@@ -90,6 +90,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
@@ -897,5 +898,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			buffer.append(category.getPmCategoryL2().getCategoryL2Code());
 		}
 		return buffer.toString();
+	}
+	
+	public static String getMessageCommon(String name){
+		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 }

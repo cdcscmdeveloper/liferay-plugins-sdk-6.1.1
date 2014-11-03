@@ -97,7 +97,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -273,8 +272,7 @@ public class SPDetailBackingBean extends
 
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
-				String variable1 = CommonMethod
-						.getMessageCommon("lbl.sc.sp.pplno");
+				String variable1 = getMessageCommon("lbl.sc.sp.pplno");
 				String variable2 = scQtProposal.getProposalNo();
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
 						variable1, variable2);

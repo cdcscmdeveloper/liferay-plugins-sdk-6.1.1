@@ -107,7 +107,6 @@ import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
@@ -202,16 +201,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		int previousIndex = this.getManagedBean().getActiveIndex();
 		validateInfo(previousIndex, false);
 		
-		if (tabTitle.equalsIgnoreCase(CommonMethod.getMessageCommon("lbl.sc.preparation"))) {
+		if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.sc.preparation"))) {
 			preparationRetrival();
 
-		} else if (tabTitle.equalsIgnoreCase(CommonMethod.getMessageCommon("lbl.sc.briefing.paper"))) {
+		} else if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.sc.briefing.paper"))) {
 			biefingPaperRetrival();
 		
-		} else if (tabTitle.equalsIgnoreCase(CommonMethod.getMessageCommon("lbl.sc.supplier.finalization"))) {
+		} else if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.sc.supplier.finalization"))) {
 			supplierFinalizationRetrival();
 	
-		} else if (tabTitle.equalsIgnoreCase(CommonMethod.getMessageCommon("lbl.sc.committee.endorsement"))) {
+		} else if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.sc.committee.endorsement"))) {
 			committeeEndorsementRetrival();
 		}
 		
@@ -337,22 +336,22 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			String label = "";
 			
 			if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
-				label = CommonMethod.getMessageCommon("lbl.sc.committee.qca");
+				label = getMessageCommon("lbl.sc.committee.qca");
 			
 			}else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)){
-				label = CommonMethod.getMessageCommon("lbl.sc.committee.qcb");
+				label = getMessageCommon("lbl.sc.committee.qcb");
 			
 			}else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
-				label = CommonMethod.getMessageCommon("lbl.sc.committee.pba");
+				label = getMessageCommon("lbl.sc.committee.pba");
 			
 			}else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
-				label = CommonMethod.getMessageCommon("lbl.sc.committee.pbb");
+				label = getMessageCommon("lbl.sc.committee.pbb");
 			
 			}else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
-				label = CommonMethod.getMessageCommon("lbl.sc.committee.fpb.sbh");
+				label = getMessageCommon("lbl.sc.committee.fpb.sbh");
 			
 			}else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
-				label = CommonMethod.getMessageCommon("lbl.sc.committee.fpb.swk");
+				label = getMessageCommon("lbl.sc.committee.fpb.swk");
 			}
 			this.getManagedBean().setCommitteeTabLabel(label);
 
@@ -858,7 +857,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			
 			if (resDTO.isSuccessful()) {				
 				String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-				String variable2 = CommonMethod.getMessageCommon("lbl.sc.supplier.finalization");
+				String variable2 = getMessageCommon("lbl.sc.supplier.finalization");
 				
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
 			}

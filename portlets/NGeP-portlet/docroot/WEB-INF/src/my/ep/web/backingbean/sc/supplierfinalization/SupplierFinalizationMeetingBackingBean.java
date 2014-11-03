@@ -86,7 +86,6 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -897,7 +896,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			renewSessionAndRetrieve();
 			
 			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-			String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
+			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
@@ -947,7 +946,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			renewSesionObject();
 			
 			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
-			String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
+			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
 			commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
 			
 		} finally {
