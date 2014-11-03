@@ -134,7 +134,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="500"
+				<td><p:inputText maxlength="100"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
@@ -146,7 +146,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				<td><p:inputText label="#{lbl['lbl.sm.projDtls.contrVal']}"
-						id="contractorContractVal"
+						id="contractorContractVal" maxlength="14"
 						required="#{backingBean.managedBean.valueReqd}"
 						value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 						size="35">

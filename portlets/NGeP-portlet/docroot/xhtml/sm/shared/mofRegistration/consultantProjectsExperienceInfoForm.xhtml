@@ -139,7 +139,7 @@
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText maxlength="500"
+							<td><p:inputText maxlength="100"
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.projDtls.projTitle']}"
 									id="supConsExpPrjTtl"
@@ -166,7 +166,7 @@
 									value="#{lbl['lbl.sm.projDtls.projCost']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText label="#{lbl['lbl.sm.projDtls.projCost']}"
-									id="consultantProjCost"
+									id="consultantProjCost" maxlength="14"
 									required="#{backingBean.managedBean.valueReqd}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35">
@@ -202,7 +202,7 @@
 						<tr>
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
-							<td><p:inputTextarea
+							<td><p:inputTextarea maxlength="40"
 									value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
 									cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
@@ -228,7 +228,7 @@
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
 							<td><p:inputText id="consultantProjConsultFee"
-									label=" #{lbl['lbl.sm.projDtls.consultFee']}"
+									label=" #{lbl['lbl.sm.projDtls.consultFee']}" maxlength="14"
 									value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
 									size="35">
 									<f:convertNumber
