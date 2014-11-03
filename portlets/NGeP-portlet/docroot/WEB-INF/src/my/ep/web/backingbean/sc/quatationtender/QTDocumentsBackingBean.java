@@ -958,10 +958,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
-		
-		List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-		List<TplSpecQuestion> tplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-		List<ScQtCheckList> techSpecList = new ArrayList<ScQtCheckList>();
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQTSpecSO specSO;
 		try {
 			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -969,69 +966,56 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			reqDTO.setQtId(qt.getQtId());
 			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
 			reqDTO.setPrepareSpec(true);
-			
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
-			techSpecList = resDto.getSpecResultBean().getResultList();
+			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean().getResultList()) {
+				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+				TplSpecMaster master = null;
+				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+				StringBuilder itemTypes = new StringBuilder();
+		    	if (itemTypes != null) {
+		    		itemTypes.append(getParameterDesc(master.getItemTypeCode()));
+		    	}
+		    	StringBuilder localGoods = new StringBuilder();
+		    	if (localGoods != null) {
+		    		localGoods.append(getParameterDesc(master.getItemOriginCode()));
+		    	}
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					if (question.getClItem() == null){
+						question.setClItem("");
+					}
+					if (question.getClSpecDetail() == null) {
+						question.setClSpecDetail("");
+					}
+					if(question.getClUom() != null) {
+						if (question.getClUom().getUomName() == null) {
+							question.getClUom().setUomName("");
+						}
+					}else{
+						question.setClUom(new PmUom());
+						question.getClUom().setUomName("");
+					}
+					if (question.getClQuantity() == null) {
+						question.setClQuantity(new BigDecimal(0));
+					}
+					
+					if (question.isClAnswerRequired()) {
+						question.setClAnswerRequired(true);
+					}
+					if (question.getClReviewRemark() == null) {
+						question.setClReviewRemark("");
+					}
+					newTplSpecQuestionsList.add(question); 
+					master.setTplSpecQuestions(newTplSpecQuestionsList);
+				}
+				masters.add(master);
+				
+				context.put("localGoods", localGoods);
+				context.put("itemType", itemTypes);
+				context.put("masters", masters);
+			}
 		} finally {
 			specSO = null;
 		}
-		ScQtDoc qtDoc = new ScQtDoc();
-		for (ScQtCheckList scQtCheckList : techSpecList) {
-			qtDoc = scQtCheckList.getScQtDoc();
-		}
-		TplSpecMaster master = qtDoc.getTplSpecMaster();
-		context.put("title", master.getSpecName());
-		
-		StringBuilder itemTypes = new StringBuilder();
-    	if (itemTypes != null) {
-    		itemTypes.append(getParameterDesc(master.getItemTypeCode()));
-    	}
-    	context.put("itemType", itemTypes);
-    	
-    	StringBuilder localGoods = new StringBuilder();
-    	if (localGoods != null) {
-    		localGoods.append(getParameterDesc(master.getItemOriginCode()));
-    	}
-		context.put("localGoods", localGoods);
-		if (tplSpecQuestionsList != null) {
-			tplSpecQuestionsList = master.getTplSpecQuestions();
-			for (TplSpecQuestion question : tplSpecQuestionsList) {
-				/*TplSpecQuestion question = null;
-				try {
-					question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
-				} catch (IllegalAccessException | InstantiationException
-						| InvocationTargetException | NoSuchMethodException e) {
-					e.printStackTrace();
-				}*/
-				if (question.getClItem() == null){
-					question.setClItem("");
-				}
-				if (question.getClSpecDetail() == null) {
-					question.setClSpecDetail("");
-				}
-				if(question.getClUom() != null) {
-					if (question.getClUom().getUomName() == null) {
-						question.getClUom().setUomName("");
-					}
-				}else{
-					question.setClUom(new PmUom());
-					question.getClUom().setUomName("");
-				}
-				if (question.getClQuantity() == null) {
-					question.setClQuantity(new BigDecimal(0));
-				}
-				
-				if (question.isClAnswerRequired()) {
-					question.setClAnswerRequired(true);
-				}
-				if (question.getClReviewRemark() == null) {
-					question.setClReviewRemark("");
-				}
-				newTplSpecQuestionsList.add(question); 
-			}
-		}
-		context.put("newTplSpecQuestionsList", newTplSpecQuestionsList);
-		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SPECIFICATION, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
