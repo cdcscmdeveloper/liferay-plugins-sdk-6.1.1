@@ -54,6 +54,7 @@ import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -120,7 +121,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.directpurchase.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -153,6 +153,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -9869,19 +9870,21 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// View Circular Attachmnets Download Method
-	public void downloadCircularDtls() {
+	// View Circular Attachment Download Method
+	public void downloadCircularDtls() throws IOException {
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
 		itemList.add(this.getManagedBean().getCtPanelItem());
 
-		try {
-			downloadFile(this.getManagedBean().getCtCircularVer()
-					.getCircularFilePath(), this.getManagedBean()
-					.getCtCircularVer().getCircularFileName());
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		}
+		String filePath = this.getManagedBean().getCtCircularVer().getCircularFilePath();
+		String fileName = this.getManagedBean().getCtCircularVer().getCircularFileName();
+		
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
+		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		actualFilePath.append(filePath);
+		
+		downloadFile(filePath, fileName);
 		this.getManagedBean().setSelectpanelItem(itemList);
 	}
 
