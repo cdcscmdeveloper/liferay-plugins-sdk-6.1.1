@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -120,6 +121,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmManufacturingDtl selectedManufacturer;
 	private SmMachineDtl selectedMachine;
 	private SmAssociationBody selectedAssocBody;
+	private SmMofAccount smMofAccount;
 	private List<SmFacility> applFactoryFacilities;
 	private List<SmFacility> applDockyardFacilities;
 	private List<SmFacility> applWorkShopFacilities;
@@ -795,6 +797,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setViewSupplierProfile(boolean viewSupplierProfile) {
 		this.viewSupplierProfile = viewSupplierProfile;
+	}
+
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
 	}
 
 }
