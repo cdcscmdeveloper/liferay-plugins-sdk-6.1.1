@@ -11,6 +11,27 @@
 		<p:panel id="bsInfPan">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.no']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.mofNo}" /></td>
+					
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.startDate']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.effDate}" /></td>
+					
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.endDate']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.expDate}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyname']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
+					
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.applNo}" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyname']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
 					
@@ -93,6 +114,8 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</table>
 				
