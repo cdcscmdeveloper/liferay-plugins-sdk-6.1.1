@@ -102,17 +102,6 @@
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement']}" />
 			   </h:panelGrid>
 		     </h:panelGrid> 
-		     <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" style="text-align:top;"
-			  	 disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-			     <p:ajax event="change" update=":form:centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />
-			  <h:panelGrid columns="2">
-			  		<p:outputLabel value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
-				  	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>	
 	 	</h:panelGrid>
 	 	<h:panelGrid columns="4" style="width:770px;" 
 		        columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
@@ -129,27 +118,6 @@
 				  <f:verbatim/>	<f:verbatim/>	
 			</h:panelGrid>
 	 </h:panelGrid>
-	   <p:outputPanel id="centalJustificationPanel" >
-	   <h:panelGrid columns="2" style="width:770px;" 
-	        rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" >
-         <h:panelGroup>
-		    <div style="height:65px; width:155px; vertical-align:top;">
-		       <h:panelGrid columns="2"  style="float:right;margin-right:-11px;">
-		           <p:outputLabel value="*" styleClass="mandatory" />
-			   	   <p:outputLabel id="centralJustificationId" value="#{lbl['lbl.ct.justification.ap201']}" style="" />
-			   </h:panelGrid>
-		    </div>
-	     </h:panelGroup>
-	  <h:panelGrid columns="2">
-	    <p:inputTextarea id="centralJustificationLbl" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-	    	value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		   	rows="4" style="width:550px;" maxlength="200" validator="#{webappBean.checkSpaces}" required="true" autoResize="false" 
-		    label="#{lbl['lbl.ct.justification.ap201']}">
-		  </p:inputTextarea>	
-	     <p:message for="centralJustificationLbl" display="icon"/>
-	  </h:panelGrid>		
-    </h:panelGrid> 
-  </p:outputPanel>
   </p:panel>
 </ui:composition>
 
