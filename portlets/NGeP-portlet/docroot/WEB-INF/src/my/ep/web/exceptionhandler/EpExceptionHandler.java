@@ -156,14 +156,14 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 
 		if (!msgCode.equals(message)) {
 			//msgCode += ": " + message;
-			msgCode = message + "("+msgCode+")";
+			msgCode = message + " ("+msgCode+")";
 		}
 
 		if (bpmcode > 0) {
 			msgCode = MessageUtils.getMessage(
 					MessageConst.ERROR_BPM_CODE
 							+ String.valueOf(bpmcode), params,
-					MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale) + "("+MessageConst.ERROR_BPM_CODE + String.valueOf(bpmcode)+")";
+					MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale) + " ("+MessageConst.ERROR_BPM_CODE + String.valueOf(bpmcode)+")";
 		}
 
 		FacesContext.getCurrentInstance().addMessage(
