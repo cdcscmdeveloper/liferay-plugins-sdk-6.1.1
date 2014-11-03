@@ -32,13 +32,14 @@
 			 maxlength="500" /></td>
 	  </tr>  
 	  <tr>
-	    <td></td>
+		<td><p:outputLabel value="*" styleClass="mandatory" /></td>
 	  	<td style="padding: 5px 0px;"><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="#{lbl['lbl.sm.profBody.profBody']}" />&#160;&#160;&#160;
 	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" /><h:outputText value="#{lbl['lbl.sm.cert.certBody']}" /></td>	  	
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status :" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}">   
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}"
+     			disabled="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">   
 			  <f:selectItems value="#{profcertifiedbodyBackingBean.getCertStatusList()}" /> 
     	    </p:selectOneMenu></td>				
 	    </tr>
