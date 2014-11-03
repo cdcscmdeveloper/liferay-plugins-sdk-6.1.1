@@ -23,25 +23,34 @@
 	</style>
 </head>
 <body>
+	
 	<table width="100%">
 	<tr>
 		<td align="left">
-			Spesifikasi $title<br/> <br/>
+			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Spesifikasi</span>
+			<br/> <br/>
 		</td>
 	</tr>
+	#foreach( $tplspecMaster in $masters )
 	<tr>
         <td align="left">
-            Title Template : $title<br/>
+			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Title Template :</span>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$tplspecMaster.specName</span>
+			<br/>
         </td>
     </tr>
     <tr>
         <td align="left">
-            Item Type : $itemType<br/>
+			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Item Type :</span>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$itemType</span>
+			<br/>
         </td>
     </tr>
     <tr>
         <td align="left">
-            Local Goods : $localGoods<br/>
+			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Local Goods :</span>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$localGoods</span>
+			<br/>
         </td>
     </tr>
     <tr align='left'>
@@ -56,20 +65,22 @@
 						<td>Answer</td>
 						<td>Note</td>
 					</tr>
-					#foreach( $tplSpecQuestions in $newTplSpecQuestionsList )
-					<tr>
-            			<td>$tplSpecQuestions.clItem</td>
-            			<td>$tplSpecQuestions.clSpecDetail</td>
-						<td>$tplSpecQuestions.clUom.uomName</td>
-						<td>$tplSpecQuestions.clQuantity</td>
-						<td>$tplSpecQuestions.clAnswerRequired</td>
-						<td>$tplSpecQuestions.clReviewRemark</td>
-            		</tr>
+					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
+						<tr>
+							<td>$tplspecQuestion.clItem</td>
+							<td>$tplspecQuestion.clSpecDetail</td>
+							<td>$tplspecQuestion.clUom.uomName</td>
+							<td>$tplspecQuestion.clQuantity</td>
+							<td>$tplspecQuestion.clAnswerRequired</td>
+							<td>$tplspecQuestion.clReviewRemark</td>
+						</tr>
 					#end
 				</table>
             </span>
         </td>
     </tr>
+	#end
     </table>
+	
 </body>
 </html>
