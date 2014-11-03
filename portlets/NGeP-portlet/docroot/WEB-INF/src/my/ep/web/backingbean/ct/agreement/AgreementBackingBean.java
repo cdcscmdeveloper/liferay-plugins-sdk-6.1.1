@@ -52,6 +52,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -299,7 +300,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		// Get performance bond rule amount
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType("BOND");
+		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
 		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 		if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 			getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
