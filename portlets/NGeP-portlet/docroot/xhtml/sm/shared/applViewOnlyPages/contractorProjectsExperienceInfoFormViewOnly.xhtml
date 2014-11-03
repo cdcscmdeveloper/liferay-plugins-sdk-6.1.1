@@ -13,7 +13,7 @@
 				rowKey="#{contrBean}" rowIndexVar="index" id="contDt">
 				<ac:paginator for="contDt" />
 
-				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}">
+				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}" style="word-break:break-all;">
 					<h:outputText value="#{contrBean.title}" />
 				</p:column>
 
