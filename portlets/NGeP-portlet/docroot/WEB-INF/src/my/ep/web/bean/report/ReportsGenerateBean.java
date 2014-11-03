@@ -291,8 +291,15 @@ public class ReportsGenerateBean {
 		private String scProcureMethodChkVar=ReportConst.EMPTY_VAL;
 		private String scPublishFromDateVar=ReportConst.EMPTY_VAL;
 		private String scPublishToDateVar=ReportConst.EMPTY_VAL;
+		private String scUserAccessRoleVar=ReportConst.EMPTY_VAL;
 				
 		
+		public String getScUserAccessRoleVar() {
+			return scUserAccessRoleVar;
+		}
+		public void setScUserAccessRoleVar(String scUserAccessRoleVar) {
+			this.scUserAccessRoleVar = scUserAccessRoleVar;
+		}
 		public boolean isScProcureAllEditView() {
 			return scProcureAllEditView;
 		}

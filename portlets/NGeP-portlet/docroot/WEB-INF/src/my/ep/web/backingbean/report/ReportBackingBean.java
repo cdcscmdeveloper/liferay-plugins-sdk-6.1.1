@@ -114,7 +114,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
-	List<String> authoriztionList;
+	List<String> authoriztionList=new ArrayList<String>();
 	private ScQt scqt;
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
 	private List<SelectItem> districtLst = new ArrayList<SelectItem>();	
@@ -1175,7 +1175,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setRptGenBean(null);
-		//retriveUserrloeByUserId(getManagedBean().getModuleValue());
+		retriveUserrloeByUserId(getManagedBean().getModuleValue());
 		if(getManagedBean().getModuleValue()!=null){
 			retriveReportListByModule(getManagedBean().getModuleValue());			
 		}		
@@ -1213,7 +1213,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		authoriztionList=new ArrayList<String>();
+		
 		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode("en");
@@ -1223,7 +1223,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			for (PmRoleDesc pmRoleDesc : roleDesc) {				
 				pmRoleDesc.getPmRole().getRoleCode();
 				log.info("Role Code="+pmRoleDesc.getPmRole().getRoleCode());
-				if(ReportConst.SUPPLIER_USER.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+				/*if(ReportConst.SUPPLIER_USER.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
 					authoriztionList.add(ReportConst.SUPPLIER_USER.toString());
 				}else if(ReportConst.SUPPLIER_ADMIN.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
 					authoriztionList.add(ReportConst.SUPPLIER_ADMIN.toString());
@@ -1305,6 +1305,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					authoriztionList.add(ReportConst.DISC_SECRETARY_SK.toString());
 				}else if(ReportConst.DISC_SECRETARY.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
 					authoriztionList.add(ReportConst.DISC_SECRETARY.toString());
+				}else{
+					authoriztionList.add(pmRoleDesc.getPmRole().getRoleCode());
+				}*/
+				if(!authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode())){
+					authoriztionList.add(pmRoleDesc.getPmRole().getRoleCode());
 				}
 			}			
 		}		
@@ -1331,6 +1336,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			PMReportReqDTO reqDTO = new PMReportReqDTO();
 			reqDTO.setReportId(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
+			PMReport mReport = rptResDTO.getPmReportDtls();
 			List<PMReport> rptLst = rptResDTO.getPmReportList();
 			if (null != rptLst) {					
 				for (PMReport pmReport : rptLst) {
@@ -1346,13 +1352,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			
 			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
-				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean);
+				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){				
-				scReportBackingBean.criteriaVariablesByReportBySC(rptGenBean);
+				scReportBackingBean.criteriaVariablesByReportBySC(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){				
-				flReportBackingBean.criteriaVariablesByReportByFL(rptGenBean);
+				flReportBackingBean.criteriaVariablesByReportByFL(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){				
-				smReportBackingBean.criteriaVariablesByReportBySM(rptGenBean);
+				smReportBackingBean.criteriaVariablesByReportBySM(rptGenBean,authoriztionList);
 			}
 			resetReportForm();
 			retrieveDates();
@@ -1498,7 +1504,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	/*
 	 *Generate all modules reports 
 	 */
-	public void generateReport(){		
+	public void generateReport(){
+		
 		if((getManagedBean().getModuleValue()!=null)&&(getManagedBean().getReportValue()!=null)){
 			if(!(getManagedBean().getReportValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
 				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getSmApplicationFromDate()==null)&&(this.getSmApplicationToDate()!=null))||((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationToDate()==null)))||(((this.getSmReceiveFromDate()==null)&&(this.getSmReceiveToDate()!=null))||((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()==null)))||(((this.getSmPrintedFromDate()==null)&&(this.getSmPrintedToDate()!=null))||((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedToDate()==null)))||(((this.getSmExpiryFromDate()==null)&&(this.getSmExpiryToDate()!=null))||((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryToDate()==null)))){
@@ -1872,8 +1879,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 							throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 						}		
 					}
-					rptGenBean.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ+this.getScCreatedFromMonth()+"/"+this.getScCreatedFromYear());
-					rptGenBean.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ+this.getScCreatedToMonth()+"/"+this.getScCreatedToYear());
+					rptGenBean.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ+this.getScCreatedFromMonth()+this.getScCreatedFromYear());
+					rptGenBean.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ+this.getScCreatedToMonth()+this.getScCreatedToYear());
 				}
 			}
 			if((this.getScQuotationNo()!=null)&&(this.getScQuotationNo()!=ReportConst.EMPTY_VAL)){				 
@@ -1883,7 +1890,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setScDeskOfficerVar(ReportConst.AMP_DESK_OFFCR_EQ+this.getScDeskOfficer());
 			}
 			if((this.getScPtj()!=null)&&(this.getScPtj()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setScPtjVar(ReportConst.AMP_PROCURE_PTJ_EQ+this.getScPtj());
+			rptGenBean.setScPtjVar(ReportConst.AMP_PROCURE_PTJ_EQ+this.getScPtj());
 			}			
 			if((this.getScStatus()!=null)&&(this.getScStatus()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScStatusVar(ReportConst.AMP_PROCURE_STATUS_EQ+this.getScStatus());
@@ -1912,9 +1919,22 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getScPublishToDate()!=null)&&(this.getScPublishToDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScPublishToDateVar(ReportConst.AMP_PUB_TO_DT_EQ+outputDateFormat.format(this.getScPublishToDate()));
 			}
+			String userRoleLogin = "";
+			log.info("authoriztionList="+authoriztionList.toString());
+			if(authoriztionList.contains("APPROVER_NAIK_TARAF")){
+				userRoleLogin = "APPROVERNT";
+			}else if(authoriztionList.contains("APPROVER")){
+				userRoleLogin = "APPROVER";
+			}else if(authoriztionList.contains("DESK_OFFICER")){
+				userRoleLogin = "DESKOFFR";
+			}
+			
+			if((userRoleLogin!=null)&&(userRoleLogin!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScUserAccessRoleVar(ReportConst.AMP_USER_ACCESS_ROLE_EQ+userRoleLogin);
+			}
 			rptGenBean.setUrlReportJSPName(reportFileNameJSP);
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getScProcureMethodChkVar()+rptGenBean.getScDeskOfficerVar()+rptGenBean.getScPtjVar()+rptGenBean.getScUserAccessRoleVar()+rptGenBean.getScCreatedFromDtVar()+rptGenBean.getScCreatedToDtVar()+rptGenBean.getScPublishFromDateVar()+rptGenBean.getScPublishToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
