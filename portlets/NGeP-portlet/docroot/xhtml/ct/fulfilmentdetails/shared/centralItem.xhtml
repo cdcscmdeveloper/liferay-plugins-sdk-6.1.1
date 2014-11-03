@@ -14,7 +14,7 @@
               value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}"  
               selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" >
               <ac:paginator for="centralitemTable"/>
-              <p:ajax event="rowSelect" update=":form:changeCentralItemField"  />
+              <p:ajax event="rowSelect" update=":form:changeCentralItemField" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 		    
 		      <p:column 
 		           filterBy="#{data.itemName}" style="width:40%;" filterMatchMode="contains">

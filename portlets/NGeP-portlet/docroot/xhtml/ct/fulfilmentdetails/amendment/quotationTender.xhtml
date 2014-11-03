@@ -54,6 +54,11 @@
 				<p:outputLabel value="%" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.fee']}" />
 		    </h:panelGrid>
+		    
+		     <p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
+		    <p:inputText  style="width:170px;" disabled="true" maxlength="50"
+		       value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.ctContract.contractType)}" />
+	 
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>

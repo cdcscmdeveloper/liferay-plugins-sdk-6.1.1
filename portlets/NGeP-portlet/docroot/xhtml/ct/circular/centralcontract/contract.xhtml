@@ -5,61 +5,60 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}"
-		toggleable="true" toggleSpeed="500">
+	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}" toggleable="true" toggleSpeed="500">
+		
 		<p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index"
-			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
-			selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
-			<ac:paginator for="centralContractDt" />
-			<p:ajax event="rowSelect" update=":form:contractListPnl"
-				process="@this" listener="#{centralContractBackingBean.setContractListner()}" />
-		    <p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:32%;white-space:normal;">
-				   <h:outputText value="#{circularContractsVar.ctContract.contractName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:12%;white-space:normal;">
-				<h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:10%;white-space:normal;">
-				<h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
-			</p:column>
+			   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
+			   selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
+			        <ac:paginator for="centralContractDt" />
+			        <p:ajax event="rowSelect" update=":form:contractListPnl" process="@this" 
+			          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{centralContractBackingBean.setContractListner()}" />
+		   
+		             <p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:32%;white-space:normal;">
+				        <h:outputText value="#{circularContractsVar.ctContract.contractName}" />
+			         </p:column>
+		
+		          	<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:12%;white-space:normal;">
+				        <h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" />
+			        </p:column>
 			
-			<p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:8%;">
-				<h:outputText
-					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:8%;">
-				<h:outputText
-					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;">
-				<h:outputText
-					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-				<p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}"
-					disabled="#{!centralContractBackingBean.managedBean.updateAction
-						or centralContractBackingBean.managedBean.viewContract}"
-					style="width:70px;">
-					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-					<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				</p:selectOneMenu>
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2" />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
-				oncomplete="contractDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
-				actionListener="#{centralContractBackingBean.addCircularContractListener()}"/>
-			<p:commandButton id="deleteContractBtn"
-				value="#{lbl['lbl.btn.delete']}" process="@this"
-				icon="ui-icon-delete" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
-				disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}"
-				onsuccess="delCtContractDlg.show()" />
-		</div>
+			        <p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:10%;white-space:normal;">
+				        <h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
+			        </p:column>
+			
+			        <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:8%;">
+			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}">
+					       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				        </h:outputText>
+			         </p:column>
+			         
+			         <p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:8%;">
+			 	        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}">
+					        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				        </h:outputText>
+			          </p:column>
+			
+			          <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;">
+				          <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
+			          </p:column>
+		
+			          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+				           <p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}" style="width:70px;"
+					            disabled="#{!centralContractBackingBean.managedBean.updateAction or centralContractBackingBean.managedBean.viewContract}">
+					            <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+					            <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+				           </p:selectOneMenu>
+			          </p:column>
+		         </p:dataTable>
+		         <p:spacer height="2" />
+		         <div class="ppRightBtn">
+			           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
+				           oncomplete="contractDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+				           actionListener="#{centralContractBackingBean.addCircularContractListener()}"/>
+			              <p:commandButton id="deleteContractBtn" value="#{lbl['lbl.btn.delete']}" process="@this"
+				              icon="ui-icon-delete" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+				              disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}" onsuccess="delCtContractDlg.show()" />
+		           </div>
 
 		<p:dialog id="delCtContractDlg"
 			resizable="false"
@@ -88,24 +87,22 @@
 		<p:outputPanel id="circularItemsPanel">
 			<h:panelGroup
 				rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null and
-		   centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
+		           centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
 				<p:outputLabel value="#{lbl['lbl.ct.sublabel.item']}"
 					style="float:left; font-weight:bold; padding-top:5px;" />
 				<div style="clear: both" />
 				<p:dataTable id="circularItemDt" var="itemVar"
 					value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
-					selectionMode="single"
-					selection="#{centralContractBackingBean.managedBean.selectedCircularItem}"
+					selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}"
 					rowKey="#{itemVar}">
 					<ac:paginator for="circularItemDt" />
 					<p:ajax event="rowSelect"
 						update="@([id$=circularZonePanel],[id$=circularPricePanel])"
-						process="@this"
+						process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						listener="#{centralContractBackingBean.setZoneListener()}" />
 					<p:column headerText="#{lbl['lbl.ct.item.name']}"
 						style="width:45%; white-space:pre-line;">
-						<h:outputText value="#{itemVar.ctContractItem.itemName}"
-							style="width:450px;" />
+						<h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%;">
 						<p:inputText styleClass="colFloatRight" style="width:120px;"
@@ -162,7 +159,7 @@
 					selectionMode="single" rowKey="#{dataZone}" rowIndexVar="index">
 					<ac:paginator for="circularItemZoneDt" />
 					<p:ajax event="rowSelect" update="@([id$=circularPricePanel])"
-						process="@this"
+						process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						listener="#{centralContractBackingBean.setPriceListener()}" />
 					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:60%;">
 						<h:outputText value="#{dataZone.zoneName}" style="width:50%;" />

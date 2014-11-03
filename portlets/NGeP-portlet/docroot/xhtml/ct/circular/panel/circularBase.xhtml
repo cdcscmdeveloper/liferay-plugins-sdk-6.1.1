@@ -21,7 +21,11 @@
 			padding: 10px;
          }
       </style>
-       	<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+       <p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
+       	<p:messages id="messages" 
+       	    showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    <ui:include src="circularButtons.xhtml" />
 		<ui:include src="circularHeader.xhtml" />
     	<table border="0" cellspacing="0" cellpadding="0" width="100%">
