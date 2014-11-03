@@ -81,6 +81,8 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -1813,7 +1815,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static List<PmCategoryL1> retrieveParentCategoryList(
+	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage(
 			String supplierType) {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setSupplierTypeCode(supplierType);
@@ -1826,6 +1828,120 @@ public class SmApplicationUtil {
 		} else {
 			return null;
 		}
+	}
+
+	public static List<PmCategoryL1> retrieveParentCategoryListForCategoryCodesPage(
+			SmApplicationManagedBean managedBean) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		log.info("** getSupplierType type ***"
+				+ managedBean.getSmAppl().getSupplierType());
+		log.info("** getApplCategoryType type ***"
+				+ managedBean.getSmAppl().getApplCategoryType());
+		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		if (managedBean.getBasicCompanyFacility() != null
+				&& managedBean.getBasicCompanyFacility().getFacilityType() != null
+				&& managedBean.getBasicCompanyFacility().getFacilityType()
+						.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
+			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital().intValue());
+		}
+		// TODO get clarification
+		// reqDTO.setBumiPercentage(0);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
+
+		return resDTO.getCategoryL1List();
+	}
+
+	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
+			long categoryL1Id,SmApplicationManagedBean managedBean) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
+
+		return resDTO.getCategoryL2List();
+	}
+
+	public static List<PmCategoryL2> retrieveChildCategoryList(
+			long categoryL1Id, SmApplicationManagedBean managedBean) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		if (managedBean.getBasicCompanyFacility() != null
+				&& managedBean.getBasicCompanyFacility().getFacilityType() != null
+				&& managedBean.getBasicCompanyFacility().getFacilityType()
+						.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
+			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital().intValue());
+		}
+		// TODO get clarification
+		// reqDTO.setBumiPercentage(0);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
+
+		return resDTO.getCategoryL2List();
+	}
+
+	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
+			long categoryL2Id, SmApplicationManagedBean managedBean) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+
+		return resDTO.getCategoryL3List();
+	}
+
+	public static List<PmCategoryL3> retrieveSubChildCategoryList(
+			long categoryL2Id, SmApplicationManagedBean managedBean) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		log.info("** getSupplierType type ***"
+				+ managedBean.getSmAppl().getSupplierType());
+		log.info("** getApplCategoryType type ***"
+				+ managedBean.getSmAppl().getApplCategoryType());
+		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		if (managedBean.getSmAppl().getApplCategoryType().equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
+		if (managedBean.getBasicCompanyFacility() != null
+				&& managedBean.getBasicCompanyFacility().getFacilityType() != null
+				&& managedBean.getBasicCompanyFacility().getFacilityType()
+						.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
+			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital().intValue());
+		}
+		// TODO get clarification
+		// reqDTO.setBumiPercentage(0);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+
+		return resDTO.getCategoryL3List();
 	}
 
 	public static List<PmUom> retrieveUomList() {
