@@ -293,6 +293,16 @@ public class QTBusinessOwnerBackingBean extends
 						new SearchFilterBean("procurementMode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								procurementMode));
+			} else {
+				if (StringUtils.isBlank(cloneBusinessOwnerSearchBean.getQtStatus())) {
+					List<String> procurementModeList = new ArrayList<String>();
+					procurementModeList.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+					procurementModeList.add(ParameterConst.PROCUREMENT_MODE_TENDER);
+					qtSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+									"procurementMode.parameterCode",
+									SearchOperator.OPERATOR_IN.value(), procurementModeList));
+				}
 			}
 
 			Date fromCreatedDate = cloneBusinessOwnerSearchBean
