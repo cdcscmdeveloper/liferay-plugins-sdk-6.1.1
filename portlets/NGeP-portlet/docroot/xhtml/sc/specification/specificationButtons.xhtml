@@ -20,7 +20,7 @@
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval' and specificationBackingBean.managedBean.readOnly eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.spec.back.search.panel.Item']}"
-							style="float:left;" icon="ui-icon-back"
+							style="float:left;" icon="ui-icon-back" immediate="true"
 							update="@([id$=panelItemGroupList])"
 							action="#{specificationBackingBean.businessOwnerBackAction}" />
 

@@ -1025,13 +1025,14 @@ public class SpecificationBackingBean extends
 		if (count == 0) {
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
 					.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
-
+				this.getManagedBean().setActiveIndex(2);
 				throw new EpException(MessageConst.ERROR_760137);
 
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(scqt
 					.getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
 							.getEvaluationType()) && scqt.isTechEvaluationReq())) {
+				this.getManagedBean().setActiveIndex(2);
 				throw new EpException(MessageConst.ERROR_760138);
 
 			}
@@ -1056,13 +1057,14 @@ public class SpecificationBackingBean extends
 		if (count >= 1) {
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
 					.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
-
+				this.getManagedBean().setActiveIndex(2);
 				throw new EpException(MessageConst.ERROR_760151);
 
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(scqt
 					.getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
 							.getEvaluationType()) && scqt.isTechEvaluationReq())) {
+				this.getManagedBean().setActiveIndex(2);
 				throw new EpException(MessageConst.ERROR_760152);
 
 			}
@@ -1080,6 +1082,7 @@ public class SpecificationBackingBean extends
 								.getParameterCode())) {
 					if (checkList.getPmStatus().getStatusId()
 							.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+						this.getManagedBean().setActiveIndex(3);
 						throw new EpException(MessageConst.ERROR_760153);
 					}
 
@@ -4248,13 +4251,18 @@ public class SpecificationBackingBean extends
 	}
 
 	public void panelConformation(AjaxBehaviorEvent event) {
-
-		if (null != this.getManagedBean().getScQt()
-				&& null != this.getManagedBean().getScQt().getEstimatedAmount()) {
-			RequestContext.getCurrentInstance().execute(
-					"reviceApprovalDlgs.show()");
-
-		}
+		// Boolean panel = this.getManagedBean().getScQt().isPanel();
+		Boolean panel = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQt().setPanel(panel);
+		/*
+		 * if (null != this.getManagedBean().getScQt() && null !=
+		 * this.getManagedBean().getScQt().getEstimatedAmount()) {
+		 * RequestContext.getCurrentInstance().execute(
+		 * "reviceApprovalDlgs.show()");
+		 * 
+		 * }
+		 */
 	}
 
 	public void panelNoConformation() {
@@ -10388,14 +10396,14 @@ public class SpecificationBackingBean extends
 							}
 						}
 					}
-						/*this.getManagedBean()
-								.getScQtCheckSt2financeProposalList()
-								.remove(this.getManagedBean().getIndex());
-						this.getManagedBean()
-								.getScQtCheckSt2financeProposalList()
-								.add(this.getManagedBean().getIndex(),
-										checkList);*/
-					
+					/*
+					 * this.getManagedBean()
+					 * .getScQtCheckSt2financeProposalList()
+					 * .remove(this.getManagedBean().getIndex());
+					 * this.getManagedBean()
+					 * .getScQtCheckSt2financeProposalList()
+					 * .add(this.getManagedBean().getIndex(), checkList);
+					 */
 
 				}
 			}

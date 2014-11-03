@@ -317,9 +317,18 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<String> supplierDivisionCode;
 	private Long divisionId;
 	private String divisionCode;
+	private CtPanelItem selectCtPanelItem;
 	
 
 	
+
+	public CtPanelItem getSelectCtPanelItem() {
+		return selectCtPanelItem;
+	}
+
+	public void setSelectCtPanelItem(CtPanelItem selectCtPanelItem) {
+		this.selectCtPanelItem = selectCtPanelItem;
+	}
 
 	public Long getDivisionId() {
 		return divisionId;
