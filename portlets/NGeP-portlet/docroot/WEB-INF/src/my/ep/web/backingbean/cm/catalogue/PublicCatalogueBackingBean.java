@@ -163,7 +163,7 @@ public class PublicCatalogueBackingBean extends
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 			for (String code : itemNames) {
 				log.debug("*******code***********" + code);
-				if(this.getManagedBean().getFamilyList().size() < 10){
+//				if(this.getManagedBean().getFamilyList().size() < 10){
 				codeReqDTO.setUnspscCode(code);
 				CodificationResDTO codeResDTO = codificationSO
 						.searchUnspscObj(codeReqDTO);
@@ -173,7 +173,7 @@ public class PublicCatalogueBackingBean extends
 				if (code != null && code.trim().length() > 0) {
 					this.getManagedBean().getFamilyCodeList().add(code);
 				}
-				}
+//				}
 			}
 
 			if(this.getManagedBean().getFamilyCodeList().size() == 1){
