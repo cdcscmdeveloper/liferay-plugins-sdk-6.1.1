@@ -1007,7 +1007,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()));
 				}
 				itemAddrList.remove(flItemAddr);
-				throw new EpException("this item is out of the tier range.");
+				throw new EpException(MessageConst.ERROR_745055);
 			}
 
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
@@ -1074,7 +1074,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(itemAddr.getZoneId() == null){
 					oriItemAddr.setOrderedQty(new BigDecimal(0));
 					flItemAddr.setOrderedQty(new BigDecimal(0));
-					throw new EpException("this item is not within the zone.");
+					throw new EpException(MessageConst.ERROR_745056);
 
 				}
 				if(itemAddr.getOrderedQty() == null){
@@ -1119,7 +1119,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 				itemAddrList.remove(flItemAddr);
 				//					getManagedBean().getZonalTierMap().put(flItemAddr.getZoneId()+" "+flItemAddr.getScRequestItem().getRequestNoteItemId(), itemAddrList);
-				throw new EpException("this item is out of the tier range.");
+				throw new EpException(MessageConst.ERROR_745055);
 			}
 
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
@@ -1136,7 +1136,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(flItemAddr.getZoneId() == null){
 					oriItemAddr.setOrderedQty(new BigDecimal(0));
 					flItemAddr.setOrderedQty(new BigDecimal(0));
-					throw new EpException("this item is not within the zone.");
+					throw new EpException(MessageConst.ERROR_745056);
 				}
 			}
 			if(flItemAddr.getOrderedQty() == null){
