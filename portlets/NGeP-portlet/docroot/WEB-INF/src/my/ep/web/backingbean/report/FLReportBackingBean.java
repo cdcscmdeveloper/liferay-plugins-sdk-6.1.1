@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.report;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -21,7 +23,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	/*
 	 * Enable FL module criteria by report name
 	 */
-	public void criteriaVariablesByReportByFL(ReportsGenerateBean rptGenBean){
+	public void criteriaVariablesByReportByFL(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		
 	switch (getManagedBean().getReportValue()) {
 		case ReportConst.CON_REQ_RPT_MIN_VAL:	

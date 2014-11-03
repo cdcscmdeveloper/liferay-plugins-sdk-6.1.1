@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.report;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -20,7 +22,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	/*
 	 *Enable CM module criteria by report name 
 	 */
-	public void criteriaVariablesByReportByCM(ReportsGenerateBean rptGenBean){
+	public void criteriaVariablesByReportByCM(ReportsGenerateBean rptGenBean, List<String> authoriztionList){
 		
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.LST_PUB_CAT_ITM_RPT_VAL:

@@ -38,7 +38,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		this.monthList = monthList;
 	}
 	
-	public void criteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean){
+	public void criteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 	
 		switch (getManagedBean().getReportValue()) {
 		 	case ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL:
