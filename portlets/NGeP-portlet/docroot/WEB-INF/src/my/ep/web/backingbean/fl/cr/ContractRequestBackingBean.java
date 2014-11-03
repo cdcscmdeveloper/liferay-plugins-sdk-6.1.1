@@ -1665,6 +1665,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}			
 				if(getManagedBean().getPmPriceType() != null){
 					if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+						reqDTO.setOrderedQty(flItemAddr.getOrderedQty());
+						ContractItemResDTO itemResDTO = contractItemSO.getItemPrice(reqDTO);//get zoneId
+						flItemAddr.setZoneId(itemResDTO.getContractZoneId());
 						if(flItemAddr.getZoneId() == null){
 							oriItemAddr.setOrderedQty(new BigDecimal(0));
 							flItemAddr.setOrderedQty(new BigDecimal(0));
