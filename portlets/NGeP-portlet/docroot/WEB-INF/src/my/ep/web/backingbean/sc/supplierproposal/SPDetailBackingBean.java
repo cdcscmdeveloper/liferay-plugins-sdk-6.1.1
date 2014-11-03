@@ -1407,11 +1407,15 @@ public class SPDetailBackingBean extends
 		getManagedBean().setProposalIndex(index);
 		System.out.println("index : "
 				+ this.getManagedBean().getProposalIndex());
+		
+		ScQt scQt = getManagedBean().getQt();
 		ScQtCheckList scQtCheckList = this.getManagedBean()
 				.getQtProposalChecklist().getScQtCheckList();
 		this.getManagedBean().setScQtCheckList(scQtCheckList);
 		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 		this.getManagedBean().setScQtDoc(scQtDoc);
+		
+		ITemplateSpecSO templateSpecSO;
 		try {
 			/*
 			 * TemplateSpecBackingBean templateSpecBackingBean = new
@@ -1426,7 +1430,7 @@ public class SPDetailBackingBean extends
 			 * .retrieveTemplateSpecMaster(templateSpecBean);
 			 */
 
-			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+			templateSpecSO = EpEjbBusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.COMMON_COMPONENT,
 							ITemplateSpecSO.class);
@@ -1442,10 +1446,12 @@ public class SPDetailBackingBean extends
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
 			templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
-		} catch (Exception e) {
-			e.printStackTrace();
+		} finally {
+			templateSpecSO = null;
 		}
-		return NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
+		
+		this.getManagedBean().setPageUrl(getFinancialSpecUrl(scQt));
+		return NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE + "?faces-redirect=true";
 
 	}
 
@@ -1565,26 +1571,29 @@ public class SPDetailBackingBean extends
 					this.getManagedBean().setZones(zones);
 					this.getManagedBean().setSelectedZone(zones.get(0));
 				}
-				if (scQt.getMaxProposal() > 1) {
-
-					redirectPage = NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE;
-				} else {
-					redirectPage = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
-
-				}
-			} else {				
-				if (scQt.getMaxProposal() > 1) {
-
-					redirectPage = NAV_TO_MORE_THAN_PROPOSAL_PAGE;
-				} else {
-					redirectPage = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
-
-				}
+				
 			}
-			return redirectPage;
+			
+			return getFinancialSpecUrl(scQt);
 		} finally {
 			proposalSO = null;
 		}
+	}
+	
+	private String getFinancialSpecUrl(ScQt scQt) {
+		String specUrl = null;
+		
+		if (scQt.getMaxProposal() > 1) {
+			if (scQt.isZonal()) {
+				specUrl = NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE;
+			} else {
+				specUrl = NAV_TO_MORE_THAN_PROPOSAL_PAGE;
+			}
+		} else {
+			specUrl = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
+		}
+		
+		return specUrl;
 	}
 
 	public String retrieveFinNonGovCompanyExpDtls(
