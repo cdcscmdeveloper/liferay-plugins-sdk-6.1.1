@@ -155,14 +155,15 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 		// bean.setMessage(ExceptionUtils.getRootCauseMessage(t));
 
 		if (!msgCode.equals(message)) {
-			msgCode += ": " + message;
+			//msgCode += ": " + message;
+			msgCode = message + "("+msgCode+")";
 		}
 
 		if (bpmcode > 0) {
 			msgCode = MessageUtils.getMessage(
 					MessageConst.ERROR_BPM_CODE
 							+ String.valueOf(bpmcode), params,
-					MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+					MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale) + "("+MessageConst.ERROR_BPM_CODE + String.valueOf(bpmcode)+")";
 		}
 
 		FacesContext.getCurrentInstance().addMessage(
