@@ -17,6 +17,7 @@
 
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+				<h:outputText value="*" style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;"/>
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.mainCat']}"
 					id="consultProjParCatCode"
@@ -39,6 +40,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+				<h:outputText value="*" style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;"/>
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.subCat']}"
 					value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
@@ -57,6 +59,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+				<h:outputText value="*" style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;"/>
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 					value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
