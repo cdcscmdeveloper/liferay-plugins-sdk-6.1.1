@@ -53,6 +53,45 @@ public class ReportConst {
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";	
 	//S1 Report
+	//JSP
+		public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
+		public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "sc_oc_method_of_asses_1b.jsp";
+		public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
+		public static final String SC_AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
+		public static final String SC_SPPSAP2_TEC_RPT_JSP = "sc_tec_shlisttech_eval_2a.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "sc_tec_techasses_2b.jsp";
+		public static final String SC_AKPT_TEC_RPT_JSP = "sc_tec_eval_tech_2c.jsp";
+		public static final String SC_TECSPEC_TEC_RPT_JSP = "sc_tec_spec_techpapers_2d.jsp";
+		public static final String SC_OVRL_TECRES_WITH_WEI_TEC_RPT_JSP = "sc_tec_overall_with_wei_2f.jsp";
+		public static final String SC_OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_JSP = "sc_tec_overall_tech_2e.jsp";
+		public static final String SC_SPPSAP2_FEC_RPT_JSP = "sc_fec_shlist_level2_3a.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP = "sc_fec_fin_asses_level2_3b.jsp";
+		public static final String SC_AKPT_FEC_RPT_JSP = "sc_fec_price_eval_3c.jsp";
+		public static final String SC_HARGA_TAWARAN_FEC_RPT_JSP = "sc_fec_priceoffer_3d.jsp";
+		public static final String SC_OVRL_FINRS_FEC_RPT_JSP = "sc_fec_overall_fin_3e.jsp";
+		public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_shortlist_asses_4a.jsp";
+		public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_method_of_asses_4b.jsp";
+		public static final String SC_PDW_EC_RPT_JSP = "sc_ec_method_of_asses_4l.jsp";	
+		public static final String SC_SPPSAP2_EC_RPT_JSP = "sc_ec_gen_spec_4c.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "sc_ec_gen_spec_4d.jsp";
+		public static final String SC_AKPTPH_EC_RPT_JSP = "sc_ec_price_eval_4e.jsp";
+		public static final String SC_TECSPEC_EC_RPT_JSP = "sc_ec_tech_spec_4f.jsp";	
+		public static final String SC_PSDAK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_govt_4j.jsp";
+		public static final String SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_non_govt_4k.jsp";
+		public static final String SC_HARGA_TAWARAN_EC_RPT_JSP = "sc_ec_priceoffer_4m.jsp";
+		public static final String SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP = "sc_ec_fin_position_4n.jsp";
+		public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
+		public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_ec_exp_non_govt_6b.jsp";	
+		public static final String SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP = "sc_ec_overall_tech_4g.jsp";
+		public static final String SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP = "sc_ec_overalltech_with_wei_4h.jsp";
+		public static final String SC_OVRL_FINRS_EC_RPT_JSP = "sc_ec_overall_fin_4i.jsp";
+		public static final String SC_COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_JSP = "sc_tecec_exp_govt_5a.jsp";
+		public static final String SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP = "sc_tecec_exp_non_govt_5b.jsp";
+		public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_govt_6a.jsp";
+		public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
+		public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";
+		
+		public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "sc_fc_analysis_eval_rep_8a.jsp";
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	//SC Module reports start
 	//CM Module reports start	
@@ -319,6 +358,7 @@ public class ReportConst {
 	public static final String AMP_TO_PRNTD_DT_EQ = "printeddateto=";
 	public static final String AMP_REPORT_ID_EQ = "reportid=";
 	public static final String AMP_FROM_RELEASE_DATE_EQ = "&releasedate=";
+	public static final String AMP_USER_ACCESS_ROLE_EQ = "&LOGIN=";
 	//	
 	public static final String EMPTY_VAL = "";
 	public static final String AMP_REPORT_NAME = "&report=";
