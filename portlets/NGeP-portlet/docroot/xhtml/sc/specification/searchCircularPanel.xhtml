@@ -142,6 +142,7 @@
 				<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
 					style="width:100%" rows="10"
 					value="#{specificationBackingBean.managedBean.panelItemList}"
+					selection="#{specificationBackingBean.managedBean.selectCtPanelItem}"
 					rowKey="#{panelItem}">
 
 					<ac:paginator for="panelItemList"></ac:paginator>
