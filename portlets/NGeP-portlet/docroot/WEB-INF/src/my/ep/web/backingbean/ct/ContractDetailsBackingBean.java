@@ -1882,6 +1882,10 @@ public void ConstructSideTabMenu(){
     public boolean isApprover() {
 		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
+    
+    public boolean isContractAdmin() {
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
+	}
 
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
