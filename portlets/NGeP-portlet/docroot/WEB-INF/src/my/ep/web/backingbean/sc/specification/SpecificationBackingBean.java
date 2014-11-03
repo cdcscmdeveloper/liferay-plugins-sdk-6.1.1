@@ -10372,14 +10372,30 @@ public class SpecificationBackingBean extends
 								.getScQtCheckSt2financeProposalList()
 								.add(checkList);
 					} else {
-						this.getManagedBean()
+						List<ScQtCheckList> finanicialCheckLists = this
+								.getManagedBean()
+								.getScQtCheckSt2financeProposalList();
+						if (null != finanicialCheckLists
+								&& !finanicialCheckLists.isEmpty()) {
+							for (int i = 0; i < finanicialCheckLists.size(); i++) {
+								ScQtCheckList qtCheckList = finanicialCheckLists
+										.get(i);
+								if (qtCheckList.getTitle().equalsIgnoreCase(
+										checkList.getTitle())) {
+									finanicialCheckLists.remove(i);
+									finanicialCheckLists.add(checkList);
+								}
+							}
+						}
+					}
+						/*this.getManagedBean()
 								.getScQtCheckSt2financeProposalList()
 								.remove(this.getManagedBean().getIndex());
 						this.getManagedBean()
 								.getScQtCheckSt2financeProposalList()
 								.add(this.getManagedBean().getIndex(),
-										checkList);
-					}
+										checkList);*/
+					
 
 				}
 			}
