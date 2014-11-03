@@ -926,15 +926,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 	  
 	  public String getMinistryAndPtjName(int temp){
-		 if(temp == 1 && getManagedBean().getCtContract() != null){
-			  if(getManagedBean().getCtContract().getOwnerOrgProfile() != null && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null){
+		 if(getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getOwnerOrgProfile() != null){
+			  if( temp == 1 && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null){
 				  return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
-			  }
-		 
-		 }  if(temp == 2 && getManagedBean().getCtContract() != null) {
-			 if(getManagedBean().getCtContract().getOwnerOrgProfile() != null && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null 
-					 && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile() != null){
-				    return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName();
+			  } else if( temp ==2){
+				    return getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
 			 }
 		 }
         return "";
