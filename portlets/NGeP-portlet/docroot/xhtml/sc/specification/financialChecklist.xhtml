@@ -11,13 +11,13 @@
 		toggleable="true">
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
-			widgetVar="financialChecklist" rows="10"
+			widgetVar="financialChecklist" 
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
 			first="#{specificationBackingBean.managedBean.financialTableRow}"
 			rowKey="#{stageTwofunctional}">
-			<ac:paginator for="financeProposaltwo" />
+		<!-- 	<ac:paginator for="financeProposaltwo" /> -->
 			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode ne 'TS'}" />
 
