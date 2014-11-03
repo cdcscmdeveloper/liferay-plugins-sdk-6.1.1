@@ -310,11 +310,6 @@ public class CommonMethod {
 		}
 		return pmStatus;
 	}
-	
-	public static String getMessageCommon(String name){
-		log.info("getMessageCommon");
-		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-	}
 
 
 
