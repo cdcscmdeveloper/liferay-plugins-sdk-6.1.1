@@ -29,7 +29,7 @@
 				<tr>
 					<td>
 						<h:inputTextarea cols="40" value="#{reason.reasonDesc}" rendered="#{reasonIndex==0}" maxlength="1000" /> 
-						<h:outputText value="#{reason.remark}" rendered="#{reasonIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+						<h:outputText value="#{reason.reasonDesc}" rendered="#{reasonIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 					</td>
 				</tr>
 			</table>
@@ -38,7 +38,7 @@
 		<br/>    
  		<div class="ppRightBtn">
 		  <p:commandButton value="#{lbl['lbl.btn.ok']}" immediate="true" oncomplete="dlRejectReason.hide();"/>	
-		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="dlRejectReason.hide();" />		
+		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRejectReason.hide();" />		
 		</div>      
 		</p:outputPanel>
 	</p:dialog>
