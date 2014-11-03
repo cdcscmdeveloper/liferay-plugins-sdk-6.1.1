@@ -145,10 +145,13 @@
             </td>
             <td style="text-align:right">$requestNoteVo.unitPrice</td>
          </tr>
-         #elseif( ($count + 1) % 14 == 0 ) 
+         #elseif( ($count + 1) % 10 == 0 ) 
       </table>
       #set( $pageCount = $pageCount + 1 )
       <p class="break"></p>
+      <br/>
+      <br/>
+      <br/>
       <table class="table2">
          <tr>
             <th width="20%">
