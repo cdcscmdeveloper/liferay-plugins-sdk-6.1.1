@@ -1822,7 +1822,7 @@ public class SmApplicationUtil {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO
-				.retrieveCategoryL1ListBySupplierType(reqDTO);
+				.retrieveCategoryL1List();
 		if (resDTO != null) {
 			return resDTO.getCategoryL1List();
 		} else {
@@ -1865,8 +1865,8 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
-		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
+		//reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 
 		return resDTO.getCategoryL2List();
 	}
@@ -1903,7 +1903,7 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		//reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();
