@@ -13,7 +13,7 @@
 		</f:facet>
 		<c:if test="#{newable}">
 			<p:inputTextarea id="itemName" style="width:71%;" value="#{question.clItem}" 
-				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="200"
+				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="2000"
 				label="#{lbl['lbl.tpl.spec.content.item']}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
@@ -29,7 +29,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.specification']}"/>
 		</f:facet>
 		<p:inputTextarea id="specification" style="width:78%;" value="#{question.clSpecDetail}" 
-			rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="200"
+			rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="1000"
 			label="#{lbl['lbl.tpl.spec.content.specification']}">
 			<p:ajax partialSubmit="true" process="@this" update="@this" />
 		</p:inputTextarea>
