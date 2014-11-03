@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.branch.panHdr']} " toggleable="true"
-		id="sample" rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+		id="sample" rendered="#{!viewSmApplBackingBean.managedBean.viewSupplierProfile}">
 		<p:panel id="brnInfPan">
 			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
