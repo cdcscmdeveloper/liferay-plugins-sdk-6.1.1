@@ -33,8 +33,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 	private ProcurementPlanSearchBean planSearchBean;
 	private PpPlan selectedPlan;
-	private PpExpenditureItem selectedEpItem; //TODO remove
-	private PpProcurementItem selectedPpItem; //TODO remove
 	private List<PpExpenditureItem> deleteEpItems;
 	private List<PpProcurementItem> deletePpItems;
 	private DualListModel<PmUser> approverModel;
@@ -135,33 +133,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.deletePpItems = deletePpItems;
 	}
 
-	/**
-	 * @return the selectedEpItem
-	 */
-	public PpExpenditureItem getSelectedEpItem() {
-		return selectedEpItem;
-	}
-
-	/**
-	 * @param selectedEpItem the selectedEpItem to set
-	 */
-	public void setSelectedEpItem(PpExpenditureItem selectedEpItem) {
-		this.selectedEpItem = selectedEpItem;
-	}
-
-	/**
-	 * @return the selectedPpItem
-	 */
-	public PpProcurementItem getSelectedPpItem() {
-		return selectedPpItem;
-	}
-
-	/**
-	 * @param selectedPpItem the selectedPpItem to set
-	 */
-	public void setSelectedPpItem(PpProcurementItem selectedPpItem) {
-		this.selectedPpItem = selectedPpItem;
-	}
 
 	/**
 	 * @return the planSearchBean

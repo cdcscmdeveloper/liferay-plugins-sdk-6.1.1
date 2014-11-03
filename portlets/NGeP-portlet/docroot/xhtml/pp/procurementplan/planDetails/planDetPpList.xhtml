@@ -10,7 +10,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	
 	<p:outputPanel id="opPlanPp">
 		<br/>
-		<p:remoteCommand name="updateFooter"  update=":form:dtProcurementPlan:ppItemFooter"/>
 	   	<p:dataTable id="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
 		     selection="#{pPlanBackingBean.managedBean.deletePpItems}" 
@@ -116,7 +115,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		<p:inputText value="#{ppItem.estimatedAmt}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
 		  			id="itEstAmt" label="#{lbl['lbl.pp.estimated.amount']}"
 		  			styleClass="ppDisplayTextS" required="#{!empty param['disableValidation']}">
-		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}" oncomplete="updateFooter()"/>
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}" update=":form:dtProcurementPlan"/>
 		  		</p:inputText>
 		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
 	        </p:column>
@@ -137,7 +136,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReason.show();" action="#{pPlanBackingBean.loadRejectReasons(ppItem.ppRejectReasons)}"
-			    	disabled="#{!ppItem.rejected}" id="clPpReason">
+			    	disabled="#{!ppItem.rejected}" id="clPpReason" update="opRejectReason">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>
@@ -152,7 +151,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 	        </p:column>
-	        <p:columnGroup type="footer"  id="ppItemFooter">
+	        <p:columnGroup type="footer">
 				<p:row>
 					<p:column colspan="5">
 					 	<f:facet name="footer">
@@ -161,7 +160,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-					   		<h:outputText  id="gtEstAmt2" value="#{pPlanBackingBean.managedBean.ppTotalEst}"/>
 					     	<p:outputLabel id="gtEstAmt" value="#{pPlanBackingBean.managedBean.ppTotalEst}" />
 					    </f:facet>
 					</p:column>

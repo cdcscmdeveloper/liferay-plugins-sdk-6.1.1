@@ -61,7 +61,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
-import my.ep.web.util.pp.common.CommonMethod;
+import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -94,7 +94,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 		
 		
-	public Long TEMP_ORG_ID = 32659L;
+//	public Long TEMP_ORG_ID = 32659L;
 	/**
 	 * get faces scopes
 	 * @return FacesScopes
@@ -202,7 +202,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadPlanDetails - Start");
 		PpPlan ppPlan = retrievePlanById(id);
 		if(ppPlan!=null){
-			PmOrgProfile pmOrgProfile = CommonMethod.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
+			PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
 			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
 				//TODO 
 				throw new EpException("Unable to retrieve Org. Profile.");
@@ -214,9 +214,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppPlan.setOrgProfile(pmOrgProfile); 
 			ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
 			this.getManagedBean().setSelectedPlan(ppPlan);
-			loadPlanActors(TEMP_ORG_ID, ppPlan.getPpPlanActors()); //ppPlan.getOrgProfile().getOrgProfileId() TODO
+			loadPlanActors(ppPlan.getOrgProfile().getOrgProfileId(), ppPlan.getPpPlanActors()); // TODOTEMP_ORG_ID
 			initialPlanRemark(ppPlan.getPpRemarks());
-			
+
 			//load plan det
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 				calculateEpGrandTotal();
@@ -283,13 +283,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private void initialPlanDetails(){
 		log.info("initialPlanDetails - Start");
 		if(getFacesScopes().getUserSessionBean().getUserId()==null){
-			//TODO 
-			throw new EpException("Unable to get UserId from session. Please login.");
+			throw new EpException("Unable to get UserId from session. Please login.");//TODO 
 		}
-		PmOrgProfile pmOrgProfile = CommonMethod.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId());
+		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId());
 		if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-			//TODO 
-			throw new EpException("Unable to retrieve Org. Profile.");
+			throw new EpException("Unable to retrieve Org. Profile.");//TODO 
 		}
 		PpPlan ppPlan = new PpPlan();
 		ppPlan.setPlanType(new PmParameter());
@@ -299,7 +297,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppPlan.setStatus(new PmStatus());
 		ppPlan.setPpRemarks(new ArrayList<PpRemark>());
 		initialPlanRemark(ppPlan.getPpRemarks());
-		loadPlanActors(TEMP_ORG_ID, null); //ppPlan.getOrgProfile().getOrgProfileId() TODO
+		loadPlanActors(ppPlan.getOrgProfile().getOrgProfileId() , null); //TEMP_ORG_ID TODO
 		this.getManagedBean().setSelectedPlan(ppPlan);
 		
 		//BPM buttons
@@ -376,25 +374,40 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void loadRejectReasons(List<PpRejectReason> ppRejectReasons) {
 		log.info("initialRejectReasons - Start");
-		
-		if(ppRejectReasons==null || ppRejectReasons.isEmpty()){
-			if (this.getManagedBean().getSelectedRejectReasons() == null) {
-				this.getManagedBean().setSelectedRejectReasons(new ArrayList<PpRejectReason>());
+		boolean newReason = false;
+		//if first remark is not new
+		if (!ppRejectReasons.isEmpty()){
+			if(!ppRejectReasons.get(0).isBrandNew()){
+				newReason = true;
 			}
-		}else{
-			this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
 		}
-		PpRejectReason reason = new PpRejectReason();
-		reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		reason.setCreatedUser(getFacesScopes().getUserSessionBean());
-		reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		reason.setChangedBy(reason.getCreatedBy());
-		reason.setChangedDate(reason.getCreatedDate());
-		this.getManagedBean().getSelectedRejectReasons().add(0, reason);
+
+		// if remarks is empty
+		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
+			newReason = true;
+		}
+		
+		if(newReason){
+			PpRejectReason reason = new PpRejectReason();
+			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			reason.setCreatedUser(getFacesScopes().getUserSessionBean());
+			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			reason.setChangedBy(reason.getCreatedBy());
+			reason.setChangedDate(reason.getCreatedDate());
+			PmRole roleCode = new PmRole();
+//			roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
+			reason.setRoleCode(roleCode);
+			ppRejectReasons.add(0, reason);
+		
+		} 
+		
+		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
 		
 		log.info("initialRejectReasons - End");
 		
 	}
+	
+	
 	
 	/**
 	 * Generate page mode based on status and role
@@ -588,7 +601,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}else{
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 			this.getManagedBean().getSelectedPlan().setPpExpenditureItems(null);
-			this.getManagedBean().getSelectedPlan().setStatus(CommonMethod.getDefaultStatus(ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
+			this.getManagedBean().getSelectedPlan().setStatus(PpCommonUtil.getDefaultStatus(ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
 		}
 		
 	}
@@ -603,7 +616,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}else{
 			this.getManagedBean().getSelectedPlan().setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
-			this.getManagedBean().getSelectedPlan().setStatus(CommonMethod.getDefaultStatus(ParameterConst.DOCTYPE_PLAN_EXPENDITURE));
+			this.getManagedBean().getSelectedPlan().setStatus(PpCommonUtil.getDefaultStatus(ParameterConst.DOCTYPE_PLAN_EXPENDITURE));
 		}
 	}
 	
@@ -647,7 +660,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void calculateNonAllocationBudget(PpExpenditureItem item){
 		log.info("calculateNonAllocationBudget");
-		item.setNonEpAmt(CommonMethod.substractBigDecimalNullable(item.getBudgetAmt(), item.getPlanAmt()));
+		item.setNonEpAmt(PpCommonUtil.substractBigDecimalNullable(item.getBudgetAmt(), item.getPlanAmt()));
 		calculateEpGrandTotal();
 		
 	}
@@ -662,9 +675,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		BigDecimal epTotalPlan = new BigDecimal(0);
 		
 		for(PpExpenditureItem epItem: this.getManagedBean().getSelectedPlan().getPpExpenditureItems()){
-			epTotalBudget = CommonMethod.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
-			epTotalNonEpAlloc = CommonMethod.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
-			epTotalPlan = CommonMethod.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
+			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
+			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
+			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
 		}
 		
 
@@ -682,7 +695,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		BigDecimal ppTotalEst = new BigDecimal(0);
 		
 		for(PpProcurementItem ppItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
-			ppTotalEst = CommonMethod.addBigDecimalNullable(ppTotalEst, ppItem.getEstimatedAmt());
+			ppTotalEst = PpCommonUtil.addBigDecimalNullable(ppTotalEst, ppItem.getEstimatedAmt());
 		}
 		this.getManagedBean().setPpTotalEst(ppTotalEst);
 	}
@@ -751,7 +764,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public List<PmProcurementCatType> getProcurementCategoryOptions() {
 		log.info("getProcurementCategoryOptions");
 		String languageCode = getFacesScopes().getUserLocale().getLanguage();
-		return CommonMethod.retrieveProcurementCatTypeList(languageCode);
+		return PpCommonUtil.retrieveProcurementCatTypeList(languageCode);
 	}
 	
 	/**
@@ -763,7 +776,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
 		if(procurementCatId!=null && procurementCatId>0L){
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
-			procurementCatTypeList = CommonMethod.retrieveProcurementTypeListByCatId(languageCode, procurementCatId);
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatId(languageCode, procurementCatId);
 		}
 		return procurementCatTypeList;
 	}
@@ -789,7 +802,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PmOrgProfile pmOrgProfile = null;
 		
 		try{
-			pmOrgProfile = CommonMethod.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId());
+			pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId());
 			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
 				//TODO 
 				throw new EpException("Unable to retrieve Org. Profile.");
@@ -825,7 +838,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public SelectItem[] getPlanYearOptions() {
 		log.info("getPlanYearOptions");
-		return CommonMethod.getPlanYearOptions();
+		return PpCommonUtil.getPlanYearOptions();
 	}
 	
 
@@ -848,7 +861,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			this.getManagedBean().getVerifierModel().setTarget(target);
 		}
-		List<PmUser> sourceList = CommonMethod.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getVerifierModel().getTarget());
+		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getVerifierModel().getTarget());
 		this.getManagedBean().getVerifierModel().setSource(sourceList);
 	
 	}
@@ -872,7 +885,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			this.getManagedBean().getApproverModel().setTarget(target);
 		}
-		List<PmUser> sourceList = CommonMethod.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getApproverModel().getTarget());
+		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getApproverModel().getTarget());
 		this.getManagedBean().getApproverModel().setSource(sourceList);
 	}
 	
