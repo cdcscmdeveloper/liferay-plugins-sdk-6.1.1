@@ -73,7 +73,7 @@
 		                      </h:outputText>
 		                  </p:column>
 		           
-		                  <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;white-space:normal;">
+		                  <p:column headerText="#{lbl['lbl.ct.schedule.type']}" style="width:15%;white-space:normal;">
 		                      <p:selectOneMenu  value="#{payScheduleObj.scheduleType.parameterId}"
 		               		       id="scheduleTypeid" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:130px;"> 
                                    <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
