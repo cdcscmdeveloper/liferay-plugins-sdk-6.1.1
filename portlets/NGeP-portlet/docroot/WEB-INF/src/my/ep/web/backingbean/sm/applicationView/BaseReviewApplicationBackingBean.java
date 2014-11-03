@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -13,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -21,9 +23,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -42,6 +43,7 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -49,7 +51,6 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -70,15 +71,21 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
+import com.sun.faces.application.ApplicationAssociate;
+import com.sun.faces.mgbean.BeanBuilder;
+import com.sun.faces.mgbean.BeanManager;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
 
+	public static Logger log = Logger
+			.getLogger(BaseReviewApplicationBackingBean.class);
 	private StreamedContent file;
 	private static final String SER_FILE_TYPE = ".ser";
 	private static final String FOLDER_NAME_SM = "SM";
@@ -164,6 +171,25 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
+	private void printJsfBeanList() {
+		ApplicationAssociate application = ApplicationAssociate
+				.getInstance(FacesContext.getCurrentInstance()
+						.getExternalContext());
+		BeanManager beanManager = application.getBeanManager();
+		Map<String, BeanBuilder> beanMap = beanManager.getRegisteredBeans();
+		Set<Entry<String, BeanBuilder>> beanEntries = beanMap.entrySet();
+
+		for (Entry<String, BeanBuilder> bean : beanEntries) {
+			String beanName = bean.getKey();
+			if (beanManager.isManaged(beanName)) {
+				BeanBuilder builder = bean.getValue();
+				log.info("Bean name: " + beanName);
+				log.info("Bean class: " + builder.getBeanClass());
+				log.info("Bean scope: " + builder.getScope());
+			}
+		}
+	}
+
 	private String getDeSerFileNameAndPath(String applNoParam) {
 		String appNo = applNoParam.substring(0, applNoParam.length() - 4);
 
@@ -207,6 +233,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		return retVal;
+	}
+
+	private SmMofAccount getSingleSmMofAccount() {
+		SmMofAccount smMofAccount = new SmMofAccount();
+		List<SmMofAccount> accounts = getManagedBean().getSmAppl()
+				.getSmSupplier().getSmMofAccounts();
+		for (SmMofAccount account : accounts) {
+			if (account.getSupplierType().equalsIgnoreCase(
+					getManagedBean().getSmAppl().getSupplierType())
+					&& account.getRecordStatusFlg().compareTo(
+							DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+				smMofAccount = account;
+				break;
+			}
+		}
+		return smMofAccount;
 	}
 
 	public void setTabParam() {
@@ -264,9 +306,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 
 		// testing by user
-//		getManagedBean().setApproverUser(false);
-//		getManagedBean().setSupplierUser(false);
-//		getManagedBean().setPoUser(true);
+		// getManagedBean().setApproverUser(false);
+		// getManagedBean().setSupplierUser(false);
+		// getManagedBean().setPoUser(true);
+//		getManagedBean().setViewSupplierProfile(true);
 	}
 
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
@@ -279,6 +322,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
+		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
@@ -938,4 +982,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		this.file = file;
 	}
 
+	public void assignSiteVisitPopUp() {
+		log.info("**** assignSiteVisitPopUp *** ");
+
+	}
 }
