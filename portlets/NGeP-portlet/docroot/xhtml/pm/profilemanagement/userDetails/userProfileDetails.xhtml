@@ -175,10 +175,13 @@
 					<tr>
 						<th width="20%">
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextL" maxlength="30"
+							<p:inputText styleClass="ppDisplayTextL" maxlength="30" id="itDesignation"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.designation}" />
+							<p:message id="itDesignationMsg" for="itDesignation" display="icon" />
 						</td>
 						<th></th>
 						<td></td>
