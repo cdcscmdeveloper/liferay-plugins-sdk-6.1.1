@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +21,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
@@ -39,6 +39,8 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -65,6 +67,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1322,20 +1325,46 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
 	}
 
-	public void downloadAllDocuments() throws IOException {
+	public void downloadQTReport(Long qtId) {
+		
+	}
 
-		List<ScQtDocReport> scQtDocReports = getManagedBean()
-				.getScQtDocReports();
-		List<ScQtDocReportAttachment> attachments = new ArrayList<ScQtDocReportAttachment>();
-		for (ScQtDocReport scQtDocReport : scQtDocReports) {
-			ScQtDocReportAttachment docReportAttachment = scQtDocReport
-					.getScQtDocReportAttachment();
-			if (docReportAttachment != null) {
-				attachments.add(docReportAttachment);
+	public void downloadAllQTDocuments(Long qtId) throws Exception {
+		IQTDetailSO detailSO;
+		IQTNoticeBoardSO qtNoticeBoardSO = null;
+		NoticeBoardReqDTO boardReqDTO = new NoticeBoardReqDTO();
+		QuationTenderResDTO resDTO = null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			resDTO = detailSO.retriveQTDocDetails(reqDTO);
+			if (resDTO.getReports() != null && !resDTO.getReports().isEmpty()) {
+				this.getManagedBean().setScQtDocReports(resDTO.getReports());
 			}
-
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			boardReqDTO.setQtId(qtId);
+			NoticeBoardResDTO boardResDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(boardReqDTO);
+			ScQt scQt = boardResDTO.getScQt();
+			this.getManagedBean().setScQt(scQt);
+		} finally {
+			detailSO = null;
 		}
-		downloadAllFiles("NGeP-QT-Documents", attachments);
+		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+		qtDocumentsBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
+		
+		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReports();
+		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+		for (ScQtDocReport scQtDocReport : scQtDocReports) {
+			ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
+			if(attachment == null) {
+				attachment = qtDocumentsBackingBean.generateDocumentAttachment(scQtDocReport);
+				scQtDocReport.setScQtDocReportAttachment(attachment);
+			}
+			scAttachments.add(attachment);
+		}
+		downloadAllFiles("NGeP-QT-Documents", scAttachments);
 	}
 
 	public boolean isVisible() {
