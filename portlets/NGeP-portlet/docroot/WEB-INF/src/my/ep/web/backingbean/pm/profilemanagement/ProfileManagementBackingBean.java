@@ -1691,6 +1691,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(user.getPmCountry().getCountryId()==null){
 			throw new EpException(MessageConst.ERROR_770035);
 		}
+		if(StringUtils.isBlank(user.getDesignation())){
+			throw new EpException(MessageConst.ERROR_770108);
+		}
 		if(StringUtils.isBlank(user.getEmail())){
 			throw new EpException(MessageConst.ERROR_770036);
 		}
