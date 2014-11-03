@@ -15,13 +15,14 @@
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" style="width:178px" value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
-			  disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"/></td>
+		<td><p:inputText style="width:178px" value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
+			  disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}" onkeyup="this.value=this.value.toUpperCase();"
+		      size="30" maxlength="10" /></td>
 	  </tr>	
 	  <tr>	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" value="#{usergroupBackingBean.managedBean.userGroup.groupName}" /></td>
+		<td><p:inputText value="#{usergroupBackingBean.managedBean.userGroup.groupName}" size="30" maxlength="50" /></td>
 	  </tr>
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.info.orgunit']}" />
