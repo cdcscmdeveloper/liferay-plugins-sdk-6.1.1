@@ -15,6 +15,9 @@
     </style> 
 
 	<p:panel id="bankHeader">
+	    <p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		    <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
 		    <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
@@ -61,8 +64,8 @@
 			                <p:selectOneMenu id="contractId"  style="width:210px;margin-bottom: 3px;"
 			                      value="#{supplierBackingBean.managedBean.contractVerId}"  required="true" label="#{lbl['lbl.ct.contract.no']}">
 			         	          <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
-				                 <p:ajax  update="fulfilmentDetail,bankHeader,bankId,supplierDetails" 
-				                      event="change" process="@this"   listener="#{supplierBackingBean.changeContractActionListener}"/>
+				                 <p:ajax  update="fulfilmentDetail,bankHeader,bankId,supplierDetails" event="change" process="@this"   
+				                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{supplierBackingBean.changeContractActionListener}"/>
 				            </p:selectOneMenu>
 			      			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 				            <p:message for="contractId" display="icon"/>

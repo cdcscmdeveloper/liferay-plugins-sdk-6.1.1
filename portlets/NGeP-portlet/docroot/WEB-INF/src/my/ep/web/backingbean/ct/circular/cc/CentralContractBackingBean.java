@@ -127,42 +127,41 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
 	public CentralContractBackingBean(){
-		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			getManagedBean().setCircularVer(new CtCircularVer());
-			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
-			getManagedBean().getCircularVer().setStatus(status);
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-			ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			initializeRemarks();
-		}
+	
+			if(getManagedBean().getOutComes()==null) {
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				getManagedBean().setCircularVer(new CtCircularVer());
+				PmStatus status = new PmStatus();
+				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
+				getManagedBean().getCircularVer().setStatus(status);
+				ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+				initializeRemarks();
+			}
 		
-		if(isCentralContractAdmin()) 
-			getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
-		
-		if(getManagedBean().getUserMap().size()==0) {
-			 initializeApproverList();
-			 this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-	    }
+			if(isCentralContractAdmin()) 
+				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
+			
+			if(getManagedBean().getUserMap().size()==0) {
+				 initializeApproverList();
+				 getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    }
 	}
 	
 	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
+	    	 return new FacesScopes();
 	}
 	
 	public void preRenderCircular() {
-		renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
+			renewSesionObject();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 	
 	public void preRenderSearch() {
-		renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
+			renewSesionObject();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
 	}
 
 	public void preRenderView() {
@@ -204,13 +203,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			setContractCircularVar(resDTO);
 			getManagedBean().setSelectedTabIndex(0);
 			
-			this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			   getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			}
-	        this.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			this.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+	        getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 						
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -225,12 +224,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		    getManagedBean().setCircularVer(resDTO.getCircularVer());
 		  
-		    if(this.getManagedBean().getCircularVer().getCtCircularContracts() != null && this.getManagedBean().getCircularVer().getCtCircularContracts().size() > 0) {
-		    	Collections.sort(this.getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
-		    
-		    	for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
+		    if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
+		    	Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+		     	for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 		    		
-		    		  if(ctCircularContract.getCtCircularItems() != null && ctCircularContract.getCtCircularItems().size() > 0)
+		    		  if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
 		    			        Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
 		    		 
 		    		  for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
@@ -240,10 +238,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		         }
 		    }
 		    
-			this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			   getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			}
 		    
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -840,30 +838,28 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public void setContractListner(){
 		
-		  if(this.getManagedBean().getSelectedCircularContract() != null && 
-			       (this.getManagedBean().getSelectedCircularContract().getCtCircularItems() == null ||
-			       this.getManagedBean().getSelectedCircularContract().getCtCircularItems().size() == 0)){
-					this.getManagedBean().getSelectedCircularContract().setCtCircularItems(new ArrayList<CtCircularItem>());
-					for(CtContractItem ctitems :this.getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
+		  if(getManagedBean().getSelectedCircularContract() != null && 
+			       (getManagedBean().getSelectedCircularContract().getCtCircularItems() == null || getManagedBean().getSelectedCircularContract().getCtCircularItems().isEmpty())) {
+					  getManagedBean().getSelectedCircularContract().setCtCircularItems(new ArrayList<CtCircularItem>());
+					  for(CtContractItem ctitems : getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
 						CtCircularItem item = new CtCircularItem();
 						item.setCtContractItem(ctitems);
-						this.getManagedBean().getSelectedCircularContract().getCtCircularItems().add(item);
+						getManagedBean().getSelectedCircularContract().getCtCircularItems().add(item);
 					}
 				}
-		this.getManagedBean().setSelectedCircularItem(null);
-	 	this.getManagedBean().setZonePriceMap(null);
-		this.getManagedBean().setChkItemZone(false);
-		this.getManagedBean().setChkItemPrice(false);
+			getManagedBean().setSelectedCircularItem(null);
+		 	getManagedBean().setZonePriceMap(null);
+			getManagedBean().setChkItemZone(false);
+			getManagedBean().setChkItemPrice(false);
 	}
 	
 	public void setZoneListener(){
 		
-		System.out.println(this.getManagedBean().getSelectedCircularItem());
-		this.getManagedBean().setZonePriceMap(null);
-		this.getManagedBean().setChkItemZone(false);
-		 this.getManagedBean().setChkItemPrice(false);
-		 if(this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices() != null
-				   && this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices().size() > 0){
+		getManagedBean().setZonePriceMap(null);
+		getManagedBean().setChkItemZone(false);
+		getManagedBean().setChkItemPrice(false);
+		 if(getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices() != null
+				   && !getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices().isEmpty()){
 				   for(CtItemPrice itemPrices : this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices()){
 					 if(itemPrices.getCtContractZone() != null){
 					    this.getManagedBean().setChkItemZone(true);

@@ -1214,7 +1214,7 @@ public void ConstructSideTabMenu(){
 				for(CtAgency ctAgency : contractVer.getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 					if(ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0 && 
-							ctAgency.getOrgProfile().getParentOrgProfile().getOrgName() != getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName()){
+							!ctAgency.getOrgProfile().getParentOrgProfile().getOrgName().equalsIgnoreCase(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName())){
 						throw new EpException(MessageConst.ERROR_750015); 
 						// Approval document is mandatory for AP178 agency. Please upload the document.
 					}
@@ -1665,11 +1665,11 @@ public void ConstructSideTabMenu(){
     public void changeField() {
 		try{
 			flush();
-			if (this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				this.getManagedBean().setItemPricing(true);
+			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+				getManagedBean().setItemPricing(true);
 
-			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
-				this.getManagedBean().setItemCeilingQuantity(true);
+			} else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+				getManagedBean().setItemCeilingQuantity(true);
 				refreshAgencyCeilingQuantityList();
 			}
 		}catch (Exception e) {
@@ -1678,8 +1678,12 @@ public void ConstructSideTabMenu(){
 	}
     
   public void  refreshCeilingQuantity(){
-	  if (this.getManagedBean().getShowItem() != null &&
-			   this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
+	  
+	  if(getManagedBean().getSelectedItem() != null){
+		  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+	  }
+	  if (getManagedBean().getShowItem() != null &&
+			   getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
 		     refreshAgencyCeilingQuantityList();
 	   }
     }
@@ -2185,21 +2189,22 @@ public void ConstructSideTabMenu(){
 	public void calculatePercentage(CtProgressivePayment progPayment){
 		float addValue = 0.0f;
   	    getManagedBean().setProgSchedButtonDeactive(false);
+  	    for(CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
+		    addValue = addValue +progressivePayment.getPercentage();
+  	     }
  		for(CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
-				  addValue = addValue +progressivePayment.getPercentage();
-			      if(progressivePayment.equals(progPayment)) {
-		  
+			     if(progressivePayment.equals(progPayment)) {
 			    	  if(Math.abs(addValue) > 100) {
 		    	             getManagedBean().setProgSchedButtonDeactive(true);
 		    	             progressivePayment.setPercentageExceeded(true);
-		              
 			    	  } else if(Math.abs(addValue) == 100) {
 		    	           getManagedBean().setProgSchedButtonDeactive(true);
 		    	           progressivePayment.setPercentageExceeded(false);
-		            
 			    	  } else {
-		            	  progressivePayment.setPercentageExceeded(false);
+			    		  progressivePayment.setPercentageExceeded(false);
 		              }
+			      } else {
+			    	  progressivePayment.setPercentageExceeded(false);
 			      }
  		   }  
 	}
@@ -2331,9 +2336,9 @@ public void ConstructSideTabMenu(){
 		 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
-	    this.getManagedBean().setViewContract(true);
+	    getManagedBean().setViewContract(true);
 	    setValidateContractField(resDTO); 
-	    this.getManagedBean().setSelectedTabIndex(0);
+	    getManagedBean().setSelectedTabIndex(0);
 		return CONTRACT_PAGE;
 	}
 	

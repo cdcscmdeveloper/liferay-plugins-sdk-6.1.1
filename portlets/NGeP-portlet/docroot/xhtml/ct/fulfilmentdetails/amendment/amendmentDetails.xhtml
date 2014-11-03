@@ -17,7 +17,7 @@
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{amendmentBackingBean.invalidContractExtendPeriod()}">
 					<p:ajax event="change" update=":form:typesOfAmend" process="@all"
-					    listener="#{amendmentBackingBean.onContractExtensionChecked}" />
+					   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
@@ -30,7 +30,8 @@
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
 					disabled="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue}">
-					 <p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
+					 <p:ajax event="change" update=":form"  process="@form" 
+					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
@@ -43,7 +44,8 @@
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
 					disabled="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue}">
-					<p:ajax event="change" update=":form" process="@form" listener="#{amendmentBackingBean.onQuantityChecked}" /> 
+					<p:ajax event="change" update=":form" process="@form"
+					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
@@ -57,7 +59,8 @@
 				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange
 				    or amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
-					<p:ajax event="change"  update=":form:amend" process="@form" /> 
+					<p:ajax event="change"  update=":form:amend" process="@form" 
+					  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
@@ -69,7 +72,8 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
-					<p:ajax event="change"  update=":form:typesOfAmend" process="@form"/> 
+					<p:ajax event="change"  update=":form:typesOfAmend" process="@form"
+					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">

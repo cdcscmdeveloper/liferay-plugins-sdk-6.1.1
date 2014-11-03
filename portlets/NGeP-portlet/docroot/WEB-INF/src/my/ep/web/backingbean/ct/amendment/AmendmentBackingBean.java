@@ -2567,4 +2567,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return activeList;
 	}
 	
+	public void setDeafultPriceType(){
+		getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+	}
 }

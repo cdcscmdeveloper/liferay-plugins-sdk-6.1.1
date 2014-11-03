@@ -12,8 +12,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
 		      rowIndexVar="index" widgetVar="panelItemObj">
 		      <ac:paginator for="panelItemDt" />
-              <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" 
-                  process="@this" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
+              <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" process="@this" 
+                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
 		      
 		      <p:column style="width:2%;">
 		           <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}" styleClass="myCustomChekBox"
@@ -174,7 +174,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		        var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
 		        selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
 			    <ac:paginator for="zoneGeneralDataTable" />
-			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" process="@this"  />	
+			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" 
+			        process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
 					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%">
 				    	<p:outputLabel value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>

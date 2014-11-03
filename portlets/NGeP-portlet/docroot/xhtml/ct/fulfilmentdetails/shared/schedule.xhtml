@@ -15,8 +15,8 @@
                value="#{contractDetailsBackingBean.managedBean.frequencySchedule}" 
                disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio or contractDetailsBackingBean.managedBean.viewContract}">  
                <f:selectItems value="#{contractDetailsBackingBean.managedBean.radioButtonSchedule}" />
-               <p:ajax event="change"  update=":form:paymentSchedule"
-                    process="@form" listener="#{contractDetailsBackingBean.progressivePayment}" /> 
+               <p:ajax event="change"  update=":form:paymentSchedule"  process="@form"
+                    listener="#{contractDetailsBackingBean.progressivePayment}"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/> 
             </p:selectOneRadio>
          </h:panelGrid>  
        
@@ -38,12 +38,13 @@
 		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
                                <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
                                <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn"  process="@form" 
-                                         listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
                            </p:selectOneMenu> 
                            <p:spacer width="1"/>
                            <p:selectOneMenu id="fromYear" value="#{payScheduleObj.startYear}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
                                <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" process="@form" 
+                                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
                            </p:selectOneMenu> 
 		               </p:column> 	
 		       
@@ -51,14 +52,15 @@
 		                    <h:panelGroup>
 		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
                                    <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                                   <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}" />
+                                   <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" process="@form" 
+                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}" />
                                 </p:selectOneMenu>
                                 <p:spacer width="1"/>
                                 <p:selectOneMenu id="toYear" value="#{payScheduleObj.endYear}" 
                             	    disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" >
                                     <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
-                                    <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" 
-                                       process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                                    <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn"  process="@form" 
+                                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
                                 </p:selectOneMenu>
                                 <p:spacer width="5"/>
 		                        <p:graphicImage id="schedValidation" library="ep/images/design"  value="/css/images/design/reject.png"  
@@ -137,16 +139,16 @@
 		                    <p:selectOneMenu id="fromProMonth" value="#{progPaymentObj.startMonth}" 
 		                        style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                                 <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                               <p:ajax event="change" update=":form:progPaymentTableId, :form:proAddButtionId"
-                                  process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
+                               <p:ajax event="change" update=":form:progPaymentTableId, :form:proAddButtionId" process="@form" 
+                                 onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
                              </p:selectOneMenu> 
                              <p:spacer width="1"/>
                            
                               <p:selectOneMenu id="fromProYear" value="#{progPaymentObj.startYear}" 
                                   style="width:80px;"  disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                                    <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
-                                 <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId" 
-                                    process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
+                                 <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId"  process="@form" 
+                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
                               </p:selectOneMenu> 
 		                  </p:column> 	
 		        
@@ -155,16 +157,16 @@
 		                          <p:selectOneMenu id="toProMonth" value="#{progPaymentObj.endMonth}"  
 		                              style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                                       <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                                     <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId"
-                                         process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
+                                     <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId" process="@form" 
+                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
                                   </p:selectOneMenu>
                                   <p:spacer width="1"/>
                                 
                                   <p:selectOneMenu id="toProYear" value="#{progPaymentObj.endYear}" 
                                        style="width:80px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                                        <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
-                                      <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId" 
-                                          process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/> 
+                                      <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId"  process="@form" 
+                                        onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/> 
                                    </p:selectOneMenu>
                                    <p:spacer width="5"/>
 		                              <p:graphicImage id="validateProAction" library="ep/images/design" name="reject.png" styleClass="ui-icon-reject" 
@@ -184,8 +186,8 @@
                                      <p:inputText value="#{progPaymentObj.percentage}" style="width:50px;" styleClass="ppRightBtn" 
                          	            disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.percentage']}">
                                         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /> 
-                                       <p:ajax event="blur" update=":form:progPaymentTableId, :form:proAddButtionId" 
-                                           process="@this" listener="#{contractDetailsBackingBean.calculatePercentage(progPaymentObj)}"/>
+                                       <p:ajax event="blur" update=":form:progPaymentTableId, :form:proAddButtionId" process="@form" 
+                                         onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.calculatePercentage(progPaymentObj)}"/>
                                      </p:inputText>
                                      <p:spacer width="5"/>
 		                             <p:graphicImage id="percentValidationId"  value="/css/images/design/reject.png"  name="reject.png" 

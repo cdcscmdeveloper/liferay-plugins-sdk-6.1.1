@@ -16,7 +16,8 @@
                  value="#{contractDetailsBackingBean.managedBean.ctItemList}"  widgetVar="itemTableObj"
                  selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" rowKey="#{ctItemVar}">
                  <ac:paginator for="itemTable"/>
-                 <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.refreshCeilingQuantity()}" />
+                 <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.refreshCeilingQuantity()}" 
+                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		 
 		         <p:column filterBy="#{ctItemVar.itemName}"
 		              style="width:30%; white-space:normal;" filterMatchMode="contains">
@@ -77,7 +78,8 @@
 		             <h:panelGrid columns="3">
 			             <p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
 			                 <f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
-			                 <p:ajax event="change" update=":form:changeField" listener="#{contractDetailsBackingBean.changeField}" process="@form"/>  
+			                 <p:ajax event="change" update=":form:changeField" listener="#{contractDetailsBackingBean.changeField}" process="@form"
+			                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 				         </p:selectOneMenu>
 				         <p:spacer width="1"/>
 			     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />

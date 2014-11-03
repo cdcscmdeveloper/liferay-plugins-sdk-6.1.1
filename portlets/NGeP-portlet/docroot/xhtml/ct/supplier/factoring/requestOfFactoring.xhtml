@@ -12,6 +12,9 @@
 		<script> $('#portlet_ctRequestFactoring_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getPortletTitle()}'); </script>
 		
 		<p:panel id="headerDetails">
+		  <p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		     <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
 		     <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	 <table style="width: 100%;">
@@ -58,7 +61,7 @@
 			         <p:selectOneMenu id="menuLoaId" style="width:210px;" 
 			              value="#{supplierBackingBean.managedBean.loaId}" required="true" label="#{lbl['lbl.ct.loa.no']}">
 			              <f:selectItems value="#{supplierBackingBean.getContractSupplierLoa()}"/>
-			              <p:ajax event="change" process="@this" 
+			              <p:ajax event="change" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 			                  update="@form" listener="#{supplierBackingBean.changeLoaActionListener()}"/> 
 		             </p:selectOneMenu>
 		             <p:spacer width="1"/>
@@ -134,7 +137,7 @@
 		                      required="true"  disabled="#{supplierBackingBean.managedBean.removeFactoring}" 
 		                      style="width:260px;" value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
                               <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
-                              <p:ajax event="change" process="@this" 
+                              <p:ajax event="change" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
                                    update="branchId,bankName,accNo,clausePanel" listener="#{supplierBackingBean.reset}"/>
                          </p:selectOneMenu>
                          <p:message for="factoringId" display="icon"></p:message>

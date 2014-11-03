@@ -8,54 +8,55 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="itemId" toggleable="true" 
 	    toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
-	    <f:facet name="header">
+	      <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
-	  	</f:facet>
+	     </f:facet>
+	  	
 	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"/><br/><br/>
-		<h:panelGrid style="width:100%;">
 		
-			<p:dataTable id="itemTable" var="ctItemVar" widgetVar="ctItemsTableObj"
-			    value="#{amendmentBackingBean.managedBean.ctItemList}"  selectionMode="single"	
-			    selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{ctItemVar}">
-				<ac:paginator for="itemTable" />
-				<p:ajax event="rowSelect" update=":form:itemId" process="@this"  />
+		<h:panelGrid style="width:100%;">
+		   <p:dataTable id="itemTable" var="ctItemVar" widgetVar="ctItemsTableObj"
+			     value="#{amendmentBackingBean.managedBean.ctItemList}"  selectionMode="single"	
+			     selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{ctItemVar}">
+				 <ac:paginator for="itemTable" />
+				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.setDeafultPriceType()}"
+				     process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			
-				<p:column style="width:35%; white-space:normal;" 
-				     filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
+				  <p:column style="width:35%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
 				      <f:facet name="header">
 		                    <h:outputText value="#{lbl['lbl.ct.item.desc']}"/>
 		                    <ac:iconTooltip id="ctItemNames" value="#{lbl['lbl.ct.instruction.item.search']}" />
 		               </f:facet>
-					<p:outputLabel value="#{ctItemVar.itemName}" style="float:left;" />
-				</p:column>
+					   <p:outputLabel value="#{ctItemVar.itemName}" style="float:left;" />
+			   	  </p:column>
 			
-				<p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.type.of.goods']}">
-					<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;" />
-				</p:column>				
+				  <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.type.of.goods']}">
+					  <p:outputLabel value="#{amendmentBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;" />
+				  </p:column>				
 			
-				<p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%; white-space:normal;">
-					<p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;" />
-				</p:column>
+				  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%; white-space:normal;">
+					   <p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;" />
+				  </p:column>
 			
-				<p:column style="width:10%; white-space:normal;text-align: right;">
-					<f:facet name="header">
+				  <p:column style="width:10%; white-space:normal;text-align: right;">
+				 	  <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
-	               	</f:facet>
-					<h:outputText value="#{ctItemVar.minimumOrderQty}" >
+	                  </f:facet>
+					 <h:outputText value="#{ctItemVar.minimumOrderQty}" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
-					</h:outputText>
-				</p:column>
+					  </h:outputText>
+				   </p:column>
 			
-				<p:column style="width:10%; white-space:normal;text-align: right;">
-					<f:facet name="header">
-			            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
-	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
-	               	</f:facet>
-					<h:outputText value="#{ctItemVar.maxQuantity}" >
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />
-					</h:outputText>
+				   <p:column style="width:10%; white-space:normal;text-align: right;">
+					   <f:facet name="header">
+			              <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
+	               		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
+	                   </f:facet>
+					  <h:outputText value="#{ctItemVar.maxQuantity}" >
+					 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />
+					  </h:outputText>
 				</p:column>
 			
 			
@@ -155,7 +156,8 @@
 					    <h:panelGrid columns="3">
 					    	<p:selectOneMenu id="show" value="#{amendmentBackingBean.managedBean.showItem}" style="width:200px;">
 					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList()}" />
-						        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeField}" process="@form" />
+						        <p:ajax event="change" listener="#{amendmentBackingBean.changeField}" 
+						            update=":form:changeField"  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					       	</p:selectOneMenu>
 					       	<p:spacer width="1"/>
 				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />

@@ -15,7 +15,7 @@
   	           value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
                selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}">
                <ac:paginator for="serviceTable"/>
-              <p:ajax event="rowSelect" update=":form:showServicePrice"/>
+              <p:ajax event="rowSelect" update=":form:showServicePrice" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		      
 		      <p:column headerText="#{lbl['lbl.ct.item.desc']}"   
 		             filterBy="#{data.itemName}" style="width:40%; white-space:normal;" filterMatchMode="contains">
