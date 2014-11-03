@@ -18,7 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</th>
 			<td>
-				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" 
+				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pp.plan.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterId}"
 					>
@@ -41,7 +41,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</th>
 			<td>
-				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" 
+				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
 					required="#{!empty param['disableValidation']}"
 					label="#{lbl['lbl.pp.plan.year']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
@@ -64,7 +64,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</th>
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotType" 
-					disabled="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
+					disabled="#{!pPlanBackingBean.managedBean.modeEditable or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
 					label="#{lbl['lbl.pp.vot.amanah.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
 				>

@@ -6,11 +6,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 >
-	<managed-bean>
-		  <description>Procurement Plan Common Constants</description>
-		  <managed-bean-name>PPConst</managed-bean-name>
-		  <managed-bean-class>my.ep.web.constant.pp.ProcurementPlanConst</managed-bean-class>
-		  <managed-bean-scope>application</managed-bean-scope>
- 	</managed-bean>
- 	
+
+	<converter>
+		<converter-id>pmUserConverter</converter-id>
+		<converter-class>my.ep.web.converter.pm.PmUserConverter</converter-class>
+	</converter>
+	
+	<converter>
+		<converter-id>pmParameterConverter</converter-id>
+		<converter-class>my.ep.web.converter.pm.PmParameterConverter</converter-class>
+	</converter>
 </faces-config>

@@ -18,13 +18,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</th>
 					<td>
-						<p:pickList styleClass="ppActors" id="plVerifier" var="actor" itemValue="#{actor}" itemLabel="#{actor}"
-							value="#{pPlanBackingBean.managedBean.verifierModel}"
-							showTargetControls="true" filterMatchMode="contains">
+						<p:pickList styleClass="ppActors" id="plVerifier" var="actor" itemValue="#{actor}" itemLabel="#{actor.userName}"
+							value="#{pPlanBackingBean.managedBean.verifierModel}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+							showTargetControls="true" filterMatchMode="contains" converter="pmUserConverter">
 							<f:facet name="sourceCaption">#{lbl['lbl.pp.available.verifier']}</f:facet>
 							<f:facet name="targetCaption">#{lbl['lbl.pp.selected.verifier']}</f:facet>
 							<p:column style="width:75%;">
-								<h:outputText value="#{actor}" />
+								<h:outputText value="#{actor.userName}" />
 							</p:column>
 						</p:pickList>
 					</td>
@@ -42,13 +42,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:pickList styleClass="ppActors" id="plAppover" var="actor" itemValue="#{actor}" itemLabel="#{actor}"
-						value="#{pPlanBackingBean.managedBean.approverModel}"
-						showTargetControls="true" filterMatchMode="contains">
+					<p:pickList styleClass="ppActors" id="plAppover" var="actor" itemValue="#{actor}" itemLabel="#{actor.userName}"
+						value="#{pPlanBackingBean.managedBean.approverModel}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+						showTargetControls="true" filterMatchMode="contains" converter="pmUserConverter">
 						<f:facet name="sourceCaption">#{lbl['lbl.pp.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.pp.selected.approver']}</f:facet>
 						<p:column style="width:75%;">
-							<h:outputText value="#{actor}" />
+							<h:outputText value="#{actor.userName}" />
 						</p:column>
 					</p:pickList>
 				</td>

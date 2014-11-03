@@ -12,6 +12,8 @@ import my.ep.persistence.entity.pm.common.PmParameter;
  */
 public class ProcurementPlanSearchBean {
 	
+	private String planNumber;
+	
 	private Long status;
 	
 	private String year;
@@ -112,6 +114,20 @@ public class ProcurementPlanSearchBean {
 	 */
 	public void setVotType(PmParameter votType) {
 		this.votType = votType;
+	}
+
+	/**
+	 * @return the planNumber
+	 */
+	public String getPlanNumber() {
+		return planNumber;
+	}
+
+	/**
+	 * @param planNumber the planNumber to set
+	 */
+	public void setPlanNumber(String planNumber) {
+		this.planNumber = planNumber;
 	}
 	
 	

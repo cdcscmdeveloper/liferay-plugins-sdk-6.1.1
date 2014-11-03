@@ -14,9 +14,9 @@
 		<p:messages id="messagesReason" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:dataGrid value="#{pPlanBackingBean.managedBean.selectedRejectReasons}" var="reason" 
 			rowIndexVar="reasonIndex" columns="1" >
-			<table class="ppTwoTable">
+			<table class="ppRmkTable">
 				<tr>
-					<th valign="top">
+					<th rowspan="2" valign="top">
 						<h:graphicImage styleClass="smallUserImage" value="#{pPlanBackingBean.userImagePath(reason.createdUser.loginId)}" />
 					</th>
 					<td>
@@ -27,7 +27,6 @@
 					</td>
 				</tr>
 				<tr>
-					<th></th>
 					<td>
 						<h:inputTextarea cols="40" value="#{reason.reasonDesc}" rendered="#{reasonIndex==0}" maxlength="1000" /> 
 						<h:outputText value="#{reason.remark}" rendered="#{reasonIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />

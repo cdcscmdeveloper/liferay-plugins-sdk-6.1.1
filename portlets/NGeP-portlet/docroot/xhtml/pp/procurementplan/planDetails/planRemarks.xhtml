@@ -10,39 +10,30 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	
 	
 	<p:outputPanel id="opPlanRemark">
-		<p:dataGrid value="#{pPlanBackingBean.managedBean.selectedPlan.ppRemarks}" var="remarkVar" 
-			rowIndexVar="remarkIndex" columns="1" >
+	
+		<p:dataGrid value="#{pPlanBackingBean.managedBean.selectedPlan.ppRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			<table class="ppRmkTable">
 				<tr>
-					<th rowspan="2" valign="top">
-						<h:graphicImage styleClass="smallUserImage" value="#{pPlanBackingBean.userImagePath(remarkVar.createdUser.loginId)}" />
-					</th>
+					<td rowspan="2" valign="top">
+						<h:graphicImage value="#{pPlanBackingBean.userImagePath(remarkVar.userId)}" height="30" width="30" />
+					</td>
+					<td width="5"></td>
 					<td>
-						<h:outputText value="#{remarkVar.createdUser.loginId}"/>,
+						<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
 						<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 						</h:outputText>
 					</td>
-					<th>
-						
-					</th>
-					<td>
-						
-					</td>
 				</tr>
 				<tr>
+					<td></td>
 					<td>
-						<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" disabled="#{!remarkVar.brandNew}"/> 
 						<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-					</td>
-					<th>
-						
-					</th>
-					<td>
-						
 					</td>
 				</tr>
 			</table>
 		</p:dataGrid>
+
 	</p:outputPanel>
 </ui:composition>

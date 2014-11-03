@@ -9,7 +9,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<p:panel id="pPlanSearch" header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
 		<br/>
+		<ui:include src="testView.xhtml"/>
 		<table class="ppTwoTable">
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
+				</td>
+				<th>
+					
+				</th>
+				<td>
+					
+				</td>
+			</tr>
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
@@ -80,7 +95,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							action="#{pPlanBackingBean.searchPlan}"
 							/>&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{pPlanBackingBean.resetPlanSearchBean}"
-							update="pPlanSearch" 
+							update="pPlanSearch, dtPlanResult" 
 							/> 
 					</div>
 				</td>
