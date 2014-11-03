@@ -198,6 +198,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void resetUserProfileSearchBean() {
 		this.getManagedBean().setUserProfileSearchBean(new UserProfilesSearchBean());
+		userProfileDataModel = new UserProfilePagingDataModel();
 	}
 	
 	/**
