@@ -1,14 +1,20 @@
 package my.ep.web.managedbean.pp.procurementplan;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.pp.ProcurementPlanConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
+import my.ep.persistence.entity.pp.procurementplan.PpRemark;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -31,13 +37,32 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private PpProcurementItem selectedPpItem; //TODO remove
 	private List<PpExpenditureItem> deleteEpItems;
 	private List<PpProcurementItem> deletePpItems;
-	private DualListModel<String> approverModel;
-	private DualListModel<String> verifierModel;
+	private DualListModel<PmUser> approverModel;
+	private DualListModel<PmUser> verifierModel;
 	private List<PpRejectReason> selectedRejectReasons;
-	
-	
-	
-	
+	private boolean modeReview;
+	private boolean modeReviewEditable;
+	private boolean modeEditable;
+//	private List<PpRemark> selectedRemarks;
+	private BigDecimal epTotalBudget;
+	private BigDecimal epTotalPlan;
+	private BigDecimal epTotalNonEpAlloc;
+	private BigDecimal ppTotalEst;
+
+	/**
+	 * @return the modeReviewEditable
+	 */
+	public boolean isModeReviewEditable() {
+		return modeReviewEditable;
+	}
+
+	/**
+	 * @param modeReviewEditable the modeReviewEditable to set
+	 */
+	public void setModeReviewEditable(boolean modeReviewEditable) {
+		this.modeReviewEditable = modeReviewEditable;
+	}
+
 	/**
 	 * @return the selectedRejectReasons
 	 */
@@ -52,31 +77,33 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.selectedRejectReasons = selectedRejectReasons;
 	}
 
+
+
 	/**
 	 * @return the approverModel
 	 */
-	public DualListModel<String> getApproverModel() {
+	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
 
 	/**
 	 * @param approverModel the approverModel to set
 	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
+	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
 
 	/**
 	 * @return the verifierModel
 	 */
-	public DualListModel<String> getVerifierModel() {
+	public DualListModel<PmUser> getVerifierModel() {
 		return verifierModel;
 	}
 
 	/**
 	 * @param verifierModel the verifierModel to set
 	 */
-	public void setVerifierModel(DualListModel<String> verifierModel) {
+	public void setVerifierModel(DualListModel<PmUser> verifierModel) {
 		this.verifierModel = verifierModel;
 	}
 
@@ -165,40 +192,206 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setSelectedPlan(PpPlan selectedPlan) {
 		this.selectedPlan = selectedPlan;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	private List<String> modeList; //TODO
+
+	/**
+	 * @return the modeReview
+	 */
+	public boolean isModeReview() {
+		return modeReview;
+	}
+
+	/**
+	 * @param modeReview the modeReview to set
+	 */
+	public void setModeReview(boolean modeReview) {
+		this.modeReview = modeReview;
+	}
+
+	/**
+	 * @return the modeEditable
+	 */
+	public boolean isModeEditable() {
+		return modeEditable;
+	}
+
+	/**
+	 * @param modeEditable the modeEditable to set
+	 */
+	public void setModeEditable(boolean modeEditable) {
+		this.modeEditable = modeEditable;
+	}
 //
-//	//TODO remove here
 //	/**
-//	 * @return the modeList
+//	 * @return the selectedRemarks
 //	 */
-//	public List<String> getModeList() {
-//		if(modeList==null)
-//			modeList = new ArrayList<String>();
-//		modeList.add("REVISION");
-//		modeList.add("APPROVAL");
-//		modeList.add("VERIFICATION");
-//		modeList.add("VIEW");
-//		modeList.add("NEW");
-//		return modeList;
+//	public List<PpRemark> getSelectedRemarks() {
+//		return selectedRemarks;
 //	}
 //
 //	/**
-//	 * @param modeList the modeList to set
+//	 * @param selectedRemarks the selectedRemarks to set
 //	 */
-//	public void setModeList(List<String> modeList) {
-//		this.modeList = modeList;
+//	public void setSelectedRemarks(List<PpRemark> selectedRemarks) {
+//		this.selectedRemarks = selectedRemarks;
 //	}
+
+
+	/**
+	 * @return the epTotalBudget
+	 */
+	public BigDecimal getEpTotalBudget() {
+		if(epTotalBudget==null)
+			epTotalBudget = new BigDecimal(0);
+		return epTotalBudget;
+	}
+
+	/**
+	 * @param epTotalBudget the epTotalBudget to set
+	 */
+	public void setEpTotalBudget(BigDecimal epTotalBudget) {
+		this.epTotalBudget = epTotalBudget;
+	}
+
+	/**
+	 * @return the epTotalPlan
+	 */
+	public BigDecimal getEpTotalPlan() {
+		if(epTotalPlan==null)
+			epTotalPlan = new BigDecimal(0);
+		return epTotalPlan;
+	}
+
+	/**
+	 * @param epTotalPlan the epTotalPlan to set
+	 */
+	public void setEpTotalPlan(BigDecimal epTotalPlan) {
+		this.epTotalPlan = epTotalPlan;
+	}
+
+	/**
+	 * @return the epTotalNonEpAlloc
+	 */
+	public BigDecimal getEpTotalNonEpAlloc() {
+		if(epTotalNonEpAlloc==null)
+			epTotalNonEpAlloc = new BigDecimal(0);
+		return epTotalNonEpAlloc;
+	}
+
+	/**
+	 * @param epTotalNonEpAlloc the epTotalNonEpAlloc to set
+	 */
+	public void setEpTotalNonEpAlloc(BigDecimal epTotalNonEpAlloc) {
+		this.epTotalNonEpAlloc = epTotalNonEpAlloc;
+	}
+
+	/**
+	 * @return the ppTotalEst
+	 */
+	public BigDecimal getPpTotalEst() {
+		if(ppTotalEst==null)
+			ppTotalEst = new BigDecimal(0);
+		return ppTotalEst;
+	}
+
+	/**
+	 * @param ppTotalEst the ppTotalEst to set
+	 */
+	public void setPpTotalEst(BigDecimal ppTotalEst) {
+		this.ppTotalEst = ppTotalEst;
+	}
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+
+	//	TODO remove here
+	private String currentRole; //TODO
+	private List<String> roleList; //TODO
+	private Long currentStatus; //TODO
+	private List<Long> statusList; //TODO
+	
+	
+/**
+	 * @return the currentRole
+	 */
+	public String getCurrentRole() {
+		return currentRole;
+	}
+
+	/**
+	 * @param currentRole the currentRole to set
+	 */
+	public void setCurrentRole(String currentRole) {
+		this.currentRole = currentRole;
+	}
+
+	/**
+	 * @return the roleList
+	 */
+	public List<String> getRoleList() {
+		if(roleList==null){
+			roleList = new ArrayList<String>();
+			roleList.add("NULL");
+			roleList.add(RoleCode.PLAN_PROCU_OFFICER.value());
+			roleList.add(RoleCode.PLAN_VERFICATION_OFFICER.value());
+			roleList.add(RoleCode.PLAN_APPROVER.value());
+			roleList.add(RoleCode.BPK_ADMIN.value());
+		}
+		return roleList;
+	}
+
+	/**
+	 * @param roleList the roleList to set
+	 */
+	public void setRoleList(List<String> roleList) {
+		this.roleList = roleList;
+	}
+	
+	/**
+	 * @return the statusList
+	 */
+	public List<Long> getStatusList() {
+		if(statusList==null){
+			statusList = new ArrayList<Long>();
+			statusList.add(ProcurementPlanConst.PPP_PENDING_SUBMISSION);
+			statusList.add(ProcurementPlanConst.PPP_PENDING_REVISION);
+			statusList.add(ProcurementPlanConst.PPP_PENDING_VERIFICATION);
+			statusList.add(ProcurementPlanConst.PPP_PENDING_APPROVAL);
+			statusList.add(ProcurementPlanConst.PPP_APPROVED);
+		}
+		return statusList;
+	}
+
+	/**
+	 * @param modeList the statusList to set
+	 */
+	public void setStatusList(List<Long> statusList) {
+		this.statusList = statusList;
+	}
+
+	/**
+	 * @return the currentStatus
+	 */
+	public Long getCurrentStatus() {
+		return currentStatus;
+	}
+
+	/**
+	 * @param currentStatus the currentStatus to set
+	 */
+	public void setCurrentStatus(Long currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+	
+	
 	
 
 }

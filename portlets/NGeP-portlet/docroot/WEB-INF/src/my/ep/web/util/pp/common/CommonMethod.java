@@ -15,21 +15,212 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.procurementcattype.ProcurementCatTypeReqDTO;
+import my.ep.dto.pm.common.procurementcattype.ProcurementCatTypeResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-
+/**
+ * Common Methods for Procurement Plan 
+ * 
+ * @author RAIN POH
+ * @since 27/10/2013
+ *
+ */
 public class CommonMethod {
 	private static Logger log = Logger.getLogger(CommonMethod.class);
 
+	/**
+	 * retriever user org by user id
+	 * @param userId
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrieveUserOrgListByUserId(Long userId){
+		PmOrgProfile pmOrgProfile = new PmOrgProfile();
+		IUserSO userSO  = null;
+		try{
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setUserId(userId);
+			
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getUserOrgList()!=null){
+				pmOrgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+				pmOrgProfile = retrievePmOrgProfileDtl(pmOrgProfile.getOrgProfileId()); // retrieve the full details
+			}
+			
+
+		}finally{
+			userSO = null;
+		}
+		return pmOrgProfile;
+	}
+	
+	
+	/**
+	 * retrieve user by role and org id
+	 * @param orgProfileId
+	 * @param roleCode
+	 * @return @return List<PmUser>
+	 */
+	public static List<PmUser> retrieveUserListByRole(Long orgProfileId, String roleCode, List<PmUser> excludedUsers){
+		List<PmUser> pmUsers = new ArrayList<PmUser>();
+		List<Long> userIds = null;
+		IUserSO userSO  = null;
+		try{
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setOrgProfileId(orgProfileId);
+			reqDTO.setRoleCode(roleCode);
+			
+			if(excludedUsers!=null && !excludedUsers.isEmpty()){
+				userIds = new ArrayList<Long>();
+				for(PmUser pmUser:excludedUsers){
+					userIds.add(pmUser.getUserId());
+				}
+				reqDTO.setUserIds(userIds);
+			}
+			
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getUserList()!=null){
+				pmUsers = resDTO.getUserList();
+			}
+			
+
+		}finally{
+			userSO = null;
+		}
+		return pmUsers;
+	}
+	
+	
+
+	/**
+	 * retrieve org profile dtl
+	 * @param id
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrievePmOrgProfileDtl(Long id){
+		
+		PmOrgProfile pmOrgProfile = new PmOrgProfile();
+		IOrgProfileSO orgProfileSO   = null;
+		try{
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = null;
+			reqDTO.setOrgProfileId(id);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmOrgProfile = resDTO.getPmOrgProfile();
+			}
+		}finally{
+			orgProfileSO = null;
+		}	
+			
+		return pmOrgProfile;
+	}
+	
+	
+	/**
+	 * retrieve plan year options for current year & current year +1
+	 * @return plan year options
+	 */
+	public static SelectItem[] getPlanYearOptions() {
+		log.info("getPlanYearOptions - Start");
+		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		Integer nextYear = currentYear + 1;
+		SelectItem[] items = new SelectItem[3];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
+		items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
+		log.info("getPlanYearOptions - End");
+		return items;
+	} 
+		
+	
+
+	public static List<PmProcurementCatType> retrieveProcurementCatTypeList(String langugageCode){
+		log.info("retrieveProcurementCatTypeList");
+		String locale = "";
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		if(langugageCode==null){
+			locale =  new FacesScopes().getUserLocale().getLanguage();
+		}else{
+			locale = langugageCode;
+		}
+		
+		IProcurementCatTypeSO reqSO  = null;
+		try{
+			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
+			ProcurementCatTypeResDTO resDTO = new ProcurementCatTypeResDTO();
+			reqDTO.setLanguageCode(locale);
+			
+			reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProcurementCatTypeSO.class);
+			resDTO = reqSO.retrieveDistinctProcurementCatTypeList(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getProcurementCatTypeList()!=null){
+				procurementCatTypeList = resDTO.getProcurementCatTypeList();
+			}
+		}finally{
+			reqSO = null;
+		}
+		return procurementCatTypeList;
+	}
+	
+	public static List<PmProcurementCatType> retrieveProcurementTypeListByCatId(String langugageCode, Long procurementCatId){
+		log.info("retrieveProcurementTypeListByCatId");
+		String locale = "";
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		if(procurementCatId==null){
+			throw new EpException("procurementCatId is required."); //TODO
+		}
+		if(langugageCode==null){
+			locale =  new FacesScopes().getUserLocale().getLanguage();
+		}else{
+			locale = langugageCode;
+		}
+		
+		IProcurementCatTypeSO reqSO  = null;
+		try{
+			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
+			ProcurementCatTypeResDTO resDTO = new ProcurementCatTypeResDTO();
+			reqDTO.setLanguageCode(locale);
+			reqDTO.setProcurementCatId(procurementCatId);
+			reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProcurementCatTypeSO.class);
+			resDTO = reqSO.retrieveDistinctProcurementTypeListByProcurementCat(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getProcurementCatTypeList()!=null){
+				procurementCatTypeList = resDTO.getProcurementCatTypeList();
+			}
+		}finally{
+			reqSO = null;
+		}
+		return procurementCatTypeList;
+	}
+	
+	
+	
 	
 	/**
 	 * retrieve org profile by orgProfileId
@@ -57,39 +248,6 @@ public class CommonMethod {
 		return profile;
 	}
 	
-	/**
-	 * retrieve org profile by login user and type
-	 * @param userId
-	 * @param type
-	 * @return org profile
-	 */
-	public static List <PmOrgProfile> getOrgProfiles(Long userId, String orgType){
-		log.info("getOrgProfiles - Start");
-		log.info("userId " + userId);
-		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
-		try{
-			if(CommonMethod.isSelected(userId)){
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setUserId(userId);
-				if(CommonMethod.isSelected(orgType)){
-					reqDTO.setOrgType(orgType);
-				}
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-//				if(resDTO.isSuccessful()){
-					profileList = resDTO.getOrgProfileList();
-					System.out.println("size.. " + profileList.size());
-		
-//				}
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
-		log.info("getOrgProfiles - End");
-		return profileList;
-	}
-	
 	public static BigDecimal addBigDecimalNullable(BigDecimal amountOne, BigDecimal amountTwo){
 		BigDecimal amtOne = amountOne!=null ? amountOne : new BigDecimal(0);
 		BigDecimal amtTwo =  amountTwo!=null ? amountTwo : new BigDecimal(0);
@@ -103,43 +261,6 @@ public class CommonMethod {
 	}
 	
 
-	public static String generateHeader(String viewMode, String progType){
-		log.info("generateHeader - Start");
-		String pageTitle = "";
-		String titleLabel = "";
-		if(ProcurementPlanConst.MODE_NEW.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.new";
-		}else if(ProcurementPlanConst.MODE_DRAFT.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.draft";
-		}else if(ProcurementPlanConst.MODE_VIEW.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.view";
-		}else if(ProcurementPlanConst.MODE_LIST.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.list";
-		}else if(ProcurementPlanConst.MODE_APPROVAL.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.approval";
-		}else if(ProcurementPlanConst.MODE_REVISION.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.revision";
-		}else if(ProcurementPlanConst.MODE_VERIFICATION.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.verification";
-		}else if(ProcurementPlanConst.MODE_MAINTAIN.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.maintain";
-		}else if(ProcurementPlanConst.MODE_NEW_MTO.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.mto.plan";
-		}else if(ProcurementPlanConst.MODE_APPROVAL_LIST.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.procurement.approval";
-		}
-
-		titleLabel = getMessageCommon(pageTitle);
-		
-		log.info("generateHeader - End");
-		return titleLabel;
-	}
-
-	public static String getMessageCommon(String name){
-		log.info("getMessageCommon");
-		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-	}
-
 	
     
     public static int getYear(int index){
@@ -150,22 +271,6 @@ public class CommonMethod {
 	    log.info("getYear - End");
 	    return year;
 	}
-	
-    public static boolean isSelected(String value){
-    	boolean result = false;
-    	if(value!=null && value.trim().length()>0 && !"0".equals(value)){
-    		result = true;
-    	}
-    	return result;
-    }
-    
-    public static boolean isSelected(Long value){
-    	boolean result = false;
-    	if(value!=null && value>0L){
-    		result = true;
-    	}
-    	return result;
-    }
     
     public static Calendar convertDateToCalender(Date date){
     	Calendar cal = Calendar.getInstance();
@@ -173,21 +278,7 @@ public class CommonMethod {
 		return cal;
     }
     
-    /**
-	 * retrieve financial year options for current year & current year +1
-	 * @return financial year options
-	 */
-	public static List<SelectItem> financialYearOptions() {
-		log.info("financialYearOptions - Start");
-		int currentYear = CommonMethod.getYear(0);
-		int nextYear = CommonMethod.getYear(1);
-		
-		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
-		financialYearOpt.add(new SelectItem(currentYear, Integer.toString(currentYear)));
-		financialYearOpt.add(new SelectItem(nextYear, Integer.toString(nextYear)));
-		log.info("financialYearOptions - End");
-		return financialYearOpt;
-	} 
+   
 	/**
 	 * retrieve list of short month e.g Jul
 	 * @return
@@ -211,22 +302,20 @@ public class CommonMethod {
 	 */
 	public static PmStatus getDefaultStatus(String docType){
 		log.info("getDefaultStatus");
-		PmStatus ppWorkflowStatus = new PmStatus();
-		if(ParameterConst.DOCTYPE_BUDGET_ALLOC.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBA_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_BUDGET_ALLOC_DTL.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBD_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_BUDGET_ALLOC_ORG.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBO_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_PLAN.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PPL_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_PLAN_ITEM.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PPI_PENDING_SUBMIT);
+		PmStatus pmStatus = new PmStatus();
+		if(ParameterConst.DOCTYPE_PLAN_PROCUREMENT.equals(docType)){
+			pmStatus.setStatusId(ProcurementPlanConst.PPP_PENDING_SUBMISSION);
+		}else if(ParameterConst.DOCTYPE_PLAN_EXPENDITURE.equals(docType)){
+			pmStatus.setStatusId(ProcurementPlanConst.PPE_PENDING_SUBMISSION);
 		}
-		log.info("status id "  + ppWorkflowStatus.getStatusId());
-		return ppWorkflowStatus;
+		return pmStatus;
 	}
 	
+	public static String getMessageCommon(String name){
+		log.info("getMessageCommon");
+		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+
 
 
 	public Integer getMonthInt(Date date) {
@@ -262,99 +351,6 @@ public class CommonMethod {
 	
 	
 	
-	/**
-	 * generate plan number 
-	 * @param planType
-	 * @param issueOrgProf
-	 * @return String
-	 */
-//	public static String generatePlanNumber(boolean isPlanned, String planType, PmOrgProfile issueOrgProf){
-//		StringBuilder sb = new StringBuilder();
-//		if(planType!=null && issueOrgProf!=null){
-//		
-//			//plan prefix
-//			if(isPlanned){
-//				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-//					sb.append("pe");
-//				}else{
-//					sb.append("pp");
-//				}
-//			}else{
-//				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-//					sb.append("ue");
-//				}else{
-//					sb.append("up");
-//				}
-//			}
-//			
-//			sb.append(issueOrgProf.getParentOrgProfile().getOrgCode()); //4  last digits
-//			sb.append(issueOrgProf.getOrgCode()); // 6 digits
-//			//2 last digits year
-//			Calendar cal = Calendar.getInstance();
-//			String.valueOf(cal.get(Calendar.YEAR)).substring(2);
-//			
-//		}
-//
-//		
-//		System.out.println("plan number: " + sb.toString());
-//		return sb.toString();
-//	}
-//	
-	
-
-	/**
-	 * auto generate doc number 
-	 * @param isPlan
-	 * @param isPlanned
-	 * @param planType
-	 * @param issueOrgProf
-	 * @return String
-	 */
-	public static String generateDocNumber(Boolean isPlan, Boolean isPlanned, String planType, PmOrgProfile issueOrgProf){
-		StringBuilder sb = new StringBuilder();
-		if(isPlan){
-			//plan prefix
-			if(isPlanned){
-				if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-					sb.append("pe");
-				}else{
-					sb.append("pp");
-				}
-			}else{
-				if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-					sb.append("ue");
-				}else{
-					sb.append("up");
-				}
-			}
-		}else{
-			sb.append("ba");
-		}
-		
-		Calendar cal = Calendar.getInstance();
-		sb.append(cal.get(Calendar.YEAR));
-		sb.append(cal.get(Calendar.MONTH));
-		sb.append(cal.get(Calendar.DATE));
-		sb.append(cal.get(Calendar.HOUR));
-		sb.append(cal.get(Calendar.MINUTE));
-		sb.append(cal.get(Calendar.SECOND));
-		sb.append(cal.get(Calendar.MILLISECOND));
-		System.out.println("doc number: " + sb.toString());
-		return sb.toString();
-	}
 	
 	
-	
-
-
-//	public static List<String> selectedCheckBoxValue(ValueChangeEvent event){
-//		List<String> itemList = new ArrayList<String>();
-//		if(event!=null){
-//			Object[] objArr = (Object[])event.getNewValue();
-//		 for (int x = 0; x < objArr.length; x++) { 
-//			 Object obj = objArr[x]; 
-//		 }
-//		}
-//        return itemList;
-//	}
 }

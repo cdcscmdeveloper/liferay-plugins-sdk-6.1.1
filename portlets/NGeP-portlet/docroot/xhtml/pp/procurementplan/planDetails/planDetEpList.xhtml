@@ -10,99 +10,158 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	
 	<p:outputPanel id="opPlanEp">
 	<br/>
-	   	<p:dataTable id="dtExpenditurePlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem"
+	   	<p:dataTable id="dtExpenditurePlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
 		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
 		     rowIndexVar="index" rowKey="#{epItem}">
 		    <ac:paginator for="dtExpenditurePlan"/>
-		    <p:ajax event="toggleSelect" update="@this" process="@this" />
-			<p:ajax event="rowSelectCheckbox" update="@this" />
-			
+
+	    	<p:columnGroup type="header">
+				<p:row>
+				 	<p:column selectionMode="multiple"  style="width:2%" />
+				    <p:column>
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.object']}" />
+					     	<h:outputText value="* " styleClass="mandatory" />
+					    </f:facet>
+				    </p:column>
+			     	<p:column  width="15%" headerText="#{lbl['lbl.pp.type.of.expenses']}" />
+				    <p:column>
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
+					    </f:facet>
+				    </p:column>
+			        <p:column>
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
+					    </f:facet>
+				    </p:column>
+			     	<p:column>
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column>
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
+					    </f:facet>
+				    </p:column>
+			      	<p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column headerText="#{lbl['lbl.pp.justification']}"/>
+				    <p:column rendered="#{!epItem.brandNew}" headerText="#{lbl['lbl.pp.last.updated']}"/>
+				</p:row>
+			</p:columnGroup>
+		  
 			<p:column selectionMode="multiple"  style="width:2%" />
 	        <p:column>
-			    <f:facet name="header">
-			     	<h:outputText value="#{lbl['lbl.pp.object']}" />
-			     	<h:outputText value="* " styleClass="mandatory" />
-			    </f:facet>
-			    <ac:lov id="lovGOSO" lovId="PM_GOSO" size="20" update=":form:dtExpenditurePlan"
-	            	readonly="true"
+			    <ac:lov id="lovGOSO" lovId="PM_GOSO" size="20" update=":form:dtExpenditurePlan" 
+			    	required="#{!empty param['disableValidation']}"
+	            	readonly="true" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
 					headerText="#{lbl['lbl.pp.goso.code']}"
 					value="#{epItem.pmSo.soCode}" 
 					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
 					conditionField="recordStatus^1" 
 				/>
+				<p:message id="lovGOSOMsg" for="lovGOSO" display="icon" />
 	        </p:column>	 
-	        <p:column width="15%">
-			    <f:facet name="header">
-			     	<h:outputText value="#{lbl['lbl.pp.type.of.expenses']}" />
-			    </f:facet>
+	        <p:column>
 		  		#{epItem.pmSo.soName}
 	        </p:column>
-	         <p:column>
-			    <f:facet name="header">
-			     	<h:outputText value="* " styleClass="mandatory" />
-			     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
-			    </f:facet>
-		  		<p:inputText value="#{epItem.budgetAmt}">
+	        <p:column>
+		  		<p:inputText value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
+		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
+		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-		  				update="otNonAllocAmt" />
+		  				update="dtExpenditurePlan" />
 		  		</p:inputText>
+		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
 	        </p:column>
 	        <p:column>
-			    <f:facet name="header">
-			     	<h:outputText value="* " styleClass="mandatory" />
-			     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
-			    </f:facet>
-		  		<p:inputText value="#{epItem.planAmt}">
+		  		<p:inputText value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
+		  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
+		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-		  				update="otNonAllocAmt" />
+		  				update="dtExpenditurePlan"  />
 		  		</p:inputText>
+		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
 	        <p:column>
-			    <f:facet name="header">
-			     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
-			    </f:facet>
-			    <h:outputText id="otNonAllocAmt" value="#{epItem.nonAllocatedAmt}" />
+	        	<p:outputLabel id="otNonAllocAmt" value="#{epItem.nonEpAmt}" />
 	        </p:column>
 	        <p:column>
-			    <f:facet name="header">
-			     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
-			    </f:facet>
 			    #{lbl['lbl.pp.no.available']}
 	        </p:column>
-	        <p:column  width="5%">
-			    <f:facet name="header">
-			     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
-			    </f:facet>
-			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}">
+	        <p:column rendered="#{pPlanBackingBean.managedBean.modeReview}">
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
 			    	<p:ajax event="change" update="clEpReason"/>
 			    </p:selectBooleanCheckbox>
 			    &#160;
-			    <p:commandLink oncomplete="dlRejectReason.show();" action="#{pPlanBackingBean.initialRejectReasons()}"
+			    <p:commandLink oncomplete="dlRejectReason.show();" action="#{pPlanBackingBean.loadRejectReasons(epItem.ppRejectReasons)}"
 			    	disabled="#{!epItem.rejected}" id="clEpReason">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>
-	         <p:column>
-			    <f:facet name="header">
-			     	<h:outputText value="#{lbl['lbl.pp.justification']}" />
-			    </f:facet>
-			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" 
+	        <p:column>
+			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
 					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-			 		cols="30" rows="2" maxlength="1000" required="#{!empty param['disableValidation']}"/>
+			 		cols="30" rows="2" maxlength="1000" required="#{!empty param['disableValidation']}">
+			 		<p:ajax event="change"  process="@this"/>
+			 	</p:inputTextarea>
 	        </p:column>
+	        <p:column rendered="#{!epItem.brandNew}">
+	        	<h:outputText value="#{epItem.changedDate}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</h:outputText>
+	        </p:column>
+	        <p:columnGroup type="footer" id="epItemFooter">
+				<p:row>
+					<p:column colspan="3">
+					 	<f:facet name="footer">
+					     	<p:outputLabel value="#{lbl['lbl.pp.grand.total']}" />
+					    </f:facet>
+					</p:column>
+					<p:column>
+					   	<f:facet name="footer">
+					     	<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" />
+					    </f:facet>
+					</p:column>
+					<p:column>
+					 	<f:facet name="footer">
+					     	<p:outputLabel id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}" />
+					    </f:facet>
+					</p:column>
+					 <p:column>
+					 	<f:facet name="footer">
+					     	<p:outputLabel id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}" />
+					    </f:facet>
+					</p:column>
+					<p:column footerText="#{lbl['lbl.pp.no.available']}" />
+					<p:column rendered="#{pPlanBackingBean.managedBean.modeReview}" footerText="&#160;"/>
+					<p:column footerText="&#160;" />
+					<p:column footerText="&#160;" rendered="#{!epItem.brandNew}" />
+				</p:row>
+			</p:columnGroup>
 		</p:dataTable>
 		<br/>
        	<br/>
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlan" 
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addEpItemDet()}"/>
 			&#160;
-			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlan"
-				immediate="true" 
+			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlan" 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet()}"
+				
 			/> 
 		</div>
 	</p:outputPanel>
 	<ac:lovPopup /> 	
-	<ui:include src="planDetEp.xhtml"/> 
+	
 </ui:composition>
