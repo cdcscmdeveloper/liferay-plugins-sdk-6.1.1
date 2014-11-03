@@ -1,0 +1,47 @@
+package my.ep.web.scheduler.servlet.sc;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+
+import my.ep.factory.EpLogger;
+import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
+import my.ep.web.scheduler.job.sc.ContinuousBidSchedulerJob;
+
+import org.apache.log4j.Logger;
+import org.quartz.JobKey;
+
+public class ScSchedulerServlet extends HttpServlet {
+
+	public static Logger log = EpLogger
+			.getLogger(ScSchedulerServlet.class);
+
+	private static final long serialVersionUID = 2591757747850240619L;
+
+	public void init(ServletConfig config) throws ServletException {
+
+		// Sc Daily job
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				ScSchedulerConstants.EP_DAILY_JOB,
+				ScSchedulerConstants.EP_JOB_GROUP),
+				BidSchedulesPoolingJob.class,
+				"Job run every day at 11:55 PM", "0 55 23 * * ?");
+
+		// daily Job to be run at server startup
+
+		EpSchedulerHelper.runBuildJobNow(new JobKey(
+				ScSchedulerConstants.EP_DAILY_JOB,
+				ScSchedulerConstants.EP_JOB_GROUP));
+
+		// Sc Continous job
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				ScSchedulerConstants.EP_CONTINOUS_JOB,
+				ScSchedulerConstants.EP_JOB_GROUP),
+				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
+				"0/60 * * * * ?");
+
+	}
+
+}
