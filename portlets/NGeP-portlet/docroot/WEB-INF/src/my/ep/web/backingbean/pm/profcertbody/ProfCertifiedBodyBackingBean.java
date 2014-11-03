@@ -106,10 +106,9 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	public SelectItem[] getBodyType() {
 
 		SelectItem[] items = null;
-			items = new SelectItem[3];
-			items[0] = new SelectItem(null, "Select One");
-			items[1] = new SelectItem(0, "Professional");
-			items[2] = new SelectItem(1, "Certified");
+			items = new SelectItem[2];
+			items[0] = new SelectItem(0, "Professional");
+			items[1] = new SelectItem(1, "Certified");
 
 		return items;
 	}
