@@ -545,10 +545,11 @@ public class SmApplicationBackingBean extends
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
 			}
-			getManagedBean().setSupplierParentCatList(
-					SmApplicationUtil
-							.retrieveParentCategoryList(getManagedBean()
-									.getSmAppl().getSupplierType()));
+			getManagedBean()
+					.setSupplierParentCatList(
+							SmApplicationUtil
+									.retrieveParentCategoryListForExperiencePage(getManagedBean()
+											.getSmAppl().getSupplierType()));
 			if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
 				SmApplicationUtil
 						.assignNonPersonnelProfBodyList(getManagedBean());
@@ -1747,6 +1748,11 @@ public class SmApplicationBackingBean extends
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
 		assignValReqdToTrue();
+		getManagedBean()
+				.setSupplierParentCatList(
+						SmApplicationUtil
+								.retrieveParentCategoryListForExperiencePage(getManagedBean()
+										.getSmAppl().getSupplierType()));
 		if (consultantBean.getSmCompanyExperienceCats() != null
 				&& !consultantBean.getSmCompanyExperienceCats().isEmpty()) {
 			for (SmCompanyExperienceCat cat : consultantBean
@@ -1852,7 +1858,11 @@ public class SmApplicationBackingBean extends
 		exp.setSmCompanyExperienceCats(expCatList);
 
 		getManagedBean().setSelectedCompanyExperience(exp);
-
+		getManagedBean()
+				.setSupplierParentCatList(
+						SmApplicationUtil
+								.retrieveParentCategoryListForExperiencePage(getManagedBean()
+										.getSmAppl().getSupplierType()));
 		resetChildCatList();
 		assignValReqdToTrue();
 		if (getManagedBean().getSmAppl().getSupplierType()
@@ -2092,6 +2102,10 @@ public class SmApplicationBackingBean extends
 			categ.setSupplierType(getManagedBean().getSmAppl()
 					.getSupplierType());
 			getManagedBean().setSelectedCategory(categ);
+			getManagedBean()
+					.setSupplierParentCatList(
+							SmApplicationUtil
+									.retrieveParentCategoryListForCategoryCodesPage(getManagedBean()));
 			getManagedBean().setSupplierChildCatList(
 					new ArrayList<PmCategoryL2>());
 			this.getManagedBean().setSupplierSubChildCatList(
@@ -4851,69 +4865,6 @@ public class SmApplicationBackingBean extends
 		return resDTO.getCityList();
 	}
 
-	private List<PmCategoryL2> retrieveChildCategoryList(long categoryL1Id) {
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL1Id(categoryL1Id);
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
-
-		return resDTO.getCategoryL2List();
-	}
-
-	private List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
-			long categoryL2Id) {
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL2Id(categoryL2Id);
-		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-				.getSupplierType());
-		// if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-		// reqDTO.setIsSpecialCategory(false);
-		// } else {
-		// reqDTO.setIsSpecialCategory(true);
-		// }
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
-
-		return resDTO.getCategoryL3List();
-	}
-
-	private List<PmCategoryL3> retrieveSubChildCategoryList(long categoryL2Id) {
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL2Id(categoryL2Id);
-		log.info("** getSupplierType type ***"
-				+ getManagedBean().getSmAppl().getSupplierType());
-		log.info("** getApplCategoryType type ***"
-				+ getManagedBean().getSmAppl().getApplCategoryType());
-		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-				.getSupplierType());
-		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			reqDTO.setIsSpecialCategory(false);
-		} else {
-			reqDTO.setIsSpecialCategory(true);
-		}
-		if (getManagedBean().getBasicCompanyFacility() != null
-				&& getManagedBean().getBasicCompanyFacility().getFacilityType() != null
-				&& getManagedBean().getBasicCompanyFacility().getFacilityType()
-						.equalsIgnoreCase("H")) {
-			reqDTO.setHomeOperated(1);
-		} else {
-			reqDTO.setHomeOperated(0);
-		}
-		if (getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
-			reqDTO.setPaidUpCapital(getManagedBean().getSmAppl()
-					.getSmCompanyBasic().getPaidUpCapital().intValue());
-		}
-		// TODO get clarification
-		// reqDTO.setBumiPercentage(0);
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
-
-		return resDTO.getCategoryL3List();
-	}
-
 	private MofRegistrationResDTO cloneSmApplicationDraft(long id,
 			String applicationType, String supplierType) {
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -5271,8 +5222,9 @@ public class SmApplicationBackingBean extends
 	public void populateExperienceChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
 		try {
-			List<PmCategoryL2> categoryL2s = this
-					.retrieveChildCategoryList(parentId);
+			List<PmCategoryL2> categoryL2s = SmApplicationUtil
+					.retrieveExperienceChildCategoryList(parentId,
+							getManagedBean());
 			catL2.setPmCategoryL2s(categoryL2s);
 			catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
 		} catch (Exception e) {
@@ -5283,8 +5235,9 @@ public class SmApplicationBackingBean extends
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
 		try {
-			List<PmCategoryL3> categoryL3s = this
-					.retrieveExperienceSubChildCategoryList(childId);
+			List<PmCategoryL3> categoryL3s = SmApplicationUtil
+					.retrieveExperienceSubChildCategoryList(childId,
+							getManagedBean());
 			catL3.setPmCategoryL3s(categoryL3s);
 
 		} catch (Exception e) {
@@ -5296,8 +5249,8 @@ public class SmApplicationBackingBean extends
 	public void populateChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
 		try {
-			List<PmCategoryL2> categoryL2s = this
-					.retrieveChildCategoryList(parentId);
+			List<PmCategoryL2> categoryL2s = SmApplicationUtil
+					.retrieveChildCategoryList(parentId, getManagedBean());
 
 			this.getManagedBean().setSupplierChildCatList(categoryL2s);
 			catL2.setPmCategoryL2s(categoryL2s);
@@ -5315,8 +5268,8 @@ public class SmApplicationBackingBean extends
 
 	public void populateSubChildCategoryByChild(long childId, PmCategoryL3 catL3) {
 		try {
-			List<PmCategoryL3> categoryL3s = this
-					.retrieveSubChildCategoryList(childId);
+			List<PmCategoryL3> categoryL3s = SmApplicationUtil
+					.retrieveSubChildCategoryList(childId, getManagedBean());
 
 			this.getManagedBean().setSupplierSubChildCatList(categoryL3s);
 			catL3.setPmCategoryL3s(categoryL3s);
