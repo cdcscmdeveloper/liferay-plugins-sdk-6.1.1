@@ -51,7 +51,6 @@ import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationBidding
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -493,8 +492,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ParameterTypeConst.DOCUMENT_TYPES,
 					ParameterConst.DOCTYPE_QUOTATION)
 					+ " " + scQt.getQtNo();
-			String variable2 = CommonMethod
-					.getMessageCommon("lbl.sc.online.bidding.endorsement");
+			String variable2 = getMessageCommon("lbl.sc.online.bidding.endorsement");
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -554,8 +552,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION)
 						+ " " + qtNo;
-				String variable2 = CommonMethod
-						.getMessageCommon("lbl.sc.online.bidding.endorsement");
+				String variable2 = getMessageCommon("lbl.sc.online.bidding.endorsement");
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
 						variable1, variable2);
 			}
