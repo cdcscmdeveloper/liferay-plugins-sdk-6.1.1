@@ -1572,10 +1572,12 @@ public class SPDetailBackingBean extends
 					redirectPage = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
 
 				}
-			} else {
-				if (scQt.getMaxProposal() == 1 || scQt.getMaxProposal() > 1) {
+			} else {				
+				if (scQt.getMaxProposal() > 1) {
 
 					redirectPage = NAV_TO_MORE_THAN_PROPOSAL_PAGE;
+				} else {
+					redirectPage = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
 
 				}
 			}
