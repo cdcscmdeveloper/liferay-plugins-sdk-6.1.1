@@ -207,12 +207,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
 		pmCategoryL3.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
 		
+		pmCategoryL3.setCategoryL3Id(null);
 		pmCategoryL3.setSupplierTypeCodeVal(0);
 		pmCategoryL3.setCategoryTypeCodeVal(0);
 		
 		this.getManagedBean().setPmCategoryL3(pmCategoryL3);
 		//this.getManagedBean().setPmBasicCategoryList(new ArrayList<PmBasicCategory>());
-		this.getManagedBean().setPmBasicCategoryList(null);
+		//this.getManagedBean().setPmBasicCategoryList(null);
 		this.getManagedBean().setCatLevel("3");
 		this.getManagedBean().setNewCategory(true);
 		reloadSelectionPmCategoryL3();
@@ -403,8 +404,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubCategory(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL2());
-				this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().add(this.getManagedBean().getPmCategoryL2());
+				if (this.getManagedBean().isNewCategory()){
+					this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL2());
+					this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().add(this.getManagedBean().getPmCategoryL2());
+				}
 				
 				reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
 				categoryCodeSO.saveCategory(reqDTO);
@@ -473,6 +476,18 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				
+				if (this.getManagedBean().isNewCategory()){
+					this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
+					this.getManagedBean().getPmCategoryL2().getPmCategoryL3s().add(this.getManagedBean().getPmCategoryL3());
+				}
+				
+				reqDTO.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
+				categoryCodeSO.saveSubCategory(reqDTO);
+				
+				//reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
+				//categoryCodeSO.saveCategory(reqDTO);
+				
 				result = resDTO.isSuccessful();
 				resetCategory();
 				FacesContext.getCurrentInstance().addMessage(
@@ -491,7 +506,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 
 		if (this.getManagedBean().isNewCategory()){
-			return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
+			//return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
+			this.getManagedBean().setNewCategory(false);
+			return "/xhtml/pm/category/categoryl2.xhtml";
 		}else
 			return "/xhtml/pm/category/search.xhtml";
 	}
