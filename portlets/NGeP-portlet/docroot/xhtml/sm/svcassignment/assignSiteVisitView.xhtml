@@ -8,6 +8,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+		<ui:param name="supplierName" value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}" />
+		<ui:param name="applNo" value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applNo}" />
+		<ui:param name="applType" value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applType)}" />
+		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
+		
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
    			<div align="right">
@@ -16,35 +21,6 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
-		
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
-				<td><p:inputText
-						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applNo}"
-						disabled="true" /></td>
-
-				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
-				<td><p:inputText
-						value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applType)}"
-						disabled="true" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
-				<td><p:inputText
-						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}"
-						disabled="true" /></td>
-
-<!-- 				<td><p:outputLabel value="Status" /></td> -->
-<!-- 				<td><p:inputText disabled="true" /></td> -->
-
-				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.dateofcreation']}" /></td>
-				<td><p:calendar disabled="true"
-						value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.createdDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-			</tr>
-		</table>
 	
 		<p:messages id="svoMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
