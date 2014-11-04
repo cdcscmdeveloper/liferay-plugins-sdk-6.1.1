@@ -18,7 +18,7 @@
 							disabled="#{!simpleQuoteBackingBean.managedBean.panelItemFlag}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItems value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
-								<p:ajax event="change" update="zoneLocationDataTable" partialSubmit="true"
+								<p:ajax event="change" update="zonePanel" partialSubmit="true"
 									process="@this"
 									listener="#{simpleQuoteBackingBean.zoneLocLevelEvent}" />
 					  </p:selectOneMenu></td>
