@@ -51,9 +51,9 @@
 										disabled="#{isPendingRnCreationStatus}">
 										<f:selectItems
 											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
-								<p:ajax event="change" update="locationDataTable" partialSubmit="true"
+								<p:ajax event="change" update="locPanel" partialSubmit="true"
 									process="@this"
-									listener="#{simpleQuoteBackingBean.localityLocLevelEvent(simpleQuoteBackingBean.managedBean.locationLevel)}" />
+									listener="#{simpleQuoteBackingBean.localityLocLevelEvent(simpleQuoteBackingBean.managedBean.supplierLocLevel)}" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
