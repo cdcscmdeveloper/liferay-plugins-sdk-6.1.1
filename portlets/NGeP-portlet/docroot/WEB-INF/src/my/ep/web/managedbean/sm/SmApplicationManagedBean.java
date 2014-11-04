@@ -372,7 +372,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// selectedConstProj = new SmProjectExperience();
 		// For share holder personell
 		selectedShareHolder = new SmPersonnel();
-		selectedShareHolder.setPmCountry(new PmCountry());
+		selectedShareHolder.setPmCountry(defaultAddr.getPmCountry());
 		smapplShareHolders = new ArrayList<SmPersonnel>();
 		selectedShareHolders = new ArrayList<SmPersonnel>();
 		selectedShrHldrAcademics = new ArrayList<SmStaffAcademic>();
@@ -398,7 +398,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
-		selectedPersonnel.setPmCountry(new PmCountry());
+		selectedPersonnel.setPmCountry(defaultAddr.getPmCountry());
 		// smapplAuthPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersAcademics = new ArrayList<SmStaffAcademic>();
