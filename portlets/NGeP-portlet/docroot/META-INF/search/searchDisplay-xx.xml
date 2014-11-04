@@ -874,4 +874,28 @@
 			</list>
 		</property>
 	</bean>	
+	
+	<bean id="PM_MACHINE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="machineId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.categorycode.PmMachineDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="machineCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.machine.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="machineDesc" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.machine.desc" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>

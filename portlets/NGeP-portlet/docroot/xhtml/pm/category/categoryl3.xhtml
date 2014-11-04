@@ -224,13 +224,13 @@
 			
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.pm.category.code']}
+					#{lbl['lbl.pm.machine.code']}
 				</f:facet>
 				<h:outputText value="" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.pm.main.category.desc']}
+					#{lbl['lbl.pm.machine.desc']}
 				</f:facet>
 				<h:outputText value="" />
             </p:column>
@@ -239,15 +239,6 @@
 		</p:dataTable>
 		<p>&nbsp;</p>
 		<div class="ppRightBtn">
-			<ui:remove>
-			<ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-				headerText="UOM Lov" readonly="true"
-				saveObject="categoryBackingBean.managedBean.selectedMaintainItem.pmUom"
-				value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
-				conditionField="recordStatus^1">
-			</ac:lov> 
-			</ui:remove>
-			
 			<ac:lov 
 			selectionMode="multiple"
 			id="pmMachineLovId" lovId="PM_MACHINE" size="26"
@@ -257,12 +248,12 @@
 				value="#{catalogueBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine.machineId}"
 				conditionField="recordStatus^1">
 			</ac:lov>
-			<ac:lovPopup />
 			<p:commandButton
 				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
 				action="#{categoryBackingBean.addSubCategory()}" />
 		</div>
 		</p:panel>
+		<ac:lovPopup />
 		
 		
 		<p:remoteCommand name="updateCategory" update="groupdetails,resultPanel" action="#{categoryBackingBean.populateToSaveLOV}" />
@@ -357,6 +348,7 @@
 					oncomplete="updateCategory();lovPopupCategory.hide();"
 					 />	
 					
+				<ui:remove>
 				<p:commandButton
 					icon="ui-icon-cancel"
 					value="#{lbl['lbl.btn.cancel']}"
@@ -365,6 +357,8 @@
 					oncomplete="lovPopupCategory.hide();"
 					update="searchPanel,resultPanel">
 				</p:commandButton>
+				</ui:remove>
+				
 				</td></tr></table>
 			</p:panel>
 		</p:dialog>
