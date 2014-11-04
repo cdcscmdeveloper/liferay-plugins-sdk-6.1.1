@@ -206,11 +206,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	public String addSubDivision() {
 		PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
 		pmCategoryL3.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
-		pmCategoryL3.setSupplierTypeCode(new PmParameter());
-		pmCategoryL3.setCategoryTypeCode(new PmParameter());
+		
+		pmCategoryL3.setSupplierTypeCodeVal(0);
+		pmCategoryL3.setCategoryTypeCodeVal(0);
 		
 		this.getManagedBean().setPmCategoryL3(pmCategoryL3);
-		this.getManagedBean().setPmBasicCategoryList(new ArrayList<PmBasicCategory>());
+		//this.getManagedBean().setPmBasicCategoryList(new ArrayList<PmBasicCategory>());
+		this.getManagedBean().setPmBasicCategoryList(null);
 		this.getManagedBean().setCatLevel("3");
 		this.getManagedBean().setNewCategory(true);
 		reloadSelectionPmCategoryL3();
@@ -443,13 +445,28 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	public String saveSubDivision() {
 		ICategoryCodeSO categoryCodeSO;
+		IParameterSO parameterSO;
 		try{
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 
 			this.getManagedBean().getPmCategoryL3().setCategoryName(this.getManagedBean().getPmCategoryL3().getCategoryName().toUpperCase());
 			this.getManagedBean().getPmCategoryL3().setBasicCategoryReq(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue()?1:0);
 			this.getManagedBean().getPmCategoryL3().setHomeOperated(this.getManagedBean().getPmCategoryL3().isHomeOperatedValue()?1:0);
+			
+			if (this.getManagedBean().isNewCategory()){
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				//supplier type
+				parameterReqDTO.setParameterId(this.getManagedBean().getPmCategoryL3().getSupplierTypeCodeVal());
+				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
+				this.getManagedBean().getPmCategoryL3().setSupplierTypeCode(parameterResDTO.getPmParameter());
+				
+				//Special Category
+				parameterReqDTO.setParameterId(this.getManagedBean().getPmCategoryL3().getCategoryTypeCodeVal());
+				parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
+				this.getManagedBean().getPmCategoryL3().setCategoryTypeCode(parameterResDTO.getPmParameter());
+			}
 			
 			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
@@ -470,6 +487,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			e.printStackTrace();
 		}finally {
 			categoryCodeSO = null;
+			parameterSO = null;
 		}
 
 		if (this.getManagedBean().isNewCategory()){
