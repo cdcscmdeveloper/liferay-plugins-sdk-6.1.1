@@ -5,7 +5,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "commonSiteVisitMB")
+@ManagedBean(name = "smCommonSiteVisitMB")
 @SessionScoped
 public class CommonSiteVisitManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
