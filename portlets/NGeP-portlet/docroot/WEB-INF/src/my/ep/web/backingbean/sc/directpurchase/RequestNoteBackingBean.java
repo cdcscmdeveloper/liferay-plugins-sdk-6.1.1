@@ -1283,9 +1283,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			    	if (baseFilterBean instanceof SearchFilterBean) {
 			    		SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
 			    		sb.append("|")
-			    		.append(filterBean.getSearchField()).append("^")
-			    		.append(filterBean.getSearchValue()).append("^")
-			    		.append(filterBean.getSearchOperator());
+			    		.append(filterBean.getSearchField()).append("^");			    		
+			    		if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_IN.value()) {
+			    			sb.append(filterBean.getSearchValue().toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll("\\s","")).append("^");
+			    		} else {
+			    			sb.append(filterBean.getSearchValue()).append("^");
+			    		}
+			    		
+			    		sb.append(filterBean.getSearchOperator());
+			    		
 			    	}
 			    }
 		    }
@@ -2853,6 +2859,72 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			paramMap.put(ReportConst.PARAM_KEY_UOM_ID, uomId + "");
 			paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays + "");
 			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+			
+			generateReport(reportName, paramMap);
+		}
+	}
+	
+	public void viewMarketResearch() throws IOException {
+		debugLogger("viewMarketResearch");
+		ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
+		
+		
+		if (requestNoteDtl != null) {
+			FacesScopes facesScopes = new FacesScopes();	
+			Map<String, String> paramMap = new HashMap<String, String>();
+			String reportName = ReportConst.SC_MARKET_RESEARCH_RPT_JSP;
+			
+			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+			
+			if(requestNoteDtl.isBrandNew()) {
+				ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
+				String itemCode = requestSupplierItem.getRequestNoteItem().getCmItem().getExtensionCode();
+				long uomId = requestSupplierItem.getCmSupplierItem().getPmUom().getUomId();
+				
+				
+				String conditionField = requestNoteDtl.getConditionField();
+				
+				for (String filter: conditionField.split("\\|")){
+			         System.out.println(filter);
+			         String searchField = null;
+			         String searchValue = null;
+			         int searchCondition = SearchOperator.OPERATOR_EQUALS.value();
+			         String[] conditions = filter.split("\\^");
+			         searchField = conditions[0];
+		        	 searchValue = conditions[1];
+			         if(conditions.length > 2) {
+			        	 searchCondition = Integer.parseInt(conditions[2]);
+			         }
+			         if ("itemName".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_ITEM_NAME, searchValue);	
+			         } else if ("companyName".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_SUPPLIER_NAME, searchValue);	
+			         } else if ("epNo".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_EP_NO, searchValue);	
+			         } else if ("bizRegNo".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_BIZ_REG_NO, searchValue);	
+			         } else if ("stateId".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_STATE_ID, searchValue);	
+
+			         } else if ("districtId".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_DISTRICT_ID, searchValue);	
+			         } else if ("mofNo".equals(searchField)) {
+			        	 paramMap.put(ReportConst.PARAM_MOF_NO, searchValue);	
+			         } else if ("docId".equals(searchField)) {				
+			        	 paramMap.put(ReportConst.PARAM_SUPP_ITEM_ID, searchValue);	
+			         }	
+			         paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
+			         paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
+			         System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
+			    }
+				
+				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 0 + "");
+				
+			}
+			else {
+				paramMap.put(ReportConst.PARAM_REQUEST_ITEM_ID, requestNoteDtl.getRequestItem().getRequestNoteItemId() + "");
+				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 1 + "");
+			}
 			
 			generateReport(reportName, paramMap);
 		}
