@@ -4,9 +4,12 @@
 package my.ep.web.backingbean.fl.deliveryorder;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,7 +135,24 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
 			}
-			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				Calendar calendar = Calendar.getInstance();
+				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+						Date currentDate = new Timestamp(System.currentTimeMillis());
+						Date startDate = flDeliveryAddress.getStartDate();
+						int deliveryTerm = 0;
+						deliveryTerm = getManagedBean().getFulfilmentRequest().getCtContract().getLatestContractVer().getCtSetting().getSupplierDoDays();
+						calendar.setTime(currentDate);
+						calendar.add(Calendar.DATE, deliveryTerm);
+						Date newDate = calendar.getTime();
+						
+						if(newDate.before(startDate)){
+							throw new EpException("Delivery Order cannot be submit yet.");
+						}
+					}
+				}
+			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				reValidateRetrieveDelAmt();
 			}
