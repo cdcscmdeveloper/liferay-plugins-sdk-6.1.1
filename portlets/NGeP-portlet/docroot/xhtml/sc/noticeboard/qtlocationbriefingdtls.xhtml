@@ -14,26 +14,26 @@
 			<p:column headerText="#{lbl['lbl.so.location']}">
 				<p:tree value="#{locTree}" var="location">
 					<p:treeNode type="state">
-						<h:outputText value="#{location.stateName}" />
+						<h:outputText value="#{location.pmState.stateName}" />
 					</p:treeNode>
 					<p:treeNode type="division">
-						<h:outputText value="#{location.divisionName}" />
+						<h:outputText value="#{location.pmDivision.divisionName}" />
 					</p:treeNode>
 					<p:treeNode type="district">
-						<h:outputText value="#{location.districtName}" />
+						<h:outputText value="#{location.pmDistrict.districtName}" />
 					</p:treeNode>
 					<p:treeNode type="city">
-						<h:outputText value="#{location.cityName}" />
+						<h:outputText value="#{location.pmCity.cityName}" />
 					</p:treeNode>
 				</p:tree>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	
+	<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
 	<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
 		<p:panel header="Briefing And Site Visit Details" toggleable="true">
 			<div>
-				<h:outputText value="* All Attandence required for Briefing">
+				<h:outputText value="All Attandence required for Briefing">
 				</h:outputText>
 			</div>
 			<p:spacer width="10px"></p:spacer>
@@ -78,7 +78,7 @@
 	<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
 
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
-			<h:outputText value="* All Attandence required for Briefing">
+			<h:outputText value="All Attandence required for Briefing">
 			</h:outputText>
 			<p:spacer width="10px;">
 			</p:spacer>
@@ -165,7 +165,7 @@
 		</p:panel>
 	</c:if>
 	
-
+</c:if>
 	
 
 </ui:composition>

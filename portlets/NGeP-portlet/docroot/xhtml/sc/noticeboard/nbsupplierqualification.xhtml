@@ -8,14 +8,13 @@
 	<p:messages id="supplierQualification" showDetail="true"
 		showSummary="false" autoUpdate="true" closable="true" />
 	<p:panel header="Check Supplier Qualification" toggleable="true">
-<div class="clear"></div>
-		<table style="margin:0 auto;">
+		<div class="clear"></div>
+		<table style="margin: 0 auto;">
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.mof.no']}"></h:outputLabel>
-					</td>
-				<td><p:inputText value="#{noticeBoardBackingBean.mofNo}"
-						></p:inputText></td>
+				</td>
+				<td><p:inputText value="#{noticeBoardBackingBean.mofNo}"></p:inputText></td>
 				<td><p:commandButton value="Check" icon="ui-icon-check"
 						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
 						update="@form,table-wrapper">
@@ -25,41 +24,49 @@
 
 	</p:panel>
 
-<h:panelGroup id="table-wrapper" rendered="#{noticeBoardBackingBean.visible}">
-	<p:panel id="qualificationCriteria" 
-		header="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
-		style="margin-bottom:5px;" toggleable="true">
-		<p:dataTable id="supplierQulification"
-			value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
-			var="qulificationBean" styleClass="test" tyle="width:70%;">
+	<h:panelGroup id="table-wrapper"
+		rendered="#{noticeBoardBackingBean.visible}">
+		<p:panel id="qualificationCriteria"
+			header="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
+			style="margin-bottom:5px;" toggleable="true">
+			<p:dataTable id="supplierQulification"
+				value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
+				var="qulificationBean" styleClass="test" tyle="width:70%;">
 
-			<p:column headerText="Criteria" style="width:30%;">
-				<h:outputText value="#{qulificationBean.criteria}" />
-			</p:column>
-			<p:column headerText="Requirement" style="width:50%;">
-				<h:outputText
-					value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
-					size="50" escape="false"
-					 />
-			</p:column>
-			
-			<p:column headerText="Qualification Status" style="width:20%;">
-				<h:outputText value="#{qulificationBean.supplierStatus}" />
-			</p:column>
+				<p:column headerText="Criteria" style="width:30%;">
+					<h:outputText value="#{qulificationBean.criteria}" />
+				</p:column>
+				<p:column headerText="Requirement" style="width:50%;">
+					<h:outputText
+						value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
+						size="50" escape="false" />
+				</p:column>
 
-		</p:dataTable>
+				<p:column headerText="Qualification Status" style="width:20%;">
+					<p:graphicImage library="ep/images/design" name="tick.png"
+						value="/resources/ep/images/design/tick.png"
+						rendered="#{qulificationBean.supplierStatus}"></p:graphicImage>
+
+					<p:graphicImage library="ep/images/design" name="cancel.png"
+						value="/resources/ep/images/design/cancel.png"
+						rendered="#{!qulificationBean.supplierStatus}"></p:graphicImage>
 
 
-		<div style="text-align: center;">
-			<h:outputText value="#{lbl['lbl.nb.supplier.criteria.qualify']}"
-				style="font-size:18px;"
-				rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
+				</p:column>
 
-			<h:outputText value="#{lbl['lbl.nb.supplier.criteria.disqualify']}"
-				style="font-size:18px;"
-				rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
-		</div>
-	</p:panel>
+			</p:dataTable>
+
+
+			<div style="text-align: center;">
+				<h:outputText value="#{lbl['lbl.nb.supplier.criteria.qualify']}"
+					style="font-size:18px;"
+					rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
+
+				<h:outputText value="#{lbl['lbl.nb.supplier.criteria.disqualify']}"
+					style="font-size:18px;"
+					rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
+			</div>
+		</p:panel>
 	</h:panelGroup>
 
 

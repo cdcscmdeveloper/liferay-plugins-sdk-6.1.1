@@ -61,7 +61,7 @@
 				style="width:7%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 				<h:outputText
-					value="#{(scqt[5] eq '1')?lbl['lbl.btn.no']:lbl['lbl.btn.yes']}" />
+					value="#{(scqt[5] eq '1')?lbl['lbl.btn.yes']:lbl['lbl.btn.no']}" />
 						&#160;
 						<p:commandLink id="supRegIcon"
 					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
@@ -74,7 +74,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-				style="width:10%; white-space:normal; text-align:right;">
+				style="width:3%; white-space:normal; text-align:right;">
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"
@@ -84,10 +84,10 @@
 					</p:commandLink>
 					<p:tooltip for="chkQualIcon"
 						value="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" />
-					
-					<p:commandButton id="downloadIcon" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
-						ajax="false"
-						action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}" />
+					<p:commandLink id="downloadIcon">
+						<p:graphicImage library="ep/images/design" name="download.png"
+							value="/resources/ep/images/design/download.png" />
+					</p:commandLink>
 					<p:tooltip for="downloadIcon"
 						value="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
 				</ui:fragment>

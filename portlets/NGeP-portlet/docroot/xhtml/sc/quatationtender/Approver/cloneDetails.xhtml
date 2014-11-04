@@ -181,9 +181,9 @@
 				<p:spacer height="3" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs}"
+						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs(true)}"
 						oncomplete="screen2.hide();" icon="ui-icon-check"
-						update="@([id$=scMemberDtl])"/>
+						update="@([id$=scmemberdtls])"/>
 					<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 						icon="ui-icon-cancel" onclick="screen2.hide();" />
 				</div>
