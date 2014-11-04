@@ -2073,7 +2073,7 @@ public class LOADetailBackingBean extends
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getContractAgency().getOrgProfileId() != null) {
+			if (scLoa.getContractAgency().getOrgProfileId() != null || getManagedBean().getSelectedContractAgency() !=null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
@@ -2087,6 +2087,13 @@ public class LOADetailBackingBean extends
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
 						.equals(contractType)) {
 					// TODO - filter user based on central contract.
+					UserReqDTO reqDTO = new UserReqDTO();
+					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
+					reqDTO.setOrgType(getManagedBean().getSelectedContractAgency());
+
+					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+
+					userList = resDTO.getUserList();
 				}
 			}
 
