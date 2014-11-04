@@ -214,7 +214,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				    	     String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
 					         if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null)
 					               account = account + " / " + getManagedBean().getContractVer().getCtContractValue().getBankName();
-					       
 					         getManagedBean().setAccountNoAndName(account);
 				      }
 				      getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath
@@ -305,7 +304,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				            items = new SelectItem[list.size() + 1];
 				            items[0] = new SelectItem(null, "- Select One -");
 				            for (CtContract obj : list) {
-				            	  if(obj.getLatestContractVer().getContractVerId() != null)
+				            	  if(obj.getLatestContractVer() != null)
 				        		     items[i++] = new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo());
 				        	   } getManagedBean().setPopulateContractList(items);
 		             } finally {
@@ -363,14 +362,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     
 	  private void setBankInfo() {
 	
-		     SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-		     getManagedBean().getContractVer().getCtContractValue().setBankName(null);
+		      getManagedBean().getContractVer().getCtContractValue().setBankName(null);
 		     getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		     getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
-		
+		     
+		     SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 		     if(supplierBank!=null) {
-			      getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-			      getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+			     getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 			      getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
 			      getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
 		     }
@@ -379,26 +377,26 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	   public List<SelectItem> getPopulateBankAccountList() {
 		    
 		       List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
-		       if (this.getManagedBean().getCtContract() != null) {
+		       if (getManagedBean().getCtContract() != null) {
 			        
-		    	   if (this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-				          && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
-				          List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
-				         
-				          for(SmSupplierBank obj : supplierBank) {
-				            	if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-						              String account = obj.getAccountNo();
-						           
+		    	   if (getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+				          && !getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
+				             for(SmSupplierBank obj : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+				            	
+				            	 if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				            		 
+				            		 String account = obj.getAccountNo();
+							           
 						              if(obj.getPmFinancialOrg() != null)
 							               account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
 						                
 						              populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
-						                 
+								       
 						              if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) 
 							                 getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
-						      }
-				        }
-			     }
+						          }
+				           }
+			        }
 		     } return populateBankAccountList;
 	  }
 	 
@@ -604,30 +602,34 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 
    public void reset(){ 
+	 
 	   SelectItem[] items = null;
-	   IFinancialOrgSO financialOrgSO;
+	   IFinancialOrgSO financialOrgSO = null;
+	   FinancialOrgReqDTO reqDTO = null;
+	   FinancialOrgResDTO resDTO = null;
 	   flush();
 		try {
 			int i = 1;
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
-			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-			if (this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
-				reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
-				FinancialOrgResDTO resDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(reqDTO);
-				if(resDTO.getFinancialBranchList() != null && resDTO.getFinancialBranchList().size() > 0){
-					List<PmFinancialBranch> list = resDTO.getFinancialBranchList();
-					items = new SelectItem[list.size() + 1];
-					items[0] = new SelectItem(null, "- Select One -");
-					for (PmFinancialBranch pmFinancialBranch : list) {
-						items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
-					}
-					this.getManagedBean().setFinancialBankBranch(items);
-				}else{
-					resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
-					getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
-					getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
-					getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
-			    }
+			reqDTO = new FinancialOrgReqDTO();
+			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
+				 
+				    reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+				    resDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(reqDTO);
+			    
+				    if(resDTO.getFinancialBranchList() != null && !resDTO.getFinancialBranchList().isEmpty()){
+					         List<PmFinancialBranch> list = resDTO.getFinancialBranchList();
+					         items = new SelectItem[list.size() + 1];
+					         items[0] = new SelectItem(null, "- Select One -");
+					         for (PmFinancialBranch pmFinancialBranch : list) {
+						          items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
+				             } getManagedBean().setFinancialBankBranch(items);
+				   }else{
+					         resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+					         getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+					         getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
+					         getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
+			       }
 		    }
 		  }catch(Exception ex){
 			  ex.printStackTrace();
@@ -794,7 +796,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			                      items[0] = new SelectItem(null, "- Select One -");
 			                      int i = 1;
 			                       for (CtContract contractLoa : list) {
-			                    	   if(contractLoa.getLatestContractVer().getContractVerId() != null)
+			                    	   if(contractLoa.getLatestContractVer() != null)
 			        	                  items[i++] = new SelectItem(contractLoa.getLoa().getLoaId(), contractLoa.getLoa().getLoaNo());
 			                       } 
 		                      getManagedBean().setContractSupplierLoa(items);
@@ -926,14 +928,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 	  
 	  public String getMinistryAndPtjName(int temp){
-		 if(getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getOwnerOrgProfile() != null){
+		  if(getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getOwnerOrgProfile() != null){
 			  if( temp == 1 && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null){
 				  return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
 			  } else if( temp ==2){
 				    return getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
 			 }
 		 }
-        return "";
+        return " ";
 	  }
 	  
 	public String getEditorValue() {

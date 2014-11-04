@@ -9,7 +9,7 @@
   <p:panel id="settingId" header="#{lbl['lbl.ct.panel.approver.list']}" 
       toggleable="true" toggleSpeed="500" rendered="#{supplierBackingBean.isContractAdmin()}" >
 		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approver.list']}"/> -->
-		<h:panelGrid columns="2" columnClasses="columnWidth20">
+		<h:panelGrid columns="2" columnClasses="columnWidth200">
 		    <f:verbatim/>
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{supplierBackingBean.managedBean.approverModel}"
