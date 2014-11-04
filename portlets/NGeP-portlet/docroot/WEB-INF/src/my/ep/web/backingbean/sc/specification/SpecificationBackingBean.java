@@ -4299,35 +4299,7 @@ public class SpecificationBackingBean extends
 
 			}
 		} else if (scQt.isPanel()) {
-			/*
-			 * if (null != this.getManagedBean().getCtPanelZones() &&
-			 * !this.getManagedBean().getCtPanelZones().isEmpty()) { if (null !=
-			 * scQt.getScQtSupplierCriteria() && null ==
-			 * scQt.getScQtSupplierCriteria() .getQtZoneCriterias()) {
-			 * scQt.getScQtSupplierCriteria().setQtZoneCriterias( new
-			 * ScQtZoneCriteria()); } ScQtZoneCriteria zoneCriteria =
-			 * scQt.getScQtSupplierCriteria() .getQtZoneCriterias();
-			 * zoneCriteria.setScQtSupplierCriteria(scQt
-			 * .getScQtSupplierCriteria()); // TODO: Need to remove
-			 * setUserDetails(zoneCriteria); List<TplSpecZoneDtl> zoneLocal =
-			 * new ArrayList<TplSpecZoneDtl>(); List<TplSpecZoneLoc> specZoneLoc
-			 * = new ArrayList<TplSpecZoneLoc>(); for (CtPanelZone panelzone :
-			 * this.getManagedBean() .getCtPanelZones()) {
-			 * 
-			 * TplSpecZoneDtl zoneDtl = new TplSpecZoneDtl();
-			 * setUserDetails(zoneDtl);
-			 * 
-			 * zoneDtl.setZoneName(panelzone.getName());
-			 * zoneDtl.setTplSpecZone(zoneCriteria);
-			 * zoneDtl.setPanelZone(panelzone); zoneLocal.add(zoneDtl); }
-			 * zoneCriteria.setTplSpecZoneDtls(zoneLocal);
-			 * 
-			 * scQt.getScQtSupplierCriteria().setQtZoneCriterias(zoneCriteria);
-			 * 
-			 * } else { scQt.getScQtSupplierCriteria().setQtZoneCriterias(null);
-			 * }
-			 */
-
+			
 			List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
 					this.getManagedBean().getZoneGeneralTrees(), null);
 
@@ -5318,57 +5290,7 @@ public class SpecificationBackingBean extends
 					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
 				}
 
-				else if ("WR".equalsIgnoreCase(checkList.getPmDocument()
-						.getDocDefinitionKey())) {
-					// this.getManagedBean().setWarantyScore(null);
-
-					/*
-					 * reqDTO.setCheckListId(checkList.getQtChecklistId());
-					 * resDTO = specSo.retrieveCheckListScoreNValue(reqDTO); if
-					 * (resDTO.getCheckListScoreResultBean() == null ||
-					 * resDTO.getScQtCheckListValue() == null) {
-					 * 
-					 * ScQtCheckListValue checkListValue = new
-					 * ScQtCheckListValue(); setUserDetails(checkListValue);
-					 * 
-					 * checkListValue.setScQtCheckList(checkList);
-					 * checkList.setScQtCheckListValue(checkListValue);
-					 * this.getManagedBean().setWarantyScore( new
-					 * ArrayList<ScQtCheckListScore>());
-					 * 
-					 * } else {
-					 * 
-					 * List<ScQtCheckListScore> noOfWarranty = new
-					 * ArrayList<ScQtCheckListScore>();
-					 * 
-					 * for (ScQtCheckListScore checklistScore : resDTO
-					 * .getCheckListScoreResultBean().getResultList()) { if
-					 * (checklistScore.getCriteriaType() == 30) { if
-					 * (checklistScore.getScoreType().intValue() == 1) {
-					 * this.getManagedBean() .setChecklistScoreType(
-					 * String.valueOf(checklistScore .getScoreType()
-					 * .intValue())); noOfWarranty.add(checklistScore);
-					 * this.getManagedBean().setWarantyScore( noOfWarranty); }
-					 * else if (checklistScore.getScoreType() .intValue() == 2)
-					 * { this.getManagedBean() .setChecklistScoreType(
-					 * String.valueOf(checklistScore .getScoreType()
-					 * .intValue())); this.getManagedBean()
-					 * .setScQtCheckListScore( checklistScore); }
-					 * 
-					 * }
-					 * 
-					 * } checkList.setScQtCheckListValue(resDTO
-					 * .getScQtCheckListValue()); }
-					 * this.getManagedBean().setScQtChecklist(checkList);
-					 */
-					return "waranty.xhtml?faces-redirect=true";
-				}
-
-				else if ("TR".equalsIgnoreCase(checkList.getPmDocument()
-						.getDocDefinitionKey())) {
-					// this.getManagedBean().setTrainingScore(null);
-					return "training.xhtml?faces-redirect=true";
-				} else if (QTConstants.TECHNICAL_STAFF_LIST
+				else if (QTConstants.TECHNICAL_STAFF_LIST
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
 
