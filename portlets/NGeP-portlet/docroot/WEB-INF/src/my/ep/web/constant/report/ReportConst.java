@@ -93,6 +93,7 @@ public class ReportConst {
 		
 		public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "sc_fc_analysis_eval_rep_8a.jsp";
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
+	public static final String SC_MARKET_RESEARCH_RPT_JSP = "SC_ITEM_PRICING_SUM.jsp";
 	//SC Module reports start
 	//CM Module reports start	
 	public static final String LST_PUB_CAT_ITM_RPT_VAL = "CM_001";	
@@ -503,5 +504,19 @@ public class ReportConst {
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
 	public static final String PARAM_DOC_NO = "PNO";
 	public static final String PARAM_USER_ID = "PUSER";
+	
+	// Report parameter key for s1 market research report
+	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
+	public static final String PARAM_DISTRICT_ID = "PDISTRICT";
+	public static final String PARAM_STATE_ID = "PSTATEID";
+	public static final String PARAM_ITEM_CODE = "PITEMCODE";
+	public static final String PARAM_ITEM_NAME = "PITEMNAME";
+	public static final String PARAM_MOF_NO = "PMOFNO";
+	public static final String PARAM_REQUEST_ITEM_ID = "PREQUESTITEMID";
+	public static final String PARAM_IS_SAVED_FLAG = "PSAVE";
+	public static final String PARAM_SUPPLIER_NAME = "PSUPP";
+	public static final String PARAM_UOM_ID = "PUOMID";
+	public static final String PARAM_EP_NO = "PEPNO";
+	public static final String PARAM_SUPP_ITEM_ID = "PSUPPITEMID";
 	public static final String NO_REPORT_ID = "This Report, still not developed...";
 }
