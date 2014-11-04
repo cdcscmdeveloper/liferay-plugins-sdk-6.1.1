@@ -156,7 +156,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setOutComes(outcome);
 		this.getManagedBean().setTaskId(taskId);
-		generatePageModeForProcess(res.getProcessName());
+		generatePageModeForProcess(res.getTaskName());
 		
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
