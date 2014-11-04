@@ -62,6 +62,7 @@
 		<!-- Procurement Plan - START -->
 		<category name="category.ep.pp">
 			<portlet id="pPlanProcurementPlan"></portlet>
+			<portlet id="pPlanProcurementPlanDet"></portlet>
 		</category>
 		<!-- Procurement Plan - END -->
 		
