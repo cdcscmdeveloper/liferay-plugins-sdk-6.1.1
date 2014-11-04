@@ -2633,6 +2633,7 @@ public class SmApplicationBackingBean extends
 		manu.setRevNo(1);
 		manu.setSmAppl(getManagedBean().getSmAppl());
 		getManagedBean().setSelectedManufacturer(manu);
+		getManagedBean().setUomSelectItems(SmApplicationUtil.getUomSelectItems());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("manufactorDialog.show()");
 		log.info("****** After **********"

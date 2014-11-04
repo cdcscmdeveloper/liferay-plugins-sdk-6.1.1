@@ -252,6 +252,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmCertBody> profBodyLs;
 	private List<PmFinancialOrg> finOrgLs;
 	private List<PmUom> uomLs;
+	private List<SelectItem> uomSelectItems;
 	List<PmReasonDesc> reasonDescList;
 	private List<PmStatusDesc> regStatusDescList;
 
@@ -454,6 +455,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		supplierParentCatList = new ArrayList<PmCategoryL1>();
 		supplierChildCatList = new ArrayList<PmCategoryL2>();
 		supplierSubChildCatList = new ArrayList<PmCategoryL3>();
+		uomSelectItems = new ArrayList<SelectItem>();
 		// For CategoryCodes End
 		testBlock = Boolean.TRUE;
 		personCalc = new SmPersonnleCalcVO();
@@ -2159,5 +2161,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSplCategoryList(List<SmSupplierCategory> splCategoryList) {
 		this.splCategoryList = splCategoryList;
+	}
+
+	public List<SelectItem> getUomSelectItems() {
+		return uomSelectItems;
+	}
+
+	public void setUomSelectItems(List<SelectItem> uomSelectItems) {
+		this.uomSelectItems = uomSelectItems;
 	}
 }
