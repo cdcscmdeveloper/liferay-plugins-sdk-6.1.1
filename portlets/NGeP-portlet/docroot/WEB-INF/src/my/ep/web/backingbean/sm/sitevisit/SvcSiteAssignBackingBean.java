@@ -7,11 +7,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.exception.EpException;
@@ -39,13 +36,10 @@ public class SvcSiteAssignBackingBean extends
 	public static Logger log = Logger.getLogger(SvcSiteAssignBackingBean.class);
 	
 	public SvcSiteAssignBackingBean() {
-//		if (MDC.get(LogKey.USER_ID) == null) {
-//			MDC.put(LogKey.USER_ID, 1L);
-//		}
+
 	}
 
 	public void retrieveSiteAssignInfo() {
-		retrieveSVOList();
 		//this.getManagedBean().setAppId(1009);
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
@@ -54,6 +48,9 @@ public class SvcSiteAssignBackingBean extends
 		log.info("----------------------retrieveSiteAssignInfo----------------" + this.getManagedBean().getAppId());
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
+		
+		retrieveSVOList(resDTO.getSmSvTask());
+		
 		this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
 		this.getManagedBean().setSmRemark(new SmRemark());
 	}
@@ -107,25 +104,24 @@ public class SvcSiteAssignBackingBean extends
 			throw new EpException(MessageConst.ERROR_721202);
 		}
 
-		return null;
 	}
 	
 
-	private void retrieveSVOList(){
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setRoleCode(SupplierManagementConst.SVO); //pending, select user base on role code.
-		IUserSO reqSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
-		UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
+	private void retrieveSVOList(SmSvTask svTask){
+		SiteAssignReqDTO userListReqDTO = new SiteAssignReqDTO();
+		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteAssignSO.class);
+		
+		userListReqDTO.setSmSvTask(svTask);
+		SiteAssignResDTO userListResDTO = reqSO.retrieveSVOListBySupplierTypeAndZone(userListReqDTO);
 		
 		this.getManagedBean().setSourceSVO(new ArrayList<PmUser>());
 		this.getManagedBean().setSelectedSVO(new ArrayList<PmUser>());
-
-		log.info("********PM SVO********" + resDTO.getUserList().size());
-		for(PmUser usr : resDTO.getUserList()){
-			this.getManagedBean().getSourceSVO().add(usr);
-			System.out.println("************SVO user" + usr.getUserName());
-		}
 		
+		log.info("********PM SVO********" + userListResDTO.getPmUsers().size());
+		if(userListResDTO.getPmUsers().size() > 0){
+			this.getManagedBean().setSourceSVO(userListResDTO.getPmUsers());
+		}
+
 		this.getManagedBean().setSvoUserList(new DualListModel<PmUser>(this.getManagedBean().getSourceSVO(), this.getManagedBean().getSelectedSVO()));
 	}
 	
