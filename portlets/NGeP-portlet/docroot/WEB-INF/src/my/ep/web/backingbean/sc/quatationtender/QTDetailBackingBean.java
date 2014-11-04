@@ -1570,7 +1570,7 @@ public class QTDetailBackingBean extends
 			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus
 					.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
-				qt.setModified(false);
+				qt.setModified(true);
 				// check if its Pending Schedule and Documents , only execute
 				// this part
 				if (null != qt.getScQtDocReports()
@@ -3073,7 +3073,7 @@ public class QTDetailBackingBean extends
 			break;
 		case 3:
 			reqDTO = prepareQTInfo();
-			reqDTO.getQtdetail().setModified(true);
+			reqDTO.getQtdetail().setModified(false);
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
@@ -3124,7 +3124,7 @@ public class QTDetailBackingBean extends
 		case 9:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 				reqDTO = prepareQTInfo();
-				reqDTO.getQtdetail().setModified(false);
+				reqDTO.getQtdetail().setModified(true);
 				detailSO.validateApprovalDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
@@ -3159,7 +3159,7 @@ public class QTDetailBackingBean extends
 			break;
 		case 3:
 			QuationTenderReqDTO reqDTO = prepareQTInfo();
-			reqDTO.getQtdetail().setModified(true);
+			reqDTO.getQtdetail().setModified(false);
 			detailSO.validateApprovalDetails(reqDTO);
 			// retrieveApprovalTabDtl();
 			break;
@@ -3189,7 +3189,7 @@ public class QTDetailBackingBean extends
 		case 9:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
 				QuationTenderReqDTO qtReqDTO = prepareQTInfo();
-				qtReqDTO.getQtdetail().setModified(false);
+				qtReqDTO.getQtdetail().setModified(true);
 				detailSO.validateApprovalDetails(qtReqDTO);
 			}
 			break;
