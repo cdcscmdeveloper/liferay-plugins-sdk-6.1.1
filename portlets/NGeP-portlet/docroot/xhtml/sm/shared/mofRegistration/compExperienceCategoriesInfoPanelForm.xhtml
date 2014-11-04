@@ -26,7 +26,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{backingBean.managedBean.supplierParentCatList}"
-						var="parent" itemLabel="#{parent.categoryName}"
+						var="parent" itemLabel="#{parent.categoryL1Code} - #{parent.categoryName}"
 						itemValue="#{parent.categoryL1Id}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
@@ -48,7 +48,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL2.pmCategoryL2s}"
-						var="conslChild" itemLabel="#{conslChild.categoryName}"
+						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{conslChild.categoryName}"
 						itemValue="#{conslChild.categoryL2Id}" />
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
@@ -67,7 +67,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL3.pmCategoryL3s}"
-						var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
+						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{conslSubChild.categoryName}"
 						itemValue="#{conslSubChild.categoryL3Id}" />
 					<p:ajax event="change"
 						listener="#{backingBean.checkDuplicateCategoryForProject(expCategoryBean,backingBean.managedBean.selectedCompanyExperience)}"
