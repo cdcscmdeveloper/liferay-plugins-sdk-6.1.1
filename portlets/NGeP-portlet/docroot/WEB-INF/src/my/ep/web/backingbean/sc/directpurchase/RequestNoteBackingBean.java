@@ -1026,7 +1026,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ScRNZone zone = getManagedBean().getScRNZone(); 
 					
 					if (zone.isBrandNew()) {
-						zone.setScRequestNote(getManagedBean().getRequestNote());
+						zone.setScRequestNote(scRequestNote);
+						scRequestNote.setScRNZone(zone);
 					}
 					specZoneDtl.setTplSpecZone(zone);
 					
