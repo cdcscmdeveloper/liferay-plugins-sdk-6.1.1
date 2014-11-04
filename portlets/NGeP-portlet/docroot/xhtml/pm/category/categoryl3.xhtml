@@ -65,30 +65,43 @@
 					<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}" size="120" />
 				</h:panelGrid>
 				
+				
 				<h:panelGrid columns="4" columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5">
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 					</h:panelGroup>
-					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}" 
-						>
+					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}" rendered="#{!categoryBackingBean.managedBean.newCategory}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems
+							value="#{categoryBackingBean.managedBean.supplierType}"
+							var="supplierType" itemLabel="#{supplierType.codeName}" itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
+					</p:selectOneMenu>
+					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}" rendered="#{categoryBackingBean.managedBean.newCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItems
 							value="#{categoryBackingBean.managedBean.supplierType}"
 							var="supplierType" itemLabel="#{supplierType.codeName}" itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
 					</p:selectOneMenu>
 					
+					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.special.category']}" />
 					</h:panelGroup>
-					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}" 
-						>
+					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}" rendered="#{!categoryBackingBean.managedBean.newCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItems
 							value="#{categoryBackingBean.managedBean.specialCategory}"
 							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
 					</p:selectOneMenu>
+					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}" rendered="#{categoryBackingBean.managedBean.newCategory}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems
+							value="#{categoryBackingBean.managedBean.specialCategory}"
+							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
+					</p:selectOneMenu>
+					
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
