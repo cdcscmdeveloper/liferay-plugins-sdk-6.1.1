@@ -67,13 +67,14 @@
 						<f:setPropertyActionListener value="#{financeList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
 					</p:commandButton>
-					<p:commandLink 
+					<h:commandLink 
 						value="#{financeList.scQtProposalChecklistAttachment.fileName}" 
 						styleClass="blue_font" 
 						immediate="true" 
 						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(financeList.scQtProposalChecklistAttachment)}"
 						rendered="#{!empty financeList.scQtProposalChecklistAttachment}"/>
 				</ui:fragment>
+				
 
 			</p:column>
 
