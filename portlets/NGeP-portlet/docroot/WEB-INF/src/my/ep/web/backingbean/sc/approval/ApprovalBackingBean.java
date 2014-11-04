@@ -352,6 +352,11 @@ public class ApprovalBackingBean extends
 	}
 
 	public void approvalBpmTask(String action) {
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(this.getManagedBean().getQt());
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
 			if (null != remarks) {
@@ -366,6 +371,13 @@ public class ApprovalBackingBean extends
 			RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
 		} else {
 			this.getManagedBean().setAction(action);
+			if (null != this.getManagedBean().getQt().getPublishDate()) {
+				detailSO.validateScheduleDetails(reqDTO);
+			}
+			if (this.getManagedBean().getQt().isBsvRequired()) {
+				reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				detailSO.validatePublicationBsvDetails(reqDTO);
+			}
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}
 	}
