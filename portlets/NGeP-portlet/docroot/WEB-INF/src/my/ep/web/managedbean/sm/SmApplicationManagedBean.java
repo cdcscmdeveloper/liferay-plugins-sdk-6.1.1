@@ -55,6 +55,7 @@ import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
@@ -455,7 +456,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		supplierParentCatList = new ArrayList<PmCategoryL1>();
 		supplierChildCatList = new ArrayList<PmCategoryL2>();
 		supplierSubChildCatList = new ArrayList<PmCategoryL3>();
-		uomSelectItems = new ArrayList<SelectItem>();
 		// For CategoryCodes End
 		testBlock = Boolean.TRUE;
 		personCalc = new SmPersonnleCalcVO();
@@ -474,6 +474,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		if (defPmCountry == null) {
 			defPmCountry = new PmCountry();
 		}
+		uomSelectItems = SmApplicationUtil.getUomSelectItems();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 		DateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -2170,4 +2171,5 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setUomSelectItems(List<SelectItem> uomSelectItems) {
 		this.uomSelectItems = uomSelectItems;
 	}
+
 }
