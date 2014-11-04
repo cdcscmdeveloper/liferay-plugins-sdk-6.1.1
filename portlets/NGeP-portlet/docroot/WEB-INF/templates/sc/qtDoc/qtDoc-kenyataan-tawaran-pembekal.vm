@@ -56,8 +56,8 @@
 			</tr>
 			<tr>
 				<td>
-            		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'><u>KENYATAAN TAWARAN</u></span>
-					<p>Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan KEMENTERIAN KEWANGAN MALAYSIA dalam kod bidang yang berkaitan and kriteria berkaitan seperti berikut:</p>
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>KENYATAAN TAWARAN</u></span>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan <span style="font-family:Arial;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KEMENTERIAN KEWANGAN MALAYSIA</span> dalam kod bidang yang berkaitan and kriteria berkaitan seperti berikut:</span></p>
 				</td>
 			</tr>
 			<tr>
@@ -66,13 +66,13 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="left">KETERANGAN TAWARAN : $qtTitle</td>
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KETERANGAN TAWARAN :</span> $qtTitle</td>
 			</tr>
 			<tr>
-				<td align="left">JENIS TAWARAN : $qtType</td>
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> $qtType</td>
 			</tr>
 			<tr>
-				<td align="left">KOD BIDANG : <br />
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KOD BIDANG :</span> <br />
 				<br /></td>
 			</tr>
 			<tr align='left'>
@@ -110,16 +110,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td align="left">TARIKH MULA TAWARAN : $publishDate</td>
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TARIKH MULA TAWARAN :</span> $publishDate</td>
 			</tr>
 			<tr>
-				<td align="left">TARIKH TUTUP TAWARAN : $closingDate</td>
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TARIKH TUTUP TAWARAN :</span> $closingDate</td>
 			</tr>
 			<tr>
-				<td align="left">TEMPOH SAH LAKU : $validityPeriod</td>
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
 			</tr>
 			<tr>
-				<td align="left">LOKALITI : <br />
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> <br />
 				</td>
 			</tr>
 			<tr>
