@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
@@ -59,6 +60,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private List<String> icNo;
 	
 	private double performanceBondRuleAmt;
+	private SelectItem[] supplierSignerDropdown;
 	
 	public AgreementManagedBean(){
 		
@@ -305,5 +307,13 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
+	}
+
+	public SelectItem[] getSupplierSignerDropdown() {
+		return supplierSignerDropdown;
+	}
+
+	public void setSupplierSignerDropdown(SelectItem[] supplierSignerDropdown) {
+		this.supplierSignerDropdown = supplierSignerDropdown;
 	}
 }

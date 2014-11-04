@@ -7,18 +7,20 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="createAgreement" header="#{lbl['lbl.ct.panel.agreement.content']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%">
-			<h:panelGrid columns="2">
+			  <h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.ct.sample.contract']}" />
 				<h:commandLink action="#{agreementBackingBean.downloadFile('', 'sample')}">
 					<p:graphicImage library="ep/images/design" name="download.png"
 						value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				</h:commandLink>				
 			</h:panelGrid>
+			
 			<p:spacer height="5" />
 			<p:dataTable id="contentTable" var="contentsVar" rowIndexVar="rowIndex"
 				value="#{agreementBackingBean.managedBean.ctAgreement.agreementContents}"
 				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{contentsVar}">
 				<p:ajax event="rowSelect" update=":form:delContentBtn" />
+				
 				<p:column style="width:60%;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.contents']}"/>
@@ -27,6 +29,7 @@
 					<p:outputLabel value="#{contentsVar.title}" style="float:left;" rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
 					<p:inputText value="#{contentsVar.title}" style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
+				
 				<p:column style="width:20%px;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.type']}"/>
@@ -35,71 +38,68 @@
 					<p:outputLabel style="float:left;"
 						value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.parameterType,contentsVar.contentType.parameterCode)}" />
 				</p:column>
+				
 				<p:column style="width:20%;" styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.action']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
-					 <p:commandLink process="@this" partialSubmit="true"
-							action="#{agreementBackingBean.downloadTemplateDoc(contentsVar)}">
+					 <p:commandLink process="@this" partialSubmit="true" action="#{agreementBackingBean.downloadTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/css/images/design/download.png"
-								title="#{lbl['lbl.txt.file.download']}" />
-						</p:commandLink>
-						<p:spacer width="2"/>
-					   <p:commandLink
+								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+					 </p:commandLink>
+					 <p:spacer width="2"/>
+					 <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/css/images/design/document.png"
-								title="#{lbl['lbl.ct.view.document']}" />
-						</p:commandLink>	
+								value="/css/images/design/document.png" title="#{lbl['lbl.ct.view.document']}" />
+					</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
 						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/css/images/design/download.png"
-								title="#{lbl['lbl.txt.file.download']}" />
+								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
 					</h:panelGroup>
-					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
+					<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
 							<p:commandButton oncomplete="uploadUserDefineDlg.show();return false;"
 								icon="iconAttachment" update=":form:contentTable, uploadUserDefineDlg">
-								<f:setPropertyActionListener value="#{contentsVar}" 
-								  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
+								<f:setPropertyActionListener value="#{contentsVar}"  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
 							</p:commandButton>
 							<h:commandLink rendered="#{contentsVar.filePath != null}" value="#{contentsVar.fileName}"
 								action="#{agreementBackingBean.downloadFile(contentsVar.filePath, contentsVar.fileName)}">
-							</h:commandLink>
-					  </h:panelGroup>
+						    </h:commandLink>
+					 </h:panelGroup>
 				</p:column>
 			</p:dataTable>
-			<p:dialog id="uploadUserDefineDlg" widgetVar="uploadUserDefineDlg"
-				modal="false" resizable="false" width="700px" height="350"
-				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:dialog id="uploadUserDefineDlg" widgetVar="uploadUserDefineDlg" height="350"
+				modal="false" resizable="false" width="700px"  styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:ajax event="close" />
-				<p:fileUpload style="display:inline;" mode="advanced"
-					fileUploadListener="#{agreementBackingBean.fileUpload}"
+				<p:fileUpload style="display:inline;" mode="advanced" fileUploadListener="#{agreementBackingBean.fileUpload}"
 					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 					invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:contentTable">
 				</p:fileUpload>
 			</p:dialog>
 		</h:panelGrid>
 		  <div class="ppRightBtn"> 
-              <p:commandButton id="addContentBtn" value="#{lbl['lbl.btn.add']}" process="@form"  icon="ui-icon-add" update=":form:contentTable" action="#{agreementBackingBean.addAgreementContents}">
+              <p:commandButton id="addContentBtn" value="#{lbl['lbl.btn.add']}" process="@form"  
+                  icon="ui-icon-add" update=":form:contentTable" action="#{agreementBackingBean.addAgreementContents}">
              		<p:tooltip for="addContentBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agreement.content']}" escape="false" />
 					</p:tooltip>
               </p:commandButton>
 		      <p:spacer width="1"/>
 		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDocumentDel.show();"
-		      		disabled="#{!(agreementBackingBean.managedBean.selectedAgreementContent!=null and agreementBackingBean.managedBean.selectedAgreementContent.contentType.parameterCode==ParameterConst.agreementUserUploadDoc)}">
+		      		disabled="#{!(agreementBackingBean.managedBean.selectedAgreementContent!=null and 
+		      		agreementBackingBean.managedBean.selectedAgreementContent.contentType.parameterCode==ParameterConst.agreementUserUploadDoc)}">
 		      		<p:tooltip for="delContentBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agreement.content']}" escape="false" />
 					</p:tooltip>
               </p:commandButton> 
 		      <p:spacer width="1"/>
-		      <p:commandButton id="downloadAllContentBtn" value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{agreementBackingBean.downloadAll()}"
+		      <p:commandButton id="downloadAllContentBtn" 
+		         value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{agreementBackingBean.downloadAll()}"
 		        	icon="ui-icon-download" process="@form">
 		        	<p:tooltip for="downloadAllContentBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.download.all.agreement.content']}" escape="false" />
@@ -115,14 +115,15 @@
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:contentTable" process="@form" 
-				actionListener="#{agreementBackingBean.delAgreementContents()}" onclick="dlgDocumentDel.hide();"/>
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:contentTable" 
+				process="@form"  actionListener="#{agreementBackingBean.delAgreementContents()}" onclick="dlgDocumentDel.hide();"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 	</p:panel>
 	
-	<p:panel id="agreementPnl" header="#{lbl['lbl.ct.agreement']}" toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
+	<p:panel id="agreementPnl" header="#{lbl['lbl.ct.agreement']}"
+	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
 		<h:panelGroup id="uploadAgPg">
 			<h:panelGrid columns="2">
 				<h:panelGrid columns="2">
@@ -133,23 +134,19 @@
 					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
 					icon="iconAttachment" value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
 				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
-				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}"
-					style="float:left;" styleClass="blue_font"
+				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}" style="float:left;" styleClass="blue_font"
 					rendered="#{agreementBackingBean.managedBean.ctAgreement.fileName != null}"
-					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath, 
-						agreementBackingBean.managedBean.ctAgreement.fileName)}" />
+					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath, agreementBackingBean.managedBean.ctAgreement.fileName)}" />
 			</h:panelGrid>
 			<p:spacer height="20" />
 		</h:panelGroup>
-		<p:dialog id="uploadAgDlg" widgetVar="uploadAgDlg"
-			modal="false" resizable="false" width="700px" height="350"
-			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:dialog id="uploadAgDlg" widgetVar="uploadAgDlg" modal="false" resizable="false" 
+			width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;" mode="advanced"
 				fileUploadListener="#{agreementBackingBean.uploadAgreement}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
-				update=":form:uploadAgPg">
+				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:uploadAgPg">
 			</p:fileUpload>
 		</p:dialog>				
 	</p:panel>
