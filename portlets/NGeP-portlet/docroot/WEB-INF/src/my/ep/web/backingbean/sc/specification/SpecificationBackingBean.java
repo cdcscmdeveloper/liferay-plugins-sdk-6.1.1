@@ -11028,63 +11028,101 @@ public class SpecificationBackingBean extends
 	 * criteria..
 	 */
 	public void searchForSupplierCount() {
+		List<String> codes = new ArrayList<String>();
+		List<ScQtCategory> suppCriteriaopenList = getManagedBean().getSuppCriteriaopenList();
+		ScQtSupplierCriteria scQtSupplierCriteria = getManagedBean().getScQt().getScQtSupplierCriteria();
+		BigDecimal minPaidUpCapital = scQtSupplierCriteria.getMinPaidUpCapital();
+		
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-		List<PmState> states = null;
-		List<PmDistrict> districts = null;
-		List<PmDivision> divisions = null;
-		supplierSearchReqDTO.setCategoryCodeIds(constructL3Ids(this
-				.getManagedBean().getSuppCriteriaopenList()));
-		supplierSearchReqDTO.setPaidUpCapital(this.getManagedBean().getScQt()
-				.getScQtSupplierCriteria().getMinPaidUpCapital());
+		supplierSearchReqDTO.setCount(true);
+		supplierSearchReqDTO.setCategoryCodeIds(constructL3Ids(suppCriteriaopenList));
+		supplierSearchReqDTO.setPaidUpCapital(minPaidUpCapital);
 		String locLevel = "";
-		/*
-		 * if (this.getManagedBean().getScQt().isZonal()) { locLevel =
-		 * this.getManagedBean().getScQt().getZoneLocationLevel()
-		 * .getParameterCode(); }
-		 */
-		if (null != this.getManagedBean().getScQt().getScQtSupplierCriteria()
-				&& null != this.getManagedBean().getScQt()
-						.getScQtSupplierCriteria().getLocationLevel()) {
-
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-			if (null != this.getManagedBean().getScQt()
-					.getScQtSupplierCriteria().getLocationLevel()
-					.getParameterId()) {
-				for (PmParameterDesc paramDesc : localParamDesc) {
-
-					if (paramDesc
-							.getPmParameter()
-							.getParameterId()
-							.equals(this.getManagedBean().getScQt()
-									.getScQtSupplierCriteria()
-									.getLocationLevel().getParameterId())) {
-						locLevel = paramDesc.getPmParameter()
-								.getParameterCode();
-
+		List<TplSpecLoc> tplSpecLocList = new ArrayList<TplSpecLoc>();
+		
+		ScQt scQt = getManagedBean().getScQt();
+		int estimatedAmt = scQt.getEstimatedAmount().intValue();
+		if(estimatedAmt >= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND){
+			//value > 500k - always get the scQtSupplierCriteria.getLocationLevel()
+			
+			if(getManagedBean().getAllStateCode() != 3 && !scQtSupplierCriteria.isAllState()){
+				if (null != scQtSupplierCriteria && null != scQtSupplierCriteria.getLocationLevel()) {
+					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+					Long locLevelId = scQt.getScQtSupplierCriteria().getLocationLevel().getParameterId();
+					if (null != locLevelId) {
+						for (PmParameterDesc paramDesc : localParamDesc) {
+							Long paramDescId = paramDesc.getPmParameter().getParameterId();
+							if (paramDescId.equals(locLevelId)) {
+								locLevel = paramDesc.getPmParameter().getParameterCode();
+							}
+						}
 					}
-
 				}
+				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
+			}else{
+				//semenanjung, always all state = true or sabah sarawak all state = true
+				tplSpecLocList = null;
 			}
+		}else{
+			if(scQt.isZonal()){
+				//value < 500k - if zonal, get the scQt.zoneLocationLevel()
+				locLevel = scQt.getZoneLocationLevel().getParameterCode();
+				
+				if (null != scQt.getZoneLocationLevel()) {
+					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+					Long locLevelId = scQt.getZoneLocationLevel().getParameterId();
+					if (null != locLevelId) {
+						for (PmParameterDesc paramDesc : localParamDesc) {
+							Long paramDescId = paramDesc.getPmParameter().getParameterId();
+							if (paramDescId.equals(locLevelId)) {
+								locLevel = paramDesc.getPmParameter().getParameterCode();
+							}
+						}
+					}
+				}
+				
+				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
+				//if(tplSpecLocList == null || tplSpecLocList.size() == 0){
+					List<TreeNode> rootZoneLocation = getManagedBean().getZoneGeneralTrees();
+					if (rootZoneLocation != null) {
+						for (TreeNode treeNode : rootZoneLocation) {
+							List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+							tplSpecLocList.addAll(locationDTO);
+						}
+					}
+				//}
+				
+			}else{
+				//value < 500k - if not zonal, get the scQtSupplierCriteria.getLocationLevel()
 
+				if (null != scQtSupplierCriteria && null != scQtSupplierCriteria.getLocationLevel()) {
+					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+					Long locLevelId = scQt.getScQtSupplierCriteria().getLocationLevel().getParameterId();
+					if (null != locLevelId) {
+						for (PmParameterDesc paramDesc : localParamDesc) {
+							Long paramDescId = paramDesc.getPmParameter().getParameterId();
+							if (paramDescId.equals(locLevelId)) {
+								locLevel = paramDesc.getPmParameter().getParameterCode();
+							}
+						}
+					}
+				}
+				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
+			}
 		}
-
-		getStatesNDistrict(this.getManagedBean().getTotalSuppliersSpecLoc(),
-				states, districts, divisions, locLevel);
-
-		supplierSearchReqDTO.setStateCodes(this.getManagedBean()
-				.getSupplierStateCode());
-		supplierSearchReqDTO.setDistrictCodes(this.getManagedBean()
-				.getSupplierDistrictCode());
-		supplierSearchReqDTO.setDivisionCodes(this.getManagedBean()
-				.getSupplierDivisionCode());
-		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierSearchSO.class);
-		SupplierSearchResDTO searchResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierSearchReqDTO);
-		this.getManagedBean().setTotalSuppliers(
-				searchResDTO.getResultBean().getTotalRecord());
+		
+		getStatesNDistrict(tplSpecLocList, codes, locLevel);
+		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(locLevel)) {
+			supplierSearchReqDTO.setStateCodes(codes);
+		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(locLevel)) {
+			supplierSearchReqDTO.setDivisionCodes(codes);
+		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(locLevel)) {
+			supplierSearchReqDTO.setDistrictCodes(codes);
+		}
+		
+		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SupplierSearchResDTO searchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+		this.getManagedBean().setTotalSuppliers(searchResDTO.getResultBean().getTotalRecord());
 
 	}
 
@@ -11093,77 +11131,64 @@ public class SpecificationBackingBean extends
 		if (null != categories) {
 			categoryIds = new ArrayList<Long>();
 			for (ScQtCategory category : categories) {
-				Long code = category.getPmCategoryL3().getCategoryL3Id();
-				categoryIds.add(code);
+				Long catId = category.getPmCategoryL3().getCategoryL3Id();
+				categoryIds.add(catId);
 			}
 		}
 		return categoryIds;
 	}
 
-	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,
-			List<PmState> states, List<PmDistrict> districts,
-			List<PmDivision> divisions, String locLevel) {
-		states = new ArrayList<PmState>();
-		districts = new ArrayList<PmDistrict>();
-		divisions = new ArrayList<PmDivision>();
+	private void getStatesNDistrict(List<? extends TplSpecLoc> locations, List<String> codes, String locLevel) {
 
+		List<PmState> states = new ArrayList<PmState>();
+		List<PmDistrict> districts = new ArrayList<PmDistrict>();
+		List<PmDivision> divisions = new ArrayList<PmDivision>();
 		if (null != locations) {
-			List<String> stateCodes = new ArrayList<String>();
-			List<String> districtCodes = new ArrayList<String>();
-			List<String> divisionCodes = new ArrayList<String>();
-			if (null == this.getManagedBean().getStateList()) {
-				this.getManagedBean().setStateList(new ArrayList<PmState>());
-
-			}
-			if (null == this.getManagedBean().getDistrictList()) {
-				this.getManagedBean().setDistrictList(
-						new ArrayList<PmDistrict>());
-			}
-			if (null == this.getManagedBean().getDivisionList()) {
-				this.getManagedBean().setDivisionList(
-						new ArrayList<PmDivision>());
-			}
 			for (TplSpecLoc specLoc : locations) {
-				if (ParameterConst.LOCATION_LEVEL_STATE
-						.equalsIgnoreCase(locLevel)) {
+				if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(locLevel)) {
 					PmState state = specLoc.getPmState();
 					if (null != state) {
-						if (!states.contains(state)) {
+						if (!codes.contains(state.getStateCode())) {
+							codes.add(state.getStateCode());
 							states.add(state);
-							stateCodes.add(state.getStateCode());
 						}
-
 					}
-					this.getManagedBean().setSupplierStateCode(stateCodes);
+					this.getManagedBean().setSupplierStateCode(codes);
+					if (null == this.getManagedBean().getStateList()) {
+						this.getManagedBean().setStateList(new ArrayList<PmState>());
+					}
 					this.getManagedBean().setStateList(states);
-				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
-						.equalsIgnoreCase(locLevel)) {
+					
+				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(locLevel)) {
 					PmDistrict district = specLoc.getPmDistrict();
 					if (null != district) {
-						if (!districts.contains(district)) {
+						if (!codes.contains(district.getDistrictCode())) {
+							codes.add(district.getDistrictCode());
 							districts.add(district);
-							districtCodes.add(district.getDistrictCode());
 						}
 					}
-					this.getManagedBean()
-							.setSupplierDistrictCode(districtCodes);
+					this.getManagedBean().setSupplierDistrictCode(codes);
+					if (null == this.getManagedBean().getDistrictList()) {
+						this.getManagedBean().setDistrictList(new ArrayList<PmDistrict>());
+					}
 					this.getManagedBean().setDistrictList(districts);
-				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
-						.equalsIgnoreCase(locLevel)) {
+					
+				} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(locLevel)) {
 					PmDivision divison = specLoc.getPmDivision();
 					if (null != divison) {
-						if (!divisions.contains(divison)) {
+						if (!codes.contains(divison.getDivisionCode())) {
+							codes.add(divison.getDivisionCode());
 							divisions.add(divison);
-							divisionCodes.add(divison.getDivisionCode());
 						}
 					}
-					this.getManagedBean()
-							.setSupplierDivisionCode(divisionCodes);
+					this.getManagedBean().setSupplierDivisionCode(codes);
+					if (null == this.getManagedBean().getDivisionList()) {
+						this.getManagedBean().setDivisionList(new ArrayList<PmDivision>());
+					}
 					this.getManagedBean().setDivisionList(divisions);
 				}
 			}
 		}
-
 	}
 
 }
