@@ -1336,10 +1336,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			PMReportReqDTO reqDTO = new PMReportReqDTO();
 			reqDTO.setReportId(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
-			PMReport mReport = rptResDTO.getPmReportDtls();
-			List<PMReport> rptLst = rptResDTO.getPmReportList();
-			if (null != rptLst) {					
-				for (PMReport pmReport : rptLst) {
+			PMReport pmReport = rptResDTO.getPmReportDtls();			
+			if (null != pmReport) {					
 					String label = ReportConst.EMPTY_VAL;
 					if((null != pmReport.getSubModule())&&(ReportConst.EMPTY_VAL != pmReport.getSubModule())){
 					  label = pmReport.getReportTitle()+" - "+ pmReport.getSubModule();
@@ -1348,7 +1346,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					}	
 				getManagedBean().setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
-				}
 			}
 			
 			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
