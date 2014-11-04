@@ -10172,7 +10172,7 @@ public class SpecificationBackingBean extends
 		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		actualFilePath.append(filePath);
 
-		downloadFile(filePath, fileName);
+		downloadFile(actualFilePath.toString(), fileName);
 		this.getManagedBean().setSelectpanelItem(itemList);
 	}
 
