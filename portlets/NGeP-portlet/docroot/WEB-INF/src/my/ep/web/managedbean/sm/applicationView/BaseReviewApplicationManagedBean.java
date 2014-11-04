@@ -154,6 +154,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		poSecReview = new SmApplSectionReview();
 		equiCompCapTotal = new BigDecimal(0);
 		setReviewApplicationExist(true);
+		setViewSupplierProfile(false);
 		
 
 		shareHolderMailAddr = new SmPersonnelAddress();
