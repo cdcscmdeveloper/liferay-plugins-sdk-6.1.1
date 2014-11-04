@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -2008,6 +2009,22 @@ public class SmApplicationUtil {
 		} else {
 			return null;
 		}
+	}
+	
+	public static List<SelectItem> getUomSelectItems(){
+		List<SelectItem> uomSelectItems = new ArrayList<SelectItem>();
+		List<PmUom> uomList = retrieveUomList();
+		
+		SelectItem si = null;
+		if(uomList!=null){
+			for(PmUom pmUom:uomList){
+				si = new SelectItem();
+				si.setLabel(pmUom.getUomName());
+				si.setValue(pmUom.getUomId());
+				uomSelectItems.add(si);
+			}
+		}
+		return uomSelectItems;
 	}
 
 	public static List<PmReasonDesc> retrieveRejectReasonList() {
