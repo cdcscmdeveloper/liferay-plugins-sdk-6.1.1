@@ -18,6 +18,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.constants.PPProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -54,9 +55,10 @@ public class BPMTaskListBackingBean extends
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 
 		// Procurement Plan - Start
-		temp.put("Plan Preparation", "review-plan");
-		temp.put("Plan Revision", "revise-plan");
-		temp.put("Budget Endorsement", "review-budget");
+		temp.put(PPProcessNameConst.REVIEW_PLAN, "pp-plan-det");
+		temp.put(PPProcessNameConst.REVISE_PLAN, "pp-plan-det");
+		temp.put(PPProcessNameConst.SUBMIT_PLAN, "pp-plan-det");
+		temp.put(PPProcessNameConst.VERIFY_PLAN, "pp-plan-det");
 		// Procurement Plan - End
 
 		// Supplier Management - Start
