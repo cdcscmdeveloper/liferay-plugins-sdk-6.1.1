@@ -3140,6 +3140,13 @@ public class SmApplicationBackingBean extends
 		buildRoleList();
 		getManagedBean().setRedirectToPersonPage(true);
 
+		// set default nationality to MALAYSIA
+		getManagedBean()
+				.getSelectedShareHolder()
+				.setPmCountry(
+						SmCommonUtil
+								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+
 	}
 
 	public void deleteSelectedShareHolders(String personType) {
