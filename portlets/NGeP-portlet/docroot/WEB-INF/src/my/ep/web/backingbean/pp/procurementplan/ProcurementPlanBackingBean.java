@@ -146,13 +146,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
 
+		//only for DRAFT (check status)
 		String[] outcome = new String[res.getAction().length + 1];
 		outcome[0] = BpmOutcomeConst.BPM_SAVE;
 		int i = 1;
 		for (String action : res.getAction()) {
 			outcome[i++] = action;
 		}
-
+System.out.println("res.getStatus() " + res.getStatus());
 		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setOutComes(outcome);
 		this.getManagedBean().setTaskId(taskId);
@@ -161,7 +162,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		this.loadPlanDetails(planObj.getPlanId().longValue());
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
 	}
@@ -291,7 +292,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppPlan.setOrgProfile(pmOrgProfile); 
 			ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
 			this.getManagedBean().setSelectedPlan(ppPlan);
-			loadPlanActors(ppPlan.getOrgProfile().getOrgProfileId(), ppPlan.getPpPlanActors()); // TODOTEMP_ORG_ID
+			loadPlanActors(ppPlan.getOrgProfile(), ppPlan.getPpPlanActors()); // TODOTEMP_ORG_ID
 			initialPlanRemark(ppPlan.getPpRemarks());
 
 			//load plan det
@@ -361,7 +362,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppPlan.setStatus(new PmStatus());
 		ppPlan.setPpRemarks(new ArrayList<PpRemark>());
 		initialPlanRemark(ppPlan.getPpRemarks());
-		loadPlanActors(ppPlan.getOrgProfile().getOrgProfileId() , null); //TEMP_ORG_ID TODO
+		loadPlanActors(ppPlan.getOrgProfile() , null); //TEMP_ORG_ID TODO
 		this.getManagedBean().setSelectedPlan(ppPlan);
 		
 		//BPM buttons
@@ -386,16 +387,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * generate actor source
 	 * @param orgProfileId
 	 */
-	private void loadPlanActors(Long orgProfileId, List <PpPlanActor> ppPlanActors){
+	private void loadPlanActors(PmOrgProfile orgProfile, List <PpPlanActor> ppPlanActors){
 		log.info("loadPlanActors - Start");
 		List<PmUser> sourceVerifier = new ArrayList<PmUser>(); 
         List<PmUser> targetVerifier = new ArrayList<PmUser>();  
         this.getManagedBean().setVerifierModel(new DualListModel<PmUser>(sourceVerifier, targetVerifier));
-        generateSourceVerifiers(orgProfileId, RoleCode.PLAN_VERFICATION_OFFICER.value(), ppPlanActors);
+        generateSourceVerifiers(orgProfile.getOrgProfileId(), RoleCode.PLAN_VERFICATION_OFFICER.value(), ppPlanActors);
 		List<PmUser> sourceApprover = new ArrayList<PmUser>(); 
         List<PmUser> targetApprover = new ArrayList<PmUser>();  
         this.getManagedBean().setApproverModel(new DualListModel<PmUser>(sourceApprover, targetApprover));
-        generateSourceApprovers(orgProfileId, RoleCode.PLAN_APPROVER.value(), ppPlanActors);
+        generateSourceApprovers(orgProfile.getParentOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors);
 
 		log.info("loadPlanActors - End");
 	}
@@ -872,6 +873,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PmOrgProfile pmOrgProfile = null;
 		
 		try{
+			//default
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+			
+			
+			//get from DB
 			Long userId = getFacesScopes().getUserSessionBean().getUserId();
 			if(userId==null){
 				throw new EpException("User Id is null. Please login.");//TODO
@@ -894,12 +901,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					items[i] = new SelectItem(year, year.toString());
 					i++;
 				}
-			}else{
-				items = new SelectItem[1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 			}
 		}catch(Exception e){
-//			throw new EpException(e.toString()); //TODO
+			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
 		}
@@ -1181,13 +1185,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String tempToken = bpmSO.authenticate("weblogic","welcome1"); //TODO
+//			String tempToken = bpmSO.authenticate("weblogic","welcome1"); //TODO
 			
 			reqDTO = new ProcurementPlanReqDTO();
 			resDTO = new ProcurementPlanResDTO();
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(tempToken); //TODO  getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); //TODO  ;
 			if(!ppPlan.isBrandNew()){
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}	
