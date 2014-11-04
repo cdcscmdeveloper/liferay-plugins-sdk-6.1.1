@@ -254,6 +254,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmFinancialOrg> finOrgLs;
 	private List<PmUom> uomLs;
 	private List<SelectItem> uomSelectItems;
+	private List<SelectItem> raceSelectItems;
 	List<PmReasonDesc> reasonDescList;
 	private List<PmStatusDesc> regStatusDescList;
 
@@ -475,6 +476,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			defPmCountry = new PmCountry();
 		}
 		uomSelectItems = SmApplicationUtil.getUomSelectItems();
+		raceSelectItems = SmApplicationUtil.getRaceSelectItems();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 		DateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -2170,6 +2172,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setUomSelectItems(List<SelectItem> uomSelectItems) {
 		this.uomSelectItems = uomSelectItems;
+	}
+
+	public List<SelectItem> getRaceSelectItems() {
+		return raceSelectItems;
+	}
+
+	public void setRaceSelectItems(List<SelectItem> raceSelectItems) {
+		this.raceSelectItems = raceSelectItems;
 	}
 
 }
