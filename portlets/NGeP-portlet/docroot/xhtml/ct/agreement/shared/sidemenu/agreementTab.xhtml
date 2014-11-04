@@ -43,20 +43,24 @@
 			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{agreementBackingBean.managedBean.selectedTabIndex}">
-                    <p:menuitem value="#{lbl['lbl.ct.menu.create.agreement']}" update="@form">
+                   
+                    <p:menuitem value="#{lbl['lbl.ct.menu.create.agreement']}" update="@all">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.ct.menu.signing.agreement']}" update="@form">
+					
+					<p:menuitem value="#{lbl['lbl.ct.menu.signing.agreement']}" update="@all">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.ct.menu.signed']}" update="@form" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
+					<p:menuitem value="#{lbl['lbl.ct.menu.signed']}" update="@all" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@form"
+					
+					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@all"
 					    rendered="#{!agreementBackingBean.isApprover() and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@form" 
+					 
+					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@all" 
 					    rendered="#{!agreementBackingBean.isApprover() and !agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>

@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
@@ -50,6 +51,7 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private String fileDirectory;
 	
 	private double performanceBondRuleAmt;
+	 private SelectItem[] terminationReasonDesc;
 
 	public String getTaskName() {
 		return taskName;
@@ -196,5 +198,13 @@ public class TerminationManagedBean extends BaseManagedBean{
 
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
+	}
+
+	public SelectItem[] getTerminationReasonDesc() {
+		return terminationReasonDesc;
+	}
+
+	public void setTerminationReasonDesc(SelectItem[] terminationReasonDesc) {
+		this.terminationReasonDesc = terminationReasonDesc;
 	}
 }
