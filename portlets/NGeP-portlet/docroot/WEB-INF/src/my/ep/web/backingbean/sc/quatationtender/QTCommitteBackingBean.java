@@ -465,7 +465,7 @@ public class QTCommitteBackingBean extends
 	}
 
 	// To clone multiple committes.. or single committe..
-	public void addCloneDtlToTabs() {
+	public void addCloneDtlToTabs(boolean isApprovalFlow) {
 		debugLogger("addCloneDtlToTabs");
 
 		ScQt scQt = this.getManagedBean().getQt();
@@ -512,9 +512,10 @@ public class QTCommitteBackingBean extends
 		/**
 		 * To check whether the cloning is required for that committe or not..
 		 */
-		checkCloneNeedRNot(scQt.getEvaluationType(), scQt.getQtStatus(),
-				needToCloneCommittes);
-
+		if (!isApprovalFlow) {
+			checkCloneNeedRNot(scQt.getEvaluationType(), scQt.getQtStatus(),
+					needToCloneCommittes);
+		}
 		List<TabBean> tabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 
@@ -1221,6 +1222,9 @@ public class QTCommitteBackingBean extends
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
+		if (null == selectedList || selectedList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
 		// List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
 		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
 				.removeAll(selectedList);

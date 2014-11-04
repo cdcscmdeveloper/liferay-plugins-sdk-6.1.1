@@ -1927,7 +1927,7 @@ public class LocationSingleton {
 		return root;
 	}
 
-	public List<TreeNode> constuctTreeNode(List<ScQtLocCriteria> specLocs) {
+	public List<TreeNode> constuctTreeNode(List<? extends TplSpecLoc> specLocs) {
 		List<TreeNode> rootNode = new ArrayList<TreeNode>();
 		if (specLocs != null) {
 

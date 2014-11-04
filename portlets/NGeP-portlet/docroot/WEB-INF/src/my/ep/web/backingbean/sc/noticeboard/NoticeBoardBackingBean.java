@@ -27,6 +27,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -80,6 +81,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -156,7 +158,11 @@ public class NoticeBoardBackingBean extends
 
 			if (!scQt.isZonal()) {
 				if (null != resDTO.getLocCriteria()) {
-					constructLocationTree(resDTO.getLocCriteria());
+
+					this.getManagedBean().setLocationNodes(
+							LocationSingleton.getInstance().constuctTreeNode(
+									resDTO.getLocCriteria()));
+
 				}
 				ScQtBsv scQtBsv = resDTO.getScQtBsv();
 
@@ -212,7 +218,7 @@ public class NoticeBoardBackingBean extends
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
@@ -234,14 +240,13 @@ public class NoticeBoardBackingBean extends
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
 				StateReqDTO reqDTO = new StateReqDTO();
-				reqDTO.setCountryId(1l);
+				reqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 				StateResDTO resDTO = stateSO
-						.retriveStatesListByCountryID(reqDTO);
+						.retriveStatesListByCountryCode(reqDTO);
 
 				if (resDTO != null && !resDTO.getStateList().isEmpty()) {
 
-					org.primefaces.model.TreeNode node = this.getManagedBean()
-							.getLocationRootNode();
+					TreeNode node = this.getManagedBean().getLocationRootNode();
 					if (node == null) {
 						node = new EpDefaultTreeNode("Root", null);
 						for (PmState state : resDTO.getStateList()) {
@@ -884,8 +889,7 @@ public class NoticeBoardBackingBean extends
 				if (pmCategoryL3 != null
 						&& pmCategoryL3.getCategoryL3Id() != null) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"pmcatL3.CATEGORY_L3_ID",
+							new SearchFilterBean("pmcatL3.CATEGORY_L3_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									pmCategoryL3.getCategoryL3Id()));
 
@@ -896,10 +900,8 @@ public class NoticeBoardBackingBean extends
 						.getMinistryProfile();
 				if (ministryProfile != null
 						&& ministryProfile.getOrgProfileId() != null) {
-					searchBean
-							.getDataFilterBeans()
-							.add(new SearchFilterBean(
-									"parentOrg.ORG_PROFILE_ID",
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("parentOrg.ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ministryProfile.getOrgProfileId()));
 
@@ -934,7 +936,7 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardSearchDataBean siteVisitDataBean = getManagedBean()
 						.getSiteVisitDataBean();
 				if (briefSearchDataBean != null) {
-					String searchField = "scQtBriefings.scQtBsvDtls.bsvDate";
+					String searchField = "bsvDtl.BSV_DATE";
 					SearchFilterBean briefSearchFilterBean = getSearchFilterBeanByDataBean(
 							searchField, briefSearchDataBean);
 
@@ -951,15 +953,14 @@ public class NoticeBoardBackingBean extends
 						}
 
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"scQtBriefings.scQtBsvDtls.bsvType",
+								new SearchFilterBean("bsvDtl.BSV_TYPE",
 										SearchOperator.OPERATOR_IN.value(),
 										bsvTypes));
 					}
 				}
 
 				if (siteVisitDataBean != null) {
-					String searchField = "scQtSiteVisit.scQtBsvDtls.bsvDate";
+					String searchField = "svDtl.BSV_DATE";
 
 					SearchFilterBean siteVisitSearchFilterBean = getSearchFilterBeanByDataBean(
 							searchField, siteVisitDataBean);
@@ -976,8 +977,7 @@ public class NoticeBoardBackingBean extends
 						}
 
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"scQtSiteVisit.scQtBsvDtls.bsvType",
+								new SearchFilterBean("svDtl.BSV_TYPE",
 										SearchOperator.OPERATOR_IN.value(),
 										bsvTypes));
 					}
@@ -1010,42 +1010,33 @@ public class NoticeBoardBackingBean extends
 
 					if (treeNode != null) {
 						if (treeNode.getType().equals("state")) {
-							searchBean
-									.getDataFilterBeans()
-									.add(new SearchFilterBean(
-											"state.STATE_ID",
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("state.STATE_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmState) treeNode.getData())
 													.getStateId()));
 						} else if (treeNode.getType().equals("division")) {
-							searchBean
-									.getDataFilterBeans()
-									.add(new SearchFilterBean(
-											"div.DIVISION_ID",
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("div.DIVISION_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmDivision) treeNode.getData())
 													.getDivisionId()));
 						} else if (treeNode.getType().equals("district")) {
-							searchBean
-									.getDataFilterBeans()
-									.add(new SearchFilterBean(
-											"distr.DISTRICT_ID",
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("distr.DISTRICT_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmDistrict) treeNode.getData())
 													.getDistrictId()));
-						} /*else if (treeNode.getType().equals("city")) {
-							searchBean
-									.getDataFilterBeans()
-									.add(new SearchFilterBean(
-											"city.CITY_ID",
-											SearchOperator.OPERATOR_EQUALS
-													.value(),
-											((PmCity) treeNode.getData())
-													.getCityId()));
-						}*/
+						} /*
+						 * else if (treeNode.getType().equals("city")) {
+						 * searchBean .getDataFilterBeans() .add(new
+						 * SearchFilterBean( "city.CITY_ID",
+						 * SearchOperator.OPERATOR_EQUALS .value(), ((PmCity)
+						 * treeNode.getData()) .getCityId())); }
+						 */
 
 					}
 				}
@@ -1325,9 +1316,7 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
 	}
 
-	public void downloadQTReport(Long qtId) {
-		
-	}
+	
 
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
 		IQTDetailSO detailSO;
