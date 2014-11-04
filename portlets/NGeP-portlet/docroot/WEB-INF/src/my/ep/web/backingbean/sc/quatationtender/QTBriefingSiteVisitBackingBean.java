@@ -192,8 +192,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		debugLogger("retrievePmDistrictList");
 		this.getManagedBean().setStateCode(false);
 		if (null != this.getManagedBean().getQtBriefing()) {
-			this.getManagedBean().getQtBriefing().getAddress()
-					.setPostcode(null);
+			/*this.getManagedBean().getQtBriefing().getAddress()
+					.setPostcode(null);*/
 			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
 					.getPmState().getStateId();
 			this.getManagedBean().setDivisionList(null);
@@ -664,6 +664,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void editAction(ScQtBsvDtl bsvDtl, int index, String bsvType) {
 		bsvDtl.setSelected(true);
+		this.getManagedBean().setRequired(true);
 		this.getManagedBean().setBsvIndex(index);
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		this.getManagedBean().setBsvType(bsvType);
