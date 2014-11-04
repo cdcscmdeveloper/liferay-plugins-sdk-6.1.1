@@ -645,17 +645,26 @@ public class SmApplicationBackingBean extends
 				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(getManagedBean()
 						.getSmAppl().getApplId());
 				if (sts != null && sts.getPmStatus() != null) {
+					if (sts.getPmStatus()
+							.getStatusId()
+							.compareTo(
+									SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
+						log.info("*** This is draft application *****");
+						throw new EpException(MessageConst.ERROR_722569);
+					}
 					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
 				}
 			}
 
 			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_722505);
-			// return SupplierManagementConst.DEFAULT_DEL_PENDING_MOF_APPLN;
-		} finally {
+		}
+		// catch (Exception e) {
+		// e.printStackTrace();
+		// throw new EpException(MessageConst.ERROR_722505);
+		// // return SupplierManagementConst.DEFAULT_DEL_PENDING_MOF_APPLN;
+		// }
+		finally {
 			mofRegistrationSO = null;
 		}
 	}
@@ -685,6 +694,10 @@ public class SmApplicationBackingBean extends
 		} else {
 			RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
 		}
+	}
+
+	public void onDisplayConfirmDelPending() {
+		RequestContext.getCurrentInstance().execute("delPenRegConfirm.show()");
 	}
 
 	public void updateSmAppl() throws Exception {
@@ -4032,6 +4045,9 @@ public class SmApplicationBackingBean extends
 			reqDTO.setOutcome(SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
 			reqDTO.setSupplierId(this.getManagedBean().getSmAppl()
 					.getSmSupplier().getSupplierId());
+			reqDTO.setUserList(new ArrayList<String>());
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			reqDTO.getUserList().add(pmUser.getLoginId());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
@@ -4059,9 +4075,11 @@ public class SmApplicationBackingBean extends
 									new FacesScopes().getUserLocale())));
 			renewSesionObject();
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
-		} catch (Exception e) {
-			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
-		} finally {
+		}
+		// catch (Exception e) {
+		// return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
+		// }
+		finally {
 			regSo = null;
 		}
 	}
