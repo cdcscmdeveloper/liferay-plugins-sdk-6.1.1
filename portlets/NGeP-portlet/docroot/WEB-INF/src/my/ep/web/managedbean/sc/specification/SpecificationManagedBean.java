@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.directpurchase.ZonesBean;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
@@ -52,7 +53,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
-/**
+/**	
  * @author ACER
  * 
  */
@@ -318,9 +319,18 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long divisionId;
 	private String divisionCode;
 	private CtPanelItem selectCtPanelItem;
+	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	
 
 	
+
+	public List<ZonesBean> getBeans() {
+		return beans;
+	}
+
+	public void setBeans(List<ZonesBean> beans) {
+		this.beans = beans;
+	}
 
 	public CtPanelItem getSelectCtPanelItem() {
 		return selectCtPanelItem;
