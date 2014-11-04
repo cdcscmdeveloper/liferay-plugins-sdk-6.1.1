@@ -273,9 +273,8 @@ public class SupplierManagementConst {
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
-	// public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION =
-	// "20100";
-	public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20700";
+	public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20100";
+	//public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20700";
 	public static final String PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION = "20101";
 	public static final String PM_STATUS_PENDING_APPLICATION_VERIFICATION = "20102";
 	public static final String PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT = "20103";
@@ -298,6 +297,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PO_REVIEW = 20104;
 	public static final long PM_STATUS_PO_ESCALTED_TO_APPROVER = 20108;
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
+	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
