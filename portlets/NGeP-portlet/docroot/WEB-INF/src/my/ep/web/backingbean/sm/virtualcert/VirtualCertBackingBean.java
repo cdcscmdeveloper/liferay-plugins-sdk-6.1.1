@@ -76,7 +76,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	private String tmpPath = null;
 	
 	public void viewVirtualCert(){
-		SmSupplier supp = getSmSupplier();
+		SmSupplier supp = getSmSupplier(null);
 
 		String xhtml = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
 
@@ -127,12 +127,11 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	
 	public void generatePdf(SmMofAccount mofAcc) throws Exception {
 		
-//		SmSupplier smSupplier = getSmSupplier();
-//		smSupplier.setSmAppl(getSerializedAppl(smSupplier.getSmAppl().getApprovedSerFile()));
+		SmSupplier smSupplier = getSmSupplier(mofAcc.getMofNo());
 		
-		Long applId = getSmSupplier().getSmAppl().getApplId();
+//		Long applId = getSmSupplier(mofAcc.getMofNo()).getSmAppl().getApplId();
 		
-		log.info("******generatePdf>>>" + applId);
+//		log.info("******generatePdf>>>" + applId);
 		IMofRegistrationSO mofRegistrationSO = null;
 //		SmAppl smAppl = null;
 //		tmpPath = System.getProperty("java.io.tmpdir");
@@ -146,8 +145,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		if(!dir.exists()) dir.mkdirs();
 		
 		log.info("************tmp>>>" + tmpPath);
-		SmSupplier smSupplier = null;
-		try {
+//		SmSupplier smSupplier = null;
+/*		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 	
@@ -164,7 +163,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			
 		} finally {
 			mofRegistrationSO = null;
-		}
+		}*/
 		
 		System.out.println("supplier.getSmAppl()::::::::::::::::0 " + smSupplier.getSmAppl().getApplId());
 		System.out.println("supplier.getSmAppl()::::::::::::::::0 " + smSupplier.getSmAppl().getSmSupplierCategories().size());
@@ -234,7 +233,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	
 	public void generateBumiPdf(SmMofAccount mofAcc) throws Exception {
 		
-		Long applId = getSmSupplier().getSmAppl().getApplId();
+		// retrieve supplier by mofAccountNo, userId
+		
+		Long applId = getSmSupplier(mofAcc.getMofNo()).getSmAppl().getApplId();
 		
 		log.info("******generatePdf>>>" + applId);
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -295,19 +296,26 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
         downloadFile(latestFile);
 	}
 	
-	private SmSupplier getSmSupplier() {
+	private SmSupplier getSmSupplier(String mofAccountNo) {
+		
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		log.info("******getSmSupplier******" + pmUser.getUserId());
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setUserId(pmUser.getUserId());
+		
+		if(mofAccountNo != null) {
+			supplierSearchReqDTO.setMofAccountNo(mofAccountNo);	
+		}
+		
 
 		ISupplierSearchSO supplierSearchSO= null;
 		SmSupplier smSupp = null;
 		try {
 			supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 //			SupplierSearchResDTO smResDTO = supplierSearchSO.retrieveSupplierForVirtualCertification(supplierSearchReqDTO);
-			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-			smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfileForVirtualCert(supplierSearchReqDTO);
+//			smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+			smSupp = smResDTO.getSmSupplier();
 		} finally {
 			supplierSearchSO = null;
 		}
@@ -468,6 +476,14 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	log.debug("html output: " + output);
     	
     	return output.toString();
+    }
+    
+    private String getAddCategoriesDate(List<SmSupplierCategory> supplierCategories) {
+    	return null;
+    }
+    
+    private String getDeleteCategoriesDate(List<SmSupplierCategory> supplierCategories) {
+    	return null;
     }
     
     private String toUtilDate(java.sql.Timestamp sqlDate) {
