@@ -195,9 +195,9 @@
 						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="shrRace"
-							value="#{backingBean.managedBean.racesList}"
-							itemValue="#{shrRace.raceId}" itemLabel="#{shrRace.raceName}" />
+						<f:selectItems var="select"
+							value="#{backingBean.managedBean.raceSelectItems}"
+							itemLabel="select.label" itemValue="select.value" />
 					</p:selectOneMenu> <p:message id="equiPerRaceMsg" for="equiPerRace"
 						showSummary="true" showDetail="false" display="icon" /></td>
 
