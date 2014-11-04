@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -122,7 +121,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
@@ -751,11 +749,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// prepare by
 					if(assignedUser != null){
 						selectedReqDtl.setAssignedUser(assignedUser);
-						applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
-
-					} else{
-						//throw new EpException("Please select Prepare By.");
-					}
+						//applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
+					} 
 					
 					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
 						// delivery term
@@ -902,7 +897,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			statusSO = null;
 		}		
 		
-		// clear the justification type and justification remarks
+		// clear the justification type, price type and justification remarks
+		getManagedBean().setPriceType("");
 		getManagedBean().setJustificationType("");
 		getManagedBean().setJustification("");
 		getManagedBean().setProcTypeOption(Boolean.FALSE);
@@ -1445,7 +1441,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestNote(requestNote);
 		
 		//clear the selected price type
-		getManagedBean().setPriceType(null);
+		getManagedBean().setPriceType("");
 		
 		// request note counter
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
@@ -1687,7 +1683,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(getManagedBean().getFulfillmentType() != null){
 			//requestNoteDtl.setFulfillmentType(getManagedBean().getFulfillmentType());
 		}
-		
+
 		List<PmUser> userlist = new ArrayList<PmUser>();
 		if(requestNoteDtl.getFulfilmentType() != null ){
 			if (requestNoteDtl.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
@@ -1701,8 +1697,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				for (String role : roleList) {
 					userlist.addAll(userListByRole(role));
 				}
+				Collections.sort(userlist, new usersComparator());
 				getManagedBean().setUserList(userlist);
 			}
+		}
+	}
+	// sorting prepared by users
+    class usersComparator implements Comparator<PmUser> {
+		public int compare(PmUser pmUser1, PmUser pmUser2) {
+			int sort;
+			// Sort on Name first 
+			sort = pmUser1.getUserName().compareTo(pmUser2.getUserName());
+			return sort;
 		}
 	}
 	
@@ -1715,8 +1721,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(getManagedBean().getRequestNote().getPmOrgProfile()!= null){
 			  reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			}
-			IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
+			UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
 				options = resDTO.getUserList();
 			log.info("result size: " +options.size());
 		} finally{
@@ -1799,11 +1804,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	public PmUser  getUserById(Long userId) {
 		PmUser user = null;
-		IUserSO userSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		if(userId != null){
 			reqDTO.setUserId(userId);
-			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+			UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
 
 			if(resDTO.getPmUser() != null){
 				 user = resDTO.getPmUser();
@@ -1814,7 +1818,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	 public void initialInformation(ScRequestNote requestNote){
 		    DualListModel<PmUser>	approvalUsers;
-			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
 			
@@ -1822,7 +1825,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			   userReqDto.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 			}
 			
-			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+			UserResDTO userResDTO = getUserSO().retrieveUserListByRole(userReqDto);
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 			
@@ -2257,19 +2260,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			//requestSupplierItem.setSupplierId(supplierId);
 			requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
 			// delivery term type
-			if(deliveryTermId > 0){
+			if(deliveryTermId != null && deliveryTermId > 0){
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterId(deliveryTermId);
 				PmParameter deliveryTermType = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
 				requestNoteDtl.setDeliverTermType(deliveryTermType);
 			}
+			
 			// prepared by
-			if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
-				for (PmUser user  : getManagedBean().getUserList()) {
-					if(user.getUserId().equals(assignedUserId)){
-						requestNoteDtl.setAssignedUser(user);	
-					}
-				}
+			if(assignedUserId != null && assignedUserId >0){
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(assignedUserId);
+				UserResDTO resDTO = getUserSO().retrieveUserByUserId(reqDTO);
+				requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
 			}
 	}
 
@@ -2315,7 +2318,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			if(requestNoteDtl.getPriceType() != null && requestNoteDtl.getPriceType().getParameterId() != null){
 				supplierListener(null, requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl , 
-						requestNoteDtl.getAssignedUser().getUserId(), requestNoteDtl.getDeliverTermType().getParameterId());
+						null, null);
 			}
 			
 		}
@@ -2935,6 +2938,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
+	
+	private IUserSO getUserSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	}
+	
 	
 	private String getServerUrl() {
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
