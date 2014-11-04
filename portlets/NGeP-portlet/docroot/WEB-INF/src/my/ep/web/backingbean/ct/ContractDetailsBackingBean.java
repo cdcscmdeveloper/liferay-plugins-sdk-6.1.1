@@ -2339,7 +2339,7 @@ public void ConstructSideTabMenu(){
 		 else
 			 reqDTO.setContractVerId(contractVerId);
 		 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-		
+		 reqDTO.setViewOnly(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    getManagedBean().setViewContract(true);
 	    setValidateContractField(resDTO); 
