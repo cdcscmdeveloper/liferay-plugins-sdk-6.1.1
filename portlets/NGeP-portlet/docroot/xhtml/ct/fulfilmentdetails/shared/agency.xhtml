@@ -75,7 +75,7 @@
 		       </p:column>
 		        
 		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
-		   	        <p:outputLabel value="#{agencyData.recordStatus == true ? 'Activie':'Inactive'}"/>
+		   	        <p:outputLabel value="#{agencyData.recordStatusFlg == 1 ? 'Active':'Inactive'}" style="float:none" />
 		       </p:column>
 			</p:dataTable> 
        	<div class="ppRightBtn">
