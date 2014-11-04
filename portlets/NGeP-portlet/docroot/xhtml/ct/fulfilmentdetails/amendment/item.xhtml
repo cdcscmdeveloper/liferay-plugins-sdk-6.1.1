@@ -354,18 +354,30 @@
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" />
-				<p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:35%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
+				<p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
 					<p:outputLabel value="#{serviceItemVar.itemName}" style="float:left;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
+					<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:15%;white-space:normal;">
 					<p:outputLabel value="#{serviceItemVar.uom.uomName}" style="float:left;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
-					<p:outputLabel value="#{serviceItemVar.minimumOrderQty}" />
-				</p:column>
+		      <p:column headerText="#{lbl['lbl.sc.frequency.per.uom']}" style="width:15%; white-space:normal;">
+		        	<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		      </p:column>				
+		      	<p:column headerText="#{lbl['lbl.sc.no.uom.per.day']}"  style="text-align: right;width:15%; white-space:normal;">
+		          	<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		      	</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" style="width:15%; white-space:normal;text-align: right;">
 					<p:outputLabel value="#{serviceItemVar.uomPerMonth}" />
 				</p:column>
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.year']}"  style="text-align: right;width:15%; white-space:normal;">
+		          	<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		      </p:column>				
+				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
+					<p:outputLabel value="#{serviceItemVar.minimumOrderQty}" />
+				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
 		            <p:outputLabel value="#{serviceItemVar.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
 		        </p:column> 

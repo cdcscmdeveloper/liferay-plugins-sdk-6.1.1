@@ -17,30 +17,45 @@
                <ac:paginator for="serviceTable"/>
               <p:ajax event="rowSelect" update=":form:showServicePrice" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		      
-		      <p:column headerText="#{lbl['lbl.ct.item.desc']}"   
-		             filterBy="#{data.itemName}" style="width:40%; white-space:normal;" filterMatchMode="contains">
+		      <p:column headerText="#{lbl['lbl.ct.item.name']}"   
+		             filterBy="#{data.itemName}" style="width:20%; white-space:normal;" filterMatchMode="contains">
 		         <p:outputLabel value="#{data.itemName}" style="float:left;"/>
 		      </p:column>       
+		      
+		      <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
+		        	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;"/>
+		      </p:column>  
 		    
 		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:15%; white-space:normal;">
 		        <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
 		      </p:column>        
 		      
+		      <p:column headerText="#{lbl['lbl.sc.frequency.per.uom']}" style="width:15%; white-space:normal;">
+		        	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		      </p:column> 
+		      
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.day']}"  style="text-align: right;width:15%; white-space:normal;">
+		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		      </p:column>
+		      
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.month']}"  style="text-align: right;width:15%; white-space:normal;">
+		          	<p:outputLabel value="#{data.uomPerMonth}" />
+		      </p:column>
+		      
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.year']}"  style="text-align: right;width:15%; white-space:normal;">
+		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		      </p:column>
+		      
 		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="text-align: right; width:20%; white-space:normal;">
 		          <h:outputText value="#{data.minimumOrderQty}">
      		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		          </h:outputText>		        
-		      </p:column>               
+		      </p:column>  
 		      
-		      <p:column headerText="#{lbl['lbl.ct.uom.per.month']}"  style="text-align: right;width:15%; white-space:normal;">
-		          <h:outputText value="#{data.uomPerMonth}">
-     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
-		          </h:outputText>		     	
-		      </p:column>
-		      
-		       <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		            <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		        </p:column>   
+		      </p:column>   
+		        
     	   </p:dataTable> 
         </h:panelGrid>
        
