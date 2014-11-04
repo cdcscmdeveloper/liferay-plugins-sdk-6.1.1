@@ -188,7 +188,7 @@
 				<p:spacer height="3" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs}"
+						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
 						oncomplete="screen2.hide();" icon="ui-icon-check"
 						update="@all" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"

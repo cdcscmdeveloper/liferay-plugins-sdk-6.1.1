@@ -78,7 +78,8 @@
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
-							<p:column headerText="#{lbl['lbl.so.bo.name']}" style="white-space: normal;">
+							<p:column headerText="#{lbl['lbl.so.bo.name']}"
+								style="white-space: normal;">
 								<h:outputText value="#{existcommitteeuser.userName}" />
 							</p:column>
 
@@ -86,13 +87,14 @@
 								<h:outputText value="#{existcommitteeuser.identificationNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.designation']}" style="white-space: normal;">
+							<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+								style="white-space: normal;">
 								<h:outputText value="#{existcommitteeuser.designation}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.email']}" style="white-space: normal;">
-								<h:outputText
-									value="#{existcommitteeuser.email}" />
+							<p:column headerText="#{lbl['lbl.so.bo.email']}"
+								style="white-space: normal;">
+								<h:outputText value="#{existcommitteeuser.email}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
@@ -227,12 +229,13 @@
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this, newCommitteeApproverProfile, committeApproverPnlId"
 					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
-					icon="ui-icon-check" 
-					update="@(.scMemberDtls, committeApproverPnlId)"/>
+					icon="ui-icon-check"
+					update="@([id$=scmemberdtls]),@(.committeApproverPnlId)" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					styleClass="apply_button" process="@this"
-					oncomplete="newspecificationcommittee.hide();" icon="ui-icon-cancel" />
+					oncomplete="newspecificationcommittee.hide();"
+					icon="ui-icon-cancel" />
 			</div>
 		</p:panel>
 	</p:dialog>

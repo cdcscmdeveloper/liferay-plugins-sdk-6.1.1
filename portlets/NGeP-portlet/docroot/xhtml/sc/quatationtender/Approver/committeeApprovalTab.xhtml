@@ -17,12 +17,12 @@
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
 				actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 				oncomplete="screen2.show();" process="@this" icon="ui-icon-clone"
-				update="@(.cloneCommitteMember)" />
+				update="@([id$=cloneid])" />
 			<p:commandButton id="committeeapproveradd"
 				value="#{lbl['lbl.so.addbtn']}" process="@this"
 				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 				oncomplete="newspecificationcommittee.show();"
-				update="@(.commiteeapprovermember)" icon="ui-icon-add" />
+				update="@([id$=cloneid])" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				process="@this, committeeapprovalId"
