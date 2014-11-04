@@ -1679,13 +1679,18 @@ public void ConstructSideTabMenu(){
     
   public void  refreshCeilingQuantity(){
 	  
-	  if(getManagedBean().getSelectedItem() != null){
-		  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+	  if(getManagedBean().getSelectedItem() != null) {
+		  if(getManagedBean().getShowItem() != null &&
+				   getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)){
+		      getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+		  } else if(getManagedBean().getShowItem() != null &&
+				   getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
+			  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+			  refreshAgencyCeilingQuantityList();
+		  } else {
+			  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+		  }
 	  }
-	  if (getManagedBean().getShowItem() != null &&
-			   getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
-		     refreshAgencyCeilingQuantityList();
-	   }
     }
     
     public void changeItemTypes(){
