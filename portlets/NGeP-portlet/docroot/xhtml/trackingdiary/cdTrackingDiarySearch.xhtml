@@ -33,7 +33,7 @@
 								<td width="35%"><p:outputLabel
 										value="UNSPSC Title" /></td>
 								<td width="65%"><p:inputText size="50"
-										value="#{codificationBackingBean.titleFilterBean.searchValue}"></p:inputText></td>
+										value="#{cdTrackingDiaryBackingBean.UNSPSCTitleFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
@@ -51,7 +51,7 @@
 							</tr>
 						</table>
 						<div style="text-align: right;">
-							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{codificationBackingBean.unspscSearch}" update="cmUNSPSCsearchID" >
+							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{cdTrackingDiaryBackingBean.unspscSearch}" update="cmUNSPSCsearchID" >
 								<f:param name="unspscCode" value="aaaaaaaaaaa" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{cdTrackingDiaryBackingBean.reset}">
@@ -95,8 +95,8 @@
 				</f:facet>
 					<p:commandLink
 						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
-							<p:graphicImage library="ep/images/design" name="reset.png"
-								value="/resources/ep/images/design/reset.png" />
+							<p:graphicImage library="ep/images/design" name="document.png"
+								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>
 			</p:column>
 			</p:dataTable>

@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "cdTrackingDiaryBackingBean")
 @SessionScoped
 public class CdTrackingDiaryBackingBean extends
-		BaseBackingBean<CodificationManagedBean> {
+		TrackingDiaryBaseBackingBean<CodificationManagedBean> {
 	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cdTrackingDiaryDetailSearch.xhtml";
@@ -51,7 +51,7 @@ public class CdTrackingDiaryBackingBean extends
 		this.getManagedBean().getContractedItem().add(unspsc);
 	}
 	
-	public void search() {
+	public void unspscSearch() {
 		String unspscCode = getManagedBean().getAutoCompleteUnspscCode().getUnspscCode();
 		String unspscTitle = UNSPSCTitleFilterBean.getSearchValue().toString();
 
@@ -66,10 +66,10 @@ public class CdTrackingDiaryBackingBean extends
 			throw new EpException(MessageConst.ERROR_716006);
 		}
 
-		if (unspscCode != null && !unspscCode.isEmpty()
-				&& unspscCode.length() != 8) {
-			throw new EpException(MessageConst.ERROR_715026);
-		}
+//		if (unspscCode != null && !unspscCode.isEmpty()
+//				&& unspscCode.length() != 8) {
+//			throw new EpException(MessageConst.ERROR_715026);
+//		}
 
 		searchDataModel.reloadData();	}
 
@@ -92,12 +92,13 @@ public class CdTrackingDiaryBackingBean extends
 			if (StringUtils.isBlank((String) UNSPSCCodeFilterBean.getSearchValue())
 					&& StringUtils.isBlank((String) UNSPSCTitleFilterBean
 							.getSearchValue())) {
-				return new SearchResultBean();
+				System.out.println("ssssssssssssss");
+		return new SearchResultBean();
 			}
 
 			ICodificationSO unspscSO = null;
 			try {
-
+				System.out.println("ssssddssssssssss");
 				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 						.getServiceObject("cm", ICodificationSO.class);
 
