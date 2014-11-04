@@ -266,12 +266,21 @@ System.out.println("res.getStatus() " + res.getStatus());
 		this.generatePageMode();
 		if(id!=null && id>0){
 			loadPlanDetails(id);
+			loadDefaultButtons();
 		}else{
 			initialPlanDetails();
 		}
 		return NAV_TO_MAINTAIN;
 	}
 	
+	private void loadDefaultButtons(){
+		this.getManagedBean().getSelectedPlan();
+		//BPM buttons
+		String[] outcome = new String[2];
+		outcome[0] = BpmOutcomeConst.BPM_SAVE;
+		outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
+		getManagedBean().setOutComes(outcome);
+	}
 	/**
 	 * load plan object by id
 	 * @param id
@@ -302,6 +311,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 				calculatePpGrandTotal();
 			}
 
+			
 		}else{
 			throw new EpException("Unable to retrieve plan."); //TODO
 		}
@@ -396,7 +406,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 		List<PmUser> sourceApprover = new ArrayList<PmUser>(); 
         List<PmUser> targetApprover = new ArrayList<PmUser>();  
         this.getManagedBean().setApproverModel(new DualListModel<PmUser>(sourceApprover, targetApprover));
-        generateSourceApprovers(orgProfile.getParentOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors);
+        generateSourceApprovers(orgProfile.getParentOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); //getParentOrgProfile().TODO
 
 		log.info("loadPlanActors - End");
 	}
@@ -607,7 +617,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 		
 	}
 	
-	/* LOCAL*/
+//	/* LOCAL*/
 //	/**
 //	 * Login user has approver role
 //	 * @return boolean
@@ -1022,10 +1032,12 @@ System.out.println("res.getStatus() " + res.getStatus());
 			List <Long> existingVerifiers = new ArrayList<>();
 			List <Long> existingApprovers = new ArrayList<>();
 			for(PpPlanActor actor:ppPlan.getPpPlanActors()){
-				if(RoleCode.PLAN_VERFICATION_OFFICER.value().equals(actor.getRoleCode())){
+				if(RoleCode.PLAN_VERFICATION_OFFICER.value().equals(actor.getRoleCode().getRoleCode())){
+					System.out.println("Existing VERIFIER: " + actor.getPmUser().getUserId());
 					existingVerifiers.add(actor.getPmUser().getUserId());
 				}
-				if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode())){
+				if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode().getRoleCode())){
+					System.out.println("Existing Approver: " + actor.getPmUser().getUserId());
 					existingApprovers.add(actor.getPmUser().getUserId());
 				}
 			}
@@ -1060,7 +1072,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 					}
 					//Remove Unselected Actor
 					for(PpPlanActor actor:ppPlan.getPpPlanActors()){
-						if(RoleCode.PLAN_VERFICATION_OFFICER.value().equals(actor.getRoleCode())){
+						if(RoleCode.PLAN_VERFICATION_OFFICER.value().equals(actor.getRoleCode().getRoleCode())){
 							if(!newVerifiers.contains(actor.getPmUser().getUserId())){
 								//Remove
 								actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
@@ -1078,6 +1090,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 				for(PmUser newUser:this.getManagedBean().getApproverModel().getTarget()){
 					newApprovers.add(newUser.getUserId());
 					if(!existingApprovers.contains(newUser.getUserId())){
+						System.out.println("add new approver");
 						//Add
 						PpPlanActor planActor = null;
 						PmRole pmRole = new PmRole();
@@ -1095,9 +1108,10 @@ System.out.println("res.getStatus() " + res.getStatus());
 				}
 				//Remove Unselected Actor
 				for(PpPlanActor actor:ppPlan.getPpPlanActors()){
-					if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode())){
+					if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode().getRoleCode())){
 						if(!newApprovers.contains(actor.getPmUser().getUserId())){
 							//Remove
+							System.out.println("remove existing approver");
 							actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						}
 					}
