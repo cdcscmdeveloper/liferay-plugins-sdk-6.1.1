@@ -24,9 +24,9 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
+			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}" >
 
-				<p:inputText value="#{financialsrv.bankCode}" size="30" maxlength="20" />
+				<p:inputText value="#{financialsrv.bankCode}" size="30" maxlength="20" disabled="#{!financialsrv.brandNew or financialsrv.serviceTypeCode.parameterCode eq 'FC'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu
