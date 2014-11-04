@@ -10,7 +10,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">  
 	<ui:define name="contentSection">
 		<script> $('#portlet_ctRequestFactoring_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getPortletTitle()}'); </script>
-		
+		<style>
+          .columnWidth200 {width: 225px; vertical-align: top;text-align: right;  }
+          .columnWidth400 {width: 400px;}
+          .columnWidth300 {width: 300px;}
+    </style> 
 		<p:panel id="headerDetails">
 		  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
@@ -51,7 +55,7 @@
 	  <p:panel id="loaId" header="#{lbl['lbl.ct.menu.loa.details']}" toggleable="true"  toggleSpeed="500">
 	         <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
 	         <h:panelGrid columns="4" style="width:100%;" 
-	              columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+	               columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 		
 		     	<h:panelGrid columns="2" style="float:right;">
 			         <p:outputLabel value="*" styleClass="mandatory" />
@@ -125,7 +129,7 @@
 			        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.dtls']}"/>
 			  </f:facet>
               <h:panelGrid columns="4" style="width:100%;"
-                  columnClasses="columnVCenterWidth15,columnWidth20,columnWidth20,columnWidth20">
+                  columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
           
                   <h:panelGrid columns="2" style="float:right;">
 	                  <p:outputLabel value="*" styleClass="mandatory" />
@@ -170,6 +174,8 @@
          		    <h:panelGrid columns="2">
          			   <p:calendar id="effdateCal" size="25"  required="true" showOn="button" label="#{lbl['lbl.ct.start.date']}"
 		    			    value="#{supplierBackingBean.managedBean.factoring.effDate}"  
+		    			    mindate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}" 
+		    			    maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
 		    			    disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true" 
 		    			    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		    			    <p:ajax event="dateSelect" update="expdateCal" />
@@ -195,6 +201,7 @@
 		 			    label="#{lbl['lbl.ct.end.date']}" value="#{supplierBackingBean.managedBean.factoring.expDate}"  
 		    			 disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true" 
 		    			  mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
+		    			  maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
 		    			 pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			         <f:attribute name="startDate" value="#{supplierBackingBean.managedBean.factoring.effDate}" />
                       <f:validator validatorId="primeDateRangeValidator" />
@@ -276,7 +283,7 @@
 		          </p:fileUpload> 
 	         </p:dialog>
          </p:panel>
-        
+         <ui:include src="approverSetting.xhtml" />
          <p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.clause']}" toggleable="true"  toggleSpeed="500"
             rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.approverRole}" >
             <p:spacer height="8"/>
@@ -299,7 +306,6 @@
     	    	<p:editor controls="print" id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430" />
     	    </p:dialog>
      </p:panel>
-      <ui:include src="approverSetting.xhtml" />
        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
    </ui:define>
 </ui:composition>
