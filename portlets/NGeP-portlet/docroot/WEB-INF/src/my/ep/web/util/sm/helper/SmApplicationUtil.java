@@ -807,6 +807,7 @@ public class SmApplicationUtil {
 
 	public static boolean validatePersonnelBeforeSave(boolean validSave,
 			int currentTab, SmApplicationManagedBean managedBean) {
+		Locale locale = new FacesScopes().getUserLocale();
 		SmAppl appl = managedBean.getSmAppl();
 		int mgmtCount = 0;
 		int staffCount = 0;
@@ -894,20 +895,39 @@ public class SmApplicationUtil {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						"Semi-Professional", "Diploma" });
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.professional.semi",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.diploma",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale) });
 			}
 			if (profCount < 1) {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						"Professional", "Bachelor Degree" });
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.professional",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale), ResourceBundleUtils.getMessage(
+										"lbl.sm.personnel.bachelor.degree",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale) });
 			}
 			if (staffCount < 1) {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						"Clerical Staff",
-						"SijilPelajaran Malaysia or equivalent certificate" });
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.comprole.clerical.staff",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale),
+								ResourceBundleUtils.getMessage(
+										"lbl.sm.personnel.spm.equivlnt",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale) });
 			}
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
@@ -916,7 +936,16 @@ public class SmApplicationUtil {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722513, new String[] {
-						"Staff", "one(1)", "Staff" });
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.comprole.staff",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale), ResourceBundleUtils.getMessage(
+										"lbl.sm.personnel.one.lowercaps",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale), ResourceBundleUtils.getMessage(
+										"lbl.sm.personnel.comprole.staff",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale) });
 			}
 		}
 		if (managedBean.getBusinessTypeVal() != null
@@ -931,7 +960,16 @@ public class SmApplicationUtil {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
-					"Director", "one(1)", "Director" });
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.comprole.director",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale), ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.one.lowercaps",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale), ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.comprole.director",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale) });
 		} else if (managedBean.getBusinessTypeVal() != null
 				&& managedBean
 						.getBusinessTypeVal()
@@ -941,13 +979,31 @@ public class SmApplicationUtil {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
-					"Director", "two(2)", "Director" });
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.comprole.director",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale), ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.two.lowercaps",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale), ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.comprole.director",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale) });
 		}
 		if (mgmtCount < 1) {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
-					"Management Staff", "one(1)", "Management Staff" });
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.mngmnt.staff",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale), ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.one.lowercaps",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale), ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.mngmnt.staff",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale) });
 		}
 		appl = null;
 		return validSave;
@@ -1821,8 +1877,7 @@ public class SmApplicationUtil {
 		reqDTO.setSupplierTypeCode(supplierType);
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
-		CategoryCodeResDTO resDTO = reqSO
-				.retrieveCategoryL1List();
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1List();
 		if (resDTO != null) {
 			return resDTO.getCategoryL1List();
 		} else {
@@ -1860,12 +1915,12 @@ public class SmApplicationUtil {
 	}
 
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
-			long categoryL1Id,SmApplicationManagedBean managedBean) {
+			long categoryL1Id, SmApplicationManagedBean managedBean) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
-		//reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		// reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 
 		return resDTO.getCategoryL2List();
@@ -1903,7 +1958,7 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		//reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		// reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();
