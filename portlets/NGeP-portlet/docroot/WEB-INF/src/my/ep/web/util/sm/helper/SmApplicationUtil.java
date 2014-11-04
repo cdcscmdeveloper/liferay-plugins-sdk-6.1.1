@@ -135,6 +135,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -909,13 +910,13 @@ public class SmApplicationUtil {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722510, new String[] {
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.professional",
+						ResourceBundleUtils.getMessage("lbl.sm.professional",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale), ResourceBundleUtils.getMessage(
-										"lbl.sm.personnel.bachelor.degree",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale) });
+								locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.bachelor.degree",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale) });
 			}
 			if (staffCount < 1) {
 				validSave = false;
@@ -925,10 +926,10 @@ public class SmApplicationUtil {
 								"lbl.sm.personnel.comprole.clerical.staff",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								locale),
-								ResourceBundleUtils.getMessage(
-										"lbl.sm.personnel.spm.equivlnt",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale) });
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.spm.equivlnt",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale) });
 			}
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
@@ -940,13 +941,15 @@ public class SmApplicationUtil {
 						ResourceBundleUtils.getMessage(
 								"lbl.sm.personnel.comprole.staff",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale), ResourceBundleUtils.getMessage(
-										"lbl.sm.personnel.one.lowercaps",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale), ResourceBundleUtils.getMessage(
-										"lbl.sm.personnel.comprole.staff",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale) });
+								locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.one.lowercaps",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.comprole.staff",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale) });
 			}
 		}
 		if (managedBean.getBusinessTypeVal() != null
@@ -963,14 +966,13 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
 					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.comprole.director",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale), ResourceBundleUtils.getMessage(
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.one.lowercaps",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale), ResourceBundleUtils.getMessage(
-									"lbl.sm.personnel.comprole.director",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale) });
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.comprole.director",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		} else if (managedBean.getBusinessTypeVal() != null
 				&& managedBean
 						.getBusinessTypeVal()
@@ -982,14 +984,13 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
 					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.comprole.director",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale), ResourceBundleUtils.getMessage(
-									"lbl.sm.personnel.two.lowercaps",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale), ResourceBundleUtils.getMessage(
-									"lbl.sm.personnel.comprole.director",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale) });
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.two.lowercaps",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.comprole.director",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		}
 		if (mgmtCount < 1) {
 			validSave = false;
@@ -997,14 +998,13 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722513, new String[] {
 					ResourceBundleUtils.getMessage(
 							"lbl.sm.personnel.mngmnt.staff",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale), ResourceBundleUtils.getMessage(
-									"lbl.sm.personnel.one.lowercaps",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale), ResourceBundleUtils.getMessage(
-									"lbl.sm.personnel.mngmnt.staff",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale) });
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.one.lowercaps",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.mngmnt.staff",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		}
 		appl = null;
 		return validSave;
@@ -2010,18 +2010,21 @@ public class SmApplicationUtil {
 			return null;
 		}
 	}
-	
-	public static List<SelectItem> getUomSelectItems(){
+
+	public static List<SelectItem> getUomSelectItems() {
 		List<SelectItem> uomSelectItems = new ArrayList<SelectItem>();
 		List<PmUom> uomList = retrieveUomList();
-		
+
 		SelectItem si = null;
-		if(uomList!=null){
-			for(PmUom pmUom:uomList){
-				si = new SelectItem();
-				si.setLabel(pmUom.getUomName());
-				si.setValue(pmUom.getUomId());
-				uomSelectItems.add(si);
+		if (uomList != null) {
+			for (PmUom pmUom : uomList) {
+				if (pmUom.getUomId() != null && pmUom.getUomName() != null
+						&& !StringUtils.isEmpty(pmUom.getUomName())) {
+					si = new SelectItem();
+					si.setLabel(pmUom.getUomName());
+					si.setValue(pmUom.getUomId());
+					uomSelectItems.add(si);
+				}
 			}
 		}
 		return uomSelectItems;
