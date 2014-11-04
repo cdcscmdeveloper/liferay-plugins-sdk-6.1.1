@@ -2646,7 +2646,8 @@ public class SmApplicationBackingBean extends
 		manu.setRevNo(1);
 		manu.setSmAppl(getManagedBean().getSmAppl());
 		getManagedBean().setSelectedManufacturer(manu);
-		getManagedBean().setUomSelectItems(SmApplicationUtil.getUomSelectItems());
+		getManagedBean().setUomSelectItems(
+				SmApplicationUtil.getUomSelectItems());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("manufactorDialog.show()");
 		log.info("****** After **********"
@@ -4797,6 +4798,28 @@ public class SmApplicationBackingBean extends
 	public void assignSelectedSupportDoc(SmApplSupportDoc doc) {
 		log.info("****** Assign Supporting Doc *******");
 		getManagedBean().setSupportDoc(doc);
+	}
+
+	public void handleResubmitSupDocFileAttachment(FileUploadEvent event) {
+		log.info("********handleFileAttachment********");
+		if (event.getFile() != null) {
+			log.info("***** File attached *******"
+					+ event.getFile().getFileName());
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
+				if (doc.getApplSupportDocId().compareTo(
+						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
+					log.info("**** This is the selected object ***** ");
+					doc.getSmApplDocFiles().get(0)
+							.setFileName(event.getFile().getFileName());
+					String filePath = Calendar.getInstance().get(Calendar.YEAR)
+							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
+							+ "/SD/";
+					doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+					commonUploadFile(event, filePath);
+				}
+			}
+		}
 	}
 
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
