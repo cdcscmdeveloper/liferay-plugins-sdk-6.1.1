@@ -90,7 +90,7 @@ public class SpkiBackingBean {
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
- 
+
 	public void getChallengeQuestions(){ 
 	try{
 			// Create property file
@@ -237,7 +237,7 @@ public class SpkiBackingBean {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		
 		pmDigiSign.setCreatedBy(userId);
-        pmDigiSign.setCertificate("111111");
+//        pmDigiSign.setCertificate("111111");
         pmDigiSign.setCreatedDate(date);
         pmDigiSign.setOrginalData(textBeforeSign);
         pmDigiSign.setSignedData(signedText);
@@ -257,16 +257,21 @@ public class SpkiBackingBean {
 
 		}
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
-	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
+//	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
+//	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
-//		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-//		externalContext.redirect("https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx"+generateSecurityToken()p);
-      //https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx
-      //https://kmcep-dev.digicert.com.my/RequestChangePIN.aspx
-      //https://kmcep-dev.digicert.com.my/RequestResetPIN.aspx
-      //https://kmcep-dev.digicert.com.my/RequestRevokeCertaspx	
+//        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		externalContext.redirect("https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx");
+		generateSecurityToken();
+//https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx
+//
+//https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx
+//
+//https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx
+//
+//https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx
+
         }
 	
 	

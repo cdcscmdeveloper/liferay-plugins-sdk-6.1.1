@@ -13,7 +13,7 @@
         
             
 
-	</ui:define>  
+	</ui:define>
    <ui:define name="contentSection">
  <h:panelGrid columns="1" cellpadding="5">
    <p:commandLink value="RequestChallRespUpdate" action="#{spkiBackingBean.RequestChallRespUpdate}">
@@ -34,9 +34,9 @@
 	<p:spacer width="7" />
    </h:panelGrid>
 	<h:panelGrid columns="1" cellpadding="5">
-<p:commandButton value="Submit" type="button"  onclick="gpki_dlg.show();" />
-</h:panelGrid>
-  <ac:gpkiPopup textBeforeSign="123" postSignAction="#{spkiBackingBean.signAction()}" />
+<p:commandButton value="Submit"  action="#{spkiBackingBean.getChallengeQuestions}" update="asd" oncomplete="spki_dlg.show();"  />	 
+	</h:panelGrid>
+ <ac:spkiPopup  id="asd" textBeforeSign="123" postSignAction="#{gpkiBackingBean.gsignAction()}" /> 
 	</ui:define>
 		    
 </ui:composition>				
