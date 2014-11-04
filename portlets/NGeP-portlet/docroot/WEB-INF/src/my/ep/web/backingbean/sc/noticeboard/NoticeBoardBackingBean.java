@@ -218,7 +218,7 @@ public class NoticeBoardBackingBean extends
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		//reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
