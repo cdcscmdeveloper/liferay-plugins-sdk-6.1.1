@@ -55,7 +55,9 @@
 					required="true" size="15" maxlength="3"
 					disabled="#{!editable}"
 					label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
-					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}">
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+				</p:inputText>
 				<p:message id="maxScoreMsg" for="maxScore" display="icon" />
 			</h:panelGroup>
 		</td>
@@ -117,7 +119,7 @@
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"
 					disabled="#{!editable}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 					<f:attribute name="min" value="0" />
 				</p:inputText>
 				<p:message id="rangeFromMsg" for="rangeFrom" display="icon" />
@@ -132,7 +134,7 @@
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"
 					disabled="#{!editable}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				</p:inputText>
 				<p:message id="rangeToMsg" for="rangeTo" display="icon" />
 			</p:column>
