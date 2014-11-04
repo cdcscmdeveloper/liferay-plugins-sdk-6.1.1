@@ -103,7 +103,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReason.show();" action="#{pPlanBackingBean.loadRejectReasons(epItem.ppRejectReasons)}"
-			    	disabled="#{!epItem.rejected}" id="clEpReason">
+			    	disabled="#{!epItem.rejected}" id="clEpReason" update=":form:opRejectReason">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>
@@ -142,7 +142,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<p:outputLabel id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}" />
 					    </f:facet>
 					</p:column>
-					<p:column footerText="#{lbl['lbl.pp.no.available']}" />
+					<p:column>
+						<f:facet name="footer">
+					     	#{lbl['lbl.pp.no.available']}
+					    </f:facet>
+					</p:column>
 					<p:column rendered="#{pPlanBackingBean.managedBean.modeReview}" footerText="&#160;"/>
 					<p:column footerText="&#160;" />
 					<p:column footerText="&#160;" rendered="#{!epItem.brandNew}" />

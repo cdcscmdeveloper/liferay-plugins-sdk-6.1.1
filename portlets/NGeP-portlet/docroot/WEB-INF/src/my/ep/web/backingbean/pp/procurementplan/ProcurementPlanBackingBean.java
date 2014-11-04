@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -21,20 +22,19 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pp.ProcurementPlanConst;
+import my.ep.constants.PPProcessNameConst;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
@@ -66,6 +66,8 @@ import my.ep.web.util.pp.common.PpCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
+
+import com.liferay.portal.util.PortalUtil;
 
 
 /**
@@ -112,6 +114,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info(message);
 	}
 	
+	// From Search Plan
 	public void preLoading(){
 		log.info("preLoading");
 		this.resetPlanSearchBean();
@@ -121,6 +124,80 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
+
+	// From Task List
+	public void preRenderView() {
+		log.info("preRenderView");
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		if (taskId == null) {
+			return;
+		}
+		FacesScopes face = new FacesScopes();
+		String token = face.getBPMAuthenticationCtxToken();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(token);
+		reqDTO.setTaskId(taskId);
+
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+
+		String[] outcome = new String[res.getAction().length + 1];
+		outcome[0] = BpmOutcomeConst.BPM_SAVE;
+		int i = 1;
+		for (String action : res.getAction()) {
+			outcome[i++] = action;
+		}
+
+		this.getManagedBean().setTaskName(res.getTaskName());
+		this.getManagedBean().setOutComes(outcome);
+		this.getManagedBean().setTaskId(taskId);
+		generatePageModeForProcess(res.getProcessName());
+		
+		// Procurement Plan
+		PPPlanDataType planObj = (PPPlanDataType) obj;
+		this.loadPlanDetails(planObj.getPlanId().longValue());
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
+	}
+	
+
+	/**
+	 * Generate page mode based on process name
+	 * @param processName
+	 */
+	private void generatePageModeForProcess(String processName){
+		log.info("generatePageModeForProcess");
+		this.getManagedBean().setModeReview(false);
+		this.getManagedBean().setModeReviewEditable(false);
+		this.getManagedBean().setModeEditable(false);
+		if(!StringUtils.isBlank(processName)){
+			// DRAFT & REVISION & UPDATE
+			if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(processName)
+					|| PPProcessNameConst.SUBMIT_PLAN.equalsIgnoreCase(processName)){
+				this.getManagedBean().setModeReview(false);
+				this.getManagedBean().setModeReviewEditable(false);
+				this.getManagedBean().setModeEditable(true);
+				
+			// APPROVAL & VERIFICATION	
+			}else if(PPProcessNameConst.REVIEW_PLAN.equalsIgnoreCase(processName)
+					|| PPProcessNameConst.VERIFY_PLAN.equalsIgnoreCase(processName)){
+				this.getManagedBean().setModeEditable(false);
+				this.getManagedBean().setModeReview(true);
+				this.getManagedBean().setModeReviewEditable(true);
+			}
+		}
+		log.info("MODE REVIEW: " + this.getManagedBean().isModeReview());
+		log.info("MODE REVIEW EDITABLE: " + this.getManagedBean().isModeReviewEditable());
+		log.info("MODE EDITABLE: " + this.getManagedBean().isModeEditable());
+	}
+	 
+	
 	
 	private void initialSearchPlan(){
 		log.info("initialSearchPlan");
@@ -232,20 +309,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadPlanDetails - End");
 	}
 	
-	public void test(){
-		renewSesionObject();
-		ProcurementPlanBackingBean crBB = new ProcurementPlanBackingBean();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-//		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		
-		//status = approved, status = pending submission
-		//BPM customize buttons
-//		getManagedBean().setOutComes(outcome);
-	}
+	
 	
 	/**
 	 * Retrieve plan by plan id
@@ -375,14 +439,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void loadRejectReasons(List<PpRejectReason> ppRejectReasons) {
 		log.info("initialRejectReasons - Start");
 		boolean newReason = false;
-		//if first remark is not new
+		//if first reason is not new
 		if (!ppRejectReasons.isEmpty()){
 			if(!ppRejectReasons.get(0).isBrandNew()){
 				newReason = true;
 			}
 		}
 
-		// if remarks is empty
+		// if reason is empty
 		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
 			newReason = true;
 		}
@@ -407,10 +471,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 	}
 	
+	public void confirmRejectReason(){
+		log.info("confirmRejectReason");
+		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
+			System.out.println(this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+		}
+	}
 	
 	
 	/**
-	 * Generate page mode based on status and role
+	 * Generate page mode based on status and role (from search plan)
 	 */
 	private void generatePageMode(){
 		log.info("generatePageMode");
@@ -802,10 +872,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PmOrgProfile pmOrgProfile = null;
 		
 		try{
-			pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId());
+			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+			if(userId==null){
+				throw new EpException("User Id is null. Please login.");//TODO
+			}
+			pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(userId);
 			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-				//TODO 
-				throw new EpException("Unable to retrieve Org. Profile.");
+				 
+				throw new EpException("Unable to retrieve Org. Profile.");//TODO
 			}
 			reqDTO = new ProcurementPlanReqDTO();
 			resDTO = new ProcurementPlanResDTO();
@@ -825,7 +899,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 			}
 		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
+//			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
 		}
