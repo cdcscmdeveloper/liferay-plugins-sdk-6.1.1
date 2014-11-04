@@ -166,8 +166,8 @@
 						value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="uom" value="#{backingBean.managedBean.uomLs}"
-							itemValue="#{uom.uomId}" itemLabel="#{uom.uomName}" />
+						<f:selectItems value="#{backingBean.managedBean.uomSelectItems}" var="select" 
+							itemLabel="select.label" itemValue="select.value"/>
 					</p:selectOneMenu> <p:message id="smManuMesUnitMsg" for="smManuMesUnit"
 						showSummary="true" showDetail="false" display="icon" /></td>
 
