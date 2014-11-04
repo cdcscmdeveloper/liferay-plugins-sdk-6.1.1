@@ -46,6 +46,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private List<PmFinancialSvc> pmFinancialSvc;
 	private List<PmFinancialSvc> pmFinancialSvcUpdate;
 	private List<PmFinancialSvc> selectedPmFinancialSvc;
+	private PmFinancialSvc selectedFinancialSvc;
 	private boolean byFactoring = true;
 	private int activeIndex = 0;
 	// Financial Org
@@ -621,6 +622,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the selectedFinancialSvc
+	 */
+	public PmFinancialSvc getSelectedFinancialSvc() {
+		return selectedFinancialSvc;
+	}
+
+	/**
+	 * @param selectedFinancialSvc the selectedFinancialSvc to set
+	 */
+	public void setSelectedFinancialSvc(PmFinancialSvc selectedFinancialSvc) {
+		this.selectedFinancialSvc = selectedFinancialSvc;
 	}
 
 }
