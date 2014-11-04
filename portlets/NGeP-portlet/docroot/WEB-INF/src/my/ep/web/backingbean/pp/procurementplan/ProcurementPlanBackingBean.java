@@ -570,8 +570,8 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * @return boolean
 	 */
 	public boolean isRoleApprover(){
-		return RoleCode.PLAN_APPROVER.value().equals(this.getManagedBean().getCurrentRole());
-//		return getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value());
+//		return RoleCode.PLAN_APPROVER.value().equals(this.getManagedBean().getCurrentRole());
+		return getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value());
 	}
 	
 	/**
@@ -579,8 +579,8 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * @return boolean
 	 */
 	public boolean isRoleVerifier(){
-		return RoleCode.PLAN_VERFICATION_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
-//		return getFacesScopes().hasRoleUser(RoleCode.PLAN_VERFICATION_OFFICER.value());
+//		return RoleCode.PLAN_VERFICATION_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
+		return getFacesScopes().hasRoleUser(RoleCode.PLAN_VERFICATION_OFFICER.value());
 	}
 	
 	/**
@@ -588,8 +588,8 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * @return boolean
 	 */
 	public boolean isBPK(){
-		return RoleCode.BPK_ADMIN.value().equals(this.getManagedBean().getCurrentRole());
-//		return getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value());
+//		return RoleCode.BPK_ADMIN.value().equals(this.getManagedBean().getCurrentRole());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value());
 	}
 	
 	/**
@@ -597,16 +597,58 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * @return boolean
 	 */
 	public boolean isPlanner(){
-//		boolean isPlanner = false;
-//		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value()) 
-//				||getFacesScopes().hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())){
-//			isPlanner = true;
-//		}
-//		return isPlanner;
-		return RoleCode.PLAN_PROCU_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
+		boolean isPlanner = false;
+		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value()) 
+				||getFacesScopes().hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())){
+			isPlanner = true;
+		}
+		return isPlanner;
+//		return RoleCode.PLAN_PROCU_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
 		
 	}
 	
+	/* LOCAL*/
+//	/**
+//	 * Login user has approver role
+//	 * @return boolean
+//	 */
+//	public boolean isRoleApprover(){
+//		return RoleCode.PLAN_APPROVER.value().equals(this.getManagedBean().getCurrentRole());
+////		return getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value());
+//	}
+//	
+//	/**
+//	 * Login user has verifier role
+//	 * @return boolean
+//	 */
+//	public boolean isRoleVerifier(){
+//		return RoleCode.PLAN_VERFICATION_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
+////		return getFacesScopes().hasRoleUser(RoleCode.PLAN_VERFICATION_OFFICER.value());
+//	}
+//	
+//	/**
+//	 * Login user has BPK role
+//	 * @return boolean
+//	 */
+//	public boolean isBPK(){
+//		return RoleCode.BPK_ADMIN.value().equals(this.getManagedBean().getCurrentRole());
+////		return getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value());
+//	}
+//	
+//	/**
+//	 * Login user has planner role
+//	 * @return boolean
+//	 */
+//	public boolean isPlanner(){
+////		boolean isPlanner = false;
+////		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value()) 
+////				||getFacesScopes().hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())){
+////			isPlanner = true;
+////		}
+////		return isPlanner;
+//		return RoleCode.PLAN_PROCU_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
+//		
+//	}
 	
 	/*
 	private void getUserRole() {	
