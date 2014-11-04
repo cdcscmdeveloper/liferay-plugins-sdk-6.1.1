@@ -37,8 +37,10 @@
 		<br/>
 		<br/>    
  		<div class="ppRightBtn">
-		  <p:commandButton value="#{lbl['lbl.btn.ok']}" immediate="true" oncomplete="dlRejectReason.hide();"/>	
-		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRejectReason.hide();" />		
+		  <p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{pPlanBackingBean.confirmRejectReason}" update="opRejectReason"
+		  	oncomplete="dlRejectReason.hide();"/>	
+		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRejectReason.hide();" update="opRejectReason"
+		  	action="#{pPlanBackingBean.confirmRejectReason}" immediate="true" />		
 		</div>      
 		</p:outputPanel>
 	</p:dialog>
