@@ -928,7 +928,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 			
-			Integer maxScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings);
+			BigDecimal maxScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings);
 			
 			if (maxScore != null) {
 				selectedSpecQuestion.setMaxScore(maxScore);
