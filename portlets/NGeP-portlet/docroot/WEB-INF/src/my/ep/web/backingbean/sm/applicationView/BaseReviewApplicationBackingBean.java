@@ -237,16 +237,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	private SmMofAccount getSingleSmMofAccount() {
 		SmMofAccount smMofAccount = new SmMofAccount();
-		List<SmMofAccount> accounts = getManagedBean().getSmAppl()
-				.getSmSupplier().getSmMofAccounts();
-		for (SmMofAccount account : accounts) {
-			if (account.getSupplierType().equalsIgnoreCase(
-					getManagedBean().getSmAppl().getSupplierType())
-					&& account.getRecordStatusFlg().compareTo(
-							DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
-				smMofAccount = account;
-				break;
+		try{
+			List<SmMofAccount> accounts = getManagedBean().getSmAppl()
+					.getSmSupplier().getSmMofAccounts();
+			for (SmMofAccount account : accounts) {
+				if (account.getSupplierType().equalsIgnoreCase(
+						getManagedBean().getSmAppl().getSupplierType())
+						&& account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+					smMofAccount = account;
+					break;
+				}
 			}
+		}catch(Exception ex){
+			log.error(ex.getMessage());
 		}
 		return smMofAccount;
 	}
