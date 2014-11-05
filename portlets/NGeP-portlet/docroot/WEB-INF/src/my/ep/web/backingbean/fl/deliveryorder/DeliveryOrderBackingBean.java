@@ -135,24 +135,27 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-				Calendar calendar = Calendar.getInstance();
-				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-					if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
-						Date currentDate = new Timestamp(System.currentTimeMillis());
-						Date startDate = flDeliveryAddress.getStartDate();
-						int deliveryTerm = 0;
-						deliveryTerm = getManagedBean().getFulfilmentRequest().getCtContract().getLatestContractVer().getCtSetting().getSupplierDoDays();
-						calendar.setTime(currentDate);
-						calendar.add(Calendar.DATE, deliveryTerm);
-						Date newDate = calendar.getTime();
-						
-						if(newDate.before(startDate)){
-							throw new EpException("Delivery Order cannot be submit yet.");
+			if(getManagedBean().getFulfilmentRequest().getCtContract() != null){
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+					Calendar calendar = Calendar.getInstance();
+					for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+						if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+							Date currentDate = new Timestamp(System.currentTimeMillis());
+							Date startDate = flDeliveryAddress.getStartDate();
+							int deliveryTerm = 0;
+							deliveryTerm = getManagedBean().getFulfilmentRequest().getCtContract().getLatestContractVer().getCtSetting().getSupplierDoDays();
+							calendar.setTime(currentDate);
+							calendar.add(Calendar.DATE, deliveryTerm);
+							Date newDate = calendar.getTime();
+							
+							if(newDate.before(startDate)){
+								throw new EpException(MessageConst.ERROR_745057, new String[]{getFullAddress(flDeliveryAddress.getPmAddress())});
+							}
 						}
 					}
 				}
 			}
+			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				reValidateRetrieveDelAmt();
 			}
