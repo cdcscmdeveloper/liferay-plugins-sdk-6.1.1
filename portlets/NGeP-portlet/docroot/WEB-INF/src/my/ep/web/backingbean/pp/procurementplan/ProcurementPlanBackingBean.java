@@ -252,8 +252,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setModeEditable(false);
 		this.getManagedBean().setModeReviewEditable(false);
 
-		this.getManagedBean().setCurrentRole(null); //TODO
-		this.getManagedBean().setCurrentStatus(null); //TODO
+//		this.getManagedBean().setCurrentRole(null); //TODO
+//		this.getManagedBean().setCurrentStatus(null); //TODO
 	}
 	
 	private void resetManagedBean(){
@@ -307,8 +307,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			loadDefaultButtons();
 		}else{
 			initialPlanDetails();
+			loadDefaultButtons();
 		}
-		this.generatePageMode();
+	
 		return NAV_TO_MAINTAIN;
 	}
 	
@@ -319,8 +320,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadDefaultButtons");
 		//if status is approved
 		Long statusId = this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
-		if(isRolePlanner() && (ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
-				|| ProcurementPlanConst.PPE_APPROVED.equals(statusId))){
+		if(isRolePlanner() && 
+				(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
+				|| ProcurementPlanConst.PPE_APPROVED.equals(statusId) 
+				|| this.getManagedBean().getSelectedPlan().isBrandNew())){
 			log.info("loadDefaultButtons2");
 			//BPM buttons
 			String[] outcome = new String[2];
@@ -350,6 +353,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppPlan.setOrgProfile(pmOrgProfile); 
 			ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
 			this.getManagedBean().setSelectedPlan(ppPlan);
+			
+			generatePageMode();
 			loadPlanActors(ppPlan.getOrgProfile(), ppPlan.getPpPlanActors()); // TODOTEMP_ORG_ID
 			loadPlanRemark(ppPlan.getPpRemarks());
 
@@ -417,19 +422,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpPlan ppPlan = new PpPlan();
 		ppPlan.setPlanType(new PmParameter());
 		ppPlan.setVotFundType(new PmParameter());
-		ppPlan.setOrgProfile(pmOrgProfile); //TODO get from login profile
+		ppPlan.setOrgProfile(pmOrgProfile);
 		ppPlan.setPpPlanActors(new ArrayList<PpPlanActor>());
 		ppPlan.setStatus(new PmStatus());
 		ppPlan.setPpRemarks(new ArrayList<PpRemark>());
-		loadPlanRemark(ppPlan.getPpRemarks());
-		loadPlanActors(ppPlan.getOrgProfile() , null); //TEMP_ORG_ID TODO
 		this.getManagedBean().setSelectedPlan(ppPlan);
 		
-		//BPM buttons
-		String[] outcome = new String[2];
-		outcome[0] = BpmOutcomeConst.BPM_SAVE;
-		outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
-		getManagedBean().setOutComes(outcome);
+		generatePageMode();
+		loadPlanRemark(ppPlan.getPpRemarks());
+		loadPlanActors(ppPlan.getOrgProfile() , null);
+		
+	
 
 		log.info("initialPlanDetails - End");
 	}
@@ -480,8 +483,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		// filter by current view mode
-		if(!this.getManagedBean().isModeEditable() && !this.getManagedBean().isModeReviewEditable() 
-				&& !this.getManagedBean().isModeReview()){
+		if(!this.getManagedBean().isModeEditable() 
+				&& !this.getManagedBean().isModeReviewEditable()){
 			newRemark = false;
 		}
 		
@@ -608,75 +611,75 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("MODE EDITABLE: " + this.getManagedBean().isModeEditable());
 	}
 	
-	/**
-	 * Generate page mode based on status and role (from search plan)
-	 */
-	private void generatePageModeTest(){
-		log.info("generatePageModeTest");
-		// Current Workflow Status
-		Long status = this.getManagedBean().getCurrentStatus();// TODO this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
-		this.getManagedBean().setModeReview(false);
-		this.getManagedBean().setModeReviewEditable(false);
-		this.getManagedBean().setModeEditable(false);
-		if(!isRoleBPK()){
-			/*
-			// Only approved plan is editable from search plan TODO
-			if(ProcurementPlanConst.PPP_APPROVED.equals(status) 
-					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
-				this.getManagedBean().setModeReview(false);
-				this.getManagedBean().setModeReviewEditable(false);
-				if(isRolePlanner()){
-					this.getManagedBean().setModeEditable(true);
-				}
-			}*/
-			
-			// NEW & DRAFT & REVISION
-			if(ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(status) 
-					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status)
-					|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(status)
-					|| ProcurementPlanConst.PPE_PENDING_REVISION.equals(status)){
-				this.getManagedBean().setModeReview(false);
-				this.getManagedBean().setModeReviewEditable(false);
-				if(isRolePlanner()){
-					this.getManagedBean().setModeEditable(true);
-				}else{
-					this.getManagedBean().setModeEditable(false);
-				}
-			// APPROVAL & VERIFICATION	
-			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
-					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
-					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
-				this.getManagedBean().setModeEditable(false);
-				this.getManagedBean().setModeReview(true);
-				if(isRoleApprover() || isRoleVerifier()){
-					this.getManagedBean().setModeReviewEditable(true);
-				}else{
-					this.getManagedBean().setModeReviewEditable(false);
-				}
-			// APPROVED
-			}else if(ProcurementPlanConst.PPP_APPROVED.equals(status) 
-					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
-				this.getManagedBean().setModeReview(false);
-				this.getManagedBean().setModeReviewEditable(false);
-				if(isRolePlanner()){
-					this.getManagedBean().setModeEditable(true);
-				}
-			}
-		}else{
-			if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
-					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
-					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
-				this.getManagedBean().setModeEditable(false);
-				this.getManagedBean().setModeReview(true);
-				this.getManagedBean().setModeReviewEditable(false);
-			}
-				
-		}
-		log.info("MODE REVIEW: " + this.getManagedBean().isModeReview());
-		log.info("MODE REVIEW EDITABLE: " + this.getManagedBean().isModeReviewEditable());
-		log.info("MODE EDITABLE: " + this.getManagedBean().isModeEditable());
-	}
-	
+//	/**
+//	 * Generate page mode based on status and role (from search plan)
+//	 */
+//	private void generatePageModeTest(){
+//		log.info("generatePageModeTest");
+//		// Current Workflow Status
+//		Long status = this.getManagedBean().getCurrentStatus();// TODO this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
+//		this.getManagedBean().setModeReview(false);
+//		this.getManagedBean().setModeReviewEditable(false);
+//		this.getManagedBean().setModeEditable(false);
+//		if(!isRoleBPK()){
+//			/*
+//			// Only approved plan is editable from search plan TODO
+//			if(ProcurementPlanConst.PPP_APPROVED.equals(status) 
+//					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
+//				this.getManagedBean().setModeReview(false);
+//				this.getManagedBean().setModeReviewEditable(false);
+//				if(isRolePlanner()){
+//					this.getManagedBean().setModeEditable(true);
+//				}
+//			}*/
+//			
+//			// NEW & DRAFT & REVISION
+//			if(ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(status) 
+//					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status)
+//					|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(status)
+//					|| ProcurementPlanConst.PPE_PENDING_REVISION.equals(status)){
+//				this.getManagedBean().setModeReview(false);
+//				this.getManagedBean().setModeReviewEditable(false);
+//				if(isRolePlanner()){
+//					this.getManagedBean().setModeEditable(true);
+//				}else{
+//					this.getManagedBean().setModeEditable(false);
+//				}
+//			// APPROVAL & VERIFICATION	
+//			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
+//					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
+//					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
+//				this.getManagedBean().setModeEditable(false);
+//				this.getManagedBean().setModeReview(true);
+//				if(isRoleApprover() || isRoleVerifier()){
+//					this.getManagedBean().setModeReviewEditable(true);
+//				}else{
+//					this.getManagedBean().setModeReviewEditable(false);
+//				}
+//			// APPROVED
+//			}else if(ProcurementPlanConst.PPP_APPROVED.equals(status) 
+//					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
+//				this.getManagedBean().setModeReview(false);
+//				this.getManagedBean().setModeReviewEditable(false);
+//				if(isRolePlanner()){
+//					this.getManagedBean().setModeEditable(true);
+//				}
+//			}
+//		}else{
+//			if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
+//					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
+//					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
+//				this.getManagedBean().setModeEditable(false);
+//				this.getManagedBean().setModeReview(true);
+//				this.getManagedBean().setModeReviewEditable(false);
+//			}
+//				
+//		}
+//		log.info("MODE REVIEW: " + this.getManagedBean().isModeReview());
+//		log.info("MODE REVIEW EDITABLE: " + this.getManagedBean().isModeReviewEditable());
+//		log.info("MODE EDITABLE: " + this.getManagedBean().isModeEditable());
+//	}
+//	
 	/**
 	 * get role applicable to current status
 	 * @param plan
