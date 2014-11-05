@@ -55,8 +55,9 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" />
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td style="width: 10%"><p:outputLabel
+							value="#{lbl['lbl.sc.tpl.search.item']}" /> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><ui:fragment
 							rendered="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterCode eq '3'}">
 							<p:selectOneMenu id="itemTypeSelectId" required="true"
@@ -108,7 +109,7 @@
 							<p:ajax event="change" partialSubmit="true" process="@this"
 								listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
 
-						</p:selectOneRadio></td> 
+						</p:selectOneRadio></td>
 				</tr>
 
 			</table>
