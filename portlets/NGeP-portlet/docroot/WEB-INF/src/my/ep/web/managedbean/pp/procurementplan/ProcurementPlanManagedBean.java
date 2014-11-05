@@ -8,12 +8,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.constant.pp.ProcurementPlanConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
-import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -32,20 +32,53 @@ import org.primefaces.model.DualListModel;
 public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 	private ProcurementPlanSearchBean planSearchBean;
+	private String filterOrgCondition;
+	private PmOrgProfile currentActiveOrg;
+	
+	private boolean modeReview;
+	private boolean modeReviewEditable;
+	private boolean modeEditable;
+	
+	
 	private PpPlan selectedPlan;
 	private List<PpExpenditureItem> deleteEpItems;
 	private List<PpProcurementItem> deletePpItems;
 	private DualListModel<PmUser> approverModel;
 	private DualListModel<PmUser> verifierModel;
 	private List<PpRejectReason> selectedRejectReasons;
-	private boolean modeReview;
-	private boolean modeReviewEditable;
-	private boolean modeEditable;
-//	private List<PpRemark> selectedRemarks;
 	private BigDecimal epTotalBudget;
 	private BigDecimal epTotalPlan;
 	private BigDecimal epTotalNonEpAlloc;
 	private BigDecimal ppTotalEst;
+	
+
+	/**
+	 * @return the filterOrgCondition
+	 */
+	public String getFilterOrgCondition() {
+		return filterOrgCondition;
+	}
+
+	/**
+	 * @param filterOrgCondition the filterOrgCondition to set
+	 */
+	public void setFilterOrgCondition(String filterOrgCondition) {
+		this.filterOrgCondition = filterOrgCondition;
+	}
+
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
 
 	/**
 	 * @return the modeReviewEditable
