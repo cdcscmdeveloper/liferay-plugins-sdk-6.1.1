@@ -62,7 +62,7 @@
 			</p:column>
 			<p:column headerText="Action" style="width:2%">
 				<p:commandLink id="crBasepageLink" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
-					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo}'}])">
+					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}'}])">
 					<p:graphicImage library="ep/images/design" name="revise.png"
 						value="/resources/ep/images/design/revise.png"
 						title="Contract Request" />
