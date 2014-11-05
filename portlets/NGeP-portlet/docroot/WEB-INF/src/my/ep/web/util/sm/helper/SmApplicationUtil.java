@@ -1088,7 +1088,7 @@ public class SmApplicationUtil {
 							.getPaidUpCapital()
 							.compareTo(new BigDecimal(50000)) < 0) {
 				validPaidUp = false;
-				amt = "RM.50,000";
+				amt = "RM50,000";
 				supType = ResourceBundleUtils.getMessage(
 						"lbl.sm.consultant.lowercaps",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
@@ -1097,7 +1097,7 @@ public class SmApplicationUtil {
 					&& managedBean.getSmAppl().getSmCompanyBasic()
 							.getPaidUpCapital().compareTo(new BigDecimal(2500)) < 0) {
 				validPaidUp = false;
-				amt = "RM.2,500";
+				amt = "RM2,500";
 				supType = ResourceBundleUtils.getMessage(
 						"lbl.sm.contractor.lowercaps",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
