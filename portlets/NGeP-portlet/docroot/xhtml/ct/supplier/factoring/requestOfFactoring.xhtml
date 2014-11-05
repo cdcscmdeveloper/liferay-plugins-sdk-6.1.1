@@ -15,10 +15,10 @@
           .columnWidth400 {width: 400px;}
           .columnWidth300 {width: 300px;}
     </style> 
-		<p:panel id="headerDetails">
-		  <p:blockUI block=":form" widgetVar="blockWidget">
+        <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
+		<p:panel id="headerDetails">
 		     <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
 		     <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	 <table style="width: 100%;">
@@ -251,7 +251,7 @@
                     <h:panelGrid columns="3">
 			               <p:commandButton oncomplete="uploadRemoveFactoringDlg.show();return false;" value="#{lbl['lbl.btn.upload']}"
 			                   icon="iconAttachment"   update="factoringPanel, uploadRemoveFactoringDlg" 
-			                   disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() }" />	
+			                   disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() }" />	
 				              <p:spacer width="1"/>
 		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
 		                        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.removeFileName != null}" 

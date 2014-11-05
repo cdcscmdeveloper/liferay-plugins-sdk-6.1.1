@@ -103,7 +103,8 @@
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:agencyId,:form:itemId"
-		         process="@form" actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"/>
+		         process="@form" actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"
+		         onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
