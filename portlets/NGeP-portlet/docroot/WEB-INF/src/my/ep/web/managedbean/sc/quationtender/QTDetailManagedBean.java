@@ -274,6 +274,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmDistrict> districtList;
 
 	private int totalSuppliers;
+	
+	private List<String> supplierStateCode;
+	private List<String> supplierDistrictCode;
+	private List<String> supplierDivisionCode;
 
 	// Panel Information
 	private CtPanelItem ctPanelItem;
@@ -2823,6 +2827,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCtpanelSupplier(CtPanelSupplier ctpanelSupplier) {
 		this.ctpanelSupplier = ctpanelSupplier;
+	}
+
+	public List<String> getSupplierStateCode() {
+		return supplierStateCode;
+	}
+
+	public void setSupplierStateCode(List<String> supplierStateCode) {
+		this.supplierStateCode = supplierStateCode;
+	}
+
+	public List<String> getSupplierDistrictCode() {
+		return supplierDistrictCode;
+	}
+
+	public void setSupplierDistrictCode(List<String> supplierDistrictCode) {
+		this.supplierDistrictCode = supplierDistrictCode;
+	}
+
+	public List<String> getSupplierDivisionCode() {
+		return supplierDivisionCode;
+	}
+
+	public void setSupplierDivisionCode(List<String> supplierDivisionCode) {
+		this.supplierDivisionCode = supplierDivisionCode;
 	}
 
 }
