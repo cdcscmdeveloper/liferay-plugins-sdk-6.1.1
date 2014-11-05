@@ -12,9 +12,9 @@
 				
 	<table style="width:100%;">
 	  <tr>	  	
-		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
+		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
+		<td><p:inputText style="text-transform:uppercase" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
 			  disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}" size="20" maxlength="12" />
 		</td>
 	  </tr>	
@@ -32,7 +32,8 @@
 			 maxlength="500" /></td>
 	  </tr>  
 	  <tr>
-		<td><p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.profcert']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
 	  	<td style="padding: 5px 0px;"><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="#{lbl['lbl.sm.profBody.profBody']}" />&#160;&#160;&#160;
 	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" /><h:outputText value="#{lbl['lbl.sm.cert.certBody']}" /></td>	  	
 	  </tr>
