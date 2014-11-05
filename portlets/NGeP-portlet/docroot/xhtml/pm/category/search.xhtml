@@ -38,6 +38,21 @@
 				<p:inputText value="#{categoryBackingBean.managedBean.subDivDesc}" size="40" />
 				
 			</h:panelGrid>
+			<div style="text-align: right;">
+				<p:commandButton value="#{lbl['lbl.pm.organisation.search']}"
+						icon="ui-icon-search"
+						action="#{categoryBackingBean.search}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						update="searchCategory" />
+						
+				<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
+						action="#{categoryBackingBean.resetCategory}"
+						update="catSearch" icon="ui-icon-reset"
+						resetValues="true" partialSubmit="true" process="@this" />
+						
+			</div>
+				
+			<ui:remove>	
 			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
 				width="100%">
 				<h:column>
@@ -53,6 +68,8 @@
 						update="searchCategory" />
 				</h:column>
 			</h:panelGrid>
+			</ui:remove>	
+			
 		</p:panel>
 		<p:panel header="#{lbl['lbl.pm.organisation.result']}" toggleable="true" style="width:100%">
 			<p:dataTable id="searchCategory" var="category"
