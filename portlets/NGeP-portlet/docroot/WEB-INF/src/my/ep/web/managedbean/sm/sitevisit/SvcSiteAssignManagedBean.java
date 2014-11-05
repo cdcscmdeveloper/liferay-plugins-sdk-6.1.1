@@ -17,7 +17,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
 
-@ManagedBean(name = "siteVisitAssignMB")
+@ManagedBean(name = "smSiteVisitAssignMB")
 @SessionScoped
 public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;

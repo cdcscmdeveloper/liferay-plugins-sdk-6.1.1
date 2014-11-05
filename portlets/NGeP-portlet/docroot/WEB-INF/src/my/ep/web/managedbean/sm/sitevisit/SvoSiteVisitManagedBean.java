@@ -24,7 +24,7 @@ import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "svoSiteVisitMB")
+@ManagedBean(name = "smSvoSiteVisitMB")
 @SessionScoped
 public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
