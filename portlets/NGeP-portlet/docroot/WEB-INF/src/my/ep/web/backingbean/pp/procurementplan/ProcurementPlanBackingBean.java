@@ -300,13 +300,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
-		this.generatePageMode();
+		
 		if(id!=null && id>0){
 			loadPlanDetails(id);
 			loadDefaultButtons();
 		}else{
 			initialPlanDetails();
 		}
+		this.generatePageMode();
 		return NAV_TO_MAINTAIN;
 	}
 	
