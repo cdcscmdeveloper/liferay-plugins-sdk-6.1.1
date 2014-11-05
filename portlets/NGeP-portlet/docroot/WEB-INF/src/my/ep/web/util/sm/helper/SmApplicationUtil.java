@@ -1911,7 +1911,13 @@ public class SmApplicationUtil {
 					.getPaidUpCapital().intValue());
 		}
 		// TODO get clarification
-		// reqDTO.setBumiPercentage(0);
+		Integer bumiPerc = new Integer(0);
+		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
+			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
+					.getBumiPercent().intValue();
+		}
+		log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
+		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 
 		return resDTO.getCategoryL1List();
@@ -1949,7 +1955,13 @@ public class SmApplicationUtil {
 					.getPaidUpCapital().intValue());
 		}
 		// TODO get clarification
-		// reqDTO.setBumiPercentage(0);
+		Integer bumiPerc = new Integer(0);
+		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
+			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
+					.getBumiPercent().intValue();
+		}
+		log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
+		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
 
 		return resDTO.getCategoryL2List();
@@ -1996,7 +2008,13 @@ public class SmApplicationUtil {
 					.getPaidUpCapital().intValue());
 		}
 		// TODO get clarification
-		// reqDTO.setBumiPercentage(0);
+		Integer bumiPerc = new Integer(0);
+		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
+			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
+					.getBumiPercent().intValue();
+		}
+		log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
+		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();

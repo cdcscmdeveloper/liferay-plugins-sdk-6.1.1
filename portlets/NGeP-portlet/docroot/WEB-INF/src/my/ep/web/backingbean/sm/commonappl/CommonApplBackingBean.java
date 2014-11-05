@@ -176,7 +176,7 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/portletViewMode.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Respond PO Inquiry")) {
-			System.out.println("** Respond to PO Inquiry *********"
+			log.info("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase("MOF Account Maintain")) {
@@ -201,12 +201,11 @@ public class CommonApplBackingBean extends
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
-				System.out
-						.println(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
-								+ resDTO.getDocNumber());
-				System.out.println("**** APPLICATION TYPE ******"
+				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
+						+ resDTO.getDocNumber());
+				log.info("**** APPLICATION TYPE ******"
 						+ resDTO.getDocNumber().charAt(1));
-				System.out.println(" *** DOCUMENT ID FROM THE BPM IS ******"
+				log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
 						+ smObj.getDocumentId());
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
@@ -230,7 +229,7 @@ public class CommonApplBackingBean extends
 				|| resDTO.getTaskName().equalsIgnoreCase(
 						"Review Application(Special Category)")
 				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
-			System.out.println(" ******* The selected process name is ******"
+			log.info(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase("MOF Account Maintain")) {
@@ -331,16 +330,15 @@ public class CommonApplBackingBean extends
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				"Draft Register Account")) {
-			System.out
-					.println(" ******* The selected process name is  Draft Register Account ******"
-							+ resDTO.getProcessName());
+			log.info(" ******* The selected process name is  Draft Register Account ******"
+					+ resDTO.getProcessName());
 			// if (resDTO.getProcessName().equalsIgnoreCase(
 			// "Start MOF Supplier Registration")) {
 			SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 			// TODO Remove this code and get the applicationType From DB
-			System.out.println(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
+			log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
 					+ resDTO.getDocNumber());
-			System.out.println(" *** DOCUMENT ID FROM THE BPM IS ******"
+			log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
 					+ smObj.getDocumentId());
 			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 			mofResDto = retriveApplicationById(smObj.getDocumentId());
@@ -348,9 +346,8 @@ public class CommonApplBackingBean extends
 
 			// applicationType =
 			// retriveApplicationById(smObj.getDocumentId());
-			System.out
-					.println("********Draft Register Account For New Mof********");
-			System.out.println("********getTaskId********" + taskId);
+			log.info("********Draft Register Account For New Mof********");
+			log.info("********getTaskId********" + taskId);
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 
 			smApplBB.processDraftApplication(appl.getApplType(), Boolean.TRUE,
@@ -363,9 +360,8 @@ public class CommonApplBackingBean extends
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				"Draft Maintain Account")) {
-			System.out
-					.println(" ******* The selected process name is  Draft Maintain Account******"
-							+ resDTO.getProcessName());
+			log.info(" ******* The selected process name is  Draft Maintain Account******"
+					+ resDTO.getProcessName());
 			// if (resDTO.getProcessName().equalsIgnoreCase(
 			// "Start MOF Account Maintain")) {
 			SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
@@ -377,11 +373,10 @@ public class CommonApplBackingBean extends
 
 			// applicationType =
 			// retriveApplicationById(smObj.getDocumentId());
-			System.out
-					.println("********Review Application Escalted for account maintain********"
-							+ appl.getSupplierType());
-			System.out.println("********getTaskId********" + taskId);
-			System.out.println("********getTaskName********"
+			log.info("********Review Application Escalted for account maintain********"
+					+ appl.getSupplierType());
+			log.info("********getTaskId********" + taskId);
+			log.info("********getTaskName********"
 					+ this.getManagedBean().getTaskName());
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 			// TODO Change this impl to get values from DB and set
@@ -389,9 +384,8 @@ public class CommonApplBackingBean extends
 
 			// applicationType =
 			// retriveApplicationById(smObj.getDocumentId());
-			System.out
-					.println("********Draft Register Account For New Mof********");
-			System.out.println("********getTaskId********" + taskId);
+			log.info("********Draft Register Account For New Mof********");
+			log.info("********getTaskId********" + taskId);
 
 			smApplBB.processDraftApplication(appl.getApplType(), Boolean.TRUE,
 					appl, mofResDto.getSmSupplier());
@@ -404,21 +398,23 @@ public class CommonApplBackingBean extends
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")
 				&& resDTO.getProcessName().equalsIgnoreCase(
 						"MOF Registration Cancellation")) {
-			System.out
-					.println("**********MOF Registration Cancellation***********"
-							+ taskId);
+			log.info("**********MOF Registration Cancellation***********"
+					+ taskId);
 			SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) resDTO.getPojo();
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
-			System.out
-					.println("********Review RegistrationCancellation********");
-			System.out.println("********Assign Site Visit APPID********"
+			log.info("********Review RegistrationCancellation********");
+			log.info("********Assign Review Cancellation APPID********"
 					+ srcObj.getDocumentId());
 			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 			mofResDto = retriveApplicationById(srcObj.getDocumentId());
 			SmAppl appl = mofResDto.getSmAppl();
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+			smApplBB.getManagedBean();
 			// TODO Change this impl to get values from DB and set
 			// smSupplier , smAppl of the managedBean
+			smApplBB.getManagedBean().setPoUser(false);
+			smApplBB.getManagedBean().setSupplierUser(false);
+			smApplBB.getManagedBean().setApproverUser(true);
 			smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 					appl, mofResDto.getSmSupplier());
 			// smApplBB.getManagedBean().getSmAppl()
@@ -446,13 +442,12 @@ public class CommonApplBackingBean extends
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")
 				&& resDTO.getProcessName().equalsIgnoreCase(
 						"MOF Application Cancellation")) {
-			System.out
-					.println("**********MOF Application Cancellation***********"
-							+ taskId);
+			log.info("**********MOF Application Cancellation***********"
+					+ taskId);
 			SMMOFAppCanDataType srcObj = (SMMOFAppCanDataType) resDTO.getPojo();
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
-			System.out.println("********Review Cancellation********");
-			System.out.println("********Assign Site Visit APPID********"
+			log.info("********Review Cancellation********");
+			log.info("********Assign Site Visit APPID********"
 					+ srcObj.getDocumentId());
 			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 			mofResDto = retriveApplicationById(srcObj.getDocumentId());
@@ -506,7 +501,7 @@ public class CommonApplBackingBean extends
 			suppDocIn.getManagedBean().setTaskId(taskId);
 			suppDocIn.getManagedBean().setBpmPojo(bpmObj);
 			suppDocIn.viewDocInquiry();
-			System.out.println("*********Respond SDO Inquiry********");
+			log.info("*********Respond SDO Inquiry********");
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
@@ -557,7 +552,7 @@ public class CommonApplBackingBean extends
 	}
 
 	public String makePayment() {
-		System.out.println("****** Make Payment **********");
+		log.info("****** Make Payment **********");
 
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -673,7 +668,7 @@ public class CommonApplBackingBean extends
 					"Review Renew Mof Registration Application - ");
 			break;
 		case "RS":
-			System.out.println(" *** DOC MODE ****"
+			log.info(" *** DOC MODE ****"
 					+ smApplBB.getManagedBean().getSmAppl()
 							.getSupportingDocMode());
 			String out = "";
@@ -689,9 +684,8 @@ public class CommonApplBackingBean extends
 					" Respond PO Inquiry For Application - ");
 			break;
 		default:
-			System.out
-					.println("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
-							+ applType);
+			log.info("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
+					+ applType);
 			break;
 		}
 	}
@@ -721,8 +715,7 @@ public class CommonApplBackingBean extends
 			return resDTO;
 
 		} catch (Exception e) {
-			System.out
-					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			log.info("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			resDTO.setErrorCaued(Boolean.TRUE);
 			return resDTO;
@@ -753,8 +746,7 @@ public class CommonApplBackingBean extends
 			return resDTO;
 
 		} catch (Exception e) {
-			System.out
-					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			log.info("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
 			e.printStackTrace();
 			throw new EpException(
 					"Invalid Application : No file uploaded for the application");

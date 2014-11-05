@@ -5505,6 +5505,10 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void testPrinter() {
+		log.info("********* Test printer actions ********  ");
+	}
+
 	public void calculateShareHolderPercent() {
 		log.info("********* calculateShareHolderPercent ********  ");
 		SmApplicationUtil.calculateShareHolderPercent(getManagedBean());
