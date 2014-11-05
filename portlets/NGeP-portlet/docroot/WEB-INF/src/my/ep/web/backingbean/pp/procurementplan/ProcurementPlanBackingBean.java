@@ -572,18 +572,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}else if(ProcurementPlanConst.PPP_PENDING_REVISION.equals(status)
 					|| ProcurementPlanConst.PPE_PENDING_REVISION.equals(status)){
 				this.getManagedBean().setModeReview(true);
-				if(isRolePlanner()){
-					this.getManagedBean().setModeEditable(true);
-				}
+				
 			// APPROVAL & VERIFICATION	
 			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
 					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
 					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
 				this.getManagedBean().setModeEditable(false);
 				this.getManagedBean().setModeReview(true);
-				if(isRoleApprover() || isRoleVerifier()){
-					this.getManagedBean().setModeReviewEditable(true);
-				}
+			
 			// APPROVED
 			}else if(ProcurementPlanConst.PPP_APPROVED.equals(status) 
 					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
