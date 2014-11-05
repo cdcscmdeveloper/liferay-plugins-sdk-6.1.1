@@ -159,7 +159,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	private String editorValue;
-	private BigDecimal paidAdvancePercentage;
+	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid;
 	private BigDecimal paidPercentage;
 	private boolean showZoneDetails;
@@ -2579,7 +2579,8 @@ public void ConstructSideTabMenu(){
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
-		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
+		if(getManagedBean().getPaidAdvancePaymentAmt().intValue() != 0)
+		    paidAdvancePercentage = (getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
 		return paidAdvancePercentage;
 	}
 
