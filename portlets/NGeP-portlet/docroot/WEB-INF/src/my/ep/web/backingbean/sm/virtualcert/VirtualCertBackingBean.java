@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.EpPropertiesConst;
@@ -33,6 +34,8 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.dto.sm.search.SupplierCategoryReqDTO;
+import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -165,9 +168,6 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			mofRegistrationSO = null;
 		}*/
 		
-		System.out.println("supplier.getSmAppl()::::::::::::::::0 " + smSupplier.getSmAppl().getApplId());
-		System.out.println("supplier.getSmAppl()::::::::::::::::0 " + smSupplier.getSmAppl().getSmSupplierCategories().size());
-		
 		// instantiate velocity template
 		// replace value in velocity template
 		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofAcc, false);
@@ -294,6 +294,28 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
         combined.close();
         fCover.delete();
         downloadFile(latestFile);
+	}
+	
+	private List<SmSupplierCategory> retrieveSupplierCategories(Long applId) {
+		
+		SupplierCategoryReqDTO supplierSearchReqDTO = new SupplierCategoryReqDTO();
+		supplierSearchReqDTO.setApplId(applId);
+		
+		List<SmSupplierCategory> resultList = new ArrayList<SmSupplierCategory>();
+		ISupplierCategorySO supplierCategorySO = null;
+		
+		try {
+			supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+			SupplierCategoryResDTO supplierCategoryResDTO = supplierCategorySO.retriveSupplierCategoriesByApplId(supplierSearchReqDTO);
+			
+			if(supplierCategoryResDTO.isSuccessful()) {
+				resultList = supplierCategoryResDTO.getSupplierCategoryList();
+			}
+		} finally {
+			supplierCategorySO = null;
+		}
+		
+		return resultList;
 	}
 	
 	private SmSupplier getSmSupplier(String mofAccountNo) {
@@ -442,12 +464,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     			categoryList.add(supplierCategory);
     		}
     	} */   	
-    	System.out.println("supplier.getSmAppl()::::::::::::::::1 " + supplier.getSmAppl().getApplId());
-    	System.out.println("supplier.getSmAppl()::::::::::::::::1 " + supplier.getSmAppl().getSmSupplierCategories().size());
+
+    	List<SmSupplierCategory> supplierCategories = retrieveSupplierCategories(supplier.getSmAppl().getApplId());
+    	
     	List categories = new ArrayList();
-    	for(SmSupplierCategory supplierCategory : supplier.getSmAppl().getSmSupplierCategories()) {
+    	for(SmSupplierCategory supplierCategory : supplierCategories) {
     		
-    		System.out.println("supplierCategory: " + supplierCategory.isRecordStatus() + " || " +  supplierCategory.isApprovedByAp() + " || " + supplierCategory.isApprovedByPo());
+    		log.info("supplierCategory: " + supplierCategory.isRecordStatus() + " || " +  supplierCategory.isApprovedByAp() + " || " + supplierCategory.isApprovedByPo());
     		
     		if(supplierCategory.isRecordStatus() && supplierCategory.isApprovedByAp() && supplierCategory.isApprovedByPo()) {
     			List category = new ArrayList();
