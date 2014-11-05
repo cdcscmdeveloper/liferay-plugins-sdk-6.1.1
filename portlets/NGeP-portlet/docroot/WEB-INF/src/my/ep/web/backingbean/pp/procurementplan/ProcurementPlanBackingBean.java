@@ -50,6 +50,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -650,10 +651,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 	/* LOCAL*/
-//	/**
-//	 * Login user has approver role
-//	 * @return boolean
-//	 */
+	/**
+	 * Login user has approver role
+	 * @return boolean
+	 */
 //	public boolean isRoleApprover(){
 //		return RoleCode.PLAN_APPROVER.value().equals(this.getManagedBean().getCurrentRole());
 //	}
@@ -682,26 +683,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //		return RoleCode.PLAN_PROCU_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
 //		
 //	}
-	
-	/*
-	private void getUserRole() {	
-		List<Role> roles = getFacesScopes().getUserRoleList();
-		for(Role role: roles){
-			if(RoleCode.PLAN_APPROVER.value().equalsIgnoreCase(role.getName()) || 
-					RoleCode.PLAN_VERFICATION_OFFICER.value().equalsIgnoreCase(role.getName())){
-				this.getManagedBean().setRoleApprover(true);
-			}
-			if(RoleCode.PLAN_EXPEN_OFFICER.value().equalsIgnoreCase(role.getName()) ||
-					RoleCode.PLAN_PROCU_OFFICER.value().equalsIgnoreCase(role.getName())){
-				this.getManagedBean().setRolePlanner(true);
-			}
-
-			if(RoleCode.BPK_ADMIN.value().equalsIgnoreCase(role.getName())){
-				this.getManagedBean().setRoleBPK(true);
-			}
-		}
-	}
-*/
 	
 	/**
 	 * retrieve plan type into mapper
@@ -1251,8 +1232,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ProcurementPlanResDTO resDTO = null;
 		PpPlan ppPlan = null; 
 		List <PpRejectReason> rejectReasons = null;
+		String docType = "";
 		try{
 			ppPlan = this.getManagedBean().getSelectedPlan();
+			
 			//Validation
 			
 			//Get All Values
@@ -1286,9 +1269,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan.getPlanType().getParameterCode()));
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 			resDTO = reqSO.savePlan(reqDTO);
+			docType = 
+					ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode()) 
+					? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
+					: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
+					
+					
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully"); //TODO
-				/*
+				
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
@@ -1301,10 +1290,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), resDTO.getPlan().getPlanNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				*/
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Procurement Plan save successfully."));
+				
+			
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
