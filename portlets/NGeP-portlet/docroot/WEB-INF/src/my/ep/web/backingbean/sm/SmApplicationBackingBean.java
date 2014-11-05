@@ -843,6 +843,9 @@ public class SmApplicationBackingBean extends
 								.setCatTypeConfirm(
 										"NOTE :  'Special' categories can only be added in this applicaiton");
 					}
+					SmCommonUtil
+							.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
+									.getSmAppl().getSmCompanyBasic());
 				}
 
 				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
