@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -2027,7 +2029,43 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+
+		// sort
+		Collections.sort(uomSelectItems, new Comparator<SelectItem>() {
+			@Override
+			public int compare(final SelectItem s1, final SelectItem s2) {
+				return s1.getLabel().compareTo(s2.getLabel());
+			}
+		});
 		return uomSelectItems;
+	}
+	
+	public static List<SelectItem> getRaceSelectItems(){
+		List<SelectItem> raceSelectItems = new ArrayList<SelectItem>();
+		List<PmRace> racesList = retrievePmRaceList();
+		
+		SelectItem si = null;
+		if (racesList != null) {
+			for (PmRace pmRace : racesList) {
+				if (pmRace.getRaceId() != null && pmRace.getRaceName() != null
+						&& !StringUtils.isEmpty(pmRace.getRaceName())) {
+					si = new SelectItem();
+					si.setLabel(pmRace.getRaceName());
+					si.setValue(pmRace.getRaceId());
+					raceSelectItems.add(si);
+				}
+			}
+		}
+
+		// sort
+		Collections.sort(raceSelectItems, new Comparator<SelectItem>() {
+			@Override
+			public int compare(final SelectItem s1, final SelectItem s2) {
+				return s1.getLabel().compareTo(s2.getLabel());
+			}
+		});
+		
+		return raceSelectItems;
 	}
 
 	public static List<PmReasonDesc> retrieveRejectReasonList() {
