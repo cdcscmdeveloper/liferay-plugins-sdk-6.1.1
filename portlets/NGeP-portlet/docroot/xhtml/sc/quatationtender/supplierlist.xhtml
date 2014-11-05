@@ -57,19 +57,16 @@
 					</p:commandLink>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
-					<h:outputText
-						value="#{qtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
+					<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofexp']}">
-					<h:outputText
-						value="#{qtSupplier.smSupplier.smMofAccounts[0].expDate}">
+					<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.status']}">
-					<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.getStatusDescById(smSupplier.pmStatus.statusId)}" />
+					
 				</p:column>
 			</p:dataTable>
 		</c:if>
