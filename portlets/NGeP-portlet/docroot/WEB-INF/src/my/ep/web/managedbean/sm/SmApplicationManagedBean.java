@@ -263,6 +263,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmPersonnleCalcVO personCalc;
 	private BigDecimal equiPerCapTotal;
 	private BigDecimal equiCompCapTotal;
+	private BigDecimal bumiEquityPercentage;
 	private boolean validResubmit;
 	private boolean resubmitWithActiveDraft;
 	private boolean draftedAppl;
@@ -287,6 +288,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String revisionBaseUrl;
 	private String revisionSupplierAppNoParam;
 	private String revisionApproverAppNoParam;
+	private String bumiRecommendationNote;
+	private boolean qualifiedForBumi;
 	private SelectItem[] identificationTypes;
 	private SmAttachment cancellationAttachment;
 
@@ -2180,6 +2183,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRaceSelectItems(List<SelectItem> raceSelectItems) {
 		this.raceSelectItems = raceSelectItems;
+	}
+
+	public String getBumiRecommendationNote() {
+		return bumiRecommendationNote;
+	}
+
+	public void setBumiRecommendationNote(String bumiRecommendationNote) {
+		this.bumiRecommendationNote = bumiRecommendationNote;
+	}
+
+	public boolean isQualifiedForBumi() {
+		return qualifiedForBumi;
+	}
+
+	public void setQualifiedForBumi(boolean qualifiedForBumi) {
+		this.qualifiedForBumi = qualifiedForBumi;
+	}
+
+	public BigDecimal getBumiEquityPercentage() {
+		return bumiEquityPercentage;
+	}
+
+	public void setBumiEquityPercentage(BigDecimal bumiEquityPercentage) {
+		this.bumiEquityPercentage = bumiEquityPercentage;
 	}
 
 }

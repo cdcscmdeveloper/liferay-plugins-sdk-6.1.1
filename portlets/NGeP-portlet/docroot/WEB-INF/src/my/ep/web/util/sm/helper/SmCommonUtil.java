@@ -13,6 +13,7 @@ import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -466,99 +467,108 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
-	// public static SmPersonnleCalcVO calculateBumiPercentageTotals(
-	// SmPersonnleCalcVO persCalcVo, List<SmPersonnel> personnelList) {
-	// calcuteStaffSubTotalSummary(persCalcVo);
-	// persCalcVo.setTotalStaffEntered(persCalcVo.getBodTotalCnt()
-	// + persCalcVo.getHghrMngmtTotalCnt()
-	// + persCalcVo.getMngmtTotalCnt() + persCalcVo.getStfTotalCnt()
-	// + persCalcVo.getSemiTotalCnt() + persCalcVo.getProfTotalCnt());
-	// persCalcVo.setTotalKeyRolesEntered(persCalcVo.getBodTotalCnt()
-	// + persCalcVo.getHghrMngmtTotalCnt()
-	// + persCalcVo.getMngmtTotalCnt());
-	//
-	// int stfBumiTotal = persCalcVo.getBodBumiCnt()
-	// + persCalcVo.getHghMngBumiCnt() + persCalcVo.getMngtBumiCnt()
-	// + persCalcVo.getStfBumiEnterCnt()
-	// + persCalcVo.getSemiBumiEnterCnt()
-	// + persCalcVo.getProfBumiEnterCnt();
-	//
-	// BigDecimal mul = new BigDecimal(100);
-	// BigDecimal halfBumi = new BigDecimal(51);
-	// if (persCalcVo.getTotalStaffEntered() > 0) {
-	// BigDecimal stffBumiPer = new BigDecimal(stfBumiTotal
-	// / persCalcVo.getTotalStaffEntered()).multiply(mul)
-	// .setScale(2, RoundingMode.HALF_UP);
-	// persCalcVo.setTotalStaffBumiPerc(stffBumiPer);
-	// }
-	// if (persCalcVo.getTotalStaffBumiPerc().compareTo(mul) == 0) {
-	// persCalcVo.setFullBumiStatus(true);
-	// } else if (persCalcVo.getTotalStaffBumiPerc().compareTo(halfBumi) >= 0
-	// && persCalcVo.getTotalStaffBumiPerc().compareTo(mul) < 0) {
-	// int keyRoleBumiTotal = persCalcVo.getBodBumiCnt()
-	// + persCalcVo.getHghMngBumiCnt()
-	// + persCalcVo.getMngtBumiCnt();
-	// if (persCalcVo.getTotalKeyRolesEntered() > 0
-	// && persCalcVo.getTotalStaffBumiPerc().compareTo(mul) != 0) {
-	// BigDecimal keyRoleBumiPer = new BigDecimal(keyRoleBumiTotal
-	// / persCalcVo.getTotalKeyRolesEntered()).multiply(mul)
-	// .setScale(2, RoundingMode.HALF_UP);
-	// persCalcVo.setTotalKeyRoleBumiPerc(keyRoleBumiPer);
-	// if (persCalcVo.getTotalKeyRoleBumiPerc().compareTo(halfBumi) >= 0
-	// && persCalcVo.getTotalKeyRoleBumiPerc().compareTo(mul) < 0) {
-	// for (SmPersonnel per : personnelList) {
-	// if (per.isEquityOwner() && per.getBumiFlg() == 1) {
-	// persCalcVo.setTotalShrBumiShrHldrPerc(persCalcVo
-	// .getTotalShrBumiShrHldrPerc().add(
-	// per.getSharePercentage()));
-	// }
-	// }
-	// if (persCalcVo.getTotalShrBumiShrHldrPerc().compareTo(
-	// halfBumi) >= 0
-	// && persCalcVo.getTotalShrBumiShrHldrPerc()
-	// .compareTo(mul) < 0) {
-	// persCalcVo.setHalfBumiStatus(true);
-	// }
-	//
-	// }
-	// }
-	// }
-	// return persCalcVo;
-	// }
-
 	public static SmPersonnleCalcVO calculateBumiPercentageTotals(
+			SmPersonnleCalcVO persCalcVo, List<SmPersonnel> personnelList) {
+		calcuteStaffSubTotalSummary(persCalcVo);
+		persCalcVo.setTotalStaffEntered(persCalcVo.getBodTotalCnt()
+				+ persCalcVo.getHghrMngmtTotalCnt()
+				+ persCalcVo.getMngmtTotalCnt() + persCalcVo.getStfTotalCnt()
+				+ persCalcVo.getSemiTotalCnt() + persCalcVo.getProfTotalCnt());
+		persCalcVo.setTotalKeyRolesEntered(persCalcVo.getBodTotalCnt()
+				+ persCalcVo.getHghrMngmtTotalCnt()
+				+ persCalcVo.getMngmtTotalCnt());
+
+		int stfBumiTotal = persCalcVo.getBodBumiCnt()
+				+ persCalcVo.getHghMngBumiCnt() + persCalcVo.getMngtBumiCnt()
+				+ persCalcVo.getStfBumiEnterCnt()
+				+ persCalcVo.getSemiBumiEnterCnt()
+				+ persCalcVo.getProfBumiEnterCnt();
+
+		BigDecimal mul = new BigDecimal(100);
+		BigDecimal halfBumi = new BigDecimal(51);
+		if (persCalcVo.getTotalStaffEntered() > 0) {
+			BigDecimal stffBumiPer = new BigDecimal(stfBumiTotal
+					/ persCalcVo.getTotalStaffEntered()).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP);
+			persCalcVo.setTotalStaffBumiPerc(stffBumiPer);
+		}
+		if (persCalcVo.getTotalStaffBumiPerc().compareTo(mul) == 0) {
+			persCalcVo.setFullBumiStatus(true);
+		} else if (persCalcVo.getTotalStaffBumiPerc().compareTo(halfBumi) >= 0
+				&& persCalcVo.getTotalStaffBumiPerc().compareTo(mul) < 0) {
+			int keyRoleBumiTotal = persCalcVo.getBodBumiCnt()
+					+ persCalcVo.getHghMngBumiCnt()
+					+ persCalcVo.getMngtBumiCnt();
+			if (persCalcVo.getTotalKeyRolesEntered() > 0
+					&& persCalcVo.getTotalStaffBumiPerc().compareTo(mul) != 0) {
+				BigDecimal keyRoleBumiPer = new BigDecimal(keyRoleBumiTotal
+						/ persCalcVo.getTotalKeyRolesEntered()).multiply(mul)
+						.setScale(2, RoundingMode.HALF_UP);
+				persCalcVo.setTotalKeyRoleBumiPerc(keyRoleBumiPer);
+				if (persCalcVo.getTotalKeyRoleBumiPerc().compareTo(halfBumi) >= 0
+						&& persCalcVo.getTotalKeyRoleBumiPerc().compareTo(mul) < 0) {
+					for (SmPersonnel per : personnelList) {
+						if (per.isEquityOwner() && per.getBumiFlg() == 1) {
+							persCalcVo.setTotalShrBumiShrHldrPerc(persCalcVo
+									.getTotalShrBumiShrHldrPerc().add(
+											per.getSharePercentage()));
+						}
+					}
+					if (persCalcVo.getTotalShrBumiShrHldrPerc().compareTo(
+							halfBumi) >= 0
+							&& persCalcVo.getTotalShrBumiShrHldrPerc()
+									.compareTo(mul) < 0) {
+						persCalcVo.setHalfBumiStatus(true);
+					}
+
+				}
+			}
+		}
+		return persCalcVo;
+	}
+
+	public static SmPersonnleCalcVO displayBumiRecommendNote(
 			List<SmSupplierBank> smSupplierBankList,
 			SmPersonnleCalcVO persCalcVo, String outputPage, String applType,
 			String supplType, BigDecimal bumiPercentage, boolean supplUser) {
-		if (supplType.equals("K")) {
+		if (supplType.equals("K")
+				&& (applType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI))) {
 			setBumiStatus(persCalcVo, bumiPercentage);
 			setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList);
+
+			String[] params = null;
 
 			if (persCalcVo.isBumiStatus()) {
 				if (StringUtils.isEmpty(persCalcVo.getNonBumiSignatoryBank())) {
 					if (supplUser) {
-						persCalcVo
-								.setBumiRecommendNote(getMessage("lbl.sm.recommend.supplier.bumi"));
+						persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.supplier.bumi", params));
 					} else {
-						persCalcVo
-								.setBumiRecommendNote(getMessage("lbl.sm.recommend.poapprover.bumi"));
+						persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.poapprover.bumi", params));
 					}
 				} else {
+					params = new String[1];
+					params[0] = persCalcVo.getNonBumiSignatoryBank();
 					if (supplUser) {
-						persCalcVo
-								.setBumiRecommendNote(getMessage("lbl.sm.recommend.supplier.sign.nonbumi"));
+						persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.supplier.sign.nonbumi",
+								params));
 					} else {
-						persCalcVo
-								.setBumiRecommendNote(getMessage("lbl.sm.recommend.poapprover.sign.nonbumi"));
+						persCalcVo.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.poapprover.sign.nonbumi",
+								params));
 					}
 				}
 			} else {
 				if (supplUser) {
-					persCalcVo
-							.setBumiRecommendNote(getMessage("lbl.sm.recommend.supplier.nonbumi"));
+					persCalcVo.setBumiRecommendNote(getMessage(
+							"lbl.sm.recommend.supplier.nonbumi", params));
 				} else {
-					persCalcVo
-							.setBumiRecommendNote(getMessage("lbl.sm.recommend.poapprover.nonbumi"));
+					persCalcVo.setBumiRecommendNote(getMessage(
+							"lbl.sm.recommend.poapprover.nonbumi", params));
 				}
 			}
 		}
@@ -605,10 +615,19 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
-	private static String getMessage(String key) {
+	private static String getMessage(String key, String[] params) {
 		Locale locale = new FacesScopes().getUserLocale();
-		return ResourceBundleUtils.getMessage(key,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String msg = "";
+		
+		if(params!=null){
+			msg = ResourceBundleUtils.getMessage(key,params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}else{
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}
+			
+		return msg;
 	}
 
 	public static void calculateSmApplicationPaidUpCapitalSum(
