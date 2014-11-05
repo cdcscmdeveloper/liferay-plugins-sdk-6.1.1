@@ -74,7 +74,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-				style="width:3%; white-space:normal; text-align:right;">
+				style="width:10%; white-space:normal; text-align:right;">
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"
@@ -84,10 +84,9 @@
 					</p:commandLink>
 					<p:tooltip for="chkQualIcon"
 						value="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" />
-					<p:commandLink id="downloadIcon">
-						<p:graphicImage library="ep/images/design" name="download.png"
-							value="/resources/ep/images/design/download.png" />
-					</p:commandLink>
+					<p:commandButton id="downloadIcon" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
+						ajax="false"
+						action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}" />
 					<p:tooltip for="downloadIcon"
 						value="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
 				</ui:fragment>
