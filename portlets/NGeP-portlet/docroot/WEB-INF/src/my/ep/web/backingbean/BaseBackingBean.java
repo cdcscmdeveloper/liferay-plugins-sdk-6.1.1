@@ -705,7 +705,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	    }
 	    
 	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + "\"");//
+    	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
 	    res.setHeader("Content-Transfer-Encoding", "binary");
 	    res.setContentType("application/pdf");
 	    res.flushBuffer();
