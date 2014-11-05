@@ -59,7 +59,7 @@ public class ReportConst {
 	public static final String SC_PURCHASE_INQ_DTL_S1_RPT_VAL = "SC_058";
 	public static final String SC_SIMPLE_QUOTE_DTL_WITH_STS_CMPLTD_S1_RPT_VAL = "SC_059";
 	public static final String SC_SIMPLE_QUOTE_SMRY_BY_RECMND_SUPLR_S1_RPT_VAL = "SC_061";
-	public static final String SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL = "SC_062";
+	public static final String SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL = "SC_063";
 	
 	//S1 Report
 	//JSP
