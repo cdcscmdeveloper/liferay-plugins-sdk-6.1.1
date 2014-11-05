@@ -167,7 +167,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
-		this.loadPlanDetails(planObj.getPlanId().longValue());
+		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
@@ -176,24 +176,25 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 	/**
 	 * Generate page mode based on process name
-	 * @param processName
+	 * @param taskName
 	 */
-	private void generatePageModeForProcess(String processName){
+	private void generatePageModeForProcess(String taskName){
 		log.info("generatePageModeForProcess");
+		log.info("taskName: " + taskName);
 		this.getManagedBean().setModeReview(false);
 		this.getManagedBean().setModeReviewEditable(false);
 		this.getManagedBean().setModeEditable(false);
-		if(!StringUtils.isBlank(processName)){
+		if(!StringUtils.isBlank(taskName)){
 			// DRAFT & REVISION & UPDATE
-			if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(processName)
-					|| PPProcessNameConst.SUBMIT_PLAN.equalsIgnoreCase(processName)){
+			if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(taskName)
+					|| PPProcessNameConst.SUBMIT_PLAN.equalsIgnoreCase(taskName)){
 				this.getManagedBean().setModeReview(false);
 				this.getManagedBean().setModeReviewEditable(false);
 				this.getManagedBean().setModeEditable(true);
 				
 			// APPROVAL & VERIFICATION	
-			}else if(PPProcessNameConst.REVIEW_PLAN.equalsIgnoreCase(processName)
-					|| PPProcessNameConst.VERIFY_PLAN.equalsIgnoreCase(processName)){
+			}else if(PPProcessNameConst.REVIEW_PLAN.equalsIgnoreCase(taskName)
+					|| PPProcessNameConst.VERIFY_PLAN.equalsIgnoreCase(taskName)){
 				this.getManagedBean().setModeEditable(false);
 				this.getManagedBean().setModeReview(true);
 				this.getManagedBean().setModeReviewEditable(true);
@@ -303,7 +304,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrievePlanTypeMapper();
 		
 		if(id!=null && id>0){
-			loadPlanDetails(id);
+			loadPlanDetails(id, true);
 			loadDefaultButtons();
 		}else{
 			initialPlanDetails();
@@ -338,7 +339,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * load plan object by id
 	 * @param id
 	 */
-	private void loadPlanDetails(Long id){
+	private void loadPlanDetails(Long id, boolean fromList){
 		log.info("loadPlanDetails - Start");
 		PpPlan ppPlan = retrievePlanById(id);
 		if(ppPlan!=null){
@@ -353,8 +354,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppPlan.setOrgProfile(pmOrgProfile); 
 			ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
 			this.getManagedBean().setSelectedPlan(ppPlan);
+			if(fromList){
+				generatePageMode();
+			}
 			
-			generatePageMode();
 			loadPlanActors(ppPlan.getOrgProfile(), ppPlan.getPpPlanActors()); // TODOTEMP_ORG_ID
 			loadPlanRemark(ppPlan.getPpRemarks());
 
