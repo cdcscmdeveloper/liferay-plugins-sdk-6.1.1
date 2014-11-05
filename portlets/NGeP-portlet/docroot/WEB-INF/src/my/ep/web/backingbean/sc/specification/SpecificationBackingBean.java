@@ -447,6 +447,9 @@ public class SpecificationBackingBean extends
 			String[] outComes = this.getManagedBean().getOutComes();
 			boolean selectPanelItem = this.getManagedBean().isSelectPanelItem();
 			Long statusId = this.getManagedBean().getCurrentStatusId();
+			List<SelectItem> evaluationTypeList = this.getManagedBean()
+					.getEvaluationTypeItem();
+
 			CtPanelItem panelItem = null;
 			CtCircularVer circularVer = null;
 			List<CtPanelItem> panelList = this.getManagedBean()
@@ -466,7 +469,7 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				setProcurementMode(resDTO.getScQt());
+				// setProcurementMode(resDTO.getScQt());
 				// this.getManagedBean().setQt(resDTO.getQtDetail());
 				break;
 			case 1:
@@ -547,6 +550,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCtCircularVer(circularVer);
 			this.getManagedBean().setSelectpanelItem(panelList);
 			this.getManagedBean().setCurrentStatusId(statusId);
+			this.getManagedBean().setEvaluationTypeItem(evaluationTypeList);
 		} /*
 		 * catch(Exception e){ e.printStackTrace(); }
 		 */
@@ -4421,7 +4425,8 @@ public class SpecificationBackingBean extends
 				}
 				this.getManagedBean().setScQt(scQt);
 				if (null != scQt.getEstimatedAmount()) {
-					setProcurementMode(scQt);
+					// setProcurementMode(scQt);
+					setEvaluationType(scQt);
 				}
 			}
 
@@ -4698,6 +4703,57 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
+	}
+
+	public void setEvaluationType(ScQt scQt) {
+
+		IParameterSO parameterSo = null;
+
+		try {
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			if (scQt.getEstimatedAmount().intValue() <= 50000) {
+
+				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
+				quotationReqDTO
+						.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+				quotationReqDTO
+						.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+				ParameterResDTO quotationResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(quotationReqDTO);
+				this.getManagedBean().getScQt()
+						.setProcurementMode(quotationResDTO.getPmParameter());
+
+				List<String> types = new ArrayList<String>();
+				types.add("1");
+				List<SelectItem> itemList = new ArrayList<SelectItem>();
+				for (String location : types) {
+					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_EVALUATION_TYPE);
+
+					for (PmParameterDesc paramDesc : localParamDesc) {
+						if (paramDesc.getPmParameter().getParameterCode()
+								.equals(location)) {
+
+							itemList.add(new SelectItem(paramDesc
+									.getPmParameter().getParameterCode(),
+									paramDesc.getCodeName()));
+							this.getManagedBean().setEvaluationTypeItem(
+									itemList);
+							this.getManagedBean()
+									.getScQt()
+									.setEvaluationType(
+											paramDesc.getPmParameter()
+													.getParameterCode());
+
+							this.getManagedBean().setScQt(scQt);
+						}
+					}
+				}
+			}
+
+		} finally {
+			parameterSo = null;
+		}
 	}
 
 	// Set Procurement Mode Quotation/Tender Method.
@@ -6996,15 +7052,10 @@ public class SpecificationBackingBean extends
 		int end = Integer.parseInt(schedule.getEndMonth());
 		String toMonth = retriveMonthDtls(end);
 
-		Date d1 = new Date();
-
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		// DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		String localDate = format.format(d1);
-		String date = localDate.substring(0, 2);
-		String fromdate = date + "/" + fromMonth + "/"
-				+ schedule.getStartYear();
-		String toDate = date + "/" + toMonth + "/" + schedule.getEndYear();
+
+		String fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
+		String toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
 
 		// schedule.setScheduleNo(schedule.getScheduleNo());
 
