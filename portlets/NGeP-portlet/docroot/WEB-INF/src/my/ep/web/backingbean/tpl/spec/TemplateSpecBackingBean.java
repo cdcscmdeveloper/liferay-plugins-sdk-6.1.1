@@ -878,7 +878,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		if (prevSpecScoring != null) {
 			BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
 			if (prevRangeTo != null) {
-				tplSpecScoring.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
+				tplSpecScoring.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(0.01)));
 			}
 		}
 		tplSpecScorings.add(tplSpecScoring);
