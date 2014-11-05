@@ -359,7 +359,7 @@ public class PpCommonUtil {
 		sb.append(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(planType) 
 				? getMessageCommon("lbl.pp.procurement.plan")
 				: getMessageCommon("lbl.pp.expenditure.plan"));
-				
+		sb.append(" ");
 		sb.append(getYear(0));
 	    return sb.toString();
 	}
