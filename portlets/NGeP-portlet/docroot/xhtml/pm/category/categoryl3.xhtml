@@ -175,7 +175,7 @@
 		
 		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" id="groupdetails">
 		<p:dataTable id="groupdetailsId" 
-			rowKey="#{pmBasicCategory.basicCategoryId}"
+			rowKey="#{pmBasicCategory.createdDate}"
 			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
 			selection="#{categoryBackingBean.managedBean.selectedBasicCategory}"
 			width="100%" var="pmBasicCategory">
