@@ -322,7 +322,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
-		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		if(getManagedBean().isViewSupplierProfile()){
+			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		}
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
