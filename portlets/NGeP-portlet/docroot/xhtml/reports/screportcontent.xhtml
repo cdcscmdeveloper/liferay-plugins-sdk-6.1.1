@@ -85,14 +85,74 @@
 									<p:selectOneMenu value="#{reportBackingBean.scDeskOfficer}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>																																	
 									</p:selectOneMenu>
-								  </c:if>							 			
+								  </c:if>
+								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSupplierView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText  value="#{reportBackingBean.scSupplier}" style="margin-top:5px;width:290px;">										
+									</p:inputText>																					
+									</c:if>	
+									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequisenerIdView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scRequisenerId}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.authoriztionList}"></f:selectItems>																																	
+									</p:selectOneMenu>
+								  </c:if>
+								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSoneStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scSoneStatus}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.cancelled']}" itemValue="#{lbl['lbl.rpt.cancelled']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.acknowledge']}" itemValue="#{lbl['lbl.rpt.acknowledge']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}" itemValue="#{lbl['lbl.rpt.others']}"></f:selectItem>																																
+									</p:selectOneMenu>
+								  </c:if>
+								 
+									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPInoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.purchaseindfltno']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText  value="#{reportBackingBean.scPIno}" style="margin-top:5px;width:290px;">										
+									</p:inputText>																					
+									</c:if>	
+									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcessRptQuotationNoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText  value="#{reportBackingBean.scProcessRptQuotationNo}" style="margin-top:5px;width:290px;">										
+									</p:inputText>																					
+									</c:if>
+									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcurementTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.procurementtype']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scProcurementType}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.gtog']}" itemValue="#{lbl['lbl.rpt.gtog']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.emergency']}" itemValue="#{lbl['lbl.rpt.emergency']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.adhoc']}" itemValue="#{lbl['lbl.rpt.adhoc']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.normal']}" itemValue="#{lbl['lbl.rpt.normal']}"></f:selectItem>																																										
+									</p:selectOneMenu>
+								  </c:if>
+									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPIDtlsPrcRptGroupView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scPIDtlsPrcRptGroup}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.requisitioner']}" itemValue="#{lbl['lbl.rpt.requisitioner']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplier']}" itemValue="#{lbl['lbl.rpt.supplier']}"></f:selectItem>																																										
+									</p:selectOneMenu>
+								  </c:if>
+								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPrcRptGroupView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scPrcRptGroup}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.requisitioner']}" itemValue="#{lbl['lbl.rpt.requisitioner']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplier']}" itemValue="#{lbl['lbl.rpt.supplier']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtype']}" itemValue="#{lbl['lbl.rpt.procurementtype']}"></f:selectItem>
+									</p:selectOneMenu>
+								  </c:if>					 			
 							    </h:panelGrid>							    
 						    </td>
 						  </tr>							  
 					</table>
 		       </div>
 		       <div>
-						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.scCreatedFromView}">
+						<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scCreatedFromView}">
 						<TABLE style="width:85%;" id="createDateTable">
 							<TR>
 								<TD>
@@ -126,6 +186,28 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>	
 										<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>																																
 									</p:selectOneMenu>
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
+		            <div>
+						<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSoneCrtdFromDateView}">
+						<TABLE style="margin-top:10px;width:43%;">
+							<TR>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.createdDt']}" style="width:158px;"/>
+								</TD>
+								<TD>
+									<p:calendar  showOn="button" value="#{reportBackingBean.scSoneCrtdFromDate}" 
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
+																				
+									</p:calendar>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" value="#{reportBackingBean.scSoneCrtdToDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
+									</p:calendar> 
 								</TD>
 							</TR>
 						</TABLE>

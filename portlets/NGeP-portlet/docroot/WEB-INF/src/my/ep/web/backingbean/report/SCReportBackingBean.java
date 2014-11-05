@@ -157,8 +157,42 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScDeskOfficerView(true);
 	        	rptGenBean.setScPtjView(true);
 	        	rptGenBean.setScStatusView(true);
-	        	rptGenBean.setScCreatedFromView(true);
-	        	
+	        	rptGenBean.setScCreatedFromView(true);	        	
+	            break;
+	        case ReportConst.SC_PURCHASE_INQ_DTL_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScPInoView(true);
+	    		rptGenBean.setScSoneStatusView(true);
+	    		rptGenBean.setScPIDtlsPrcRptGroupView(true);
+	            break;
+	        case ReportConst.SC_SIMPLE_QUOTE_DTL_WITH_STS_CMPLTD_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScSoneStatusView(true);
+	    		rptGenBean.setScPrcRptGroupView(true);
+	            break;
+	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_RECMND_SUPLR_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScSoneStatusView(true);
+	    		rptGenBean.setScPrcRptGroupView(true);
+	            break;
+	        case ReportConst.SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScSoneStatusView(true);
+	    		rptGenBean.setScPrcRptGroupView(true);
 	            break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
