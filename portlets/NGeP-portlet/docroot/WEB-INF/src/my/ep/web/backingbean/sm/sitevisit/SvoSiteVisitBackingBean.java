@@ -137,7 +137,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 
-			if(smSvTask.getSmSvBankInfos().size() < 1){
+			/*if(smSvTask.getSmSvBankInfos().size() < 1){
 				System.out.println("######### SmSvBankInfo #####");
 				smSvTask.setSmSvBankInfos(new ArrayList<SmSvBankInfo>());
 				for(SmSupplierBank suppBank : smSvTask.getSmAppl().getSmSupplierBanks()){
@@ -146,7 +146,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					bankInfo.setSmSvTask(smSvTask);
 					smSvTask.getSmSvBankInfos().add(bankInfo);
 				}
-			}
+			}*/
 
 			if(this.getManagedBean().getSmSvTemplateMap() == null){
 				this.getManagedBean().setSmSvTemplateMap(new HashMap<String, SmSvTemplate>());
