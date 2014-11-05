@@ -111,43 +111,47 @@
 					</h:commandLink> 
 					</h:panelGroup>
 				</p:column>
-
-				<p:column style="width:14%;">
+                <p:column style="width:14%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
 					</f:facet>
 					
-				 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
-						 postUpdateListener="#{requestNoteBackingBean.beforeSavePostListener(requestNoteDtl)}"
-						 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
-					     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
-						 update="@form"
-						 rendered="#{requestNoteDtl.brandNew}"   
-						 conditionField="#{requestNoteDtl.conditionField}">					
-					</ac:lov>
-					
-				  <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
-						 postUpdateListener="#{requestNoteBackingBean.afterSavePostListener(requestNoteDtl)}"
-						 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
-					     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
-						 update="@form"
-						 conditionField="requestNoteItem.requestNoteItemId^#{requestNoteDtl.requestItem.requestNoteItemId}"
-                         rendered="#{!requestNoteDtl.brandNew}">    
-					</ac:lov>
-				
-					<p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
-					    onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-					    rendered="#{requestNoteDtl.vCmSupplierItem ne null}"
-						update="@([id$=suppDetailsPopup])">
-						<p:graphicImage library="ep/images/design" name="evaluate.png"
-							style="vertical-align:middle" />
-							<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
-					</p:commandLink>
-					
-				</p:column>
-				
+				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;margin-right: -12px;">	
+					   <p:row>
+			            <p:column  styleClass="ppPanelGrid" style="vertical-align: top;padding-right: 1px;text-align: right; border:none !important;">
+			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+									 postUpdateListener="#{requestNoteBackingBean.beforeSavePostListener(requestNoteDtl)}"
+									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
+								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
+									 update="@form"
+									 rendered="#{requestNoteDtl.brandNew}"   
+									 conditionField="#{requestNoteDtl.conditionField}">					
+							  </ac:lov>
+							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+									 postUpdateListener="#{requestNoteBackingBean.afterSavePostListener(requestNoteDtl)}"
+									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
+								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
+									 update="@form"
+									 conditionField="requestNoteItem.requestNoteItemId^#{requestNoteDtl.requestItem.requestNoteItemId}"
+			                         rendered="#{!requestNoteDtl.brandNew}">    
+								</ac:lov>
+			             </p:column>
+			             <p:column  styleClass="ppPanelGrid" style="vertical-align: top;padding-left: 1px;text-align: left; border:none !important;">
+			                 <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
+								    onstart="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+								    rendered="#{requestNoteDtl.vCmSupplierItem ne null}"
+									update="@([id$=suppDetailsPopup])">
+									<p:graphicImage library="ep/images/design" name="evaluate.png"
+										style="vertical-align:middle" />
+										<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
+								</p:commandLink>
+			             </p:column>
+			           </p:row>
+			          </p:panelGrid>
+			    </p:column>
+			 
 				<p:column style="width:11%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
