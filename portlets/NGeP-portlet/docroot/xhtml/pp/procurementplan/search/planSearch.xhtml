@@ -9,7 +9,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<p:panel id="pPlanSearch" header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
 		<br/>
-	
+		
 		<table class="ppTwoTable">
 			<tr>
 				<th>
@@ -63,7 +63,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						headerText="#{lbl['lbl.pp.ministry']}"
 						value="#{pPlanBackingBean.managedBean.planSearchBean.ministry.pmOrgValidity.orgName}" 
 						saveObject="pPlanBackingBean.managedBean.planSearchBean.ministry"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" 
+						conditionField="#{pPlanBackingBean.managedBean.filterOrgCondition}" 
 					/>
 				</td>
 			</tr>

@@ -23,10 +23,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pp.ministry']}">  
-	            TODO #{plan.orgProfile.parentOrgProfile!=null ? plan.orgProfile.parentOrgProfile.pmOrgValidity.orgName : '-'}
+	            #{plan.orgProfile.parentOrgProfile!=null ? plan.orgProfile.parentOrgProfile.pmOrgValidity.orgName : '-'}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
-	            TODO 
+	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(status.statusId) : ''}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
       		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">

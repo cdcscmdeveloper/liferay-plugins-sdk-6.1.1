@@ -22,6 +22,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -147,15 +148,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		Object obj = res.getPojo();
 
 		//only for DRAFT (check status)
-		String[] outcome = new String[res.getAction().length + 1];
-		outcome[0] = BpmOutcomeConst.BPM_SAVE;
-		int i = 1;
-		for (String action : res.getAction()) {
-			outcome[i++] = action;
+		if(PPProcessNameConst.SUBMIT_PLAN.equalsIgnoreCase(res.getTaskName())){
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
+			this.getManagedBean().setOutComes(outcome);
+		}else{
+			this.getManagedBean().setOutComes(res.getAction());
 		}
-System.out.println("res.getStatus() " + res.getStatus());
+		
 		this.getManagedBean().setTaskName(res.getTaskName());
-		this.getManagedBean().setOutComes(outcome);
 		this.getManagedBean().setTaskId(taskId);
 		generatePageModeForProcess(res.getTaskName());
 		
@@ -202,12 +207,41 @@ System.out.println("res.getStatus() " + res.getStatus());
 	
 	private void initialSearchPlan(){
 		log.info("initialSearchPlan");
-		//TODO
-		//check role and populate drop down value accordingly
+	
+		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
+		if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
+			throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+		}
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		generateOrgFilter();
 	}
-	/**
-	 * Reset all the critical page mode flags
-	 */
+	
+	public void generateOrgFilter(){
+		log.info("generateOrgFilter");
+		//check role and populate drop down value accordingly
+		StringBuilder conditionSB = new StringBuilder();
+		conditionSB.append("orgTypeCode.parameterCode^");
+		conditionSB.append(ParameterConst.ORG_TYPE_MINISTRY);
+		conditionSB.append("|");
+		conditionSB.append("recordStatus^1^");
+		
+		if(!isRoleBPK()){
+			if(isRoleApprover()){
+				conditionSB.append("|");
+				conditionSB.append("orgProfileId^");
+				conditionSB.append(this.getCurrentActiveOrg().getOrgProfileId());
+				
+			}else{
+				conditionSB.append("|");
+				conditionSB.append("orgProfileId^");
+				conditionSB.append(this.getCurrentActiveOrg().getParentOrgProfile().getOrgProfileId());
+			}
+		}
+			
+		this.getManagedBean().setFilterOrgCondition(conditionSB.toString());
+
+	}
+	
 	/**
 	 * Reset all the critical page mode flags
 	 */
@@ -232,6 +266,8 @@ System.out.println("res.getStatus() " + res.getStatus());
 		this.getManagedBean().setApproverModel(null);
 		this.getManagedBean().setVerifierModel(null);
 		this.getManagedBean().setSelectedRejectReasons(null);
+		this.getManagedBean().setCurrentActiveOrg(null);
+		this.getManagedBean().setFilterOrgCondition(null);
 	
 	}
 	
@@ -242,7 +278,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 	public String redirectToSearchPlan(){
 		log.info("redirectToSearchPlan - Start");
 		try{
-			
+			initialSearchPlan();
 			
 			
 		}catch (Exception e){
@@ -291,8 +327,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 		if(ppPlan!=null){
 			PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
 			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-				//TODO 
-				throw new EpException("Unable to retrieve Org. Profile.");
+				throw new EpException("Unable to retrieve Org. Profile.");//TODO 
 			}
 			if(ppPlan.getVotFundType()==null){
 				ppPlan.setVotFundType(new PmParameter());
@@ -360,10 +395,11 @@ System.out.println("res.getStatus() " + res.getStatus());
 		if(getFacesScopes().getUserSessionBean().getUserId()==null){
 			throw new EpException("Unable to get UserId from session. Please login.");//TODO 
 		}
-		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId());
+		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
 		if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
 			throw new EpException("Unable to retrieve Org. Profile.");//TODO 
 		}
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		PpPlan ppPlan = new PpPlan();
 		ppPlan.setPlanType(new PmParameter());
 		ppPlan.setVotFundType(new PmParameter());
@@ -470,7 +506,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
 			PmRole roleCode = new PmRole();
-//			roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
+			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			reason.setRoleCode(roleCode);
 			ppRejectReasons.add(0, reason);
 		
@@ -500,7 +536,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 		this.getManagedBean().setModeReview(false);
 		this.getManagedBean().setModeReviewEditable(false);
 		this.getManagedBean().setModeEditable(false);
-		if(!isBPK()){
+		if(!isRoleBPK()){
 			// NEW & DRAFT & REVISION
 			if(ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(status) 
 					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status)
@@ -508,7 +544,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 					|| ProcurementPlanConst.PPE_PENDING_REVISION.equals(status)){
 				this.getManagedBean().setModeReview(false);
 				this.getManagedBean().setModeReviewEditable(false);
-				if(isPlanner()){
+				if(isRolePlanner()){
 					this.getManagedBean().setModeEditable(true);
 				}else{
 					this.getManagedBean().setModeEditable(false);
@@ -529,7 +565,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
 				this.getManagedBean().setModeReview(false);
 				this.getManagedBean().setModeReviewEditable(false);
-				if(isPlanner()){
+				if(isRolePlanner()){
 					this.getManagedBean().setModeEditable(true);
 				}
 			}
@@ -580,7 +616,6 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * @return boolean
 	 */
 	public boolean isRoleApprover(){
-//		return RoleCode.PLAN_APPROVER.value().equals(this.getManagedBean().getCurrentRole());
 		return getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value());
 	}
 	
@@ -589,7 +624,6 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * @return boolean
 	 */
 	public boolean isRoleVerifier(){
-//		return RoleCode.PLAN_VERFICATION_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
 		return getFacesScopes().hasRoleUser(RoleCode.PLAN_VERFICATION_OFFICER.value());
 	}
 	
@@ -597,8 +631,7 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * Login user has BPK role
 	 * @return boolean
 	 */
-	public boolean isBPK(){
-//		return RoleCode.BPK_ADMIN.value().equals(this.getManagedBean().getCurrentRole());
+	public boolean isRoleBPK(){
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value());
 	}
 	
@@ -606,25 +639,23 @@ System.out.println("res.getStatus() " + res.getStatus());
 	 * Login user has planner role
 	 * @return boolean
 	 */
-	public boolean isPlanner(){
+	public boolean isRolePlanner(){
 		boolean isPlanner = false;
 		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value()) 
 				||getFacesScopes().hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())){
 			isPlanner = true;
 		}
 		return isPlanner;
-//		return RoleCode.PLAN_PROCU_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
 		
 	}
 	
-//	/* LOCAL*/
+	/* LOCAL*/
 //	/**
 //	 * Login user has approver role
 //	 * @return boolean
 //	 */
 //	public boolean isRoleApprover(){
 //		return RoleCode.PLAN_APPROVER.value().equals(this.getManagedBean().getCurrentRole());
-////		return getFacesScopes().hasRoleUser(RoleCode.PLAN_APPROVER.value());
 //	}
 //	
 //	/**
@@ -633,29 +664,21 @@ System.out.println("res.getStatus() " + res.getStatus());
 //	 */
 //	public boolean isRoleVerifier(){
 //		return RoleCode.PLAN_VERFICATION_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
-////		return getFacesScopes().hasRoleUser(RoleCode.PLAN_VERFICATION_OFFICER.value());
 //	}
 //	
 //	/**
 //	 * Login user has BPK role
 //	 * @return boolean
 //	 */
-//	public boolean isBPK(){
+//	public boolean isRoleBPK(){
 //		return RoleCode.BPK_ADMIN.value().equals(this.getManagedBean().getCurrentRole());
-////		return getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value());
 //	}
 //	
 //	/**
 //	 * Login user has planner role
 //	 * @return boolean
 //	 */
-//	public boolean isPlanner(){
-////		boolean isPlanner = false;
-////		if(getFacesScopes().hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value()) 
-////				||getFacesScopes().hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())){
-////			isPlanner = true;
-////		}
-////		return isPlanner;
+//	public boolean isRolePlanner(){
 //		return RoleCode.PLAN_PROCU_OFFICER.value().equals(this.getManagedBean().getCurrentRole());
 //		
 //	}
@@ -922,8 +945,6 @@ System.out.println("res.getStatus() " + res.getStatus());
 		IProcurementPlanSO reqSO = null;
 		ProcurementPlanResDTO resDTO = null;
 		
-		PmOrgProfile pmOrgProfile = null;
-		
 		try{
 			//default
 			items = new SelectItem[1];
@@ -932,29 +953,26 @@ System.out.println("res.getStatus() " + res.getStatus());
 			
 			//get from DB
 			Long userId = getFacesScopes().getUserSessionBean().getUserId();
-			if(userId==null){
-				throw new EpException("User Id is null. Please login.");//TODO
-			}
-			pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(userId);
-			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-				 
-				throw new EpException("Unable to retrieve Org. Profile.");//TODO
-			}
-			reqDTO = new ProcurementPlanReqDTO();
-			resDTO = new ProcurementPlanResDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());//TODO  ok
-			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
-			resDTO = reqSO.retrieveExistingPlanYears(reqDTO);
-			if (resDTO.isSuccessful() && resDTO.getPlanYears()!=null) {
-				int i = 1;
-				items = new SelectItem[resDTO.getPlanYears().size()+1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-				for(Long year:resDTO.getPlanYears()){
-					items[i] = new SelectItem(year, year.toString());
-					i++;
+			if(userId!=null){
+				log.info("getExistingPlanYearOptions" + userId);
+				log.info("getExistingPlanYearOptions" + this.getCurrentActiveOrg().getOrgProfileId());
+				reqDTO = new ProcurementPlanReqDTO();
+				resDTO = new ProcurementPlanResDTO();
+				reqDTO.setOrgProfileId(this.getCurrentActiveOrg().getOrgProfileId());
+				reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+				resDTO = reqSO.retrieveExistingPlanYears(reqDTO);
+				if (resDTO.isSuccessful() && resDTO.getPlanYears()!=null) {
+					int i = 1;
+					items = new SelectItem[resDTO.getPlanYears().size()+1];
+					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+					for(Long year:resDTO.getPlanYears()){
+						items[i] = new SelectItem(year, year.toString());
+						i++;
+					}
 				}
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
@@ -962,6 +980,23 @@ System.out.println("res.getStatus() " + res.getStatus());
 		return items;
 	}
 	
+	
+	/**
+	 * to make sure the current active org is not null
+	 * @return
+	 */
+	private PmOrgProfile getCurrentActiveOrg(){
+		log.info("getCurrentActiveOrg");
+		if(this.getManagedBean().getCurrentActiveOrg()==null){
+			PmOrgProfile pmOrgProfile = 
+					PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
+			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
+				throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+			}
+			this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		}
+		return this.getManagedBean().getCurrentActiveOrg();
+	}
 	/**
 	 * get Plan Year options
 	 * @return SelectItem[]
@@ -1239,18 +1274,16 @@ System.out.println("res.getStatus() " + res.getStatus());
 					reqDTO.setRejectReasonList(rejectReasons);
 				}
 			}
-
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//			String tempToken = bpmSO.authenticate("weblogic","welcome1"); //TODO
 			
 			reqDTO = new ProcurementPlanReqDTO();
 			resDTO = new ProcurementPlanResDTO();
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); //TODO  ;
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); 
 			if(!ppPlan.isBrandNew()){
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}	
+			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan.getPlanType().getParameterCode()));
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 			resDTO = reqSO.savePlan(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -1328,11 +1361,32 @@ System.out.println("res.getStatus() " + res.getStatus());
 			log.info("+ getMinistry "  +planSearchBean.getMinistry().getOrgProfileId());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("orgProfile.orgProfileId");
+			bean.setSearchField("orgProfile.parentOrgProfile.orgProfileId");
 			bean.setSearchValue(planSearchBean.getMinistry().getOrgProfileId());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
+		}else{
+			log.info("default org filter");
+			//filter plan by org profile
+			if(!isRoleBPK()){
+				if(isRoleApprover()){
+					log.info("isRoleApprover");
+					SearchFilterBean profile = new SearchFilterBean();
+					profile.setSearchField("orgProfile.parentOrgProfile.orgProfileId");
+					profile.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					profile.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()); // user login active org
+					searchBean.getDataFilterBeans().add(profile);
+				}else if(isRoleVerifier() || isRolePlanner()){
+					log.info("isRoleVerifier or isRolePlanner");
+					SearchFilterBean profile = new SearchFilterBean();
+					profile.setSearchField("orgProfile.orgProfileId");
+					profile.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					profile.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()); // user login active org
+					searchBean.getDataFilterBeans().add(profile);
+				}
+			}
 		}
+		
 		// ptj
 		if(planSearchBean.getPtj()!=null && !"".equalsIgnoreCase(planSearchBean.getPtj())){
 			log.info("+ getPtj "  +planSearchBean.getPtj());
@@ -1365,11 +1419,8 @@ System.out.println("res.getStatus() " + res.getStatus());
 			isEmpty = false;
 		}
 		
-		// status
-		if(planSearchBean.getStatus()!=null && planSearchBean.getStatus()!=null){
-			log.info("+ getStatus "  +planSearchBean.getStatus());
 		
-		}
+		
 		
 		//base on the flag, default list is either select all or empty
 		if(isEmpty && !isSearchable){

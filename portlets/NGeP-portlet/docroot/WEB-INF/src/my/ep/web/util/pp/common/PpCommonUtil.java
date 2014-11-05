@@ -52,22 +52,26 @@ public class PpCommonUtil {
 	 * @param userId
 	 * @return PmOrgProfile
 	 */
-	public static PmOrgProfile retrieveUserOrgListByUserId(Long userId){
+	public static PmOrgProfile retrieveUserOrgListByUserId(Long userId, boolean isDetails){
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		IUserSO userSO  = null;
 		try{
-			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = new UserResDTO();
-			reqDTO.setUserId(userId);
-			
-			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			
-			if(resDTO.isSuccessful() && resDTO.getUserOrgList()!=null){
-				pmOrgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
-				pmOrgProfile = retrievePmOrgProfileDtl(pmOrgProfile.getOrgProfileId()); // retrieve the full details
+			if(userId!=null){
+				UserReqDTO reqDTO = new UserReqDTO();
+				UserResDTO resDTO = new UserResDTO();
+				reqDTO.setUserId(userId);
+				
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+				
+				if(resDTO.isSuccessful() && resDTO.getUserOrgList()!=null){
+					pmOrgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+					if(isDetails){
+						pmOrgProfile = retrievePmOrgProfileDtl(pmOrgProfile.getOrgProfileId()); // retrieve the full details
+					}
+					
+				}
 			}
-			
 
 		}finally{
 			userSO = null;
@@ -344,7 +348,22 @@ public class PpCommonUtil {
 		}
 	}
 	
-	
+	public static String getMessageCommon(String name){
+		log.info("getMessageCommon");
+		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+
+	public static String getDocTitle(String planType){
+		log.info("getDocTitle");
+		StringBuilder sb = new StringBuilder();
+		sb.append(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(planType) 
+				? getMessageCommon("lbl.pp.procurement.plan")
+				: getMessageCommon("lbl.pp.expenditure.plan"));
+				
+		sb.append(getYear(0));
+	    return sb.toString();
+	}
+    
 	
 	
 	
