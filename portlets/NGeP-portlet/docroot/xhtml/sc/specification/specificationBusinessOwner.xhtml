@@ -163,10 +163,10 @@
 			</tr>
 			<tr>
 				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}">
 					<td><h:outputLabel value="Zone/Location" /></td>
 					<td><p:selectOneRadio
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
 							value="#{specificationBackingBean.managedBean.scQt.zonal}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
