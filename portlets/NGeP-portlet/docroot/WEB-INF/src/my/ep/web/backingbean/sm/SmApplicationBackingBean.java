@@ -856,9 +856,30 @@ public class SmApplicationBackingBean extends
 						|| getManagedBean()
 								.getCurrentPageType()
 								.equalsIgnoreCase(
-										SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
+										SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)
+						|| getManagedBean()
+								.getCurrentPageType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 					calcPersonnelListCount();
-					calculateBumiPercentageTotals();
+					SmCommonUtil
+							.displayBumiRecommendNote(
+									getManagedBean().getSmAppl()
+											.getSmSupplierBanks(),
+									getManagedBean().getPersonCalc(),
+									getManagedBean().getCurrentPageType(),
+									getManagedBean().getSmAppl()
+											.getApplCategoryType(),
+									getManagedBean()
+											.getSmAppl()
+											.getApplCategoryType()
+											.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? getManagedBean()
+											.getNewSupplierType()
+											: getManagedBean().getSmAppl()
+													.getSupplierType(),
+									getManagedBean().getBumiEquityPercentage(),
+									getManagedBean().isSupplierUser());
+
 				}
 			}
 			assignValReqdToFalse();
@@ -5592,6 +5613,9 @@ public class SmApplicationBackingBean extends
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 							.getSmAppl().getSmCompanyBasic());
 			SmCommonUtil.calcAllEquityOwnerPercent(getManagedBean());
+			getManagedBean().setBumiEquityPercentage(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getBumiPercent());
 
 		} catch (NumberFormatException ne) {
 			throw new EpException(MessageConst.ERROR_722522);

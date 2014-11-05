@@ -106,7 +106,11 @@ public class SmPersonnleCalcVO implements Serializable {
 
 	private boolean fullBumiStatus;
 	
+	private boolean bumiStatus;
+	
 	private String bumiRecommendNote;
+	
+	private String nonBumiSignatoryBank;
 
 	public int getBodNonBumiCnt() {
 		return bodNonBumiCnt;
@@ -498,6 +502,22 @@ public class SmPersonnleCalcVO implements Serializable {
 
 	public void setBumiRecommendNote(String bumiRecommendNote) {
 		this.bumiRecommendNote = bumiRecommendNote;
+	}
+
+	public boolean isBumiStatus() {
+		return bumiStatus;
+	}
+
+	public String getNonBumiSignatoryBank() {
+		return nonBumiSignatoryBank;
+	}
+
+	public void setNonBumiSignatoryBank(String nonBumiSignatoryBank) {
+		this.nonBumiSignatoryBank = nonBumiSignatoryBank;
+	}
+
+	public void setBumiStatus(boolean bumiStatus) {
+		this.bumiStatus = bumiStatus;
 	}
 
 }
