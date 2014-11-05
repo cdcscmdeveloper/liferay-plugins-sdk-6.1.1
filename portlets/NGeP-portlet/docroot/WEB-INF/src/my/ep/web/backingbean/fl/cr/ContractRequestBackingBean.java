@@ -225,7 +225,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public ContractRequestBackingBean() {
 		if (getManagedBean().getFlRequest() == null) {
-			System.out.println("==contructor==");
 			getManagedBean().setFlRequest(new FlFulfilmentRequest());
 			getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
@@ -345,7 +344,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			checkCeilingAmount(flRequest);
 			checkCeilingQty(flRequest);
 			if(isRequisitioner()){
-				System.out.println("getManagedBean().getApproverModel().getTarget(): "+getManagedBean().getApproverModel().getTarget());
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 				UserReqDTO userReqDTO = new UserReqDTO();
@@ -617,7 +615,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			ContractAmendmentResDTO ctAmendmentResDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-			System.out.println("address List::: "+ctAmendmentResDTO.getAddressTypeList().size());
 			getManagedBean().setAddressTypesList(ctAmendmentResDTO.getAddressTypeList());
 		}
 		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
@@ -776,7 +773,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				.get("contractId"));
 		String scheduleNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("scheduleNo");
-		System.out.println("scheduleNo: "+scheduleNo);
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		
@@ -900,7 +896,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		String contractId = originalServletRequest.getParameter("contractId");
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
 		
-		System.out.println("taskId:" + taskId);
 		if (taskId != null) {
 			renewSesionObject();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
@@ -1213,7 +1208,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void updateIssuedJabatan() {
-		System.out.println("-updateIssuedJabatan- "+ getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
 
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -1254,7 +1248,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
 
 					sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
-					System.out.println("sumOrderedAmt: "+sumOrderedAmt);
 				}
 			}
 			IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
@@ -1264,8 +1257,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			BigDecimal prevSumAmt = itemSummarySO.retrieveContractAgencyAccumulatedAmount(reqDTO);
 			checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
 
-			System.out.println("checkCeilingAmt total: "+checkCeilingAmt);
-			System.out.println("getAgencyCeilingAmount: "+ctResDTO.getAgencyCeilingAmount().intValue());
 			if(checkCeilingAmt.intValue() >  ctResDTO.getAgencyCeilingAmount().intValue()){
 				throw new EpException(MessageConst.ERROR_750014);
 			}
@@ -1289,7 +1280,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					break;
 				}
 				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-				System.out.println("sumOrderedQty: "+sumOrderedQty);
 				
 				IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
 				FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
@@ -1298,8 +1288,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 				checkCeilingQty = prevSumQty.add(sumOrderedQty);
 
-				System.out.println("checkCeilingQty total: "+checkCeilingQty);
-				System.out.println("getAgencyCeilingAmount: "+ctResDTO.getItemCeilingQuantity());
 				if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
 					throw new EpException(MessageConst.ERROR_750016,new String[]{itemAddr.getCmItem().getItemName()});
 				}
@@ -1391,7 +1379,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	
 	public void retrieveZonalPrice(FlFulfilmentItemAddr flItemAddr) {
-		System.out.println("event "+flItemAddr.getFulfilmentItemAddrId());
 		int unitPrice = 0;
 		int orderedQty = 0;
 		int orderedAmt = 0;
@@ -1878,7 +1865,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-			System.out.println("address List::: "+resDTO.getAddressTypeList().size());
 			getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 			
 			addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
@@ -1893,7 +1879,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		reqDTO.setAddressType(addressType);
 		AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
-		System.out.println("size ::: "+resDTO.getAddressTypeList().size());
 		//resDTO.get
 		return resDTO;
 	}
@@ -2379,7 +2364,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		for(TreeNode node:root.getChildren()){
 			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
 			if(addr.isSelectedChargeItem()){
-				//System.out.println("in update methos check ");
 				selectedNodes.add(node);
 			}
 		}
@@ -2797,7 +2781,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			boolean checkValue=(boolean)e.getComponent().getAttributes().get("value");
-			System.out.println("checkValue:::: "+checkValue);
 			if((boolean) e.getComponent().getAttributes().get("value")){
 				getManagedBean().setChargeLinePanel(true);
 			}else{
