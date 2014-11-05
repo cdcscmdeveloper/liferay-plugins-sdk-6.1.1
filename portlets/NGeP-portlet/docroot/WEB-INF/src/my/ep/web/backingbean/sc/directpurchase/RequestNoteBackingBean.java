@@ -312,21 +312,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		try {
 			requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
 			//List<ScRequestNoteDtl>	scRequestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-			/*if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
+			if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
 				for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
-					for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
+					/*for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
 						if(supplierItem.getSmSupplier() != null){
 							if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
 								requestNoteDtl.setScRequestSupplierItem(supplierItem);
 							}	
 						}
-					}
+					}*/
 					if(requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId() == null){
 						requestNoteDtl.setAssignedUser(null);
 					}
-					scRequestNoteDtls.add(requestNoteDtl);
 				}	
-			}*/
+			}
 			
 			// adding request note delete list
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
