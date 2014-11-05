@@ -26,7 +26,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            #{plan.orgProfile.parentOrgProfile!=null ? plan.orgProfile.parentOrgProfile.pmOrgValidity.orgName : '-'}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
-	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(status.statusId) : ''}
+	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : ''}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
       		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">
