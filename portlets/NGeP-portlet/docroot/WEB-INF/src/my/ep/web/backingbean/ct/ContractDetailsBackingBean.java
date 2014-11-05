@@ -363,10 +363,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				  && !getManagedBean().getContractVer().getCtSchedules().isEmpty() ) {
 		        getManagedBean().setChkSchedule(true);
 		        Collections.sort(getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
+		        for(CtSchedule ctSchedule : getManagedBean().getContractVer().getCtSchedules()) {
+		        	if(ctSchedule.isUseInFulfilment()) {
+		        		getManagedBean().setDisableScheduleRadio(true);
+		        		break;
+		        	}
+		        }
 		        ScheduleDate();
 		 } if (getManagedBean().getContractVer().getCtProgressivePayments() != null
 				   && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() ){
 			     Collections.sort(getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
+			     for(CtProgressivePayment ctProgressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
+			    	 if(ctProgressivePayment.isUseInFulfilment()) {
+			    		 getManagedBean().setDisableScheduleRadio(true);
+			    		 break;
+			    	 }
+			     }			     
 			     ProgressiveDate();
 		   }
 		    
