@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -389,10 +390,25 @@ public class QTScheduleDetailBackingBean extends
 	}
 	
 	public Date handleMaximumDate() {
-		Date bsvDate = this.getManagedBean().getBsvDate();
+		debugLogger("handleMaximumDate");
+		ScQt scQt = this.getManagedBean().getQt();
 		Date publishDate = new Date();
-		if (null != bsvDate) {
-			return	DateUtils.minusDays(bsvDate, 1);
+		if (scQt.isBsvRequired()) {
+			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
+			Date briefingDate=null;
+			for (ScQtBsv bsvs : bsvDetails) {
+				List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
+				for (ScQtBsvDtl bsvDtl : dtls) {
+					briefingDate = bsvDtl.getBsvDate();
+					if (null != briefingDate) {
+						return	DateUtils.minusDays(briefingDate, 1);
+					}
+				}
+			}
+		} else {
+			Calendar c1 = Calendar.getInstance();
+			c1.add(Calendar.YEAR, 50);
+			publishDate = c1.getTime();
 		}
 		return publishDate;
 	}
