@@ -389,12 +389,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		
 		// to get ptj locality by default
-		ptjLocality(getManagedBean().getLocationLevel());
+		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		
-		// update tab menu
-		 RequestContext.getCurrentInstance().update("tabMenuId");
-		 return "simpleQuote";
-		 
+	   return "simpleQuote";
 	}
 	
 	
@@ -1119,7 +1116,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   debugLogger("byBusinessEvent");
 		   if (getManagedBean().isByLocality()) {
 			   getManagedBean().setTabActiveIndex(0);
-			   ptjLocality(getManagedBean().getLocationLevel());
+			  String supplierLocLevel =  getManagedBean().getSupplierLocLevel();
+			   if(supplierLocLevel == null){
+				   supplierLocLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
+				   getManagedBean().getScQuote().setSupplierLocationLevel(getParameterByTypeAndCode(
+							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
+				}
+			   ptjLocality(supplierLocLevel);
+			   
 		   } else{
 			   getManagedBean().setByLocality(Boolean.FALSE);
 			   if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
@@ -1316,7 +1320,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * showLocationPopup method for location popup in simple quote
 	 */
 	public void showLocationPopup() {
-		String locationLevel = this.getManagedBean().getLocationLevel();
+		String locationLevel = this.getManagedBean().getSupplierLocLevel();
 		if (locationLevel == null) {
 			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
@@ -1456,7 +1460,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
     */
 	public void updateLocation() {
 		getManagedBean().getLocationTrees().clear();
-		String locationLevel = this.getManagedBean().getLocationLevel();
+		String locationLevel = this.getManagedBean().getSupplierLocLevel();
 		List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedLocNodes() != null) {
@@ -1572,7 +1576,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
      * editLocation Method for location in simple quote
 	*/
 	public void editLocation(TreeNode rootZoneLocation, int LocIndex) {
-	    String locationLevel = this.getManagedBean().getLocationLevel();
+	    String locationLevel = this.getManagedBean().getSupplierLocLevel();
 	    
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getLocationTrees() != null) {
@@ -2785,8 +2789,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					ScSQRemark.class));
 			
 			getManagedBean().setProcessName(res.getProcessName());
-			
-			 getManagedBean().setRnToSQFlag(Boolean.TRUE);
+		    getManagedBean().setTitleChecker(Boolean.FALSE);
+			getManagedBean().setRnToSQFlag(Boolean.TRUE);
 			// page navigation to simple quote
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
@@ -3145,6 +3149,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public void localityLocLevelEvent(String locationLevel){
 		if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
 			getManagedBean().getLocationTrees().clear();
+		}
+		if(locationLevel == null){
+			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
 		ptjLocality(locationLevel);
 	}
