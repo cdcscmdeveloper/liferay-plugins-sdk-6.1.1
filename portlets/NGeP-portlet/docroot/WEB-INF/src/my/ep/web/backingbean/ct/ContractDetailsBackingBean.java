@@ -1164,6 +1164,10 @@ public void ConstructSideTabMenu(){
 		CtContractVer contractVer = reqDTO.getCtContractVer();
 		Date today = new Date();
 		
+		if(getManagedBean().isUpdateContract() && getManagedBean().getAttachmentList().isEmpty()){
+			throw new EpException(MessageConst.ERROR_750051); 
+		}
+		
 		if(contractVer.getCtContractZones()!=null) {
 			for(CtContractZone contractZone : contractVer.getCtContractZones()) {
 				if(contractZone.getDeliveryTerm()==0) {
