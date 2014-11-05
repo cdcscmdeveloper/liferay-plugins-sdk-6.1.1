@@ -55,10 +55,8 @@ public class BPMTaskListBackingBean extends
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 
 		// Procurement Plan - Start
-		temp.put(PPProcessNameConst.REVIEW_PLAN, "pp-plan-det");
-		temp.put(PPProcessNameConst.REVISE_PLAN, "pp-plan-det");
-		temp.put(PPProcessNameConst.SUBMIT_PLAN, "pp-plan-det");
-		temp.put(PPProcessNameConst.VERIFY_PLAN, "pp-plan-det");
+		temp.put(PPProcessNameConst.EXPENDITURE_PREPARATION_PROCESS_NAME, "plan-detail");
+		temp.put(PPProcessNameConst.PROCUREMENT_PREPARATION_PROCESS_NAME, "plan-detail");
 		// Procurement Plan - End
 
 		// Supplier Management - Start
