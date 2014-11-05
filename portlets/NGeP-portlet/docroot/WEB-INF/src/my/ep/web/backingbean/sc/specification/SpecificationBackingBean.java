@@ -624,7 +624,7 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
-
+			this.getManagedBean().getScQt().setZonal(false);
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
 				removespecDtls();
@@ -645,6 +645,7 @@ public class SpecificationBackingBean extends
 
 			ScQt scQt = this.getManagedBean().getScQt();
 			scQt.setZonal(false);
+			scQt.setQtType(QTConstants.OPEN_TYPE);
 			this.getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
 			ScQtSupplierCriteria supplierCriteria = scQt
 					.getScQtSupplierCriteria();
