@@ -185,6 +185,7 @@
 			<portlet id="SmApplRevisionView"></portlet>
 			<portlet id="SoftCertPayment"></portlet>
 			<portlet id="viewSupplierProfile"></portlet>
+			<portlet id="taskStatusSearch"></portlet>
 		</category>
 
 		<category name="Template">
