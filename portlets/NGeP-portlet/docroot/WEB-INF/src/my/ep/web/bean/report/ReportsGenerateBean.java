@@ -2,6 +2,7 @@ package my.ep.web.bean.report;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.model.SelectItem;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -65,6 +66,15 @@ public class ReportsGenerateBean {
 		private boolean scProcureQuoteEditView = false;
 		private boolean scProcureTenderEditView = false;
 		private boolean scProcureRestrctdEditView = false;
+		private boolean scSoneCrtdFromDateView = false;
+		private boolean scRequisenerIdView = false;
+		private boolean scSupplierView = false;
+		private boolean scPInoView = false;
+		private boolean scSoneStatusView = false;
+		private boolean scPrcRptGroupView = false;
+		private boolean scPIDtlsPrcRptGroupView = false;
+		private boolean scProcurementTypeView = false;
+		private boolean scProcessRptQuotationNoView = false;	
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -292,8 +302,131 @@ public class ReportsGenerateBean {
 		private String scPublishFromDateVar=ReportConst.EMPTY_VAL;
 		private String scPublishToDateVar=ReportConst.EMPTY_VAL;
 		private String scUserAccessRoleVar=ReportConst.EMPTY_VAL;
-				
+		private String scSoneCrtdFromDateVar=ReportConst.EMPTY_VAL;
+		private String scSoneCrtdToDateVar=ReportConst.EMPTY_VAL;
+		private String scRequisenerIdVar=ReportConst.EMPTY_VAL;
+		private String scSupplierVar=ReportConst.EMPTY_VAL;
+		private String scPInoVar=ReportConst.EMPTY_VAL;
+		private String scSoneStatusVar=ReportConst.EMPTY_VAL;				
+		private String scPrcRptGroupVar=ReportConst.EMPTY_VAL;
+		private String scPIDtlsPrcRptGroupVar=ReportConst.EMPTY_VAL;
+		private String scProcurementTypeVar=ReportConst.EMPTY_VAL;
+		private String scProcessRptQuotationNoVar=ReportConst.EMPTY_VAL;
 		
+		public boolean isScPrcRptGroupView() {
+			return scPrcRptGroupView;
+		}
+		public void setScPrcRptGroupView(boolean scPrcRptGroupView) {
+			this.scPrcRptGroupView = scPrcRptGroupView;
+		}
+		public boolean isScPIDtlsPrcRptGroupView() {
+			return scPIDtlsPrcRptGroupView;
+		}
+		public void setScPIDtlsPrcRptGroupView(boolean scPIDtlsPrcRptGroupView) {
+			this.scPIDtlsPrcRptGroupView = scPIDtlsPrcRptGroupView;
+		}
+		public boolean isScProcurementTypeView() {
+			return scProcurementTypeView;
+		}
+		public void setScProcurementTypeView(boolean scProcurementTypeView) {
+			this.scProcurementTypeView = scProcurementTypeView;
+		}
+		public boolean isScProcessRptQuotationNoView() {
+			return scProcessRptQuotationNoView;
+		}
+		public void setScProcessRptQuotationNoView(boolean scProcessRptQuotationNoView) {
+			this.scProcessRptQuotationNoView = scProcessRptQuotationNoView;
+		}
+		public String getScPrcRptGroupVar() {
+			return scPrcRptGroupVar;
+		}
+		public void setScPrcRptGroupVar(String scPrcRptGroupVar) {
+			this.scPrcRptGroupVar = scPrcRptGroupVar;
+		}
+		public String getScPIDtlsPrcRptGroupVar() {
+			return scPIDtlsPrcRptGroupVar;
+		}
+		public void setScPIDtlsPrcRptGroupVar(String scPIDtlsPrcRptGroupVar) {
+			this.scPIDtlsPrcRptGroupVar = scPIDtlsPrcRptGroupVar;
+		}
+		public String getScProcurementTypeVar() {
+			return scProcurementTypeVar;
+		}
+		public void setScProcurementTypeVar(String scProcurementTypeVar) {
+			this.scProcurementTypeVar = scProcurementTypeVar;
+		}
+		public String getScProcessRptQuotationNoVar() {
+			return scProcessRptQuotationNoVar;
+		}
+		public void setScProcessRptQuotationNoVar(String scProcessRptQuotationNoVar) {
+			this.scProcessRptQuotationNoVar = scProcessRptQuotationNoVar;
+		}
+		public boolean isScSoneCrtdFromDateView() {
+			return scSoneCrtdFromDateView;
+		}
+		public void setScSoneCrtdFromDateView(boolean scSoneCrtdFromDateView) {
+			this.scSoneCrtdFromDateView = scSoneCrtdFromDateView;
+		}
+		public boolean isScRequisenerIdView() {
+			return scRequisenerIdView;
+		}
+		public void setScRequisenerIdView(boolean scRequisenerIdView) {
+			this.scRequisenerIdView = scRequisenerIdView;
+		}
+		public boolean isScSupplierView() {
+			return scSupplierView;
+		}
+		public void setScSupplierView(boolean scSupplierView) {
+			this.scSupplierView = scSupplierView;
+		}
+		public boolean isScPInoView() {
+			return scPInoView;
+		}
+		public void setScPInoView(boolean scPInoView) {
+			this.scPInoView = scPInoView;
+		}
+		public boolean isScSoneStatusView() {
+			return scSoneStatusView;
+		}
+		public void setScSoneStatusView(boolean scSoneStatusView) {
+			this.scSoneStatusView = scSoneStatusView;
+		}
+		public String getScSoneCrtdFromDateVar() {
+			return scSoneCrtdFromDateVar;
+		}
+		public void setScSoneCrtdFromDateVar(String scSoneCrtdFromDateVar) {
+			this.scSoneCrtdFromDateVar = scSoneCrtdFromDateVar;
+		}
+		public String getScSoneCrtdToDateVar() {
+			return scSoneCrtdToDateVar;
+		}
+		public void setScSoneCrtdToDateVar(String scSoneCrtdToDateVar) {
+			this.scSoneCrtdToDateVar = scSoneCrtdToDateVar;
+		}
+		public String getScRequisenerIdVar() {
+			return scRequisenerIdVar;
+		}
+		public void setScRequisenerIdVar(String scRequisenerIdVar) {
+			this.scRequisenerIdVar = scRequisenerIdVar;
+		}
+		public String getScSupplierVar() {
+			return scSupplierVar;
+		}
+		public void setScSupplierVar(String scSupplierVar) {
+			this.scSupplierVar = scSupplierVar;
+		}
+		public String getScPInoVar() {
+			return scPInoVar;
+		}
+		public void setScPInoVar(String scPInoVar) {
+			this.scPInoVar = scPInoVar;
+		}
+		public String getScSoneStatusVar() {
+			return scSoneStatusVar;
+		}
+		public void setScSoneStatusVar(String scSoneStatusVar) {
+			this.scSoneStatusVar = scSoneStatusVar;
+		}
 		public String getScUserAccessRoleVar() {
 			return scUserAccessRoleVar;
 		}

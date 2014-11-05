@@ -11,7 +11,10 @@ public class ReportConst {
 	public static final String MOD_CM_TTL = "lbl.module.catalogueManagement";
 	public static final String MOD_FL_TTL = "lbl.module.orderFulfillment";
 	public static final String MOD_SM_TTL = "lbl.module.supplierManagement";
-	// public static final String MOD_SOURCES_TTL = "";
+	public static final String SC_MOD_VAL = "SC";
+	public static final String CM_MOD_VAL = "CM";
+	public static final String FL_MOD_VAL = "FL";
+	public static final String SM_MOD_VAL = "SM";	
 	//SC Module reports start	
 	public static final String SPPPP_PEMATUHAN_OC_RPT_VAL = "SC_001";	
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "SC_002";	
@@ -51,7 +54,13 @@ public class ReportConst {
 	public static final String OVRL_FINRS_EC_RPT_VAL = "SC_036";
 	public static final String SC_QUOT_TENDER_OR_RPT_VAL = "SC_038";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
-	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";	
+	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
+	public static final String SC_SUMMARY_SOURCING_OR_RPT_VAL = "SC_039";
+	public static final String SC_PURCHASE_INQ_DTL_S1_RPT_VAL = "SC_058";
+	public static final String SC_SIMPLE_QUOTE_DTL_WITH_STS_CMPLTD_S1_RPT_VAL = "SC_059";
+	public static final String SC_SIMPLE_QUOTE_SMRY_BY_RECMND_SUPLR_S1_RPT_VAL = "SC_061";
+	public static final String SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL = "SC_062";
+	
 	//S1 Report
 	//JSP
 		public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
@@ -415,8 +424,20 @@ public class ReportConst {
 	public static final String AMP_PROCURE_PTJ_EQ = "&ORGPROFILEID=";
 	public static final String AMP_LOGIN_EQ = "&LOGIN=";
 	public static final String AMP_PUB_FRM_DT_EQ = "&PUBFRDT=";
-	public static final String AMP_PUB_TO_DT_EQ = "&PUBTODT=";
-	
+	public static final String AMP_PUB_TO_DT_EQ = "&PUBTODT=";	
+	//sc
+	public static final String SC_AMP_REQUISENER_EQ = "&REQUSRID=";
+	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";
+	public static final String SC_AMP_STATUS_EQ = "&STATUS=";
+	public static final String SC_AMP_PI_NO_EQ = "&PINO=";
+	public static final String SC_AMP_PRCESS_RPT_GROUP_EQ = "&PGROUP=";
+	public static final String SC_AMP_QT_NO_EQ = "&QUOTENO=";
+	public static final String SC_AMP_PROC_TYPE_EQ = "&PROTYPE=";
+	public static final String SC_AMP_APPROVER_NAIK_TARAF_EQ = "&APPROVER_NAIK_TARAF=";
+	public static final String SC_AMP_APPROVERNT_EQ = "&APPROVERNT=";
+	public static final String SC_AMP_APPROVER_EQ = "&APPROVER=";
+	public static final String SC_AMP_DESK_OFFICER_EQ = "&DESK_OFFICER=";
+	public static final String SC_AMP_DESKOFFR_EQ = "&DESKOFFR=";
 	//fl
 	public static final String FL_AMP_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String FL_AMP_TO_DATE_EQ = "&PTODATE=";
@@ -519,4 +540,11 @@ public class ReportConst {
 	public static final String PARAM_EP_NO = "PEPNO";
 	public static final String PARAM_SUPP_ITEM_ID = "PSUPPITEMID";
 	public static final String NO_REPORT_ID = "This Report, still not developed...";
+	public static final String SLASH_REPRT_VIEW_SERVLET = "/ReportViewServlet";
+	public static final String GENERATED_URL = "generatedUrl";
+	public static final String REPORT_VIEW_URL = "reportViewUrl";
+	public static final String PM_MODULE_SER_OBJ = "pm";
+	public static final String RPT_MODULE_SER_OBJ = "rpt";
+	public static final String RPT_EIFON = " - ";
+	public static final String ENG_LANG = "en";
 }
