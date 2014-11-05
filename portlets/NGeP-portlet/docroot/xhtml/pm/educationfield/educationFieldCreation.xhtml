@@ -16,7 +16,7 @@
 	  <tr>	  	
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
+		<td><p:inputText style="text-transform:uppercase" value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
 			 disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}" size="30" maxlength="10" />
 		</td>
 	  </tr>	
@@ -31,7 +31,8 @@
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
-     			value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}" >
+     			value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}" 
+     			disabled="#{educationBackingBean.managedBean.pmEduField.brandNew}">
      	       <f:selectItems value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems> 	 	    	
   	        </p:selectOneMenu></td>				
 	    </tr>	    	    

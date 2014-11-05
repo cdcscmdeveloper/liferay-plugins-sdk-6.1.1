@@ -15,8 +15,8 @@
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText style="width:178px" value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
-			  disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}" onkeyup="this.value=this.value.toUpperCase();"
+		<td><p:inputText style="width:178px;text-transform:uppercase" value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
+			  disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 		      size="30" maxlength="10" /></td>
 	  </tr>	
 	  <tr>	
@@ -31,7 +31,7 @@
       	 <p:inputText value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}" 
       		 disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}" size="10" />&#160;&#160;
       	 <ac:lov id="uomLovId" lovId="PM_ORG_PROFILE_FPJ" size="60"
-      	 			update="@form" 
+      	 			update="@form"
 					headerText="Org Profile Lov" 			
 					value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
@@ -45,7 +45,8 @@
 	   <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
-     			value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}">>  
+     			value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}"
+     			disabled="#{usergroupBackingBean.managedBean.userGroup.brandNew}">
 			 <f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
     	 </p:selectOneMenu></td>				
 	    </tr>

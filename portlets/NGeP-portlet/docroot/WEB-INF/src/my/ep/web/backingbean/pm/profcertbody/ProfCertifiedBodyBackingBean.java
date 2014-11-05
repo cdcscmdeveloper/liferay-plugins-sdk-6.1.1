@@ -149,9 +149,15 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			if (null == searchBean) {
 				searchBean = new SearchBean<PmCertBody>();
 			}			
-			if (null != getManagedBean().getCertType()) {
+			if (getManagedBean().getCertType() != null){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("isCertifiedBody",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getCertType()));
+				
+			} else if (getManagedBean().getCertType() == null ) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("isProfessionalBody",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getCertType()));
 			}			

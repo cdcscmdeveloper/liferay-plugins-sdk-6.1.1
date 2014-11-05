@@ -25,7 +25,7 @@
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
      	 <td><p:columnGroup> 		        
       	 <p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}" 
-      	    disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />&#160;&#160;
+      	    id="lvlCode" disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />&#160;&#160;
       	 <ac:lov id="bnLovId" lovId="PM_BUSINESS_NATURE_ADV" size="100"
       	 			update=":#{p:component('parentCategory')}" 
 					headerText="Business Nature Lov" 			
