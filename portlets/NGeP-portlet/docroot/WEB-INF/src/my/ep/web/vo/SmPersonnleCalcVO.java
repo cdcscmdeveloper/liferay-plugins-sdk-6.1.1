@@ -105,6 +105,8 @@ public class SmPersonnleCalcVO implements Serializable {
 	private boolean halfBumiStatus;
 
 	private boolean fullBumiStatus;
+	
+	private String bumiRecommendNote;
 
 	public int getBodNonBumiCnt() {
 		return bodNonBumiCnt;
@@ -488,6 +490,14 @@ public class SmPersonnleCalcVO implements Serializable {
 
 	public void setProfActualTotalCnt(int profActualTotalCnt) {
 		this.profActualTotalCnt = profActualTotalCnt;
+	}
+
+	public String getBumiRecommendNote() {
+		return bumiRecommendNote;
+	}
+
+	public void setBumiRecommendNote(String bumiRecommendNote) {
+		this.bumiRecommendNote = bumiRecommendNote;
 	}
 
 }
