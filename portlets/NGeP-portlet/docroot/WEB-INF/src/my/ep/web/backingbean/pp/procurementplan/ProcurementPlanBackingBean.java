@@ -270,6 +270,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setCurrentActiveOrg(null);
 		this.getManagedBean().setFilterOrgCondition(null);
 	
+	
 	}
 	
 	/**
@@ -320,11 +321,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		Long statusId = this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
 		if(isRolePlanner() && (ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
 				|| ProcurementPlanConst.PPE_APPROVED.equals(statusId))){
+			log.info("loadDefaultButtons2");
 			//BPM buttons
 			String[] outcome = new String[2];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
 			this.getManagedBean().setOutComes(outcome);
+		}else{
+			this.getManagedBean().setOutComes(null);
 		}
 	}
 	/**
