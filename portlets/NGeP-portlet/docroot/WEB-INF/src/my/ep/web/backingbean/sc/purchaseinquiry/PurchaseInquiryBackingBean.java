@@ -26,12 +26,10 @@ import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
-import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -42,8 +40,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
-import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -52,15 +48,11 @@ import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
-import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -77,7 +69,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -91,6 +82,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.SourcingZoneHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -813,7 +805,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 		 ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
 		 
-         boolean flag = Boolean.TRUE;
+         boolean page_nav_flag = Boolean.TRUE;
 		 if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
 			 // get selected supplier 
 			 ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
@@ -839,13 +831,19 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			 if(requestNoteDtl.getScRequestNote() != null){
 				 ScRequestNote	requestNote  = requestNoteDtl.getScRequestNote();
 				 getManagedBean().setRequestNote(requestNote);
-				 if(requestNote.getWorkFlowStatuses().size() > 0){
-					 flag = Boolean.FALSE;
+				 if(requestNote.getCurrentStatus() != null){
+					 page_nav_flag = Boolean.FALSE;
 				 } 
 			 }
 			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
-	    }
-		 
+		 }
+
+		/* if (prInquiry.getScPIZone() != null) {
+			 getManagedBean().setScPIZone(prInquiry.getScPIZone());	
+		 } else {
+			 getManagedBean().setScPIZone(new ScPIZone());	
+		 }*/
+
 		// no of response days
 		 prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), getCurrentDateWithoutTime(prInquiry.getDateToResponse())));
 		 
@@ -894,7 +892,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 priceTypeChangeListener();
 
 		 FacesContext fc = FacesContext.getCurrentInstance();
-		 if(flag){ // page nav.to purchase inquiry
+		 if(page_nav_flag){ // page nav.to purchase inquiry
 			 fc = FacesContext.getCurrentInstance();
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
 
@@ -968,9 +966,22 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		// price type
     	
     	ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
+    	ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
+    	 ScPIZone zone = getManagedBean().getScPIZone(); 
+    	 
+    	 Map<String, TplSpecZoneDtl> zoneDtlMap =  getManagedBean().getZoneDtlMap();
+    	 if(zoneDtlMap == null){
+    	    zoneDtlMap  = new HashMap<String, TplSpecZoneDtl>();
+    	 }
+    	 
     	// zone dtl
     	if(pricing.getCmSupplierZone() != null){
-    		result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone()));
+    		result.setTplSpecZone(SourcingZoneHelper.getInstance().createSpecZone(pricing.getCmSupplierZone(), 
+    				zoneDtlMap, zone, prInquiry.isBrandNew()));
+			if (zone.isBrandNew()) {
+				zone.setScPrInquiry(prInquiry);
+				prInquiry.setScPIZone(zone);
+			}
     	}
 		
     	if(pricing.getFromQty() != null){
@@ -1007,98 +1018,87 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			}
 		}
 
-		private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
-			IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IZoneMaintenanceSO.class);
-			ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
-			TplSpecZoneDtl specZoneDtl = null;
-			if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
-
-				reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
-				ZoneMaintenanceResDTO resDTO  = zoneMaintenanceSO.getSupplierZoneById(reqDTO);
-				CmSupplierZone CmSupplierZone = resDTO.getSelectedCmSupplierZone();
-
-				if(CmSupplierZone.getCmSupplierZoneDtls() != null && CmSupplierZone.getCmSupplierZoneDtls().size()>0) {	
-					
-					Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
-					StringBuilder zoneKey = new StringBuilder();
-					String suppZoneName = CmSupplierZone.getSuppZoneName();
-					ScPrInquiry scPrInquiry = getManagedBean().getScPrInquiry();
-
-					zoneKey.append(CmSupplierZone.getSuppZoneId());
-					zoneKey.append(ZONE_SEPARATOR);
-					zoneKey.append(suppZoneName);
-					
-					if (zoneDtlMap == null) {
-						zoneDtlMap = new HashMap<String, TplSpecZoneDtl>();
-						
-						if (!scPrInquiry.isBrandNew()) {
-							putDBSpecZoneDtlsIntoMap(zoneDtlMap);
-						}
-						
-						getManagedBean().setZoneDtlMap(zoneDtlMap);
-					}
-					
-					specZoneDtl = zoneDtlMap.get(zoneKey.toString());
-					
-					if (specZoneDtl == null) {
-						specZoneDtl = new TplSpecZoneDtl();
-						specZoneDtl.setZoneName(suppZoneName);
-						specZoneDtl.setSupplierZone(CmSupplierZone);
-						
-						ScPIZone zone = getManagedBean().getScPIZone(); 
-						
-						zone.setScPrInquiry(getManagedBean().getScPrInquiry());
-						getManagedBean().getScPrInquiry().setScPIZone(zone);
-						specZoneDtl.setTplSpecZone(zone);
-						
-						List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();					
-						for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {						
-							TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-							specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-							specZoneLoc.setPmState(zoneDtl.getPmState());
-							specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-							specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
-							zoneLocs.add(specZoneLoc);
-						}
-						specZoneDtl.setTplSpecZoneLocs(zoneLocs);
-						
-						zoneDtlMap.put(zoneKey.toString(), specZoneDtl);
-					}
-				}
-			}
-			return specZoneDtl;
-		}
-		private void putDBSpecZoneDtlsIntoMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
-			ISpecZoneLocSO specZoneLocSO = null;
-			
-			try {
-				specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
-				
-				ScPIZone zone = getManagedBean().getScPIZone(); 
-				
-				SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-				reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-				reqDTO.setDocId(zone.getSpecZoneId());
-				//reqDTO.setDocId(3391L);
-				SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
-				
-				StringBuilder dbZoneKey = null;
-				List<TplSpecZoneDtl> dbSpecZoneDtls = resDTO.getZonesList();
-				
-				for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) {
-					dbZoneKey = new StringBuilder();
-					dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
-					dbZoneKey.append(ZONE_SEPARATOR);
-					dbZoneKey.append(dbSpecZoneDtl.getZoneName());
-					
-					zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl);
-				}
-			} finally {
-				specZoneLocSO = null;
-			}
-		}
-		
+	/*
+	 * private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
+	 * IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO)
+	 * BusinessDelegate
+	 * .getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+	 * IZoneMaintenanceSO.class); ZoneMaintenanceReqDTO reqDTO = new
+	 * ZoneMaintenanceReqDTO(); TplSpecZoneDtl specZoneDtl = null;
+	 * if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
+	 * 
+	 * reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
+	 * ZoneMaintenanceResDTO resDTO =
+	 * zoneMaintenanceSO.getSupplierZoneById(reqDTO); CmSupplierZone
+	 * CmSupplierZone = resDTO.getSelectedCmSupplierZone();
+	 * 
+	 * if(CmSupplierZone.getCmSupplierZoneDtls() != null &&
+	 * CmSupplierZone.getCmSupplierZoneDtls().size()>0) {
+	 * 
+	 * Map<String, TplSpecZoneDtl> zoneDtlMap =
+	 * getManagedBean().getZoneDtlMap(); StringBuilder zoneKey = new
+	 * StringBuilder(); String suppZoneName = CmSupplierZone.getSuppZoneName();
+	 * ScPrInquiry scPrInquiry = getManagedBean().getScPrInquiry();
+	 * 
+	 * zoneKey.append(CmSupplierZone.getSuppZoneId());
+	 * zoneKey.append(ZONE_SEPARATOR); zoneKey.append(suppZoneName);
+	 * 
+	 * if (zoneDtlMap == null) { zoneDtlMap = new HashMap<String,
+	 * TplSpecZoneDtl>();
+	 * 
+	 * if (!scPrInquiry.isBrandNew()) { putDBSpecZoneDtlsIntoMap(zoneDtlMap); }
+	 * 
+	 * getManagedBean().setZoneDtlMap(zoneDtlMap); }
+	 * 
+	 * specZoneDtl = zoneDtlMap.get(zoneKey.toString());
+	 * 
+	 * if (specZoneDtl == null) { specZoneDtl = new TplSpecZoneDtl();
+	 * specZoneDtl.setZoneName(suppZoneName);
+	 * specZoneDtl.setSupplierZone(CmSupplierZone);
+	 * 
+	 * ScPIZone zone = getManagedBean().getScPIZone();
+	 * 
+	 * zone.setScPrInquiry(getManagedBean().getScPrInquiry());
+	 * getManagedBean().getScPrInquiry().setScPIZone(zone);
+	 * specZoneDtl.setTplSpecZone(zone);
+	 * 
+	 * List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+	 * for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {
+	 * TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+	 * specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+	 * specZoneLoc.setPmState(zoneDtl.getPmState());
+	 * specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+	 * specZoneLoc.setTplSpecZoneDtl(specZoneDtl); zoneLocs.add(specZoneLoc); }
+	 * specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+	 * 
+	 * zoneDtlMap.put(zoneKey.toString(), specZoneDtl); } } } return
+	 * specZoneDtl; } private void putDBSpecZoneDtlsIntoMap(Map<String,
+	 * TplSpecZoneDtl> zoneDtlMap) { ISpecZoneLocSO specZoneLocSO = null;
+	 * 
+	 * try { specZoneLocSO =
+	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
+	 * .COMMON_COMPONENT, ISpecZoneLocSO.class);
+	 * 
+	 * ScPIZone zone = getManagedBean().getScPIZone();
+	 * 
+	 * SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+	 * reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+	 * reqDTO.setDocId(zone.getSpecZoneId()); //reqDTO.setDocId(3391L);
+	 * SpecZoneLocResDTO resDTO =
+	 * specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
+	 * 
+	 * StringBuilder dbZoneKey = null; List<TplSpecZoneDtl> dbSpecZoneDtls =
+	 * resDTO.getZonesList();
+	 * 
+	 * for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) { dbZoneKey = new
+	 * StringBuilder();
+	 * dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
+	 * dbZoneKey.append(ZONE_SEPARATOR);
+	 * dbZoneKey.append(dbSpecZoneDtl.getZoneName());
+	 * 
+	 * zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl); } } finally {
+	 * specZoneLocSO = null; } }
+	 */
 		/**
 		 * Get parameter code select items by parameter type for radio buttons.
 		 * 
