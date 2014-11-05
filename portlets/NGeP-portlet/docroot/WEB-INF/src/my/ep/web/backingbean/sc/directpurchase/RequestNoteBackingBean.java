@@ -32,7 +32,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
-import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -42,7 +41,6 @@ import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
-import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -55,8 +53,6 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
-import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -73,15 +69,11 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
-import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
-import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -136,6 +128,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
@@ -250,6 +243,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     	}
 	
 		finalizeRemarks(requestNote.getRemarks());
+		
+		if(requestNote.getCurrentStatus() == null){
+			// WorkFlow Status 
+			List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+			ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
+			getCurrentStatus(statusResDTO.getPmStatus());
+			scWorkFlowStatus.setCurrent(Boolean.TRUE);
+			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			scWorkFlowStatus.setRequestNote(requestNote);
+			workFlowStatuses.add(scWorkFlowStatus);
+			requestNote.setWorkFlowStatuses(workFlowStatuses);
+		}
 	    
 	    setUserDetails(requestNote);
 	    requestNoteReqDTO.setRequestNote(requestNote);
@@ -540,12 +548,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		// For status 
 		if(docStatusId != null){
-			IStatusSO statusSO = null;
 			try {
-				
-				statusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-				
+
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				if (DPStatusConstants.PRI_PENDING_RN_CREATION.equals(docStatusId) || 
 						DPStatusConstants.PID_PENDING_RN_CREATION.equals(docStatusId) ||
@@ -554,13 +558,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				} else {
 					statusReqDTO.setStatusId(docStatusId);
 				}
-				
-				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-				
+
+				StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
+
 				getCurrentStatus(statusResDTO.getPmStatus());
-				
+
 			} finally {
-				statusSO = null;
+				//statusSO = null;
 			}
 		}
 
@@ -879,21 +883,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		
-		IStatusSO statusSO = null;
 		try {
 			
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
 			
-			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
 			
 			getCurrentStatus(statusResDTO.getPmStatus());
 			
 		} finally {
-			statusSO = null;
+			//statusSO = null;
 		}		
 		
 		// clear the justification type, price type and justification remarks
@@ -960,11 +961,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		result.setScRequestSupplierItem(scRequestSupplierItem);
 		result.setPricing(pricing);
 		
+		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		ScRNZone zone = getManagedBean().getScRNZone(); 
+		
+		 Map<String, TplSpecZoneDtl> zoneDtlMap =  getManagedBean().getZoneDtlMap();
+    	 if(zoneDtlMap == null){
+    	    zoneDtlMap  = new HashMap<String, TplSpecZoneDtl>();
+    	 }
+		
 		// zone dtl
 		if(pricing.getCmSupplierZone() != null){
-			result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone()));
+			result.setTplSpecZone(SourcingZoneHelper.getInstance().createSpecZone(pricing.getCmSupplierZone(), 
+					zoneDtlMap, zone, scRequestNote.isBrandNew()));
 		}
 		
+		if (zone.isBrandNew()) {
+			zone.setScRequestNote(scRequestNote);
+			scRequestNote.setScRNZone(zone);
+		}
 		result.setPriceType(getParameterByTypeAndCode(
 				ParameterTypeConst.PRICE_TYPE, pricing.getPricingType()));
 
@@ -979,102 +993,92 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return result;
 	}
 	
-	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
-		IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IZoneMaintenanceSO.class);
-		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
-		TplSpecZoneDtl specZoneDtl = null;
-		if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
-
-			reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
-			ZoneMaintenanceResDTO resDTO  = zoneMaintenanceSO.getSupplierZoneById(reqDTO);
-			CmSupplierZone CmSupplierZone = resDTO.getSelectedCmSupplierZone();
-
-			if(CmSupplierZone.getCmSupplierZoneDtls() != null && CmSupplierZone.getCmSupplierZoneDtls().size()>0) {	
-				
-				Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
-				StringBuilder zoneKey = new StringBuilder();
-				String suppZoneName = CmSupplierZone.getSuppZoneName();
-				ScRequestNote scRequestNote = getManagedBean().getRequestNote();
-
-				zoneKey.append(CmSupplierZone.getSuppZoneId());
-				zoneKey.append(ZONE_SEPARATOR);
-				zoneKey.append(suppZoneName);
-				
-				if (zoneDtlMap == null) {
-					zoneDtlMap = new HashMap<String, TplSpecZoneDtl>();
-					
-					if (!scRequestNote.isBrandNew()) {
-						putDBSpecZoneDtlsIntoMap(zoneDtlMap);
-					}
-					
-					getManagedBean().setZoneDtlMap(zoneDtlMap);
-				}
-				
-				specZoneDtl = zoneDtlMap.get(zoneKey.toString());
-				
-				if (specZoneDtl == null) {
-					specZoneDtl = new TplSpecZoneDtl();
-					specZoneDtl.setZoneName(suppZoneName);
-					specZoneDtl.setSupplierZone(CmSupplierZone);
-					
-					ScRNZone zone = getManagedBean().getScRNZone(); 
-					
-					if (zone.isBrandNew()) {
-						zone.setScRequestNote(scRequestNote);
-						scRequestNote.setScRNZone(zone);
-					}
-					specZoneDtl.setTplSpecZone(zone);
-					
-					List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();					
-					for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {						
-						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-						specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-						specZoneLoc.setPmState(zoneDtl.getPmState());
-						specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-						specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
-						zoneLocs.add(specZoneLoc);
-					}
-					specZoneDtl.setTplSpecZoneLocs(zoneLocs);
-					
-					zoneDtlMap.put(zoneKey.toString(), specZoneDtl);
-				}
-				
-			}
-		}
-		return specZoneDtl;
-	}
-	
-	private void putDBSpecZoneDtlsIntoMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
-		ISpecZoneLocSO specZoneLocSO = null;
-		
-		try {
-			specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
-			
-			ScRNZone zone = getManagedBean().getScRNZone(); 
-			
-			SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-			reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			reqDTO.setDocId(zone.getDocId());
-			//reqDTO.setDocId(3391L);
-			SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
-			
-			StringBuilder dbZoneKey = null;
-			List<TplSpecZoneDtl> dbSpecZoneDtls = resDTO.getZonesList();
-			
-			for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) {
-				dbZoneKey = new StringBuilder();
-				dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
-				dbZoneKey.append(ZONE_SEPARATOR);
-				dbZoneKey.append(dbSpecZoneDtl.getZoneName());
-				
-				zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl);
-			}
-		} finally {
-			specZoneLocSO = null;
-		}
-		
-	}
+	/*
+	 * private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
+	 * IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO)
+	 * BusinessDelegate
+	 * .getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+	 * IZoneMaintenanceSO.class); ZoneMaintenanceReqDTO reqDTO = new
+	 * ZoneMaintenanceReqDTO(); TplSpecZoneDtl specZoneDtl = null;
+	 * if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
+	 * 
+	 * reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
+	 * ZoneMaintenanceResDTO resDTO =
+	 * zoneMaintenanceSO.getSupplierZoneById(reqDTO); CmSupplierZone
+	 * CmSupplierZone = resDTO.getSelectedCmSupplierZone();
+	 * 
+	 * if(CmSupplierZone.getCmSupplierZoneDtls() != null &&
+	 * CmSupplierZone.getCmSupplierZoneDtls().size()>0) {
+	 * 
+	 * Map<String, TplSpecZoneDtl> zoneDtlMap =
+	 * getManagedBean().getZoneDtlMap(); StringBuilder zoneKey = new
+	 * StringBuilder(); String suppZoneName = CmSupplierZone.getSuppZoneName();
+	 * ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+	 * 
+	 * zoneKey.append(CmSupplierZone.getSuppZoneId());
+	 * zoneKey.append(ZONE_SEPARATOR); zoneKey.append(suppZoneName);
+	 * 
+	 * if (zoneDtlMap == null) { zoneDtlMap = new HashMap<String,
+	 * TplSpecZoneDtl>();
+	 * 
+	 * if (!scRequestNote.isBrandNew()) { putDBSpecZoneDtlsIntoMap(zoneDtlMap);
+	 * }
+	 * 
+	 * getManagedBean().setZoneDtlMap(zoneDtlMap); }
+	 * 
+	 * specZoneDtl = zoneDtlMap.get(zoneKey.toString());
+	 * 
+	 * if (specZoneDtl == null) { specZoneDtl = new TplSpecZoneDtl();
+	 * specZoneDtl.setZoneName(suppZoneName);
+	 * specZoneDtl.setSupplierZone(CmSupplierZone);
+	 * 
+	 * ScRNZone zone = getManagedBean().getScRNZone();
+	 * 
+	 * if (zone.isBrandNew()) { zone.setScRequestNote(scRequestNote);
+	 * scRequestNote.setScRNZone(zone); } specZoneDtl.setTplSpecZone(zone);
+	 * 
+	 * List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+	 * for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {
+	 * TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+	 * specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+	 * specZoneLoc.setPmState(zoneDtl.getPmState());
+	 * specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+	 * specZoneLoc.setTplSpecZoneDtl(specZoneDtl); zoneLocs.add(specZoneLoc); }
+	 * specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+	 * 
+	 * zoneDtlMap.put(zoneKey.toString(), specZoneDtl); }
+	 * 
+	 * } } return specZoneDtl; }
+	 * 
+	 * private void putDBSpecZoneDtlsIntoMap(Map<String, TplSpecZoneDtl>
+	 * zoneDtlMap) { ISpecZoneLocSO specZoneLocSO = null;
+	 * 
+	 * try { specZoneLocSO =
+	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
+	 * .COMMON_COMPONENT, ISpecZoneLocSO.class);
+	 * 
+	 * ScRNZone zone = getManagedBean().getScRNZone();
+	 * 
+	 * SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+	 * reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+	 * reqDTO.setDocId(zone.getDocId()); //reqDTO.setDocId(3391L);
+	 * SpecZoneLocResDTO resDTO =
+	 * specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
+	 * 
+	 * StringBuilder dbZoneKey = null; List<TplSpecZoneDtl> dbSpecZoneDtls =
+	 * resDTO.getZonesList();
+	 * 
+	 * for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) { dbZoneKey = new
+	 * StringBuilder();
+	 * dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
+	 * dbZoneKey.append(ZONE_SEPARATOR);
+	 * dbZoneKey.append(dbSpecZoneDtl.getZoneName());
+	 * 
+	 * zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl); } } finally {
+	 * specZoneLocSO = null; }
+	 * 
+	 * }
+	 */
 
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
@@ -1405,17 +1409,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 	
-		IStatusSO statusSO = null;
 		try {
 			if(requestNote.getCurrentStatus() == null){
-				statusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
 				// WorkFlow Status 
 				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 				ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
 				getCurrentStatus(statusResDTO.getPmStatus());
 				scWorkFlowStatus.setCurrent(Boolean.TRUE);
 				scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
@@ -1425,7 +1427,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 		} finally {
-			statusSO = null;
+			//geStatusSO() = null;
 		}
 		
 		requestNote.setRemarks(initializeRemarks(
@@ -1940,21 +1942,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
 				purchaseInDefaultBackingBean.justificationTypeEvent();
 				
-				IStatusSO statusSO = null;
 				try {
-					
-					statusSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-					
 					StatusReqDTO statusReqDTO = new StatusReqDTO();
 					statusReqDTO.setStatusId(DPStatusConstants.PID_COMPLETED);
 					
-					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+					StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
 					
 					purchaseInDefaultBackingBean.getCurrentStatus(statusResDTO.getPmStatus());
 					
 				} finally {
-					statusSO = null;
+					//statusSO = null;
 				}
 				
 				List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
@@ -2492,11 +2489,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
 		
 		if (statusDescs == null || statusDescs.size() == 0) {
-			IStatusSO statusSO = null;
-			
 			try {
-				statusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				
@@ -2505,14 +2498,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
 				reqDTO.setLanguageCode(languageCode);
 
-				StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+				StatusResDTO resDTO = getStatusSO().retrieveStatusDescList(reqDTO);
 				if(resDTO.isSuccessful()) {
 					statusDescs = resDTO.getStatusDescList();
 					
 					getManagedBean().setStatusDescs(statusDescs);
 				}
 			} finally {
-				statusSO = null;
+				//statusSO = null;
 			}	
 		}
 		return statusDescs;
@@ -2940,6 +2933,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	}
+	
+	private IStatusSO getStatusSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
 	
 	
