@@ -18,7 +18,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</th>
 			<td>
-				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" disabled="#{!pPlanBackingBean.managedBean.modeEditable 
+					|| !pPlanBackingBean.managedBean.selectedPlan.brandNew}"
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pp.plan.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterId}"
 					>
