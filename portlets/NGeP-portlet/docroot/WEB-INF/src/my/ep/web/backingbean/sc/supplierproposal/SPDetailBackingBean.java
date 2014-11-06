@@ -1088,7 +1088,11 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-
+				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+				Calendar mindate = Calendar.getInstance();
+				mindate.set(getManagedBean().getYear().intValue(), 0, 1);
+				getManagedBean().setNonFedEffMinDate(mindate.getTime());
+				getManagedBean().setNonFedMinDate(mindate.getTime());
 				pageUrl = retrieveTecNonGovCompanyExpDtls(scQtProposalChecklist);
 			}
 
@@ -1111,6 +1115,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
+				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
 				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
 
 			} // to check proposalchecklist is technicalspecification -
@@ -2083,7 +2088,10 @@ public class SPDetailBackingBean extends
 	public void effectiveDateSelectListener(ScQtPRPExperience prpExperience) {
 
 		getManagedBean().setNonFedMinDate(prpExperience.getEffectiveDate());
-		if (prpExperience.getEffectiveDate() != null
+		prpExperience.setExpiryDate(null);
+		prpExperience.setContractPeriod(0);
+		
+		/*if (prpExperience.getEffectiveDate() != null
 				&& prpExperience.getExpiryDate() != null) {
 			Calendar startCalendar = new GregorianCalendar();
 			startCalendar.setTime(prpExperience.getEffectiveDate());
@@ -2095,21 +2103,28 @@ public class SPDetailBackingBean extends
 					- startCalendar.get(Calendar.MONTH);
 			prpExperience.setContractPeriod(diffMonth);
 
-		}
+		}*/
 		int index = getManagedBean().getScQtPRPExperiences().indexOf(
 				prpExperience);
 		getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
 
-		System.out.println("*****experience in months is *****"
-				+ getManagedBean().getScQtPRPExperiences().get(index)
-						.getContractPeriod());
-		totalContractYears();
+		//totalContractYears();
 	}
 
-	public void expiryDateSelectListener(int index) {
-		ScQtPRPExperience prpExperience = getManagedBean()
-				.getScQtPRPExperiences().get(index);
+	public void expiryDateSelectListener(ScQtPRPExperience prpExperience) {
+		/*ScQtPRPExperience prpExperience = getManagedBean()
+				.getScQtPRPExperiences().get(index);*/
+		
+		int index = getManagedBean()
+				.getScQtPRPExperiences().indexOf(prpExperience);
 		getManagedBean().setNonFedEffMaxDate(prpExperience.getExpiryDate());
+		
+		
+		if(prpExperience.getEffectiveDate() == null){
+			prpExperience.setExpiryDate(null);
+			getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
+			throw new EpException("Please Select Effective Date");
+		}
 
 		if (prpExperience.getEffectiveDate() != null
 				&& prpExperience.getExpiryDate() != null) {
@@ -2219,6 +2234,10 @@ public class SPDetailBackingBean extends
 				.getScQtPRPExperiences();
 		List<ScQtPRPExperience> selectedExperienceList = this.getManagedBean()
 				.getSelectedPRPExperiences();
+		
+		if(selectedExperienceList == null || selectedExperienceList.size() == 0){
+			throw new EpException("Please select a record delete");
+		}
 		if (selectedExperienceList != null) {
 			List<ScQtPRPExperience> tobeDeletedExperiences = new ArrayList<ScQtPRPExperience>();
 
@@ -2230,6 +2249,8 @@ public class SPDetailBackingBean extends
 		}
 		getManagedBean().setTotalContracts(
 				getManagedBean().getScQtPRPExperiences().size());
+		getManagedBean().setSelectedAll(false);
+		getManagedBean().setSelected(false);
 
 		totalContractYears();
 	}
@@ -2621,6 +2642,40 @@ public class SPDetailBackingBean extends
 		SmSupplierBank bank = (SmSupplierBank) event.getObject();
 		getManagedBean().setSmChequeSignatories(bank.getSmChequeSignatories());
 
+	}
+	
+	public void selectAll(){
+		System.out.println("***** inside selectAll *****");
+		if(getManagedBean().isSelectedAll()){
+			getManagedBean().setSelected(true);
+			getManagedBean().setSelectedPRPExperiences(getManagedBean().getScQtPRPExperiences());
+		}else {
+			getManagedBean().setSelected(false);
+			getManagedBean().setSelectedPRPExperiences(null);
+			
+		}
+		
+	}
+	
+	public void selected(int index){
+		
+		System.out.println("***** inside selected *****");
+		List<ScQtPRPExperience> selectedExperienceList = getManagedBean()
+				.getSelectedPRPExperiences();
+		
+		if(getManagedBean().isSelected()){
+			if(selectedExperienceList == null){
+				selectedExperienceList = new ArrayList<ScQtPRPExperience>();
+			}
+			selectedExperienceList.add(getManagedBean().getScQtPRPExperiences().get(index));
+		}else {
+			
+			if(selectedExperienceList.contains(getManagedBean().getScQtPRPExperiences().get(index))){
+				selectedExperienceList.remove(getManagedBean().getScQtPRPExperiences().get(index));
+			}
+			
+		}
+		getManagedBean().setSelectedPRPExperiences(selectedExperienceList);
 	}
 
 }

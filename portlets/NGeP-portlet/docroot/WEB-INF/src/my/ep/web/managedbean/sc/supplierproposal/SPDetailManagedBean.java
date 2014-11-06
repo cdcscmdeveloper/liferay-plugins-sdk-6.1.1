@@ -57,6 +57,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProposalChecklist> tecCheckDetailsList;
 	private List<ScQtProposalChecklist> financeCheckDetailsList;
 	private List<ScQtProposalChecklist> selectedCheckDetails;
+	
 
 	private ScQtCheckList scQtCheckList;
 	private long days;
@@ -100,9 +101,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private int totalContracts;
 	private int totalYears;
 	private BigDecimal totalContractAmount;
+	private BigDecimal year;
+	private boolean selectedAll;
+	private boolean selected;
+	
 	// Business rule 
-	private Date nonFedMinDate;
+	private Date nonFedEffMinDate;
 	private Date nonFedEffMaxDate;
+	private Date nonFedMinDate;
 	private List<ScQtPRPExperience> deletedPRPExperiences;
 
 	// Credit Facilities
@@ -938,6 +944,81 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setOthersTermsConditions(String othersTermsConditions) {
 		this.othersTermsConditions = othersTermsConditions;
+	}
+
+
+
+	/**
+	 * @return the year
+	 */
+	public BigDecimal getYear() {
+		return year;
+	}
+
+
+
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(BigDecimal year) {
+		this.year = year;
+	}
+
+
+
+
+	/**
+	 * @return the nonFedEffMinDate
+	 */
+	public Date getNonFedEffMinDate() {
+		return nonFedEffMinDate;
+	}
+
+
+	/**
+	 * @param nonFedEffMinDate the nonFedEffMinDate to set
+	 */
+	public void setNonFedEffMinDate(Date nonFedEffMinDate) {
+		this.nonFedEffMinDate = nonFedEffMinDate;
+	}
+	
+
+	/**
+	 * @return the selectedAll
+	 */
+	public boolean isSelectedAll() {
+		return selectedAll;
+	}
+
+
+
+
+	/**
+	 * @param selectedAll the selectedAll to set
+	 */
+	public void setSelectedAll(boolean selectedAll) {
+		this.selectedAll = selectedAll;
+	}
+
+
+
+
+	/**
+	 * @return the selected
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+
+
+
+
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 
