@@ -276,7 +276,8 @@
 
 						<p:tabView id="tierId"
 							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
-
+							<p:ajax event="tabChange" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID"/>
+        
 
 							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="pricingTierTab.xhtml" />
