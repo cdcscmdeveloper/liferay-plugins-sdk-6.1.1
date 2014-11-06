@@ -290,6 +290,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String revisionApproverAppNoParam;
 	private String bumiRecommendationNote;
 	private boolean qualifiedForBumi;
+	private Date currDate;
 	private SelectItem[] identificationTypes;
 	private SmAttachment cancellationAttachment;
 
@@ -484,6 +485,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		DateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
 		today = df.format(new Date());
+		currDate = new Date();
 		System.out.println("*** Date String *** " + df.format(new Date()));
 	}
 
@@ -2207,6 +2209,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBumiEquityPercentage(BigDecimal bumiEquityPercentage) {
 		this.bumiEquityPercentage = bumiEquityPercentage;
+	}
+
+	public Date getCurrDate() {
+		return currDate;
+	}
+
+	public void setCurrDate(Date currDate) {
+		this.currDate = currDate;
 	}
 
 }
