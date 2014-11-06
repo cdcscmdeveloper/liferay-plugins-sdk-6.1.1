@@ -838,11 +838,15 @@ public class SmApplicationBackingBean extends
 							.equalsIgnoreCase("N")) {
 						getManagedBean()
 								.setCatTypeConfirm(
-										"NOTE :  'Normal' categories can only be added in this applicaiton");
+										SmCommonUtil
+												.getMessage(
+														"lbl.sm.categorycode.note.normal",
+														null));
 					} else {
-						getManagedBean()
-								.setCatTypeConfirm(
-										"NOTE :  'Special' categories can only be added in this applicaiton");
+						getManagedBean().setCatTypeConfirm(
+								SmCommonUtil.getMessage(
+										"lbl.sm.categorycode.note.special",
+										null));
 					}
 					SmCommonUtil
 							.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
