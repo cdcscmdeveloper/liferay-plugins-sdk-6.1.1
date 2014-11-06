@@ -64,7 +64,7 @@
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
 					style="float: left;white-space: normal;" />
 				<p:commandLink oncomplete="attachDlg1.show();return false;"
-					rendered="#{!table.pmDocument.hardCopyReq}"
+					rendered="#{!table.pmDocument.hardCopyReq}" update="@([id$=attachDlg1])"
 					action="#{backingBean.assignSelectedSupportDoc(table)}">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png"
