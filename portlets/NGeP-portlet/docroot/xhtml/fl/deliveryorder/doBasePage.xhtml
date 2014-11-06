@@ -32,7 +32,8 @@
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton
 							styleClass="ui-button" icon="ui-icon-save" value="#{lbl['lbl.btn.save']}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form"  
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
 							styleClass="ui-button" icon="ui-icon-submit" value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
