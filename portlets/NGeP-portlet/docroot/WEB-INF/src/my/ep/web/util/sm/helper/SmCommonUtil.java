@@ -532,47 +532,54 @@ public class SmCommonUtil {
 			List<SmPersonnel> smPersonnelList, SmPersonnleCalcVO persCalcVo,
 			String outputPage, String applType, String supplType,
 			BigDecimal bumiPercentage, boolean supplUser) {
-		if (supplType.equals("K")
-				&& (applType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI))) {
-			persCalcVo.setNonBumiSignatoryBank("");
-			setBumiStatus(persCalcVo, bumiPercentage);
-			setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList,
-					smPersonnelList);
-
-			if (persCalcVo.isBumiStatus()) {
-				if (StringUtils.isEmpty(persCalcVo.getNonBumiSignatoryBank())) {
-					if (supplUser) {
-						persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.supplier.bumi", null));
+		
+		try{
+			if (supplType.equals("K")
+					&& (applType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI))) {
+				persCalcVo.setNonBumiSignatoryBank("");
+				setBumiStatus(persCalcVo, bumiPercentage);
+				setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList,
+						smPersonnelList);
+				
+				if (persCalcVo.isBumiStatus()) {
+					if (StringUtils.isEmpty(persCalcVo.getNonBumiSignatoryBank())) {
+						if (supplUser) {
+							persCalcVo.setBumiRecommendNote(getMessage(
+									"lbl.sm.recommend.supplier.bumi", null));
+						} else {
+							persCalcVo.setBumiRecommendNote(getMessage(
+									"lbl.sm.recommend.poapprover.bumi", null));
+						}
 					} else {
-						persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.poapprover.bumi", null));
+						if (supplUser) {
+							persCalcVo.setBumiRecommendNote(getMessage(
+									"lbl.sm.recommend.supplier.sign.nonbumi",
+									null));
+						} else {
+							String[] params = { "" };
+							params[0] = persCalcVo.getNonBumiSignatoryBank();
+							persCalcVo.setBumiRecommendNote(getMessage(
+									"lbl.sm.recommend.poapprover.sign.nonbumi",
+									params));
+						}
 					}
 				} else {
 					if (supplUser) {
 						persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.supplier.sign.nonbumi",
-								null));
+								"lbl.sm.recommend.supplier.nonbumi", null));
 					} else {
-						String[] params = { "" };
-						params[0] = persCalcVo.getNonBumiSignatoryBank();
 						persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.poapprover.sign.nonbumi",
-								params));
+								"lbl.sm.recommend.poapprover.nonbumi", null));
 					}
-				}
-			} else {
-				if (supplUser) {
-					persCalcVo.setBumiRecommendNote(getMessage(
-							"lbl.sm.recommend.supplier.nonbumi", null));
-				} else {
-					persCalcVo.setBumiRecommendNote(getMessage(
-							"lbl.sm.recommend.poapprover.nonbumi", null));
 				}
 			}
+		}catch(NullPointerException ex){
+			log.error(ex.getMessage());
 		}
+		
+		
 		return persCalcVo;
 	}
 
