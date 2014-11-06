@@ -20,6 +20,7 @@
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
 			<p:column>
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
+					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
@@ -78,11 +79,13 @@
 			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
+				disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 				oncomplete="addDeliveryAddr.show();" 
 				title="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
 				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) "
+				disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 				process="@this,delAddr" oncomplete="addManualDeliveryAddr.show();"
 				title="#{lbl['lbl.fl.tooltip.other.address']}">
 				<f:setPropertyActionListener
