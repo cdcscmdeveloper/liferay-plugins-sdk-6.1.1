@@ -142,6 +142,7 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class SmApplicationUtil {
@@ -2052,16 +2053,17 @@ public class SmApplicationUtil {
 		Collections.sort(uomSelectItems, new Comparator<SelectItem>() {
 			@Override
 			public int compare(final SelectItem s1, final SelectItem s2) {
-				return s1.getLabel().compareTo(s2.getLabel());
+				return StringUtil.upperCase(s1.getLabel()).compareTo(
+						StringUtil.upperCase(s2.getLabel()));
 			}
 		});
 		return uomSelectItems;
 	}
-	
-	public static List<SelectItem> getRaceSelectItems(){
+
+	public static List<SelectItem> getRaceSelectItems() {
 		List<SelectItem> raceSelectItems = new ArrayList<SelectItem>();
 		List<PmRace> racesList = retrievePmRaceList();
-		
+
 		SelectItem si = null;
 		if (racesList != null) {
 			for (PmRace pmRace : racesList) {
@@ -2082,7 +2084,7 @@ public class SmApplicationUtil {
 				return s1.getLabel().compareTo(s2.getLabel());
 			}
 		});
-		
+
 		return raceSelectItems;
 	}
 
