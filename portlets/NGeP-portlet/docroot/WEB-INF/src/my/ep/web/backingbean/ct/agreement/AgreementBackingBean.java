@@ -453,7 +453,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
 			throw new EpException(MessageConst.ERROR_100023,new String[] { "Agency Witness" });
 		} else {
-			validateAgencySupWitnes();
+		//	validateAgencySupWitnes();
 			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
 				if (agencyWitness.getOfficerName() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Name of Agency Witness" });
@@ -464,11 +464,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (agencyWitness.getOfficerPosition() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Position of Agency Witness" });
 				}
-				if(getManagedBean().getIcNo().contains(agencyWitness.getOfficerIc())){
+				/*if(getManagedBean().getIcNo().contains(agencyWitness.getOfficerIc())){
 					throw new EpException(MessageConst.WARN_755000);
 				} else {
 					getManagedBean().getIcNo().add(agencyWitness.getOfficerIc());
-				}
+				}*/
 			}
 		}
 
@@ -485,7 +485,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getCtSupplierWitness().size() == 0) {
 			   throw new EpException(MessageConst.ERROR_100023,new String[] { "Supplier Witness" });
 		} else {
-			validateAgencySupWitnes();
+	//		validateAgencySupWitnes();
 			for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
 				if (supplierWitness.getOfficerName() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Name of Supplier Witness" });
@@ -496,11 +496,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (supplierWitness.getOfficerPosition() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Postion of Supplier Witness" });
 				}
-				if(getManagedBean().getIcNo().contains(supplierWitness.getOfficerIc())){
+				/*if(getManagedBean().getIcNo().contains(supplierWitness.getOfficerIc())){
 					throw new EpException(MessageConst.WARN_755000);
 				} else {
 					getManagedBean().getIcNo().add(supplierWitness.getOfficerIc());
-				}
+				}*/
 			}
 		}
 	}
@@ -958,128 +958,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		selectedAgencySigner = null;
 	}
 
-	public void addSupplierSigner() {
-		try {
-			    if(!getManagedBean().isValidateWitness()){
-			    	CtAgreementParty ctAgreementParty = new CtAgreementParty();
-					ctAgreementParty.setAgreementPartyType(new PmParameter());
-					ctAgreementParty.getAgreementPartyType().setParameterId(
-							retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
-					if (ctAgreementParty.getOfficer() == null)
-						ctAgreementParty.setOfficer(new PmUser());
-					    getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
-			    } else {
-			    	 throw new EpException(MessageConst.WARN_754000);
-			    }
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void deleteSupplierSigner() {
-		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedSupplierSigner.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedSupplierSigner[i];
-			getManagedBean().getCtSupplierSigner().remove(ctAgreementParty);
-		}
-		selectedSupplierSigner = null;
-	}
-
-	public void addSupplierWitness() {
-		try {    
-			        validateAgencySupWitnes();
-			        if(getManagedBean().getCtSupplierWitness() != null && !getManagedBean().getCtSupplierWitness().isEmpty()) {
-			       	     for(CtAgreementParty suplierWitness : getManagedBean().getCtSupplierWitness()) {
-			       		        if(getManagedBean().getIcNo().contains(suplierWitness.getOfficerIc())) {
-			       		        	    getManagedBean().setValidateWitness(true);
-			       		        	    throw new EpException(MessageConst.WARN_755000);
-				                 } else {
-				                	 getManagedBean().getIcNo().add(suplierWitness.getOfficerIc());
-				                 }
-			             }
-			       }   
-			        
-			        if(!getManagedBean().isValidateWitness()) {
-			        	CtAgreementParty ctAgreementParty = new CtAgreementParty();
-						ctAgreementParty.setAgreementPartyType(new PmParameter());
-						ctAgreementParty.getAgreementPartyType().setParameterId(
-								retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
-						        getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
-						    
-			        }
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void deleteSupplierWitness() {
-		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedSupplierWitnes.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedSupplierWitnes[i];
-			getManagedBean().getCtSupplierWitness().remove(ctAgreementParty);
-		}
-		selectedSupplierWitnes = null;
-	}
 	
-	public void validateAgencySupWitnes(){
-		
-		 getManagedBean().setValidateWitness(false);
-		if(getManagedBean().getIcNo() != null && getManagedBean().getIcNo().size() > 0){
-           	 getManagedBean().getIcNo().clear();
-           }else {
-           	 getManagedBean().setIcNo(new ArrayList<String>());
-          }
-		
-		if(getManagedBean().getCtAgencySigner() != null && !getManagedBean().getCtAgencySigner().isEmpty()) {
-        	for(CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
-       		     getManagedBean().getIcNo().add(agencySigner.getOfficerIc());
-	         }
-         }
-       
-         if(getManagedBean().getCtSupplierSigner() != null && !getManagedBean().getCtSupplierSigner().isEmpty()) {
-       	     for(CtAgreementParty supplierSigner: getManagedBean().getCtSupplierSigner()) {
-       		       getManagedBean().getIcNo().add(supplierSigner.getOfficerIc());
-	         }
-         }
-	}
-
-	public void addAgencyWitnes() {
-		try {
-			
-			 validateAgencySupWitnes();
-		        if(getManagedBean().getCtSignAgencyWitness() != null && !getManagedBean().getCtSignAgencyWitness().isEmpty()) {
-		       	     for(CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-		       		        if(getManagedBean().getIcNo().contains(agencyWitness.getOfficerIc())) {
-		       		                getManagedBean().setValidateWitness(true);
-		       		        	    throw new EpException(MessageConst.WARN_755000);
-			                 } else {
-			                	 getManagedBean().getIcNo().add(agencyWitness.getOfficerIc());
-			                 }
-		             }
-		       }   
-		        if(!getManagedBean().isValidateWitness()) {
-			
-		        	CtAgreementParty ctAgreementParty = new CtAgreementParty();
-			        ctAgreementParty.setAgreementPartyType(new PmParameter());
-			        ctAgreementParty.getAgreementPartyType().setParameterId(
-					retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
-			        getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
-		        }    
-			       
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void deleteAgencyWitnes() {
-		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedAgencyWitnes.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedAgencyWitnes[i];
-			getManagedBean().getCtSignAgencyWitness().remove(ctAgreementParty);
-		}
-		selectedAgencyWitnes = null;
-	}
 
 	public boolean isContractAdmin() {
 		return getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
@@ -1165,50 +1044,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			userSO = null;
 		}
 		return sourceList;
-	}
-
-	public void setUserValueAgency(CtAgreementParty ctParty) {
-		int counter = 0;
-		getManagedBean().setValidateWitness(false);
-		for (CtAgreementParty party : getManagedBean().getCtAgencySigner()) {
-	
-			if (party.equals(ctParty)) {
-				   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
-				   UserReqDTO reqDTO = new UserReqDTO();
-				   reqDTO.setUserId(ctParty.getOfficer().getUserId());
-				   UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
-				   party.setOfficerName(resDTO.getPmUser().getUserName());
-				   party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
-				   party.setOfficerPosition(resDTO.getPmUser().getDesignation());
-			 }
-			if(party.getOfficer().getUserId() != null && party.getOfficer().getUserId().intValue() == ctParty.getOfficer().getUserId().intValue()){
-				counter++;
-				if(counter == 2) {
-					getManagedBean().setValidateWitness(true);
-			     	throw new EpException(MessageConst.WARN_754000);
-				}
-			}
-		 }
-	}
-
-	public void setSupplierUserValue(CtAgreementParty ctParty) {
-		
-		SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(ctParty.getOfficerName());
-		getManagedBean().setValidateWitness(false);
-		if (personnel != null) {
-			ctParty.setOfficerIc(personnel.getIdentificationNo());
-			ctParty.setOfficerPosition(personnel.getDesignation());
-		 }
-		int counter = 0;
-		for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
-			if(party.getOfficerName() != null && party.getOfficerName().equalsIgnoreCase(ctParty.getOfficerName())){
-				counter++;
-				if(counter == 2) {
-					getManagedBean().setValidateWitness(true);
-			    	throw new EpException(MessageConst.WARN_754000);
-				}
-			}
-		}
 	}
 
 	private void initializeRemarks() {
@@ -1335,6 +1170,220 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 
 		return url;
+	}
+	
+	public void addSupplierSigner() {
+		try {
+			    if(!getManagedBean().isValidateWitness()){
+			    	CtAgreementParty ctAgreementParty = new CtAgreementParty();
+					ctAgreementParty.setAgreementPartyType(new PmParameter());
+					ctAgreementParty.getAgreementPartyType().setParameterId(
+							retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
+					if (ctAgreementParty.getOfficer() == null)
+						ctAgreementParty.setOfficer(new PmUser());
+					    getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+			    } else {
+			    	 throw new EpException(MessageConst.WARN_754000);
+			    }
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteSupplierSigner() {
+		getManagedBean().setValidateWitness(false);
+		for (int i = 0; i < selectedSupplierSigner.length; i++) {
+			CtAgreementParty ctAgreementParty = selectedSupplierSigner[i];
+			getManagedBean().getCtSupplierSigner().remove(ctAgreementParty);
+		}
+		selectedSupplierSigner = null;
+	}
+
+	
+
+	public void deleteSupplierWitness() {
+		getManagedBean().setValidateWitness(false);
+		for (int i = 0; i < selectedSupplierWitnes.length; i++) {
+			CtAgreementParty ctAgreementParty = selectedSupplierWitnes[i];
+			getManagedBean().getCtSupplierWitness().remove(ctAgreementParty);
+		}
+		selectedSupplierWitnes = null;
+	}
+	
+	public void validateAgencyWitnes(){
+		
+		 getManagedBean().setValidateWitness(false);
+		 getManagedBean().setAgencyOfficerIcNo(new ArrayList<String>());
+        
+		if(getManagedBean().getCtAgencySigner() != null && !getManagedBean().getCtAgencySigner().isEmpty()) {
+        	for(CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
+       		     getManagedBean().getAgencyOfficerIcNo().add(agencySigner.getOfficerIc());
+	         }
+         }
+	}
+
+	public void deleteAgencyWitnes() {
+		getManagedBean().setValidateWitness(false);
+		for (int i = 0; i < selectedAgencyWitnes.length; i++) {
+			CtAgreementParty ctAgreementParty = selectedAgencyWitnes[i];
+			getManagedBean().getCtSignAgencyWitness().remove(ctAgreementParty);
+		}
+		selectedAgencyWitnes = null;
+	}
+	
+	public void setUserValueAgency(CtAgreementParty ctParty) {
+		int counter = 0;
+		getManagedBean().setValidateWitness(false);
+		for (CtAgreementParty party : getManagedBean().getCtAgencySigner()) {
+	
+				if (party.equals(ctParty)) {
+					   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+					   UserReqDTO reqDTO = new UserReqDTO();
+					   reqDTO.setUserId(ctParty.getOfficer().getUserId());
+					   UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+					   party.setOfficerName(resDTO.getPmUser().getUserName());
+					   party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
+					   party.setOfficerPosition(resDTO.getPmUser().getDesignation());
+				 }
+				if(party.getOfficer().getUserId() != null 
+						 && party.getOfficer().getIdentificationNo().equalsIgnoreCase(ctParty.getOfficerIc())) {
+					counter++;
+					if(counter == 2) {
+						getManagedBean().setValidateWitness(true);
+						 throw new EpException(MessageConst.WARN_754000, new String[]{ctParty.getOfficerIc()});
+					}
+				
+				} else if(getManagedBean().getAgencyWitnessIcNo() != null && !getManagedBean().getAgencyWitnessIcNo().isEmpty()
+						&& getManagedBean().getAgencyWitnessIcNo().contains(ctParty.getOfficerIc())) {
+					getManagedBean().setValidateWitness(true);
+					throw new EpException(MessageConst.WARN_755000, new String[]{ctParty.getOfficerIc()});
+			   }
+		}
+	}
+	
+	public void addAgencyWitnes() {
+	
+		try {
+			  
+			validateAgencyWitnes();
+			getManagedBean().setAgencyWitnessIcNo(new ArrayList<String>());
+			if(getManagedBean().getCtSignAgencyWitness() != null && !getManagedBean().getCtSignAgencyWitness().isEmpty()) {
+		       	for(CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
+		       		   if(getManagedBean().getAgencyOfficerIcNo() != null && !getManagedBean().getAgencyOfficerIcNo().isEmpty()
+		       				    && getManagedBean().getAgencyOfficerIcNo().contains(agencyWitness.getOfficerIc())) {
+		       		            getManagedBean().setValidateWitness(true);
+		       		            throw new EpException(MessageConst.WARN_756000, new String[]{agencyWitness.getOfficerIc()});
+		       		    } else if(getManagedBean().getAgencyWitnessIcNo() != null && !getManagedBean().getAgencyWitnessIcNo().isEmpty()
+		       		    		&& getManagedBean().getAgencyWitnessIcNo().contains(agencyWitness.getOfficerIc())){
+			                	 getManagedBean().setValidateWitness(true);
+	       		                 throw new EpException(MessageConst.WARN_757000, new String[]{agencyWitness.getOfficerIc()});
+		       		    }  else if(getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty()
+		       		    		&& getManagedBean().getSupplierOfficerIcNo().contains(agencyWitness.getOfficerIc())){
+		                	 getManagedBean().setValidateWitness(true);
+       		                 throw new EpException(MessageConst.WARN_760000, new String[]{agencyWitness.getOfficerIc()});
+	       		        }  else if(getManagedBean().getSupplierWitnessIcNo() != null && !getManagedBean().getSupplierWitnessIcNo().isEmpty()
+		       		             && getManagedBean().getSupplierWitnessIcNo().contains(agencyWitness.getOfficerIc())){
+			                	 getManagedBean().setValidateWitness(true);
+	       		                  throw new EpException(MessageConst.WARN_763000, new String[]{agencyWitness.getOfficerIc()});
+		       		    } else {
+			                	 getManagedBean().getAgencyWitnessIcNo().add(agencyWitness.getOfficerIc());
+			            }
+		          }
+		     
+			} if(!getManagedBean().isValidateWitness()) {
+			
+		        	CtAgreementParty ctAgreementParty = new CtAgreementParty();
+			        ctAgreementParty.setAgreementPartyType(new PmParameter());
+			        ctAgreementParty.getAgreementPartyType().setParameterId(
+					retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
+			        getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
+		    }    	       
+	 	} catch (NamingException e) {
+			  e.printStackTrace();
+		 }
+	}
+	
+	public void validateSupplierWitnes(){
+		
+		     getManagedBean().setValidateWitness(false);
+		     getManagedBean().setSupplierOfficerIcNo(new ArrayList<String>());
+             if(getManagedBean().getCtSupplierSigner() != null && !getManagedBean().getCtSupplierSigner().isEmpty()) {
+            	  for(CtAgreementParty supplierSigner: getManagedBean().getCtSupplierSigner()) {
+     		            getManagedBean().getSupplierOfficerIcNo().add(supplierSigner.getOfficerIc());
+	               }
+              }
+	   }
+	
+	   public void addSupplierWitness() {
+		
+		     try {    
+			           
+		    	 validateSupplierWitnes();
+			     getManagedBean().setSupplierOfficerIcNo(new ArrayList<String>());
+			     if(getManagedBean().getCtSupplierWitness() != null && !getManagedBean().getCtSupplierWitness().isEmpty()) {
+			       	   for(CtAgreementParty suplierWitness : getManagedBean().getCtSupplierWitness()) {
+			       	            	
+			       	         if(getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty() 
+			       	        		 && getManagedBean().getSupplierOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
+			       		                getManagedBean().setValidateWitness(true);
+			       		                throw new EpException(MessageConst.WARN_760000, new String[]{suplierWitness.getOfficerIc()});
+			       	     
+			       	         } else if (getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty()
+			       	        		  && getManagedBean().getSupplierOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
+				                	    getManagedBean().setValidateWitness(true);
+		       		                    throw new EpException(MessageConst.WARN_761000, new String[]{suplierWitness.getOfficerIc()});
+			       	      
+			       	         } else if (getManagedBean().getAgencyOfficerIcNo() != null && !getManagedBean().getAgencyOfficerIcNo().isEmpty()
+			       	        		&& getManagedBean().getAgencyOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
+			                	    getManagedBean().setValidateWitness(true);
+	       		                    throw new EpException(MessageConst.WARN_756000, new String[]{suplierWitness.getOfficerIc()});
+		       	           
+			       	         } else if(getManagedBean().getAgencyWitnessIcNo() != null && !getManagedBean().getAgencyWitnessIcNo().isEmpty()
+			       	            	    && getManagedBean().getAgencyWitnessIcNo().contains(suplierWitness.getOfficerIc())){
+			       	            		getManagedBean().setValidateWitness(true);
+		       		                    throw new EpException(MessageConst.WARN_762000, new String[]{suplierWitness.getOfficerIc()});
+			       	          } else {
+				                	   getManagedBean().getSupplierWitnessIcNo().add(suplierWitness.getOfficerIc());
+				              }
+			            }
+			     
+			      } if(!getManagedBean().isValidateWitness()) {
+			        	  
+			    	       CtAgreementParty ctAgreementParty = new CtAgreementParty();
+						   ctAgreementParty.setAgreementPartyType(new PmParameter());
+						   ctAgreementParty.getAgreementPartyType().setParameterId(
+								retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
+						        getManagedBean().getCtSupplierWitness().add(ctAgreementParty);	    
+			     }
+		   
+		     } catch (NamingException e) {
+		          	e.printStackTrace();
+		     }
+	   }
+	   
+	   public void setSupplierUserValue(CtAgreementParty ctParty) {
+			
+			SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(ctParty.getOfficerName());
+			getManagedBean().setValidateWitness(false);
+			if(personnel != null) {
+				 ctParty.setOfficerIc(personnel.getIdentificationNo());
+				 ctParty.setOfficerPosition(personnel.getDesignation());
+			 }
+			
+			int counter = 0;
+			for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
+				if(party.getOfficerIc() != null && ctParty.getOfficerIc() != null && party.getOfficerIc().equalsIgnoreCase(ctParty.getOfficerIc())) {
+					  counter++;
+					  if(counter == 2) {
+						    getManagedBean().setValidateWitness(true);
+						    throw new EpException(MessageConst.WARN_758000, new String[]{ctParty.getOfficerIc()});
+					  }
+				  } else if(getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty()
+							&& getManagedBean().getSupplierOfficerIcNo().contains(ctParty.getOfficerIc())) {
+						getManagedBean().setValidateWitness(true);
+						throw new EpException(MessageConst.WARN_759000, new String[]{ctParty.getOfficerIc()});
+				  }
+			}
 	}
 
 	public boolean isSupplementValue() {

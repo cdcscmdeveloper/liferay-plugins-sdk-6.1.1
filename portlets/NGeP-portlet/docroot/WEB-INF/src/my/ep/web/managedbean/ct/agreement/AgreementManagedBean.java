@@ -57,7 +57,11 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, SmPersonnel> supplierUserMap;
 	private CtAgreement ctAgreement;
-	private List<String> icNo;
+
+	private List<String> agencyOfficerIcNo;
+	private List<String> agencyWitnessIcNo;
+	private List<String> supplierOfficerIcNo;
+	private List<String> supplierWitnessIcNo;
 	
 	private double performanceBondRuleAmt;
 	private SelectItem[] supplierSignerDropdown;
@@ -285,12 +289,20 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
-	public List<String> getIcNo() {
-		return icNo;
+	public List<String> getAgencyOfficerIcNo() {
+		return agencyOfficerIcNo;
 	}
 
-	public void setIcNo(List<String> icNo) {
-		this.icNo = icNo;
+	public void setAgencyOfficerIcNo(List<String> agencyOfficerIcNo) {
+		this.agencyOfficerIcNo = agencyOfficerIcNo;
+	}
+
+	public List<String> getAgencyWitnessIcNo() {
+		return agencyWitnessIcNo;
+	}
+
+	public void setAgencyWitnessIcNo(List<String> agencyWitnessIcNo) {
+		this.agencyWitnessIcNo = agencyWitnessIcNo;
 	}
 
 	public boolean isValidateWitness() {
@@ -315,5 +327,21 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setSupplierSignerDropdown(SelectItem[] supplierSignerDropdown) {
 		this.supplierSignerDropdown = supplierSignerDropdown;
+	}
+
+	public List<String> getSupplierOfficerIcNo() {
+		return supplierOfficerIcNo;
+	}
+
+	public void setSupplierOfficerIcNo(List<String> supplierOfficerIcNo) {
+		this.supplierOfficerIcNo = supplierOfficerIcNo;
+	}
+
+	public List<String> getSupplierWitnessIcNo() {
+		return supplierWitnessIcNo;
+	}
+
+	public void setSupplierWitnessIcNo(List<String> supplierWitnessIcNo) {
+		this.supplierWitnessIcNo = supplierWitnessIcNo;
 	}
 }

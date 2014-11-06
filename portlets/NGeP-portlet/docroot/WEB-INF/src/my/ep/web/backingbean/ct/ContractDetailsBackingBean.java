@@ -1407,13 +1407,13 @@ public void ConstructSideTabMenu(){
 			   List<PmState> state = new ArrayList<PmState>();
 			   if(zone.getCtContractZoneDtls() != null) {
 				 for(CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
-				   if(zoneDtl.getState() != null){
+				   if(zoneDtl.getState() != null && getParameterDesc(getManagedBean().getContractVer().getCtContract().getLocationLevel()).equalsIgnoreCase(ContractConst.ZONE_LOCATION_NAME)){
 					  if(!state.contains(zoneDtl.getState())){
 						  stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getState()) , zoneNode);
 					   }state.add(zoneDtl.getState());
 				    }
-				   if(zoneDtl.getDistrict() != null && !getParameterDesc(getManagedBean().getContractVer().getCtContract().getLocationLevel()).equalsIgnoreCase(ContractConst.ZONE_LOCATION_NAME)){
-					   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getDistrict()), stateNode);
+				   if(zoneDtl.getDistrict() != null && getParameterDesc(getManagedBean().getContractVer().getCtContract().getLocationLevel()).equalsIgnoreCase(ContractConst.ZONE_LOCATION_NAME_DISTRICT)){
+					   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getDistrict()), zoneNode);
 				   }
 				 }
 			  }
@@ -1422,18 +1422,18 @@ public void ConstructSideTabMenu(){
 	} 
 	
     public void getZoneObjDetails() {
-    	if(this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+    	if(!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
     		for(CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
-    			for(TreeNode zonename : this.getManagedBean().getCtZoneTrees().getChildren()){
+    			for(TreeNode zonename : getManagedBean().getCtZoneTrees().getChildren()){
     				if(ctContractZone.toString().equalsIgnoreCase(((LocationDTO)zonename.getData()).getZoneId())) {
     					if(ctContractZone.getDeliveryTermUom() == null)
      					   ctContractZone.setDeliveryTermUom(new PmParameter());
-     					ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
-     					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
-     				}
-    			}
+     				ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
+     				ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+     			}
     		}
     	}
+     }
 	}
     
 	public SelectItem[] retrieveFinancialOrgList() throws NamingException {
