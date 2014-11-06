@@ -17,6 +17,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
+import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -27,11 +28,14 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.procurementcattype.ProcurementCatTypeReqDTO;
 import my.ep.dto.pm.common.procurementcattype.ProcurementCatTypeResDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -46,6 +50,36 @@ import org.apache.log4j.Logger;
  */
 public class PpCommonUtil {
 	private static Logger log = Logger.getLogger(PpCommonUtil.class);
+	
+	/**
+	 * Retrieve plan by plan id
+	 * @param planId
+	 * @return PpPlan
+	 */
+	public static PpPlan retrievePlanById(Long planId){
+		log.info("retrievePlanById - Start");
+		PpPlan ppPlan = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setPlanId(planId);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrievePlanDetById(reqDTO);
+			if (resDTO.isSuccessful()) {
+				ppPlan = resDTO.getPlan();
+			}
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
+		}
+		log.info("retrievePlanById - End");
+		return ppPlan;
+	}
 
 	/**
 	 * retriever user org by user id

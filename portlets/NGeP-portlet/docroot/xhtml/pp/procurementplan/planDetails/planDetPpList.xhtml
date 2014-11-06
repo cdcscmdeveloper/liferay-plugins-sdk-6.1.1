@@ -14,7 +14,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
 		     selection="#{pPlanBackingBean.managedBean.deletePpItems}" 
 		     rowIndexVar="index" rowKey="#{ppItem}">
-	     	
 
 			<p:columnGroup type="header">
 				<p:row>
@@ -136,7 +135,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.loadRejectReasons(ppItem.ppRejectReasons)}"
-			    	disabled="#{!ppItem.rejected}" id="clPpReason" update=":form:opRejectReason">
+			    	disabled="#{!ppItem.rejected}" id="clPpReason" update=":form:dlRejectReason">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>
