@@ -1403,16 +1403,17 @@ public void ConstructSideTabMenu(){
 				   zone.getDeliveryTermUom().setParameterId(0L);
 			   }
 			   zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.toString(), zone.getZoneName(), zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
-			   TreeNode stateNode = null;
 			   List<PmState> state = new ArrayList<PmState>();
 			   if(zone.getCtContractZoneDtls() != null) {
 				 for(CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
-				   if(zoneDtl.getState() != null && getParameterDesc(getManagedBean().getContractVer().getCtContract().getLocationLevel()).equalsIgnoreCase(ContractConst.ZONE_LOCATION_NAME)){
+					 
+				   if(zoneDtl.getState() != null && getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)){
 					  if(!state.contains(zoneDtl.getState())){
-						  stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getState()) , zoneNode);
-					   }state.add(zoneDtl.getState());
+						  new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getState()) , zoneNode);
+					   }
+					  state.add(zoneDtl.getState());
 				    }
-				   if(zoneDtl.getDistrict() != null && getParameterDesc(getManagedBean().getContractVer().getCtContract().getLocationLevel()).equalsIgnoreCase(ContractConst.ZONE_LOCATION_NAME_DISTRICT)){
+				   if(zoneDtl.getDistrict() != null && getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)){
 					   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getDistrict()), zoneNode);
 				   }
 				 }
