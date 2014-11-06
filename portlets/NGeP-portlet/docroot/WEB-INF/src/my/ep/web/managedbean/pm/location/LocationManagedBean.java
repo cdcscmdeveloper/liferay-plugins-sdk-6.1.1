@@ -11,6 +11,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
+import my.ep.web.bean.pm.LocationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "locationMB")
@@ -20,13 +21,9 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private VPmLocation pmLocation = new VPmLocation();
 
-	private String locationCode;
-
+	private LocationSearchBean locationSearchBean;
+	
 	private String selectedType;
-
-	private String locationName;
-
-	private String recordStatus;
 
 	private PmState state;
 
@@ -53,6 +50,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	private int status;
 
 	private VPmLocation location;
+	private boolean divisionFlag;
 
 	public LocationManagedBean() {
 		state = new PmState();
@@ -62,6 +60,7 @@ public class LocationManagedBean extends BaseManagedBean {
 		state.setPmCountry(new PmCountry());
 		division.setPmState(state);
 		district.setPmState(state);
+		district.setPmDivision(division);
 		city.setPmDistrict(district);
 
 	}
@@ -74,13 +73,6 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.countries = countries;
 	}
 
-	public String getSelectedType() {
-		return selectedType;
-	}
-
-	public void setSelectedType(String selectedType) {
-		this.selectedType = selectedType;
-	}
 
 	public List<VPmLocation> getvPmLocation() {
 		return vPmLocation;
@@ -162,22 +154,7 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.city = city;
 	}
 
-	public String getLocationCode() {
-		return locationCode;
-	}
-
-	public void setLocationCode(String locationCode) {
-		this.locationCode = locationCode;
-	}
-
-	public String getLocationName() {
-		return locationName;
-	}
-
-	public void setLocationName(String locationName) {
-		this.locationName = locationName;
-	}
-
+	
 	public PmCountry getCountry() {
 		return country;
 	}
@@ -194,20 +171,7 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.status = status;
 	}
 
-	/**
-	 * @return the recordStatus
-	 */
-	public String getRecordStatus() {
-		return recordStatus;
-	}
-
-	/**
-	 * @param recordStatus
-	 *            the recordStatus to set
-	 */
-	public void setRecordStatus(String recordStatus) {
-		this.recordStatus = recordStatus;
-	}
+	
 
 	/**
 	 * @return the location
@@ -222,6 +186,51 @@ public class LocationManagedBean extends BaseManagedBean {
 	 */
 	public void setLocation(VPmLocation location) {
 		this.location = location;
+	}
+
+	/**
+	 * @return the divisionFlag
+	 */
+	public boolean isDivisionFlag() {
+		return divisionFlag;
+	}
+
+	/**
+	 * @param divisionFlag
+	 *            the divisionFlag to set
+	 */
+	public void setDivisionFlag(boolean divisionFlag) {
+		this.divisionFlag = divisionFlag;
+	}
+
+	/**
+	 * @return the locationSearchBean
+	 */
+	public LocationSearchBean getLocationSearchBean() {
+		if (locationSearchBean == null)
+			locationSearchBean = new LocationSearchBean();
+		return locationSearchBean;
+	}
+
+	/**
+	 * @param locationSearchBean the locationSearchBean to set
+	 */
+	public void setLocationSearchBean(LocationSearchBean locationSearchBean) {
+		this.locationSearchBean = locationSearchBean;
+	}
+
+	/**
+	 * @return the selectedType
+	 */
+	public String getSelectedType() {
+		return selectedType;
+	}
+
+	/**
+	 * @param selectedType the selectedType to set
+	 */
+	public void setSelectedType(String selectedType) {
+		this.selectedType = selectedType;
 	}
 
 }

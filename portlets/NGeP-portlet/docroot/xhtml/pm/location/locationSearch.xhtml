@@ -1,33 +1,67 @@
-<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="locationSearchPanel"
+		header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
+		<br />
+		<table class="ppTwoTable">
+			<tr>
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.location.type']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						value="#{locationBackingBean.managedBean.locationSearchBean.locationType}" >
+						<f:selectItems value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
+					</p:selectOneMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						 value="#{lbl['lbl.pm.location.code']}" /></th>
+				<td><p:inputText styleClass="ppDisplayTextM" maxlength="10"
+						value="#{locationBackingBean.managedBean.locationSearchBean.locationCode}" />
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
 
-	<p:panel>
-		<h:panelGrid columns="2">
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.location.name']}" /></th>
+				<td><p:inputText styleClass="ppDisplayTextM"
+						value="#{locationBackingBean.managedBean.locationSearchBean.locationName}"
+						cols="50" rows="5" maxlength="50" autoResize="false" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
 
-			<h:outputLabel value="#{lbl['lbl.pm.location.type']}"></h:outputLabel>
-			<p:selectOneMenu
-				value="#{locationBackingBean.managedBean.selectedType}"
-				style="width: 276px;margin-bottom: 5px;">
-				<f:selectItems
-					value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
-			</p:selectOneMenu>
-			<h:outputLabel value="#{lbl['lbl.pm.location.code']}"></h:outputLabel>
-			<p:inputText value="#{locationBackingBean.managedBean.locationCode}"
-				size="40" />
-			<h:outputLabel value="#{lbl['lbl.pm.location.name']}"></h:outputLabel>
-			<p:inputText value="#{locationBackingBean.managedBean.locationName}"
-				size="40" />
-			<h:outputLabel value="#{lbl['lbl.pm.location.status']}"></h:outputLabel>
-			<p:selectOneMenu
-				value="#{locationBackingBean.managedBean.recordStatus}"
-				style="width: 135px;margin-bottom: 5px;">
-				<f:selectItems
-					value="#{locationBackingBean.getStatusOptions()}" />
-			</p:selectOneMenu>
-
-		</h:panelGrid>
+			</tr>
+			
+			<tr>
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						value="#{locationBackingBean.managedBean.locationSearchBean.recordStatus}">
+						<f:selectItems value="#{locationBackingBean.getStatusOptions()}" />
+					</p:selectOneMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<td colspan="4">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							update="searchLocations" process="locationSearchPanel"
+							icon="ui-icon-search" action="#{locationBackingBean.searchLocation}" />
+						&#160;
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							update="locationSearchPanel" icon="ui-icon-reset"
+							action="#{locationBackingBean.resetLocationSearchBean}" />
+					</div>
+				</td>
+			</tr>
+		</table>
 	</p:panel>
+
 </ui:composition>
