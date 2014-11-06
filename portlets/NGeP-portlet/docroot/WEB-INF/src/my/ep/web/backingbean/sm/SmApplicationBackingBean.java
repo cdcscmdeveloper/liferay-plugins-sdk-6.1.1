@@ -2762,8 +2762,8 @@ public class SmApplicationBackingBean extends
 						.isEmpty())) {
 
 			validShrHldr = false;
-			throw new EpException(
-					"At least one record for work experience (job function) is required for personnel with role Equity Owner");
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.jobexperience.required.atleast.one", null));
 		}
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
