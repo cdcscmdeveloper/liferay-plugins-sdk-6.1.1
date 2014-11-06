@@ -42,8 +42,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.sm.person.dob']}" /></td>
-				<td><p:calendar showOn="button"
-						value="#{backingBean.managedBean.selectedPersonnel.birthDate}" /></td>
+				<td><p:calendar showOn="button" maxdate="#{backingBean.managedBean.currDate}" 
+				value="#{backingBean.managedBean.selectedPersonnel.birthDate}" /></td>
 				<td><p:outputLabel value="* #{lbl['lbl.sm.personnel.type']}" /></td>
 				<td><p:selectOneRadio>
 						<f:selectItem itemLabel="#{lbl['lbl.sm.personnel.management']}" itemValue="1" />
