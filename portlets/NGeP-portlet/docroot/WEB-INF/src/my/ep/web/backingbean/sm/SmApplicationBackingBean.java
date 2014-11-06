@@ -136,6 +136,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -5806,18 +5807,24 @@ public class SmApplicationBackingBean extends
 
 		String url = portalUrl + currentUrl + "/view-revision-application";
 
-		String revApprvrAppNo = getManagedBean()
-				.getSmAppl()
-				.getApprovedSerFile()
-				.substring(
-						getManagedBean().getSmAppl().getApprovedSerFile()
-								.lastIndexOf('/') + 1,
-						getManagedBean().getSmAppl().getApprovedSerFile()
-								.indexOf("_APP"))
-				+ "_APP";
+		String revApprvrAppNo = "";
 
-		String revSupplAppNo = getManagedBean().getSmAppl().getApplNo()
-				+ "_SUP";
+		if (getManagedBean().getSmAppl().getApprovedSerFile() != null
+				&& StringUtils.isNotBlank(getManagedBean().getSmAppl()
+						.getApprovedSerFile())) {
+			revApprvrAppNo = getManagedBean()
+					.getSmAppl()
+					.getApprovedSerFile()
+					.substring(
+							getManagedBean().getSmAppl().getApprovedSerFile()
+									.lastIndexOf('/') + 1,
+							getManagedBean().getSmAppl().getApprovedSerFile()
+									.indexOf("_APP"))
+					+ "_APP";
+		}
+
+		String revSupplAppNo = getManagedBean().getSmAppl().getApplNo() == null ? ""
+				: getManagedBean().getSmAppl().getApplNo() + "_SUP";
 
 		getManagedBean().setRevisionApproverAppNoParam(revApprvrAppNo);
 		getManagedBean().setRevisionSupplierAppNoParam(revSupplAppNo);
