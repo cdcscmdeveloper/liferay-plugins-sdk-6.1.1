@@ -869,6 +869,8 @@ public class SmApplicationBackingBean extends
 							.displayBumiRecommendNote(
 									getManagedBean().getSmAppl()
 											.getSmSupplierBanks(),
+									getManagedBean().getSmAppl()
+											.getSmPersonnels(),
 									getManagedBean().getPersonCalc(),
 									getManagedBean().getCurrentPageType(),
 									getManagedBean().getSmAppl()
