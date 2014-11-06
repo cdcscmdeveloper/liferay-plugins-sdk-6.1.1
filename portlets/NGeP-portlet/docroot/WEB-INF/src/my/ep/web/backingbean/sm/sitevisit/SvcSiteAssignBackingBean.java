@@ -41,7 +41,7 @@ public class SvcSiteAssignBackingBean extends
 	}
 
 	public void retrieveSiteAssignInfo() {
-		this.getManagedBean().setAppId(1009);
+		//this.getManagedBean().setAppId(1009);
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
