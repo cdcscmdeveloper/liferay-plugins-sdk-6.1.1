@@ -46,7 +46,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{price.startDate}" showOn="button"
-					mindate="#{price.minDate}" maxdate="#{price.maxDate}" rendered="#{price.showFlag}"
+					mindate="#{price.parentPrice.startDate}" maxdate="#{price.parentPrice.endDate}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect"
 						listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}"
@@ -67,8 +67,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" mindate="#{price.minDate}"
-					maxdate="#{price.maxDate}"
+				<p:calendar value="#{price.endDate}" showOn="button" mindate="#{price.parentPrice.startDate}" maxdate="#{price.parentPrice.endDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 					rendered="#{price.showFlag}">
 					<p:ajax event="dateSelect"
