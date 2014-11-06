@@ -1844,7 +1844,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}	
 		}
 		removePanelItemZones(tplSpecZoneDtl);
+		
+		if(panelSuppliers == null || panelSuppliers.isEmpty()){
+			getManagedBean().getScQuote().setScQuoteSuppliers(null);
+		}
 		getManagedBean().setPanelSuppliers(panelSuppliers);
+		
 	}
 
 	private void removePanelItemZones(TplSpecZoneDtl tplSpecZoneDtl) {
