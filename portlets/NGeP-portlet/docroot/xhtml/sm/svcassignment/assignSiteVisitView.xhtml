@@ -61,8 +61,8 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.siteassign.pnl.scheduledate']}">
-					<p:calendar id="scheduleDateId" navigator="true"
-						value="#{svc.scheduleDate}" mindate="#{CommonConstants.CURRENT_DATE}"
+					<p:calendar id="scheduleDateId" navigator="true" required="true" label="#{lbl['lbl.sm.siteassign.pnl.scheduledate']}"
+						value="#{svc.scheduleDate}" mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						size="30" showOn="button" />
 				</p:column>
@@ -79,7 +79,7 @@
 							converter="svoListConverter" /></td>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sm.remark']}" /></td>
-					<td valign="top"><p:inputTextarea rows="5" cols="60" 
+					<td valign="top"><p:inputTextarea rows="5" cols="60" maxlength="2500"
 							autoResize="false" id="Remark"
 							value="#{svcSiteAssignBackingBean.managedBean.smRemark.remark}" /></td>
 				</tr>
