@@ -623,20 +623,21 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
-			}/*else {
+			}else {
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setMainCatCode(this.getManagedBean().getPmCategoryL1().getCategoryL1Code());
-				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL2ByCode(reqDTO);
-				if(resDTO.getCategoryL1()!=null){
+				reqDTO.setCategoryL1Id(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
+				reqDTO.setSubCatCode(this.getManagedBean().getPmCategoryL2().getCategoryL2Code());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL2ListByCode(reqDTO);
+				if(resDTO.getCategoryL2List()!=null && resDTO.getCategoryL2List().size()>0){
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 									MessageUtils.getMessage(
-											MessageConst.ERROR_775001,
+											MessageConst.ERROR_775002,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return false;
 				}
-			}*/
+			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
