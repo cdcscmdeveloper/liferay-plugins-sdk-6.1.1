@@ -185,7 +185,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				String messagePrefix = "";
 				String messageId = MessageConst.INFO_700026;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700004;
+					messageId = MessageConst.INFO_700025;
 				} else if(resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					messageId = MessageConst.INFO_700004;
