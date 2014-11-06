@@ -87,7 +87,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%; white-space: normal;">
-				    <h:commandLink immediate="true"  action="#{requestNoteBackingBean.viewMarketResearch()}"
+				    <h:commandLink immediate="true"  action="#{requestNoteBackingBean.viewMarketResearch(requestNoteDtl)}"
 				    	id="marketSummaryIcon">
 				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
