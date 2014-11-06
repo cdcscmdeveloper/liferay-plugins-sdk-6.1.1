@@ -6,23 +6,32 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-	<p:panel header="#{lbl['lbl.sc.sp.non.gov']}" toggleable="true">
+	<p:panel id="nonFedExpPanel" header="#{lbl['lbl.sc.sp.non.gov']}" toggleable="true">
+	
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td><td>#{supplierProposalDetailBackingBean.managedBean.year}</td>
 			</tr>
 		</table>
 		<p:dataTable id="technongovtid" var="technongovt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
-			rowKey="#{technongovt}" rowIndexVar="rowIndex"
-			selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPExperiences}"
-			rows="10">
-
-			<p:column selectionMode="multiple" style="width:2%" />
-
+			rowKey="#{technongovt}" rowIndexVar="rowIndex" rows="10">
+			<p:column  style="width:2%" >
 			<ac:paginator for="technongovtid" />
+			<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=technongovtid])"
+							listener="#{supplierProposalDetailBackingBean.selectAll}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				
+				<p:selectBooleanCheckbox value="#{supplierProposalDetailBackingBean.managedBean.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}"/>
+				</p:selectBooleanCheckbox>
+			
+			</p:column>
 
 			<p:column>
 				<f:facet name="header">
@@ -76,14 +85,14 @@
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
-				<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}"
-					showOn="button" navigator="true" size="15" mindate="01/01/2008"
+				<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}" readonlyInput="true"
+					showOn="button" navigator="true" size="15" mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMinDate}"
 					maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
 					label="#{lbl['lbl.sc.sp.effectivedt']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax event="dateSelect" process="@this" partialSubmit="true"
-						update="@([id$=expDatePanelGroupID],[id$=totalcontractyrs],[id$=contractPeriodPanelGropID])"
+						update="@([id$=expDatePanelGroupID])"
 						listener="#{supplierProposalDetailBackingBean.effectiveDateSelectListener(technongovt)}" />
 				</p:calendar>
 				<p:message id="effectiveDateMsg" for="effectiveDate" display="icon" />
@@ -99,14 +108,14 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
-					<p:calendar id="expiryDate" value="#{technongovt.expiryDate}"
+					<p:calendar id="expiryDate" value="#{technongovt.expiryDate}" readonlyInput="true"
 						showOn="button" navigator="true"
 						mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedMinDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
 						label="#{lbl['lbl.sc.sp.expirydt']}"
 						rendered="#{technongovt.brandNew eq true}">
 						<p:ajax event="dateSelect"
-							listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(rowIndex)}"
+							listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(technongovt)}"
 							update="@([id$=totalcontractyrs],[id$=contractPeriodPanelGropID])"
 							process="@this" partialSubmit="true" />
 					</p:calendar>
@@ -136,15 +145,15 @@
 		<div class="ppRightBtn">
 
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				rendered="#{!statusHide}" process="@this,technongovtid"
+				rendered="#{!statusHide}" process="@all"
 				partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
 				update="@([id$=technongovtid],[id$=totalcontractyrs])"
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" rendered="#{!statusHide}"
-				update="@([id$=technongovtid],[id$=totalcontractyrs])"
+				icon="ui-icon-delete" rendered="#{!statusHide}" process="@this" partialSubmit="true"
+				update="@([id$=nonFedExpPanel])" 
 				action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
 
 		</div>
