@@ -2860,9 +2860,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
-	public void viewMarketResearch() throws IOException {
+	public void viewMarketResearch(ScRequestNoteDtl requestNoteDtl) throws IOException {
 		debugLogger("viewMarketResearch");
-		ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 		
 		
 		if (requestNoteDtl != null) {
@@ -2873,7 +2872,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 			
 			if(requestNoteDtl.isBrandNew()) {
-				ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
+				ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 				String itemCode = requestSupplierItem.getRequestNoteItem().getCmItem().getExtensionCode();
 				long uomId = requestSupplierItem.getCmSupplierItem().getPmUom().getUomId();
 				
