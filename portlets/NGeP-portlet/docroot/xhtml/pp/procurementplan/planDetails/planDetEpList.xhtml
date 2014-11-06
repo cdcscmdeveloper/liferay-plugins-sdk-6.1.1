@@ -14,7 +14,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
 		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
 		     rowIndexVar="index" rowKey="#{epItem}">
-		    <ac:paginator for="dtExpenditurePlan"/>
 
 	    	<p:columnGroup type="header">
 				<p:row>
@@ -103,7 +102,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.loadRejectReasons(epItem.ppRejectReasons)}"
-			    	disabled="#{!epItem.rejected}" id="clEpReason" update=":form:opRejectReason" immediate="true">
+			    	disabled="#{!epItem.rejected}" id="clEpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>

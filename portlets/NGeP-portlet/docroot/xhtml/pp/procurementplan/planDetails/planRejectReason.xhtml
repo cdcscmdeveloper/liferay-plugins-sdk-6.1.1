@@ -6,10 +6,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"	
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<p:outputPanel id="opRejectReason">
+
 	<p:dialog id="dlRejectReason" header="#{lbl['lbl.pp.reject.reason']}" 
 		widgetVar="dlRejectReasonWv" dynamic="true" width="1000" height="300">
-		
+		2222
+		<p:ajax event="close" update="dgReason" />
+		<p:outputPanel id="opRejectReason">
 		<!-- Validation Message -->
 		<p:messages id="messagesReason" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:dataGrid id="dgReason" value="#{pPlanBackingBean.managedBean.selectedRejectReasons}" var="reason" 
@@ -28,7 +30,7 @@
 				</tr>
 				<tr>
 					<td>
-						<h:inputTextarea cols="40" value="#{reason.reasonDesc}" rendered="#{reasonIndex==0}" maxlength="1000" /> 
+						<h:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" rendered="#{reasonIndex==0}" maxlength="1000" /> 
 						<h:outputText value="#{reason.reasonDesc}" rendered="#{reasonIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 					</td>
 				</tr>
@@ -38,11 +40,11 @@
 		<br/>    
  		<div class="ppRightBtn">
 		  <p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{pPlanBackingBean.confirmRejectReason}" update="opRejectReason"
-		  	oncomplete="dlRejectReasonWv.hide();"/>	
+		  		process="opRejectReason" oncomplete="dlRejectReasonWv.hide();"/>	
 		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRejectReasonWv.hide();" update="opRejectReason"
-		  	action="#{pPlanBackingBean.confirmRejectReason}" immediate="true" />		
+		  		immediate="true" />		
 		</div>      
-		
+		</p:outputPanel>
 	</p:dialog>
-	</p:outputPanel>
+	
 </ui:composition>

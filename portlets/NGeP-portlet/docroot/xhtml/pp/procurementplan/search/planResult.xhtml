@@ -35,9 +35,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>  
 	   	</p:dataTable> 
 	   	<br/>
+	   	
+	   	
 	   	<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}"  action="#{pPlanBackingBean.redirectToMaintainPlan(null)}"  
-				ajax="false"/>
+	   		<c:if test="#{pPlanBackingBean.isRolePlanner()}">
+				<p:commandButton value="#{lbl['lbl.btn.create']}"
+					action="#{pPlanBackingBean.redirectToMaintainPlan(null)}"  
+					ajax="false"/>
+			</c:if>
 		</div>
 	</p:panel>
 </ui:composition>
