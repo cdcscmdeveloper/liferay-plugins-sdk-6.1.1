@@ -42,7 +42,7 @@
 						<f:selectItem itemLabel="Indian" itemValue="I" />
 					</p:selectOneMenu></td> -->
 				<td><p:outputLabel value="* #{lbl['lbl.sm.person.dob']}" /></td>
-				<td><p:calendar showOn="button"
+				<td><p:calendar showOn="button" maxdate="#{backingBean.managedBean.currDate}"
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" /></td>
 			</tr>
 			<tr>
