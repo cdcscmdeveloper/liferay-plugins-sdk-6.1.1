@@ -5808,23 +5808,26 @@ public class SmApplicationBackingBean extends
 		String url = portalUrl + currentUrl + "/view-revision-application";
 
 		String revApprvrAppNo = "";
+		String revSupplAppNo = "";
 
-		if (getManagedBean().getSmAppl().getApprovedSerFile() != null
-				&& StringUtils.isNotBlank(getManagedBean().getSmAppl()
-						.getApprovedSerFile())) {
-			revApprvrAppNo = getManagedBean()
-					.getSmAppl()
-					.getApprovedSerFile()
-					.substring(
-							getManagedBean().getSmAppl().getApprovedSerFile()
-									.lastIndexOf('/') + 1,
-							getManagedBean().getSmAppl().getApprovedSerFile()
-									.indexOf("_APP"))
-					+ "_APP";
+		if (getManagedBean().getSmAppl() != null) {
+			if (getManagedBean().getSmAppl().getApprovedSerFile() != null
+					&& StringUtils.isNotBlank(getManagedBean().getSmAppl()
+							.getApprovedSerFile())) {
+				revApprvrAppNo = getManagedBean()
+						.getSmAppl()
+						.getApprovedSerFile()
+						.substring(
+								getManagedBean().getSmAppl()
+										.getApprovedSerFile().lastIndexOf('/') + 1,
+								getManagedBean().getSmAppl()
+										.getApprovedSerFile().indexOf("_APP"))
+						+ "_APP";
+			}
+
+			revSupplAppNo = getManagedBean().getSmAppl().getApplNo() == null ? ""
+					: getManagedBean().getSmAppl().getApplNo() + "_SUP";
 		}
-
-		String revSupplAppNo = getManagedBean().getSmAppl().getApplNo() == null ? ""
-				: getManagedBean().getSmAppl().getApplNo() + "_SUP";
 
 		getManagedBean().setRevisionApproverAppNoParam(revApprvrAppNo);
 		getManagedBean().setRevisionSupplierAppNoParam(revSupplAppNo);
