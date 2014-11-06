@@ -5617,7 +5617,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setValidSmUserLimit(
 				SmApplicationUtil.validatePersonLimit(getManagedBean()
 						.getSmAppl().getSmSupplier().getSupplierId(),
-						getManagedBean().getSmAppl().getApplType(), getManagedBean().getSmAppl().getApplId()));
+						getManagedBean().getSmAppl().getApplType(),
+						getManagedBean().getSmAppl().getApplId()));
 	}
 
 	private void calculateBumiPercentageTotals() {
@@ -5889,26 +5890,31 @@ public class SmApplicationBackingBean extends
 		return itemList.toArray(new SelectItem[itemList.size()]);
 
 	}
-	
-	private void displayBumiRecommendNote(){
-		if(getManagedBean().getSmAppl()!=null){
-			getManagedBean().setBumiRecommendationNote(SmCommonUtil
-					.displayBumiRecommendNote(
-							getManagedBean().getSmAppl()
-									.getSmSupplierBanks(),
+
+	private void displayBumiRecommendNote() {
+		if (getManagedBean().getSmAppl() != null) {
+			String applType = getManagedBean().getSmAppl().getApplType() == null ? ""
+					: getManagedBean().getSmAppl().getApplType();
+			String suppType = "";
+
+			if (getManagedBean().isSupplierUser()) {
+				suppType = applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? getManagedBean()
+						.getNewSupplierType() : getManagedBean().getSmAppl()
+						.getSupplierType();
+			} else {
+				suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
+						: getManagedBean().getSmAppl().getSupplierType();
+			}
+			getManagedBean().setBumiRecommendationNote(
+					SmCommonUtil.displayBumiRecommendNote(
+							getManagedBean().getSmAppl().getSmSupplierBanks(),
 							getManagedBean().getPersonCalc(),
-							getManagedBean().getCurrentPageType(),
-							getManagedBean().getSmAppl()
-									.getApplCategoryType(),
-							getManagedBean()
-									.getSmAppl()
-									.getApplCategoryType()
-									.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? getManagedBean()
-									.getNewSupplierType()
-									: getManagedBean().getSmAppl()
-											.getSupplierType(),
+							getManagedBean().getCurrentPageType(), applType,
+							suppType,
 							getManagedBean().getBumiEquityPercentage(),
-							getManagedBean().isSupplierUser()).getBumiRecommendNote());
+							getManagedBean().isSupplierUser())
+							.getBumiRecommendNote());
 		}
+
 	}
 }
