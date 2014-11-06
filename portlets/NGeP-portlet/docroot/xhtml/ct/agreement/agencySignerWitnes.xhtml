@@ -107,11 +107,11 @@
 		                <p:column selectionMode="multiple" style="width:2%"/> 
 		
 		                <p:column headerText="#{lbl['lbl.ct.name']}" style="width:50%;">
-		                      <p:inputText value="#{signAgWitnessVar.officerName}" style="width:90%" maxlength="20"/>
+		                      <p:inputText value="#{signAgWitnessVar.officerName}" style="width:90%" maxlength="20" validator="#{webappBean.checkInputField}"/>
 		                </p:column> 
 		
 		                <p:column headerText="#{lbl['lbl.ct.ic.no']}" style="width:20%;">
-		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%" maxlength="20"/>
+		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%" maxlength="12" validator="#{webappBean.checkIntegerField}"/>
 		                </p:column> 
 		         
 		                <p:column headerText="#{lbl['lbl.ct.designation']}" style="width:30%;">
