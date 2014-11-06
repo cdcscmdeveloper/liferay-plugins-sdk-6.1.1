@@ -1363,5 +1363,14 @@ public class NoticeBoardBackingBean extends
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
+	
+	public String constuctConditionFields(){
+		Long orgProfileId=this.getManagedBean().getMinistryProfile().getOrgProfileId();
+		if(null != orgProfileId){
+			return "parentOrgProfile.orgProfileId^"+orgProfileId;
+		}
+		
+		return "";
+	}
 
 }
