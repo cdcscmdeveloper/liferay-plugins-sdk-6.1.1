@@ -41,6 +41,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -529,22 +530,24 @@ public class SmCommonUtil {
 
 	public static SmPersonnleCalcVO displayBumiRecommendNote(
 			List<SmSupplierBank> smSupplierBankList,
-			List<SmPersonnel> smPersonnelList, SmPersonnleCalcVO persCalcVo,
-			String outputPage, String applType, String supplType,
-			BigDecimal bumiPercentage, boolean supplUser) {
-		
-		try{
+			SmPersonnleCalcVO persCalcVo, String outputPage, String applType,
+			String supplType, BigDecimal bumiPercentage, boolean supplUser) {
+
+		try {
 			if (supplType.equals("K")
 					&& (applType
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
 							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI))) {
+				if (persCalcVo == null) {
+					persCalcVo = new SmPersonnleCalcVO();
+				}
 				persCalcVo.setNonBumiSignatoryBank("");
 				setBumiStatus(persCalcVo, bumiPercentage);
-				setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList,
-						smPersonnelList);
-				
+				setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList);
+
 				if (persCalcVo.isBumiStatus()) {
-					if (StringUtils.isEmpty(persCalcVo.getNonBumiSignatoryBank())) {
+					if (StringUtils.isEmpty(persCalcVo
+							.getNonBumiSignatoryBank())) {
 						if (supplUser) {
 							persCalcVo.setBumiRecommendNote(getMessage(
 									"lbl.sm.recommend.supplier.bumi", null));
@@ -575,52 +578,62 @@ public class SmCommonUtil {
 					}
 				}
 			}
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			log.error(ex.getMessage());
 		}
-		
-		
+
 		return persCalcVo;
 	}
 
 	private static void setAllBankSignatoriesNonBumi(
 			SmPersonnleCalcVO persCalcVo,
-			List<SmSupplierBank> smSupplierBankList,
-			List<SmPersonnel> smPersonnelList) {
+			List<SmSupplierBank> smSupplierBankList) {
 		StringBuffer sb = new StringBuffer();
 		String bankSignatoryNonBumi = "";
 
-		for (SmSupplierBank smSupplierBank : smSupplierBankList) {
-			bankSignatoryNonBumi = getBankSignatoryNonBumi(smSupplierBank,
-					smPersonnelList);
-			if (!StringUtils.isEmpty(bankSignatoryNonBumi)) {
-				sb.append(bankSignatoryNonBumi).append(",");
+		if (smSupplierBankList != null
+				&& CollectionUtils.isNotEmpty(smSupplierBankList)) {
+			for (SmSupplierBank smSupplierBank : smSupplierBankList) {
+				bankSignatoryNonBumi = getBankSignatoryNonBumi(smSupplierBank);
+				if (!StringUtils.isEmpty(bankSignatoryNonBumi)) {
+					sb.append(bankSignatoryNonBumi).append(",");
+				}
 			}
-		}
-		if (sb.length() > 0) {
-			sb.deleteCharAt(sb.lastIndexOf(","));
-			bankSignatoryNonBumi = sb.toString();
+			if (sb.length() > 0) {
+				sb.deleteCharAt(sb.lastIndexOf(","));
+				bankSignatoryNonBumi = sb.toString();
+			}
 		}
 
 		persCalcVo.setNonBumiSignatoryBank(bankSignatoryNonBumi);
 	}
 
-	private static String getBankSignatoryNonBumi(
-			SmSupplierBank smSupplierBank, List<SmPersonnel> smPersonnelList) {
+	private static String getBankSignatoryNonBumi(SmSupplierBank smSupplierBank) {
 		String bankRetVal = "";
-		for (SmChequeSignatory sign : smSupplierBank.getSmChequeSignatories()) {
-			if (sign.getSmPersonnel().getBumiFlg()==0) {
-				bankRetVal = smSupplierBank.getPmFinancialOrg().getFinOrgName();
-				break;
+
+		if (smSupplierBank.getSmChequeSignatories() != null
+				&& CollectionUtils.isNotEmpty(smSupplierBank
+						.getSmChequeSignatories())) {
+			for (SmChequeSignatory sign : smSupplierBank
+					.getSmChequeSignatories()) {
+				if (sign.getSmPersonnel() != null
+						&& sign.getSmPersonnel().getBumiFlg() == 0) {
+					bankRetVal = smSupplierBank.getPmFinancialOrg() == null ? ""
+							: smSupplierBank.getPmFinancialOrg()
+									.getFinOrgName();
+					break;
+				}
 			}
 		}
+
 		return bankRetVal;
 	}
 
 	private static SmPersonnleCalcVO setBumiStatus(
 			SmPersonnleCalcVO persCalcVo, BigDecimal bumiPercentage) {
 		persCalcVo.setBumiStatus(false);
-		if (bumiPercentage.compareTo(new BigDecimal(50)) == 1) {
+		if (bumiPercentage != null
+				&& bumiPercentage.compareTo(new BigDecimal(50)) == 1) {
 			persCalcVo.setBumiStatus(true);
 		}
 		return persCalcVo;

@@ -865,26 +865,7 @@ public class SmApplicationBackingBean extends
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 					calcPersonnelListCount();
-					SmCommonUtil
-							.displayBumiRecommendNote(
-									getManagedBean().getSmAppl()
-											.getSmSupplierBanks(),
-									getManagedBean().getSmAppl()
-											.getSmPersonnels(),
-									getManagedBean().getPersonCalc(),
-									getManagedBean().getCurrentPageType(),
-									getManagedBean().getSmAppl()
-											.getApplCategoryType(),
-									getManagedBean()
-											.getSmAppl()
-											.getApplCategoryType()
-											.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? getManagedBean()
-											.getNewSupplierType()
-											: getManagedBean().getSmAppl()
-													.getSupplierType(),
-									getManagedBean().getBumiEquityPercentage(),
-									getManagedBean().isSupplierUser());
-
+					displayBumiRecommendNote();
 				}
 			}
 			assignValReqdToFalse();
@@ -5907,5 +5888,27 @@ public class SmApplicationBackingBean extends
 
 		return itemList.toArray(new SelectItem[itemList.size()]);
 
+	}
+	
+	private void displayBumiRecommendNote(){
+		if(getManagedBean().getSmAppl()!=null){
+			getManagedBean().setBumiRecommendationNote(SmCommonUtil
+					.displayBumiRecommendNote(
+							getManagedBean().getSmAppl()
+									.getSmSupplierBanks(),
+							getManagedBean().getPersonCalc(),
+							getManagedBean().getCurrentPageType(),
+							getManagedBean().getSmAppl()
+									.getApplCategoryType(),
+							getManagedBean()
+									.getSmAppl()
+									.getApplCategoryType()
+									.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? getManagedBean()
+									.getNewSupplierType()
+									: getManagedBean().getSmAppl()
+											.getSupplierType(),
+							getManagedBean().getBumiEquityPercentage(),
+							getManagedBean().isSupplierUser()).getBumiRecommendNote());
+		}
 	}
 }
