@@ -677,15 +677,18 @@ public class QTDetailBackingBean extends
 					if (!"BO".equals(tabBean.getScQtCommittee()
 							.getScCommittee().getCommitteeType()
 							.getParameterCode())) {
-						if (!QTStatusConst.CM_COMPLETE.equals(tabBean
-								.getScQtCommittee().getScCommittee()
-								.getCommitteStatus())
-								&& !this.getManagedBean().isSaveFlow()) {
-							PmStatus committeStatus = new PmStatus();
-							committeStatus
-									.setStatusId(QTStatusConst.CM_PENDING_APPROVAL);
-							tabBean.getScQtCommittee().getScCommittee()
-									.setCommitteStatus(committeStatus);
+						if (!tabBean.getScQtCommittee().getScCommittee()
+								.getScCommitteeMembers().isEmpty()) {
+							if (!QTStatusConst.CM_COMPLETE.equals(tabBean
+									.getScQtCommittee().getScCommittee()
+									.getCommitteStatus())
+									&& !this.getManagedBean().isSaveFlow()) {
+								PmStatus committeStatus = new PmStatus();
+								committeStatus
+										.setStatusId(QTStatusConst.CM_PENDING_APPROVAL);
+								tabBean.getScQtCommittee().getScCommittee()
+										.setCommitteStatus(committeStatus);
+							}
 						}
 					}
 
@@ -1319,54 +1322,57 @@ public class QTDetailBackingBean extends
 					isEnable));
 			// evaluation type is one tier only oc is added..
 			if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
-
+				boolean ecEditable = false;
 				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType.getValue("EvaluationCommittee"), qtId);
 				if (this.getManagedBean().isEditable()) {
-					isEnable = getEnableFlagByStatus(currentStatus,
+					ecEditable = getEnableFlagByStatus(currentStatus,
 							scQt.getEvaluationType(),
 							evalCommitte.getScCommittee());
 				}
 				committeTabs.add(new TabBean(
 						QTConstants.EVALUATION_COMMITTEE_TAB, evalCommitte,
-						isEnable));
+						ecEditable));
 			}
 			// evaluation type is two tier below committe are added
 			else {
+				boolean ocEditable = false;
 				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType.getValue("OpeningCommittee"), qtId);
 				if (this.getManagedBean().isEditable()) {
-					isEnable = getEnableFlagByStatus(currentStatus,
+					ocEditable = getEnableFlagByStatus(currentStatus,
 							scQt.getEvaluationType(),
 							openingCommitte.getScCommittee());
 				}
 				committeTabs.add(new TabBean(QTConstants.OPENING_COMMITTEE_TAB,
-						openingCommitte, isEnable));
+						openingCommitte, ocEditable));
+				boolean tecEditable = false;
 				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType
 								.getValue(ParameterConst.DOCTYPE_TEC_COMMITTE),
 						qtId);
 				if (this.getManagedBean().isEditable()) {
-					isEnable = getEnableFlagByStatus(currentStatus,
+					tecEditable = getEnableFlagByStatus(currentStatus,
 							scQt.getEvaluationType(),
 							tecCommitte.getScCommittee());
 				}
 				committeTabs.add(new TabBean(
 						ParameterConst.DOCTYPE_TEC_COMMITTE, tecCommitte,
-						isEnable));
+						tecEditable));
 				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType
 								.getValue(ParameterConst.DOCTYPE_FEC_COMMITTE),
 						qtId);
+				boolean fecEditable = false;
 				if (this.getManagedBean().isEditable()) {
-					isEnable = getEnableFlagByStatus(currentStatus,
+					fecEditable = getEnableFlagByStatus(currentStatus,
 							scQt.getEvaluationType(),
 							fecCommitte.getScCommittee());
 				}
 
 				committeTabs.add(new TabBean(
 						ParameterConst.DOCTYPE_FEC_COMMITTE, fecCommitte,
-						isEnable));
+						fecEditable));
 			}
 			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(qtId);
 

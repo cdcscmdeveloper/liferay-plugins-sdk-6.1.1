@@ -24,42 +24,32 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.category.code']}" /></td>
-				<td><ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
+				<td><ac:lov id="category" lovId="PM_CATEGORY_L3"
 						headerText="Category Lov"
 						saveObject="noticeBoardBackingBean.managedBean.categoryL3"
 						value="#{noticeBoardBackingBean.managedBean.categoryL3.categoryName}"
-						size="25"/> <ac:lovPopup /></td>
+						size="25" readonly="true" /> <ac:lovPopup /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.notice.board.ministry']}" /></td>
-				<td><p:selectOneMenu
-						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgProfileId}"
-						style="width:195px;margin-bottom:5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}"></f:selectItem>
-						<f:selectItems
-							value="#{noticeBoardBackingBean.retriveOrgProfilesForMinistryLevel()}"
-							var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgName}"
-							itemValue="#{pmOrgProfile.orgProfileId}"></f:selectItems>
-						<p:ajax event="change"
-							listener="#{noticeBoardBackingBean.handleMinistryProfileChanged}"
-							update="ptjlist" process="@this" partialSubmit="true" />
 
-					</p:selectOneMenu></td>
+				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE"
+						headerText="MinistryOrgProfile Lov" update=":form:openPtj"
+						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
+						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgProfileId}"
+						size="25" readonly="true" /> <ac:lovPopup /></td>
+
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
-				<td><p:selectOneMenu id="ptjlist"
+				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE"
+						headerText="PTJOrgProfile Lov"
+						saveObject="noticeBoardBackingBean.managedBean.ptjProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgProfileId}"
-						style="width:195px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}"></f:selectItem>
-						<f:selectItems
-							value="#{noticeBoardBackingBean.managedBean.ptjList}"
-							var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgName}"
-							itemValue="#{pmOrgProfile.orgProfileId}"></f:selectItems>
-					</p:selectOneMenu></td>
+						size="25" readonly="true" conditionField="#{noticeBoardBackingBean.constuctConditionFields()}" /> <ac:lovPopup /></td>
+
 			</tr>
 		</table>
 
@@ -330,8 +320,8 @@
 					style="padding-right:5px;" />
 				<p:column>
 
-					<p:inputMask styleClass="ppNumericAlign" id="sitevisitdate" size="5"
-						
+					<p:inputMask styleClass="ppNumericAlign" id="sitevisitdate"
+						size="5"
 						value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('SiteVisit')}"
