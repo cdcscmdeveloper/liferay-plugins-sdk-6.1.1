@@ -319,7 +319,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			// DRAFT & REVISION & UPDATE
 			if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(taskName)
 					|| PPProcessNameConst.SUBMIT_PLAN.equalsIgnoreCase(taskName)){
-				this.getManagedBean().setModeReview(true);
+				if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(taskName)){
+					this.getManagedBean().setModeReview(true);
+				}
 				this.getManagedBean().setModeReviewEditable(false);
 				this.getManagedBean().setModeEditable(true);
 				
@@ -548,7 +550,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			newReason = true;
 		}
 		
-		if(newReason){
+		if(newReason && this.getManagedBean().isModeReviewEditable()){
 			System.out.println("new reason");
 			PpRejectReason reason = new PpRejectReason();
 			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
@@ -569,34 +571,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("initialRejectReasons - End");
 		
 	}
-	//TODO REMOVE
-		public void showRejectReason(){
-			log.info("confirmRejectReason");
-			if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-				System.out.println(this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
-			}
-		}
+	
 	//TODO REMOVE
 	public void cancelRejectReason(){
 		log.info("cancelRejectReason");
 		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
 			System.out.println("this.getManagedBean().getSelectedReasonDesc() "+this.getManagedBean().getSelectedReasonDesc());
 			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
-			this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());;
+			this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
+			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
 		}
+//		RequestContext.getCurrentInstance().execute("dlRejectReasonWv.hide()");
 	}
 	
 	//TODO REMOVE
 	public void confirmRejectReason(){
 		log.info("confirmRejectReason");
 		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-//			System.out.println(this.getManagedBean().getSelectedReasonDesc());
 //			if(!StringUtils.isBlank(this.getManagedBean().getSelectedReasonDesc())){
 //				this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
 //			}
 			System.out.println("this.getManagedBean().getSelectedReasonDesc() "+this.getManagedBean().getSelectedReasonDesc());
 			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
 		}
+//		RequestContext.getCurrentInstance().execute("dlRejectReasonWv.hide()");
 	}
 	
 
