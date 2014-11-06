@@ -14,7 +14,7 @@
 						value="#{lbl['lbl.pm.financialorg.regType']}" /> </td>
 				<td><p:selectOneMenu id="regType"
 						
-						value="#{financialOrgBackingBean.managedBean.regTypeId}"
+						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean}"
 						style="width: 276px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.financialOrgRegType)}" />

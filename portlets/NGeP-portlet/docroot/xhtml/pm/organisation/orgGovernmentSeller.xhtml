@@ -16,7 +16,7 @@
 			<ac:paginator for="financialacc" />
 			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
 				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
-					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
+					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!financialacc.brandNew}" 
 					required="true" style="margin-bottom: 5px;">
 					<f:selectItem itemValue=" " itemLabel="---Select---" />
 					<f:selectItems var="finorgLs"
@@ -29,12 +29,12 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
 
-				<p:inputText value="#{financialacc.accountNo}" size="15" />
+				<p:inputText value="#{financialacc.accountNo}" size="15" disabled="#{!financialacc.brandNew}"  />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
-					required="true" style="margin-bottom: 5px;">
+					required="true" disabled="#{financialacc.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>

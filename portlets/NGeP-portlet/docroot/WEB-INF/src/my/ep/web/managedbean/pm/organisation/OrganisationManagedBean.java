@@ -8,8 +8,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.primefaces.model.DualListModel;
-
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -26,7 +24,10 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "organisationMB")
 @SessionScoped
@@ -34,20 +35,18 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		Serializable {
 	private static final long serialVersionUID = 1L;
 	private int activeIndex = 0;
-	
+
 	private int selectedTabIndex;
 	// Organization Search
-	private String orgTypeCode;
-	private String orgCode;
-	private String orgName;
-	private String orgStatus;
+	private OrganisationSearchBean organisationSearchBean;
+
 	private String orgType;
 	// Org Details
 	private PmOrgProfile orgProfile;
 	private PmOrgValidity orgValidity = new PmOrgValidity();
 	private Date currentDate = new Date();
 	private List<PmZone> zoneList;
-	private PmZone zone= new PmZone();
+	private PmZone zone = new PmZone();
 	private Long zoneId;
 	// Office Address
 	private List<PmAddressType> officeAddressTypeList;
@@ -67,38 +66,39 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmAddressType> deliveryAddressTypeList;
 	private List<PmAddressType> selectedDelAddressTypes;
 	private PmAddressType selectedDeliveryAddressType;
-//
+	//
 	private List<PmPtjGroup> ptjGroup;
 	private PmPtjGroup pmPtjGroup;
 	private List<PmAgOffice> agOffice;
 	private List<PmOrgProfile> pmOrgProfile;
 	private List<PmOrgProfile> orgProfileList;
 	//
+	private PmFinancialOrg financialOrg = new PmFinancialOrg();
 	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
-	private List<PmFinancialAcc> pmFinancialAcc =  new ArrayList<PmFinancialAcc>();
+	private List<PmFinancialAcc> pmFinancialAcc = new ArrayList<PmFinancialAcc>();
 	private List<PmFinancialAcc> selectedPmFinancialAcc;
-	
+
 	private List<PmOrgProfile> selectedPmOrgProfile;
-	
+
 	private List<PmPtjGroup> ptjGroupList;
 	private List<PmPtjGroup> selectedPtjGroup;
 	private PmPtjGroup selectedPtj;
-	
-	private	DualListModel<PmUser> supplierUsers;
+
+	private DualListModel<PmUser> supplierUsers;
 	private List<PmUser> sourceUsers;
 	private List<PmUser> selectedUsers;
-	
+
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
-		officeContactPerson= new PmContact();
-		deliveryContactPerson= new PmContact();
-		orgProfile= new PmOrgProfile();
+		officeContactPerson = new PmContact();
+		deliveryContactPerson = new PmContact();
+		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
-		officeAddressTypeList= new ArrayList<PmAddressType>();
-		contactList= new ArrayList<PmContact>();
-		ptjGroup= new ArrayList<PmPtjGroup>();
-		agOffice= new ArrayList<PmAgOffice>();
+		officeAddressTypeList = new ArrayList<PmAddressType>();
+		contactList = new ArrayList<PmContact>();
+		ptjGroup = new ArrayList<PmPtjGroup>();
+		agOffice = new ArrayList<PmAgOffice>();
 		orgProfile.setPmAgOffice(new PmAgOffice());
 		orgProfile.setPmPtjGroup(new PmPtjGroup());
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
@@ -113,7 +113,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param contactList the contactList to set
+	 * @param contactList
+	 *            the contactList to set
 	 */
 	public void setContactList(List<PmContact> contactList) {
 		this.contactList = contactList;
@@ -285,68 +286,6 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.activeIndex = activeIndex;
 	}
 
-	
-
-	/**
-	 * @return the orgTypeCode
-	 */
-	public String getOrgTypeCode() {
-		return orgTypeCode;
-	}
-
-	/**
-	 * @param orgTypeCode
-	 *            the orgTypeCode to set
-	 */
-	public void setOrgTypeCode(String orgTypeCode) {
-		this.orgTypeCode = orgTypeCode;
-	}
-
-	/**
-	 * @return the orgCode
-	 */
-	public String getOrgCode() {
-		return orgCode;
-	}
-
-	/**
-	 * @param orgCode
-	 *            the orgCode to set
-	 */
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
-	}
-
-	/**
-	 * @return the orgName
-	 */
-	public String getOrgName() {
-		return orgName;
-	}
-
-	/**
-	 * @param orgName
-	 *            the orgName to set
-	 */
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
-
-	/**
-	 * @return the orgStatus
-	 */
-	public String getOrgStatus() {
-		return orgStatus;
-	}
-
-	/**
-	 * @param orgStatus
-	 *            the orgStatus to set
-	 */
-	public void setOrgStatus(String orgStatus) {
-		this.orgStatus = orgStatus;
-	}
-
 	/**
 	 * @return the orgType
 	 */
@@ -492,7 +431,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param zone the zone to set
+	 * @param zone
+	 *            the zone to set
 	 */
 	public void setZone(PmZone zone) {
 		this.zone = zone;
@@ -506,9 +446,11 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param officeAddressTypeList the officeAddressTypeList to set
+	 * @param officeAddressTypeList
+	 *            the officeAddressTypeList to set
 	 */
-	public void setOfficeAddressTypeList(List<PmAddressType> officeAddressTypeList) {
+	public void setOfficeAddressTypeList(
+			List<PmAddressType> officeAddressTypeList) {
 		this.officeAddressTypeList = officeAddressTypeList;
 	}
 
@@ -520,7 +462,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param ptjGroup the ptjGroup to set
+	 * @param ptjGroup
+	 *            the ptjGroup to set
 	 */
 	public void setPtjGroup(List<PmPtjGroup> ptjGroup) {
 		this.ptjGroup = ptjGroup;
@@ -534,7 +477,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmPtjGroup the pmPtjGroup to set
+	 * @param pmPtjGroup
+	 *            the pmPtjGroup to set
 	 */
 	public void setPmPtjGroup(PmPtjGroup pmPtjGroup) {
 		this.pmPtjGroup = pmPtjGroup;
@@ -548,7 +492,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param agOffice the agOffice to set
+	 * @param agOffice
+	 *            the agOffice to set
 	 */
 	public void setAgOffice(List<PmAgOffice> agOffice) {
 		this.agOffice = agOffice;
@@ -562,7 +507,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmOrgProfile the pmOrgProfile to set
+	 * @param pmOrgProfile
+	 *            the pmOrgProfile to set
 	 */
 	public void setPmOrgProfile(List<PmOrgProfile> pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
@@ -576,7 +522,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param orgProfileList the orgProfileList to set
+	 * @param orgProfileList
+	 *            the orgProfileList to set
 	 */
 	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
 		this.orgProfileList = orgProfileList;
@@ -590,7 +537,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmFinancialOrg the pmFinancialOrg to set
+	 * @param pmFinancialOrg
+	 *            the pmFinancialOrg to set
 	 */
 	public void setPmFinancialOrg(List<PmFinancialOrg> pmFinancialOrg) {
 		this.pmFinancialOrg = pmFinancialOrg;
@@ -604,7 +552,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmFinancialAcc the pmFinancialAcc to set
+	 * @param pmFinancialAcc
+	 *            the pmFinancialAcc to set
 	 */
 	public void setPmFinancialAcc(List<PmFinancialAcc> pmFinancialAcc) {
 		this.pmFinancialAcc = pmFinancialAcc;
@@ -618,7 +567,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedPmFinancialAcc the selectedPmFinancialAcc to set
+	 * @param selectedPmFinancialAcc
+	 *            the selectedPmFinancialAcc to set
 	 */
 	public void setSelectedPmFinancialAcc(
 			List<PmFinancialAcc> selectedPmFinancialAcc) {
@@ -633,13 +583,12 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedPmOrgProfile the selectedPmOrgProfile to set
+	 * @param selectedPmOrgProfile
+	 *            the selectedPmOrgProfile to set
 	 */
 	public void setSelectedPmOrgProfile(List<PmOrgProfile> selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
-
-	
 
 	/**
 	 * @return the ptjGroupList
@@ -649,7 +598,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param ptjGroupList the ptjGroupList to set
+	 * @param ptjGroupList
+	 *            the ptjGroupList to set
 	 */
 	public void setPtjGroupList(List<PmPtjGroup> ptjGroupList) {
 		this.ptjGroupList = ptjGroupList;
@@ -663,7 +613,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedPtjGroup the selectedPtjGroup to set
+	 * @param selectedPtjGroup
+	 *            the selectedPtjGroup to set
 	 */
 	public void setSelectedPtjGroup(List<PmPtjGroup> selectedPtjGroup) {
 		this.selectedPtjGroup = selectedPtjGroup;
@@ -677,7 +628,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param supplierUsers the supplierUsers to set
+	 * @param supplierUsers
+	 *            the supplierUsers to set
 	 */
 	public void setSupplierUsers(DualListModel<PmUser> supplierUsers) {
 		this.supplierUsers = supplierUsers;
@@ -691,7 +643,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param sourceUsers the sourceUsers to set
+	 * @param sourceUsers
+	 *            the sourceUsers to set
 	 */
 	public void setSourceUsers(List<PmUser> sourceUsers) {
 		this.sourceUsers = sourceUsers;
@@ -705,7 +658,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedUsers the selectedUsers to set
+	 * @param selectedUsers
+	 *            the selectedUsers to set
 	 */
 	public void setSelectedUsers(List<PmUser> selectedUsers) {
 		this.selectedUsers = selectedUsers;
@@ -719,7 +673,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedTabIndex the selectedTabIndex to set
+	 * @param selectedTabIndex
+	 *            the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
@@ -733,12 +688,43 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedPtj the selectedPtj to set
+	 * @param selectedPtj
+	 *            the selectedPtj to set
 	 */
 	public void setSelectedPtj(PmPtjGroup selectedPtj) {
 		this.selectedPtj = selectedPtj;
 	}
 
-	
+	/**
+	 * @return the financialOrg
+	 */
+	public PmFinancialOrg getFinancialOrg() {
+		return financialOrg;
+	}
+
+	/**
+	 * @param financialOrg
+	 *            the financialOrg to set
+	 */
+	public void setFinancialOrg(PmFinancialOrg financialOrg) {
+		this.financialOrg = financialOrg;
+	}
+
+	/**
+	 * @return the organisationSearchBean
+	 */
+	public OrganisationSearchBean getOrganisationSearchBean() {
+		if(organisationSearchBean== null){
+			organisationSearchBean= new OrganisationSearchBean();
+		}
+		return organisationSearchBean;
+	}
+
+	/**
+	 * @param organisationSearchBean the organisationSearchBean to set
+	 */
+	public void setOrganisationSearchBean(OrganisationSearchBean organisationSearchBean) {
+		this.organisationSearchBean = organisationSearchBean;
+	}
 
 }

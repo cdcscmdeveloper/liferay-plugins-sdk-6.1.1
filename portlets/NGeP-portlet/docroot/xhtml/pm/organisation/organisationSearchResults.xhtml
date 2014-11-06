@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.pm.organisation.result']}" 
+		toggleable="true">
+		<p:dataTable id="searchOrganisation" var="organisation"
+			value="#{organisationBackingBean.searchOrganisation}"
+			rowIndexVar="index" lazy="true">
+
+			<ac:paginator for="searchOrganisation"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}"
+				style="width :15%">
+				<h:outputText value="#{organisation.pmOrgValidity.orgCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
+				style="width :40%">
+				<h:outputText value="#{organisation.pmOrgValidity.orgName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.status']}">  
+	            #{(organisation.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+	         </p:column>
+			<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
+				style="width :5%">
+				<p:commandLink
+					action="#{organisationBackingBean.editOrganization(organisation)}"
+					update="@form">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						title="Edit Organisation"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<div class="ppRightBtn">
+
+		<p:commandButton id="addLocation"
+			value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"
+			action="#{organisationBackingBean.addOrganisation()}" />
+	</div>
+</ui:composition>

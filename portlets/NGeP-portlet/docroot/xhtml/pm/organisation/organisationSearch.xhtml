@@ -1,31 +1,72 @@
-<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="orgSearchPanel"
+		header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
+		<br />
+		<table class="ppTwoTable">
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgType']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgTypeCode}">
+						<f:selectItems
+							value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
+					</p:selectOneMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgCode']}" /></th>
+				<td><p:inputText styleClass="ppDisplayTextM" maxlength="10"
+						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgCode}" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
 
-	<p:panel>
-		<h:panelGrid columns="2">
-			<h:outputLabel value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel>
-			<p:selectOneMenu
-				value="#{organisationBackingBean.managedBean.orgTypeCode}"
-				style="width: 275px;margin-bottom: 5px;">
-				<f:selectItems
-					value="#{organisationBackingBean.getOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
-			</p:selectOneMenu>
-			<h:outputLabel value="#{lbl['lbl.pm.organisation.orgCode']}"></h:outputLabel>
-			<p:inputText value="#{organisationBackingBean.managedBean.orgCode}"
-				size="40" />
-			<h:outputLabel value="#{lbl['lbl.pm.organisation.orgName']}"></h:outputLabel>
-			<p:inputText value="#{organisationBackingBean.managedBean.orgName}"
-				size="40" />
-			<h:outputLabel value="#{lbl['lbl.pm.organisation.status']}"></h:outputLabel>
-			<p:selectOneMenu
-				value="#{organisationBackingBean.managedBean.orgStatus}"
-				style="width: 135px;margin-bottom: 5px;">
-				<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
-			</p:selectOneMenu>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgName']}" /></th>
+				<td><p:inputText styleClass="ppDisplayTextM"
+						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgName}"
+						maxlength="50" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
 
-		</h:panelGrid>
+			</tr>
+
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.status']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgStatus}">
+						<f:selectItems
+							value="#{organisationBackingBean.getStatusOptions()}" />
+					</p:selectOneMenu></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+
+			<tr>
+				<td colspan="4">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{organisationBackingBean.searchOrganisation}"
+							update="searchOrganisation" process="orgSearchPanel"
+							icon="ui-icon-search"
+							 />
+						&#160;
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							update="orgSearchPanel" icon="ui-icon-reset"
+							action="#{organisationBackingBean.resetOrganisationSearchBean}" />
+					</div>
+
+				</td>
+			</tr>
+		</table>
 	</p:panel>
+
 </ui:composition>
