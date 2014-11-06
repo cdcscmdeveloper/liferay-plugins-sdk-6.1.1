@@ -529,34 +529,35 @@ public class SmCommonUtil {
 
 	public static SmPersonnleCalcVO displayBumiRecommendNote(
 			List<SmSupplierBank> smSupplierBankList,
-			SmPersonnleCalcVO persCalcVo, String outputPage, String applType,
-			String supplType, BigDecimal bumiPercentage, boolean supplUser) {
+			List<SmPersonnel> smPersonnelList, SmPersonnleCalcVO persCalcVo,
+			String outputPage, String applType, String supplType,
+			BigDecimal bumiPercentage, boolean supplUser) {
 		if (supplType.equals("K")
 				&& (applType
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI))) {
+			persCalcVo.setNonBumiSignatoryBank("");
 			setBumiStatus(persCalcVo, bumiPercentage);
-			setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList);
-
-			String[] params = null;
+			setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList,
+					smPersonnelList);
 
 			if (persCalcVo.isBumiStatus()) {
 				if (StringUtils.isEmpty(persCalcVo.getNonBumiSignatoryBank())) {
 					if (supplUser) {
 						persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.supplier.bumi", params));
+								"lbl.sm.recommend.supplier.bumi", null));
 					} else {
 						persCalcVo.setBumiRecommendNote(getMessage(
-								"lbl.sm.recommend.poapprover.bumi", params));
+								"lbl.sm.recommend.poapprover.bumi", null));
 					}
 				} else {
-					params = new String[1];
-					params[0] = persCalcVo.getNonBumiSignatoryBank();
 					if (supplUser) {
 						persCalcVo.setBumiRecommendNote(getMessage(
 								"lbl.sm.recommend.supplier.sign.nonbumi",
-								params));
+								null));
 					} else {
+						String[] params = { "" };
+						params[0] = persCalcVo.getNonBumiSignatoryBank();
 						persCalcVo.setBumiRecommendNote(getMessage(
 								"lbl.sm.recommend.poapprover.sign.nonbumi",
 								params));
@@ -565,24 +566,26 @@ public class SmCommonUtil {
 			} else {
 				if (supplUser) {
 					persCalcVo.setBumiRecommendNote(getMessage(
-							"lbl.sm.recommend.supplier.nonbumi", params));
+							"lbl.sm.recommend.supplier.nonbumi", null));
 				} else {
 					persCalcVo.setBumiRecommendNote(getMessage(
-							"lbl.sm.recommend.poapprover.nonbumi", params));
+							"lbl.sm.recommend.poapprover.nonbumi", null));
 				}
 			}
 		}
 		return persCalcVo;
 	}
 
-	public static void setAllBankSignatoriesNonBumi(
+	private static void setAllBankSignatoriesNonBumi(
 			SmPersonnleCalcVO persCalcVo,
-			List<SmSupplierBank> smSupplierBankList) {
+			List<SmSupplierBank> smSupplierBankList,
+			List<SmPersonnel> smPersonnelList) {
 		StringBuffer sb = new StringBuffer();
 		String bankSignatoryNonBumi = "";
 
 		for (SmSupplierBank smSupplierBank : smSupplierBankList) {
-			bankSignatoryNonBumi = getBankSignatoryNonBumi(smSupplierBank);
+			bankSignatoryNonBumi = getBankSignatoryNonBumi(smSupplierBank,
+					smPersonnelList);
 			if (!StringUtils.isEmpty(bankSignatoryNonBumi)) {
 				sb.append(bankSignatoryNonBumi).append(",");
 			}
@@ -595,10 +598,11 @@ public class SmCommonUtil {
 		persCalcVo.setNonBumiSignatoryBank(bankSignatoryNonBumi);
 	}
 
-	private static String getBankSignatoryNonBumi(SmSupplierBank smSupplierBank) {
+	private static String getBankSignatoryNonBumi(
+			SmSupplierBank smSupplierBank, List<SmPersonnel> smPersonnelList) {
 		String bankRetVal = "";
 		for (SmChequeSignatory sign : smSupplierBank.getSmChequeSignatories()) {
-			if (!sign.getSmPersonnel().isBumi()) {
+			if (sign.getSmPersonnel().getBumiFlg()==0) {
 				bankRetVal = smSupplierBank.getPmFinancialOrg().getFinOrgName();
 				break;
 			}
@@ -615,18 +619,18 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
-	private static String getMessage(String key, String[] params) {
+	public static String getMessage(String key, String[] params) {
 		Locale locale = new FacesScopes().getUserLocale();
 		String msg = "";
-		
-		if(params!=null){
-			msg = ResourceBundleUtils.getMessage(key,params,
+
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-		}else{
+		} else {
 			msg = ResourceBundleUtils.getMessage(key,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-			
+
 		return msg;
 	}
 
