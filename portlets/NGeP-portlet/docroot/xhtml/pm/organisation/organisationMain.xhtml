@@ -1,84 +1,18 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
 	<ui:define name="contentSection">
-		<p:panel>
-			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
-		</p:panel>
-		<p:panel id="orgSearch" header="#{lbl['lbl.pm.header.general.org.search']}"
-			toggleable="true">
-			<h:panelGrid id="organisationSearchr"  columns="2">
-				<h:column>
-
-					<ui:include src="/xhtml/pm/organisation/organisationSearch.xhtml" />
-				</h:column>
-
-			</h:panelGrid>
-			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
-				width="100%">
-				<h:column>
-				<div align="right">
-						<p:commandButton  value="#{lbl['lbl.pm.organisation.search']}"
-							icon="ui-icon-search" action="#{organisationBackingBean.searchOrg}"
-							update="organisationSearch" process="orgSearch" />
-						<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
-							icon="ui-icon-reset" type="reset"
-							actionListener="#{organisationBackingBean.resetOrganisation}" process="@this"
-							update="orgSearch" />
-					</div>					
-				</h:column>
-			</h:panelGrid>
-		</p:panel>
-		<p:panel header="#{lbl['lbl.pm.organisation.result']}"
-			toggleable="true">
-			<p:dataTable id="organisationSearch" var="organisation"
-				value="#{organisationBackingBean.searchOrganisation}"
-				rowIndexVar="index" lazy="true">
-
-				<ac:paginator for="organisationSearch"></ac:paginator>
-
-				<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}"
-					style="width :15%">
-					<h:outputText value="#{organisation.pmOrgValidity.orgCode}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
-					style="width :40%">
-					<h:outputText value="#{organisation.pmOrgValidity.orgName}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.organisation.status']}"
-					style="width :15%">
-
-					<h:outputText value="Active"
-						rendered="#{organisation.recordStatusFlg == '1'}" />					
-					<h:outputText value="Inactive"
-						rendered="#{organisation.recordStatusFlg == '0'}" />
-					
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
-					style="width :5%">
-					<p:commandLink
-						action="#{organisationBackingBean.editOrganization(organisation)}"
-						update="@form">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							title="Edit Organisation"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
-		<div class="ppRightBtn">
-
-			<p:commandButton id="addLocation"
-				value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"
-				action="#{organisationBackingBean.addOrganisation()}" />
-		</div>
-
-	</ui:define>
-
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<!-- Search -->
+		<ui:include src="organisationSearch.xhtml"/>
+		<!-- Result -->
+		<ui:include src="organisationSearchResults.xhtml"/>
+ 	</ui:define>
 </ui:composition>

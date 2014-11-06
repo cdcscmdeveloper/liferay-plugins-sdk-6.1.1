@@ -21,6 +21,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "financialOrgManagedBean")
@@ -33,15 +34,12 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	private static final long serialVersionUID = 1L;
 	// Financial Search
-	private String orgName;
-	private String regNumber;
-	private String regTypeId;
-	private String orgStatus;
-	private String serviceType;
-	
+	private FinancialOrgSearchBean financialOrgSearchBean;
+
 	private int selectedTabIndex;
 
 	// Financial Svc
+	private String regType;
 	private PmFinancialSvc financialSvc;
 	private List<PmFinancialSvc> pmFinancialSvc;
 	private List<PmFinancialSvc> pmFinancialSvcUpdate;
@@ -91,8 +89,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private Date currentDate = new Date();
 
 	public FinancialOrgManagedBean() {
-		addressType= new ArrayList<PmAddressType>();
-		pmContact= new ArrayList<PmContact>();
+		addressType = new ArrayList<PmAddressType>();
+		pmContact = new ArrayList<PmContact>();
 		pmAddress = new PmAddress();
 		pmAddressType = new PmAddressType();
 		contactPerson = new PmContact();
@@ -101,12 +99,12 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		pmAddress.setPmDistrict(new PmDistrict());
 		pmAddress.setPmCountry(new PmCountry());
 		pmAddress.setPmState(new PmState());
-//pmAddress.setPmDivision(new PmDivision());
+		// pmAddress.setPmDivision(new PmDivision());
 		pmAddressType.setPmAddress(pmAddress);
 		financialOrg.setPmCountry(new PmCountry());
 		// Branch Address
-		branchAddressList= new ArrayList<PmAddressType>();
-		branchContact= new ArrayList<PmContact>();
+		branchAddressList = new ArrayList<PmAddressType>();
+		branchContact = new ArrayList<PmContact>();
 		branchAddress = new PmAddress();
 		branchAddressType = new PmAddressType();
 		branchContactPerson = new PmContact();
@@ -116,10 +114,9 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		branchAddress.setPmDistrict(new PmDistrict());
 		branchAddress.setPmCountry(new PmCountry());
 		branchAddress.setPmState(new PmState());
-		//branchAddress.setPmDivision(new PmDivision());
-		//branchAddressType.setPmAddress(branchAddress);
-		orgProfileList= new ArrayList<PmOrgProfile>();
-		
+		// branchAddress.setPmDivision(new PmDivision());
+		// branchAddressType.setPmAddress(branchAddress);
+		orgProfileList = new ArrayList<PmOrgProfile>();
 
 	}
 
@@ -260,8 +257,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.branchAddressType = branchAddressType;
 	}
 
-	
-
 	/**
 	 * @return the branchAddressList
 	 */
@@ -270,7 +265,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchAddressList the branchAddressList to set
+	 * @param branchAddressList
+	 *            the branchAddressList to set
 	 */
 	public void setBranchAddressList(List<PmAddressType> branchAddressList) {
 		this.branchAddressList = branchAddressList;
@@ -345,53 +341,12 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.financialSvc = financialSvc;
 	}
 
-	public String getOrgName() {
-		return orgName;
-	}
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
-
-	public String getRegNumber() {
-		return regNumber;
-	}
-
-	public void setRegNumber(String regNumber) {
-		this.regNumber = regNumber;
-	}
-
-	public String getServiceType() {
-		return serviceType;
-	}
-
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
-
-	
-
 	public PmAddressType getPmAddressType() {
 		return pmAddressType;
 	}
 
 	public void setPmAddressType(PmAddressType pmAddressType) {
 		this.pmAddressType = pmAddressType;
-	}
-
-	/**
-	 * @return the orgStatus
-	 */
-	public String getOrgStatus() {
-		return orgStatus;
-	}
-
-	/**
-	 * @param orgStatus
-	 *            the orgStatus to set
-	 */
-	public void setOrgStatus(String orgStatus) {
-		this.orgStatus = orgStatus;
 	}
 
 	public List<PmFinancialSvc> getPmFinancialSvc() {
@@ -507,21 +462,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @return the regTypeId
-	 */
-	public String getRegTypeId() {
-		return regTypeId;
-	}
-
-	/**
-	 * @param regTypeId
-	 *            the regTypeId to set
-	 */
-	public void setRegTypeId(String regTypeId) {
-		this.regTypeId = regTypeId;
-	}
-
-	/**
 	 * @return the financialOrg
 	 */
 	public PmFinancialOrg getFinancialOrg() {
@@ -604,9 +544,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmFinancialSvcUpdate the pmFinancialSvcUpdate to set
+	 * @param pmFinancialSvcUpdate
+	 *            the pmFinancialSvcUpdate to set
 	 */
-	public void setPmFinancialSvcUpdate(List<PmFinancialSvc> pmFinancialSvcUpdate) {
+	public void setPmFinancialSvcUpdate(
+			List<PmFinancialSvc> pmFinancialSvcUpdate) {
 		this.pmFinancialSvcUpdate = pmFinancialSvcUpdate;
 	}
 
@@ -618,7 +560,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedTabIndex the selectedTabIndex to set
+	 * @param selectedTabIndex
+	 *            the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
@@ -632,10 +575,43 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedFinancialSvc the selectedFinancialSvc to set
+	 * @param selectedFinancialSvc
+	 *            the selectedFinancialSvc to set
 	 */
 	public void setSelectedFinancialSvc(PmFinancialSvc selectedFinancialSvc) {
 		this.selectedFinancialSvc = selectedFinancialSvc;
+	}
+
+	/**
+	 * @return the financialOrgSearchBean
+	 */
+	public FinancialOrgSearchBean getFinancialOrgSearchBean() {
+		if (financialOrgSearchBean == null)
+			financialOrgSearchBean = new FinancialOrgSearchBean();
+		return financialOrgSearchBean;
+	}
+
+	/**
+	 * @param financialOrgSearchBean
+	 *            the financialOrgSearchBean to set
+	 */
+	public void setFinancialOrgSearchBean(
+			FinancialOrgSearchBean financialOrgSearchBean) {
+		this.financialOrgSearchBean = financialOrgSearchBean;
+	}
+
+	/**
+	 * @return the regType
+	 */
+	public String getRegType() {
+		return regType;
+	}
+
+	/**
+	 * @param regType the regType to set
+	 */
+	public void setRegType(String regType) {
+		this.regType = regType;
 	}
 
 }

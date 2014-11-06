@@ -37,7 +37,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -55,6 +54,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -71,6 +71,8 @@ public class FinancialOrgBackingBean extends
 	// Tab values
 	public static final int GENERRAL = 0;
 	public static final int FACTRING_BRANCH = 1;
+	// Navigation Details
+	public static final String NAV_TO_SEARCH = "financialOrgSearchMain";
 	private IPagingDataModel<PmFinancialOrg> searchFinancialOrg = new FinancialOrgPagingDataModel();
 
 	public FinancialOrgBackingBean() {
@@ -79,12 +81,63 @@ public class FinancialOrgBackingBean extends
 
 	}
 
+	public void preLoading() {
+		log.info("preLoading");
+		// load critical mappers
+
+		this.resetFinancialOrgSearchBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_SEARCH);
+	}
+
 	public int getGeneralInfoTab() {
 		return GENERRAL;
 	}
 
 	public int getFactringBranchInfoTab() {
 		return FACTRING_BRANCH;
+	}
+
+	private ISearchBean<PmFinancialOrg> getSearchBeanData(
+			ISearchBean<PmFinancialOrg> searchBean) {
+		log.info("getSearchBeanData - Start");
+		FinancialOrgSearchBean fSearchBean = this.getManagedBean()
+				.getFinancialOrgSearchBean();
+		if (fSearchBean.getOrgName() != null
+				&& fSearchBean.getOrgName().trim().length() > 0) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("finOrgName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getFinancialOrgSearchBean()
+									.getOrgName(), true));
+		}
+
+		if (fSearchBean.getServiceType() != null
+				&& fSearchBean.getServiceType().trim().length() > 0) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmFinancialSvcs.serviceTypeCode.parameterCode",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getFinancialOrgSearchBean()
+									.getServiceType()));
+		}
+		if (fSearchBean.getOrgStatus() != null&& fSearchBean.getOrgStatus().trim().length() > 0) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getFinancialOrgSearchBean()
+									.getOrgStatus()));
+		}
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("bizRegNumber",
+						SearchOperator.OPERATOR_LIKE.value(), getManagedBean()
+								.getFinancialOrgSearchBean().getRegNumber()));
+
+		
+
+		log.info("getSearchBeanData - End");
+		return searchBean;
 	}
 
 	private class FinancialOrgPagingDataModel extends
@@ -104,34 +157,8 @@ public class FinancialOrgBackingBean extends
 			try {
 
 				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-
-				if (getManagedBean().getOrgName() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("finOrgName",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getOrgName(), true));
-				}
-
-				if (getManagedBean().getServiceType() != null) {
-					searchBean
-							.getDataFilterBeans()
-							.add(new SearchFilterBean(
-									"pmFinancialSvcs.serviceTypeCode.parameterCode",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getServiceType()));
-				}
-				if (getManagedBean().getOrgStatus() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recordStatusFlg",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getOrgStatus()));
-				}
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("bizRegNumber",
-								SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getRegNumber()));
-
-				reqDTO.setFinancialSearchBean(searchBean);
+				ISearchBean<PmFinancialOrg> searchBeanData = getSearchBeanData(searchBean);
+				reqDTO.setFinancialSearchBean(searchBeanData);
 				financialOrgSO = (IFinancialOrgSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -177,7 +204,7 @@ public class FinancialOrgBackingBean extends
 				new ArrayList<PmFinancialAcc>());
 		getManagedBean().setPmFinancialSvc(new ArrayList<PmFinancialSvc>());
 		getManagedBean().getFinancialOrg().setRecordStatusFlg(null);
-		getManagedBean().setRegTypeId(null);
+
 		getManagedBean().setPmAddress(new PmAddress());
 		getManagedBean().setContactPerson(new PmContact());
 		getManagedBean().getPmAddress().setPmCountry(new PmCountry());
@@ -198,14 +225,6 @@ public class FinancialOrgBackingBean extends
 
 		resetFinOrg();
 		return "/xhtml/pm/financialorg/financialOrgSearchMain.xhtml";
-
-	}
-
-	public void reset() {
-		this.getManagedBean().setOrgName(null);
-		this.getManagedBean().setRegNumber(null);
-		this.getManagedBean().setServiceType(null);
-		this.getManagedBean().setOrgStatus(null);
 
 	}
 
@@ -682,11 +701,11 @@ public class FinancialOrgBackingBean extends
 
 		if (financialSvc != null && financialSvc.isBrandNew()) {
 			if (this.getManagedBean().getSelectedPmFinancialSvc() == null) {
-				
+
 				this.getManagedBean().setSelectedPmFinancialSvc(
 						new ArrayList<PmFinancialSvc>());
 			}
-			
+
 			this.getManagedBean().getSelectedPmFinancialSvc()
 					.remove(financialSvc);
 		}
@@ -921,6 +940,15 @@ public class FinancialOrgBackingBean extends
 
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getStatusOptions();
+	}
+
+	/**
+	 * reset search bean fields
+	 */
+	public void resetFinancialOrgSearchBean() {
+		log.info("resetFinancialOrgSearchBean");
+		this.getManagedBean().setFinancialOrgSearchBean(
+				new FinancialOrgSearchBean());
 	}
 
 	private PmAddress setDefaultAddr() {
