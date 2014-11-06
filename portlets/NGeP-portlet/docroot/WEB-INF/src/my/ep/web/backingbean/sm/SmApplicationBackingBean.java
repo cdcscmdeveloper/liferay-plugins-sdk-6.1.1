@@ -5636,7 +5636,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setValidSmUserLimit(
 				SmApplicationUtil.validatePersonLimit(getManagedBean()
 						.getSmAppl().getSmSupplier().getSupplierId(),
-						getManagedBean().getSmAppl().getApplType()));
+						getManagedBean().getSmAppl().getApplType(), getManagedBean().getSmAppl().getApplId()));
 	}
 
 	private void calculateBumiPercentageTotals() {
