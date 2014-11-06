@@ -802,20 +802,23 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void deleteBusinessOwner() {
 		debugLogger("deleteBusinessOwner");
-		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
-				.getScCommitteeMemberList();
-		List<ScCommitteeMember> selectedList = new ArrayList<ScCommitteeMember>();
+		int count = 0;
+		List<ScCommitteeMember> committeeMemberList = this.getManagedBean().getScCommitteeMemberList();
 		for (int i = 0; i < committeeMemberList.size(); i++) {
 			ScCommitteeMember member = committeeMemberList.get(i);
 			if (member.isSelected()) {
+				count++;
 				committeeMemberList.remove(member);
-				if (null != member.getCommitteeMemberId()) {
+				/*if (null != member.getCommitteeMemberId()) {
 					member.setDeleted(true);
 					selectedList.add(member);
-				}
+				}*/
 			}
 		}
-		this.getManagedBean().setToBeDelCommitteMemebers(selectedList);
+		if(count < 1) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
+		//this.getManagedBean().setToBeDelCommitteMemebers(selectedList);
 		ScQtCommittee qtCommittee = getManagedBean().getScQtCommittee();
 		ScCommittee scCommittee = qtCommittee.getScCommittee();
 		scCommittee.setScCommitteeMembers(committeeMemberList);
@@ -979,10 +982,12 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		return null;
 	}
-
+	
 	public String createBusinessOwner() {
+		debugLogger("createBusinessOwner");
+		this.getManagedBean().setEditable(false);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+		reqDTO.setOrgProfileId(getManagedBean().getQt().getPmOrgProfile().getOrgProfileId());
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 		PmOrgProfile orgProfile = resDTO.getPmOrgProfile();
