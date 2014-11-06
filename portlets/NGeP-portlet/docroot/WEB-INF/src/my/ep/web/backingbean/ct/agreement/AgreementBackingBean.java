@@ -453,7 +453,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
 			throw new EpException(MessageConst.ERROR_100023,new String[] { "Agency Witness" });
 		} else {
-		//	validateAgencySupWitnes();
+		
 			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
 				if (agencyWitness.getOfficerName() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Name of Agency Witness" });
@@ -464,11 +464,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (agencyWitness.getOfficerPosition() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Position of Agency Witness" });
 				}
-				/*if(getManagedBean().getIcNo().contains(agencyWitness.getOfficerIc())){
-					throw new EpException(MessageConst.WARN_755000);
-				} else {
-					getManagedBean().getIcNo().add(agencyWitness.getOfficerIc());
-				}*/
+	           checkDuplicateAgencyWitness(agencyWitness.getOfficerIc());
 			}
 		}
 
@@ -485,8 +481,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getCtSupplierWitness().size() == 0) {
 			   throw new EpException(MessageConst.ERROR_100023,new String[] { "Supplier Witness" });
 		} else {
-	//		validateAgencySupWitnes();
-			for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
+	    	for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
 				if (supplierWitness.getOfficerName() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Name of Supplier Witness" });
 				}
@@ -496,11 +491,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (supplierWitness.getOfficerPosition() == null) {
 					throw new EpException(MessageConst.ERROR_100022,new String[] { "Postion of Supplier Witness" });
 				}
-				/*if(getManagedBean().getIcNo().contains(supplierWitness.getOfficerIc())){
-					throw new EpException(MessageConst.WARN_755000);
-				} else {
-					getManagedBean().getIcNo().add(supplierWitness.getOfficerIc());
-				}*/
+				checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
 			}
 		}
 	}
@@ -1319,7 +1310,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		     try {    
 			           
 		    	 validateSupplierWitnes();
-			     getManagedBean().setSupplierOfficerIcNo(new ArrayList<String>());
+			     getManagedBean().setSupplierWitnessIcNo(new ArrayList<String>());
 			     if(getManagedBean().getCtSupplierWitness() != null && !getManagedBean().getCtSupplierWitness().isEmpty()) {
 			       	   for(CtAgreementParty suplierWitness : getManagedBean().getCtSupplierWitness()) {
 			       	            	
@@ -1328,8 +1319,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			       		                getManagedBean().setValidateWitness(true);
 			       		                throw new EpException(MessageConst.WARN_760000, new String[]{suplierWitness.getOfficerIc()});
 			       	     
-			       	         } else if (getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty()
-			       	        		  && getManagedBean().getSupplierOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
+			       	         } else if (getManagedBean().getSupplierWitnessIcNo() != null && !getManagedBean().getSupplierWitnessIcNo().isEmpty()
+			       	        		  && getManagedBean().getSupplierWitnessIcNo().contains(suplierWitness.getOfficerIc())) {
 				                	    getManagedBean().setValidateWitness(true);
 		       		                    throw new EpException(MessageConst.WARN_761000, new String[]{suplierWitness.getOfficerIc()});
 			       	      
@@ -1386,6 +1377,32 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 	}
 
+	public void checkDuplicateAgencyWitness(String str){
+		
+			   if(getManagedBean().getAgencyOfficerIcNo().contains(str)) {
+	       		      throw new EpException(MessageConst.WARN_756000, new String[]{str});
+	       	   } else if(getManagedBean().getAgencyWitnessIcNo().contains(str)){
+		                	  throw new EpException(MessageConst.WARN_757000, new String[]{str});
+	           }  else if(getManagedBean().getSupplierOfficerIcNo().contains(str)){
+	                    throw new EpException(MessageConst.WARN_760000, new String[]{str});
+       		   }  else if(getManagedBean().getSupplierWitnessIcNo().contains(str)){
+		               throw new EpException(MessageConst.WARN_763000, new String[]{str});
+	       	   } 
+	}
+	
+	public void checkDuplicateSupplierWitness(String str){
+		
+		 if(getManagedBean().getSupplierOfficerIcNo().contains(str)) {
+		        throw new EpException(MessageConst.WARN_760000, new String[]{str});
+	      } else if (getManagedBean().getSupplierWitnessIcNo().contains(str)) {
+               throw new EpException(MessageConst.WARN_761000, new String[]{str});
+	      } else if (getManagedBean().getAgencyOfficerIcNo().contains(str)) {
+        	   throw new EpException(MessageConst.WARN_756000, new String[]{str});
+          } else if(getManagedBean().getAgencyWitnessIcNo().contains(str)){
+	             throw new EpException(MessageConst.WARN_762000, new String[]{str});
+          }
+    }
+	
 	public boolean isSupplementValue() {
 		return supplementValue;
 	}
