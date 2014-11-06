@@ -5898,22 +5898,22 @@ public class SmApplicationBackingBean extends
 			String suppType = "";
 
 			if (getManagedBean().isSupplierUser()) {
-				suppType = applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? getManagedBean()
-						.getNewSupplierType() : getManagedBean().getSmAppl()
-						.getSupplierType();
+				suppType = applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? (getManagedBean()
+						.getNewSupplierType() == null ? "" : getManagedBean()
+						.getNewSupplierType()) : (getManagedBean().getSmAppl()
+						.getSupplierType() == null ? "" : getManagedBean()
+						.getSmAppl().getSupplierType());
 			} else {
 				suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
 						: getManagedBean().getSmAppl().getSupplierType();
 			}
 			getManagedBean().setBumiRecommendationNote(
-					SmCommonUtil.displayBumiRecommendNote(
-							getManagedBean().getSmAppl().getSmSupplierBanks(),
-							getManagedBean().getPersonCalc(),
-							getManagedBean().getCurrentPageType(), applType,
-							suppType,
+					SmCommonUtil.displayBumiRecommendNote(getManagedBean()
+							.getSmAppl().getSmSupplierBanks(), getManagedBean()
+							.getPersonCalc(), getManagedBean()
+							.getCurrentPageType(), applType, suppType,
 							getManagedBean().getBumiEquityPercentage(),
-							getManagedBean().isSupplierUser())
-							.getBumiRecommendNote());
+							getManagedBean().isSupplierUser()));
 		}
 
 	}
