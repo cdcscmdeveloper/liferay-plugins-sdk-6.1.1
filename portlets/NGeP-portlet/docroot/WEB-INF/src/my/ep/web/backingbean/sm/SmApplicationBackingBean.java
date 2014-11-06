@@ -2343,7 +2343,9 @@ public class SmApplicationBackingBean extends
 				retrievePmStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
-		getManagedBean().setFacilityType("FACTORY");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.factory", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("factoryDialog.show()");
 	}
