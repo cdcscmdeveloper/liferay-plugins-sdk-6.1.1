@@ -21,6 +21,7 @@
 				listener="#{contractRequestBackingBean.selectAddrEvent()}" />			
 			<p:column>
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
+					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
@@ -90,6 +91,7 @@
 				oncomplete="addDeliveryAddr.show();" />
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
+				disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				title="#{lbl['lbl.fl.tooltip.other.address']}"
 				oncomplete="addManualDeliveryAddr.show();" >
@@ -101,7 +103,7 @@
 				icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 				title="#{lbl['lbl.fl.tooltip.delete']}"
-				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide}">
+				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide or contractRequestBackingBean.managedBean.buttonVal=='View'}">
 			</p:commandButton>
 
 		</div>

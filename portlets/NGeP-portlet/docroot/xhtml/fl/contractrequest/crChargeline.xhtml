@@ -24,6 +24,7 @@
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
 					rendered="#{chargeLineNode.parent == 'true'}"
+					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 					listener="#{contractRequestBackingBean.selectCheckbox}"

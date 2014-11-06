@@ -135,6 +135,7 @@
 						showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryDate}"
@@ -148,6 +149,7 @@
 						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
 						maxdate="#{purchaseRequestBackingBean.managedBean.maxDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />

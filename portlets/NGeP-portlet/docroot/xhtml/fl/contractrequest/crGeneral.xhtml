@@ -129,7 +129,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:calendar mode="popup" showOn="button" 
-						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
+						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal=='View'}" 
 						readonlyInput="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
@@ -146,7 +146,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
 				<td><p:calendar mode="popup" showOn="button" id="delEndDate" 
-						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
+						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal=='View'}" 
 						readonlyInput="true"
 						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
 						maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
