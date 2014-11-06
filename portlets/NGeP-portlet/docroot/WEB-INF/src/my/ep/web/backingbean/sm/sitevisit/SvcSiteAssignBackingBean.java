@@ -41,7 +41,7 @@ public class SvcSiteAssignBackingBean extends
 	}
 
 	public void retrieveSiteAssignInfo() {
-		//this.getManagedBean().setAppId(1009);
+		this.getManagedBean().setAppId(1009);
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
@@ -127,7 +127,7 @@ public class SvcSiteAssignBackingBean extends
 	}
 	
 	public void validateForm(){
-		if(this.getManagedBean().getSvoUserList().getTarget().size() < 1){
+		if(this.getManagedBean().getSvoUserList().getTarget().size() < 2){
 			throw new EpException(MessageConst.ERROR_721201);
 		}else{
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
