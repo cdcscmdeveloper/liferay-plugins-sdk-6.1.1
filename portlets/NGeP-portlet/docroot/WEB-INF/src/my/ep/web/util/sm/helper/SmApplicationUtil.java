@@ -148,11 +148,12 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
-	public static boolean validatePersonLimit(Long supplierId, String applType) {
+	public static boolean validatePersonLimit(Long supplierId, String applType, Long applId) {
 		boolean validPerCount = true;
 		int count = 5;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
+		reqDTO.setApplId(applId);
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelResDTO resDTO = smPersonnelSO
