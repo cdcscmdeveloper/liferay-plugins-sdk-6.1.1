@@ -148,7 +148,8 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
-	public static boolean validatePersonLimit(Long supplierId, String applType, Long applId) {
+	public static boolean validatePersonLimit(Long supplierId, String applType,
+			Long applId) {
 		boolean validPerCount = true;
 		int count = 5;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -1161,7 +1162,10 @@ public class SmApplicationUtil {
 				System.out.println("*** Value **** " + s);
 				throw new EpException(
 						MessageConst.ERROR_722554,
-						new String[] { "sum of Bumi,Non-Bumi and Non-Malaysian amounts" });
+						new String[] { SmCommonUtil
+								.getMessage(
+										"lbl.sm.sum.equity.amount.bumi.nonbumi.nonmsia",
+										null) });
 			}
 		}
 		return validAmt;
