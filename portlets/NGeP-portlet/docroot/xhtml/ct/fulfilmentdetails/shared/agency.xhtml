@@ -86,7 +86,7 @@
 				</p:tooltip>
        		</p:commandButton> 
 			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"
-				rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+				rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}" >
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
 				</p:tooltip>
