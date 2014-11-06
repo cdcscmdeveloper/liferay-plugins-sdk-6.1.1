@@ -514,6 +514,18 @@ public class QTDetailBackingBean extends
 			debugLogger("org profile list should not be empty");
 		}
 	}
+	
+	public String gotoQtSearchPage() {
+		debugLogger("gotoQtSearchPage");
+		this.getManagedBean().setQt(null);
+		if (this.getManagedBean().getQt() == null) {
+			this.getManagedBean().setQt(new ScQt());
+		}
+		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
+			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
+		}
+		return QTConstants.SEARCH_PAGE;
+	}
 
 	/**
 	 * Method to return the maintance page

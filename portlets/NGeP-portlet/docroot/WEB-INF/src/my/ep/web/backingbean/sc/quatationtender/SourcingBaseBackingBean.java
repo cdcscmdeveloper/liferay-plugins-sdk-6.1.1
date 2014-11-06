@@ -695,10 +695,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
-	public String gotoQtSearchPage() {
-		return QTConstants.SEARCH_PAGE;
-	}
-
 	protected File generatePdfFromOracle(String reportName,
 			Map<String, String> paramMap, ScAttachment attachment)
 			throws IOException {
