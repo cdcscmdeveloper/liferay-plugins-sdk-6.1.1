@@ -13,7 +13,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.location.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="locationcode"
-						label="#{lbl['lbl.pm.location.type']}" style="width: 135px;margin-bottom: 5px;" 
+						label="#{lbl['lbl.pm.location.type']}"  styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;" 
 						value="#{locationBackingBean.managedBean.selectedType}"
 						required="true">
 						<f:selectItems
@@ -153,8 +153,24 @@
 							<f:selectItems var="stateLs"
 								value="#{locationBackingBean.managedBean.states}"
 								itemLabel="#{stateLs.stateName}" itemValue="#{stateLs.stateId}" />
-							<p:ajax event="change" update="stateIdd"  listener="#{locationBackingBean.retriveDistrictValues}" />
+							<p:ajax event="change" update="divisionval,stateIdd"  listener="#{locationBackingBean.retrieveDivisionList}" />
 						</p:selectOneMenu></td><td> <p:message id="statevalMsg" for="stateval" display="icon" /></td>
+				</tr>
+				<tr>
+					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+							value=" #{lbl['lbl.pm.division']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{locationBackingBean.managedBean.district.pmDivision.divisionId}"
+							id="divisionval" disabled="#{locationBackingBean.managedBean.divisionFlag}"  
+							label=" #{lbl['lbl.pm.state']}" required="#{locationBackingBean.managedBean.divisionFlag}"
+							style="width: 276px;margin-bottom: 5px;" >
+							<f:selectItem itemValue=" " itemLabel="---Select---" />
+							<f:selectItems var="divisionLs"
+								value="#{locationBackingBean.managedBean.divisions}"
+								itemLabel="#{divisionLs.divisionName}" itemValue="#{divisionLs.divisionId}" />
+							
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
@@ -230,9 +246,9 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.location.status']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="locationStatus"
-						label="#{lbl['lbl.pm.location.status']}"
+						label="#{lbl['lbl.pm.location.status']}" styleClass="ppDropDownWidthM"
 						value="#{locationBackingBean.managedBean.status}" required="true"
-						style="width: 135px;margin-bottom: 5px;" >
+						style="width: 135px;margin-bottom: 5px;"  disabled="true">
 						<f:selectItems
 					value="#{locationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td><td> <p:message id="locationStatusMsg" for="locationStatus"

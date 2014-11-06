@@ -20,6 +20,9 @@
 			<p:column headerText="#{lbl['lbl.pm.zone.name']}" style="width :30%">
 				<h:outputText value="#{zone.zoneName}" />
 			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.status']}">  
+	            #{(zone.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+	         </p:column>
 
 
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
@@ -32,7 +35,7 @@
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}"
+			<p:commandButton value="#{lbl['lbl.btn.create']}" icon="ui-icon-add"
 				action="#{zoneBackingBean.addZone()}" />
 		</div>
 

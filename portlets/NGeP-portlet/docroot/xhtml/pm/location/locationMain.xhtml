@@ -1,91 +1,18 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
 	<ui:define name="contentSection">
-		<p:messages showDetail="true" autoUpdate="true" closable="true"
-			severity="error, info" />
-		<p:panel>
-			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
-		</p:panel>
-		<p:panel id="locDefSearch" header="SEARCH" toggleable="true">
-
-			<h:panelGrid id="locationSearch" style="width:100%;">
-				<h:column>
-					<ui:include src="/xhtml/pm/location/locationSearch.xhtml" />
-				</h:column>
-				<h:column>
-
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.pm.search.location']}"
-							icon="ui-icon-search"
-							action="#{locationBackingBean.searchLocation}"
-							update="searchLocations" process="locDefSearch" />
-						<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
-							icon="ui-icon-reset" type="reset"
-							actionListener="#{locationBackingBean.reset}" process="@this"
-							update="locationSearch" />
-					</div>
-				</h:column>
-			</h:panelGrid>
-		</p:panel>
-		<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
-
-			<p:dataTable id="searchLocations" var="location"
-				value="#{locationBackingBean.searchLocation}" rowIndexVar="index"
-				lazy="true">
-
-				<ac:paginator for="searchLocations"></ac:paginator>
-
-				<p:column headerText="#{lbl['lbl.pm.location.code']}"
-					style="width :15%">
-					<h:outputText value="#{location.locationCode}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.pm.location.name']}"
-					style="width :40%">
-					<h:outputText value="#{location.locationName}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.location.type']}"
-					style="width :10%">
-					<h:outputText value="STATE"
-						rendered="#{location.locationType == 'ST'}" />
-					<h:outputText value="DIVISION"
-						rendered="#{location.locationType == 'DV'}" />
-					<h:outputText value="DISTRICT"
-						rendered="#{location.locationType == 'DS'}" />
-					<h:outputText value="CITY"
-						rendered="#{location.locationType == 'CT'}" />
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.state']}" style="width :15%">
-					<h:outputText value="#{location.state}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.district']}" style="width :15%">
-					<h:outputText value="#{location.district}" />
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
-					<p:commandLink
-						action="#{locationBackingBean.editLocation(location.locationType,location.locationId)}">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							title="Update Location"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
-
-		<div class="ppRightBtn">
-			<p:commandButton id="addLocation"
-				value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"
-				action="#{locationBackingBean.addLocation()}" />
-		</div>
-
-	</ui:define>
-
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<!-- Search -->
+		<ui:include src="locationSearch.xhtml"/>
+		<!-- Result -->
+		<ui:include src="locationSearchResults.xhtml"/>
+ 	</ui:define>
 </ui:composition>

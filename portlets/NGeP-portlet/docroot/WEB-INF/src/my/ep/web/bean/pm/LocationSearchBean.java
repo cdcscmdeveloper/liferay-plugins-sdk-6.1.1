@@ -1,0 +1,79 @@
+/**
+ * 
+ */
+package my.ep.web.bean.pm;
+
+/**
+ * @author venugopal
+ *
+ */
+public class LocationSearchBean {
+
+	private String locationCode;
+
+	private String locationType;
+
+	private String locationName;
+
+	private String recordStatus;
+
+	/**
+	 * @return the locationCode
+	 */
+	public String getLocationCode() {
+		return locationCode;
+	}
+
+	/**
+	 * @param locationCode the locationCode to set
+	 */
+	public void setLocationCode(String locationCode) {
+		this.locationCode = locationCode;
+	}
+
+	
+
+	/**
+	 * @return the locationType
+	 */
+	public String getLocationType() {
+		return locationType;
+	}
+
+	/**
+	 * @param locationType the locationType to set
+	 */
+	public void setLocationType(String locationType) {
+		this.locationType = locationType;
+	}
+
+	/**
+	 * @return the locationName
+	 */
+	public String getLocationName() {
+		return locationName;
+	}
+
+	/**
+	 * @param locationName the locationName to set
+	 */
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
+	/**
+	 * @return the recordStatus
+	 */
+	public String getRecordStatus() {
+		return recordStatus;
+	}
+
+	/**
+	 * @param recordStatus the recordStatus to set
+	 */
+	public void setRecordStatus(String recordStatus) {
+		
+		this.recordStatus = recordStatus;
+	}
+
+}
