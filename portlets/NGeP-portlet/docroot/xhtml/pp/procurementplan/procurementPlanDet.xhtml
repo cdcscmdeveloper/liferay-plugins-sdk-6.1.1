@@ -37,6 +37,7 @@
 						<p>#{lbl['lbl.pp.select.plan.type']}</p>	 
 					</c:otherwise>
 				</c:choose>
+				<ui:include src="planDetails/planRejectReason.xhtml"/> 
 			</p:panel>
 			
 			<!-- Plan Actors -->			
@@ -49,6 +50,6 @@
 				<ui:include src="planDetails/planRemarks.xhtml"/> 
 			</p:panel>	
 		</p:outputPanel>
-		<ui:include src="planDetails/planRejectReason.xhtml"/> 
+	
 	</ui:define>
 </ui:composition>

@@ -9,8 +9,8 @@
 
 	<p:dialog id="dlRejectReason" header="#{lbl['lbl.pp.reject.reason']}" 
 		widgetVar="dlRejectReasonWv" dynamic="true" width="1000" height="300">
-		2222
-		<p:ajax event="close" update="dgReason" />
+		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmRejectReason}" update="opRejectReason" oncomplete="dlRejectReasonWv.hide()" />
+		<p:remoteCommand name="cancelCmd"  action="#{pPlanBackingBean.cancelRejectReason}" update="opRejectReason"  oncomplete="dlRejectReasonWv.hide()" />
 		<p:outputPanel id="opRejectReason">
 		<!-- Validation Message -->
 		<p:messages id="messagesReason" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -30,19 +30,19 @@
 				</tr>
 				<tr>
 					<td>
-						<h:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" rendered="#{reasonIndex==0}" maxlength="1000" /> 
+						<p:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" rendered="#{reasonIndex==0}" maxlength="1000">
+							
+						</p:inputTextarea>
 						<h:outputText value="#{reason.reasonDesc}" rendered="#{reasonIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 					</td>
 				</tr>
 			</table>
 		</p:dataGrid>
 		<br/>
-		<br/>    
+		<br/>  
  		<div class="ppRightBtn">
-		  <p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{pPlanBackingBean.confirmRejectReason}" update="opRejectReason"
-		  		process="opRejectReason" oncomplete="dlRejectReasonWv.hide();"/>	
-		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRejectReasonWv.hide();" update="opRejectReason"
-		  		immediate="true" />		
+		  <p:commandButton value="#{lbl['lbl.btn.ok']}"  immediate="true" oncomplete="confirmCmd();" />
+		  <p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="cancelCmd();" />		
 		</div>      
 		</p:outputPanel>
 	</p:dialog>
