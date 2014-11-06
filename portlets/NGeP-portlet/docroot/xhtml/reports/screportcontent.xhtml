@@ -11,26 +11,8 @@
 						  <tr>
 						    <td width="100%">
 							    <h:panelGrid  id="scReportCriteria" columns="4" style="width:85%;">
-							    	 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scQuotationNoView}" >			
-									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:160px;"/>
-									<p:inputText id="rptQuotation" value="#{reportBackingBean.scQuotationNo}" style="margin-top:5px;width:290px;">									
-									<p:ajax event="blur" listener="#{reportBackingBean.quotationNumberValidation()}" process="@form"
-					 				partialSubmit="true" update="@form"/>	
-									</p:inputText>
-									<p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
-									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>												
-									</c:if>
-																  
-								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
-								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
-									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
-								  </c:if>								 							 			
-							    </h:panelGrid>							    
-						    </td>
-						  </tr>	
-						  <tr>
-						    <td width="100%">
-							    <h:panelGrid  id="scProcureReportCriteria" columns="4" style="width:85%;">
+							    						 							 			
+							    
 							    	 
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllChkView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.scProcurementMethod']}"   style="margin-top:5px;width:160px;"/>
@@ -60,6 +42,18 @@
 										<p:ajax event="change" listener="#{reportBackingBean.onSelectEffectedValues()}" partialSubmit="true" process="@this" update=":form:procureAllChk :form:quotationChk :form:tenderChk" />
 									 </p:selectManyCheckbox>												
 									</c:if>
+									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scQuotationNoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText id="rptQuotation" value="#{reportBackingBean.scQuotationNo}" style="margin-top:5px;width:290px;">									
+									<p:ajax event="blur" listener="#{reportBackingBean.quotationNumberValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>	
+									</p:inputText>																					
+									</c:if>
+																  
+								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
+								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
+									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
+								  </c:if>			
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scStatus}" style="margin-top:5px;width:300px;">
@@ -77,13 +71,17 @@
 								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.scPtjView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:130px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPtj}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>									
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.orgProfileList}"></f:selectItems>										
 									</p:selectOneMenu>
 								  </c:if>
 								   <c:if test="#{smReportBackingBean.managedBean.rptGenBean.scDeskOfficerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deskOfficer']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scDeskOfficer}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>																																	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.userListbyprofileRole}"></f:selectItems>																																		
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSupplierView}" >			
@@ -206,6 +204,28 @@
 								</TD>				
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.scSoneCrtdToDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
+		             <div>
+						<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPublishDateView}">
+						<TABLE style="margin-top:10px;width:43%;">
+							<TR>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.publishedDt']}" style="width:158px;"/>
+								</TD>
+								<TD>
+									<p:calendar  showOn="button" value="#{reportBackingBean.scPublishFromDate}" 
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
+																				
+									</p:calendar>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" value="#{reportBackingBean.scPublishToDate}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
 									</p:calendar> 
 								</TD>

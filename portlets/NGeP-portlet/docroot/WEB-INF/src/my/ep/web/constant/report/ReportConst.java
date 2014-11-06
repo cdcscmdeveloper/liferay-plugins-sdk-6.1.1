@@ -53,9 +53,16 @@ public class ReportConst {
 	public static final String OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL = "SC_034";	
 	public static final String OVRL_FINRS_EC_RPT_VAL = "SC_036";
 	public static final String SC_QUOT_TENDER_OR_RPT_VAL = "SC_038";
+	public static final String SC_SUMMRY_SRC_OR_RPT_VAL = "SC_039";
+	public static final String SC_BRIF_SITE_VISIT_OR_RPT_VAL = "SC_040";
+	public static final String SC_QUOT_TENDER_MONITOR_OR_RPT_VAL = "SC_041";
+	public static final String SC_PRAPOSAL_SUB_LST_OR_RPT_VAL = "SC_042";
+	public static final String SC_PRICE_SCHEDULE_OR_RPT_VAL = "SC_043";
+	public static final String SC_LETTER_OF_ACCPT_OR_RPT_VAL = "SC_044";
+	public static final String SC_COMMITTEE_DTLS_TD_RPT_VAL = "SC_045";
+
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
-	public static final String SC_SUMMARY_SOURCING_OR_RPT_VAL = "SC_039";
 	public static final String SC_PURCHASE_INQ_DTL_S1_RPT_VAL = "SC_058";
 	public static final String SC_SIMPLE_QUOTE_DTL_WITH_STS_CMPLTD_S1_RPT_VAL = "SC_059";
 	public static final String SC_SIMPLE_QUOTE_SMRY_BY_RECMND_SUPLR_S1_RPT_VAL = "SC_061";
@@ -437,7 +444,8 @@ public class ReportConst {
 	public static final String SC_AMP_APPROVERNT_EQ = "&APPROVERNT=";
 	public static final String SC_AMP_APPROVER_EQ = "&APPROVER=";
 	public static final String SC_AMP_DESK_OFFICER_EQ = "&DESK_OFFICER=";
-	public static final String SC_AMP_DESKOFFR_EQ = "&DESKOFFR=";
+	public static final String DESKOFFR = "DESKOFFR";
+	public static final String APPROVERNT="APPROVERNT";
 	//fl
 	public static final String FL_AMP_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String FL_AMP_TO_DATE_EQ = "&PTODATE=";
@@ -547,4 +555,7 @@ public class ReportConst {
 	public static final String RPT_MODULE_SER_OBJ = "rpt";
 	public static final String RPT_EIFON = " - ";
 	public static final String ENG_LANG = "en";
+	public static final String APPROVER_NAIK_TARAF = "APPROVER_NAIK_TARAF";
+	public static final String APPROVER = "APPROVER";
+	public static final String DESK_OFFICER = "DESK_OFFICER";
 }
