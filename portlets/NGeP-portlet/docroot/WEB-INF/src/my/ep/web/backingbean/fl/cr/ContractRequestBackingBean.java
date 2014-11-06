@@ -2820,10 +2820,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						
 						if(childData.getPmPrgActivity()!=null) {
 							getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
+							getManagedBean().setProgramLov(true);
 						}
 						
 						if(childData.getPmSubSetia()!=null) {
 							getManagedBean().setPmSubSetia(childData.getPmSubSetia());
+							getManagedBean().setProjectLov(true);
 						}
 					}
 			}	 

@@ -134,6 +134,7 @@ import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
+import my.ep.web.util.fl.helper.QuantityFormatUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -841,6 +842,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				flItemAddr.setItemType(purchaseItem.getRequestItem().getItemType());
 				flItemAddr.setScRequestItem(purchaseItem.getRequestItem());
 				flItemAddr.setCmItem(purchaseItem.getRequestItem().getCmItem());
+				//code for adding numberformat
+				QuantityFormatUtils quantityFormatUtils = new QuantityFormatUtils();
+				flItemAddr.setNumberFormatPattern(quantityFormatUtils.getDisplayNumberFormatFl(purchaseItem.getRequestItem().getUom().getUomCode()));
 				//zonal & zonal tier & zonal promo & tier promo
 				if(purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
@@ -1149,11 +1153,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 			oriItemAddr.setUnitPrice(flItemAddr.getUnitPrice());
 			oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()));
+			
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
 		}
 		populateItemsForSelectedAddress();
 	}
+	
 	
 	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
 		if(null== flItemAddr.getOrderedQty() || flItemAddr.getOrderedQty().doubleValue()==0) {
@@ -2439,10 +2445,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					
 					if(childData.getPmPrgActivity()!=null) {
 						getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
+						getManagedBean().setProgramLov(true);
 					}
 					
 					if(childData.getPmSubSetia()!=null) {
 						getManagedBean().setPmSubSetia(childData.getPmSubSetia());
+						getManagedBean().setProjectLov(true);
 					}
 				}
 		}	 
