@@ -64,8 +64,8 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
-					mindate="#{tier.minDate}" maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+					mindate="#{tier.parentPrice.startDate}" maxdate="#{tier.parentPrice.endDate}" 
+					rendered="#{tier.showFlag}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
@@ -77,9 +77,9 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" showOn="button" size="10" mindate="#{tier.minDate}"
-					maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10" 
+					mindate="#{tier.parentPrice.startDate}" maxdate="#{tier.parentPrice.endDate}" 
+					rendered="#{tier.showFlag}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />

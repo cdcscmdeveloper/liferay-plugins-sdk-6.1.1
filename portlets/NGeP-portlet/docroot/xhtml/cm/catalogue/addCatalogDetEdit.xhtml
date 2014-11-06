@@ -317,6 +317,7 @@
 
 						<p:tabView id="zonalTierId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
+							<p:ajax event="tabChange" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId"/>
 							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
