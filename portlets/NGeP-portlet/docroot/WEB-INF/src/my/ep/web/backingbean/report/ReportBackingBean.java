@@ -160,6 +160,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String roleCode;	
 	private Date fromDate;
 	private Date toDate;
+	private String subModule;
 	//sc		
 	private String scQuotationId;
 	private String scQuotationNo;	
@@ -301,6 +302,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String reportFileNameJSP;	
 	
 	
+	public String getSubModule() {
+		return subModule;
+	}
+	public void setSubModule(String subModule) {
+		this.subModule = subModule;
+	}
 	public String getScPrcRptGroup() {
 		return scPrcRptGroup;
 	}
@@ -1374,10 +1381,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			reqDTO.setReportId(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();			
-			if (null != pmReport) {					
+			if (null != pmReport) {				    
 					String label = ReportConst.EMPTY_VAL;
 					if((null != pmReport.getSubModule())&&(ReportConst.EMPTY_VAL != pmReport.getSubModule())){
 					  label = pmReport.getReportTitle()+ReportConst.RPT_EIFON+ pmReport.getSubModule();
+					  this.setSubModule(pmReport.getSubModule());
 					}else{
 						label = pmReport.getReportTitle();
 					}	
@@ -1417,7 +1425,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			this.setSmExpiryFromDate(newDate);
 			this.setScSoneCrtdFromDate(newDate);			
 		}
-		if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){
+		if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))&&(this.getSubModule().equalsIgnoreCase(ReportConst.SUB_MOD_S1))){
 			this.setScSoneCrtdToDate(currentDate);
 			Date newDate= new Date();
 			newDate.setMonth(0);
@@ -2342,7 +2350,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setScPrcRptGroup(null);
 		this.setScPIDtlsPrcRptGroup(null);
 		this.setScProcurementType(null);
-		this.setScProcessRptQuotationNo(null);
+		this.setScProcessRptQuotationNo(null);		
 		scProcureAllList = new ArrayList<SelectItem>();	
 		scQuotationList = new ArrayList<SelectItem>();	
 		scTenderList = new ArrayList<SelectItem>();	

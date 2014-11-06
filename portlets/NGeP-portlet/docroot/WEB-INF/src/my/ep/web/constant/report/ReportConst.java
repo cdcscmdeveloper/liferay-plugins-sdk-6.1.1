@@ -558,4 +558,5 @@ public class ReportConst {
 	public static final String APPROVER_NAIK_TARAF = "APPROVER_NAIK_TARAF";
 	public static final String APPROVER = "APPROVER";
 	public static final String DESK_OFFICER = "DESK_OFFICER";
+	public static final String SUB_MOD_S1 = "S1";
 }
