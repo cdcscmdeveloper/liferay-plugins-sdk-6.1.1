@@ -71,10 +71,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				if (getManagedBean().getMainCatCode() != null) {
 					reqDTO.setMainCatCode(getManagedBean().getMainCatCode());
-					/*searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("orgTypeCode.parameterId",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getMainCatCode()));*/
 				}
 				if (getManagedBean().getMainCatDesc() != null) {
 					reqDTO.setMainCatDesc(getManagedBean().getMainCatDesc());
@@ -92,6 +88,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 				if (getManagedBean().getSubDivDesc() != null) {
 					reqDTO.setSubDivDesc(getManagedBean().getSubDivDesc());
+				}
+				
+				/*if (getManagedBean().getMainCatCode() != null) {
+					reqDTO.setMainCatCode(getManagedBean().getMainCatCode());
+				}
+				if (getManagedBean().getMainCatDesc() != null) {
+					reqDTO.setMainCatDesc(getManagedBean().getMainCatDesc());
+				}*/
+				if (getManagedBean().getPmCategoryLevel() != null && getManagedBean().getPmCategoryLevel().intValue()>0) {
+					reqDTO.setPmCategoryLevel(getManagedBean().getPmCategoryLevel());
 				}
 				
 				reqDTO.setSearchBeanObject(searchBean);
@@ -757,6 +763,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		getManagedBean().setSearchOperatorValue(new String[3]);
 		this.getSearchLOVPagingDataModel().resetData();
 		this.getManagedBean().setSelectedLOV(new ArrayList<PmCategoryL3>());
+	}
+	
+	public void updateCategoryLevel(){
+		log.info("getManagedBean().getPmCategoryLevel() "+getManagedBean().getPmCategoryLevel());
 	}
 	
 	public void search() {

@@ -27,6 +27,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private String mainCatDesc;
 	private String subCatDesc;
 	private String subDivDesc;
+	private Integer pmCategoryLevel;
 	private PmCategoryL1 pmCategoryL1;
 	private PmCategoryL2 pmCategoryL2;
 	private PmCategoryL3 pmCategoryL3;
@@ -240,6 +241,14 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 
 	public void setSelectedBasicCategory2(PmBasicCategory[] selectedBasicCategory2) {
 		this.selectedBasicCategory2 = selectedBasicCategory2;
+	}
+
+	public Integer getPmCategoryLevel() {
+		return pmCategoryLevel;
+	}
+
+	public void setPmCategoryLevel(Integer pmCategoryLevel) {
+		this.pmCategoryLevel = pmCategoryLevel;
 	}
 
 
