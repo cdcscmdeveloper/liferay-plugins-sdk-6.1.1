@@ -67,6 +67,7 @@ import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
@@ -318,7 +319,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			// DRAFT & REVISION & UPDATE
 			if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(taskName)
 					|| PPProcessNameConst.SUBMIT_PLAN.equalsIgnoreCase(taskName)){
-				this.getManagedBean().setModeReview(false);
+				this.getManagedBean().setModeReview(true);
 				this.getManagedBean().setModeReviewEditable(false);
 				this.getManagedBean().setModeEditable(true);
 				
@@ -531,7 +532,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void loadRejectReasons(List<PpRejectReason> ppRejectReasons) {
 		log.info("initialRejectReasons - Start");
-		showRejectReason();
+		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
+			System.out.println(this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+		}
 		boolean newReason = false;
 		//if first reason is not new
 		if (!ppRejectReasons.isEmpty()){
@@ -546,6 +549,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		if(newReason){
+			System.out.println("new reason");
 			PpRejectReason reason = new PpRejectReason();
 			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			reason.setCreatedUser(getFacesScopes().getUserSessionBean());
@@ -560,16 +564,38 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		} 
 		
 		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
+		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
 		
 		log.info("initialRejectReasons - End");
 		
 	}
+	//TODO REMOVE
+		public void showRejectReason(){
+			log.info("confirmRejectReason");
+			if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
+				System.out.println(this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+			}
+		}
+	//TODO REMOVE
+	public void cancelRejectReason(){
+		log.info("cancelRejectReason");
+		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
+			System.out.println("this.getManagedBean().getSelectedReasonDesc() "+this.getManagedBean().getSelectedReasonDesc());
+			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+			this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());;
+		}
+	}
 	
 	//TODO REMOVE
-	public void showRejectReason(){
+	public void confirmRejectReason(){
 		log.info("confirmRejectReason");
 		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-			System.out.println(this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+//			System.out.println(this.getManagedBean().getSelectedReasonDesc());
+//			if(!StringUtils.isBlank(this.getManagedBean().getSelectedReasonDesc())){
+//				this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
+//			}
+			System.out.println("this.getManagedBean().getSelectedReasonDesc() "+this.getManagedBean().getSelectedReasonDesc());
+			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
 		}
 	}
 	
@@ -1153,6 +1179,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List <PpRejectReason> rejectReasons = null;
 		String docType = "";
 		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
 			ppPlan = this.getManagedBean().getSelectedPlan();
 			
 			//Validation
@@ -1178,8 +1206,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 			
-			reqDTO = new ProcurementPlanReqDTO();
-			resDTO = new ProcurementPlanResDTO();
+			
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); 

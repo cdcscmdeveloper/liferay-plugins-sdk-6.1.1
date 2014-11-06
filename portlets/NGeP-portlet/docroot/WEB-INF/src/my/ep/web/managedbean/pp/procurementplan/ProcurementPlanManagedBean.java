@@ -46,11 +46,27 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private DualListModel<PmUser> approverModel;
 	private DualListModel<PmUser> verifierModel;
 	private List<PpRejectReason> selectedRejectReasons;
+	private String selectedReasonDesc;
 	private BigDecimal epTotalBudget;
 	private BigDecimal epTotalPlan;
 	private BigDecimal epTotalNonEpAlloc;
 	private BigDecimal ppTotalEst;
 	
+	
+
+	/**
+	 * @return the selectedReasonDesc
+	 */
+	public String getSelectedReasonDesc() {
+		return selectedReasonDesc;
+	}
+
+	/**
+	 * @param selectedReasonDesc the selectedReasonDesc to set
+	 */
+	public void setSelectedReasonDesc(String selectedReasonDesc) {
+		this.selectedReasonDesc = selectedReasonDesc;
+	}
 
 	/**
 	 * @return the filterOrgCondition
@@ -308,107 +324,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 
 
-	
-	
-	
-	
-//	
-//	
-//	private String testString; //TODO
-//
-//	//	TODO remove here
-//	private String currentRole; //TODO
-//	private List<String> roleList; //TODO
-//	private Long currentStatus; //TODO
-//	private List<Long> statusList; //TODO
-//	
-//	
-///**
-//	 * @return the testString
-//	 */
-//	public String getTestString() {
-//		return testString;
-//	}
-//
-//	/**
-//	 * @param testString the testString to set
-//	 */
-//	public void setTestString(String testString) {
-//		this.testString = testString;
-//	}
-//
-///**
-//	 * @return the currentRole
-//	 */
-//	public String getCurrentRole() {
-//		return currentRole;
-//	}
-//
-//	/**
-//	 * @param currentRole the currentRole to set
-//	 */
-//	public void setCurrentRole(String currentRole) {
-//		this.currentRole = currentRole;
-//	}
-//
-//	/**
-//	 * @return the roleList
-//	 */
-//	public List<String> getRoleList() {
-//		if(roleList==null){
-//			roleList = new ArrayList<String>();
-//			roleList.add("NULL");
-//			roleList.add(RoleCode.PLAN_PROCU_OFFICER.value());
-//			roleList.add(RoleCode.PLAN_VERFICATION_OFFICER.value());
-//			roleList.add(RoleCode.PLAN_APPROVER.value());
-//			roleList.add(RoleCode.BPK_ADMIN.value());
-//		}
-//		return roleList;
-//	}
-//
-//	/**
-//	 * @param roleList the roleList to set
-//	 */
-//	public void setRoleList(List<String> roleList) {
-//		this.roleList = roleList;
-//	}
-//	
-//	/**
-//	 * @return the statusList
-//	 */
-//	public List<Long> getStatusList() {
-//		if(statusList==null){
-//			statusList = new ArrayList<Long>();
-//			statusList.add(ProcurementPlanConst.PPP_PENDING_SUBMISSION);
-//			statusList.add(ProcurementPlanConst.PPP_PENDING_REVISION);
-//			statusList.add(ProcurementPlanConst.PPP_PENDING_VERIFICATION);
-//			statusList.add(ProcurementPlanConst.PPP_PENDING_APPROVAL);
-//			statusList.add(ProcurementPlanConst.PPP_APPROVED);
-//		}
-//		return statusList;
-//	}
-//
-//	/**
-//	 * @param modeList the statusList to set
-//	 */
-//	public void setStatusList(List<Long> statusList) {
-//		this.statusList = statusList;
-//	}
-//
-//	/**
-//	 * @return the currentStatus
-//	 */
-//	public Long getCurrentStatus() {
-//		return currentStatus;
-//	}
-//
-//	/**
-//	 * @param currentStatus the currentStatus to set
-//	 */
-//	public void setCurrentStatus(Long currentStatus) {
-//		this.currentStatus = currentStatus;
-//	}
-//	
 	
 	
 
