@@ -528,7 +528,7 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
-	public static SmPersonnleCalcVO displayBumiRecommendNote(
+	public static String displayBumiRecommendNote(
 			List<SmSupplierBank> smSupplierBankList,
 			SmPersonnleCalcVO persCalcVo, String outputPage, String applType,
 			String supplType, BigDecimal bumiPercentage, boolean supplUser) {
@@ -540,7 +540,7 @@ public class SmCommonUtil {
 			if (persCalcVo == null) {
 				persCalcVo = new SmPersonnleCalcVO();
 			}
-			persCalcVo.setNonBumiSignatoryBank("");
+			persCalcVo.setBumiRecommendNote("");
 			setBumiStatus(persCalcVo, bumiPercentage);
 			setAllBankSignatoriesNonBumi(persCalcVo, smSupplierBankList);
 
@@ -578,7 +578,7 @@ public class SmCommonUtil {
 			}
 		}
 
-		return persCalcVo;
+		return persCalcVo.getBumiRecommendNote();
 	}
 
 	private static void setAllBankSignatoriesNonBumi(
