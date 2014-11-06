@@ -28,8 +28,10 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -43,8 +45,27 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	public static final String NAV_TO_ADD = "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
 	public static final String NAV_TO_MAIN = "/xhtml/pm/zonesearch/zoneSearchMain.xhtml";
 	private IPagingDataModel<PmZone> searchZone = new SearchZonePagingDataModel();
-	boolean result = false;
 	private boolean flag;
+	private boolean result;
+	// Default value
+	public static final boolean SEARCH_DEFAULT = false;
+
+	public void preLoading() {
+		log.info("preLoading");
+		this.resetZoneSearchBean();
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_MAIN);
+	}
+
+	/**
+	 * reset search bean fields
+	 */
+	public void resetZoneSearchBean() {
+		log.info("ZoneSearchBean");
+		this.getManagedBean().setZoneSearchBean(new ZoneSearchBean());
+	}
 
 	public ZoneBackingBean() {
 		retrievePmStateList();
@@ -71,10 +92,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public void reset() {
-		this.getManagedBean().setZoneCode(null);
-		this.getManagedBean().setZoneName(null);
-		this.getManagedBean().setStateName(null);
-		this.getManagedBean().setStatus(null);
+
 		this.getManagedBean().setPmZone(new PmZone());
 
 	}
@@ -136,6 +154,46 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	}
 
+	private ISearchBean<PmZone> getSearchBeanData(ISearchBean<PmZone> searchBean) {
+		log.info("getSearchBeanData - Start");
+		ZoneSearchBean zSearchBean = this.getManagedBean().getZoneSearchBean();
+
+		if (zSearchBean.getZoneCode() != null
+				&& zSearchBean.getZoneCode().trim().length() > 0) {
+			log.info("+ zoneCode " + zSearchBean.getZoneCode());
+			/*SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField("zoneCode");
+			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value(),true);
+			bean.setSearchValue(zSearchBean.getZoneCode());
+			searchBean.getDataFilterBeans().add(bean);*/
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("zoneCode",
+							SearchOperator.OPERATOR_LIKE.value(),
+							zSearchBean.getZoneCode(), true));
+		}
+		if (zSearchBean.getZoneCode() != null
+				&& zSearchBean.getZoneName().trim().length() > 0) {
+			log.info("+ zoneName " + zSearchBean.getZoneName());
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField("zoneName");
+			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			bean.setSearchValue(zSearchBean.getZoneName());
+			searchBean.getDataFilterBeans().add(bean);
+		}
+
+		if (zSearchBean.getStatus() != null) {
+			log.info("+ status " + zSearchBean.getStatus());
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField("recordStatusFlg");
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchValue(zSearchBean.getStatus());
+			searchBean.getDataFilterBeans().add(bean);
+		}
+
+		log.info("getSearchBeanData - End");
+		return searchBean;
+	}
+
 	private class SearchZonePagingDataModel extends PagingDataModel<PmZone> {
 		private static final long serialVersionUID = 1L;
 
@@ -143,49 +201,30 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			super("searchZone");
 		}
 
+		@Override
 		public ISearchResultBean<PmZone> pageChangeListener(
 				ISearchBean<PmZone> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
 			IZoneSO zoneSO;
-			try {
-				ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
 
-				if (getManagedBean().getZoneCode() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("zoneCode",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getZoneCode(), true));
-				}
-				if (getManagedBean().getZoneName() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("zoneName",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getZoneName(), true));
-				}
-				if (getManagedBean().getStateName() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"pmZoneStates.pmState.stateName",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getStateName(), true));
-				}
-				if (getManagedBean().getStatus() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recordStatusFlg",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getStatus()));
-				}
-				zoneReqDTO.setZoneSearchBean(searchBean);
+			try {
+				ISearchBean<PmZone> searchBeanData = getSearchBeanData(searchBean);
+				ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+				zoneReqDTO.setZoneSearchBean(searchBeanData);
 				zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IZoneSO.class);
-				ZoneResDTO resDto = zoneSO.searchZoneData(zoneReqDTO);
-				if (resDto.isSuccessful()) {
-					return resDto.getZoneResultBean();
+				ZoneResDTO resDTO = zoneSO.searchZoneData(zoneReqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getZoneResultBean();
 				}
-
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
 			}
+
 			return null;
 		}
 	}
@@ -195,7 +234,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
 		StateResDTO resDTO = stateSO.retrieveStateList();
-		
+
 		this.getManagedBean().setStates(resDTO.getStateList());
 	}
 
@@ -257,10 +296,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				}
 				if (itemIds.size() > 0) {
 					if (itemIds.contains(state.getStateId())) {
-						
 
 					} else {
-						
+
 						zoneList.add(zoneState);
 						this.getManagedBean().setZoneStateList(zoneList);
 					}

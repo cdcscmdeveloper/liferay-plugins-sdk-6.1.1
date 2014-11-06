@@ -10,6 +10,7 @@ import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmZoneState;
+import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "zoneManagedBean")
@@ -20,17 +21,12 @@ public class ZoneManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private String zoneCode;
-	private String zoneName;
-	private String stateName;
-	private String status;
-	private String stateCode;
+	private ZoneSearchBean zoneSearchBean;
 	private PmZone pmZone;
 	private List<PmState> states = new ArrayList<PmState>();
 	private List<PmState> selectedStates = new ArrayList<PmState>();
 	private PmState pmState;
-	private List<PmZoneState> zoneStateList= new ArrayList<PmZoneState>();
+	private List<PmZoneState> zoneStateList = new ArrayList<PmZoneState>();
 	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();
 	private PmZoneState selectedZone;
 	private List<SelectItem> selections;
@@ -41,48 +37,6 @@ public class ZoneManagedBean extends BaseManagedBean {
 	public ZoneManagedBean() {
 		pmZone = new PmZone();
 	}
-
-	public String getZoneCode() {
-		return zoneCode;
-	}
-
-	public void setZoneCode(String zoneCode) {
-		this.zoneCode = zoneCode;
-	}
-
-	public String getZoneName() {
-		return zoneName;
-	}
-
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
-	}
-
-	public String getStateName() {
-		return stateName;
-	}
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getStateCode() {
-		return stateCode;
-	}
-
-	public void setStateCode(String stateCode) {
-		this.stateCode = stateCode;
-	}
-
-	
 
 	/**
 	 * @return the pmZone
@@ -174,8 +128,6 @@ public class ZoneManagedBean extends BaseManagedBean {
 		this.selections = selections;
 	}
 
-	
-
 	/**
 	 * @return the selectedZone
 	 */
@@ -184,7 +136,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedZone the selectedZone to set
+	 * @param selectedZone
+	 *            the selectedZone to set
 	 */
 	public void setSelectedZone(PmZoneState selectedZone) {
 		this.selectedZone = selectedZone;
@@ -198,7 +151,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zoneStateList the zoneStateList to set
+	 * @param zoneStateList
+	 *            the zoneStateList to set
 	 */
 	public void setZoneStateList(List<PmZoneState> zoneStateList) {
 		this.zoneStateList = zoneStateList;
@@ -212,7 +166,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmState the pmState to set
+	 * @param pmState
+	 *            the pmState to set
 	 */
 	public void setPmState(PmState pmState) {
 		this.pmState = pmState;
@@ -226,12 +181,28 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedZones the selectedZones to set
+	 * @param selectedZones
+	 *            the selectedZones to set
 	 */
 	public void setSelectedZones(List<PmZoneState> selectedZones) {
 		this.selectedZones = selectedZones;
 	}
 
-	
+	/**
+	 * @return the zoneSearchBean
+	 */
+	public ZoneSearchBean getZoneSearchBean() {
+		if (zoneSearchBean == null)
+			zoneSearchBean = new ZoneSearchBean();
+		return zoneSearchBean;
+	}
+
+	/**
+	 * @param zoneSearchBean
+	 *            the zoneSearchBean to set
+	 */
+	public void setZoneSearchBean(ZoneSearchBean zoneSearchBean) {
+		this.zoneSearchBean = zoneSearchBean;
+	}
 
 }
