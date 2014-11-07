@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -2209,6 +2210,8 @@ public class SPDetailBackingBean extends
 	public void addNonFederalGovtExperience() {
 		debugLogger("addNonFederalGovtExperience");
 		ScQtPRPExperience prpExperience = new ScQtPRPExperience();
+		
+		
 		try {
 			List<ScQtPRPExperience> experienceList = this.getManagedBean()
 					.getScQtPRPExperiences();
@@ -2218,6 +2221,8 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience scQtPRPExperience : experienceList) {
 				scQtPRPExperience.setBrandNew(false);
 			}
+			prpExperience.setContractTitle("");
+			prpExperience.setClientName("");
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -2243,14 +2248,23 @@ public class SPDetailBackingBean extends
 
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 				tobeDeletedExperiences.add(scQtPRPExperience);
-				experienceList.remove(scQtPRPExperience);
+				Iterator<ScQtPRPExperience> itr = experienceList.iterator();
+				while(itr.hasNext()){
+					ScQtPRPExperience localQtPRPExperience = itr.next();
+					if(localQtPRPExperience.equals(scQtPRPExperience)){
+						itr.remove();
+						break;
+					}
+				}
 			}
 			getManagedBean().setDeletedPRPExperiences(tobeDeletedExperiences);
 		}
+		getManagedBean().setScQtPRPExperiences(experienceList);
 		getManagedBean().setTotalContracts(
 				getManagedBean().getScQtPRPExperiences().size());
 		getManagedBean().setSelectedAll(false);
 		getManagedBean().setSelected(false);
+		getManagedBean().setSelectedPRPExperiences(null);
 
 		totalContractYears();
 	}
@@ -2346,6 +2360,8 @@ public class SPDetailBackingBean extends
 
 	public String supplierProposalBackAction() {
 		debugLogger("supplierProposalBackAction");
+		getManagedBean().setSelectedAll(false);
+		getManagedBean().setSelected(false);
 		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 	}
 
@@ -2645,7 +2661,7 @@ public class SPDetailBackingBean extends
 	}
 	
 	public void selectAll(){
-		System.out.println("***** inside selectAll *****");
+		
 		if(getManagedBean().isSelectedAll()){
 			getManagedBean().setSelected(true);
 			getManagedBean().setSelectedPRPExperiences(getManagedBean().getScQtPRPExperiences());
@@ -2659,7 +2675,6 @@ public class SPDetailBackingBean extends
 	
 	public void selected(int index){
 		
-		System.out.println("***** inside selected *****");
 		List<ScQtPRPExperience> selectedExperienceList = getManagedBean()
 				.getSelectedPRPExperiences();
 		
@@ -2668,14 +2683,22 @@ public class SPDetailBackingBean extends
 				selectedExperienceList = new ArrayList<ScQtPRPExperience>();
 			}
 			selectedExperienceList.add(getManagedBean().getScQtPRPExperiences().get(index));
+			if(getManagedBean().getScQtPRPExperiences().size() == selectedExperienceList.size()){
+				getManagedBean().setSelectedAll(true);
+			}
 		}else {
 			
 			if(selectedExperienceList.contains(getManagedBean().getScQtPRPExperiences().get(index))){
 				selectedExperienceList.remove(getManagedBean().getScQtPRPExperiences().get(index));
 			}
+			if(selectedExperienceList.size() != selectedExperienceList.size() && getManagedBean().isSelectedAll()){
+				getManagedBean().setSelectedAll(false);
+			}
 			
 		}
 		getManagedBean().setSelectedPRPExperiences(selectedExperienceList);
 	}
+	
+	
 
 }
