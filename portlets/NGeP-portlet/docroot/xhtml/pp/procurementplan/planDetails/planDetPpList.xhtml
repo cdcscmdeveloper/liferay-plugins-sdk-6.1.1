@@ -135,7 +135,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.loadRejectReasons(ppItem.ppRejectReasons)}"
-			    	disabled="#{!ppItem.rejected}" id="clPpReason" update=":form:opRejectReason" immediate="true">
+			    	disabled="#{!ppItem.rejected}" id="clPpReason" update="@([id$=opRejectReason])" immediate="true">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>
