@@ -22,6 +22,7 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				style="float:right;" icon="ui-icon-save"
 				action="#{specificationBackingBean.acceptCompanyScoring}">
 				<f:setPropertyActionListener
@@ -104,6 +105,7 @@
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu required="true"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="fincreditFacilityAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
@@ -132,10 +134,12 @@
 						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								actionListener="#{specificationBackingBean.addScoring(51)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 								process="@this" partialSubmit="true" icon="ui-icon-delete"
 								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
 								update="#{scoringPnlId}">
@@ -156,6 +160,7 @@
 								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 							</td>
 							<td><p:inputText maxlength="18" id="creditFacilityScore"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 									label="#{lbl['lbl.sc.spec.max.score']}" required="true"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
