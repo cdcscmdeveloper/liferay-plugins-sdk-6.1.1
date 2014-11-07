@@ -218,6 +218,13 @@ public class ApprovalBackingBean extends
 		this.getManagedBean().setScQtApproval(bean.getScQtApproval());
 		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
 	}
+	
+	public void deleteOthersApprovalFile() {
+		List<ScQtApprovalRequest> list = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setApprovalRequestAttachement(null);
+		}
+	}
 
 	/**
 	 * determineIcon for displaying image icon in pid
