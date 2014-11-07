@@ -760,5 +760,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			((EpExceptionHandler)expHandler).handleException(exception);
 		}
 	}
-	
+
+	public String escapeXhtml(String input) {
+		String output = "";
+		if(input != null) {
+			output = StringUtils.replace(input, "&", "&#38;");
+		}
+		return output;
+	}
 }
