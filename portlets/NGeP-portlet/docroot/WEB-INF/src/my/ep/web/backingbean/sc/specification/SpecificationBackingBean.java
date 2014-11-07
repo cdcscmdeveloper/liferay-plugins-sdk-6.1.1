@@ -1016,6 +1016,9 @@ public class SpecificationBackingBean extends
 
 				}
 
+			}else{
+				isTemplateSpec(techCheckList, scqt);
+				isTemplateSpecStatus(techCheckList, scqt);
 			}
 		}
 
@@ -1439,12 +1442,15 @@ public class SpecificationBackingBean extends
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				retriveFinancialCheckList();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				retriveFinancialCheckList();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
 
@@ -1453,12 +1459,16 @@ public class SpecificationBackingBean extends
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				retriveFinancialScoring();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				retriveTechnicalScoring();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
 
@@ -1467,12 +1477,16 @@ public class SpecificationBackingBean extends
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				retriveRecommendationDetails();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				retriveFinancialScoring();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
 
@@ -1481,12 +1495,16 @@ public class SpecificationBackingBean extends
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				retriveDeliveryDetails();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				retriveRecommendationDetails();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
 
@@ -1501,10 +1519,14 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(this.getManagedBean()
 										.getFulfilmentType())) {
 					retriveFulfilmentDtls();
+					checktemplateSpecStatus(this.getManagedBean().getScQt());
+					checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
 						.equalsIgnoreCase(this.getManagedBean()
 								.getFulfilmentType())) {
 					retriveCommitteeEndorsment();
+					checktemplateSpecStatus(this.getManagedBean().getScQt());
+					checkFinancialSpecStatus(this.getManagedBean().getScQt());
 
 				}
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
@@ -1513,6 +1535,8 @@ public class SpecificationBackingBean extends
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				retriveDeliveryDetails();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
 
@@ -1521,6 +1545,8 @@ public class SpecificationBackingBean extends
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				retriveCommitteeEndorsment();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
@@ -1533,10 +1559,14 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(this.getManagedBean()
 										.getFulfilmentType())) {
 					retriveFulfilmentDtls();
+					checktemplateSpecStatus(this.getManagedBean().getScQt());
+					checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
 						.equalsIgnoreCase(this.getManagedBean()
 								.getFulfilmentType())) {
 					retriveCommitteeEndorsment();
+					checktemplateSpecStatus(this.getManagedBean().getScQt());
+					checkFinancialSpecStatus(this.getManagedBean().getScQt());
 
 				}
 			}
@@ -1553,6 +1583,8 @@ public class SpecificationBackingBean extends
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				retriveCommitteeEndorsment();
+				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
 
@@ -4846,7 +4878,7 @@ public class SpecificationBackingBean extends
 						.retrieveParameterByTypeAndCode(tenderReqDTO);
 				this.getManagedBean().getScQt()
 						.setProcurementMode(tenderResDTO.getPmParameter());
-				 scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 				scQt.setOpenFor(SourcingConstants.OPERN_FOR_ALL);
 				this.getManagedBean().setScQt(scQt);
 			}
@@ -5538,6 +5570,17 @@ public class SpecificationBackingBean extends
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+				/*if (this.getManagedBean().getScQt().isZonal()) {
+					ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria();
+					if (null != supplierCriteria
+							&& null != supplierCriteria.getQtZoneCriterias()) {
+						supplierCriteria.getQtZoneCriterias().setModified(true);
+						templateSpecBean.getSpecMaster().setTplSpecZone(
+								supplierCriteria.getQtZoneCriterias());
+
+					}
+				}*/
 				return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -8229,6 +8272,8 @@ public class SpecificationBackingBean extends
 				total = total
 						+ weight.getQtScoreWeightage().getWeightage()
 								.intValue();
+				this.getManagedBean().setTechnicalWeightageScore(
+						new BigDecimal(total));
 				if (total > 100) {
 					throw new EpException(MessageConst.ERROR_760148);
 				}
@@ -8329,6 +8374,8 @@ public class SpecificationBackingBean extends
 				total = total
 						+ weight.getQtScoreWeightage().getWeightage()
 								.intValue();
+				this.getManagedBean().setFinancialWeightageScore(
+						new BigDecimal(total));
 
 				if (total > 100) {
 					throw new EpException(MessageConst.ERROR_760148);
@@ -8337,8 +8384,7 @@ public class SpecificationBackingBean extends
 				// BigDecimal techWeightage = new BigDecimal(100);
 				// MathContext mc = new MathContext(4);
 				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-				this.getManagedBean().setFinancialWeightageScore(
-						new BigDecimal(total));
+
 			}
 		} finally {
 
