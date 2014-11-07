@@ -1206,7 +1206,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		getLoginUserOrg();
-		
+		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 		if (taskId != null) {
 			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -1219,6 +1219,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			Object obj = res.getPojo();
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
 			
+			//TODO flError have been implemented for current will be commented first
+//			if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
+//				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+//				errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
+//				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+//				errRes.getFlErrorContent();
+//				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,errRes.getFlErrorContent()));
+//			}
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
@@ -1232,7 +1240,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				getManagedBean().setSubmitButtonStatus(false);
 			}
 			
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId().longValue());
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
@@ -1243,7 +1251,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml?faces-redirect=true");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml?faces-redirect=true");//TODO once flError implemented ?faces-redirect=true removed
 	}
 
 	public void calculateSubTotal(BigDecimal quantity){
