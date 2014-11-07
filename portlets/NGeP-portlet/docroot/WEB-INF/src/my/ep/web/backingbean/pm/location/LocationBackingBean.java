@@ -117,29 +117,22 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		if (lSearchBean.getLocationType() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationType",
-							SearchOperator.OPERATOR_LIKE.value(),
+							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getLocationSearchBean().getLocationType()));
 		}
 
 		if (lSearchBean.getLocationCode() != null
 				&& lSearchBean.getLocationCode().trim().length() > 0) {
 			log.info("+ locationCode " + lSearchBean.getLocationCode());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("locationCode");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(lSearchBean.getLocationCode());
-			searchBean.getDataFilterBeans().add(bean);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationCode",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getLocationSearchBean().getLocationCode(),true));
 		}
 		if (lSearchBean.getLocationName() != null
 				&& lSearchBean.getLocationName().trim().length() > 0) {
 			log.info("+ locationName " + lSearchBean.getLocationName());
-			/*
-			 * SearchFilterBean bean = new SearchFilterBean();
-			 * bean.setSearchField("locationName");
-			 * bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			 * bean.setSearchValue(lSearchBean.getLocationName());
-			 * searchBean.getDataFilterBeans().add(bean);
-			 */
+			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationName",
 							SearchOperator.OPERATOR_LIKE.value(),
@@ -149,11 +142,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		if (lSearchBean.getRecordStatus() != null) {
 			log.info("+ status " + lSearchBean.getRecordStatus());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("status");
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchValue(lSearchBean.getRecordStatus());
-			searchBean.getDataFilterBeans().add(bean);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("status",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getLocationSearchBean()
+									.getRecordStatus()));
 		}
 
 		log.info("getSearchBeanData - End");

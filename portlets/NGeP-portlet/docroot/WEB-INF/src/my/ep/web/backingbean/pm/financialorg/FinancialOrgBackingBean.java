@@ -132,7 +132,7 @@ public class FinancialOrgBackingBean extends
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("bizRegNumber",
 						SearchOperator.OPERATOR_LIKE.value(), getManagedBean()
-								.getFinancialOrgSearchBean().getRegNumber()));
+								.getFinancialOrgSearchBean().getRegNumber(),true));
 
 		
 

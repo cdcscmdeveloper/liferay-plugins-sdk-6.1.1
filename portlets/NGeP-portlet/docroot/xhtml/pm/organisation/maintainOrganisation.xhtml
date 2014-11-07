@@ -18,17 +18,17 @@
 						icon="ui-icon-back" update=":form" process="@this"
 						action="#{organisationBackingBean.backToSearch}"
 						style="float:left;" /></td>
-				<td><p:commandButton value="Save"
+				<td><p:commandButton value="#{organisationBackingBean.managedBean.orgProfile.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}" 
 						action="#{organisationBackingBean.saveOrganization}"
 						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" /></td>
 			</tr>
 
 
 		</table>
-		<c:if
+		<!-- <c:if
 			test="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
 			<ui:include src="orgProfileHeader.xhtml" />
-		</c:if>
+		</c:if> -->
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
