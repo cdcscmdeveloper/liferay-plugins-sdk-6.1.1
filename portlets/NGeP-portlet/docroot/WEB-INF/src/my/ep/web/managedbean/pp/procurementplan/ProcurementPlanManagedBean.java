@@ -1,20 +1,18 @@
 package my.ep.web.managedbean.pp.procurementplan;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
-import my.ep.type.pm.RoleCode;
+import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -47,12 +45,27 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private DualListModel<PmUser> verifierModel;
 	private List<PpRejectReason> selectedRejectReasons;
 	private String selectedReasonDesc;
+	private List<PpRemark> selectedRemarks;
 	private BigDecimal epTotalBudget;
 	private BigDecimal epTotalPlan;
 	private BigDecimal epTotalNonEpAlloc;
 	private BigDecimal ppTotalEst;
 	
 	
+
+	/**
+	 * @return the selectedRemarks
+	 */
+	public List<PpRemark> getSelectedRemarks() {
+		return selectedRemarks;
+	}
+
+	/**
+	 * @param selectedRemarks the selectedRemarks to set
+	 */
+	public void setSelectedRemarks(List<PpRemark> selectedRemarks) {
+		this.selectedRemarks = selectedRemarks;
+	}
 
 	/**
 	 * @return the selectedReasonDesc

@@ -383,6 +383,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setApproverModel(null);
 		this.getManagedBean().setVerifierModel(null);
 		this.getManagedBean().setSelectedRejectReasons(null);
+		this.getManagedBean().setSelectedRemarks(null);
 		this.getManagedBean().setCurrentActiveOrg(null);
 		this.getManagedBean().setFilterOrgCondition(null);
 	
@@ -397,35 +398,57 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void loadPlanDetails(Long id, boolean fromList){
 		log.info("loadPlanDetails - Start");
-		PpPlan ppPlan = PpCommonUtil.retrievePlanById(id);
-		if(ppPlan!=null){
-			PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
-			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-				throw new EpException("Unable to retrieve Org. Profile.");//TODO 
-			}
-			if(ppPlan.getVotFundType()==null){
-				ppPlan.setVotFundType(new PmParameter());
-			}
-			
-			ppPlan.setOrgProfile(pmOrgProfile); 
-			ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
-			this.getManagedBean().setSelectedPlan(ppPlan);
-			if(fromList){
-				generatePageMode();
-			}
-			
-			loadPlanActors(ppPlan.getOrgProfile(), ppPlan.getPpPlanActors()); 
-			loadPlanRemark(ppPlan.getPpRemarks());
+		PpPlan ppPlan = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setPlanId(id);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrievePlanDetById(reqDTO);
+			if (resDTO.isSuccessful()) {
+				ppPlan = resDTO.getPlan();
+				if(ppPlan!=null){
+					PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
+					if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
+						throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+					}
+					if(ppPlan.getVotFundType()==null){
+						ppPlan.setVotFundType(new PmParameter());
+					}
+					
+					ppPlan.setOrgProfile(pmOrgProfile); 
+					ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
+					this.getManagedBean().setSelectedPlan(ppPlan);
+					if(fromList){
+						generatePageMode();
+					}
+					
+					loadPlanActors(ppPlan.getOrgProfile(), ppPlan.getPpPlanActors()); 
+					loadPlanRemark(resDTO.getRemarkList());
 
-			//load plan det
-			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
-				calculateEpGrandTotal();
-			}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
-				calculatePpGrandTotal();
+					//load plan det
+					if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+						calculateEpGrandTotal();
+					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+						calculatePpGrandTotal();
+					}
+				}else{
+					throw new EpException("Unable to retrieve plan."); //TODO
+				}
 			}
-		}else{
-			throw new EpException("Unable to retrieve plan."); //TODO
+			
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
 		}
+
+		
+		
 		log.info("loadPlanDetails - End");
 	}
 
@@ -449,11 +472,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppPlan.setOrgProfile(pmOrgProfile);
 		ppPlan.setPpPlanActors(new ArrayList<PpPlanActor>());
 		ppPlan.setStatus(new PmStatus());
-		ppPlan.setPpRemarks(new ArrayList<PpRemark>());
 		this.getManagedBean().setSelectedPlan(ppPlan);
 		
 		generatePageMode();
-		loadPlanRemark(ppPlan.getPpRemarks());
+		loadPlanRemark(new ArrayList<PpRemark>());
 		loadPlanActors(ppPlan.getOrgProfile() , null);
 		
 	
@@ -494,16 +516,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void loadPlanRemark(List<PpRemark> remarkList) {
 		log.info("loadPlanRemark - Start");
+		this.getManagedBean().setSelectedRemarks(remarkList);
+		
 		boolean newRemark = false;
 		//if first remark is not new
-		if (!remarkList.isEmpty()){
-			if(!remarkList.get(0).isBrandNew()){
+		if (!this.getManagedBean().getSelectedRemarks().isEmpty()){
+			if(!this.getManagedBean().getSelectedRemarks().get(0).isBrandNew()){
 				newRemark = true;
 			}
 		}
 
 		// if remarks is empty
-		if (remarkList.isEmpty() || remarkList.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
+		if (this.getManagedBean().getSelectedRemarks().isEmpty() || this.getManagedBean().getSelectedRemarks().size() == 0) {//|| !compareUserName(this.getManagedBean().getSelectedRemarks().get(0).getUserId())
 			newRemark = true;
 		}
 		
@@ -521,7 +545,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
 			remark.setUserId(getFacesScopes().getUserSessionBean().getLoginId());
-			remarkList.add(0, remark);
+			if(!this.getManagedBean().getSelectedPlan().isBrandNew()){
+				PmRole roleCode = new PmRole();
+				roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
+				remark.setRoleCode(roleCode);
+			}
+			this.getManagedBean().getSelectedRemarks().add(0, remark);
 		} 
 		log.info("loadPlanRemark - End");
 		
@@ -534,9 +563,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void loadRejectReasons(List<PpRejectReason> ppRejectReasons) {
 		log.info("initialRejectReasons - Start");
-		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-			System.out.println(this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
-		}
+
+		this.getManagedBean().setSelectedReasonDesc("");
 		boolean newReason = false;
 		//if first reason is not new
 		if (!ppRejectReasons.isEmpty()){
@@ -568,6 +596,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
 		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
 		
+		
 		log.info("initialRejectReasons - End");
 		
 	}
@@ -576,25 +605,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void cancelRejectReason(){
 		log.info("cancelRejectReason");
 		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-			System.out.println("this.getManagedBean().getSelectedReasonDesc() "+this.getManagedBean().getSelectedReasonDesc());
-			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
-			this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
-			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+			this.getManagedBean().setSelectedReasonDesc("");
 		}
-//		RequestContext.getCurrentInstance().execute("dlRejectReasonWv.hide()");
 	}
 	
 	//TODO REMOVE
 	public void confirmRejectReason(){
 		log.info("confirmRejectReason");
 		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-//			if(!StringUtils.isBlank(this.getManagedBean().getSelectedReasonDesc())){
-//				this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
-//			}
-			System.out.println("this.getManagedBean().getSelectedReasonDesc() "+this.getManagedBean().getSelectedReasonDesc());
-			System.out.println("get(0).getReasonDesc() " +this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+			if(!StringUtils.isBlank(this.getManagedBean().getSelectedReasonDesc())){
+				this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
+				this.getManagedBean().setSelectedReasonDesc("");
+			}
 		}
-//		RequestContext.getCurrentInstance().execute("dlRejectReasonWv.hide()");
 	}
 	
 
@@ -954,6 +977,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
 			}else if(ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(statusId)){
 				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
+			}else if(ProcurementPlanConst.PPE_PENDING_REVISION.equals(statusId)){
+				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
+			}else if(ProcurementPlanConst.PPP_PENDING_REVISION.equals(statusId)){
+				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
 			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(statusId)){
 				roleCode = RoleCode.PLAN_VERFICATION_OFFICER.value();
 			}else if(ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(statusId)
@@ -1161,6 +1188,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 
+	private PpRemark getRemark(PpPlan ppPlan){
+		log.info("getRemark");
+		PpRemark remark = null;
+		if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+			PpRemark ppRemark = this.getManagedBean().getSelectedRemarks().get(0);
+			if(ppRemark.isBrandNew() && !StringUtils.isBlank(ppRemark.getRemark())){
+				if(ppRemark.getRoleCode() ==null || StringUtils.isBlank(ppRemark.getRoleCode().getRoleCode())){
+					log.info("set setRemarkRole");
+					PmRole roleCode = new PmRole();
+					roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
+					ppRemark.setRoleCode(roleCode);
+					ppRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
+				}
+			}
+			remark = ppRemark;
+		}
+		return remark;
+	}
 
 	/**
 	 * Submit & update plan
@@ -1176,6 +1221,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpPlan ppPlan = null; 
 		List <PpRejectReason> rejectReasons = null;
 		String docType = "";
+		PpRemark remark = null;
+		
 		try{
 			reqDTO = new ProcurementPlanReqDTO();
 			resDTO = new ProcurementPlanResDTO();
@@ -1185,17 +1232,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			//Get All Values
 			updatePlanActors(ppPlan);
-			if(ppPlan.getPpRemarks()!=null){
-				PpRemark ppRemark= ppPlan.getPpRemarks().get(0);
-				if(ppRemark.isBrandNew() && !StringUtils.isBlank(ppRemark.getRemark())){
-					if(ppRemark.getRoleCode() ==null || StringUtils.isBlank(ppRemark.getRoleCode().getRoleCode())){
-						PmRole roleCode = new PmRole();
-						roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
-						ppRemark.setRoleCode(roleCode);
-						ppRemark.setPpPlan(ppPlan);
-					}
-				}
-			}
+			remark = getRemark(ppPlan);
 			
 			if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)){
 				rejectReasons = getAllRejectionReasons(ppPlan);
@@ -1204,7 +1241,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 			
-			
+			reqDTO.setPpRemark(remark);
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); 
