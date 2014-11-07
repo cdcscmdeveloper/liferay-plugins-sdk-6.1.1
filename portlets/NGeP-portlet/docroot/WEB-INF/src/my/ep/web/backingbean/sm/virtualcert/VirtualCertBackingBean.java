@@ -61,7 +61,6 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.tools.generic.EscapeTool;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.Document;
@@ -428,19 +427,18 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("expDate", expDate);
     	context.put("regDate", toUtilDate(supplier.getCreatedDate()));
     	
-    	context.put("companyName", companyName);
+    	context.put("companyName", escapeXhtml(companyName));
     	context.put("bizRegNo", bizRegNo);
-    	context.put("address1", address1);
-    	context.put("address2", address2);
-    	context.put("address3", address3);
-    	context.put("address4", address4);
+    	context.put("address1", escapeXhtml(address1));
+    	context.put("address2", escapeXhtml(address2));
+    	context.put("address3", escapeXhtml(address3));
+    	context.put("address4", escapeXhtml(address4));
     	context.put("postCode", postCode);
     	context.put("cityName", cityName);
     	context.put("stateName", stateName);
     	context.put("countryName", countryName);
     	context.put("personnelList", personnelList);
     	context.put("hostUrl", hostUrl);
-    	context.put("escape", new EscapeTool());
     	
     	StringWriter output = new StringWriter();
     	
