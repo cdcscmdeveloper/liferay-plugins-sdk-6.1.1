@@ -28,9 +28,11 @@
 							<f:facet name="header">
 					               <h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.pm.contract.no']}" />
 			                   	</f:facet>
-				               <ac:lov id="lovContract" lovId="CT_CONTRACT" required="true" label="Contract NO."
-								size="15" headerText="Contract"
+				               <ac:lov id="lovContract" lovId="CT_CONTRACT_FOR_FEE" required="true" label="Contract NO." 
+								size="20" headerText="Contract" readonly="true" update=":form:settingTabId:feeSettingId:feeByContractTableID"
+								postUpdateListener="ruleCatalogueBackingBean.updateDatesForFeeBaseOnContract(#{rowIndex} ,ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId)"
 								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId" 
+								conditionField="recordStatus^1"
 								value="#{feeObj.contractId.contractNo}">
 							   </ac:lov>
 						
@@ -40,8 +42,9 @@
 							<f:facet name="header">
 				                	#{lbl['lbl.so.itemname']}
 				                </f:facet>
-				                 <ac:lov id="lovContractItem" lovId="CT_CONTRACT_ITEM" 
-				                 size="15" headerText="Contract Item"
+				              
+				                 <ac:lov id="lovContractItem" lovId="CT_CONTRACT_ITEM"  disabled="#{feeObj.contractId.contractNo == null}"  
+				                 size="35" headerText="Contract Item" readonly="true" 
 				                	postUpdateListener="ruleCatalogueBackingBean.scRequestItemCodeUpdate(#{rowIndex},ruleCatalogueBackingBean.managedBean.feeExemptionsForContract)"
 								    saveObject="ruleCatalogueBackingBean.managedBean.selectedCtContractItem" 
 								    value="#{feeObj.requestItemId.itemName}">
@@ -56,9 +59,9 @@
 		                		</f:facet>
 
 							<p:calendar showOn="button" id="effDate"
-								mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+								mindate="#{ruleCatalogueBackingBean.managedBean.today}" 
 								label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								value="#{feeObj.effDate}">
 							</p:calendar>
 						</p:column>
@@ -71,7 +74,7 @@
 							<p:calendar showOn="button" id="expDate"
 								mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 								label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								value="#{feeObj.expDate}">
 							</p:calendar>
 						</p:column>
@@ -80,14 +83,14 @@
 							<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
-							<p:selectOneMenu value="#{feeObj.recordStatusFlg}"
+							<p:selectOneMenu value="#{feeObj.recordStatusFlg}" disabled="#{typeValueObj.brandNew}"
 								style="width:128px;">
 								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
 									itemValue="0" />
 								<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							</p:selectOneMenu>
 						</p:column>
-						<p:column width="10%">
+						<p:column width="5%">
 							<f:facet name="header">
 
 							</f:facet>

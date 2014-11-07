@@ -31,8 +31,8 @@
 					         <h:outputText value="*" styleClass="mandatory" /> <h:outputText value=" #{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			                   	</f:facet>
 					<ac:lov id="lovSupplier" lovId="SM_SUPPLIER" label="Organization / supplier Name"
-						size="15" required="true"
-						headerText="Supplier"
+						size="25" required="true" readonly="true"
+						headerText="Supplier" update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
 						postUpdateListener="ruleCatalogueBackingBean.updateOrgProfileForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem)"
 						saveObject="ruleCatalogueBackingBean.managedBean.selectedSmSupplier"
 						value="#{feeObj.orgProfileId.smSupplier.companyName}">
@@ -45,8 +45,8 @@
 				                	#{lbl['lbl.so.itemname']}
 				                </f:facet>
            
-					<ac:lov id="lovItem" lovId="CM_ITEM"
-						size="15"
+					<ac:lov id="lovItem" lovId="CM_ITEM" disabled="#{feeObj.orgProfileId.smSupplier == null}"
+						size="30" readonly="true"
 						headerText="Item" 
 						saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
 						value="#{feeObj.itemId.itemName}">
@@ -63,7 +63,7 @@
 					<p:calendar showOn="button" id="effDate"
 						mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 						label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{feeObj.effDate}">
 					</p:calendar>
 				</p:column>
@@ -76,7 +76,7 @@
 					<p:calendar showOn="button" id="expDate"
 						mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 						label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{feeObj.expDate}">
 					</p:calendar>
 				</p:column>
@@ -85,13 +85,13 @@
 					<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
-					<p:selectOneMenu value="#{feeObj.recordStatusFlg}"
+					<p:selectOneMenu value="#{feeObj.recordStatusFlg}" disabled="#{typeValueObj.brandNew}"
 						style="width:128px;">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 						<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 					</p:selectOneMenu>
 				</p:column>
-				<p:column width="10%">
+				<p:column width="5%">
 					<f:facet name="header">
 
 					</f:facet>
