@@ -11,6 +11,9 @@
 
 	<ui:define name="contentSection">
 		<p:panel>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
 			<p:messages id="specApprovalMessages"
 						showDetail="true" autoUpdate="true" closable="true"
 						showSummary="false" />
@@ -29,6 +32,8 @@
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+								onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
 								action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</p:column>
