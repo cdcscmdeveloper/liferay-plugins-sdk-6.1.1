@@ -58,7 +58,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.gl.account']}" /></td>
 					<td><ac:lov id="lovGLAccount" lovId="PM_GL_ACCOUNT"
-							size="15" headerText="GL Account"
+							size="15" headerText="GL Account" readonly="true"
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount.glAccCode}">
 						</ac:lov> 
@@ -78,7 +78,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.vot.fund.code']}" /></td>
 					<td><ac:lov id="lovVotFund" lovId="PM_VOT_FUND"
-							size="15" headerText="Vot Fund"
+							size="15" headerText="Vot Fund" readonly="true"
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund"
 							conditionField="recordStatus^1|votFundType^A"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund.votFundCode}">
@@ -93,7 +93,9 @@
 					<td><p:selectOneMenu
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.preferredLanguage}"
 							style="width:128px;">
-							<f:selectItem itemLabel="en" itemValue="en" />
+							<!-- <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> -->  
+	            		<f:selectItems value="#{ruleCatalogueBackingBean.getLanguageList()}" 
+	            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
 						</p:selectOneMenu></td>
 					<td />
 					<td />

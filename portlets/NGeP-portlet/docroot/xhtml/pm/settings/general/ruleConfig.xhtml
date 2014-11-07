@@ -8,41 +8,39 @@
 
 
 
-		<div style="text-align: right; min-height: 40px;">
+	<div style="text-align: right; min-height: 40px;">
 
-			<h:panelGroup>
-				<p:commandButton value="#{lbl['lbl.cm.save']}"
-					icon="ui-icon-save"
-					action="#{ruleCatalogueBackingBean.saveRuleCatalog}" update="@form"></p:commandButton>
+		<h:panelGroup>
+			<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
+				action="#{ruleCatalogueBackingBean.saveRuleCatalog}" update="@form"></p:commandButton>
 
-			</h:panelGroup>
+		</h:panelGroup>
 
-		</div>
+	</div>
 
-			<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"
-				var="ruleTypeObj" row="10"
-				value="#{ruleCatalogueBackingBean.managedBean.configRuleList}"
-				selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleType}"
-				rowKey="#{ruleTypeObj}" rowIndexVar="rowIndex"
-				selectionMode="single">
+	<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"
+		var="ruleTypeObj" row="10"
+		value="#{ruleCatalogueBackingBean.managedBean.configRuleList}"
+		selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleType}"
+		rowKey="#{ruleTypeObj}" rowIndexVar="rowIndex" selectionMode="single">
 
-				<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-					update=":form:settingTabId:ruleTypeValueTableID" />
-				<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-					update=":form:settingTabId:ruleTypeValueTableID" />
+		<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+			update=":form:settingTabId:ruleTypeValueTableID" />
+		<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+			update=":form:settingTabId:ruleTypeValueTableID" />
 
 
 
-				<p:column>
-					<f:facet name="header">
+		<p:column>
+			<f:facet name="header">
 					               #{lbl['lbl.pm.rule.type']}
 			                   	</f:facet>
 				
 			                    #{ruleTypeObj.ruleTypeDesc}
 				
 			            	</p:column>
-				<p:column>
-					<f:facet name="header">
+		<p:column>
+			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.data.type']}
 				                </f:facet>
                                 #{ruleCatalogueBackingBean.getParameterDesc(ParameterTypeConst.ruleDataType,ruleTypeObj.ruleDataTypeId.parameterCode)}
@@ -50,120 +48,136 @@
 							
 			              	</p:column>
 
-			</p:dataTable>
-			<br />
-			<h:outputText value="#{lbl['lbl.pm.rule.type.value']}"
-				style="font-weight: bold;" />
-			<p:spacer height="20px" />
-			<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget" row="5"
-				value="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues}"
-				var="typeValueObj" selectionMode="single"
-				selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleValue}"
-				rowKey="#{typeValueObj}" rowIndexVar="index">
+	</p:dataTable>
+	<br />
+	<h:outputText value="#{lbl['lbl.pm.rule.type.value']}"
+		style="font-weight: bold;" />
+	<p:spacer height="20px" />
+	<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
+		row="5"
+		value="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues}"
+		var="typeValueObj" rowKey="#{typeValueObj}" rowIndexVar="index">
 
-				<ac:paginator for="ruleTypeValueTableID" />
-				<p:column width="15%"
-					rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'C')}">
-					<f:facet name="header">
+		<ac:paginator for="ruleTypeValueTableID" />
+		<p:column width="25%"
+			rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'C')}">
+			<f:facet name="header">
+					                 #{lbl['lbl.pm.value']}
+				           </f:facet>
+
+			<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+				partialSubmit="true" process=":form:settingTabId"
+				update=":form:settingTabId"
+				valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"></p:inputText>
+		</p:column>
+
+		<p:column width="25%"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
+			<f:facet name="header">
 					                 #{lbl['lbl.pm.value']}
 				                </f:facet>
 
-					<p:inputText value="#{typeValueObj.ruleValue}" size="15"></p:inputText>
-				</p:column>
+			<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3"
+				update=":form:settingTabId:ruleTypeValueTableID" size="20"
+				headerText="Category" readonly="true"
+				postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
+				saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
+				value="#{typeValueObj.categoryDisplayValue}">
+			</ac:lov>
 
-				<p:column width="15%"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
-					<f:facet name="header">
-					                 #{lbl['lbl.pm.value']}
-				                </f:facet>
+		</p:column>
 
-					<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" update=":form:settingTabId:ruleTypeValueTableID"
-						size="15" headerText="Category"
-						postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
-						saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
-						value="#{typeValueObj.ruleValue}">
-					</ac:lov>
-					
-				</p:column>
-
-				<p:column width="15%"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
-					<f:facet name="header">
+		<p:column width="15%"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+			<f:facet name="header">
 								
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			                	</f:facet>
-					<p:inputText value="#{typeValueObj.fromValue}" size="15"></p:inputText>
-				</p:column>
+			<p:inputText value="#{typeValueObj.fromValue}" size="15" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
+				valueChangeListener="#{ruleCatalogueBackingBean.fromValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].fromValue)}"></p:inputText>
+		
+		</p:column>
 
-				<p:column width="15%"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
-					<f:facet name="header">
+		<p:column width="15%"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
-					<p:inputText value="#{typeValueObj.toValue}" size="15"></p:inputText>
-				</p:column>
+			<p:inputText value="#{typeValueObj.toValue}" size="15" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
+				valueChangeListener="#{ruleCatalogueBackingBean.toValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].toValue)}"></p:inputText>
+		
+		</p:column>
 
-				<p:column
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
-					<f:facet name="header">
+		<p:column width="30%"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
+			<f:facet name="header">
 				                	#{lbl['lbl.pm.desc']}
 		                		</f:facet>
 		                		#{typeValueObj.categoryL3Id.categoryName}
 							</p:column>
 
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.pm.as.effdate']}"/>
-		                		</f:facet>
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
+			</f:facet>
 
-					<p:calendar showOn="button" id="effDate"
-						mindate="#{ruleCatalogueBackingBean.managedBean.today}"
-						required="true" label="#{lbl['lbl.pm.as.effdate']}"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-						value="#{typeValueObj.effDate}">
-					</p:calendar>
-				</p:column>
+			<p:calendar showOn="button" id="effDate"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+				required="true" label="#{lbl['lbl.pm.as.effdate']}"
+				readonlyInput="true" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
+				valueChangeListener="#{ruleCatalogueBackingBean.effDateUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].effDate)}"
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				value="#{typeValueObj.effDate}">
+			</p:calendar>
+		</p:column>
 
-				<p:column>
-					<f:facet name="header">
+		<p:column>
+			<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-					<p:calendar showOn="button" id="expDate"
-						mindate="#{ruleCatalogueBackingBean.managedBean.today}"
-					    label="#{lbl['lbl.pm.as.expdate']}"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-						value="#{typeValueObj.expDate}">
-					</p:calendar>
-				</p:column>
+			<p:calendar showOn="button" id="expDate"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true" partialSubmit="true" process=":form:settingTabId"
+				update=":form:settingTabId"
+				valueChangeListener="#{ruleCatalogueBackingBean.expDateUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].expDate)}"
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				value="#{typeValueObj.expDate}">
+			</p:calendar>
+		</p:column>
 
-				<p:column width="10%">
-					<f:facet name="header">
+		<p:column width="10%">
+			<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
-					<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
-						style="width:128px;">
-						<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-						<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-					</p:selectOneMenu>
-				</p:column>
+			<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
+				disabled="#{typeValueObj.brandNew}" style="width:128px;">
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+			</p:selectOneMenu>
+		</p:column>
+		<p:column width="10%">
+			<f:facet name="header">
 
-			</p:dataTable>
-			<br/>
-			<h:panelGroup id="addBtnId">
-				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-						ajax="true"
-						action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
-						update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						icon="ui-icon-delete" ajax="true"
-						action="#{ruleCatalogueBackingBean.deleteMoreRuleValue()}"
-						update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-				</div>
-			</h:panelGroup>
-	
+			</f:facet>
+			<p:commandLink id="deleteValue" partialSubmit="true" process="@this"
+				action="#{ruleCatalogueBackingBean.deleteMoreRuleValue(index)}"
+				update=":form:settingTabId:ruleTypeValueTableID">
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+			</p:commandLink>
+		</p:column>
+	</p:dataTable>
+	<br />
+	<h:panelGroup id="addBtnId">
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+				action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
+				partialSubmit="true" process=":form:settingTabId"
+				update=":form:settingTabId"></p:commandButton>
+
+		</div>
+	</h:panelGroup>
+
 
 </ui:composition>

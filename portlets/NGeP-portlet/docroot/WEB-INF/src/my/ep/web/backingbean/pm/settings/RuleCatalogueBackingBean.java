@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -33,12 +34,14 @@ import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.PmConfigRule;
@@ -49,6 +52,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -72,14 +76,79 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
-
+		System.out
+				.println("........in constructor of RuleCatalogueBackingBean........");
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+					"pm", IRuleSO.class);
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.BOND);
+			reqDTO.setCompareValue("4000000");
+			RuleResDTO resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out.println("...>.200000...true............compareResult="
+					+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+			reqDTO.setCompareValue("40000");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out
+					.println("...<=...20000.....false.............compareResult="
+							+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+			reqDTO.setCompareValue("50000");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out
+					.println("...<=..20000 & 78888..true..............compareResult="
+							+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.GST);
+			reqDTO.setCompareValue("7");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out
+					.println("..==..6.......false..............compareResult="
+							+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.RESTRICTED_CATEGORY_FOR_QUTATION_TENDER);
+			reqDTO.setCompareValue("031021");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out
+					.println("..==....category......false..............compareResult="
+							+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.MULTIPLE_PROPOSAL_CATEGORY);
+			reqDTO.setCompareValue("061022");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out
+					.println("..==....category......true..............compareResult="
+							+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.QUTAION_THRESHOLD);
+			reqDTO.setCompareValue("1000000");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out
+					.println("..<=.500000......false..............compareResult="
+							+ resDTO.isCompareValueResult());
+			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_FEE);
+			reqDTO.setCompareValue("0.8");
+			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
+			System.out.println("..==.0.8......true..............compareResult="
+					+ resDTO.isCompareValueResult());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void checkDateValidation(PmConfigRuleValue ruleValue, String ruleType){
+		log.info("...............checkDateValidation...............");
+//		log.info(".......ruleValue="+ruleValue);
+//		log.info(".......ruleValue.getExpDate()="+ruleValue.getExpDate());
+//		log.info(".......ruleValue.getEffDate()="+ruleValue.getEffDate());
+		if(ruleValue.getExpDate() != null && (ruleValue.getExpDate().getTime() < ruleValue.getEffDate().getTime())){
+			throw new EpException(MessageConst.ERROR_770111 , new String[]{ruleType});
+		}
 	}
 
 	public String preRenderView() {
 		log.info("...........preRenderView............");
 		this.getManagedBean().setTabActiveIndex(0);
 		this.getManagedBean().setFeeExemptionIndex(0);
-		
+
 		IConfigGeneralSO cgeneralSO = null;
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
@@ -107,7 +176,26 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().setSelectedRuleType(
 					this.getManagedBean().getConfigRuleList().get(0));
 			// this.getManagedBean().setTabActiveIndex(1);
-
+			// fill up category display value
+			for (PmConfigRule rule : resRDTO.getRuleTypeList()) {
+				if (rule.getRuleDataTypeId().getParameterCode()
+						.equalsIgnoreCase("c")) {
+					for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
+						PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
+						if (categoryL3 != null) {
+							String categoryL3Code = categoryL3
+									.getCategoryL3Code();
+							String categoryL2Code = categoryL3
+									.getPmCategoryL2().getCategoryL2Code();
+							String categoryL1Code = categoryL3
+									.getPmCategoryL2().getPmCategoryL1()
+									.getCategoryL1Code();
+							cRule.setCategoryDisplayValue(categoryL3Code
+									+ categoryL2Code + categoryL1Code);
+						}
+					}
+				}
+			}
 			// ////////////getitng FeeExemption////////////////////////////
 			IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
 					.getInstance()
@@ -196,19 +284,18 @@ public class RuleCatalogueBackingBean extends
 		return "";
 	}
 
-
 	public void categoryCodesUpdate(int index,
 			List<PmConfigRuleValue> ruleTypeValueList, PmCategoryL3 categoryL3) {
 		log.info("................categoryCodesUpdate...............");
 		ICategoryCodeSO categoryCodeSo;
-		try {
+		
 			categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 			CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
 			codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
 			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
 					.retrieveCategoryL3DtlById(codeReqDTO);
-			if (CategoryCodeResDTO != null 
+			if (CategoryCodeResDTO != null
 					&& CategoryCodeResDTO.getCategoryL3() != null) {
 				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
 				ruleValue.setCategoryL3Id(CategoryCodeResDTO.getCategoryL3());
@@ -219,23 +306,92 @@ public class RuleCatalogueBackingBean extends
 				String categoryL1Code = CategoryCodeResDTO.getCategoryL3()
 						.getPmCategoryL2().getPmCategoryL1()
 						.getCategoryL1Code();
-//				log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
-//						+ CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
-//				log.info(".............categoryL3Code=" + categoryL3Code);
-//				log.info(".............categoryL2Code=" + categoryL2Code);
-//				log.info(".............categoryL1Code=" + categoryL1Code);
-				ruleValue.setRuleValue(categoryL3Code + categoryL2Code
-						+ categoryL1Code);
+				// log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
+				// + CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
+				// log.info(".............categoryL3Code=" + categoryL3Code);
+				// log.info(".............categoryL2Code=" + categoryL2Code);
+				// log.info(".............categoryL1Code=" + categoryL1Code);
+				ruleValue.setCategoryDisplayValue(categoryL3Code
+						+ categoryL2Code + categoryL1Code);
 				this.getManagedBean().getSelectedRuleType()
 						.getConfigRuleValues().remove(index);
 				this.getManagedBean().getSelectedRuleType()
 						.getConfigRuleValues().add(index, ruleValue);
 			}
-		} finally {
-
-		}
+		
 	}
 
+	public void ruleValueUpdate(int index,
+			List<PmConfigRuleValue> ruleTypeValueList, String value) {
+		log.info("................ruleValueUpdate...............");
+		if(value != null){
+				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
+				
+				ruleValue.setRuleValue(value);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().remove(index);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().add(index, ruleValue);
+			}
+		
+	}
+	public void fromValueUpdate(int index,
+			List<PmConfigRuleValue> ruleTypeValueList, Long fromValue) {
+		log.info("................fromValueUpdate...............");
+		if(fromValue != null){
+				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
+				
+				ruleValue.setFromValue(fromValue);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().remove(index);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().add(index, ruleValue);
+			}
+		
+	}
+	
+	public void toValueUpdate(int index,
+			List<PmConfigRuleValue> ruleTypeValueList, Long toValue) {
+		log.info("................toValueUpdate...............");
+		if(toValue != null){
+				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
+				
+				ruleValue.setToValue(toValue);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().remove(index);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().add(index, ruleValue);
+			}
+		
+	}
+	public void effDateUpdate(int index,
+			List<PmConfigRuleValue> ruleTypeValueList, Date effDate) {
+		log.info("................effDateUpdate...............");
+		if(effDate != null){
+				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
+				
+				ruleValue.setEffDate(effDate);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().remove(index);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().add(index, ruleValue);
+			}
+		
+	}
+	public void expDateUpdate(int index,
+			List<PmConfigRuleValue> ruleTypeValueList, Date expDate) {
+		log.info("................expDateUpdate...............");
+		if(expDate != null){
+				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
+				
+				ruleValue.setExpDate(expDate);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().remove(index);
+				this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().add(index, ruleValue);
+			}
+		
+	}
 	public void updateOrgProfileForFee(int index,
 			List<PmFeeExemption> feeExcemptionList) {
 		log.info("................updateOrgProfileForFee...............");
@@ -267,6 +423,24 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 
+	public void updateDatesForFeeBaseOnContract(int index,
+			CtContract contract) {
+		log.info("................updateDatesForFeeBaseOnContract...............");
+		Date currentDate = new Date();
+		    Date defaultEffDate = contract.getLatestContractVer().getCtContractValue().getEffDate();
+		    Date defaultExpDate = contract.getLatestContractVer().getCtContractValue().getExpDate();
+		    if(contract.getPublishDate().getTime() < currentDate.getTime()){
+		    	defaultEffDate = currentDate;
+		    }
+	     	PmFeeExemption exemption = this.getManagedBean().getFeeExemptionsForContract().get(index);
+			exemption.setEffDate(defaultEffDate);
+			exemption.setExpDate(defaultExpDate);
+			this.getManagedBean().getFeeExemptionsForContract().remove(index);
+			this.getManagedBean().getFeeExemptionsForContract()
+					.add(index, exemption);
+	}
+
+	
 	public void updateCmItemForFee(int index,
 			List<PmFeeExemption> feeExcemptionList) {
 		log.info("................updateCmItemForFee...............");
@@ -300,10 +474,11 @@ public class RuleCatalogueBackingBean extends
 			unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
-			reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity().getUnspscCode());
+			reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity()
+					.getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
-    
+
 			if (resDTO.isSuccessful()) {
 				CmUnspsc commodity = resDTO.getCommodityObj();
 				exemption.setTypes(new ArrayList<CmType>());
@@ -315,8 +490,8 @@ public class RuleCatalogueBackingBean extends
 
 			}
 
-		    exemption.setUnspscId(resDTO.getCommodityObj());
-		    this.getManagedBean().getFeeExemptionsForComodity().remove(index);
+			exemption.setUnspscId(resDTO.getCommodityObj());
+			this.getManagedBean().getFeeExemptionsForComodity().remove(index);
 			this.getManagedBean().getFeeExemptionsForComodity()
 					.add(index, exemption);
 
@@ -367,31 +542,58 @@ public class RuleCatalogueBackingBean extends
 		}
 
 	}
+	
+	/**
+	 * get all language list
+	 * @return List<PmLanguage>
+	 */
+	public List<PmLanguage> getLanguageList() {
+		log.info("getLanguageList");
+		return PmCommonUtil.retrieveLanguageObjs();
+	}
 
 	public void addMoreRuleValue() {
 		log.info(".................addMoreRuleValue...................");
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(new Date());
-		log.info("..............this.getManagedBean().getSelectedRuleType()="+this.getManagedBean().getSelectedRuleType());
-		log.info("..............this.getManagedBean().getSelectedRuleType().getRuleType()="+this.getManagedBean().getSelectedRuleType().getRuleType());
-		log.info("..............this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()="+this.getManagedBean().getSelectedRuleType().getRuleDataTypeId());
-		if(this.getManagedBean().getSelectedRuleType().getRuleDataTypeId().getParameterCode().equals("C")){
-			newRuleValue.setCategoryL3Id(new PmCategoryL3());// make sure to delete the new obj before update if doesn't selected
+		
+		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
+				.getParameterCode().equals("C")) {
+			newRuleValue.setCategoryL3Id(new PmCategoryL3());// make sure to
+																// delete the
+																// new obj
+																// before update
+																// if doesn't
+																// selected
 		}
-
+//		int indexOfSelectedRuleType = this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
+//		this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
 		int index = this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size();
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.add(index, newRuleValue);
+//		this.getManagedBean().getConfigRuleList().add(indexOfSelectedRuleType, this.getManagedBean().getSelectedRuleType());
+//		for(PmConfigRuleValue value : this.getManagedBean().getConfigRuleList().get(indexOfSelectedRuleType).getConfigRuleValues()){
+//	       	log.info(".......................value.getRuleValue()="+value.getRuleValue());
+//		}
 
 	}
 
-	public void deleteMoreRuleValue() {
+	public void deleteMoreRuleValue(int rowIndex) {
 		log.info(".................deleteMoreRuleValue...................");
+		
+//		PmConfigRuleValue ruleValue = 	this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
+		
+//		int indexOfSelectedRuleType = this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
+//		this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
 
-		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-				.remove(this.getManagedBean().getSelectedRuleValue());
+		this.getManagedBean().getSelectedRuleType().getConfigRuleValues().remove(rowIndex);
+		//merge selectedRuleType with changes in values into ConfigRuleTypes
+//		this.getManagedBean().getConfigRuleList().add(indexOfSelectedRuleType, this.getManagedBean().getSelectedRuleType());
+//		for(PmConfigRuleValue value : this.getManagedBean().getConfigRuleList().get(indexOfSelectedRuleType).getConfigRuleValues()){
+//	       	log.info(".......................value.getRuleValue()="+value.getRuleValue());
+//		}
 
 	}
 
@@ -400,7 +602,9 @@ public class RuleCatalogueBackingBean extends
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		// newFeeExemption.setFeeExemptionType("1");
 		newFeeExemption.setEffDate(new Date());
-		newFeeExemption.setItemId(new CmItem());// make sure to delete the new objs before update if doesn't selected
+		newFeeExemption.setItemId(new CmItem());// make sure to delete the new
+												// objs before update if doesn't
+												// selected
 		newFeeExemption.setOrgProfileId(new PmOrgProfile());
 
 		int index = this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -427,7 +631,9 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 
-		newFeeExemption.setEffDate(new Date());// make sure to delete the new objs before update if doesn't selected
+		newFeeExemption.setEffDate(new Date());// make sure to delete the new
+												// objs before update if doesn't
+												// selected
 		newFeeExemption.setTypeId(new CmType());
 		newFeeExemption.setUnspscId(new CmUnspsc());
 
@@ -480,27 +686,97 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveRuleCatalog() {
+		log.info("...........saveRuleCatalog............");
 		// make sure to delete the new obj before update if doesn't selected
-		  for(PmConfigRule ruleType:this.getManagedBean().getConfigRuleList()){
-       	   
-       	   if(ruleType.getRuleDataTypeId().getParameterCode().equals("C")){
-       		   for(PmConfigRuleValue ruleTypeValue:ruleType.getConfigRuleValues()){
-       			if(ruleTypeValue.getCategoryL3Id()!= null && ruleTypeValue.getCategoryL3Id().getCategoryL3Id() == null){
-       				ruleTypeValue.setCategoryL3Id(null);
-       			}
-       		   }
-      		}
-          }
+		for (PmConfigRule ruleType : this.getManagedBean().getConfigRuleList()) {
+
+			if (ruleType.getRuleDataTypeId().getParameterCode().equals("C")) {
+				for (PmConfigRuleValue ruleTypeValue : ruleType
+						.getConfigRuleValues()) {
+					if (ruleTypeValue.getCategoryL3Id() != null
+							&& ruleTypeValue.getCategoryL3Id()
+									.getCategoryL3Id() == null) {
+						ruleTypeValue.setCategoryL3Id(null);
+					}
+				}
+			}
+			// set System date for those Expire date not selected
+			Date currentDate = new Date();
+			for (PmConfigRuleValue ruleTypeValue : ruleType
+					.getConfigRuleValues()) {
+				
+				if (ruleTypeValue.isBrandNew()
+						&& ruleTypeValue.getExpDate() == null) {
+					ruleTypeValue.setExpDate(currentDate);
+				}
+				checkDateValidation(ruleTypeValue, ruleType.getRuleTypeDesc());
+
+			}
+			// TODO validation check/ Date overlapping
+//			boolean dateOverlaped = false;
+//			log.info("........................ruleType.getConfigRuleValues().size()="+ruleType.getConfigRuleValues().size());
+			for (int i = 0; i < ruleType.getConfigRuleValues().size(); i++) {
+				
+				PmConfigRuleValue baseValueToCompare = ruleType
+						.getConfigRuleValues().get(i);
+				log.info(".........................baseValueToCompare.getRuleValue()="+baseValueToCompare.getRuleValue());
+				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
+					PmConfigRuleValue value = ruleType.getConfigRuleValues()
+							.get(j);
+					log.info(".........................second.value.getRuleValue()="+value.getRuleValue());
+					if (ruleType.getRuleDataTypeId().getParameterCode()
+							.equals("C")) {
+						log.info(".........................baseValueToCompare.getCategoryL3Id().getCategoryL3Id()="+baseValueToCompare.getCategoryL3Id().getCategoryL3Id());
+						log.info(".........................value.getCategoryL3Id().getCategoryL3Id()="+value.getCategoryL3Id().getCategoryL3Id());
+						if (value.getCategoryL3Id().getCategoryL3Id() == baseValueToCompare.getCategoryL3Id().getCategoryL3Id()) {
+							  log.info("..............is overlapped= "+isDateOverlaped(
+										baseValueToCompare.getEffDate(),
+										baseValueToCompare.getExpDate(),
+										value.getEffDate(), value.getExpDate()));
+							if(isDateOverlaped(
+									baseValueToCompare.getEffDate(),
+									baseValueToCompare.getExpDate(),
+									value.getEffDate(), value.getExpDate())){
+								  log.info("................befor throw exeption for category...................");
+								  log.info("............ value.getCategoryL3Id()="+ value.getCategoryL3Id());
+								//hit error and return
+								throw new EpException(MessageConst.ERROR_770110, new String[]{ruleType.getRuleTypeDesc()});
+							}
+
+						}
+
+					} else {// if it's amount or percentage shouldn't be
+							// overlapped
+//						  log.info("..............is overlapped= "+isDateOverlaped(
+//									baseValueToCompare.getEffDate(),
+//									baseValueToCompare.getExpDate(),
+//									value.getEffDate(), value.getExpDate()));
+						if(isDateOverlaped(
+								baseValueToCompare.getEffDate(),
+								baseValueToCompare.getExpDate(),
+								value.getEffDate(), value.getExpDate())){
+//                           log.info("................before throw exception...................");
+							//hit error and return
+							throw new EpException(MessageConst.ERROR_770109, new String[]{ruleType.getRuleTypeDesc()});
+						}
+					}
+				
+					
+
+				}
+			}
+
+		}
+
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 					"pm", IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
-			
-         
+
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
-			//retrive updated list
+			// retrive updated list
 			reqDTO = new RuleReqDTO();
 			FacesScopes fs = new FacesScopes();
 			reqDTO.setLanguageCode(fs.getUserLocale().getLanguage());
@@ -510,6 +786,26 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().setConfigRuleList(resDTO.getRuleTypeList());
 			this.getManagedBean().setSelectedRuleType(
 					this.getManagedBean().getConfigRuleList().get(0));
+			// fill up category display value
+			for (PmConfigRule rule : resDTO.getRuleTypeList()) {
+				if (rule.getRuleDataTypeId().getParameterCode()
+						.equalsIgnoreCase("c")) {
+					for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
+						PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
+						if (categoryL3 != null) {
+							String categoryL3Code = categoryL3
+									.getCategoryL3Code();
+							String categoryL2Code = categoryL3
+									.getPmCategoryL2().getCategoryL2Code();
+							String categoryL1Code = categoryL3
+									.getPmCategoryL2().getPmCategoryL1()
+									.getCategoryL1Code();
+							cRule.setCategoryDisplayValue(categoryL3Code
+									+ categoryL2Code + categoryL1Code);
+						}
+					}
+				}
+			}
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
@@ -526,6 +822,24 @@ public class RuleCatalogueBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
+//		log.info("..................start1.getTime()="+start1.getTime());
+//		log.info("..................end2.getTime()="+end2.getTime());
+//		log.info(".................start2.getTime()="+start2.getTime());
+//		log.info("..................end1.getTime()="+end1.getTime());
+//		log.info(".................start1.getTime() <= end2.getTime()="+(start1.getTime() <= end2.getTime()));
+//		log.info("................start2.getTime() <= end1.getTime()="+(start2.getTime() <= end1.getTime()));
+		Date currentDate = new Date();
+		if(end1 == null){
+			end1 = currentDate;
+		}
+		if(end2 == null){
+			end2 = currentDate;
+		}
+		return start1.getTime() <= end2.getTime()
+				&& start2.getTime() <= end1.getTime();
 	}
 
 	public void saveFeeExemptionForOrgItem() {
