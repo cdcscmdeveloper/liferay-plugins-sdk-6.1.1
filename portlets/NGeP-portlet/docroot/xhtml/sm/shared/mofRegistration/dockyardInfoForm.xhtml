@@ -181,11 +181,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="smFacDockYardPosCode"
+				<td><p:inputText id="smFacDockYardPosCode" maxlength="5"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.postcode']}"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
-						size="35" /> <p:message id="smFacDockYardPosCodeMsg"
+						size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
+						<f:validateRegex pattern="[0-9]+" />
+						</p:inputText> 
+						<p:message id="smFacDockYardPosCodeMsg"
 						for="smFacDockYardPosCode" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -241,13 +244,16 @@
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
 						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+						<p:outputLabel value="*" styleClass="mandatory" 
+						rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O' or 
+							backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}"/>
 					</p:outputPanel></td>
 				<td><p:outputPanel id="docPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
 							<p:inputText id="smDocPrice" label="#{lbl['lbl.cm.price']}"
 								value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
-								size="20">
+								size="20" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -258,7 +264,7 @@
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
 							<p:inputText id="smDocRent" label="#{lbl['lbl.sm.facility.rent.rm']}"
 								value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
-								size="20">
+								size="20" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>

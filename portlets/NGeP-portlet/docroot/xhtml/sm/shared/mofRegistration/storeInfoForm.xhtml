@@ -180,11 +180,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="10" id="smFacStorePosCode"
+				<td><p:inputText id="smFacStorePosCode"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.postcode']}"
+						label="#{lbl['lbl.sm.postcode']}" maxlength="5"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.postcode}"
-						size="35" /> <p:message id="smFacStorePosCodeMsg"
+						size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"> 
+						<f:validateRegex pattern="[0-9]+" />
+						</p:inputText>
+						<p:message id="smFacStorePosCodeMsg"
 						for="smFacStorePosCode" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
@@ -240,13 +243,16 @@
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}" />
 						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
+						<p:outputLabel value="*" styleClass="mandatory" 
+						rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O' or 
+							backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}"/>
 					</p:outputPanel></td>
 				<td><p:outputPanel id="storPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
 							<p:inputText id="smFacStorePrice" label="#{lbl['lbl.cm.price']}"
 								value="#{backingBean.managedBean.selectedStoreFacility.purchasePrice}"
-								size="20">
+								size="20" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -257,7 +263,7 @@
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
 							<p:inputText id="smFacStoreRent" label="#{lbl['lbl.sm.facility.rent.rm']}"
 								value="#{backingBean.managedBean.selectedStoreFacility.rentalRate}"
-								size="20">
+								size="20" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
