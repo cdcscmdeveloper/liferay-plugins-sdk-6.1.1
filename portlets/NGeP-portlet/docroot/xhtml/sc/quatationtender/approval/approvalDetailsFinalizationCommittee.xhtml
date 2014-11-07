@@ -8,7 +8,7 @@
 	<p:spacer height="5" />
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="fcareqdtlsid"
-			value="#{fcaApprovalDtlsList}"
+			value="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls}"
 			var="fcrequestdetails" rowIndexVar="index" editable="true"
 			rowKey="#{fcrequestdetails}">
 
@@ -28,10 +28,32 @@
 
 	<p:panel header="#{lbl['lbl.sc.qt.finalize.appoint']}"
 		toggleable="true">
-		<p:dataTable id="finalizecommitteid" style="width:50%">
+		<p:dataTable id="finalizationsecretaryid"
+			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
+			var="approverSettings" rowIndexVar="index" editable="true"
+			rowKey="#{approverSettings}">
 			<p:column headerText="#{lbl['lbl.so.finalization.committee']}">
+				<p:selectOneMenu id="finalizationCommittes"
+					value="#{approverSettings.committeType}"
+					style="width: 178px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems var="secretary"
+						value="#{fcaApprovalTab.approverCommittes}"
+						itemLabel="#{secretary.parameterCode}"
+						itemValue="#{secretary.parameterCode}" />
+					<p:ajax event="change" update="commType"
+						listener="#{qTDetailBB.retrieveSecretaryNameByCommType}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.secretary.name']}">
+				<h:panelGroup id="commType">
+					<ui:fragment
+						rendered="#{qtfinalizationcommittee.finalizationCommitte.parameterCode eq 'PBB' or qtfinalizationcommittee.finalizationCommitte.parameterCode eq 'PBA'}">
+						<h:outputText value="#{approverSettings.approver.userName}" />
+					</ui:fragment>
+
+				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

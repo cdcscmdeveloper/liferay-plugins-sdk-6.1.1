@@ -2,6 +2,7 @@ package my.ep.web.bean.sc.quatationtender;
 
 import java.util.List;
 
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
@@ -20,6 +21,7 @@ public class TabBean {
 	private List<ScQtApproval> scQtApprovalList;
 	private ScQtCommittee scQtCommittee;
 	private boolean isEditable;
+	private List<PmParameter> approverCommittes;
 
 	private List<ScCommitteeMember> members;
 	
@@ -54,6 +56,14 @@ public class TabBean {
 	public TabBean(String titleName, ScQtCommittee scQtCommittee) {
 		this.titleName = titleName;
 		this.scQtCommittee = scQtCommittee;
+	}
+	
+	public TabBean(String titleName, ScQtApproval scQtApproval,
+			List<PmParameter> approverSetting) {
+		this.titleName = titleName;
+		this.scQtApproval = scQtApproval;
+		this.approverCommittes = approverSetting;
+
 	}
 
 	public String getTitleName() {
@@ -143,5 +153,15 @@ public class TabBean {
 		this.scQtCommittee = scQtCommittee;
 		this.setEditable(editable);
 	}
+
+	public List<PmParameter> getApproverCommittes() {
+		return approverCommittes;
+	}
+
+	public void setApproverCommittes(List<PmParameter> approverCommittes) {
+		this.approverCommittes = approverCommittes;
+	}
+
+	
 
 }

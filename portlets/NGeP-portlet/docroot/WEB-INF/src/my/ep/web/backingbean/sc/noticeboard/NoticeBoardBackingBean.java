@@ -1365,11 +1365,12 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	public String constuctConditionFields(){
+		if(null != this.getManagedBean().getMinistryProfile()){
 		Long orgProfileId=this.getManagedBean().getMinistryProfile().getOrgProfileId();
 		if(null != orgProfileId){
 			return "parentOrgProfile.orgProfileId^"+orgProfileId;
 		}
-		
+		}
 		return "";
 	}
 
