@@ -12,7 +12,9 @@
        
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
-	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address']}" escape="false"/><br/><br/>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address1']}" escape="false"/>
+	   <p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address" />
+	   <h:outputText styleClass="instruction" value=" #{lbl['lbl.ct.instruction.delivery.address2']}" escape="false"/><br/><br/>
   
        <p:dataTable id="tableAgencyDetails" var="agencyData" 
             value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
