@@ -18,11 +18,19 @@
 					showTargetControls="true" filterMatchMode="contains">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.available.approver']}"/>
+						<p:graphicImage id="sourceList"
+							         library="ep/images/design" name="tooltips.png" /> 
+						  <p:tooltip id="sourceTooltip" for="sourceList">
+							<h:outputText id="sourceApprover" escape="false" value="#{lbl['lbl.ct.tooltip.available.approver']}" />
+						</p:tooltip> 
 					</f:facet>  
         			<f:facet name="targetCaption">
         				#{lbl['lbl.ct.selected.approver']}
-        				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.selected.approver']}"/>
+        				<p:graphicImage id="targetList"
+							         library="ep/images/design" name="tooltips.png" /> 
+						  <p:tooltip id="targetTooltip" for="targetList">
+							<h:outputText id="targetApprover" escape="false" value="#{lbl['lbl.ct.tooltip.selected.approver']}" />
+						</p:tooltip> 
         			</f:facet> 
 					<p:column style="width:75%;">
 						<h:outputText value="#{data}" />

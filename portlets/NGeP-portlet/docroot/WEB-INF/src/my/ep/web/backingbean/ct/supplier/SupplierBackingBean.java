@@ -338,8 +338,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				            if (resDTO.isSuccessful()) {
 					               getManagedBean().setContractVer(resDTO.getCtContractVer());
 					               getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-					               getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 					               if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()!=null) {
+					            	    getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 						                getPopulateBankAccountList();
 					               }
 				           }
@@ -379,7 +379,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		       List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
 		       if (getManagedBean().getCtContract() != null) {
 			        
-		    	   if (getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+		    	   if (getManagedBean().getCtContract().getSmSupplier() != null && getManagedBean().getCtContract().getSmSupplier().getSmAppl() != null
+		    			 &&  getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
 				          && !getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
 				             for(SmSupplierBank obj : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 				            	
@@ -387,7 +388,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				            		 
 				            		 String account = obj.getAccountNo();
 							           
-						              if(obj.getPmFinancialOrg() != null)
+						              if(obj.getPmFinancialOrg() != null && obj.getPmFinancialOrg().getFinOrgName() != null)
 							               account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
 						                
 						              populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
