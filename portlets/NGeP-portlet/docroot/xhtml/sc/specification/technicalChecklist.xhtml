@@ -30,6 +30,7 @@
 			<p:column style="width:2px;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="stageTwotechProposal"
@@ -37,6 +38,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 					rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
@@ -207,7 +209,6 @@
 				style="width:5%;text-align: center;">
 
 				<p:commandLink
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 

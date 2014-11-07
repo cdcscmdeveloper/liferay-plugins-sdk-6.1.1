@@ -22,6 +22,7 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				style="float:right;" icon="ui-icon-save"
 				action="#{specificationBackingBean.acceptCompanyScoring}" >
 					<f:setPropertyActionListener
