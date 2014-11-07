@@ -433,6 +433,7 @@ public class RuleCatalogueBackingBean extends
 		    	defaultEffDate = currentDate;
 		    }
 	     	PmFeeExemption exemption = this.getManagedBean().getFeeExemptionsForContract().get(index);
+	    	exemption.setDefaultEffDate(defaultEffDate);
 			exemption.setEffDate(defaultEffDate);
 			exemption.setExpDate(defaultExpDate);
 			this.getManagedBean().getFeeExemptionsForContract().remove(index);
