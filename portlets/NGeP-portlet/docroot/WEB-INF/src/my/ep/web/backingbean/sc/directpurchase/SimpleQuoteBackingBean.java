@@ -249,7 +249,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 						
 						if(scQuote.isZonal()){
-							//zoneEvent();
+							zoneEvent();
 						}
 					}
 				} else{
