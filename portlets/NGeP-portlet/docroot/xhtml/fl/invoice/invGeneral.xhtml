@@ -74,8 +74,8 @@
 						<p:ajax event="change" 
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu> <p:message for="accountId" display="icon" />
-					 <p:inputText disabled="true" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
-		   			value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankAccountNo}"></p:inputText></td>
+					 <p:inputText disabled="true" size="55" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
+		   				value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankAccountNo}  #{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankName}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
