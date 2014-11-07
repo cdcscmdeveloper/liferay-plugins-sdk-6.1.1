@@ -21,8 +21,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.qt.status']}" />
 				</f:facet>
-				<p:selectOneMenu id="decisiontypeid" required="true"
-					label="#{lbl['lbl.sc.qt.status']}"
+				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.decessionType.parameterId}"
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -36,24 +35,40 @@
 					display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
-				<h:commandLink value="#{otherrequestdetails.approvalRequestAttachement.fileName}"
-					styleClass="blue_font" immediate="true"
-					action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}" />
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
 					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
-					partialSubmit="true" process="@this" update="otherreqdtlsid">
+					partialSubmit="true" process="otherreqdtlsid"
+					update="otherreqdtlsid">
 					<f:setPropertyActionListener
 						value="#{otherrequestdetails.approvalRequestAttachement}"
 						target="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalDtls}" />
 				</p:commandButton>
+				<p:dataGrid id="otheruploadId"
+					value="#{otherrequestdetails.approvalRequestAttachement}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+					style="width:100%">
+					<table>
+						<tr>
+							<td><h:commandLink
+									value="#{otherrequestdetails.approvalRequestAttachement.fileName}"
+									styleClass="blue_font" immediate="true"
+									action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}" />
+								<p:commandLink
+									action="#{approvalBackingBean.deleteOthersApprovalFile}"
+									immediate="true" update="otheruploadId">
+									<h:graphicImage library="ep/images/design" name="trash.png"
+										styleClass="tasklist_title1" />
+								</p:commandLink></td>
+						</tr>
+					</table>
+				</p:dataGrid>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.qt.remark']}" />
 				</f:facet>
-				<p:inputTextarea id="remarkid" required="true"
-					label="#{lbl['lbl.sc.qt.remark']}"
+				<p:inputTextarea id="remarkid"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
 					rows="3" />
 				<p:message id="remarkidMsg" for="remarkid" display="icon" />
