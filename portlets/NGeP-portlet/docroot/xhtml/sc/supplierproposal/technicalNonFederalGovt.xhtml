@@ -24,14 +24,14 @@
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="@this"
+							update="@([id$=technongovtid])"
 							listener="#{supplierProposalDetailBackingBean.selectAll}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 
 				<p:selectBooleanCheckbox
 					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=technongovtid])"
+					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}" />
 				</p:selectBooleanCheckbox>
 
