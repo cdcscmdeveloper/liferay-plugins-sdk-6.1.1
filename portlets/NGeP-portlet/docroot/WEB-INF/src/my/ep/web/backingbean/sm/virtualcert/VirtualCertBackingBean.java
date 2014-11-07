@@ -60,6 +60,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.tools.generic.EscapeTool;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.Document;
@@ -301,7 +302,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		SupplierCategoryReqDTO supplierSearchReqDTO = new SupplierCategoryReqDTO();
 		supplierSearchReqDTO.setApplId(applId);
 		
-		List<SmSupplierCategory> resultList = new ArrayList<SmSupplierCategory>();
+//		List<SmSupplierCategory> resultList = new ArrayList<SmSupplierCategory>();
+		List resultList = new ArrayList();
 		ISupplierCategorySO supplierCategorySO = null;
 		
 		try {
@@ -309,7 +311,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			SupplierCategoryResDTO supplierCategoryResDTO = supplierCategorySO.retriveSupplierCategoriesByApplId(supplierSearchReqDTO);
 			
 			if(supplierCategoryResDTO.isSuccessful()) {
-				resultList = supplierCategoryResDTO.getSupplierCategoryList();
+//				resultList = supplierCategoryResDTO.getSupplierCategoryList();
+				resultList = supplierCategoryResDTO.getResultList();
 			}
 		} finally {
 			supplierCategorySO = null;
@@ -434,9 +437,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("cityName", cityName);
     	context.put("stateName", stateName);
     	context.put("countryName", countryName);
-    	System.out.println("toUtilDate(supplier.getCreatedDate()): " + toUtilDate(supplier.getCreatedDate()));
     	context.put("personnelList", personnelList);
     	context.put("hostUrl", hostUrl);
+    	context.put("escape", new EscapeTool());
     	
     	StringWriter output = new StringWriter();
     	
@@ -465,9 +468,10 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     		}
     	} */   	
 
-    	List<SmSupplierCategory> supplierCategories = retrieveSupplierCategories(supplier.getSmAppl().getApplId());
+//    	List<SmSupplierCategory> supplierCategories = retrieveSupplierCategories(supplier.getSmAppl().getApplId());
+    	List supplierCategories = retrieveSupplierCategories(supplier.getSmAppl().getApplId());
     	
-    	List categories = new ArrayList();
+/*    	List categories = new ArrayList();
     	for(SmSupplierCategory supplierCategory : supplierCategories) {
     		
     		log.info("supplierCategory: " + supplierCategory.isRecordStatus() + " || " +  supplierCategory.isApprovedByAp() + " || " + supplierCategory.isApprovedByPo());
@@ -481,7 +485,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     			
     			categories.add(category);
     		}
-    	}
+    	}*/
     	
     	VelocityContext context = new VelocityContext();
     	
@@ -491,7 +495,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("expDate", this.getManagedBean().getExpDate());
     	context.put("regDate", toUtilDate(supplier.getCreatedDate()));
 //    	context.put("categoryList", categoryList);
-    	context.put("categories", categories);
+    	context.put("categories", supplierCategories);
+    	context.put("addDateAndCount", getAddCategoriesDate(supplierCategories, supplier.getSmAppl().getCreatedDate()));
+    	context.put("deleteDateAndCount", getDeleteCategoriesDate(supplierCategories, supplier.getSmAppl().getCreatedDate()));
     	
     	StringWriter output = new StringWriter();
     	    	
@@ -501,12 +507,64 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	return output.toString();
     }
     
-    private String getAddCategoriesDate(List<SmSupplierCategory> supplierCategories) {
-    	return null;
+    private String getAddCategoriesDate(List supplierCategories, java.sql.Timestamp applDate) {
+    	Calendar applUtilDate = Calendar.getInstance();
+    	applUtilDate.setTimeInMillis(applDate.getTime());
+    	applUtilDate.add(Calendar.SECOND, 30);
+    	
+    	Calendar catDate = Calendar.getInstance();
+    	String addDateInString = null; 
+    	int count = 0;
+    	
+    	/*for(SmSupplierCategory supplierCategory : supplierCategories) {
+    		catDate.setTimeInMillis(supplierCategory.getChangedDate().getTime());
+    		if(catDate.after(applUtilDate)) {
+    			addDateInString = toUtilDate(supplierCategory.getChangedDate());
+    			count++;
+    		}
+    	}*/
+    	
+    	for(Object obj : supplierCategories) {
+    		Object[] supplierCategory = (Object[]) obj;
+    		catDate.setTimeInMillis(((java.sql.Timestamp)supplierCategory[1]).getTime());
+    		if(catDate.after(applUtilDate)) {
+    			addDateInString = toUtilDate((java.sql.Timestamp)supplierCategory[1]);
+    			count++;
+    		}
+    	}
+    	
+    	String dateAndCount = "";
+    	if(count > 0) {
+    		dateAndCount = addDateInString + " : " + count;
+    	}
+    	
+    	return dateAndCount;
     }
     
-    private String getDeleteCategoriesDate(List<SmSupplierCategory> supplierCategories) {
-    	return null;
+    private String getDeleteCategoriesDate(List<SmSupplierCategory> supplierCategories, java.sql.Timestamp applDate) {
+    	Calendar applUtilDate = Calendar.getInstance();
+    	applUtilDate.setTimeInMillis(applDate.getTime());
+    	applUtilDate.add(Calendar.SECOND, 30);
+    	
+    	Calendar catDate = Calendar.getInstance();
+    	String addDateInString = null; 
+    	int count = 0;
+    	
+    	for(Object obj : supplierCategories) {
+    		Object[] supplierCategory = (Object[]) obj;
+    		catDate.setTimeInMillis(((java.sql.Timestamp)supplierCategory[1]).getTime());
+    		if(catDate.after(applUtilDate)) {
+    			addDateInString = toUtilDate((java.sql.Timestamp)supplierCategory[1]);
+    			count++;
+    		}
+    	}
+    	
+    	String dateAndCount = "";
+    	if(count > 0) {
+    		dateAndCount = addDateInString + " : " + count;
+    	}
+    	
+    	return dateAndCount;
     }
     
     private String toUtilDate(java.sql.Timestamp sqlDate) {
