@@ -17,7 +17,7 @@
 					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(entry.key,entry.value)}" />
 		</c:forEach>
 
-		<p:menuitem value="#{lbl[lbl.sm.sitevist.report.submission]}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,'')}" />.
+		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,'')}" />.
 	</p:tabMenu>
 	
 </ui:composition>
