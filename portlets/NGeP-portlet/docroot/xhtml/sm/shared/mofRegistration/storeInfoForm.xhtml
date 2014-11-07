@@ -185,7 +185,7 @@
 						label="#{lbl['lbl.sm.postcode']}" maxlength="5"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.postcode}"
 						size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"> 
-						<f:validateRegex pattern="[0-9]+" />
+						<f:validateRegex pattern="[0-9]*" />
 						</p:inputText>
 						<p:message id="smFacStorePosCodeMsg"
 						for="smFacStorePosCode" showSummary="true" showDetail="false"
