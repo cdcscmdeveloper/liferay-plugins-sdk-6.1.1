@@ -1201,8 +1201,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					ppRemark.setRoleCode(roleCode);
 					ppRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 				}
+				remark = ppRemark;
 			}
-			remark = ppRemark;
+			
 		}
 		return remark;
 	}
