@@ -11,13 +11,27 @@
 		toggleable="true">
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
-			rowKey="#{creditfacilities}" rowIndexVar="rowIndex"
-			selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPCreditFacilities}">
+			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
+			<ac:paginator for="creditfaciitiesid" />
+			
+			<p:column style="width:2%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=creditfaciitiesid])"
+							listener="#{supplierProposalDetailBackingBean.selectAllCreditFacilities}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
 
-			<p:column selectionMode="multiple" style="width:2%" />
+				<p:selectBooleanCheckbox
+					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{supplierProposalDetailBackingBean.selectedCreditFacility(rowIndex)}" />
+				</p:selectBooleanCheckbox>
 
-			<ac:paginator for="technongovtid" />
-
+			</p:column>
+			
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -28,7 +42,9 @@
 				<p:inputText id="bankName" value="#{creditfacilities.bankName}"
 					size="30" rendered="#{creditfacilities.brandNew eq true}"
 					required="true" maxlength="100"
-					label="#{lbl['lbl.sc.sp.bank.name']}" />
+					label="#{lbl['lbl.sc.sp.bank.name']}" >
+					<p:ajax process="@this" partialSubmit="true" update="@this,bankNameMsg" />
+					</p:inputText>
 				<p:message id="bankNameMsg" for="bankName" display="icon" />
 			</p:column>
 
@@ -42,7 +58,9 @@
 				<p:inputTextarea id="bankAddress"
 					value="#{creditfacilities.bankAddress}" cols="35" rows="3"
 					required="true" maxlength="100" label="#{lbl['lbl.sc.sp.address']}"
-					rendered="#{creditfacilities.brandNew eq true}" />
+					rendered="#{creditfacilities.brandNew eq true}" >
+					<p:ajax process="@this" partialSubmit="true" update="@this,bankAddressMsg" />
+					</p:inputTextarea>
 				<p:message id="bankAddressMsg" for="bankAddress" display="icon" />
 			</p:column>
 
@@ -61,7 +79,7 @@
 					rendered="#{creditfacilities.brandNew eq true}">
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.creditType)}" />
-					<p:ajax event="change"
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this,creditTypeMsg"
 						listener="#{supplierProposalDetailBackingBean.creditTypeChange(creditfacilities)}" />
 				</p:selectOneMenu>
 				<p:message id="creditTypeMsg" for="creditType" display="icon" />
@@ -83,7 +101,7 @@
 					maxlength="19" label="#{lbl['lbl.sc.sp.amt.credit']}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.totalCreditFacilitiesSum}"
-						update="@this, :form:totalSummaryPG" />
+						update="@this, :form:totalSummaryPG,creditAmtMsg" />
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -106,7 +124,7 @@
 					maxlength="19" label="#{lbl['lbl.sc.sp.amt.paid']}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.totalCreditFacilitiesSum}"
-						update="@this, :form:totalSummaryPG" />
+						update="@this, :form:totalSummaryPG,amtPaidMsg" />
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -121,7 +139,7 @@
 				action="#{supplierProposalDetailBackingBean.addCreditFacilities}"
 				update="creditfaciitiesid" icon="ui-icon-add" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this" partialSubmit="true"
 				rendered="#{!statusHide}" icon="ui-icon-delete"
 				update="creditfaciitiesid, totalSummaryPG"
 				action="#{supplierProposalDetailBackingBean.deleteCreditFacilities}" />

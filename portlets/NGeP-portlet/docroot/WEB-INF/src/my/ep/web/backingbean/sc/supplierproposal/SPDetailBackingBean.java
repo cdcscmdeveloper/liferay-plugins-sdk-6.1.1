@@ -2241,7 +2241,7 @@ public class SPDetailBackingBean extends
 				.getSelectedPRPExperiences();
 		
 		if(selectedExperienceList == null || selectedExperienceList.size() == 0){
-			throw new EpException("Please select a record delete");
+			throw new EpException("Please select a record to delete");
 		}
 		if (selectedExperienceList != null) {
 			List<ScQtPRPExperience> tobeDeletedExperiences = new ArrayList<ScQtPRPExperience>();
@@ -2296,23 +2296,29 @@ public class SPDetailBackingBean extends
 
 	public void deleteCreditFacilities() {
 		debugLogger("deleteCreditFacilities");
-		List<ScQtPRPCreditFacility> creditFacilitiesList = this
-				.getManagedBean().getScQtPRPCreditFacilities();
-		List<ScQtPRPCreditFacility> selectedcreditFacilitiesList = this
+		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean().getScQtPRPCreditFacilities();
+		List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
 				.getManagedBean().getSelectedPRPCreditFacilities();
-		if (creditFacilitiesList.size() == selectedcreditFacilitiesList.size()) {
+		
+		if(selectedCreditFacilitiesList == null ||selectedCreditFacilitiesList.size() == 0 ){
+			throw new EpException("Please select a record to delete");
+		}
+		
+		if (creditFacilitiesList.size() == selectedCreditFacilitiesList.size()) {
 			getManagedBean().setToBeDeletedCreditFacilities(
-					selectedcreditFacilitiesList);
+					selectedCreditFacilitiesList);
 			creditFacilitiesList.clear();
-		} else if (selectedcreditFacilitiesList != null) {
+		} else if (selectedCreditFacilitiesList != null) {
 			List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
-			for (ScQtPRPCreditFacility facility : selectedcreditFacilitiesList) {
+			for (ScQtPRPCreditFacility facility : selectedCreditFacilitiesList) {
 				toDeleteCreditFacilitiesList.add(facility);
 				creditFacilitiesList.remove(facility);
 			}
 			getManagedBean().setToBeDeletedCreditFacilities(
 					toDeleteCreditFacilitiesList);
 		}
+		getManagedBean().setScQtPRPCreditFacilities(creditFacilitiesList);
+		getManagedBean().setSelectedPRPCreditFacilities(null);
 		totalCreditFacilitiesSum();
 	}
 
@@ -2683,20 +2689,46 @@ public class SPDetailBackingBean extends
 				selectedExperienceList = new ArrayList<ScQtPRPExperience>();
 			}
 			selectedExperienceList.add(getManagedBean().getScQtPRPExperiences().get(index));
-			if(getManagedBean().getScQtPRPExperiences().size() == selectedExperienceList.size()){
-				getManagedBean().setSelectedAll(true);
-			}
+			
 		}else {
 			
 			if(selectedExperienceList.contains(getManagedBean().getScQtPRPExperiences().get(index))){
 				selectedExperienceList.remove(getManagedBean().getScQtPRPExperiences().get(index));
 			}
-			if(selectedExperienceList.size() != selectedExperienceList.size() && getManagedBean().isSelectedAll()){
-				getManagedBean().setSelectedAll(false);
-			}
-			
 		}
 		getManagedBean().setSelectedPRPExperiences(selectedExperienceList);
+	}
+	
+	public void selectAllCreditFacilities(){
+		
+		if(getManagedBean().isSelectedAll()){
+			getManagedBean().setSelected(true);
+			getManagedBean().setSelectedPRPCreditFacilities(getManagedBean().getScQtPRPCreditFacilities());
+		}else {
+			getManagedBean().setSelected(false);
+			getManagedBean().setSelectedPRPCreditFacilities(null);
+			
+		}
+	}
+	
+	public void selectedCreditFaclity(int index){
+		
+		List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean()
+				.getSelectedPRPCreditFacilities();
+		
+		if(getManagedBean().isSelected()){
+			if(selectedCreditFacilityList == null){
+				selectedCreditFacilityList = new ArrayList<ScQtPRPCreditFacility>();
+			}
+			selectedCreditFacilityList.add(getManagedBean().getScQtPRPCreditFacilities().get(index));
+			
+		}else {
+			
+			if(selectedCreditFacilityList.contains(getManagedBean().getScQtPRPCreditFacilities().get(index))){
+				selectedCreditFacilityList.remove(getManagedBean().getScQtPRPCreditFacilities().get(index));
+			}
+		}
+		getManagedBean().setSelectedPRPCreditFacilities(selectedCreditFacilityList);
 	}
 	
 	
