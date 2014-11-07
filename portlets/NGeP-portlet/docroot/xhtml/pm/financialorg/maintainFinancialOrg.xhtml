@@ -18,7 +18,7 @@
 				<td><p:commandButton value="Back" immediate="true"
 						icon="ui-icon-back" update=":form" process="@this"
 						action="#{financialOrgBackingBean.backToMain}" style="float:left;" /></td>
-				<td><p:commandButton value="Save"
+				<td><p:commandButton value="#{financialOrgBackingBean.managedBean.financialOrg.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
 						action="#{financialOrgBackingBean.saveFinancialOrg}"
 						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" />
 				</td>
@@ -26,10 +26,10 @@
 
 
 		</table>
-		<c:if
+		<!-- <c:if
 			test="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 			<ui:include src="/xhtml/pm/financialorg/financialOrgHeader.xhtml"></ui:include>
-		</c:if>
+		</c:if> -->
 		<table border="0" cellspacing="0" cellpadding="0" width="100%"
 			id="subMenu">
 			<tr>

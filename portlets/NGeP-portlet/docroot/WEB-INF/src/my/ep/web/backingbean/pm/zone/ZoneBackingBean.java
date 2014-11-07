@@ -160,12 +160,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 		if (zSearchBean.getZoneCode() != null
 				&& zSearchBean.getZoneCode().trim().length() > 0) {
-			log.info("+ zoneCode " + zSearchBean.getZoneCode());
-			/*SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("zoneCode");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value(),true);
-			bean.setSearchValue(zSearchBean.getZoneCode());
-			searchBean.getDataFilterBeans().add(bean);*/
+			log.info("+ zoneCode " + zSearchBean.getZoneCode());			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneCode",
 							SearchOperator.OPERATOR_LIKE.value(),
@@ -174,11 +169,17 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		if (zSearchBean.getZoneCode() != null
 				&& zSearchBean.getZoneName().trim().length() > 0) {
 			log.info("+ zoneName " + zSearchBean.getZoneName());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("zoneName");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(zSearchBean.getZoneName());
-			searchBean.getDataFilterBeans().add(bean);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("zoneName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							zSearchBean.getZoneName(), true));
+		}
+		if (zSearchBean.getStateName() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmZoneStates.pmState.stateName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							zSearchBean.getStateName(), true));
 		}
 
 		if (zSearchBean.getStatus() != null) {
