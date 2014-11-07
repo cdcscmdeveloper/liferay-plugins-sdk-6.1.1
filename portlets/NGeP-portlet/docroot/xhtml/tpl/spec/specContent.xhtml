@@ -144,17 +144,20 @@
 			</c:if>
 		</p:panel>
 		
-		<p:dialog id="delConfirmPopup" header="#{lbl['lbl.tpl.spec.content.delete.confirmation.title']}" widgetVar="#{delConfirmPopup}" modal="true" height="100" width="350" resizable="false" >
+		<p:dialog id="delConfirmPopup" header="#{lbl['lbl.msg.confirm.delete.header']}" widgetVar="#{delConfirmPopup}" modal="true" height="100" width="350" resizable="false" >
 			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="delConfirmPopup"/>
 			
-			<h:outputText value="#{lbl['lbl.msg.confirm.delete']}" />
-			<br />
-			<br />
+			<h:panelGrid columns="3">
+                   <p:graphicImage library="ep/images/design" 
+                        name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			       <p:spacer width="10"/>
+                   <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+            </h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" 
 					oncomplete="#{delConfirmPopup}.hide();" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
 					partialSubmit="true" process="@this" update="spg" />
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-cancel"
 					partialSubmit="true" process="@this" update="@this" 
 					oncomplete="#{delConfirmPopup}.hide();return false">
 					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{false}" />
