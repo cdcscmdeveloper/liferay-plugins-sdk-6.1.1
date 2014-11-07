@@ -2332,7 +2332,9 @@ public class SmApplicationBackingBean extends
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_FACTORY_FACILITY_PANEL);
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
-		getManagedBean().setFacilityType("FACTORY");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.factory", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("factoryDialog.show()");
 	}
@@ -2414,7 +2416,9 @@ public class SmApplicationBackingBean extends
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
 		getManagedBean().setSelectedDockyardFacility(facilityBean);
-		getManagedBean().setFacilityType("DOCKYARD");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.dockyard", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("dockYardDialog.show()");
 	}
@@ -2433,7 +2437,9 @@ public class SmApplicationBackingBean extends
 				retrievePmStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
-		getManagedBean().setFacilityType("DOCKYARD");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.dockyard", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("dockYardDialog.show()");
 	}
@@ -2493,7 +2499,9 @@ public class SmApplicationBackingBean extends
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
 		getManagedBean().setSelectedWorkShopFacility(facilityBean);
-		getManagedBean().setFacilityType("WORKSHOP");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.workshop", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("workShopDialog.show()");
 	}
@@ -2512,7 +2520,9 @@ public class SmApplicationBackingBean extends
 				retrievePmStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
-		getManagedBean().setFacilityType("WORKSHOP");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.workshop", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("workShopDialog.show()");
 	}
@@ -2571,7 +2581,9 @@ public class SmApplicationBackingBean extends
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_STORE_FACILITY_PANEL);
 		getManagedBean().setSelectedStoreFacility(facilityBean);
-		getManagedBean().setFacilityType("STORE");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.store", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("storeDialog.show()");
 	}
@@ -2590,7 +2602,9 @@ public class SmApplicationBackingBean extends
 				retrievePmStateList(getManagedBean()
 						.getSelectedFactoryFacility().getSmAddress()
 						.getPmCountry().getCountryId()));
-		getManagedBean().setFacilityType("STORE");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.store", null)));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("storeDialog.show()");
 	}
