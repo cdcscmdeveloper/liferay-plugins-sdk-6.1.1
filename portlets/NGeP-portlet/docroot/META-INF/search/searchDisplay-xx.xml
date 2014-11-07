@@ -333,6 +333,53 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="CT_CONTRACT_FOR_FEE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="contractId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.ct.CtContractDAO" />
+	    <property name="searchMethod" value="retrieveContract" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.contract.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.so.contract.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.so.suppliername" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="latestContractVer.ctContractValue.effDate" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.so.suppliername" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="latestContractVer.ctContractValue.expDate" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.so.suppliername" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				
+			</list>
+		</property>
+	</bean>
 
 	<bean id="FL_DELIVERY_ADDR" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="addressId" />
