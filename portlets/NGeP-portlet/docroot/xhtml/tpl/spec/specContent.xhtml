@@ -147,7 +147,7 @@
 		<p:dialog id="delConfirmPopup" header="#{lbl['lbl.tpl.spec.content.delete.confirmation.title']}" widgetVar="#{delConfirmPopup}" modal="true" height="100" width="350" resizable="false" >
 			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="delConfirmPopup"/>
 			
-			<h:outputText value="Confirm to delete?" />
+			<h:outputText value="#{lbl['lbl.msg.confirm.delete']}" />
 			<br />
 			<br />
 			<div class="ppRightBtn">
