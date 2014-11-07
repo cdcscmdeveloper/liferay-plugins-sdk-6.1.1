@@ -1910,7 +1910,7 @@ public void ConstructSideTabMenu(){
 	}
     
     public boolean isContractAdmin() {
-		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
 
 	private String getUserRole() {		
