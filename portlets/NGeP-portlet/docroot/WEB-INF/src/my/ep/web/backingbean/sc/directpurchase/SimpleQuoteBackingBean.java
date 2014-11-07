@@ -242,11 +242,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 								throw new EpException("Simple quote must have only one Panel Item.");
 							}
 						}
-						   //adding selected item to item List
-					       prepareQuestions(selectedPanelItem , null);
-					       scQuote.setPanelItem(selectedPanelItem);   
-					       getManagedBean().getPanelItems().add(selectedPanelItem);
+						//adding selected item to item List
+						prepareQuestions(selectedPanelItem , null);
+						scQuote.setPanelItem(selectedPanelItem);   
+						getManagedBean().getPanelItems().add(selectedPanelItem);
 						getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
+						
+						if(scQuote.isZonal()){
+							//zoneEvent();
+						}
 					}
 				} else{
 					throw new EpException("Select non contract items only.");
@@ -1838,15 +1842,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(sqQuoteSupplier.getTplSpecZoneDtl() != null && sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone() != null){
 						if(!sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone().getPanelZoneId().equals(panelZone.getPanelZoneId())){
 							panelSuppliers.add(sqQuoteSupplier);
-						}
+						} 
 					}
 				}
 			}	
 		}
+		//delete panel zones
 		removePanelItemZones(tplSpecZoneDtl);
-		
 		if(panelSuppliers == null || panelSuppliers.isEmpty()){
-			getManagedBean().getScQuote().setScQuoteSuppliers(null);
+			this.getManagedBean().getScQuote().setScQuoteSuppliers(null);
+			
+		} else{
+			getManagedBean().getScQuote().setScQuoteSuppliers(panelSuppliers);
 		}
 		getManagedBean().setPanelSuppliers(panelSuppliers);
 		
@@ -2105,7 +2112,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		
 	public void tabMenuListener(Integer activeIndex) {
 		debugLogger("tabMenuListener");
-		System.out.println("active index :"+ getManagedBean().getActiveIndex());
 		if(activeIndex.equals(0)){
 			getManagedBean().setActiveIndex(0);
 		} else if(activeIndex.equals(1)){
