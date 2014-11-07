@@ -11,7 +11,7 @@
 		toggleable="true">
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
-			widgetVar="financialChecklist" 
+			
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
@@ -215,7 +215,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				process="@this,financeProposaltwo" partialSubmit="true"
-				oncomplete="financialChecklist.paginator.endLink.click();"
+			
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
 				update="@all,financeProposaltwo" icon="ui-icon-add" />
 

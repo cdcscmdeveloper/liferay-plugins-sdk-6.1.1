@@ -10,13 +10,12 @@
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
-			widgetVar="technicalChecklist" 
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
 			first="#{specificationBackingBean.managedBean.technicalTableRow}"
 			rowKey="#{stageTwoTechnical}">
-		<!-- 	<ac:paginator for="stageTwotechProposal" /> -->
+			<!-- 	<ac:paginator for="stageTwotechProposal" /> -->
 
 			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}" />
@@ -188,7 +187,7 @@
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<h:panelGroup id="uploadtech">
 					<p:commandLink oncomplete="uploadDlg.show();return false;"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 						styleClass="sample#{index}"
 						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 						update="stageTwotechProposal">
@@ -208,7 +207,7 @@
 				style="width:5%;text-align: center;">
 
 				<p:commandLink
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 
@@ -224,24 +223,23 @@
 
 		<div align="right">
 			<p:commandButton
-			disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="Create Specification" process="@this"
-			disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();"
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-			disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				process="@this,stageTwotechProposal"
-				oncomplete="technicalChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
 				update="@all,stageTwotechProposal" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-			disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.deleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				update="stageTwotechProposal">
