@@ -32,10 +32,10 @@ public class DeletePendingActivationJob implements Job {
 		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IPersonnelSO.class);
-		PersonnelResDTO resDTO = reqSO
-				.deleteExpiredPendingActivationPersonnel(reqDTO);
-		log.info("finish executing delete pending job with status:"
-				+ resDTO.isSuccessful() + "...");
+//		PersonnelResDTO resDTO = reqSO
+//				.deleteExpiredPendingActivationPersonnel(reqDTO);
+//		log.info("finish executing delete pending job with status:"
+//				+ resDTO.isSuccessful() + "...");
 	}
 
 }
