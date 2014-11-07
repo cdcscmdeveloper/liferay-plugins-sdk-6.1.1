@@ -17,7 +17,8 @@
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{amendmentBackingBean.invalidContractExtendPeriod()}">
 					<p:ajax event="change" update=":form:typesOfAmend" process="@all"
-					   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
+					   onstart="blockWidget.show();" 
+					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">

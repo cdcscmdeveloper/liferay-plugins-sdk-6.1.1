@@ -455,13 +455,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      MenuModel amendMenuModel = new DefaultMenuModel();
 		      AmendTabSideMenus sideMenu = new AmendTabSideMenus();
 		      FacesContext facesContext = FacesContext.getCurrentInstance();
-		    
-		      if(getManagedBean().getFinalListOfSideMenu() == null)
-			       getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
-		      else
-			      getManagedBean().getFinalListOfSideMenu().clear();
-		
-		       if(this.getManagedBean().getAckFA() == null){
+		      getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
+		  
+		       if(getManagedBean().getAckFA() == null) {
 			         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
 			         if(getManagedBean().getContractVer().getCtAmendment() != null &&
 			        		  (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
@@ -494,6 +490,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		     for( String str : this.getManagedBean().getFinalListOfSideMenu()){
 	 	    	    MenuItem menuItem = new MenuItem();
+	 	    	    menuItem.setId("AmendMenuId"+zoneTabIndex);
 	 	    	    menuItem.setValue(str);
 	 	    	    menuItem.setUpdate("@all");
 	 	    	    menuItem.setActionExpression(FacesScopes
@@ -2568,6 +2565,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	public void setDeafultPriceType(){
-		getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-	}
+		
+		 if(getManagedBean().getSelectedItem() != null) {
+			 
+			 if(getManagedBean().getShowItem() != null && getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE))
+			         getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+			  else if(getManagedBean().getShowItem() != null && getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY))
+				     getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
+			  else 
+				  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+		     }
+       }
 }

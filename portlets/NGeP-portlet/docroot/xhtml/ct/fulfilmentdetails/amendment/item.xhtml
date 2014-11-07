@@ -23,15 +23,18 @@
 				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.setDeafultPriceType()}"
 				     process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			
-				  <p:column style="width:35%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
-				      <f:facet name="header">
-		                    <h:outputText value="#{lbl['lbl.ct.item.desc']}"/>
-		                    <ac:iconTooltip id="ctItemNames" value="#{lbl['lbl.ct.instruction.item.search']}" />
+				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
+				  <f:facet name="header">
+		                    <h:outputText id="productItemDisc"  value="#{lbl['lbl.ct.item.desc']}"/>
+		                        &#160;<p:graphicImage id="amendProductItemId" library="ep/images/design" name="tooltips.png" /> <p:tooltip
+							          id="amendProductTooltip" for="amendProductItemId">
+							<h:outputText id="amendProductInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
+						</p:tooltip> 
 		               </f:facet>
 					   <p:outputLabel value="#{ctItemVar.itemName}" style="float:left;" />
 			   	  </p:column>
 			
-				  <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.type.of.goods']}">
+				  <p:column style="width:15%; white-space:normal;" headerText="#{lbl['lbl.ct.type.of.goods']}">
 					  <p:outputLabel value="#{amendmentBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;" />
 				  </p:column>				
 			
@@ -354,7 +357,15 @@
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" />
-				<p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
+				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
+				      <f:facet name="header">
+		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
+		                        &#160; <p:graphicImage id="amendServiceItemId"
+							         library="ep/images/design" name="tooltips.png" /> <p:tooltip
+							          id="amendServiceTooltip" for="amendServiceItemId">
+							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
+						</p:tooltip> 
+		               </f:facet>
 					<p:outputLabel value="#{serviceItemVar.itemName}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
