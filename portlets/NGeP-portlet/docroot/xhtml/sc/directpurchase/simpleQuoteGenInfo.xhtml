@@ -134,9 +134,7 @@
 				<td style="width: 15%;">
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td style="width: 30%;">
-					<table>
-						<tr>
-						 <td> 
+					<table><tr><td> 
 							<p:calendar showOn="button" id="startDate"  
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
@@ -151,69 +149,75 @@
 							<td><p:message id="startDateMsg" for="startDate" display="icon" /></td>
 						</tr>
 					</table>
-				</td>
-			
-				<td style="width: 15%;">
-				 <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td style="width: 40%;"><p:calendar showOn="button" id="endDate" label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
-				       mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
-				       readonlyInput="true"  required="true" 
-				       disabled="#{isPendingRnCreationStatus}"
-				       pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
-				       value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
-				     <p:ajax event="dateSelect" update="durationId"  process="@this" partialSubmit="true" 
-										listener="#{simpleQuoteBackingBean.dateListener}" />
-				    </p:calendar></td>
-				    <td><p:message id="endDateMsg" for="endDate" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
-				<td colspan="3">
-				 <p:outputPanel autoUpdate="true" id="durationId">
-				   <p:inputText  size="6" label="#{lbl['lbl.sc.sq.gen.info.duration']}" maxlength="5"
-				      value="#{simpleQuoteBackingBean.managedBean.duration}" disabled="true"
-				      style="text-align:right; margin-top: 4px">
-				    <f:convertNumber pattern="##0.0"/>
-				</p:inputText>
-				
-				 <p:spacer	width="5px" /> 
-				 <h:outputText value="#{lbl['lbl.ss.simple.quote.hours']}"></h:outputText>
-				 </p:outputPanel>
-				</td>
-			</tr>
-			
-			
-			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3">
-					<table>
-						<tr>
-							<td><p:selectOneRadio id="noOfQuote"
-									label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}"
-									required="true"
-									disabled="#{isPendingRnCreationStatus}"
-									value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
-									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
-										itemValue="false" />
-									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
-										itemValue="true" />
-									<p:ajax event="change" update="@([id$=mainTabMenu])"
-										process="@this" partialSubmit="true"
-										listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
-								</p:selectOneRadio></td>
+				  </td>
+				   <td style="width: 15%;">
+				     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 
-							<td style="margin-top: -3px"><p:message id="noofquoteMsg" for="noOfQuote"
-									display="icon" /> <ac:iconTooltip
-									value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" /></td>
+				    <td style="width: 40%;">
+					      <table><tr><td><p:calendar showOn="button" id="endDate"
+									label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
+									mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
+									readonlyInput="true" required="true"
+									disabled="#{isPendingRnCreationStatus}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
+									<p:ajax event="dateSelect" update="durationId" process="@this"
+										partialSubmit="true"
+										listener="#{simpleQuoteBackingBean.dateListener}" />
+								  </p:calendar></td>
+							      <td><p:message id="endDateMsg" for="endDate" display="icon" /></td>
+							 </tr>
+							</table>
+					  </td>
+				     </tr>
+					 <tr>
+						<td><p:outputLabel
+									value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
+						<td colspan="3"><p:outputPanel autoUpdate="true"
+									id="durationId">
+									<p:inputText size="6"
+										label="#{lbl['lbl.sc.sq.gen.info.duration']}" maxlength="5"
+										value="#{simpleQuoteBackingBean.managedBean.duration}"
+										disabled="true" style="text-align:right; margin-top: 4px">
+										<f:convertNumber pattern="##0.0" />
+									</p:inputText>
+
+									<p:spacer width="5px" />
+									<h:outputText value="#{lbl['lbl.ss.simple.quote.hours']}"></h:outputText>
+								</p:outputPanel></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel
+									value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td colspan="3">
+								<table>
+									<tr>
+										<td><p:selectOneRadio id="noOfQuote"
+												label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}"
+												required="true" disabled="#{isPendingRnCreationStatus}"
+												value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
+												<f:selectItem
+													itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
+													itemValue="false" />
+												<f:selectItem
+													itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
+													itemValue="true" />
+												<p:ajax event="change" update="@([id$=mainTabMenu])"
+													process="@this" partialSubmit="true"
+													listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
+											</p:selectOneRadio></td>
+
+										<td style="margin-top: -3px"><p:message id="noofquoteMsg"
+												for="noOfQuote" display="icon" /> <ac:iconTooltip
+												value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" /></td>
+									</tr>
+								</table>
+							</td>
+
 						</tr>
-					</table>
-				</td>
-			
-			</tr>
-		</table>
-	</p:panel>
+					</table></p:panel>
 	<p:panel label="#{lbl['lbl.ss.panel.title.remarks']}" header="#{lbl['lbl.ss.panel.title.remarks']}" id="rmkId" toggleable="true" toggleSpeed="500">
 	<p:outputPanel>
 	 <table style="width: 100%">
