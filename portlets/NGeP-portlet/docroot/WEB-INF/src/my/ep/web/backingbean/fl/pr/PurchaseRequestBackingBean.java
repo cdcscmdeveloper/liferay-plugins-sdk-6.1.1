@@ -134,7 +134,6 @@ import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
-import my.ep.web.util.fl.helper.QuantityFormatUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -842,9 +841,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				flItemAddr.setItemType(purchaseItem.getRequestItem().getItemType());
 				flItemAddr.setScRequestItem(purchaseItem.getRequestItem());
 				flItemAddr.setCmItem(purchaseItem.getRequestItem().getCmItem());
-				//code for adding numberformat
-				QuantityFormatUtils quantityFormatUtils = new QuantityFormatUtils();
-				flItemAddr.setNumberFormatPattern(quantityFormatUtils.getDisplayNumberFormatFl(purchaseItem.getRequestItem().getUom().getUomCode()));
 				//zonal & zonal tier & zonal promo & tier promo
 				if(purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
