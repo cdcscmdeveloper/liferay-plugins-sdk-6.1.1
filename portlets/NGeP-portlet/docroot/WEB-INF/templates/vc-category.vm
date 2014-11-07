@@ -75,24 +75,24 @@
     </tr>
     <tr align='left'>
         <td>
-	
+		
 		<table border='1' >
 		
 		 <tr >
 		  	<th width='20' >BIL</th >
-		  	<th width='160' >TARIKH DAFTAR BIDANG</th >
-		  	<th width='150' >KOD BIDANG</th >
-		  	<th width='390' >KETERANGAN</th >
-		  	<th width='100' >STATUS</th >
+		  	<th width='120' >TARIKH DAFTAR BIDANG</th >
+		  	<th width='100' >KOD BIDANG</th >
+		  	<th width='520' >KETERANGAN</th >
+		  	<th width='60' >STATUS</th >
 		 </tr>
 		#set( $count = 1 )	
 		#foreach( $category in $categories )
 		 <tr >
 		  	<td width='20' >$count</td>
-		  	<td width='160' >$category.get(0)</td>
-		  	<td width='150' >$category.get(1)</td>
-		  	<td width='390' >$category.get(2)</td>
-		  	<td width='100' >AKTIF</td>
+		  	<td width='120' >$category.get(0)</td>
+		  	<td width='100' >$category.get(2)</td>
+		  	<td width='520' >$category.get(3)</td>
+		  	<td width='60' >$category.get(4)</td>
 		 </tr>
 			#set( $count = $count + 1 )
 		#end
@@ -104,18 +104,22 @@
     <tr>
     	<td><span>&#160;</span></td>
     </tr>
+    #if ( $addDateAndCount != "")
     <tr align='left'>
         <td>
-            <span style='font-size:11px;font-family: Albertus Medium;'>Bilangan Tambah Bidang Pada</span>
-            <span style='font-size:11px;font-family: Times New Roman;'>dd/mm/yyyy</span>
+            <span style='font-size:11px;font-family: Albertus Medium;'>Bilangan Tambah Bidang Pada </span>
+            <span style='font-size:11px;font-family: Times New Roman;'>$addDateAndCount</span>
         </td>
     </tr>
+    #end
+    #if ( $addDateAndCount != "")
     <tr align='left'>
         <td>
             <span style='font-size:11px;font-family: Albertus Medium;'>Bilangan Batal Bidang Pada</span>
-            <span style='font-size:11px;font-family: Times New Roman;'>dd/mm/yyyy</span>
+            <span style='font-size:11px;font-family: Times New Roman;'>$deleteDateAndCount</span>
         </td>
     </tr>
+    #end
 </table>
 
 

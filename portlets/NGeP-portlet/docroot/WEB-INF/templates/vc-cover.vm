@@ -84,10 +84,10 @@
             	#if ( $address2 != "")
             		$address2<br />
             	#end
-            	#if ( $address2 != "")
+            	#if ( $address3 != "")
             		$address3<br />
             	#end
-            	#if ( $address2 != "")
+            	#if ( $address4 != "")
             		$address4<br />
             	#end
             	$postCode $cityName, $stateName
