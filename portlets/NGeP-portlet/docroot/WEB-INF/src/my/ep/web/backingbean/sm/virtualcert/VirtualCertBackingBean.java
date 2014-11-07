@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -297,10 +298,10 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
         downloadFile(latestFile);
 	}
 	
-	private List<SmSupplierCategory> retrieveSupplierCategories(Long applId) {
+	private List<SmSupplierCategory> retrieveSupplierCategories(Long supplierId) {
 		
 		SupplierCategoryReqDTO supplierSearchReqDTO = new SupplierCategoryReqDTO();
-		supplierSearchReqDTO.setApplId(applId);
+		supplierSearchReqDTO.setSupplierId(supplierId);
 		
 //		List<SmSupplierCategory> resultList = new ArrayList<SmSupplierCategory>();
 		List resultList = new ArrayList();
@@ -469,7 +470,10 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	} */   	
 
 //    	List<SmSupplierCategory> supplierCategories = retrieveSupplierCategories(supplier.getSmAppl().getApplId());
-    	List supplierCategories = retrieveSupplierCategories(supplier.getSmAppl().getApplId());
+    	
+    	System.out.println("supplier.getSupplierId(): " + supplier.getSupplierId());
+    	
+    	List supplierCategories = retrieveSupplierCategories(supplier.getSupplierId());
     	
 /*    	List categories = new ArrayList();
     	for(SmSupplierCategory supplierCategory : supplierCategories) {
@@ -527,9 +531,11 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	for(Object obj : supplierCategories) {
     		Object[] supplierCategory = (Object[]) obj;
     		catDate.setTimeInMillis(((java.sql.Timestamp)supplierCategory[1]).getTime());
-    		if(catDate.after(applUtilDate)) {
-    			addDateInString = toUtilDate((java.sql.Timestamp)supplierCategory[1]);
-    			count++;
+    		if(((BigDecimal)supplierCategory[5]).intValue() == 1) {
+        		if(catDate.after(applUtilDate)) {
+        			addDateInString = toUtilDate((java.sql.Timestamp)supplierCategory[1]);
+        			count++;
+        		}    			
     		}
     	}
     	
@@ -553,9 +559,11 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	for(Object obj : supplierCategories) {
     		Object[] supplierCategory = (Object[]) obj;
     		catDate.setTimeInMillis(((java.sql.Timestamp)supplierCategory[1]).getTime());
-    		if(catDate.after(applUtilDate)) {
-    			addDateInString = toUtilDate((java.sql.Timestamp)supplierCategory[1]);
-    			count++;
+    		if(((BigDecimal)supplierCategory[5]).intValue() == 9) {
+	    		if(catDate.after(applUtilDate)) {
+	    			addDateInString = toUtilDate((java.sql.Timestamp)supplierCategory[1]);
+	    			count++;
+	    		}
     		}
     	}
     	
