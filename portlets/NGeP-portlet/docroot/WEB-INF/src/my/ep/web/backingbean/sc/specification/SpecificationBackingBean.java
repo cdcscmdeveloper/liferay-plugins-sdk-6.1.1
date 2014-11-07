@@ -4846,7 +4846,7 @@ public class SpecificationBackingBean extends
 						.retrieveParameterByTypeAndCode(tenderReqDTO);
 				this.getManagedBean().getScQt()
 						.setProcurementMode(tenderResDTO.getPmParameter());
-				// scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				 scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 				scQt.setOpenFor(SourcingConstants.OPERN_FOR_ALL);
 				this.getManagedBean().setScQt(scQt);
 			}
