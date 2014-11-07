@@ -1921,6 +1921,9 @@ public class SmApplicationUtil {
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
 					.getBumiPercent().intValue();
+			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+				bumiPerc = 99;
+			}
 		}
 		log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
@@ -1965,6 +1968,9 @@ public class SmApplicationUtil {
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
 					.getBumiPercent().intValue();
+			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+				bumiPerc = 99;
+			}
 		}
 		log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
@@ -2018,6 +2024,9 @@ public class SmApplicationUtil {
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
 					.getBumiPercent().intValue();
+			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+				bumiPerc = 99;
+			}
 		}
 		log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
