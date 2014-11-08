@@ -31,7 +31,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -42,11 +41,12 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 @ViewScoped
 public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	private static Logger log = Logger.getLogger(ZoneBackingBean.class);
-	public static final String NAV_TO_ADD = "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
-	public static final String NAV_TO_MAIN = "/xhtml/pm/zonesearch/zoneSearchMain.xhtml";
+	public static final String NAV_TO_ADD = "/xhtml/pm/zonesearch/zoneMaintenance";
+	public static final String NAV_TO_MAIN = "/xhtml/pm/zonesearch/zoneSearchMain";
+
 	private IPagingDataModel<PmZone> searchZone = new SearchZonePagingDataModel();
-	private boolean flag;
-	private boolean result;
+
+	private boolean result= false;
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
 
@@ -85,7 +85,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 		getManagedBean().setPmZone(new PmZone());
 		getManagedBean().setZoneStateList(new ArrayList<PmZoneState>());
-		getManagedBean().getPmZone().setRecordStatusFlg(null);
 
 		getSelectionTypes();
 		return NAV_TO_ADD;
@@ -107,6 +106,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
 		List<PmZoneState> zones = getManagedBean().getZoneStateList();
+		System.out.println("Record Status"
+				+ getManagedBean().getPmZone().getRecordStatusFlg());
 
 		PmZone zone = this.getManagedBean().getPmZone();
 		if (zone.isBrandNew()) {
@@ -157,38 +158,42 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	private ISearchBean<PmZone> getSearchBeanData(ISearchBean<PmZone> searchBean) {
 		log.info("getSearchBeanData - Start");
 		ZoneSearchBean zSearchBean = this.getManagedBean().getZoneSearchBean();
-
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
 		if (zSearchBean.getZoneCode() != null
 				&& zSearchBean.getZoneCode().trim().length() > 0) {
-			log.info("+ zoneCode " + zSearchBean.getZoneCode());			
+			log.info("+ zoneCode " + zSearchBean.getZoneCode());
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneCode",
-							SearchOperator.OPERATOR_LIKE.value(),
-							zSearchBean.getZoneCode(), true));
+							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
+									.getZoneCode(), true));
+			isEmpty = false;
 		}
 		if (zSearchBean.getZoneCode() != null
 				&& zSearchBean.getZoneName().trim().length() > 0) {
 			log.info("+ zoneName " + zSearchBean.getZoneName());
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneName",
-							SearchOperator.OPERATOR_LIKE.value(),
-							zSearchBean.getZoneName(), true));
+							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
+									.getZoneName(), true));
+			isEmpty = false;
 		}
-		if (zSearchBean.getStateName() != null) {
+		if (zSearchBean.getStateName() != null
+				&& zSearchBean.getStateName().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmZoneStates.pmState.stateName",
-							SearchOperator.OPERATOR_LIKE.value(),
-							zSearchBean.getStateName(), true));
+					new SearchFilterBean("pmZoneStates.pmState.stateName",
+							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
+									.getStateName(), true));
+			isEmpty = false;
 		}
 
-		if (zSearchBean.getStatus() != null) {
+		if (isEmpty && !isSearchable) {
 			log.info("+ status " + zSearchBean.getStatus());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("recordStatusFlg");
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchValue(zSearchBean.getStatus());
-			searchBean.getDataFilterBeans().add(bean);
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getZoneSearchBean().getStatus()));
 		}
 
 		log.info("getSearchBeanData - End");
@@ -323,27 +328,19 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		return PmCommonUtil.getStatusOptions();
 	}
 
+	public SelectItem[] getRecordStatusOptions() {
+		SelectItem[] items = new SelectItem[2];
+		items[0] = new SelectItem(1, "Active");
+		items[1] = new SelectItem(0, "Inactive");
+		return items;
+	}
+
 	public IPagingDataModel<PmZone> getSearchZone() {
 		return searchZone;
 	}
 
 	public void setSearchZone(IPagingDataModel<PmZone> searchZone) {
 		this.searchZone = searchZone;
-	}
-
-	/**
-	 * @return the flag
-	 */
-	public boolean isFlag() {
-		return flag;
-	}
-
-	/**
-	 * @param flag
-	 *            the flag to set
-	 */
-	public void setFlag(boolean flag) {
-		this.flag = flag;
 	}
 
 }

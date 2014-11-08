@@ -90,6 +90,8 @@ public class OrganisationBackingBean extends
 	private IPagingDataModel<PmOrgProfile> searchOrganisation = new SearchOrgPagingDataModel();
 	private boolean flag;
 	boolean result = false;
+	// Default value
+			public static final boolean SEARCH_DEFAULT = false;
 	// Tab values
 	public static final int PROFILE_DETAIL = 0;
 	public static final int GOV_SELLER = 1;
@@ -168,6 +170,8 @@ public class OrganisationBackingBean extends
 		log.info("getSearchBeanData - Start");
 		OrganisationSearchBean oSearchBean = this.getManagedBean()
 				.getOrganisationSearchBean();
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
 
 		if (oSearchBean.getOrgTypeCode() != null
 				&& oSearchBean.getOrgTypeCode().trim().length() > 0) {
@@ -176,6 +180,7 @@ public class OrganisationBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgTypeCode()));
+			isEmpty = false;
 		}
 
 		if (oSearchBean.getOrgCode() != null
@@ -185,6 +190,7 @@ public class OrganisationBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgCode(), true));
+			isEmpty = false;
 		}
 		if (oSearchBean.getOrgName() != null
 				&& oSearchBean.getOrgName().trim().length() > 0) {
@@ -193,10 +199,10 @@ public class OrganisationBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgName(), true));
+			isEmpty = false;
 
 		}
-		if (oSearchBean.getOrgStatus() != null
-				&& oSearchBean.getOrgStatus().trim().length() > 0) {
+		if(isEmpty && !isSearchable){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgValidity.recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),

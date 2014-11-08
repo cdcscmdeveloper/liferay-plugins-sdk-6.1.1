@@ -42,6 +42,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -61,14 +62,15 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public static final String NAV_TO_MAIN = "/xhtml/pm/location/locationMain";
 	public static final String NAV_TO_EDIT = "/xhtml/pm/location/editLocationMain";
 
+	// Default value
+	public static final boolean SEARCH_DEFAULT = false;
+
 	public LocationBackingBean() {
 
 	}
 
 	public void preLoading() {
 		log.info("preLoading");
-		// load critical mappers
-
 		this.resetLocationSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -80,7 +82,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public void resetLocation() {
-
+		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().setState(new PmState());
 		getManagedBean().setCity(new PmCity());
 		getManagedBean().setDivision(new PmDivision());
@@ -100,7 +102,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public String addLocation() {
-
+		this.getManagedBean().setSelectedType(null);
 		resetLocation();
 		retrievePmCountryList();
 		retrievePmStateList();
@@ -111,6 +113,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	private ISearchBean<VPmLocation> getSearchBeanData(
 			ISearchBean<VPmLocation> searchBean) {
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
 		log.info("getSearchBeanData - Start");
 		LocationSearchBean lSearchBean = this.getManagedBean()
 				.getLocationSearchBean();
@@ -118,7 +122,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationType",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getLocationSearchBean().getLocationType()));
+							getManagedBean().getLocationSearchBean()
+									.getLocationType()));
+			isEmpty = false;
 		}
 
 		if (lSearchBean.getLocationCode() != null
@@ -127,20 +133,23 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationCode",
 							SearchOperator.OPERATOR_LIKE.value(),
-							getManagedBean().getLocationSearchBean().getLocationCode(),true));
+							getManagedBean().getLocationSearchBean()
+									.getLocationCode(), true));
+			isEmpty = false;
 		}
 		if (lSearchBean.getLocationName() != null
 				&& lSearchBean.getLocationName().trim().length() > 0) {
 			log.info("+ locationName " + lSearchBean.getLocationName());
-			
+
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationName",
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getLocationSearchBean()
 									.getLocationName(), true));
+			isEmpty = false;
 		}
 
-		if (lSearchBean.getRecordStatus() != null) {
+		if (isEmpty && !isSearchable) {
 			log.info("+ status " + lSearchBean.getRecordStatus());
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("status",
@@ -379,10 +388,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"State Updated Successfully.",
-									"State Name : "
-											+ this.getManagedBean().getState()
-													.getStateName()));
+									"State", this.getManagedBean().getState()
+											.getStateName()
+											+ " is Successfully saved"));
 
 				}
 
@@ -404,11 +412,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"Division updated Successfully.",
-									"Divison Name : "
-											+ this.getManagedBean()
-													.getDivision()
-													.getDivisionName()));
+									"Division :", this.getManagedBean()
+											.getDivision().getDivisionName()
+											+ " is Successfully saved"));
 				}
 
 			} else if (getManagedBean().getSelectedType().equalsIgnoreCase(
@@ -429,11 +435,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"District updated successfully.",
-									"Dirstrct Name : "
-											+ this.getManagedBean()
-													.getDistrict()
-													.getDistrictName()));
+									"District: ", this.getManagedBean()
+											.getDistrict().getDistrictName()
+											+ " is Successfully saved"));
 
 				}
 
@@ -454,10 +458,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"City updated successfully.",
-									"City Name : "
-											+ this.getManagedBean().getCity()
-													.getCityName()));
+									"City :", this.getManagedBean().getCity()
+											.getCityName()
+											+ " is Successfully saved"));
 
 				}
 
@@ -602,6 +605,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public SelectItem[] getSearchStatusOptions() {
+		SelectItem[] items = new SelectItem[2];
+		items[0] = new SelectItem(1, "Active");
+		items[1] = new SelectItem(0, "Inactive");
+		return items;
+	}
+
+	public SelectItem[] getRecordStatusOptions() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(1, "Active");
 		items[1] = new SelectItem(0, "Inactive");

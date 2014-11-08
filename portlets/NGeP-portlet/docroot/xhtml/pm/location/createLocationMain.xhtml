@@ -14,8 +14,8 @@
 				immediate="true" />
 		</div>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.pm.save.location']}" update="@([id$=Msg])"
-				icon="ui-icon-save" action="#{locationBackingBean.saveLocation}" />
+			<p:commandButton value="#{lbl['lbl.btn.create']}" update="@([id$=Msg])"
+				icon="ui-icon-add" action="#{locationBackingBean.saveLocation}" />
 		</div>
 		<ui:include src="/xhtml/pm/location/createLocation.xhtml" />
 	</ui:define>

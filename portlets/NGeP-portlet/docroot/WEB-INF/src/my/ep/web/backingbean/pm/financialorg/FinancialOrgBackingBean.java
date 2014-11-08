@@ -71,6 +71,8 @@ public class FinancialOrgBackingBean extends
 	// Tab values
 	public static final int GENERRAL = 0;
 	public static final int FACTRING_BRANCH = 1;
+	// Default value
+		public static final boolean SEARCH_DEFAULT = false;
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "financialOrgSearchMain";
 	private IPagingDataModel<PmFinancialOrg> searchFinancialOrg = new FinancialOrgPagingDataModel();
@@ -104,6 +106,8 @@ public class FinancialOrgBackingBean extends
 		log.info("getSearchBeanData - Start");
 		FinancialOrgSearchBean fSearchBean = this.getManagedBean()
 				.getFinancialOrgSearchBean();
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
 		if (fSearchBean.getOrgName() != null
 				&& fSearchBean.getOrgName().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
@@ -111,6 +115,7 @@ public class FinancialOrgBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getOrgName(), true));
+			isEmpty = false;
 		}
 
 		if (fSearchBean.getServiceType() != null
@@ -121,20 +126,24 @@ public class FinancialOrgBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getServiceType()));
+			isEmpty = false;
 		}
-		if (fSearchBean.getOrgStatus() != null&& fSearchBean.getOrgStatus().trim().length() > 0) {
+		if(isEmpty && !isSearchable){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getOrgStatus()));
 		}
+		if (fSearchBean.getRegNumber() != null
+				&& fSearchBean.getRegNumber().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("bizRegNumber",
 						SearchOperator.OPERATOR_LIKE.value(), getManagedBean()
-								.getFinancialOrgSearchBean().getRegNumber(),true));
-
-		
+								.getFinancialOrgSearchBean().getRegNumber(),
+						true));
+		isEmpty = false;
+		}
 
 		log.info("getSearchBeanData - End");
 		return searchBean;
@@ -268,109 +277,114 @@ public class FinancialOrgBackingBean extends
 						.getPmParameter());
 				financialSvc.setPmFinancialOrg(financialOrg);
 			}
-			if (this.getManagedBean()
-					.getPmFinancialSvc()
-					.get(0)
-					.getServiceTypeCode()
-					.getParameterCode()
-					.equalsIgnoreCase(
-							ParameterConst.BANK_SERVICES_FACTORING_COMPANY)) {
 
-				for (PmFinancialAcc financialAcc : this.getManagedBean()
-						.getPmFinancialAcc()) {
-					financialAcc.setPmFinancialOrg(financialOrg);
-					financialAcc.setPmPaymentBankOrg(financialOrg);
-				}
-
-				List<PmOrgProfile> orgProfileList = this.getManagedBean()
-						.getOrgProfileList();
-
-				for (PmOrgProfile orgProfile : orgProfileList) {
-					// PmOrgProfile orgPmOrgProfile = new PmOrgProfile();
-					System.out.println("saving org Profile");
-					// orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
-					orgProfile.setPmFinancialOrg(financialOrg);
-
-				}
-				financialOrg.setPmOrgProfiles(this.getManagedBean()
-						.getOrgProfileList());
-
-				for (PmFinancialBranch financialBranchs : this.getManagedBean()
-						.getPmFinancialBranch()) {
+			for (PmFinancialSvc financialService : this.getManagedBean()
+					.getPmFinancialSvc()) {
+				if (financialService
+						.getServiceTypeCode()
+						.getParameterCode()
+						.equalsIgnoreCase(
+								ParameterConst.BANK_SERVICES_FACTORING_COMPANY)) {
 
 					for (PmFinancialAcc financialAcc : this.getManagedBean()
-							.getPmFinancialBranchAcc()) {
-						financialAcc.setPmFinancialBranch(financialBranchs);
+							.getPmFinancialAcc()) {
+						financialAcc.setPmFinancialOrg(financialOrg);
 						financialAcc.setPmPaymentBankOrg(financialOrg);
+					}
+
+					List<PmOrgProfile> orgProfileList = this.getManagedBean()
+							.getOrgProfileList();
+
+					for (PmOrgProfile orgProfile : orgProfileList) {
+						// PmOrgProfile orgPmOrgProfile = new PmOrgProfile();
+						System.out.println("saving org Profile");
+						// orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
+						orgProfile.setPmFinancialOrg(financialOrg);
 
 					}
-					financialBranchs.setPmFinancialAccs(this.getManagedBean()
-							.getPmFinancialBranchAcc());
+					financialOrg.setPmOrgProfiles(this.getManagedBean()
+							.getOrgProfileList());
 
-					financialBranchs.setPmFinancialOrg(financialOrg);
-				}
-				for (PmFinancialBranch financialBranchs : this.getManagedBean()
-						.getPmFinancialBranch()) {
-					/*
-					 * PmAddressType brachAddress = getManagedBean()
-					 * .getBranchAddressType();
-					 * System.out.println("BranchAddress" +
-					 * brachAddress.getPmAddress().getAddress1()); brachAddress
-					 * .setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
-					 * .value());
-					 * 
-					 * List<PmAddressType> branchAddressTypes = getManagedBean()
-					 * .getBranchAddressList();
-					 * branchAddressTypes.add(brachAddress); PmAddress
-					 * branchAddress = getManagedBean() .getBranchAddress();
-					 * PmContact contact = getManagedBean()
-					 * .getBranchContactPerson();
-					 * contact.setPmAddressType(brachAddress); List<PmContact>
-					 * branchcontactLst = getManagedBean() .getBranchContact();
-					 * branchcontactLst.add(contact);
-					 * brachAddress.setPmAddress(branchAddress);
-					 * brachAddress.setPmContacts(branchcontactLst);
-					 * brachAddress.setPmFinancialBranch(financialBranchs);
-					 * financialBranchs.setPmAddressTypes(branchAddressTypes);
-					 */
-					PmAddressType branchaddressType = this.getManagedBean()
-							.getBranchAddressType();
-					branchaddressType
-							.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
-									.value());
-					List<PmAddressType> branchAddressTypes = getManagedBean()
-							.getBranchAddressList();
-					branchAddressTypes.add(branchaddressType);
-					PmAddress address = this.getManagedBean()
-							.getBranchAddress();
-					PmContact contact = this.getManagedBean()
-							.getBranchContactPerson();
-					contact.setPmAddressType(branchaddressType);
-					List<PmContact> contactLst = this.getManagedBean()
-							.getBranchContact();
-					contactLst.add(contact);
-					System.out.println("ContactList" + contactLst.size());
-					branchaddressType.setPmContacts(contactLst);
-					branchaddressType.setPmAddress(address);
-					branchaddressType.setPmFinancialBranch(financialBranchs);
-					financialBranchs.setPmAddressTypes(branchAddressTypes);
+					for (PmFinancialBranch financialBranchs : this
+							.getManagedBean().getPmFinancialBranch()) {
 
-					for (PmFinancialAcc financialAcc : getManagedBean()
-							.getPmFinancialBranchAcc()) {
-						financialAcc.setPmFinancialBranch(financialBranchs);
-						financialAcc.setPmPaymentBankOrg(financialOrg);
+						for (PmFinancialAcc financialAcc : this
+								.getManagedBean().getPmFinancialBranchAcc()) {
+							financialAcc.setPmFinancialBranch(financialBranchs);
+							financialAcc.setPmPaymentBankOrg(financialOrg);
 
+						}
+						financialBranchs.setPmFinancialAccs(this
+								.getManagedBean().getPmFinancialBranchAcc());
+
+						financialBranchs.setPmFinancialOrg(financialOrg);
 					}
-					financialBranchs.setPmFinancialAccs(getManagedBean()
-							.getPmFinancialBranchAcc());
+					for (PmFinancialBranch financialBranchs : this
+							.getManagedBean().getPmFinancialBranch()) {
+						/*
+						 * PmAddressType brachAddress = getManagedBean()
+						 * .getBranchAddressType();
+						 * System.out.println("BranchAddress" +
+						 * brachAddress.getPmAddress().getAddress1());
+						 * brachAddress
+						 * .setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
+						 * .value());
+						 * 
+						 * List<PmAddressType> branchAddressTypes =
+						 * getManagedBean() .getBranchAddressList();
+						 * branchAddressTypes.add(brachAddress); PmAddress
+						 * branchAddress = getManagedBean() .getBranchAddress();
+						 * PmContact contact = getManagedBean()
+						 * .getBranchContactPerson();
+						 * contact.setPmAddressType(brachAddress);
+						 * List<PmContact> branchcontactLst = getManagedBean()
+						 * .getBranchContact(); branchcontactLst.add(contact);
+						 * brachAddress.setPmAddress(branchAddress);
+						 * brachAddress.setPmContacts(branchcontactLst);
+						 * brachAddress.setPmFinancialBranch(financialBranchs);
+						 * financialBranchs
+						 * .setPmAddressTypes(branchAddressTypes);
+						 */
+						PmAddressType branchaddressType = this.getManagedBean()
+								.getBranchAddressType();
+						branchaddressType
+								.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
+										.value());
+						List<PmAddressType> branchAddressTypes = getManagedBean()
+								.getBranchAddressList();
+						branchAddressTypes.add(branchaddressType);
+						PmAddress address = this.getManagedBean()
+								.getBranchAddress();
+						PmContact contact = this.getManagedBean()
+								.getBranchContactPerson();
+						contact.setPmAddressType(branchaddressType);
+						List<PmContact> contactLst = this.getManagedBean()
+								.getBranchContact();
+						contactLst.add(contact);
+						System.out.println("ContactList" + contactLst.size());
+						branchaddressType.setPmContacts(contactLst);
+						branchaddressType.setPmAddress(address);
+						branchaddressType
+								.setPmFinancialBranch(financialBranchs);
+						financialBranchs.setPmAddressTypes(branchAddressTypes);
 
-					financialBranchs.setPmFinancialOrg(financialOrg);
+						for (PmFinancialAcc financialAcc : getManagedBean()
+								.getPmFinancialBranchAcc()) {
+							financialAcc.setPmFinancialBranch(financialBranchs);
+							financialAcc.setPmPaymentBankOrg(financialOrg);
+
+						}
+						financialBranchs.setPmFinancialAccs(getManagedBean()
+								.getPmFinancialBranchAcc());
+
+						financialBranchs.setPmFinancialOrg(financialOrg);
+					}
+					financialOrg.setPmFinancialAccs(this.getManagedBean()
+							.getPmFinancialAcc());
+					financialOrg.setPmFinancialBranchs(this.getManagedBean()
+							.getPmFinancialBranch());
+
 				}
-				financialOrg.setPmFinancialAccs(this.getManagedBean()
-						.getPmFinancialAcc());
-				financialOrg.setPmFinancialBranchs(this.getManagedBean()
-						.getPmFinancialBranch());
-
 			}
 			PmAddressType addressType = this.getManagedBean()
 					.getPmAddressType();

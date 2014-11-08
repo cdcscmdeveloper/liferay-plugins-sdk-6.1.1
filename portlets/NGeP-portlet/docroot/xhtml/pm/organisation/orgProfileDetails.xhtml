@@ -6,26 +6,24 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel>
 		<h:panelGrid columns="2">
-			<c:if
-				test="#{organisationBackingBean.managedBean.orgProfile.brandNew}">
-				<table>
-					<tr>
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel></td>
+					<td><p:selectOneMenu id="orgtypeId"
+							disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
+							label="#{lbl['lbl.pm.organisation.orgType']}"
+							value="#{organisationBackingBean.managedBean.orgType}"
+							style="width: 275px;margin-bottom: 5px;" required="true">
+							<f:selectItems
+								value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
+							<p:ajax event="change" update="@form"
+								listener="#{organisationBackingBean.resetOrgProfile}" />
+						</p:selectOneMenu></td>
+					<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
+				</tr>
+			</table>
 
-						<td><h:outputLabel
-								value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel></td>
-						<td><p:selectOneMenu id="orgtypeId"
-								label="#{lbl['lbl.pm.organisation.orgType']}"
-								value="#{organisationBackingBean.managedBean.orgType}"
-								style="width: 275px;margin-bottom: 5px;" required="true">
-								<f:selectItems
-									value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
-								<p:ajax event="change" update="@form"
-									listener="#{organisationBackingBean.resetOrgProfile}" />
-							</p:selectOneMenu></td>
-						<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
-					</tr>
-				</table>
-			</c:if>
 		</h:panelGrid>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.pm.header.general.org.profile']}"

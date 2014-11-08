@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="locationSearchPanel"
-		header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
+		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 		<br />
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.location.type']}" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
 						value="#{locationBackingBean.managedBean.locationSearchBean.locationType}" >
 						<f:selectItems value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
 					</p:selectOneMenu></td>
@@ -42,7 +42,7 @@
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
 				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
 						value="#{locationBackingBean.managedBean.locationSearchBean.recordStatus}">
-						<f:selectItems value="#{locationBackingBean.getStatusOptions()}" />
+						<f:selectItems value="#{locationBackingBean.getRecordStatusOptions()}" />
 					</p:selectOneMenu></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
