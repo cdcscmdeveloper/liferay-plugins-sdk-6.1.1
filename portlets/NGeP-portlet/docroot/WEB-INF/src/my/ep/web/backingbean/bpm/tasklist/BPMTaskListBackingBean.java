@@ -149,6 +149,8 @@ public class BPMTaskListBackingBean extends
 				"change-bank-account");
 
 		// Fulfilment Management - Start
+		temp.put(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME
+				+ FLProcessNameConst.SUBMIT_PHIS_CR, "contract-request");				
 		temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME
 				+ FLProcessNameConst.SUBMIT_CR_HT, "contract-request");
 		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
