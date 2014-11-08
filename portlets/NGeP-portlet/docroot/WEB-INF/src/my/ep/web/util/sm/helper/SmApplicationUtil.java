@@ -172,6 +172,22 @@ public class SmApplicationUtil {
 		return validPerCount;
 	}
 
+	public static boolean valiateNewCategoryAdded(
+			SmApplicationManagedBean managedBean) {
+		boolean addedNewCode = false;
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				addedNewCode = true;
+				break;
+			}
+		}
+		
+		return addedNewCode;
+
+	}
+
 	public static boolean validateSupportingDocs(List<SmApplSupportDoc> suppDocs) {
 		boolean validSupportDocs = true;
 		int i = 0;
@@ -807,6 +823,15 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722516);
 			}
 
+		}
+		if (managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+			validSave = valiateNewCategoryAdded(managedBean);
+			if (!validSave) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(
+						MessageConst.ERROR_722570);
+			}
 		}
 		appl = null;
 		return validSave;

@@ -408,7 +408,8 @@
 		widgetVar="typeConfirmation">
 
 		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
-			update="@form" action="#{backingBean.assignApplnCategoryType}"
+			process="@this" partialSubmit="true" update="@form"
+			action="#{backingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
 		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
 			process="@this" partialSubmit="true" update=":form:tt:catCodeInfPan"

@@ -1326,6 +1326,31 @@ public class SmApplicationBackingBean extends
 
 	public void assignApplnCategoryType() {
 		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+		// Remove from active list
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+			for (SmSupplierCategory cat : getManagedBean()
+					.getActiveCategoryList()) {
+				if (cat.isSpecialCategory()
+						&& cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					catList.add(cat);
+				}
+
+			}
+			getManagedBean().getActiveCategoryList().removeAll(catList);
+		} else {
+			for (SmSupplierCategory cat : getManagedBean()
+					.getActiveCategoryList()) {
+				if (!cat.isSpecialCategory()
+						&& cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					catList.add(cat);
+				}
+
+			}
+			getManagedBean().getActiveCategoryList().removeAll(catList);
+		}
+		// Remove from main list
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
@@ -3982,6 +4007,14 @@ public class SmApplicationBackingBean extends
 						&& !doc.getSmApplDocFiles().isEmpty()) {
 					doc.getSmApplDocFiles().clear();
 				}
+			}
+		}
+		if (getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+			boolean validNewCatAdded = SmApplicationUtil
+					.valiateNewCategoryAdded(getManagedBean());
+			if (!validNewCatAdded) {
+				throw new EpException(MessageConst.ERROR_722570);
 			}
 		}
 		initiateSmApplicationTask();
