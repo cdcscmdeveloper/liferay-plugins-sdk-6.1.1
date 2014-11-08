@@ -312,7 +312,7 @@ public class SpecificationBackingBean extends
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 		List<TplSpecZoneLoc> results = null;
-		
+
 		if (null != treeNodes && !treeNodes.isEmpty()) {
 			for (TreeNode treeNode : treeNodes) {
 				TplSpecZoneDtl tplSpecZoneDtl = null;
@@ -5533,13 +5533,7 @@ public class SpecificationBackingBean extends
 
 	private void returnCheckListScores(List<ScQtCheckListScore> checklistScores) {
 
-		Collections.sort(checklistScores, new Comparator<ScQtCheckListScore>() {
-			@Override
-			public int compare(ScQtCheckListScore p1, ScQtCheckListScore p2) {
-				return Long.compare(p1.getRangeFrom().longValue(), p2
-						.getRangeFrom().longValue());
-			}
-		});
+		Collections.sort(checklistScores);
 
 	}
 
@@ -7346,16 +7340,7 @@ public class SpecificationBackingBean extends
 					localScore.add(Score);
 				}
 
-				Collections.sort(localScore,
-						new Comparator<ScQtCheckListScore>() {
-							@Override
-							public int compare(ScQtCheckListScore p1,
-									ScQtCheckListScore p2) {
-								return Long.compare(
-										p1.getRangeTo().longValue(), p2
-												.getRangeTo().longValue());
-							}
-						});
+				// Collections.sort(localScore);
 				if (null != checkListScore) {
 					noOfContractScore.addAll(checkListScore);
 				}
@@ -7408,16 +7393,7 @@ public class SpecificationBackingBean extends
 						ScQtCheckListScore Score = scoreYears.get(i);
 						localScore.add(Score);
 					}
-					Collections.sort(localScore,
-							new Comparator<ScQtCheckListScore>() {
-								@Override
-								public int compare(ScQtCheckListScore p1,
-										ScQtCheckListScore p2) {
-									return Long.compare(p1.getRangeTo()
-											.longValue(), p2.getRangeTo()
-											.longValue());
-								}
-							});
+					// Collections.sort(localScore);
 					if (null != scoreYears) {
 						noOfYearsScore.addAll(scoreYears);
 					}
@@ -7518,16 +7494,6 @@ public class SpecificationBackingBean extends
 					localScore.add(Score);
 				}
 
-				Collections.sort(localScore,
-						new Comparator<ScQtCheckListScore>() {
-							@Override
-							public int compare(ScQtCheckListScore p1,
-									ScQtCheckListScore p2) {
-								return Long.compare(
-										p1.getRangeTo().longValue(), p2
-												.getRangeTo().longValue());
-							}
-						});
 				if (null != checkListScore) {
 					noOfContractScore.addAll(checkListScore);
 				}
@@ -10412,14 +10378,14 @@ public class SpecificationBackingBean extends
 		}
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			
+
 			List<ScQtSpecificationRemark> remarks = this.getManagedBean()
 					.getSpecificationRemarks();
 			if (null != remarks) {
 				for (int i = 0; i < remarks.size(); i++) {
 					String userRemark = remarks.get(i).getRemark();
 					if (null == userRemark || "".equals(userRemark)) {
-						//throw new EpException(MessageConst.ERROR_760154);
+						// throw new EpException(MessageConst.ERROR_760154);
 					}
 				}
 			}
