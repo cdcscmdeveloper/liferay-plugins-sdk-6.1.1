@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="pRejectReasonResult"
-		header="#{lbl['lbl.pm.rejection.reason.result']}" toggleable="true">
-		<p:dataTable id="searchLocations" var="location" rows ="10"
+	<p:panel header="#{lbl['lbl.pm.result.location']}"
+		toggleable="true">
+		<p:dataTable id="searchLocations" var="location" rows="10"
 			value="#{locationBackingBean.searchLocation}" rowIndexVar="index"
 			lazy="true">
 			<ac:paginator for="searchLocations"></ac:paginator>
