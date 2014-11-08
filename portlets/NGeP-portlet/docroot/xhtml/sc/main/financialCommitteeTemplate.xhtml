@@ -22,10 +22,12 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				style="float:right;" icon="ui-icon-check" update="@all"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 				style="float:right;" update="@all"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',2)}"
 				icon="ui-icon-save" />
@@ -84,7 +86,7 @@
 		</p:panel>
 
 
-		<ac:templateSpec
+		<ac:templateSpec editable="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
 

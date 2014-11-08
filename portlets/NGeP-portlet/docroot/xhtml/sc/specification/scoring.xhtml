@@ -9,17 +9,23 @@
 	<p:panel>
 
 		<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="50"
-			widgetVar="scoreWidget" value="#{scoringList}" 
+			widgetVar="scoreWidget" value="#{scoringList}"
 			selection="#{selectionList}" var="checkListScoring"
 			rowKey="#{checkListScoring}">
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-			<p:column  style="width:2px;">
-			<f:facet name="header">
-					<p:selectBooleanCheckbox  value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="#{scoringPnlId}"  listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, scoringList)}" />
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="#{scoringPnlId}"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, scoringList)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{checkListScoring.selected}">
+				<p:selectBooleanCheckbox
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+					value="#{checkListScoring.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -29,6 +35,7 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.from']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_fromRange" style="text-align:right"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
@@ -43,6 +50,7 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.to']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toRange" style="text-align:right"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
 					value="#{checkListScoring.rangeTo}" maxlength="18">
@@ -58,12 +66,12 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
 					label="#{lbl['lbl.sc.spec.stage2.score']}"
-					
 					value="#{checkListScoring.score}" maxlength="18">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
-				
+
 			</p:column>
 
 		</p:dataTable>
