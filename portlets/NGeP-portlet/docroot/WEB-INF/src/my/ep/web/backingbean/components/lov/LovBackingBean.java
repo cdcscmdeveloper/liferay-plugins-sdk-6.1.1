@@ -24,8 +24,10 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cc.lov.ILovSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.cc.lov.LovReqDTO;
 import my.ep.dto.cc.lov.LovResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.aut.AutUser;
 import my.ep.type.aut.SearchCondition;
@@ -106,45 +108,6 @@ public class LovBackingBean implements Serializable {
 			
 			searchBean.getDataFilterBeans().clear();
 			return searchAction(searchBean, false);
-			
-//			ILovSO lovSO = null;
-//			try {				
-//				LovReqDTO reqDTO = new LovReqDTO();
-//				
-//				if(lovSearchBean.getDataFilterBeans().size() <= 3) {
-//					constructSearchBean(getLovBean().getConditionField());
-//				}
-//				searchBean.getDataFilterBeans().clear();
-//				searchBean.getDataFilterBeans().addAll(getLovSearchBean().getDataFilterBeans());
-//				
-//				// check if operator = LIKE, then set to case insensitive
-//				for(int i = 0; i < searchBean.getDataFilterBeans().size(); i++) {
-//					SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
-//					if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
-//						filterBean.setCaseInsensitive(true);
-//					}
-//				}
-//				
-//				debugLogger("searchBean.getDataFilterBeans(): " + searchBean.getDataFilterBeans());
-//				debugLogger("searchBean.getDataFilterBeans().size(): " + searchBean.getDataFilterBeans().size());
-//				
-//				reqDTO.setSearchBean(searchBean);
-//				reqDTO.setDaoClass(getLovBean().getDaoClass());
-//				reqDTO.setSearchMethod(getLovBean().getSearchMethod());
-//				
-//				lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
-////				ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
-//				
-//				debugLogger("reqDTO: " + reqDTO);
-//				debugLogger("reqDTO.getSearchBean(): " + reqDTO.getSearchBean());
-//				
-//				LovResDTO resDTO = lovSO.getSearchList(reqDTO);
-//				ISearchResultBean resultBean = resDTO.getResultBean();	
-//				
-//				return resultBean;
-//			} finally {
-//				lovSO = null;
-//			}
 		}
 	}
 
@@ -236,21 +199,6 @@ public class LovBackingBean implements Serializable {
 		}
 	}
 	
-//	public static String parseColumnName() {
-//		
-//	}
-	
-/*	public void searchAction() {
-		System.out.println("===============================search action");
-	
-		HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
-		ServletContext servletContext = request.getSession().getServletContext();
-		webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-		Object object = webApplicationContext.getBean("SCR_NOTIFICATION_LIST");
-		
-		System.out.println(object);
-	}*/
-	
 	public void initLov() {
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -314,36 +262,37 @@ public class LovBackingBean implements Serializable {
 	}
 	
 	public void searchAction() {
+
+		validateBeforeSearch();
 		
 		searchDataModel.reloadData();
+	}
+	
+	private void validateBeforeSearch() {
 		
-/*		ILovSO lovSO = null;
-		try {
-			LovReqDTO reqDTO = new LovReqDTO();
-			
-			if(lovSearchBean.getDataFilterBeans().size() <= 5) {
-				constructSearchBean(this.getLovBean().getConditionField());
+		Object searchValue1 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchValue();
+		if(StringUtils.isNotBlank(searchValue1.toString())) {
+			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField() == null ||
+					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField().length() == 0) {
+				throw new EpException(MessageConst.WARN_751000);
 			}
-			
-			reqDTO.setSearchBean(lovSearchBean);
-			reqDTO.setDaoClass(this.getLovBean().getDaoClass());
-			reqDTO.setSearchMethod(this.getLovBean().getSearchMethod());
-			
-			for(int i = 0; i < lovSearchBean.getDataFilterBeans().size(); i++) {
-				SearchFilterBean filter = (SearchFilterBean)lovSearchBean.getDataFilterBeans().get(i);
-				System.out.println(filter.getSearchField() + " " + filter.getSearchOperator() + " " + filter.getSearchValue());
+		}
+		
+		Object searchValue2 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchValue();
+		if(StringUtils.isNotBlank(searchValue2.toString())) {
+			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchField() == null ||
+					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchField().length() == 0) {
+				throw new EpException(MessageConst.WARN_751000);
 			}
-			
-			lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
-//			ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
-			
-			LovResDTO resDTO = lovSO.getSearchList(reqDTO);
-			ISearchResultBean resultBean = resDTO.getResultBean();			
-			
-			this.setResultList(resultBean.getResultList());
-		} finally {
-			lovSO = null;
-		}*/
+		}
+		
+		Object searchValue3 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(1)).getSearchValue();
+		if(StringUtils.isNotBlank(searchValue3.toString())) {
+			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(1)).getSearchField() == null ||
+					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(1)).getSearchField().length() == 0) {
+				throw new EpException(MessageConst.WARN_751000);
+			}
+		}
 	}
 
 	public void resetAction() {
@@ -495,13 +444,6 @@ public class LovBackingBean implements Serializable {
 		return operatorList;
 	}
 	
-/*	private void initSearchBean() {
-		lovSearchBean = new SearchBean();
-		for(int i = 0; i < 4; i++) {
-			SearchFilterBean filterBean = new SearchFilterBean();
-			lovSearchBean.getDataFilterBeans().add(filterBean);
-		}
-	}*/
 	
 	protected LovBean getBeanByLovId(String lovId) {
 		HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
