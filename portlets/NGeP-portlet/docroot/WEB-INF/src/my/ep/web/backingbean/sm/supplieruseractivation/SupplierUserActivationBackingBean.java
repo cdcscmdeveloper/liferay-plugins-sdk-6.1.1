@@ -155,7 +155,7 @@ public class SupplierUserActivationBackingBean extends
 					//create PmUser only
 					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
 					
-					
+					Long draftApplId = null;
 					IPersonnelSO personnelSO = null;
 					IMofRegistrationSO mofRegistrationSO = null;
 					List<SmPersonnel> personnelList = new ArrayList<SmPersonnel>();
@@ -164,7 +164,8 @@ public class SupplierUserActivationBackingBean extends
 						MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 						mofRegistrationReqDTO.setSupplierId(Long.parseLong(supplierId));
 						MofRegistrationResDTO mofRegistrationResDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
-						Long draftApplId = mofRegistrationResDTO.getSmAppl().getApplId();
+						if(mofRegistrationResDTO.getSmAppl() != null)
+							draftApplId = mofRegistrationResDTO.getSmAppl().getApplId();
 						personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 						reqDTO.setIdentificationNo(this.getManagedBean().getSmPersonnel().getIdentificationNo());
