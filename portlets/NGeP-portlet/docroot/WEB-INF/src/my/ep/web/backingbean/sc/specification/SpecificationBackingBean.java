@@ -405,6 +405,10 @@ public class SpecificationBackingBean extends
 						zoneList.add(tplSpecZoneDtl);
 						// tplSpecDtls.add(tplSpecZoneDtl);
 						// scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
+					} else {
+						tplSpecZoneDtl = (TplSpecZoneDtl) treeNode1.getData();
+						setUserDetails(tplSpecZoneDtl);
+						zoneList.add(tplSpecZoneDtl);
 					}
 
 				}
@@ -1016,7 +1020,7 @@ public class SpecificationBackingBean extends
 
 				}
 
-			}else{
+			} else {
 				isTemplateSpec(techCheckList, scqt);
 				isTemplateSpecStatus(techCheckList, scqt);
 			}
@@ -1441,8 +1445,8 @@ public class SpecificationBackingBean extends
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
-				retriveFinancialCheckList();
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				retriveFinancialCheckList();
 
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
@@ -1458,8 +1462,8 @@ public class SpecificationBackingBean extends
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
-				retriveFinancialScoring();
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				retriveFinancialScoring();
 				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
@@ -1484,8 +1488,9 @@ public class SpecificationBackingBean extends
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
-				retriveFinancialScoring();
+
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
+				retriveFinancialScoring();
 				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 			}
 			break;
@@ -2350,6 +2355,11 @@ public class SpecificationBackingBean extends
 
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
+		if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+				.getManagedBean().getScQt().getEvaluationType())
+				&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
+			this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+		}
 		try {
 			if (null == this.getManagedBean()
 					.getScQtCheckSt2financeProposalList()
@@ -5570,17 +5580,18 @@ public class SpecificationBackingBean extends
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
-				/*if (this.getManagedBean().getScQt().isZonal()) {
-					ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getScQt()
-							.getScQtSupplierCriteria();
-					if (null != supplierCriteria
-							&& null != supplierCriteria.getQtZoneCriterias()) {
-						supplierCriteria.getQtZoneCriterias().setModified(true);
-						templateSpecBean.getSpecMaster().setTplSpecZone(
-								supplierCriteria.getQtZoneCriterias());
-
-					}
-				}*/
+				/*
+				 * if (this.getManagedBean().getScQt().isZonal()) {
+				 * ScQtSupplierCriteria supplierCriteria =
+				 * this.getManagedBean().getScQt() .getScQtSupplierCriteria();
+				 * if (null != supplierCriteria && null !=
+				 * supplierCriteria.getQtZoneCriterias()) {
+				 * supplierCriteria.getQtZoneCriterias().setModified(true);
+				 * templateSpecBean.getSpecMaster().setTplSpecZone(
+				 * supplierCriteria.getQtZoneCriterias());
+				 * 
+				 * } }
+				 */
 				return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -9801,6 +9812,17 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setLocalOutCome(action);
 
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				retriveCommitteeEndorsment();
+				List<ScQtSpecificationRemark> remarks = this.getManagedBean()
+						.getSpecificationRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_760154);
+						}
+					}
+				}
 
 				RequestContext.getCurrentInstance().execute(
 						"reviceApprovalDlgs.show()");
@@ -10389,13 +10411,14 @@ public class SpecificationBackingBean extends
 		}
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			
 			List<ScQtSpecificationRemark> remarks = this.getManagedBean()
 					.getSpecificationRemarks();
 			if (null != remarks) {
 				for (int i = 0; i < remarks.size(); i++) {
 					String userRemark = remarks.get(i).getRemark();
 					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(MessageConst.ERROR_760154);
+						//throw new EpException(MessageConst.ERROR_760154);
 					}
 				}
 			}
