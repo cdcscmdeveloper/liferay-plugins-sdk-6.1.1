@@ -20,7 +20,7 @@
 			</tr>
 		</table>
 		<p:spacer height="3px" />
-		
+
 		<p:dataTable id="briefingdtlid" var="briefingdtls"
 			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"
 			rowIndexVar="index" styleClass="briefDetails"
@@ -31,7 +31,8 @@
 			<p:column headerText="#{lbl['lbl.so.desc']}">
 				<p:commandLink
 					action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
-					style="margin-right:20px;" partialSubmit="true" process="@this"  update="@([id$=briefdlgId])">
+					style="white-space: normal;word-wrap: break-word;"
+					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</p:commandLink>
 			</p:column>
@@ -48,10 +49,12 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
-				<h:outputText value="#{briefingdtls.coordinatingOfficer}" />
+				<h:outputText value="#{briefingdtls.coordinatingOfficer}"
+					style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.maxattendance']}">
+			<p:column headerText="#{lbl['lbl.so.maxattendance']}"
+				style="width:14%;white-space: normal;text-align: center;">
 				<h:outputText value="#{briefingdtls.maxNoOfAttendance}" />
 			</p:column>
 
@@ -59,10 +62,11 @@
 				<h:outputText
 					value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.bsvStatus.statusId)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
+			<p:column headerText="#{lbl['lbl.so.action']}"
+				style="width:5%;white-space: normal;text-align: center;">
 				<p:commandLink
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
-					style="margin-right:20px;" partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
@@ -87,9 +91,10 @@
 						icon="ui-icon-add" />
 
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete" process="@this,briefingdtlid" partialSubmit="true"
+						icon="ui-icon-delete" process="@this,briefingdtlid"
+						partialSubmit="true"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
-						update= "@([id$=briefingdtlid])" />
+						update="@([id$=briefingdtlid])" />
 				</div>
 			</f:facet>
 		</p:panelGrid>
@@ -128,7 +133,8 @@
 					<p:column headerText="#{lbl['lbl.so.desc']}">
 						<p:commandLink
 							action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
-							style="margin-right:20px;" partialSubmit="true" process="@this">
+							style="white-space: normal;word-wrap: break-word;"
+							partialSubmit="true" process="@this">
 							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 						</p:commandLink>
 					</p:column>
@@ -145,10 +151,12 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
-						<h:outputText value="#{sitevisitdtls.coordinatingOfficer}" />
+						<h:outputText value="#{sitevisitdtls.coordinatingOfficer}"
+							style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.maxattendance']}">
+					<p:column headerText="#{lbl['lbl.so.maxattendance']}"
+						style="width:14%;white-space: normal;text-align: center;">
 						<h:outputText value="#{sitevisitdtls.maxNoOfAttendance}" />
 					</p:column>
 
@@ -157,10 +165,11 @@
 							value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.bsvStatus.statusId)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
+					<p:column headerText="#{lbl['lbl.so.action']}"
+						style="width:5%;white-space: normal;text-align: center;">
 						<p:commandLink
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex, 'S')}"
-							style="margin-right:20px;" partialSubmit="true" process="@this">
+							partialSubmit="true" process="@this">
 							<p:graphicImage library="ep/images/design" name="edit.png"
 								value="/resources/ep/images/design/edit.png" />
 						</p:commandLink>
@@ -178,7 +187,8 @@
 								icon="ui-icon-add" />
 
 							<p:commandButton value="#{lbl['lbl.so.delete']}"
-								icon="ui-icon-delete" process="@this, sitevisitdtlid" partialSubmit="true"
+								icon="ui-icon-delete" process="@this, sitevisitdtlid"
+								partialSubmit="true"
 								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
 								update="@([id$=sitevisitdtlid])" />
 
