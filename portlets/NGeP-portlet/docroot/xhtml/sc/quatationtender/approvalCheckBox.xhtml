@@ -59,7 +59,7 @@
 			<ui:include src="/xhtml/sc/quatationtender/approval/approvalDetailsPTJ.xhtml" />
 		</ui:fragment>
 		
-		<ui:fragment rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Finalization Committee Approval'}">
+		<ui:fragment rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Finalaization Committee Approval'}">
 			<ui:param name="fcaApprovalTab" value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
 			<ui:param name="fcaApprovalRemarkList" value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 			<ui:include src="/xhtml/sc/quatationtender/approval/approvalDetailsFinalizationCommittee.xhtml" />
