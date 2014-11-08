@@ -1020,7 +1020,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				externalContext.getApplicationMap().put(facesScopes.getUserSessionBean().getUserId().toString()+contractId.toString(), null);
 			} else if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				for(CtContractItem contractItem : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems()) {
-					if(contractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					if(contractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
+						(contractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && contractItem.getEffDate().after(new Date()))) {
 						flTempItem = new FlTempItem();
 						flTempItem.setFlRequest(getManagedBean().getFlRequest());
 						flTempItem.setScRequestItem(contractItem.getScRequestItem());
