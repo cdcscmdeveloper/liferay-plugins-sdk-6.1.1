@@ -2961,6 +2961,11 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
 
+		if(shareHolderBean.getPmUser() != null && shareHolderBean.getPmUser().getUserId() != null)
+			getManagedBean().setDisableIcEmail(true);
+		else
+			getManagedBean().setDisableIcEmail(false);
+		
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (shareHolderBean.getEpRole() != null
 				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
@@ -3174,6 +3179,7 @@ public class SmApplicationBackingBean extends
 		shr.setShareAmt(new BigDecimal(0));
 		shr.setSharePercentage(new BigDecimal(0));
 		setDefaultPersonnelValues(shr);
+		getManagedBean().setDisableIcEmail(false);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(

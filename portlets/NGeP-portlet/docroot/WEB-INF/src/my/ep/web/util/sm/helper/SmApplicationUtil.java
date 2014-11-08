@@ -1342,7 +1342,7 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		if (pers.getEpRole() != null
+		if (pers.getPmUser() == null && pers.getEpRole() != null
 				&& !pers.getEpRole().isEmpty()
 				&& (pers.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
