@@ -2961,11 +2961,12 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
 
-		if(shareHolderBean.getPmUser() != null && shareHolderBean.getPmUser().getUserId() != null)
+		if (shareHolderBean.getPmUser() != null
+				&& shareHolderBean.getPmUser().getUserId() != null)
 			getManagedBean().setDisableIcEmail(true);
 		else
 			getManagedBean().setDisableIcEmail(false);
-		
+
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (shareHolderBean.getEpRole() != null
 				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
@@ -4417,6 +4418,12 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
+	public void approveOrRejectMofCancellation(String dialog) {
+		log.info("**** assignFinalApproveOrReject *** ");
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute(dialog + ".show()");
+	}
+
 	public void assignSiteVisitPopUp(String dialog) {
 		log.info("**** assignSiteVisitPopUp *** ");
 		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
@@ -4434,6 +4441,12 @@ public class SmApplicationBackingBean extends
 	public void cancelFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+	}
+
+	public void resetMofCancellationFinalApproveOrReject(String dialog) {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:" + dialog);
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}
 

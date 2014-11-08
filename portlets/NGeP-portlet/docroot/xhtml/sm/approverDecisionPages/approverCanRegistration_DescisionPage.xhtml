@@ -10,8 +10,9 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" />
+		<p:messages id="messages" showDetail="true"
+			autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true"
+			showSummary="false" />
 
 		<p:panel header="#{lbl['lbl.sm.approver.decision.cancel.header']}">
 			<table>
@@ -86,7 +87,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 					onclick="approveAppCanDialog.show();" />
 				<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
-					onclick="rejectAppCanDialog.show();" />
+					update="rejectAppCanDialog" partialSubmit="true" process="@this"
+					action="#{backingBean.approveOrRejectMofCancellation('rejectAppCanDialog')}" />
 
 			</div>
 		</p:panel>
@@ -107,17 +109,18 @@
 			</div>
 		</p:dialog>
 		<p:dialog width="800px" header="#{lbl['lbl.sm.reject.application']}"
-			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
-			hideEffect="fade" modal="true">
+			id="rejectAppCanDialog" widgetVar="rejectAppCanDialog"
+			resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="rejectAppCanDialog.hide();"
-					action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
+					partialSubmit="true" process="rejectAppCanDialog"
+					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectAppCanDialog','REJECT')}" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					onclick="rejectAppCanDialog.hide();" />
+					action="#{backingBean.resetMofCancellationFinalApproveOrReject('rejectAppCanDialog')}"
+					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
 	</ui:define>
