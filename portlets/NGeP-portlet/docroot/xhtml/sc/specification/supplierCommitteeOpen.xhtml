@@ -16,7 +16,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
-				style="width:20%">
+				style="width:15%">
 
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
 					disabled="true" size="1">
@@ -33,26 +33,26 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
-				style="width:25%;white-space: normal;">
+				style="width:35%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
-				style="width:20%;white-space: normal;">
+				style="width:23%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
-				style="width:20%;white-space: normal;">
+				style="width:17%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
-				style="width:10%;white-space: normal;">
+				style="width:5%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
-				style="width:5%">
+				style="width:5%;text-align: center;">
 
 				<h:outputText
 					value="#{lbl[cateGory.mandatory ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
