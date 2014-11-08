@@ -293,7 +293,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Date currDate;
 	private SelectItem[] identificationTypes;
 	private SmAttachment cancellationAttachment;
-
+	private boolean disableIcEmail;
+	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
 	}
@@ -2217,6 +2218,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrDate(Date currDate) {
 		this.currDate = currDate;
+	}
+
+	public boolean isDisableIcEmail() {
+		return disableIcEmail;
+	}
+
+	public void setDisableIcEmail(boolean disableIcEmail) {
+		this.disableIcEmail = disableIcEmail;
 	}
 
 }

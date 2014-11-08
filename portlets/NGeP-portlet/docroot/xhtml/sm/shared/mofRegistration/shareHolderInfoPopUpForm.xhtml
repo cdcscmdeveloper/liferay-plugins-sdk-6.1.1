@@ -39,7 +39,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="equiPerIdenType" required="true"
-						label="#{lbl['lbl.sm.identificationtype']}"
+						label="#{lbl['lbl.sm.identificationtype']}" disabled="#{backingBean.managedBean.disableIcEmail}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
 						<f:selectItems value="#{backingBean.managedBean.identificationTypes}" />
@@ -57,7 +57,7 @@
 
 				<td><p:outputPanel id="equiPerDtlIdenTypePan">
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-							required="true" id="equiPerIcNum"
+							required="true" id="equiPerIcNum" disabled="#{backingBean.managedBean.disableIcEmail}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
@@ -67,7 +67,7 @@
 						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
 							showSummary="true" showDetail="false" display="icon" />
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-							required="true" id="equiPerPasptNum"
+							required="true" id="equiPerPasptNum" disabled="#{backingBean.managedBean.disableIcEmail}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
@@ -129,7 +129,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.email']}"
-						id="equiEmail" required="true" maxlength="80"
+						id="equiEmail" required="true" maxlength="80" disabled="#{backingBean.managedBean.disableIcEmail}"
 						validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
 						value="#{backingBean.managedBean.selectedShareHolder.email}"
 						size="35">
