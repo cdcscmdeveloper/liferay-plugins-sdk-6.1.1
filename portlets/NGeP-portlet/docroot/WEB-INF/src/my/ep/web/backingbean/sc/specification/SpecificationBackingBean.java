@@ -312,9 +312,10 @@ public class SpecificationBackingBean extends
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 		List<TplSpecZoneLoc> results = null;
-		TplSpecZoneDtl tplSpecZoneDtl = null;
+		
 		if (null != treeNodes && !treeNodes.isEmpty()) {
 			for (TreeNode treeNode : treeNodes) {
+				TplSpecZoneDtl tplSpecZoneDtl = null;
 				results = new ArrayList<TplSpecZoneLoc>();
 				List<TreeNode> zoneNodes = treeNode.getChildren();
 				// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
