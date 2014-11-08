@@ -34,7 +34,7 @@
 
 
 		</div>
-		<p:spacer height="125"></p:spacer>
+		<p:spacer height="175"></p:spacer>
 
 		<p:panel>
 			<table>
@@ -47,6 +47,7 @@
 				</tr>
 			</table>
 		</p:panel>
+		<p:spacer height="75"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true">
 			<p:dataTable id="cashHand" rowIndexVar="index" var="cash"
 				rowKey="#{cash}">
@@ -76,7 +77,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel>
 			<p:inputText readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
-
+		<p:spacer height="75"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.score.total.cash']}"
 			toggleable="true">
 			<table>
