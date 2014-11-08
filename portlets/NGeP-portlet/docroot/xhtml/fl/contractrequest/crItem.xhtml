@@ -595,7 +595,8 @@
 						value="#{contractRequestBackingBean.getParameterDesc(item.itemType)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item.code']}">
-					<h:outputText value="#{item.scRequestItem.cmItem.extensionCode}" />
+					<h:outputText rendered="#{item.scRequestItem.cmItem==null}" value="#{item.scRequestItem.tempUnspscCode}" />
+					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.item.name']}">
 					<h:outputText value="#{item.itemName}" />
