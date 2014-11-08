@@ -66,8 +66,10 @@
 
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.qut.tender.type']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+						value="#{lbl['lbl.sc.spec.qut.tender.type']}" /> <ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</ui:fragment></td>
 				<td><ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
 						<p:selectOneMenu
