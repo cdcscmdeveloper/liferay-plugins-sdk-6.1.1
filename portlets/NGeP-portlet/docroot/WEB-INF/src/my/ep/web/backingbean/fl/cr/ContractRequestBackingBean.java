@@ -62,6 +62,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -105,6 +106,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.jaxb.fl.phis.codata.FLPHISContractOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
@@ -916,7 +918,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 							IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLContractOrderDataType coObj = (FLContractOrderDataType) obj;
+			
+			FLContractOrderDataType coObj = null;
+			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) && 
+				res.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR)) {
+				FLPHISContractOrderDataType phisCoObj = (FLPHISContractOrderDataType) obj;
+				coObj = phisCoObj.getContractOrder();
+			} else {
+				coObj = (FLContractOrderDataType) obj;
+			}
 			flReqDTO.setFlRequestId(coObj.getOrderDetails().getRequestId().longValue());
 
 			///flReqDTO.setSelectedApprovers(coObj.getApproverList());
