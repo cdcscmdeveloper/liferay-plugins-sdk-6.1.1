@@ -24,20 +24,20 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
-					maxlength="2" size="2" style="margin-right: 3px !important;">
+					maxlength="2" size="1" style="margin-right: 3px !important;">
 					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
 						process="@this"
 						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(cateGory)}" />
 				</p:inputText>
 
 				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
-					size="2">
+					size="1">
 					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
 						maxlength="2" process="@this"
 						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(cateGory)}" />
 				</p:inputText>
 
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="2"
+				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="1"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
 					postUpdateListener="qTSupplierQulCriteriaBackingBean.categoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList, qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3)"
@@ -124,6 +124,7 @@
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
+								<p:ajax event="change" process="@this" partialSubmit="true"/>
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
@@ -144,6 +145,7 @@
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
+								<p:ajax event="change" process="@this" partialSubmit="true"/>
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
@@ -226,6 +228,7 @@
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
+								<p:ajax event="change" process="@this" partialSubmit="true"/>
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
@@ -275,13 +278,13 @@
 				</h:panelGrid>
 			</p:panel>
 
-			<p:dialog widgetVar="ZoneLocation" modal="true" width="600"
-				position="top" height="400">
+			<p:dialog widgetVar="ZoneLocation" modal="true" width="35%"
+				position="top" height="65%">
 				<p:panel id="zonePopupPanel"
 					header="#{lbl['lbl.sc.spec.zone.add.location']}">
 					<table styleClass="noBorders tr,noBorders td">
 						<TR>
-							<TD width="80%"><p:panel></p:panel>
+							<TD width="80%">
 								<div style="height: 300px; overflow-y: scroll;">
 									<p:tree id="treeZoneLocationPopup"
 										value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootLocationTree}"
@@ -301,20 +304,28 @@
 											<h:outputText value="#{pmCity.cityName}" />
 										</p:treeNode>
 									</p:tree>
-								</div></TD>
+								</div>
+							</TD>
 						</TR>
+						<tr>
+							<td><p:spacer height="2" /></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+										onclick="ZoneLocation.hide();" icon="ui-icon-cancel" />
+									<p:commandButton value="#{lbl['lbl.btn.ok']}"
+										onclick="ZoneLocation.hide();" process="@all"
+										update="@this, zoneLocationDataTable,zonePopupPanel"
+										action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}"
+										icon="ui-icon-accept">
+									</p:commandButton>
+								</div>
+							</td>
+						</tr>
 					</table>
 				</p:panel>
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					style="float:right;" onclick="ZoneLocation.hide();"
-					icon="ui-icon-cancel" />
-					&#160;&#160;
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
-					onclick="ZoneLocation.hide();" process="@all"
-					update="@this, zoneLocationDataTable,zonePopupPanel"
-					action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}"
-					icon="ui-icon-accept">
-				</p:commandButton>
 			</p:dialog>
 		</h:panelGroup>
 	</p:panel>
