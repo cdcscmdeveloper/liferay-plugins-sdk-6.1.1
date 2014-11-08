@@ -6,11 +6,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:70px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-		<h:outputText value="#{question.tplSpecEstimations[0].estimatedCost}">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-		</h:outputText>
-	</p:column>
 	<p:column style="width:70px;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}">
 		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 			value="#{tplSpecAnswer.autoScore}"

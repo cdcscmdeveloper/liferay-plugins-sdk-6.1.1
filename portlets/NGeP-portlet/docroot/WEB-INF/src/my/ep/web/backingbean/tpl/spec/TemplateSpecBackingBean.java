@@ -457,6 +457,26 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.PRICE_TYPE, searchBean);
 	}
 	
+	public BigDecimal getEstimationCostByAnswer(TplSpecAnswer specAnswer) {
+		long specZoneId = specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() != null ? specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId().longValue() : 0;
+		long specTierQtyId = specAnswer.getTplSpecTierQty() != null ? specAnswer.getTplSpecTierQty().getSpecTierQtyId().longValue() : 0;
+		
+		BigDecimal estimatedCost = null;
+		
+		for (TplSpecEstimation tmpSpecEstimation : specAnswer.getTplSpecQuestion().getTplSpecEstimations()) {
+			long tmpSpecZoneId = tmpSpecEstimation.getTplSpecZoneDtl() != null ? tmpSpecEstimation.getTplSpecZoneDtl().getSpecZoneId().longValue() : 0;
+			long tmpSpecTierQtyId = tmpSpecEstimation.getTplSpecTierQty() != null ? tmpSpecEstimation.getTplSpecTierQty().getSpecTierQtyId().longValue() : 0;
+			
+			if (specZoneId == tmpSpecZoneId && specTierQtyId == tmpSpecTierQtyId) {
+				estimatedCost = tmpSpecEstimation.getEstimatedCost();
+				
+				break;
+			}
+		}
+		
+		return estimatedCost;
+	}
+	
 	public void itemTypeChange() {
 		IParameterSO parameterSO = null;
 		try {

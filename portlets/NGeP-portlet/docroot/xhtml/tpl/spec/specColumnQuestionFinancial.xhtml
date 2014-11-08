@@ -17,24 +17,6 @@
 		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 			rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
-	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
-		<f:facet name="footer">
-			<p:inputText style="width:80%;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
-			<p:spacer width="16%" />
-		</f:facet>
-		
-		<p:inputText style="min-width:0px !important;width:75%;" rendered="#{isQuestionTypeItem}" disabled="true" />
-		<p:commandButton id="scoringBtn"
-			icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
-			style="background-color:transparent !important; border:0px none;"
-			styleClass="scoringBtn"
-			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
-			oncomplete="#{scoringSetPopup}.show();"
-			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
-			rendered="#{isScoringReq}">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-		</p:commandButton>
-	</p:column>
 	<p:column style="width:80px;" rendered="#{isEstCostReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
@@ -53,6 +35,24 @@
 			oncomplete="#{estimationPopup}.show();"
 			partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
 			rendered="#{!isPriceTypeStandard}">
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+		</p:commandButton>
+	</p:column>
+	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+		<f:facet name="footer">
+			<p:inputText style="width:80%;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
+			<p:spacer width="16%" />
+		</f:facet>
+		
+		<p:inputText style="min-width:0px !important;width:75%;" rendered="#{isQuestionTypeItem}" disabled="true" />
+		<p:commandButton id="scoringBtn"
+			icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+			style="background-color:transparent !important; border:0px none;"
+			styleClass="scoringBtn"
+			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+			oncomplete="#{scoringSetPopup}.show();"
+			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
+			rendered="#{isScoringReq}">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
