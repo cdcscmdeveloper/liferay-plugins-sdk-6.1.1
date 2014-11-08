@@ -82,7 +82,8 @@
 							<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
-						<h:outputText value="#{newItems.cmItem.extensionCode}"/> 
+						<h:outputText value="#{newItems.cmItem.extensionCode}" rendered="#{newItems.cmItem!=null}" />
+						<h:outputText value="#{newItems.scRequestItem.tempUnspscCode}" rendered="#{newItems.cmItem==null}" />	
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 						<h:outputText value="#{newItems.scRequestItem.itemName}" />
