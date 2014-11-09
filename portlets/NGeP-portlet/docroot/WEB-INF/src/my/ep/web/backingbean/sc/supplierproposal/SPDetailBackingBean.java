@@ -2221,8 +2221,7 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience scQtPRPExperience : experienceList) {
 				scQtPRPExperience.setBrandNew(false);
 			}
-			prpExperience.setContractTitle("");
-			prpExperience.setClientName("");
+			
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -2319,6 +2318,8 @@ public class SPDetailBackingBean extends
 		}
 		getManagedBean().setScQtPRPCreditFacilities(creditFacilitiesList);
 		getManagedBean().setSelectedPRPCreditFacilities(null);
+		getManagedBean().setSelectedAll(false);
+		getManagedBean().setSelected(false);
 		totalCreditFacilitiesSum();
 	}
 

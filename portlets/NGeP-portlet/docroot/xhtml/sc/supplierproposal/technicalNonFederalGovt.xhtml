@@ -161,7 +161,7 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" partialSubmit="true"
 				process="@all" rendered="#{!statusHide}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
-				update="technongovtid,totalcontractyrs" icon="ui-icon-add" />
+				update="@([id$=nonFedExpPanel])" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}" partialSubmit="true"
 				process="@this" icon="ui-icon-delete" rendered="#{!statusHide}"
