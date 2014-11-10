@@ -1406,6 +1406,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 			case "70032" :
 				throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+			default : 
+				log.info("MyIDENTITY ERROR: " + identificationNo + " - " + resDTO.getStatusCode() + " - " + resDTO.getStatusDesc());
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70099);
 			}
 		}
 	}
