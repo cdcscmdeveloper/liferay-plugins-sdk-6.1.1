@@ -1252,10 +1252,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 	}
 	
-	public void addAgencyWitnes() {
+	public void addAgencyWitnes(int temp) {
 	
 		try {
-			  
+			
 			validateAgencyWitnes();
 			getManagedBean().setAgencyWitnessIcNo(new ArrayList<String>());
 			if(getManagedBean().getCtSignAgencyWitness() != null && !getManagedBean().getCtSignAgencyWitness().isEmpty()) {
@@ -1281,7 +1281,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			            }
 		          }
 		     
-			} if(!getManagedBean().isValidateWitness()) {
+			} if(!getManagedBean().isValidateWitness() && temp == 2) {
 			
 		        	CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			        ctAgreementParty.setAgreementPartyType(new PmParameter());
@@ -1305,7 +1305,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
               }
 	   }
 	
-	   public void addSupplierWitness() {
+	   public void addSupplierWitness(int temp) {
 		
 		     try {    
 			           
@@ -1338,7 +1338,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				              }
 			            }
 			     
-			      } if(!getManagedBean().isValidateWitness()) {
+			      } if(!getManagedBean().isValidateWitness() && temp == 2) {
 			        	  
 			    	       CtAgreementParty ctAgreementParty = new CtAgreementParty();
 						   ctAgreementParty.setAgreementPartyType(new PmParameter());
