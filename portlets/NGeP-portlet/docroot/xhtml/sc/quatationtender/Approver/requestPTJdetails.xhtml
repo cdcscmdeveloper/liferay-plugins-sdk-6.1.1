@@ -39,7 +39,7 @@
 						disabled="true" readonly="true" size="80" /></td>
 				<td style="width: 250px;"><p:outputLabel value="Request Date" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.createdDate}"
+						value="#{approvalBackingBean.managedBean.scQtApproval.submissionDate}"
 						disabled="true" readonly="true" size="30">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
