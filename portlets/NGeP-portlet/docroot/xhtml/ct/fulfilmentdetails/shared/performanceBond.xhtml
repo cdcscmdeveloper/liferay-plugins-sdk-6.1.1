@@ -43,19 +43,19 @@
 			
 			<p:column style="width:10%;">
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
-					disabled="#{varBond.performanceBondId != null or contractDetailsBackingBean.managedBean.viewContract}" style="width:85px;" />
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:85px;" />
 			</p:column>
 		
 			<p:column style="width:30%;">
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}" 
-				    style="width:180px;" disabled="#{varBond.performanceBondId != null or contractDetailsBackingBean.managedBean.viewContract}">
+				    style="width:180px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 					<f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
 				</p:selectOneMenu>
 			</p:column>
 			
 			<p:column style="width:12%;">
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="23"
-				    disabled="#{varBond.performanceBondId != null or contractDetailsBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+				    disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -64,7 +64,7 @@
 			<p:column style="width:8%;">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					showOn="button" readonlyInput="true" navigator="true"
-					disabled="#{varBond.performanceBondId != null or contractDetailsBackingBean.managedBean.viewContract}"
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 					mindate="#{varBond.effDate}" maxdate="#{varBond.expDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
@@ -73,8 +73,8 @@
 			
 			<p:column style="width:8%;">
 				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
-				    readonlyInput="true" disabled="#{varBond.performanceBondId != null or contractDetailsBackingBean.managedBean.viewContract}" 
-				    mindate="#{varBond.effDate}" navigator="true"
+				    readonlyInput="true" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" 
+				    mindate="#{contractDetailsBackingBean.getExactDate}" navigator="true" maxdate="#{contractDetailsBackingBean.getExactDate}"
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />
                     <f:validator validatorId="primeDateRangeValidator" />
@@ -84,7 +84,7 @@
 			<p:column styleClass="column-align-center" style="width:22%;">
 				<h:panelGroup id="uploadBondPg">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"
-						icon="iconAttachment" update=":form:tableBond, uploadBondDlg" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+						icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg" 
 						rendered="#{varBond.filePath == null and contractDetailsBackingBean.managedBean.updateContract}">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
@@ -96,14 +96,15 @@
 			</p:column>
 			<p:column style="width:10%;">
 				<p:selectOneMenu id="rStatus" value="#{varBond.recordStatusFlg}"
-					disabled="#{varBond.performanceBondId != null or contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;">
-					<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;">
+					 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+				         <p:ajax process="@form"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<c:if test='#{contractDetailsBackingBean.managedBean.updateContract and !contractDetailsBackingBean.managedBean.viewContract}'>
+			<c:if test='#{!contractDetailsBackingBean.managedBean.viewContract}'>
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@form" 
 				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond">
 					<p:tooltip for="addPdBtn">

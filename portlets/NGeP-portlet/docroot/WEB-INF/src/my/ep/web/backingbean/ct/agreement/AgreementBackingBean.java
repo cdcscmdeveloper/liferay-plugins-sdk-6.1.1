@@ -1381,9 +1381,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 			   if(getManagedBean().getAgencyOfficerIcNo().contains(str)) {
 	       		      throw new EpException(MessageConst.WARN_756000, new String[]{str});
-	       	   } else if(getManagedBean().getAgencyWitnessIcNo().contains(str)){
-		                	  throw new EpException(MessageConst.WARN_757000, new String[]{str});
-	           }  else if(getManagedBean().getSupplierOfficerIcNo().contains(str)){
+	       	   } else if(getManagedBean().getSupplierOfficerIcNo().contains(str)){
 	                    throw new EpException(MessageConst.WARN_760000, new String[]{str});
        		   }  else if(getManagedBean().getSupplierWitnessIcNo().contains(str)){
 		               throw new EpException(MessageConst.WARN_763000, new String[]{str});
@@ -1394,8 +1392,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		 if(getManagedBean().getSupplierOfficerIcNo().contains(str)) {
 		        throw new EpException(MessageConst.WARN_760000, new String[]{str});
-	      } else if (getManagedBean().getSupplierWitnessIcNo().contains(str)) {
-               throw new EpException(MessageConst.WARN_761000, new String[]{str});
 	      } else if (getManagedBean().getAgencyOfficerIcNo().contains(str)) {
         	   throw new EpException(MessageConst.WARN_756000, new String[]{str});
           } else if(getManagedBean().getAgencyWitnessIcNo().contains(str)){

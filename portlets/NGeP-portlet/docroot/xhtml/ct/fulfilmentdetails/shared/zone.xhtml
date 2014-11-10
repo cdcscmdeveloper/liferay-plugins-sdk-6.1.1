@@ -45,7 +45,7 @@
                      style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="#{lbl['lbl.ct.delivery.term']}"
                      disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
                 <p:spacer width="2" />
-                <h:outputLabel rendered="#{zoneTree.zone != null}" style="float:none;" value="#{lbl['lbl.ct.days']}" ></h:outputLabel>
+                <h:outputText rendered="#{zoneTree.zone != null}" style="float:none;" value="#{lbl['lbl.ct.days']}" ></h:outputText>
              </p:treeNode>
         </p:column>
       </p:treeTable>
