@@ -2322,6 +2322,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelFactorySaveorUpdate() {
 		assignValReqdToFalse();
+		getManagedBean().getSelectedFactoryFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedFactoryFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:factoryDialog");
 		RequestContext.getCurrentInstance().execute("factoryDialog.hide()");
 	}
@@ -2408,6 +2410,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelDockyardSaveorUpdate() {
 		assignValReqdToFalse();
+		getManagedBean().getSelectedDockyardFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedDockyardFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:dockYardDialog");
 		RequestContext.getCurrentInstance().execute("dockYardDialog.hide()");
 	}
@@ -2491,6 +2495,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelWorkShopSaveorUpdate() {
 		assignValReqdToFalse();
+		getManagedBean().getSelectedWorkShopFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedWorkShopFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:workShopDialog");
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
@@ -2573,6 +2579,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelStoreSaveorUpdate() {
 		assignValReqdToFalse();
+		getManagedBean().getSelectedStoreFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedStoreFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:storeDialog");
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
@@ -6005,6 +6013,9 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
+	
+	
+
 	
 //	private void generateSuppDocPdfFile(VelocityContext context)
 //			throws Exception {
