@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -276,6 +277,17 @@ public class QTBriefingSiteVisitBackingBean extends
 				throw new EpException(MessageConst.ERROR_760099);
 			}
 			bsvDetail.setScQtBsv(briefingBean.getScQtBsv());
+		}
+		if (null != bsvDetail) {
+			Date bsvDate = bsvDetail.getBsvDate();
+			if (null != bsvDate) {
+				Date publishDate = this.getManagedBean().getQt().getPublishDate();
+				if (null != publishDate) {
+					if (bsvDate.compareTo(publishDate) < 0 ) {
+						throw new EpException("Publish Date is more Than Briefing/Site Visit date.");
+					}
+				}
+			}
 		}
 		if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
