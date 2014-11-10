@@ -395,13 +395,15 @@ public class QTScheduleDetailBackingBean extends
 		Date publishDate = new Date();
 		if (scQt.isBsvRequired()) {
 			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
-			Date briefingDate=null;
-			for (ScQtBsv bsvs : bsvDetails) {
-				List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
-				for (ScQtBsvDtl bsvDtl : dtls) {
-					briefingDate = bsvDtl.getBsvDate();
-					if (null != briefingDate) {
-						return	DateUtils.minusDays(briefingDate, 1);
+			if (null != bsvDetails && !bsvDetails.isEmpty()) {
+				Date briefingDate=null;
+				for (ScQtBsv bsvs : bsvDetails) {
+					List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
+					for (ScQtBsvDtl bsvDtl : dtls) {
+						briefingDate = bsvDtl.getBsvDate();
+						if (null != briefingDate) {
+							return	DateUtils.minusDays(briefingDate, 1);
+						}
 					}
 				}
 			}
