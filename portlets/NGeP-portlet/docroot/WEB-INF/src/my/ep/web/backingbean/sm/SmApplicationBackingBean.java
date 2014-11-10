@@ -4417,6 +4417,58 @@ public class SmApplicationBackingBean extends
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
+	
+	public String finalDecisionDeletePendingAppln(String dialog,
+			String decision) {
+		List<String> updateIds = new ArrayList<String>();
+		updateIds.add(":form");
+		log.info("*** Submit Approve *** " + decision);
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		RequestContext.getCurrentInstance().update(updateIds);
+		return approveOrRejectPendingApplicationCancellation(decision);
+
+	}
+
+	public String approveOrRejectPendingApplicationCancellation(String res) {
+		IReviewApplicationSO reqSO = null;
+
+		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+		reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IReviewApplicationSO.class);
+		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+		reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
+		reqDTO.setOutcome(res);
+		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setLocation(getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
+				.getStateName().toUpperCase());
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		if (getManagedBean().getSupplierToPOList() != null) {
+			log.info("**** LIST of supp from BPM earlier task *******"
+					+ getManagedBean().getSupplierToPOList().size());
+			reqDTO.setUserList(getManagedBean().getSupplierToPOList());
+		} else {
+			log.info("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
+			reqDTO.setUserList(new ArrayList<String>());
+		}
+		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils
+								.getMessage(
+										MessageConst.INFO_700055,
+										new String[] {
+												getManagedBean().getSmAppl()
+														.getApplNo(),
+												res.toUpperCase() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+		renewSesionObject();
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
+	}
 
 	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
