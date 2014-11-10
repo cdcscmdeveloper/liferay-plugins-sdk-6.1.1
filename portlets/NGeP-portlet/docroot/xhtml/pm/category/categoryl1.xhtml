@@ -21,9 +21,19 @@
 						icon="ui-icon-back" update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}"
 						style="float:left;" /></td>
-				<td><p:commandButton value="#{lbl['lbl.btn.save']}"
+				<td>
+				
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveCategory}"
-						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" /></td>
+						rendered="#{!categoryBackingBean.managedBean.newCategory}"
+						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" />
+						
+					<p:commandButton value="#{lbl['lbl.btn.create']}"
+						action="#{categoryBackingBean.saveCategory}"
+						rendered="#{categoryBackingBean.managedBean.newCategory}"
+						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" />
+						
+				</td>
 			</tr>
 
 
@@ -106,12 +116,15 @@
 			</p:column>
 
 		</p:dataTable>
+		
+		<ui:remove>
 		<p>&nbsp;</p>
 		<div class="ppRightBtn">
 			<p:commandButton
 				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 				action="#{categoryBackingBean.addSubCategory()}" />
 		</div>
+		</ui:remove>
 		
 		</p:panel>	
 		</c:if>

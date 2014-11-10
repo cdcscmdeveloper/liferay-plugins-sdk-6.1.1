@@ -134,12 +134,15 @@
 			</p:column>
 
 		</p:dataTable>
+		
+		<ui:remove>
 		<p>&nbsp;</p>
 		<div class="ppRightBtn">
 			<p:commandButton
 				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 				action="#{categoryBackingBean.addSubDivision()}" />
 		</div>
+		</ui:remove>
 		
 		</p:panel>	
 		</c:if>
