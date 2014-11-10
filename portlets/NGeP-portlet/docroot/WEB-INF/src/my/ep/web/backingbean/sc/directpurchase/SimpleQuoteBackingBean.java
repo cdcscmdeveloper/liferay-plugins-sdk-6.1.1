@@ -452,22 +452,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DIVISION);	
 			}
 		}
-		
+		List<TplSpecZoneDtl> tplSpecZoneDtls = new ArrayList<TplSpecZoneDtl>();
 		if(ctPanelItem.getCtPanelZones() != null && ctPanelItem.getCtPanelZones().size()>0){
 			ScQuoteZone quoteZone = new ScQuoteZone();
 			
 			for (CtPanelZone ctPanelZone : ctPanelItem.getCtPanelZones()) {
-
 				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-				quoteZone.setScQuote(scQuote);
-				scQuote.setQuoteZone(quoteZone);
 				tplSpecZoneDtl.setTplSpecZone(quoteZone);
 				tplSpecZoneDtl.setZoneName(ctPanelZone.getName());
 				tplSpecZoneDtl.setPanelZone(ctPanelZone);
-				// for zonal 
-				scQuote.setZonal(Boolean.TRUE);
-				getManagedBean().setScQuote(scQuote);
-
+				
 				List<PmState> states = SourcingLocationHelper
 						.getStateFromCtPanelZone(ctPanelZone.getPanelZoneDtls());
 				List<PmDistrict> districts = SourcingLocationHelper
@@ -477,12 +471,20 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						LocationSingleton.getInstance().buildTreeWithDisabledChilds(tplSpecZoneDtl, states,
 								districts, null, null,false,TplSpecZoneLoc.class));
 				
-
-				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
+				tplSpecZoneDtls.add(tplSpecZoneDtl);
+				
+				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size() >0){
 					createPanelSuppliersWithZone(ctPanelZone.getCtPanelSuppliers(), scQuote, tplSpecZoneDtl);
 				}
 				
 			}
+			
+			// for zonal 
+			scQuote.setZonal(Boolean.TRUE);
+			quoteZone.setScQuote(scQuote);
+			quoteZone.setTplSpecZoneDtls(tplSpecZoneDtls);
+			scQuote.setQuoteZone(quoteZone);
+			getManagedBean().setScQuote(scQuote);
 		}
 	}
 	
@@ -1867,7 +1869,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.getQuoteZone().setModified(Boolean.TRUE);
 			}	
 		}
+		// after delete zone update  prod and service item list
+		updateProdNServiceItemList(quote);
 		getManagedBean().setScQuote(quote);
+	}
+
+	private void updateProdNServiceItemList(ScQuote quote) {
+
+		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quote.getQuoteZone());
+		}
+
+		if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+			getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setTplSpecZone(quote.getQuoteZone());
+		}
+
 	}
 	
 	public void selectPanelItemZone(NodeSelectEvent event) {
