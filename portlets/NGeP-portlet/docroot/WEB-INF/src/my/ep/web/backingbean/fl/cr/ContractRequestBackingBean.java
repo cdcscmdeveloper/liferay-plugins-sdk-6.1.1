@@ -315,7 +315,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					throw new EpException(MessageConst.ERROR_750017);
 				}
 				validateOrderQuantity();
-				checkMinimumQtyItem(getManagedBean().getFlRequest());// to be confirm to release this rules.
+				checkMinimumQtyItem(getManagedBean().getFlRequest());
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
@@ -1099,7 +1099,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlManualAddress().getPmAddress().getPmDivision().setDivisionId(1L);
 		}
 		setFlSupplierDtl(getManagedBean().getFlRequest());
-		//setOneOffFulfilmentItemAddr(getManagedBean().getFlRequest());
+//		setOneOffFulfilmentItemAddr(getManagedBean().getFlRequest());
 		setFulfilmentItemAddr(getManagedBean().getFlRequest());
 	}
 
@@ -3168,19 +3168,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		quantityMap.clear();
 		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-				Long key = itemAddr.getScRequestItem().getCmItem().getItemId();
+				Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
+				
 				if(!quantityMap.containsKey(key)){
-					quantityMap.put(itemAddr.getScRequestItem().getCmItem().getItemId(),itemAddr.getOrderedQty());
+					quantityMap.put(itemAddr.getScRequestItem().getRequestNoteItemId(),itemAddr.getOrderedQty());
 				}else{
 					BigDecimal sumOrderedQty = quantityMap.get(key);
 					BigDecimal totalOrderQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-					quantityMap.put(itemAddr.getScRequestItem().getCmItem().getItemId(),totalOrderQty);
+					quantityMap.put(itemAddr.getScRequestItem().getRequestNoteItemId(),totalOrderQty);
 				}
 			}
 		}
 		for(CtContractItem ctContractItem : flRequest.getCtContract().getLatestContractVer().getCtContractItems()){
-			if(quantityMap.containsKey(ctContractItem.getScRequestItem().getCmItem().getItemId())){
-				BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getCmItem().getItemId());
+			if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
+				BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
 				if(flOrederedQty.intValue() <  ctContractItem.getMinimumOrderQty()){
 					throw new EpException(ctContractItem.getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is lesser than minimum quantity " +ctContractItem.getMinimumOrderQty());
 				}
