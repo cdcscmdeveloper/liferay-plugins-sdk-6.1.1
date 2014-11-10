@@ -2644,7 +2644,7 @@ public class UnspscCodeBackingBean extends
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "unspscRequestForm");
+				.handleNavigation(fc, null, "unspscRequestFormByMenu");
 	}
 
 	public int productOrServiceOperator() {
