@@ -139,7 +139,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form"></p:ajax>
+								update="@form" listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
 
 						</p:selectOneRadio>
 						<p:message id="evalMsg" for="evalType" display="icon" />
@@ -158,7 +158,8 @@
 							value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.techEvaluationReqChanged}"></p:ajax>
 						</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
 					</td>
 				</ui:fragment>
