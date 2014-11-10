@@ -2014,6 +2014,8 @@ public class SpecificationBackingBean extends
 					.setClPriceTypeCode(PriceTyperesDTO.getPmParameter());
 			setUserDetails(tplSpecQuestion);
 			// questionsList.add(tplSpecQuestion);
+			specMaster.setScoringReq(this.getManagedBean().getScQt()
+					.isTechEvaluationReq());
 			specMaster.setTplSpecQuestions(questionsList);
 
 			this.getManagedBean().getScQt().setZoneLocationLevel(null);
@@ -4515,7 +4517,7 @@ public class SpecificationBackingBean extends
 
 	// Retrive Non Panel Zone Details Method
 	public void retriveNonpanelZoneDtls(List<TplSpecZoneDtl> zonedtls) {
-	
+
 		try {
 			List<ZonesBean> beans = getManagedBean().getBeans();
 			/*
@@ -11018,7 +11020,8 @@ public class SpecificationBackingBean extends
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-			specMaster.setScoringReq(getManagedBean().getScQt().isTechEvaluationReq());
+			specMaster.setScoringReq(getManagedBean().getScQt()
+					.isTechEvaluationReq());
 			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
 					SourcingConstants.TECHNICAL_DOCTYPE);
 
@@ -11132,6 +11135,10 @@ public class SpecificationBackingBean extends
 				.getTemplateSpecBean();
 		templateSpecBean.setSpecMaster(checklist.getScQtDoc()
 				.getTplSpecMaster());
+		if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
+			templateSpecBean.getSpecMaster().setScoringReq(
+					scQt.isTechEvaluationReq());
+		}
 		if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) {
 			if (scQt.isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = scQt
@@ -11228,8 +11235,8 @@ public class SpecificationBackingBean extends
 				}
 
 				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
-				if(null==tplSpecLocList){
-					tplSpecLocList=new ArrayList<TplSpecLoc>();
+				if (null == tplSpecLocList) {
+					tplSpecLocList = new ArrayList<TplSpecLoc>();
 				}
 				// if(tplSpecLocList == null || tplSpecLocList.size() == 0){
 				List<TreeNode> rootZoneLocation = getManagedBean()
@@ -11287,13 +11294,31 @@ public class SpecificationBackingBean extends
 				searchResDTO.getResultBean().getTotalRecord());
 
 	}
-	
+
+	public void evaluationTypeChange() {
+		String evaluationType = getManagedBean().getScQt().getEvaluationType();
+		if (evaluationType.equals("2")) {
+			getManagedBean().getScQt().setTechEvaluationReq(true);
+		}
+	}
+
 	public void techEvaluationReqChanged() {
-		boolean isTechEvaluationReq = getManagedBean().getScQt().isTechEvaluationReq();
-		
-		// TODO  - Get list of technical checklist to set score req.
-		TplSpecMaster specMaster = null;
-		specMaster.setScoringReq(isTechEvaluationReq);
+		boolean isTechEvaluationReq = getManagedBean().getScQt()
+				.isTechEvaluationReq();
+
+		// TODO - Get list of technical checklist to set score req.
+		List<ScQtCheckList> techCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+	
+		if (null != techCheckList) {
+			for (ScQtCheckList qtCheckList : techCheckList) {
+				qtCheckList.getScQtDoc().getTplSpecMaster()
+						.setScoringReq(isTechEvaluationReq);
+				
+			}
+		}
+		//this.getManagedBean().setScQtCheckSt2techProposal(localCheckList);
+		// specMaster.setScoringReq(isTechEvaluationReq);
 	}
 
 	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
