@@ -428,201 +428,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
+			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 		    ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	}
 	
-	public void ScheduleDate(){
-		String startMonth = "";
-		String endMonth = "";
-		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
-			   
-			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-                String fromdate = dateFormat.format(ctSchedules.getFromDate());
-			    String todate = dateFormat.format(ctSchedules.getToDate());
-			    String startdate = fromdate.substring(3, 5);
-			    String startYear = fromdate.substring(6,fromdate.length());
-			    String enddate = todate.substring(3, 5);
-			    String endYear = todate.substring(6, todate.length());
-                if (startdate.equalsIgnoreCase("01")) {
-				     startMonth = "0";
-			    }
-			  if (startdate.equalsIgnoreCase("02")) {
-				   startMonth = "1";
-			  }
-				if (startdate.equalsIgnoreCase("03")) {
-					startMonth = "2";
-				}
-				if (startdate.equalsIgnoreCase("04")) {
-					startMonth = "3";
-				}
-				if (startdate.equalsIgnoreCase("05")) {
-					startMonth = "4";
-				}
-				if (startdate.equalsIgnoreCase("06")) {
-					startMonth = "5";
-				}
-	
-				if (startdate.equalsIgnoreCase("07")) {
-					startMonth = "6";
-				}
-				if (startdate.equalsIgnoreCase("08")) {
-					startMonth = "7";
-				}
-				if (startdate.equalsIgnoreCase("09")) {
-					startMonth = "8";
-				}
-				if (startdate.equalsIgnoreCase("10")) {
-					startMonth = "9";
-				}
-				if (startdate.equalsIgnoreCase("11")) {
-					startMonth = "10";
-				}
-				if (startdate.equalsIgnoreCase("12")) {
-					startMonth = "11";
-				}
-	
-				if (enddate.equalsIgnoreCase("01")) {
-					endMonth = "0";
-				}
-				if (enddate.equalsIgnoreCase("02")) {
-					endMonth = "1";
-				}
-				if (enddate.equalsIgnoreCase("03")) {
-					endMonth = "2";
-				}
-				if (enddate.equalsIgnoreCase("04")) {
-					endMonth = "3";
-				}
-				if (enddate.equalsIgnoreCase("05")) {
-					endMonth = "4";
-				}
-				if (enddate.equalsIgnoreCase("06")) {
-					endMonth = "5";
-				}
-	
-				if (enddate.equalsIgnoreCase("07")) {
-					endMonth = "6";
-				}
-				if (enddate.equalsIgnoreCase("08")) {
-					endMonth = "7";
-				}
-				if (enddate.equalsIgnoreCase("09")) {
-					endMonth = "8";
-				}
-				if (enddate.equalsIgnoreCase("10")) {
-					endMonth = "9";
-				}
-				if (enddate.equalsIgnoreCase("11")) {
-					endMonth = "10";
-				}
-				if (enddate.equalsIgnoreCase("12")) {
-					endMonth = "11";
-				}
-
-			ctSchedules.setStartMonth(startMonth);
-			ctSchedules.setEndMonth(endMonth);
-			ctSchedules.setStartYear(startYear);
-			ctSchedules.setEndYear(endYear);
-		}
-	}
-	
-	public void ProgressiveDate(){
-		String startMonth = "";
-		String endMonth = "";
-		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
-			   
-			if(ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
-			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-                String fromdate = dateFormat.format(ctSchedules.getFromDate());
-			    String todate = dateFormat.format(ctSchedules.getToDate());
-			    String startdate = fromdate.substring(3, 5);
-			    String startYear = fromdate.substring(6,fromdate.length());
-			    String enddate = todate.substring(3, 5);
-			    String endYear = todate.substring(6, todate.length());
-                if (startdate.equalsIgnoreCase("01")) {
-				     startMonth = "0";
-			    }
-			  if (startdate.equalsIgnoreCase("02")) {
-				   startMonth = "1";
-			  }
-				if (startdate.equalsIgnoreCase("03")) {
-					startMonth = "2";
-				}
-				if (startdate.equalsIgnoreCase("04")) {
-					startMonth = "3";
-				}
-				if (startdate.equalsIgnoreCase("05")) {
-					startMonth = "4";
-				}
-				if (startdate.equalsIgnoreCase("06")) {
-					startMonth = "5";
-				}
-	
-				if (startdate.equalsIgnoreCase("07")) {
-					startMonth = "6";
-				}
-				if (startdate.equalsIgnoreCase("08")) {
-					startMonth = "7";
-				}
-				if (startdate.equalsIgnoreCase("09")) {
-					startMonth = "8";
-				}
-				if (startdate.equalsIgnoreCase("10")) {
-					startMonth = "9";
-				}
-				if (startdate.equalsIgnoreCase("11")) {
-					startMonth = "10";
-				}
-				if (startdate.equalsIgnoreCase("12")) {
-					startMonth = "11";
-				}
-	
-				if (enddate.equalsIgnoreCase("01")) {
-					endMonth = "0";
-				}
-				if (enddate.equalsIgnoreCase("02")) {
-					endMonth = "1";
-				}
-				if (enddate.equalsIgnoreCase("03")) {
-					endMonth = "2";
-				}
-				if (enddate.equalsIgnoreCase("04")) {
-					endMonth = "3";
-				}
-				if (enddate.equalsIgnoreCase("05")) {
-					endMonth = "4";
-				}
-				if (enddate.equalsIgnoreCase("06")) {
-					endMonth = "5";
-				}
-	
-				if (enddate.equalsIgnoreCase("07")) {
-					endMonth = "6";
-				}
-				if (enddate.equalsIgnoreCase("08")) {
-					endMonth = "7";
-				}
-				if (enddate.equalsIgnoreCase("09")) {
-					endMonth = "8";
-				}
-				if (enddate.equalsIgnoreCase("10")) {
-					endMonth = "9";
-				}
-				if (enddate.equalsIgnoreCase("11")) {
-					endMonth = "10";
-				}
-				if (enddate.equalsIgnoreCase("12")) {
-					endMonth = "11";
-				}
-			
-			ctSchedules.setStartMonth(startMonth);
-			ctSchedules.setEndMonth(endMonth);
-			ctSchedules.setStartYear(startYear);
-			ctSchedules.setEndYear(endYear);
-			}
-		}
-	}
 	
     public void ConstructSideTabMenu(){
 		
@@ -766,7 +575,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public String backAction() {
-		this.getManagedBean().setViewContract(false);
+		getManagedBean().setViewContract(false);
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 	
@@ -993,173 +802,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return null;	
 	}
     
-    public void scheduleProgressiveDate(){
-    	
-    	if(getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-			
-			  if(getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
-				    String Startmonth = "";
-				    String endmonth = "";
-				for(CtSchedule schedule : this.getManagedBean().getContractVer().getCtSchedules()) {
-				   if(schedule.getStartMonth() != null) {
-					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-						Startmonth = "01";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-						Startmonth = "02";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-						Startmonth = "03";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-						Startmonth = "04";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-						Startmonth = "05";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-						Startmonth = "06";
-					}
-
-					else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-						Startmonth = "07";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-						Startmonth = "08";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-						Startmonth = "09";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-						Startmonth = "10";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-						Startmonth = "11";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-						Startmonth = "12";
-					}
-				 
-					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-						endmonth = "01";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-						endmonth = "02";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-						endmonth = "03";
-					}
-
-					else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-						endmonth = "04";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-						endmonth = "05";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-						endmonth = "06";
-					}
-
-					else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-						endmonth = "07";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-						endmonth = "08";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-						endmonth = "09";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-						endmonth = "10";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-						endmonth = "11";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-						endmonth = "12";
-					 }
-				   
-					Date d1 = new Date();
-
-					SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"+ schedule.getEndYear();
-
-					try {
-						schedule.setFromDate(format.parse(fromdate));
-						schedule.setToDate(format.parse(toDate));
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}getManagedBean().getContractVer().setCtProgressivePayments(null);
-			  }
-			}
-	
-    	} else {
-			           if (getManagedBean().getContractVer().getCtProgressivePayments() != null && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-				String Startmonth = "";
-				String endmonth = "";
-				for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
-					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-						Startmonth = "01";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-						Startmonth = "02";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-						Startmonth = "03";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-						Startmonth = "04";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-						Startmonth = "05";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-						Startmonth = "06";
-					}
-
-					else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-						Startmonth = "07";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-						Startmonth = "08";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-						Startmonth = "09";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-						Startmonth = "10";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-						Startmonth = "11";
-					} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-						Startmonth = "12";
-					}
-					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-						endmonth = "01";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-						endmonth = "02";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-						endmonth = "03";
-					}
-
-					else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-						endmonth = "04";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-						endmonth = "05";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-						endmonth = "06";
-					}
-
-					else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-						endmonth = "07";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-						endmonth = "08";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-						endmonth = "09";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-						endmonth = "10";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-						endmonth = "11";
-					} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-						endmonth = "12";
-					}
-					Date d1 = new Date();
-
-					SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"
-							+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"
-							+ schedule.getEndYear();
-					try {
-						schedule.setFromDate(format.parse(fromdate));
-						schedule.setToDate(format.parse(toDate));
-					} catch (ParseException e) {
-						log.debug(e.getMessage());
-					}
-				}
-				getManagedBean().getContractVer().setCtSchedules(null);
-			} 
-		}	
-    }
+   
     
     private void validateCtContractVer(ContractReqDTO reqDTO) throws EpException {
 		CtContractVer contractVer = reqDTO.getCtContractVer();
@@ -1186,24 +829,40 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		 if(reqDTO.getCtContract().isBondReq() && !contractVer.getCtPerformanceBonds().isEmpty()) {
 			 
-				Calendar cal = Calendar.getInstance();
-		        cal.setTime(contractVer.getCtContractValue().getExpDate());
-		        cal.add(Calendar.YEAR, 1); 
 		        double bondAmount = 0.0;
 			
 		        for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
 					
+		        	if(performanceBond.getRecordStatusFlg().intValue() == 1) {
+		        		performanceBond.setRecordStatus(true);
+		        	} else {
+		        		performanceBond.setRecordStatus(true);
+		        	}
+		        	
 		        	if(performanceBond.isRecordStatus()) {
 					        bondAmount = bondAmount + performanceBond.getBondAmount();
 					
 					       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
 						         throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
-					 
-					      if(performanceBond.getEffDate().compareTo(contractVer.getCtContractValue().getEffDate()) != 0 || cal.getTime().compareTo(performanceBond.getExpDate()) != 0)
+					       
+					       SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			               
+					       String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			               String todate = dateFormat.format(performanceBond.getExpDate());
+						   
+			               int startDay = Integer.valueOf(expDate.substring(0, 2));
+						   int startMonth = Integer.valueOf(expDate.substring(3, 5));
+						   int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
+						   
+						   int endDay = Integer.valueOf(todate.substring(0, 2));
+						   int endMonth = Integer.valueOf(todate.substring(3, 5));
+						   int endYear = Integer.valueOf(todate.substring(6, todate.length()));
+			
+					      if(startDay != endDay || startMonth != endMonth  || startYear != endYear)
 						      throw new EpException(MessageConst.ERROR_750049); 
 					 }
 		        }
-				if(bondAmount != 0.0) {
+				/*if(bondAmount != 0.0) {
 					int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					  if( retval >0 ){
 				    	throw new EpException(MessageConst.ERROR_750048);
@@ -1211,7 +870,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					  if(retval < 0){
 						  throw new EpException(MessageConst.ERROR_750050);  
 					  }
-				}	
+				}	*/
 			}
 		 
 		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
@@ -1924,7 +1583,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
     
     public boolean isContractAdmin() {
-		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
+    /*	if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
+			return true;
+    	else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()))
+			return true;*/
+    	return true;
 	}
 
 	private String getUserRole() {		
@@ -2605,6 +2268,370 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return activeList;
 	}
 	
+	public void ScheduleDate(){
+		String startMonth = "";
+		String endMonth = "";
+		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
+			   
+			   if(ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
+			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+                String fromdate = dateFormat.format(ctSchedules.getFromDate());
+			    String todate = dateFormat.format(ctSchedules.getToDate());
+			    String startdate = fromdate.substring(3, 5);
+			    String startYear = fromdate.substring(6,fromdate.length());
+			    String enddate = todate.substring(3, 5);
+			    String endYear = todate.substring(6, todate.length());
+                if (startdate.equalsIgnoreCase("01")) {
+				     startMonth = "0";
+			    }
+			  if (startdate.equalsIgnoreCase("02")) {
+				   startMonth = "1";
+			  }
+				if (startdate.equalsIgnoreCase("03")) {
+					startMonth = "2";
+				}
+				if (startdate.equalsIgnoreCase("04")) {
+					startMonth = "3";
+				}
+				if (startdate.equalsIgnoreCase("05")) {
+					startMonth = "4";
+				}
+				if (startdate.equalsIgnoreCase("06")) {
+					startMonth = "5";
+				}
+	
+				if (startdate.equalsIgnoreCase("07")) {
+					startMonth = "6";
+				}
+				if (startdate.equalsIgnoreCase("08")) {
+					startMonth = "7";
+				}
+				if (startdate.equalsIgnoreCase("09")) {
+					startMonth = "8";
+				}
+				if (startdate.equalsIgnoreCase("10")) {
+					startMonth = "9";
+				}
+				if (startdate.equalsIgnoreCase("11")) {
+					startMonth = "10";
+				}
+				if (startdate.equalsIgnoreCase("12")) {
+					startMonth = "11";
+				}
+	
+				if (enddate.equalsIgnoreCase("01")) {
+					endMonth = "0";
+				}
+				if (enddate.equalsIgnoreCase("02")) {
+					endMonth = "1";
+				}
+				if (enddate.equalsIgnoreCase("03")) {
+					endMonth = "2";
+				}
+				if (enddate.equalsIgnoreCase("04")) {
+					endMonth = "3";
+				}
+				if (enddate.equalsIgnoreCase("05")) {
+					endMonth = "4";
+				}
+				if (enddate.equalsIgnoreCase("06")) {
+					endMonth = "5";
+				}
+	
+				if (enddate.equalsIgnoreCase("07")) {
+					endMonth = "6";
+				}
+				if (enddate.equalsIgnoreCase("08")) {
+					endMonth = "7";
+				}
+				if (enddate.equalsIgnoreCase("09")) {
+					endMonth = "8";
+				}
+				if (enddate.equalsIgnoreCase("10")) {
+					endMonth = "9";
+				}
+				if (enddate.equalsIgnoreCase("11")) {
+					endMonth = "10";
+				}
+				if (enddate.equalsIgnoreCase("12")) {
+					endMonth = "11";
+				}
+
+			ctSchedules.setStartMonth(startMonth);
+			ctSchedules.setEndMonth(endMonth);
+			ctSchedules.setStartYear(startYear);
+			ctSchedules.setEndYear(endYear);
+	    	}
+		}
+	}
+	
+	public void ProgressiveDate(){
+		String startMonth = "";
+		String endMonth = "";
+		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
+			   
+			if(ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
+			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+                String fromdate = dateFormat.format(ctSchedules.getFromDate());
+			    String todate = dateFormat.format(ctSchedules.getToDate());
+			    String startdate = fromdate.substring(3, 5);
+			    String startYear = fromdate.substring(6,fromdate.length());
+			    String enddate = todate.substring(3, 5);
+			    String endYear = todate.substring(6, todate.length());
+                if (startdate.equalsIgnoreCase("01")) {
+				     startMonth = "0";
+			    }
+			  if (startdate.equalsIgnoreCase("02")) {
+				   startMonth = "1";
+			  }
+				if (startdate.equalsIgnoreCase("03")) {
+					startMonth = "2";
+				}
+				if (startdate.equalsIgnoreCase("04")) {
+					startMonth = "3";
+				}
+				if (startdate.equalsIgnoreCase("05")) {
+					startMonth = "4";
+				}
+				if (startdate.equalsIgnoreCase("06")) {
+					startMonth = "5";
+				}
+	
+				if (startdate.equalsIgnoreCase("07")) {
+					startMonth = "6";
+				}
+				if (startdate.equalsIgnoreCase("08")) {
+					startMonth = "7";
+				}
+				if (startdate.equalsIgnoreCase("09")) {
+					startMonth = "8";
+				}
+				if (startdate.equalsIgnoreCase("10")) {
+					startMonth = "9";
+				}
+				if (startdate.equalsIgnoreCase("11")) {
+					startMonth = "10";
+				}
+				if (startdate.equalsIgnoreCase("12")) {
+					startMonth = "11";
+				}
+	
+				if (enddate.equalsIgnoreCase("01")) {
+					endMonth = "0";
+				}
+				if (enddate.equalsIgnoreCase("02")) {
+					endMonth = "1";
+				}
+				if (enddate.equalsIgnoreCase("03")) {
+					endMonth = "2";
+				}
+				if (enddate.equalsIgnoreCase("04")) {
+					endMonth = "3";
+				}
+				if (enddate.equalsIgnoreCase("05")) {
+					endMonth = "4";
+				}
+				if (enddate.equalsIgnoreCase("06")) {
+					endMonth = "5";
+				}
+	
+				if (enddate.equalsIgnoreCase("07")) {
+					endMonth = "6";
+				}
+				if (enddate.equalsIgnoreCase("08")) {
+					endMonth = "7";
+				}
+				if (enddate.equalsIgnoreCase("09")) {
+					endMonth = "8";
+				}
+				if (enddate.equalsIgnoreCase("10")) {
+					endMonth = "9";
+				}
+				if (enddate.equalsIgnoreCase("11")) {
+					endMonth = "10";
+				}
+				if (enddate.equalsIgnoreCase("12")) {
+					endMonth = "11";
+				}
+			
+			ctSchedules.setStartMonth(startMonth);
+			ctSchedules.setEndMonth(endMonth);
+			ctSchedules.setStartYear(startYear);
+			ctSchedules.setEndYear(endYear);
+			}
+		}
+	}
+	
+	 public void scheduleProgressiveDate(){
+	    	
+	    	if(getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+				
+				  if(getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
+					    String Startmonth = "";
+					    String endmonth = "";
+					for(CtSchedule schedule : this.getManagedBean().getContractVer().getCtSchedules()) {
+					   if(schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
+						if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+							Startmonth = "01";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+							Startmonth = "02";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+							Startmonth = "03";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+							Startmonth = "04";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+							Startmonth = "05";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+							Startmonth = "06";
+						}
+
+						else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+							Startmonth = "07";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+							Startmonth = "08";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+							Startmonth = "09";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+							Startmonth = "10";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+							Startmonth = "11";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+							Startmonth = "12";
+						}
+					 
+						if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+							endmonth = "01";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+							endmonth = "02";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+							endmonth = "03";
+						}
+
+						else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+							endmonth = "04";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+							endmonth = "05";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+							endmonth = "06";
+						}
+
+						else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+							endmonth = "07";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+							endmonth = "08";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+							endmonth = "09";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+							endmonth = "10";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+							endmonth = "11";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+							endmonth = "12";
+						 }
+					   
+						Date d1 = new Date();
+
+						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						String localDate = format.format(d1);
+						String date = localDate.substring(0, 2);
+						String fromdate = date + "/" + Startmonth + "/"+ schedule.getStartYear();
+						String toDate = date + "/" + endmonth + "/"+ schedule.getEndYear();
+
+						try {
+							schedule.setFromDate(format.parse(fromdate));
+							schedule.setToDate(format.parse(toDate));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}getManagedBean().getContractVer().setCtProgressivePayments(null);
+				  }
+				}
+		
+	    	} else {
+				           if (getManagedBean().getContractVer().getCtProgressivePayments() != null && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
+					String Startmonth = "";
+					String endmonth = "";
+					for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
+						if (schedule.getStartMonth() != null && schedule.getEndMonth() != null){
+						if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+							Startmonth = "01";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+							Startmonth = "02";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+							Startmonth = "03";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+							Startmonth = "04";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+							Startmonth = "05";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+							Startmonth = "06";
+						}
+
+						else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+							Startmonth = "07";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+							Startmonth = "08";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+							Startmonth = "09";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+							Startmonth = "10";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+							Startmonth = "11";
+						} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+							Startmonth = "12";
+						}
+						if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+							endmonth = "01";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+							endmonth = "02";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+							endmonth = "03";
+						}
+
+						else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+							endmonth = "04";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+							endmonth = "05";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+							endmonth = "06";
+						}
+
+						else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+							endmonth = "07";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+							endmonth = "08";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+							endmonth = "09";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+							endmonth = "10";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+							endmonth = "11";
+						} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+							endmonth = "12";
+						}
+						Date d1 = new Date();
+
+						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						String localDate = format.format(d1);
+						String date = localDate.substring(0, 2);
+						String fromdate = date + "/" + Startmonth + "/"
+								+ schedule.getStartYear();
+						String toDate = date + "/" + endmonth + "/"
+								+ schedule.getEndYear();
+						try {
+							schedule.setFromDate(format.parse(fromdate));
+							schedule.setToDate(format.parse(toDate));
+						} catch (ParseException e) {
+							log.debug(e.getMessage());
+						}
+					  }
+					}
+					getManagedBean().getContractVer().setCtSchedules(null);
+				} 
+			}	
+	    }
+	
 	public void setMinistryOwnerId(){
 		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
 	}
@@ -2752,5 +2779,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     		}
     	}
     	return true;
+    }
+    
+    public Date getExactDate() throws ParseException{
+    	
+    	  SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+    	   String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+          int startDay = Integer.valueOf(expDate.substring(0, 2));
+		   int startMonth = Integer.valueOf(expDate.substring(3, 5));
+		   int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
+		   String toDate = startDay + "/" + startMonth + "/"+ startYear;
+		   return (Date)dateFormat.parse(toDate);
     }
 }
