@@ -1364,16 +1364,11 @@ public class SmApplicationBackingBean extends
 		StringBuffer sb = new StringBuffer();
 		String desc = null;
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.normal", null);
+			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.normal", null);
 		} else {
-			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.special", null);
+			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.special", null);
 		}
-		sb.append(
-				SmCommonUtil.getMessage("lbl.sm.categorycode.note", null) + " ")
-				.append(desc)
-				.append(" "
-						+ SmCommonUtil.getMessage(
-								"lbl.sm.categorycode.note.msg", null));
+		sb.append(desc);
 		getManagedBean().setCatTypeConfirm(sb.toString());
 		log.info("***** After confirm +++++++"
 				+ getManagedBean().getSmAppl().getSupportingDocMode());
