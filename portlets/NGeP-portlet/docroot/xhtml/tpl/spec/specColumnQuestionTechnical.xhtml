@@ -209,7 +209,7 @@
 		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 		<p:message id="delTermTypeMsg" for="delTermType" display="icon" />
 	</p:column>
-	<p:column style="width:125px;" rendered="#{isScoringReq}">
+	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}"/>
@@ -230,7 +230,7 @@
 				action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 				oncomplete="#{scoringSetPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
-				rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId}">
+				rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId and isScoringReq}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</h:panelGroup>

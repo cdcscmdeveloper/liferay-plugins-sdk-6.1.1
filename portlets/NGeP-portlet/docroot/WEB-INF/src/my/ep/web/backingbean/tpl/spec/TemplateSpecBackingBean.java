@@ -426,13 +426,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public SelectItem[] getPriceTypeDropdownList(TplSpecMaster specMaster) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> filteredList = new ArrayList<String>();
-		boolean scoringReq = specMaster.isScoringReq();
+		boolean specificationReq = specMaster.isSpecificationReq();
 		boolean estCostReq = specMaster.isEstCostReq();
 		
 		if (specMaster.getTplSpecZone() == null) {
 			filteredList.add(ParameterConst.PRICE_TYPE_STANDARD);
 			
-			if (scoringReq) {
+			if (specificationReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
 				filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
 			} else if (!estCostReq) {
@@ -441,7 +441,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		} else {
 			filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
 			
-			if (scoringReq) {
+			if (specificationReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
 			} else if (!estCostReq) {

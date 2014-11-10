@@ -11018,6 +11018,7 @@ public class SpecificationBackingBean extends
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+			specMaster.setScoringReq(getManagedBean().getScQt().isTechEvaluationReq());
 			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
 					SourcingConstants.TECHNICAL_DOCTYPE);
 
