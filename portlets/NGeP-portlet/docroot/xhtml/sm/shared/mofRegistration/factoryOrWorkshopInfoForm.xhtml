@@ -186,7 +186,7 @@
 						label="#{lbl['lbl.sm.postcode']}" maxlength="5"
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
 						size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"> 
-						<f:validateRegex pattern="[0-9]*" />
+						<f:validator validatorId="postcodeValidator"/>
 						</p:inputText> 
 						<p:message id="smFacFactoryPostCodeMsg"
 						for="smFacFactoryPostCode" showSummary="true" showDetail="false"
@@ -256,7 +256,7 @@
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
 							<p:inputText id="smFacFactoryPrice" label="#{lbl['lbl.cm.price']}"
 								value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
-								size="20" required="true">
+								size="20" required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -267,7 +267,7 @@
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 							<p:inputText id="smFacFactoryRent" label="#{lbl['lbl.sm.facility.rent.rm']}"
 								value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
-								size="20" required="true">
+								size="20" required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -296,7 +296,7 @@
 				partialSubmit="true" process="factoryDialog"
 				update=":form:tt:facDt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" partialSubmit="true" process="@this"
-				action="#{backingBean.cancelFactorySaveorUpdate}" />
+				action="#{backingBean.cancelFactorySaveorUpdate}" update=":form:tt:factoryDialog, @([id$=Msg])"/>
 		</div>
 	</p:dialog>
 </ui:composition>
