@@ -808,6 +808,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 			this.getManagedBean().setSpecialCategory(resDTO.getParameterDescList());
 			
+			//default value for Special Category
+			if(this.getManagedBean().isNewCategory()){
+				reqDTO.setParameterType("CAT");
+				reqDTO.setParameterCode("-");
+				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				this.getManagedBean().getPmCategoryL3().setCategoryTypeCodeVal(resDTO.getPmParameter().getParameterId());
+			}
+			
 			this.getManagedBean().setSelectedBasicCategory(new ArrayList<PmBasicCategory>() );
 		}catch(Exception e){
 			e.printStackTrace();
@@ -835,6 +843,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	
 	public void updateCategoryLevel(){
 		log.info("getManagedBean().getPmCategoryLevel() "+getManagedBean().getPmCategoryLevel());
+	}
+	
+	public void updateSpecialGroup(){
+		log.info("getManagedBean().updateSpecialGroup() ");
+		//this.getManagedBean().setDisplayCategoryGrouping(false);
 	}
 	
 	public void search() {
