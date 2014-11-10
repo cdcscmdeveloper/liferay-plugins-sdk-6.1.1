@@ -32,7 +32,7 @@
 	<p:panel header="#{lbl['lbl.sm.sitevist.equity']}" toggleable="true" id="pnlEquity">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.total.owner']}" /></td>
+				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.sitevist.total.owner']}" /></td>
 				<td><p:inputText readonly="true" id="ttlOwnerId" value="#{fn:length(svTask.smAppl.smSupplier.smSupplierOwners)}"/> #{lbl['lbl.sm.persons']}</td>
 			</tr>
 			
@@ -87,8 +87,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.gov.agency.equity']}" /><br /><p:outputLabel
-						value="#{lbl['lbl.sm.sitevist.unit.trust.agncy.amount']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.govagencyequity.unittrustagncy.amount']}" /></td>
 				<td><p:inputText readonly="true" id="eqUnitTrustId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.govtUnitrustEquity}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -131,7 +130,7 @@
 	<p:panel header="#{lbl['lbl.sm.sitevist.board.directors']}" toggleable="true" id="pnlBOD">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
+				<td  style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
 				<td><p:inputText id="ttlBODId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.totalBOD}" /> #{lbl['lbl.sm.persons']}</td>
 			</tr>
 			<tr>
@@ -164,7 +163,7 @@
 	<p:panel header="#{lbl['lbl.sm.person.composition.mngt']}" toggleable="true" id="pnlMgmt">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
+				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
 				<td><p:inputText id="ttlMgmtId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.totalMgmt}" /> #{lbl['lbl.sm.persons']}</td>
 			</tr>
 
@@ -191,7 +190,7 @@
 <!-- 				<td><p:inputText /></td> -->
 <!-- 			</tr> -->
 			
-			<ui:repeat varStatus="mgmtStatus" var="mgmt" value="#{svoSiteVisitBackingBean.managedBean.bodLs}">
+			<ui:repeat varStatus="mgmtStatus" var="mgmt" value="#{svoSiteVisitBackingBean.managedBean.mgmtLs}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
 					<p:outputLabel value="&#160;" rendered="#{mgmtStatus.index != 0}" /></td>
@@ -208,7 +207,7 @@
 	<p:panel header="#{lbl['lbl.sm.sitevist.workers']}" toggleable="true" id="pnlWorker">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
+				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
 				<td><p:inputText id="ttlWrkId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.totalWorker}" /> #{lbl['lbl.sm.persons']}</td>
 			</tr>
 
