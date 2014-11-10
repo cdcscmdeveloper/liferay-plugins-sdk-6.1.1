@@ -11287,6 +11287,14 @@ public class SpecificationBackingBean extends
 				searchResDTO.getResultBean().getTotalRecord());
 
 	}
+	
+	public void techEvaluationReqChanged() {
+		boolean isTechEvaluationReq = getManagedBean().getScQt().isTechEvaluationReq();
+		
+		// TODO  - Get list of technical checklist to set score req.
+		TplSpecMaster specMaster = null;
+		specMaster.setScoringReq(isTechEvaluationReq);
+	}
 
 	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
 		List<Long> categoryIds = null;
