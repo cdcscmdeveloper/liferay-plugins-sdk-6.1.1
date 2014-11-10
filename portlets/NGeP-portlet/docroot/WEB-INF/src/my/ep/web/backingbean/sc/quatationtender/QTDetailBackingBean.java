@@ -762,7 +762,7 @@ public class QTDetailBackingBean extends
 				qtSupplierCriteria.setQtZoneCriterias(null);
 			}
 		} else if (scQt.isZonal() && !scQt.isPanel()) {
-			List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+			/*List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
 					this.getManagedBean().getZoneGeneralTrees(), null);
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
 				if (null != this.getManagedBean().getSupplierCriteria()) {
@@ -784,7 +784,7 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().getSupplierCriteria()
 							.setLocationLevel(scQt.getZoneLocationLevel());
 				}
-			}
+			}*/
 		}
 		if (null != this.getManagedBean().getSupplierCriteria()) {
 			this.getManagedBean().getSupplierCriteria()
