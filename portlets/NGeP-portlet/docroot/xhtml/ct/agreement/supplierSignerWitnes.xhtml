@@ -96,7 +96,9 @@
                         </p:column>
                        
                         <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
-                            <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="12" validator="#{webappBean.checkIntegerField}"/>
+                            <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="12" validator="#{webappBean.checkIntegerField}">
+                              <p:ajax event="blur" process="@form" listener="#{agreementBackingBean.addSupplierWitness(1)}"></p:ajax>
+                              </p:inputText>
                         </p:column> 	       
           
                          <p:column style="width:20%;" headerText="#{lbl['lbl.ct.designation']}" >
@@ -106,7 +108,7 @@
               </h:panelGrid>
               <div class="ppRightBtn"> 
 		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
-		                 process="@form" action="#{agreementBackingBean.addSupplierWitness()}" update=":form:supplierWitnesTable">
+		                 process="@form" action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable">
 		    	        <p:tooltip for="addSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
 				        </p:tooltip>

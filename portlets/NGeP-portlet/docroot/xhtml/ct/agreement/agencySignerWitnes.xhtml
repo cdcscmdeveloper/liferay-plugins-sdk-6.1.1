@@ -111,7 +111,9 @@
 		                </p:column> 
 		
 		                <p:column headerText="#{lbl['lbl.ct.ic.no']}" style="width:20%;">
-		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%" maxlength="12" validator="#{webappBean.checkIntegerField}"/>
+		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%" maxlength="12" validator="#{webappBean.checkIntegerField}">
+		                    <p:ajax event="blur" process="@form" listener="#{agreementBackingBean.addAgencyWitnes(1)}"></p:ajax>
+		                    </p:inputText>
 		                </p:column> 
 		         
 		                <p:column headerText="#{lbl['lbl.ct.designation']}" style="width:30%;">
@@ -122,7 +124,7 @@
       
              <div class="ppRightBtn"> 
 		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
-		           icon="ui-icon-add" action="#{agreementBackingBean.addAgencyWitnes()}" 
+		           icon="ui-icon-add" action="#{agreementBackingBean.addAgencyWitnes(2)}" 
 		           process="@form" oncomplete="AgWitnessObj.paginator.endLink.click();"  update=":form:AgWitnessTable">
 		           <p:tooltip for="addAgencyWitnessBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
