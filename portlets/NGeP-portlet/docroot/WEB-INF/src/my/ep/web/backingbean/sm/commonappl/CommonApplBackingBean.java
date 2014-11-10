@@ -8,13 +8,17 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -22,6 +26,8 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
@@ -30,6 +36,7 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
@@ -37,6 +44,7 @@ import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -447,7 +455,7 @@ public class CommonApplBackingBean extends
 			SMMOFAppCanDataType srcObj = (SMMOFAppCanDataType) resDTO.getPojo();
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			log.info("********Review Cancellation********");
-			log.info("********Assign Site Visit APPID********"
+			log.info("********Review For deletion for pending application********"
 					+ srcObj.getDocumentId());
 			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 			mofResDto = retriveApplicationById(srcObj.getDocumentId());
@@ -455,10 +463,17 @@ public class CommonApplBackingBean extends
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 			// TODO Change this impl to get values from DB and set
 			// smSupplier , smAppl of the managedBean
-			// smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
-			// appl, mofResDto.getSmSupplier());
+			smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+					appl, mofResDto.getSmSupplier());
 			// smApplBB.getManagedBean().getSmAppl()
 			// .setApplId(new Long(smObj.getDocumentId()));
+			smApplBB.getManagedBean().setPoUser(true);
+			smApplBB.getManagedBean().setSupplierUser(false);
+			smApplBB.getManagedBean().setApproverUser(false);
+			if (srcObj.getSupplierList() != null) {
+				smApplBB.getManagedBean().setSupplierToPOList(
+						srcObj.getSupplierList());
+			}
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
@@ -755,7 +770,36 @@ public class CommonApplBackingBean extends
 		}
 
 	}
+	// private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
+	// log.info("*** This is resubmit to get po ****** ");
+	// SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+	// reqDTO.setApplId(applId);
+	// ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
+	// .getInstance()
+	// .getServiceObject("sm", ISmWorkFlowStatusSO.class);
+	// SmWorkFlowStatusResDTO resDTO = reqSO
+	// .retrieveCurrentWorkFlowStatusByDocId(reqDTO);
+	// if (resDTO != null && resDTO.getWorkflowStatus() != null) {
+	// return resDTO.getWorkflowStatus();
+	// } else {
+	// return null;
+	// }
+	// }
 
+	// private void setPmStatusDesc(String statusId,SmApplicationManagedBean
+	// managedBean) {
+	// log.info("****** Status Id ******" + statusId);
+	// StatusReqDTO reqDTO = new StatusReqDTO();
+	// reqDTO.setStatusId(Long.parseLong(statusId));
+	// reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+	// IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+	// .getServiceObject("pm", IStatusSO.class);
+	// StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
+	// if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+	// managedBean.setCurrentStatus(
+	// resDTO.getPmStatusDesc().getStatusName());
+	// }
+	// }
 	// public void preRender(){
 	// log.info("------ preRender-------");
 	// HttpServletRequest servletRequest = PortalUtil

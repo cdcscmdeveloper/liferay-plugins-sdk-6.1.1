@@ -10,8 +10,9 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" />
+		<p:messages id="messages" showDetail="true"
+			autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true"
+			showSummary="false" />
 
 		<p:panel header="#{lbl['lbl.sm.pending.app.desc.header']}">
 			<table>
@@ -25,7 +26,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" size="35"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							disabled="true" /></td>
 
@@ -33,7 +34,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" size="35"
 							value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 							disabled="true">
 							<f:convertDateTime
@@ -44,7 +45,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" size="35"
 							value="#{backingBean.managedBean.currentStatus}" disabled="true" /></td>
 
 				</tr>
@@ -72,38 +73,40 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 					onclick="approveAppCanDialog.show();" />
 				<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
-					onclick="rejectAppCanDialog.show();" />
+					update="rejectAppCanDialog" partialSubmit="true" process="@this"
+					action="#{backingBean.approveOrRejectMofCancellation('rejectAppCanDialog')}" />
 
 			</div>
 		</p:panel>
 
 
-		<p:dialog width="650px" header="#{lbl['lbl.sm.approve.application']}"
+		<p:dialog width="800px" header="#{lbl['lbl.sm.approve.application']}"
 			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
 			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
+				src="/xhtml/sm/shared/poDecisionSharedPages/approveDelPendingApplPopUpForm.xhtml" />
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					onclick="approveAppCanDialog.hide();"
-					action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
+					action="#{backingBean.approveOrRejectPendingApplicationCancellation('APPROVE')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					onclick="approveAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
-		<p:dialog width="650px" header="#{lbl['lbl.sm.reject.application']}"
-			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
-			hideEffect="fade" modal="true">
+		<p:dialog width="800px" header="#{lbl['lbl.sm.reject.application']}"
+			id="rejectAppCanDialog" widgetVar="rejectAppCanDialog"
+			resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 
 			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
+				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedDelPendingApplPopUpForm.xhtml" />
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="rejectAppCanDialog.hide();"
-					action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					onclick="rejectAppCanDialog.hide();" />
+					partialSubmit="true" process="rejectAppCanDialog"
+					action="#{backingBean.finalDecisionDeletePendingAppln('rejectAppCanDialog','REJECT')}" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					action="#{backingBean.resetMofCancellationFinalApproveOrReject('rejectAppCanDialog')}"
+					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
 	</ui:define>
