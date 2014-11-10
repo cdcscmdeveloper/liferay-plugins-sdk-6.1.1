@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -297,7 +298,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				super.renewSesionObject();
 			//}
 		}else {
-			throw new EpException("Failed.");
+			throw new EpException(MessageConst.ERROR_700020);
 		}
     }    
 	    finally {
@@ -394,7 +395,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// clear data
 				super.renewSesionObject();
 			} else{
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}    
 		finally {
@@ -689,7 +690,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo());
 				}	  
 			} else{
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}    
 		finally {
@@ -802,7 +803,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 
 		if(counter==0){
-			throw new EpException("Please select At least one Item.");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -870,7 +871,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		} else {
 			// TODO - remove after catalogue team had add the filtering in view.
-			throw new EpException("Price not found");
+			throw new EpException(MessageConst.ERROR_760159);
 		}
 		
 		// copy suppliers from compare screen
@@ -931,7 +932,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(cmSupplierItem.getPmUom()!=null){
 			scRequestItem.setUom(cmSupplierItem.getPmUom());
 		} else{
-			throw new EpException("Uom is mandatory.");
+			Locale locale = new FacesScopes().getUserLocale();
+			throw new EpException(MessageConst.INFO_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.uom",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 		return scRequestItem;
 	}
@@ -1170,7 +1173,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<Long> cmSupplieritemIds = null;
 		
 		if(scRequestItem.getQuantity() !=null && scRequestItem.getQuantity().intValue() < 0){
-			throw new EpException(MessageConst.INFO_100033, new String[]{" Order Quatity" ,"0"});
+			Locale locale = new FacesScopes().getUserLocale();
+			throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), "0"});
 		}
 		
 		ScSupplierItemPrice scSupplierItemPrice = requestSupplierItem.getSupplierItemPrice();
@@ -1755,7 +1760,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		
 			if(counter == 0){
-				throw new EpException("Please select At least one Item");
+				throw new EpException(MessageConst.ERROR_760158);
 			}
 		}
 		
@@ -2351,7 +2356,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 		} else {
-			throw new EpException("Please select At least one Item.");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 		
 		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
