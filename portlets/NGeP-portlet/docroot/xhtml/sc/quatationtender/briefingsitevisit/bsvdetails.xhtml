@@ -20,7 +20,7 @@
 			</tr>
 		</table>
 		<p:spacer height="3px" />
-		
+
 		<p:dataTable id="briefingdtlid" var="briefingdtls"
 			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"
 			rowIndexVar="index" styleClass="briefDetails"
@@ -29,12 +29,20 @@
 			<ac:paginator for="briefingdtlid" />
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.so.desc']}">
-				<p:commandLink disabled="#{QTStatusConst.BSV_COMPLETE eq briefingdtls.bsvStatus.statusId}"
-					action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
-					style="white-space: normal;word-wrap: break-word;"
-					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+				<c:if
+					test="#{QTStatusConst.BSV_COMPLETE eq briefingdtls.bsvStatus.statusId}">
+					<p:commandLink
+						rendered="#{QTStatusConst.BSV_COMPLETE ne briefingdtls.bsvStatus.statusId}"
+						action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
+						style="white-space: normal;word-wrap: break-word;"
+						partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
+						<h:outputText value="#{briefingdtls.bsvDesc}" />
+					</p:commandLink>
+				</c:if>
+				<c:if
+					test="#{QTStatusConst.BSV_COMPLETE ne briefingdtls.bsvStatus.statusId}">
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
-				</p:commandLink>
+				</c:if>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.date']}">
