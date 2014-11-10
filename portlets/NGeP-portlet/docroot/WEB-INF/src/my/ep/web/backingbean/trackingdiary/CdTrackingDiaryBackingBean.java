@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "cdTrackingDiaryBackingBean")
 @SessionScoped
 public class CdTrackingDiaryBackingBean extends
-BaseBackingBean<CodificationManagedBean> {
+		BaseBackingBean<CodificationManagedBean> {
 	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cdTrackingDiaryDetailSearch.xhtml";
@@ -84,36 +84,21 @@ BaseBackingBean<CodificationManagedBean> {
 		protected ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
 			System.out.println("titleFilterBean.getSearchValue()="+ titleFilterBean.getSearchValue());
-			if (getManagedBean().getAutoCompleteUnspscCode().getUnspscCode() != null
-					&& getManagedBean().getAutoCompleteUnspscCode()
-							.getUnspscCode().trim().length() > 0) {
-				codeFilterBean.setSearchValue(getManagedBean()
-						.getAutoCompleteUnspscCode().getUnspscCode());
-				System.out.println("getManagedBean().getAutoCompleteUnspscCode().getUnspscCode()="+getManagedBean().getAutoCompleteUnspscCode().getUnspscCode());
-			}
+		
 
 			if (StringUtils.isBlank((String) codeFilterBean.getSearchValue())
 					&& StringUtils.isBlank((String) titleFilterBean
 							.getSearchValue())) {
-				return new SearchResultBean();
+				System.out.println("ssssssssssssss");
+		return new SearchResultBean();
 			}
 
 			ICodificationSO unspscSO = null;
 			try {
-
+				System.out.println("ssssddssssssssss");
 				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 						.getServiceObject("cm", ICodificationSO.class);
 
-				if (getManagedBean().getAutoCompleteUnspscCode()
-						.getUnspscCode() != null
-						&& getManagedBean().getAutoCompleteUnspscCode()
-								.getUnspscCode().trim().length() > 0) {
-					System.out.println("*********codeFilterBean***********");
-					codeFilterBean.setSearchField("unspscCode");
-					codeFilterBean.setSearchValue(getManagedBean()
-							.getAutoCompleteUnspscCode().getUnspscCode());
-					searchBean.getDataFilterBeans().add(codeFilterBean);
-				}
 
 				if (StringUtils.isNotBlank((String) titleFilterBean
 						.getSearchValue())) {
@@ -213,7 +198,7 @@ BaseBackingBean<CodificationManagedBean> {
 		codeFilterBean = (null);
 
 		titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-//		setcodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		setcodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 //		extensionCodeFilterBean = null;
 		statusFilterBean = (null);
 
@@ -236,6 +221,14 @@ BaseBackingBean<CodificationManagedBean> {
 
 	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
 		this.searchDataModel = searchDataModel;
+	}
+
+	public SearchFilterBean getcodeFilterBean() {
+		return codeFilterBean;
+	}
+
+	public void setcodeFilterBean(SearchFilterBean codeFilterBean) {
+		codeFilterBean = codeFilterBean;
 	}
 
 	public SearchFilterBean getStatusFilterBean() {
@@ -269,14 +262,6 @@ BaseBackingBean<CodificationManagedBean> {
 
 	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
 		this.titleFilterBean = titleFilterBean;
-	}
-
-	public SearchFilterBean getCodeFilterBean() {
-		return codeFilterBean;
-	}
-
-	public void setCodeFilterBean(SearchFilterBean codeFilterBean) {
-		this.codeFilterBean = codeFilterBean;
 	}
 
 
