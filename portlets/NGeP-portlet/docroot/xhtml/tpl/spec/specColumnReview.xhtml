@@ -15,7 +15,8 @@
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
 			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 			oncomplete="#{scoringSetPopup}.show();"
-			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
+			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
+			rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId and isScoringReq}">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
