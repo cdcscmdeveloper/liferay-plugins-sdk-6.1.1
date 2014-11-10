@@ -25,12 +25,10 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
-import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
@@ -42,8 +40,6 @@ import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -52,20 +48,16 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
-import my.ep.dto.pm.common.reason.ReasonReqDTO;
-import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
-import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
-import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
@@ -216,8 +208,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void prerenderApplicationForResubmission() {
-		HttpServletRequest originalServletRequest = new FacesScopes()
-				.getOriginalServletRequest();
 		log.info("**** Prerender Application *************");
 		SmAppl appl = getManagedBean().getSmAppl();
 		SmSupplier supplierProfile = getManagedBean().getSmSupplier();
@@ -311,7 +301,7 @@ public class SmApplicationBackingBean extends
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			// MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 
 			if (!fromBpm) {
@@ -540,7 +530,6 @@ public class SmApplicationBackingBean extends
 
 			} else {
 				setApplicationFailities(smAppl.getSmFacilities());
-				// TODO
 			}
 			if (smAppl.getApplType().equalsIgnoreCase(
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -785,8 +774,7 @@ public class SmApplicationBackingBean extends
 				// Save or update to DB
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-				MofRegistrationResDTO resDTO = mofRegistrationSO
-						.updateApplication(reqDto);
+				mofRegistrationSO.updateApplication(reqDto);
 				getManagedBean().setCurrentPageType(outputPageType);
 
 			} else {
@@ -902,10 +890,7 @@ public class SmApplicationBackingBean extends
 				setApplicationShareHolders(getManagedBean().getSmAppl()
 						.getSmPersonnels());
 			}
-
-			// TODO remove the below line if not reqd
 			retrieveBusinessTypeList();
-			// TODO remove the below line if not reqd
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
 			if (getManagedBean().isPoUser()) {
@@ -1392,7 +1377,6 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setCatTypeConfirm(sb.toString());
 		log.info("***** After confirm +++++++"
 				+ getManagedBean().getSmAppl().getSupportingDocMode());
-		// TODO fix the bug and remove this hard code
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
@@ -1411,7 +1395,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setApplCategoryType("S");
 		}
 		// getManagedBean().setCatTypeConfirm(null);
-		// TODO fix the bug and remove this hard code
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
@@ -2887,8 +2870,7 @@ public class SmApplicationBackingBean extends
 
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.updateApplication(reqDto);
+			mofRegistrationSO.updateApplication(reqDto);
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
@@ -2904,8 +2886,6 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			// TODO reset few values that could have been already submit by
-			// partial submit on ajax functions
 			SmPersonnel per = getManagedBean().getSelectedPersonnel();
 			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
 					per.getIdentificationTypeId());
@@ -2920,11 +2900,11 @@ public class SmApplicationBackingBean extends
 						per.getEpRole());
 			}
 			if (per.getPmRace() != null && per.getPmRace().getRaceId() != null) {
-				System.out.println(" *** Not null race ******");
+				log.info(" *** Not null race ******");
 				getManagedBean().getSelectedShareHolder().setPmRace(
 						per.getPmRace());
 			} else {
-				System.out.println(" ***Empty race value  ******");
+				log.info(" ***Empty race value  ******");
 				getManagedBean().getSelectedShareHolder().setPmRace(null);
 
 			}
@@ -3003,7 +2983,7 @@ public class SmApplicationBackingBean extends
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// TODO use this object to reset some values on back button click
+		// use this object to reset some values on back button click
 		SmPersonnel per = new SmPersonnel();
 		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
@@ -3155,19 +3135,7 @@ public class SmApplicationBackingBean extends
 		role.setLabel("Catalogue User");
 		role.setValue(RoleCode.CM_USER.value());
 		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) // added
-																				// this
-																				// condition
-																				// because
-																				// do
-																				// not
-																				// want
-																				// to
-																				// show
-																				// catalogue
-																				// user
-																				// for
-																				// consultant
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) 
 			roles.add(role);
 		getManagedBean().setePRoleList(roles);
 	}
@@ -3532,9 +3500,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignPersonForBranch(SmSupplierBranch brn) {
+		SmSupplierBranch br = new SmSupplierBranch();
 		for (int i = 0; i < getManagedBean().getSmAppl()
 				.getSmSupplierBranches().size(); i++) {
-			SmSupplierBranch br = getManagedBean().getSmAppl()
+			 br = getManagedBean().getSmAppl()
 					.getSmSupplierBranches().get(i);
 			if (br.getSupplierBranchId().equals(brn.getSupplierBranchId())) {
 				getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -3624,7 +3593,7 @@ public class SmApplicationBackingBean extends
 				.getCountryId());
 		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
 
-			// TODO reset to defualt values for a new record
+			// reset to defualt values for a new record
 			getManagedBean().setShrHldrPermStates(defStates);
 			getManagedBean().setShrHldrPermDistricts(
 					new ArrayList<PmDistrict>());
@@ -3765,7 +3734,6 @@ public class SmApplicationBackingBean extends
 
 	// Process Bank Info Start
 	public void addOrUpdateBankInfoToSmAppl() {
-		// TODO to be changed later
 		getManagedBean().getSelectedBank().getSmChequeSignatories().clear();
 		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
 		for (Long perId : getManagedBean().getChequeSingPerId()) {
@@ -3905,7 +3873,6 @@ public class SmApplicationBackingBean extends
 	public void initiateSmApplicationTask() {
 		IMofRegistrationSO regSo = null;
 		try {
-			// TODO to be used while doing the iteration2
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			if (getManagedBean().getSmAppl().isResubmit()) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
@@ -4054,7 +4021,6 @@ public class SmApplicationBackingBean extends
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes()
 														.getUserLocale())));
-		// TODO remove if effect flow
 		renewSesionObject();
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
@@ -4065,7 +4031,6 @@ public class SmApplicationBackingBean extends
 			SmRemark remark = new SmRemark();
 			remark.setDocId(getManagedBean().getSmAppl().getApplId());
 			remark.setDocType(ParameterConst.NEW_SM_APPLN_FOR_CANCEL);
-			// TODO set the role
 			remark.setRemark(getManagedBean().getSupplierRemarks());
 			saveSmRemarks(remark);
 			saveSmCancellationAttachment(getManagedBean()
@@ -4131,10 +4096,9 @@ public class SmApplicationBackingBean extends
 				reqDTO.setOnlineDoc(false);
 			}
 
-			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
-			resDTO = regSo.initiateSmDelPendingApplicationTask(reqDTO);
+			regSo.initiateSmDelPendingApplicationTask(reqDTO);
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -4342,8 +4306,6 @@ public class SmApplicationBackingBean extends
 	private MofRegistrationReqDTO setMofRegistrationReqDTO(SmAppl bpmAppl,
 			String outcome) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-
-		// TODO Remove the hard code later
 		reqDTO.setOutcome(outcome);
 		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
 		reqDTO.setSupplierId(bpmAppl.getSmSupplier().getSupplierId());
@@ -4653,8 +4615,7 @@ public class SmApplicationBackingBean extends
 					reqDTO.setServerName(fs.getRequest().getServerName());
 					reqDTO.setServerPort(fs.getRequest().getServerPort());
 
-					ReviewApplicationResDTO resDTO = reqSO
-							.submitPOorApproverReviewToBPM(reqDTO);
+					reqSO.submitPOorApproverReviewToBPM(reqDTO);
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -4816,7 +4777,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setSmRemark(remarks);
 		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISmRemarksSO.class);
-		SmRemaksResDTO resDTO = reqSO.saveSmRemarks(reqDTO);
+		reqSO.saveSmRemarks(reqDTO);
 
 	}
 
@@ -4825,7 +4786,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setAttachment(attach);
 		ISmAttachmentSO reqSO = (ISmAttachmentSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISmAttachmentSO.class);
-		SmAttachmentResDTO resDTO = reqSO.updateSmAttachment(reqDTO);
+		reqSO.updateSmAttachment(reqDTO);
 
 	}
 
@@ -4851,7 +4812,6 @@ public class SmApplicationBackingBean extends
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_REGISTRATION);
 		} else if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("B")) {
-			// TODO remove this data later to get confirmation
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
 		} else {
 			this.getManagedBean().setFinOrgLs(new ArrayList<PmFinancialOrg>());
@@ -4957,19 +4917,19 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private PmReasonDesc retrieveReasonDescriptionByReasonId(Long reasonId) {
-		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IReasonSO.class);
-		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonId(reasonId);
-		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-		ReasonResDTO resDTO = reqSO.retrieveReasonDescById(reqDTO);
-		if (resDTO.getReasonDesc() != null) {
-			log.info(" *** Reject Description ****** "
-					+ resDTO.getReasonDesc().getReasonDesc());
-		}
-		return resDTO.getReasonDesc();
-	}
+	// private PmReasonDesc retrieveReasonDescriptionByReasonId(Long reasonId) {
+	// IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
+	// .getServiceObject("pm", IReasonSO.class);
+	// ReasonReqDTO reqDTO = new ReasonReqDTO();
+	// reqDTO.setReasonId(reasonId);
+	// reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+	// ReasonResDTO resDTO = reqSO.retrieveReasonDescById(reqDTO);
+	// if (resDTO.getReasonDesc() != null) {
+	// log.info(" *** Reject Description ****** "
+	// + resDTO.getReasonDesc().getReasonDesc());
+	// }
+	// return resDTO.getReasonDesc();
+	// }
 
 	private List<PmState> retrievePmStateList(long countryId) {
 		StateReqDTO reqDTO = new StateReqDTO();
@@ -5010,8 +4970,6 @@ public class SmApplicationBackingBean extends
 			reqDto.setSupplierId(id);
 			reqDto.setAppType(applicationType);
 			reqDto.setSupplierType(supplierType);
-			// TODO remove the clone later (Problem at company basic clone
-			// to be fixed)
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.cloneSmApplicationDraft(reqDto);
 			// MofRegistrationResDTO resDTO = mofRegistrationSO
@@ -5852,7 +5810,6 @@ public class SmApplicationBackingBean extends
 		try {
 			commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;
@@ -5873,8 +5830,7 @@ public class SmApplicationBackingBean extends
 		ThemeDisplay themeDisplay = (ThemeDisplay) req
 				.getAttribute(WebKeys.THEME_DISPLAY);
 		Layout layout = themeDisplay.getLayout();
-		System.out
-				.println("layout.getFriendlyURL():" + layout.getFriendlyURL());
+		log.info("layout.getFriendlyURL():" + layout.getFriendlyURL());
 
 		String portalUrl = themeDisplay.getURLPortal();
 		String currentUrl = themeDisplay.getURLCurrent();
