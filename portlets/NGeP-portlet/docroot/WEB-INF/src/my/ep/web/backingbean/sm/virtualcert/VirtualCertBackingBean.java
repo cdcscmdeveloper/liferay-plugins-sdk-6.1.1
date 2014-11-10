@@ -31,6 +31,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -498,8 +499,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("regDate", toUtilDate(supplier.getCreatedDate()));
 //    	context.put("categoryList", categoryList);
     	context.put("categories", supplierCategories);
-    	context.put("addDateAndCount", getAddCategoriesDate(supplierCategories, supplier.getSmAppl().getCreatedDate()));
-    	context.put("deleteDateAndCount", getDeleteCategoriesDate(supplierCategories, supplier.getSmAppl().getCreatedDate()));
+    	context.put("addDateAndCount", (supplier.getSmAppl().getApplType() == ParameterConst.NEW_SM_APPLN_FOR_MOF) ? "" : getAddCategoriesDate(supplierCategories, supplier.getSmAppl().getCreatedDate()));
+    	context.put("deleteDateAndCount", (supplier.getSmAppl().getApplType() == ParameterConst.NEW_SM_APPLN_FOR_MOF) ? "" : getDeleteCategoriesDate(supplierCategories, supplier.getSmAppl().getCreatedDate()));
     	
     	StringWriter output = new StringWriter();
     	    	
@@ -603,24 +604,6 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     
 	public void generatePdf(OutputStream baos, String html) throws Exception {
 		
-/*		Document document = new Document(PageSize.A4);
-		PdfWriter writer = PdfWriter.getInstance(document, baos);
-		
-		Font font = new Font(Font.TIMES_ROMAN, 11);
-		HeaderFooter footer = new HeaderFooter(new Phrase("(Sijil ini adalah cetakan komputer dan tidak memerlukan tandatangan)", font), false);
-		
-		footer.setBorder(Rectangle.NO_BORDER);
-        footer.setAlignment(Element.ALIGN_CENTER);
-        
-		document.setFooter(footer);
-		
-		document.open();
-		
-		HTMLWorker htmlWorker = new HTMLWorker(document);		
-		htmlWorker.parse(new StringReader(html));
-				
-		document.close();*/
-		
         ITextRenderer render = new ITextRenderer();
         if (html != null) {
         	html = html.replaceAll("&amp;nbsp;", "");
@@ -629,20 +612,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
             render.layout();
             render.createPDF(baos);
         }
-//		return baos.toByteArray();
 	}
-	
-/*	public void convertHtmlToPdf(String htmlString, OutputStream os)
-            throws Exception {
-        ITextRenderer render = new ITextRenderer();
-        if (htmlString != null) {
-            htmlString = htmlString.replaceAll("&amp;nbsp;", "");
-            htmlString = htmlString.replaceAll("&amp;", "&amp;amp;");
-            render.setDocumentFromString(htmlString);
-            render.layout();
-            render.createPDF(os);
-        }
-    }*/
 	
 	public static void doMerge(List<InputStream> list, OutputStream outputStream)
             throws DocumentException, IOException {
