@@ -1229,7 +1229,7 @@ public class SmApplicationUtil {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
 				throw new EpException(MessageConst.ERROR_722509,
-						new String[] { "Total Share" });
+						new String[] { SmCommonUtil.getMessage("label.sm.total.share", null) });
 			}
 		}
 		appl = null;
