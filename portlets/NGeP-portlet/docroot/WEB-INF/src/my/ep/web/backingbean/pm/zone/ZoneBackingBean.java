@@ -36,6 +36,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "zoneBackingBean")
 @ViewScoped
@@ -46,7 +47,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	private IPagingDataModel<PmZone> searchZone = new SearchZonePagingDataModel();
 
-	private boolean result= false;
+	boolean result = false;
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
 
@@ -132,9 +133,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Zone submit successfully.", "Zone Name : "
+							"Zone Name : "
 									+ this.getManagedBean().getPmZone()
-											.getZoneName()));
+											.getZoneName()," submit successfully."));
 
 		}
 	}
@@ -250,6 +251,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			this.getManagedBean().setPmState(new PmState());
 		}
 		getManagedBean().setSelectedStates(null);
+		this.getManagedBean().setSelectState(null);
 
 		getSelectionTypes();
 	}
@@ -311,6 +313,28 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				}
 			}
 		}
+
+	}
+
+	public void okZoneAction1() {
+
+		if (this.getManagedBean().getSelectedStates() != null
+				&& !this.getManagedBean().getSelectedStates().isEmpty()) {
+			for (PmState state : getManagedBean().getSelectedStates()) {
+				PmZoneState zoneState = new PmZoneState();
+				zoneState.setPmState(state);
+
+			this.getManagedBean().getZoneStateList().add(zoneState);
+			}
+			if (this.getManagedBean().getZoneStateList() != null) {
+
+			} else {
+				throw new EpException(MessageConst.ERROR_770021);
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770022);
+		}
+		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
 
 	}
 
