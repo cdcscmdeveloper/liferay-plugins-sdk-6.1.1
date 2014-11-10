@@ -24,6 +24,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<div class="ppRightBtn">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	        <p:commandButton  immediate="true" 
+	          partialSubmit="true" process="@this"
 	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 	          rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 			  style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}"  />
@@ -36,7 +37,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					 
 		    <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 		      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			  icon="ui-icon-submit" update="mailPanel" process="@all" 
+			  icon="ui-icon-submit" update="mailPanel" process="@all"  partialSubmit="true"
 			  rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
 	  </div>
@@ -51,6 +52,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						oncomplete="blockWidget.hide();"
 						icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 						styleClass="ui-button"
+						partialSubmit="true"
 						actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
 				 
 				  </ui:repeat>

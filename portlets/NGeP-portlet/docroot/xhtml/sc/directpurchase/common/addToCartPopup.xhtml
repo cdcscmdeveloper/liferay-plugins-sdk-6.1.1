@@ -89,7 +89,7 @@
 										required="#{requestNoteBackingBean.managedBean.required}">
 										<f:selectItems
 											value="#{requestNoteBackingBean.managedBean.procurementTypes}" />
-										<p:ajax event="change"
+										<p:ajax event="change" partialSubmit="true"
 											update="justLabel ,justValue ,justRmksLabel,justRmksValue"
 											listener="#{requestNoteBackingBean.procurementTypeEvent}"
 											process="@this" />
@@ -138,8 +138,9 @@
 			<p:row>
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" process="@this addToCartId ,addToCartPopup"
+					    partialSubmit="true" 
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
-						 onstart="popupBlockWidget.show();" oncomplete="popupBlockWidget.hide();"
+						onstart="popupBlockWidget.show();" oncomplete="popupBlockWidget.hide();"
 						icon="ui-icon-submit" update="addToCartId ,@([id$=supplierItemViewID])"/>
 						
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
@@ -149,8 +150,8 @@
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
-		  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/>
-	   <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
+   <!--  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/> -->	  
+    <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
 		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	  </p:blockUI>
 	
