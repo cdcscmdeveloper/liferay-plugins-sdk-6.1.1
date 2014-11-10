@@ -233,13 +233,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 						if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
 							if(productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
-								throw new EpException("Simple quote must have only one Panel Item.");
+								throw new EpException(MessageConst.ERROR_760160);
 							}
 						}
 
 						if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
 							if(serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
-								throw new EpException("Simple quote must have only one Panel Item.");
+								throw new EpException(MessageConst.ERROR_760160);
 							}
 						}
 						//adding selected item to item List
@@ -253,7 +253,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						}
 					}
 				} else{
-					throw new EpException("Select non contract items only.");
+					throw new EpException(MessageConst.ERROR_760161);
 				}
 			} else { // non contract item and non panel item
 				if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){
@@ -312,7 +312,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 					
 				} else{
-					throw new EpException("Select panel items only.");
+					throw new EpException(MessageConst.ERROR_760162);
 				}
 			}
 		}
@@ -848,7 +848,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				// clear SQ data
 				super.renewSesionObject();
 			} else{
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}  finally {
 			quoteSO = null;
@@ -914,7 +914,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 				
 				if(quote.getJustificationType().getParameterCode() == null){
-					throw new EpException("Justification is madatory.");
+					throw new EpException(MessageConst.INFO_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
 				quote.setJustificationType(getParameterByTypeAndCode(
@@ -923,7 +924,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 				
 				if(quote.getJustificationType().getParameterCode() == null){
-					throw new EpException("Justification is madatory.");
+					throw new EpException(MessageConst.INFO_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
 				quote.setJustificationType(getParameterByTypeAndCode(
@@ -1076,7 +1078,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				 super.renewSesionObject();
 				
 			} else {
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}  finally {
 			quoteSO = null;
@@ -1110,7 +1112,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					   successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
 				   }
 			   } else {
-				   throw new EpException("Failed.");
+				   throw new EpException(MessageConst.ERROR_700020);
 			   }
 
 		   } finally {
@@ -1263,7 +1265,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else{
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 	
@@ -1282,7 +1284,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
 
@@ -1302,7 +1304,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}	
 	
@@ -1454,7 +1456,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else{
-			throw new EpException("Please select At least one Zone Location");
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.zone.location",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 
 		// hide zone location popup
@@ -2063,7 +2066,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			 if(quote.getEndDate().after(quote.getStartDate())){
 				 getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
 			 } else{
-				 throw new EpException("The End date must be greater than the start date");
+				 throw new EpException(MessageConst.ERROR_760164);
 			 }
 		 }
 	 }
@@ -2408,7 +2411,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							natureQuoteCriterias.add(natureQuoteCriteria);
 							getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
 						} else{
-							throw new EpException(natureQuoteCriteria.getPmBusinessNature().getLevelName() +" Already exists.");
+							throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(natureQuoteCriteria.getPmBusinessNature().getLevelName(),
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 					}
 				}
@@ -3043,7 +3047,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 				
 			} else {
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}  finally {
 			quoteSO = null;
@@ -3398,7 +3402,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(zone != null){
 
 						if(zone.getZoneName().equalsIgnoreCase(tplSpecZoneDtl.getZoneName())){
-							throw new EpException(tplSpecZoneDtl.getZoneName() +" zone already exists.");
+							throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 					}
 				}
@@ -3438,7 +3443,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 									if(stateIds != null && stateIds.size()>0){
 
 										if(stateIds.contains(TplSpecZoneLoc.getPmState().getStateId())){
-											throw new EpException(TplSpecZoneLoc.getPmState().getStateName() +" state already exists in "+ zone.getZoneName());
+											throw new EpException(MessageConst.ERROR_760168, new String[] {TplSpecZoneLoc.getPmState().getStateName(),
+													zone.getZoneName()});
 										}
 									}
 
@@ -3447,7 +3453,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 								if(TplSpecZoneLoc.getPmDivision() != null){
 									if(divIds != null && divIds.size()>0){
 										if(divIds.contains(TplSpecZoneLoc.getPmDivision().getDivisionId())){
-											throw new EpException(TplSpecZoneLoc.getPmDivision().getDivisionName() +" division already exists in "+ zone.getZoneName());
+											throw new EpException(MessageConst.ERROR_760167, new String[] {TplSpecZoneLoc.getPmDivision().getDivisionName(),
+													zone.getZoneName()});
 										}
 									}
 								} 
@@ -3455,7 +3462,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 								if(TplSpecZoneLoc.getPmDistrict() != null){
 									if(distIds != null && distIds.size()>0){
 										if(distIds.contains(TplSpecZoneLoc.getPmDistrict().getDistrictId())){
-											throw new EpException(TplSpecZoneLoc.getPmDistrict().getDistrictName() +" district already exists in "+ zone.getZoneName());
+											throw new EpException(MessageConst.ERROR_760166, new String[] {TplSpecZoneLoc.getPmDistrict().getDistrictName(),
+													zone.getZoneName()});
 										}
 									}
 								}
