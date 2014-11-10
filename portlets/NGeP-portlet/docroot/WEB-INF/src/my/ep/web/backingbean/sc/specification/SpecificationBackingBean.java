@@ -5219,6 +5219,8 @@ public class SpecificationBackingBean extends
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+				templateSpecBean.getSpecMaster().setScoringReq(
+						this.getManagedBean().getScQt().isTechEvaluationReq());
 				return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -6304,6 +6306,8 @@ public class SpecificationBackingBean extends
 					.getTemplateSpecBean();
 			templateSpecBean.setSpecMaster(checklist.getScQtDoc()
 					.getTplSpecMaster());
+			templateSpecBean.getSpecMaster().setScoringReq(
+					this.getManagedBean().getScQt().isTechEvaluationReq());
 
 		} finally {
 			templateSpecSO = null;
