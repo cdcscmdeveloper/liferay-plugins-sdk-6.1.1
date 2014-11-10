@@ -3135,7 +3135,7 @@ public class SmApplicationBackingBean extends
 		role.setLabel("Catalogue User");
 		role.setValue(RoleCode.CM_USER.value());
 		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) 
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR))
 			roles.add(role);
 		getManagedBean().setePRoleList(roles);
 	}
@@ -3153,7 +3153,6 @@ public class SmApplicationBackingBean extends
 
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-			shr.setEquityOwner(true);
 			validatePaidCaptialAmt(false);
 			manageEquityLimit(shr);
 			if (!getManagedBean().isValidEquityLimit()) {
@@ -3169,16 +3168,17 @@ public class SmApplicationBackingBean extends
 				}
 
 			}
+			shr.setEquityOwner(true);
 			getManagedBean().setPersonnelInfoHeader("Equity Owner Information");
 		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+			manageEquityLimit(shr);
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
 		// getManagedBean().setSelectedPersonnel(null);
 
 		assignSelShareHolderAddress(shr);
 		getManagedBean().setSelectedShareHolder(shr);
-		manageEquityLimit(shr);
 		if (getManagedBean().isValidSmUserLimit()) {
 			getManagedBean().setUserWithRole(true);
 		} else {
@@ -3503,8 +3503,7 @@ public class SmApplicationBackingBean extends
 		SmSupplierBranch br = new SmSupplierBranch();
 		for (int i = 0; i < getManagedBean().getSmAppl()
 				.getSmSupplierBranches().size(); i++) {
-			 br = getManagedBean().getSmAppl()
-					.getSmSupplierBranches().get(i);
+			br = getManagedBean().getSmAppl().getSmSupplierBranches().get(i);
 			if (br.getSupplierBranchId().equals(brn.getSupplierBranchId())) {
 				getManagedBean().getSmAppl().getSmSupplierBranches()
 						.set(i, brn);
