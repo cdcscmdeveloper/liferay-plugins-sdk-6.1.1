@@ -186,7 +186,7 @@
 						label="#{lbl['lbl.sm.postcode']}"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
 						size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-						<f:validateRegex pattern="[0-9]*" />
+						<f:validator validatorId="postcodeValidator"/>
 						</p:inputText> 
 						<p:message id="smFacDockYardPosCodeMsg"
 						for="smFacDockYardPosCode" showSummary="true" showDetail="false"
@@ -253,7 +253,7 @@
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
 							<p:inputText id="smDocPrice" label="#{lbl['lbl.cm.price']}"
 								value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
-								size="20" required="true">
+								size="20" required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -264,7 +264,7 @@
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
 							<p:inputText id="smDocRent" label="#{lbl['lbl.sm.facility.rent.rm']}"
 								value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
-								size="20" required="true">
+								size="20" required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -293,7 +293,7 @@
 				partialSubmit="true" process="dockYardDialog"
 				update=":form:tt:docDt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this" partialSubmit="true"
-				action="#{backingBean.cancelDockyardSaveorUpdate}" />
+				action="#{backingBean.cancelDockyardSaveorUpdate}" update=":form:tt:dockYardDialog, @([id$=Msg])"/>
 		</div>
 	</p:dialog>
 </ui:composition>
