@@ -7,7 +7,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "cdTrackingDiaryManagedBean")
 @SessionScoped
-public class CdTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean { 
+public class CdTrackingDiaryManagedBean extends BaseManagedBean { 
 
 	/**
 	 * 
