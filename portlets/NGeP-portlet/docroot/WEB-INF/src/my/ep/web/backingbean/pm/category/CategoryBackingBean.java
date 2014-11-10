@@ -97,16 +97,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					reqDTO.setMainCatDesc(getManagedBean().getMainCatDesc());
 				}*/
 				if (getManagedBean().getPmCategoryLevel() != null && getManagedBean().getPmCategoryLevel().intValue()>0) {
+					
 					reqDTO.setPmCategoryLevel(getManagedBean().getPmCategoryLevel());
+					reqDTO.setSearchBeanObject(searchBean);
+					CategoryCodeResDTO resDTO =categoryCodeSO.searchAllCategory(reqDTO);
+					
+					if (resDTO.isSuccessful()) {
+						//resDTO.getCategoryResultBean().getResultList();
+						return resDTO.getCategoryResultBean();
+					}
 				}
 				
-				reqDTO.setSearchBeanObject(searchBean);
-				CategoryCodeResDTO resDTO =categoryCodeSO.searchAllCategory(reqDTO);
+				
 
-				if (resDTO.isSuccessful()) {
-					//resDTO.getCategoryResultBean().getResultList();
-					return resDTO.getCategoryResultBean();
-				}
+				
 
 			} catch (Exception e) {
 				e.printStackTrace();
