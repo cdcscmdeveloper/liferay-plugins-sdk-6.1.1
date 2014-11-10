@@ -84,6 +84,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public void resetLocation() {
 		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().setState(new PmState());
+		getManagedBean().getState().setPmCountry(defaultCountry);
 		getManagedBean().setCity(new PmCity());
 		getManagedBean().setDivision(new PmDivision());
 		getManagedBean().setDistrict(new PmDistrict());
@@ -334,6 +335,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							IDivisionSO.class);
 			DivisionResDTO resDTO = divisionSO
 					.retrieveDivisionDtlById(divisionReqDTO);
+			System.out.println("State Name"+resDTO.getPmDivision().getPmState().getStateName());
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
 		}
 		if (locationType
@@ -346,7 +348,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							IDistrictSO.class);
 			DistrictResDTO resDTO = districtSO
 					.retriveDistrictDtlByID(districtReqDTO);
-			this.getManagedBean().setDistrict(resDTO.getPmDistrict());
+			System.out.println("State Name"+resDTO.getPmDistrict().getPmState().getStateName());
+			getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 		}
 		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
@@ -356,6 +359,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			ICitySO citySO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 			CityResDTO resDTO = citySO.retriveCityByDtlId(cityReqDTO);
+			System.out.println("DistName"+resDTO.getPmCity().getPmDistrict().getDistrictName());
+			this.getManagedBean().getCity().getPmDistrict().setDistrictId(resDTO.getPmCity().getPmDistrict().getDistrictId());
 			this.getManagedBean().setCity(resDTO.getPmCity());
 
 		}
