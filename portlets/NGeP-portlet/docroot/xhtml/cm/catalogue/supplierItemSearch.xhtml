@@ -129,11 +129,13 @@
 									
 								<p:commandButton id="requestNoteId" rendered="#{unspscCodeBackingBean.requisitioner}"
 									action="#{requestNoteBackingBean.requestNoteAction}"
+									partialSubmit="true" process="@this"
 									value="#{lbl['lbl.sc.request.note']} ( #{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls)} )"
 									disabled="#{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls) eq '0'}" />
 
 								<p:commandButton value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specMaster.tplSpecQuestions.size() + simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specMaster.tplSpecQuestions.size()} )" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
-									action="#{simpleQuoteBackingBean.simpleQuoteAction('' , false , null)}"  disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"
+									action="#{simpleQuoteBackingBean.simpleQuoteAction('', false, null)}"  disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"
+									partialSubmit="true" process="@this"
 									title="#{lbl['lbl.sc.sq.tooltip']}" escape="true">
 								</p:commandButton>
 
@@ -229,6 +231,7 @@
 										rendered="#{supplierItem.contractNo != null}"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}" actionListener="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId, supplierItem.circularNo != null , null)}" update="@([id$=btnId])" icon="ui-icon-plus" 
+										process="@this" partialSubmit="true"
 										rendered="#{supplierItem.contractNo == null}"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"	/>
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.compare']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,3)}" update="@([id$=btnId])" icon="ui-icon-plus" 
@@ -243,6 +246,7 @@
 									disabled="#{!supplierItem.pidRequired}"
 									rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }"
 									onstart="blockWidget.show();"
+									process="@this" partialSubmit="true"
 									oncomplete="blockWidget.hide();"
 									title="#{lbl['lbl.sc.pid.tooltip']}">
 								</p:commandButton>
@@ -250,9 +254,10 @@
 								<p:spacer width="5px" />
 							    
 								<p:commandLink disabled="#{!supplierItem.atcRequired}" 
-									action="#{requestNoteBackingBean.addToCart(supplierItem.docId , false , null)}"
+									action="#{requestNoteBackingBean.addToCart(supplierItem.docId, false, null)}"
 									update="@([id$=addToCartPopup])"
 									rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
+									partialSubmit="true" process="@this"
 									onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();">
 									<p:graphicImage library="ep/images/design"
