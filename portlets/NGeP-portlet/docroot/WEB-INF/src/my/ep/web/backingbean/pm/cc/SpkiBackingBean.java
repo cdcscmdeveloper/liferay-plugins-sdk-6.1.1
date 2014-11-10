@@ -264,14 +264,6 @@ public class SpkiBackingBean {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		externalContext.redirect("https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx");
 		generateSecurityToken();
-//https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx
-//
-//https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx
-//
-//https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx
-//
-//https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx
-
         }
 	
 	
