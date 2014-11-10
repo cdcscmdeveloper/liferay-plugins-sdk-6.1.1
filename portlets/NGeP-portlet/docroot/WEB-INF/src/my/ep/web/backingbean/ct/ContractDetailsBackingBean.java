@@ -359,8 +359,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		           }
 		     }
 		
-		 } if (getManagedBean().getContractVer().getCtSchedules() != null 
-				  && !getManagedBean().getContractVer().getCtSchedules().isEmpty() ) {
+		 } if (getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty() ) {
 		        getManagedBean().setChkSchedule(true);
 		        Collections.sort(getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
 		        for(CtSchedule ctSchedule : getManagedBean().getContractVer().getCtSchedules()) {
@@ -533,6 +532,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		String endMonth = "";
 		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			   
+			if(ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
 			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
                 String fromdate = dateFormat.format(ctSchedules.getFromDate());
 			    String todate = dateFormat.format(ctSchedules.getToDate());
@@ -620,23 +620,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ctSchedules.setEndMonth(endMonth);
 			ctSchedules.setStartYear(startYear);
 			ctSchedules.setEndYear(endYear);
+			}
 		}
 	}
 	
-public void ConstructSideTabMenu(){
+    public void ConstructSideTabMenu(){
 		
-		MenuModel fulfilmentMenuModel = new DefaultMenuModel();
-		CtTabSideMenus menu = new CtTabSideMenus();
+		   MenuModel fulfilmentMenuModel = new DefaultMenuModel();
+		   CtTabSideMenus menu = new CtTabSideMenus();
 		
-		int zoneTabIndex = 0;
-		FacesContext facesContext = FacesContext.getCurrentInstance();
+		   int zoneTabIndex = 0;
+		   FacesContext facesContext = FacesContext.getCurrentInstance();
+		   getManagedBean().setFinalListOfSideMenu( new ArrayList<String>());
 		
-		if(this.getManagedBean().getFinalListOfSideMenu() == null)
-			   this.getManagedBean().setFinalListOfSideMenu( new ArrayList<String>());
-		else
-			   this.getManagedBean().getFinalListOfSideMenu().clear();
-		
-		if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+		   if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 		    	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
 			      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuAgency);
 			      if(getManagedBean().getCtContract().isZonalPricing()) {
@@ -674,8 +671,8 @@ public void ConstructSideTabMenu(){
 		      
 	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
 	 	    	MenuItem zoneItem = new MenuItem();
-	 	    	zoneItem.setId("sideMenu"+zoneTabIndex);
 				zoneItem.setValue(str);
+				zoneItem.setId("zoneMenuID"+zoneTabIndex);
 				zoneItem.setUpdate("@all");
 				zoneItem.setActionExpression(FacesScopes
 						.createMethodExpression(facesContext,
@@ -1004,6 +1001,7 @@ public void ConstructSideTabMenu(){
 				    String Startmonth = "";
 				    String endmonth = "";
 				for(CtSchedule schedule : this.getManagedBean().getContractVer().getCtSchedules()) {
+				   if(schedule.getStartMonth() != null) {
 					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
 						Startmonth = "01";
 					} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
@@ -1031,6 +1029,7 @@ public void ConstructSideTabMenu(){
 					} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
 						Startmonth = "12";
 					}
+				 
 					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
 						endmonth = "01";
 					} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
@@ -1059,7 +1058,8 @@ public void ConstructSideTabMenu(){
 						endmonth = "11";
 					} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
 						endmonth = "12";
-					}
+					 }
+				   
 					Date d1 = new Date();
 
 					SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -1075,8 +1075,8 @@ public void ConstructSideTabMenu(){
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
-				getManagedBean().getContractVer().setCtProgressivePayments(null);
+				}getManagedBean().getContractVer().setCtProgressivePayments(null);
+			  }
 			}
 	
     	} else {
@@ -1184,7 +1184,7 @@ public void ConstructSideTabMenu(){
 				throw new EpException(MessageConst.ERROR_750013); // At least one row should be in Agency section.
 			}
 			
-		 if(reqDTO.getCtContract().isBondReq() && contractVer.getCtPerformanceBonds().size()>0) {
+		 if(reqDTO.getCtContract().isBondReq() && !contractVer.getCtPerformanceBonds().isEmpty()) {
 			 
 				Calendar cal = Calendar.getInstance();
 		        cal.setTime(contractVer.getCtContractValue().getExpDate());
@@ -1214,17 +1214,30 @@ public void ConstructSideTabMenu(){
 				}	
 			}
 		 
-		     if(contractVer.getCtProgressivePayments() != null && contractVer.getCtProgressivePayments().size() > 0){
-			      for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()){
-				          if(progressivePayment.getPhaseNo()== null){
-				        	  throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
-				          }
+		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		    	
+		    	if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().isEmpty()) &&
+		    	       (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().isEmpty())) {
+		    		    
+		    		     if(getManagedBean().getCtContract().isFrequencySchedule()){
+		    		    	  throw new EpException(MessageConst.ERROR_100022,new String[] { "Fulfilment Schedule" });
+		 			     }else{
+		 			    	throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Payment" });
+		 			     }
+		    	   }
+		    		
+		    		 if(contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty()) {
+		    		      for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
+				                 if(progressivePayment.getPhaseNo()== null) {
+				        	           throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
+				                  }
 				        
-				          if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ){
-				            	throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
-				          }
-			       }
-		    }
+				                 if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ) {
+				            	       throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
+				                  }
+			                 }
+		    	        }
+		          }
 			
 			if(contractVer.getCtAgencies().size()>0) {
 				double ceilingAmt = 0.0;
@@ -1911,7 +1924,7 @@ public void ConstructSideTabMenu(){
 	}
     
     public boolean isContractAdmin() {
-		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
 	}
 
 	private String getUserRole() {		
