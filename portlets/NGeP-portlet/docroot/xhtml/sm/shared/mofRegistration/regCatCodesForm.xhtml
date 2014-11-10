@@ -60,7 +60,8 @@
 				value="#{backingBean.managedBean.activeCategoryList}"
 				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 				selection="#{backingBean.managedBean.deleteNewApplCategoryList}"
-				rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}">
+				rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="catDt" />
 				<p:ajax event="rowSelect"
 					listener="#{backingBean.unSelectApporvedCategories}"
