@@ -18,15 +18,18 @@
 		<table style="width: 100%;">
 			<tr>
 				<td>
+				
+				<ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
 					icon="ui-icon-back" update=":form" process="@this"
 					rendered="#{categoryBackingBean.managedBean.newCategory}"
 					action="#{categoryBackingBean.editCategory(categoryBackingBean.managedBean.pmCategoryL1.categoryL1Id)}"
 					style="float:left;" 
 				/>
+				</ui:remove>
+				
 				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
 					icon="ui-icon-back" update=":form" process="@this"
-					rendered="#{!categoryBackingBean.managedBean.newCategory}"
 					action="#{categoryBackingBean.backToSearch}"
 					style="float:left;" 
 				/>
