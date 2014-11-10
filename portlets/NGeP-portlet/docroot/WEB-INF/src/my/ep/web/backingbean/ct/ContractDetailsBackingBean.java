@@ -674,6 +674,7 @@ public void ConstructSideTabMenu(){
 		      
 	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
 	 	    	MenuItem zoneItem = new MenuItem();
+	 	    	zoneItem.setId("sideMenu"+zoneTabIndex);
 				zoneItem.setValue(str);
 				zoneItem.setUpdate("@all");
 				zoneItem.setActionExpression(FacesScopes
