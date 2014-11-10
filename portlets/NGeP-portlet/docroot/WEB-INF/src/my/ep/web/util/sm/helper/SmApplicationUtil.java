@@ -183,7 +183,7 @@ public class SmApplicationUtil {
 				break;
 			}
 		}
-		
+
 		return addedNewCode;
 
 	}
@@ -228,13 +228,12 @@ public class SmApplicationUtil {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			if (pmUser == null
 					|| (pmUser != null && pmUser.getUserId() == null)) {
-				System.out
-						.println("**** Invalid user from the session scope ******");
+				log.info("**** Invalid user from the session scope ******");
 				throw new EpException(MessageConst.ERROR_721017);
 			}
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(pmUser.getLoginId());
-			System.out.println("************Supplier PmUser Login Id:"
+			log.info("************Supplier PmUser Login Id:"
 					+ pmUser.getLoginId());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
@@ -659,7 +658,6 @@ public class SmApplicationUtil {
 			appl.getSmFacilities().add(managedBean.getBasicCompanyFacility());
 
 		} else {
-			// TODO
 			for (int i = 0; i < appl.getSmFacilities().size(); i++) {
 				if (appl.getSmFacilities().get(i).getFacilityType()
 						.equalsIgnoreCase("B")
@@ -753,7 +751,6 @@ public class SmApplicationUtil {
 		SmAppl appl = managedBean.getSmAppl();
 		int payAccCnt = 0;
 		int regAccCnt = 0;
-		int designatedAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
 		int noSignatoryCount = 0;
 
@@ -829,8 +826,7 @@ public class SmApplicationUtil {
 			validSave = valiateNewCategoryAdded(managedBean);
 			if (!validSave) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(
-						MessageConst.ERROR_722570);
+				throw new EpException(MessageConst.ERROR_722570);
 			}
 		}
 		appl = null;
@@ -846,6 +842,7 @@ public class SmApplicationUtil {
 		int directorCount = 0;
 		int profCount = 0;
 		int semiProfCount = 0;
+		String qual = "";
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 
 			if (per.isDirector()) {
@@ -868,7 +865,7 @@ public class SmApplicationUtil {
 					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 						PmParameter param = retrievePmParameterById(aca
 								.getQualificationLevelId().longValue());
-						String qual = "";
+						qual = "";
 						if (param != null && param.getParameterCode() != null) {
 							qual = param.getParameterCode();
 							if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
@@ -888,7 +885,7 @@ public class SmApplicationUtil {
 					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 						PmParameter param = retrievePmParameterById(aca
 								.getQualificationLevelId().longValue());
-						String qual = "";
+						qual = "";
 						if (param != null && param.getParameterCode() != null) {
 							qual = param.getParameterCode();
 							if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_BACHELORS)
@@ -905,7 +902,7 @@ public class SmApplicationUtil {
 					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
 						PmParameter param = retrievePmParameterById(aca
 								.getQualificationLevelId().longValue());
-						String qual = "";
+						qual = "";
 						if (param != null && param.getParameterCode() != null) {
 							qual = param.getParameterCode();
 							if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_DIPLOMA)
@@ -1179,12 +1176,12 @@ public class SmApplicationUtil {
 								.getForeignerEquity());
 
 			}
-			// TODO checking the personnel sum is exactly same as the sum of
+			// checking the personnel sum is exactly same as the sum of
 			// bumi +non bumi + non malaysian
 			if (perShrSum.compareTo(allPersCapSum) != 0) {
 				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				System.out.println("*** Value **** " + s);
+				log.info("*** Value **** " + s);
 				throw new EpException(
 						MessageConst.ERROR_722554,
 						new String[] { SmCommonUtil
@@ -1252,7 +1249,6 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722540);
 			}
 		} catch (NumberFormatException | PortalException | SystemException e) {
-			// TODO Auto-generated catch block
 			log.info(e.getMessage());
 		}
 
@@ -1262,7 +1258,6 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722541);
 			}
 		} catch (NumberFormatException | PortalException | SystemException e) {
-			// TODO Auto-generated catch block
 			log.info(e.getMessage());
 		}
 	}
@@ -1323,10 +1318,10 @@ public class SmApplicationUtil {
 		}
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			if (pers.getPersonnelId() == null && pers.equals(per)) {
-				System.out.println("****** Same obj before save ");
+				log.info("****** Same obj before save ");
 			} else if (pers.getPersonnelId() != null
 					&& pers.getPersonnelId().equals(per.getPersonnelId())) {
-				System.out.println("**** Same obj without id ******");
+				log.info("**** Same obj without id ******");
 			} else {
 				if (per.getIdentificationNo() != null
 						&& per.getIdentificationNo().equalsIgnoreCase(
@@ -1342,7 +1337,8 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		if (pers.getPmUser() == null && pers.getEpRole() != null
+		if (pers.getPmUser() == null
+				&& pers.getEpRole() != null
 				&& !pers.getEpRole().isEmpty()
 				&& (pers.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
@@ -1531,8 +1527,7 @@ public class SmApplicationUtil {
 
 	public static List<SmStaffTotal> getStaffList(SmAppl app) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
-		System.out.println("****  getStaffList *********"
-				+ app.getSupplierType());
+		log.info("****  getStaffList *********" + app.getSupplierType());
 		if (app.getSupplierType().equals(
 				SupplierManagementConst.STYPE_CONTRACTOR)) {
 			SmStaffTotal stf = new SmStaffTotal();
@@ -1565,8 +1560,7 @@ public class SmApplicationUtil {
 	}
 
 	public static boolean validL3CategoryCode(Long catL3Id, Long supplierId) {
-		System.out
-				.println("*** Validate the code with directors and equi owners ***** ");
+		log.info("*** Validate the code with directors and equi owners ***** ");
 		IMofRegistrationSO mofRegistrationSO = null;
 		boolean validCategory = true;
 		try {
@@ -1710,7 +1704,7 @@ public class SmApplicationUtil {
 		String poLogin = null;
 		if (resDTO != null && resDTO.getWorkflowStatus() != null
 				&& resDTO.getWorkflowStatus().getCreatedBy() != null) {
-			System.out.println("******** The user id from the data ******* "
+			log.info("******** The user id from the data ******* "
 					+ resDTO.getWorkflowStatus().getCreatedBy());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(resDTO.getWorkflowStatus().getCreatedBy());
@@ -1941,7 +1935,6 @@ public class SmApplicationUtil {
 			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
 					.getPaidUpCapital().intValue());
 		}
-		// TODO get clarification
 		Integer bumiPerc = new Integer(0);
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
@@ -1988,7 +1981,6 @@ public class SmApplicationUtil {
 			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
 					.getPaidUpCapital().intValue());
 		}
-		// TODO get clarification
 		Integer bumiPerc = new Integer(0);
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
@@ -2044,7 +2036,6 @@ public class SmApplicationUtil {
 			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
 					.getPaidUpCapital().intValue());
 		}
-		// TODO get clarification
 		Integer bumiPerc = new Integer(0);
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
@@ -2241,8 +2232,7 @@ public class SmApplicationUtil {
 					.retrieveSmApplicationDetailsById(reqDto);
 			return resDTO;
 		} catch (Exception e) {
-			System.out
-					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			log.info("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			resDTO.setErrorCaued(Boolean.TRUE);
 			return resDTO;
@@ -2495,13 +2485,13 @@ public class SmApplicationUtil {
 
 	public static void calculateShareHolderPercent(
 			SmApplicationManagedBean managedBean) {
-		System.out.println("********* calculateShareHolderPercent ********  ");
-		System.out.println(" *** Non Bumi Equity **** "
+		log.info("********* calculateShareHolderPercent ********  ");
+		log.info(" *** Non Bumi Equity **** "
 				+ managedBean.getSmAppl().getSmCompanyBasic()
 						.getNonBumiEquity());
-		System.out.println(" *** Bumi Equity **** "
+		log.info(" *** Bumi Equity **** "
 				+ managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity());
-		System.out.println(" *** Non MY Equity **** "
+		log.info(" *** Non MY Equity **** "
 				+ managedBean.getSmAppl().getSmCompanyBasic()
 						.getForeignerEquity());
 
@@ -2555,8 +2545,7 @@ public class SmApplicationUtil {
 			}
 			if (resDto.getSmPersonnelList() != null) {
 				selPerList = resDto.getSmPersonnelList();
-				System.out.println("*** List retrieved *** "
-						+ selPerList.size());
+				log.info("*** List retrieved *** " + selPerList.size());
 			}
 			for (SmPersonnel per : selPerList) {
 				if ((per.getShareAmt() == null)) {

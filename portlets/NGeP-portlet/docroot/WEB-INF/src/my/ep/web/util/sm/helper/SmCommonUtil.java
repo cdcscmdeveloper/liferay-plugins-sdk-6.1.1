@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.ejb.Local;
+
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -56,7 +58,7 @@ public class SmCommonUtil {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {
-			System.out.println(ex.getMessage());
+			log.info(ex.getMessage());
 			// return;
 		}
 		md.update(str.getBytes());
@@ -70,7 +72,7 @@ public class SmCommonUtil {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException ex) {
-			System.out.println(ex.getMessage());
+			log.info(ex.getMessage());
 			// return;
 		}
 		md.update(str.getBytes());
@@ -150,7 +152,7 @@ public class SmCommonUtil {
 	}
 
 	public static String getApplTypeDesc(String applType) {
-		System.out.println("--------getApplTypeDesc start--------" + applType);
+		log.info("--------getApplTypeDesc start--------" + applType);
 		String apType = "";
 
 		switch (applType) {
@@ -183,7 +185,7 @@ public class SmCommonUtil {
 			break;
 		}
 
-		System.out.println("--------getApplTypeDesc--------" + apType);
+		log.info("--------getApplTypeDesc--------" + apType);
 
 		return apType;
 	}
@@ -191,13 +193,13 @@ public class SmCommonUtil {
 	public static SmPersonnleCalcVO calcPersonnelListCount(
 			List<SmPersonnel> personnelList, List<SmStaffTotal> stfTotals,
 			String supplierType) {
-		System.out
-				.println("********* Staff calculation from Util class ********* ");
+		log.info("********* Staff calculation from Util class ********* ");
 		SmPersonnleCalcVO personVO = new SmPersonnleCalcVO();
 		personVO = resetAllPersonnelCount(stfTotals, personVO);
 		// setValidSmUserLimit(validatePersonLimit());
+		Locale locale = new FacesScopes().getUserLocale();
 		for (SmPersonnel per : personnelList) {
-			personVO = calcSumUpByPersonnel(per, personVO, supplierType);
+			personVO = calcSumUpByPersonnel(per, personVO, supplierType,locale);
 		}
 		calcuteStaffSubTotalSummary(personVO);
 		return personVO;
@@ -214,8 +216,7 @@ public class SmCommonUtil {
 	}
 
 	private static SmPersonnleCalcVO calcSumUpByPersonnel(SmPersonnel per,
-			SmPersonnleCalcVO persCalcVo, String supplierType) {
-		Locale locale = new FacesScopes().getUserLocale();
+			SmPersonnleCalcVO persCalcVo, String supplierType,Locale locale) {
 		per.setRoleName("");
 		if (per.getPmCountry() != null
 				&& per.getPmCountry().getCountryId() != null) {
@@ -727,14 +728,13 @@ public class SmCommonUtil {
 				.add(compBasic.getGovtEquity())
 				.add(compBasic.getGovtUnitrustEquity())
 				.setScale(2, RoundingMode.HALF_UP));
-		System.out.println("**** Paid up capital ****** "
-				+ compBasic.getPaidUpCapital());
+		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
 
 	public static void calculateSmApplicationPaidUpCapitalPercent(
 			SmCompanyBasic compBasic) {
 		BigDecimal mul = new BigDecimal(100);
-		System.out.println(" *** Intial Calc ***** ");
+		log.info(" *** Intial Calc ***** ");
 		if (compBasic.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
 			compBasic.setBumiPercent(compBasic
 					.getBumiEquity()
@@ -779,8 +779,8 @@ public class SmCommonUtil {
 
 	public static void calcAllEquityOwnerPercent(
 			SmApplicationManagedBean managedBean) {
+		BigDecimal mul = new BigDecimal(100);
 		for (SmPersonnel person : managedBean.getSmapplShareHolders()) {
-			BigDecimal mul = new BigDecimal(100);
 			if (person.getShareAmt() != null
 					&& managedBean.getSmAppl().getSmCompanyBasic()
 							.getPaidUpCapital() != null
