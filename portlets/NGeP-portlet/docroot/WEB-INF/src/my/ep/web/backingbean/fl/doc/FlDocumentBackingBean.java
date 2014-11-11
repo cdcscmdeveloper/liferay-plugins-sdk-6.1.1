@@ -527,6 +527,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			siBB.getManagedBean().setSelectedTabIndex(0);
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			siBB.getManagedBean().setButtonVal(buttonVal);
+			siBB.getPopulateReasonList();
 			siBB.populateChargeLineData();
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
