@@ -82,6 +82,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -170,8 +171,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	  }
 	
 	  public void preRenderCircular() {
-		  
-		  renewSesionObject();
+		    getManagedBean().setAutoUpdate(true);
+		  	renewSesionObject();
 		    getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		    FacesContext fc = FacesContext.getCurrentInstance();
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
@@ -557,6 +558,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
+			
+			//gpki
+			if (this.getManagedBean().getPmDigiSign() != null) {
+				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			}
+			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
@@ -604,23 +611,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICircularSO.class);
-			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				if(getManagedBean().getCancelCircularReq().getCtCancelCircularList().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
-				}
-				
-				if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin())) {
-					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
-				    }
-			    }
-			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				String remark = getManagedBean().getRemarkList().get(0).getRemark();
-	 			if((remark == null || remark.length() == 0)) {
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-	 			}
-			}
+			validateCircular(action);			
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
@@ -675,57 +666,99 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
-	private void validateCircular(String outcome) {
-	
+	public void validateCircular(String outcome) {
+			getManagedBean().setAutoUpdate(true);
 			
 			/*if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if(getManagedBean().getCancelCircularReq().getCtCancelCircularList().size()==0) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
+				}
+				
+				if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin())) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
+					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+				    }
+			    }
+			
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0)) {
+	 				RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
+	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
+			}
 			
 			if(getManagedBean().getCircularVer().getCtPanelItems().size()==0) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Panel Item"});
 			}
 			else {
 				for (CtPanelItem panelItem: getManagedBean().getCircularVer().getCtPanelItems()) {
 					if(panelItem.getZoneAllParamterId()==null) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",
+								true);
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Panel Coverage"});
 					}
 					
 					if(panelItem.getCategoryParameterId() == null) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",
+								true);
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Category"});
 					}
 					else {
 						if(getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
 							if(panelItem.getSpecification().length()==0) {
+								RequestContext.getCurrentInstance().addCallbackParam("epException",
+										true);
 								throw new EpException(MessageConst.ERROR_100022, new String[]{"Specification"});
 							}
 						}
 					}
 					
 					if(panelItem.getItemName().length()==0) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",
+								true);
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Name"});
 					}
 					
 					if(panelItem.getPmUom().getUomId()==null) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",
+								true);
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"UOM"});
 					}
 					
 					if(getItemGeneralCode(panelItem.getZoneAllParamterId()).equalsIgnoreCase(
 							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
 						if(panelItem.getLocationLevelId().getParameterId()==null) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException",
+									true);
 							throw new EpException(MessageConst.ERROR_100022, new String[]{"Location Level"});
 						}
 						
 						if(panelItem.getCtPanelZones().size()==0) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException",
+									true);
 							throw new EpException(MessageConst.ERROR_100023, new String[]{"Zone"});
 						}
 						else {
 							for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
 								if(panelZone.getName().length()==0) {
+									RequestContext.getCurrentInstance().addCallbackParam("epException",
+											true);
 									throw new EpException(MessageConst.ERROR_100022, new String[]{"Zone Name"});
 								}
 								
 								if(panelZone.getCtPanelSuppliers().size()==0) {
+									RequestContext.getCurrentInstance().addCallbackParam("epException",
+											true);
 									throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
 								}
 							}
@@ -733,6 +766,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 					else {					
 						if(panelItem.getCtPanelSuppliers().size()==0) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException",
+									true);
 							throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
 						}
 					}
@@ -748,8 +783,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
 				(getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark() == null || 
 					getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark().length()==0 )) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 				throw new EpException("100022", new String[]{"Circular Details/Item Remark"});
 			}
+		}
+		
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(getManagedBean().getCircularVer().getStartDate());
+			sb.append(getManagedBean().getCircularVer().getEndDate());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setAction(outcome);
 		}
 	}
 	
@@ -1657,5 +1708,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void setCircularVerPagingDataModel(
 			IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
 		this.circularVerPagingDataModel = circularVerPagingDataModel;
+	}
+	
+	
+	public String preSubmitPanelCircular(
+			PmDigiSign pmDigiSign) {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		return savePanelCircular(getManagedBean().getAction());
+	}
+
+	public void disableUpdate() {
+		getManagedBean().setAutoUpdate(false);
 	}
 }

@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -96,6 +97,11 @@ public class PanelManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
 	private List<SmSupplier> supplierList; 
+	
+	//gpki signing
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
 	
 	public CtCircular getCircular() {
 		return circular;
@@ -485,5 +491,29 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
 	}
 }

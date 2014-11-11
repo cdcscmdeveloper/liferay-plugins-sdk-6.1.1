@@ -57,6 +57,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -83,6 +84,7 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -104,6 +106,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
@@ -522,9 +525,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 		
-			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
-			}
+//			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+//				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+//			}
 			
 			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))
 			       validateCircular(action);
@@ -560,6 +563,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
+			
+			if(this.getManagedBean().getPmDigiSign() !=null){
+				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			}
+			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
@@ -602,20 +610,27 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return null;
 	}
 	
-	private void validateCircular(String outcome) {
+	public void validateCircular(String outcome) {
 		ICircularDetailSO circularDetailSO = null;
 		circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularDetailSO.class);
-		
+		getManagedBean().setAutoUpdate(true);
 		
 		/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
 		
+			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+			}
+			
 			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
 			}
 			
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 			}
 		//}
@@ -624,15 +639,34 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
  			String contractRemark = getManagedBean().getCircularVer().getContractRemarks().get(0).getRemark();
  			if((remark == null || remark.length() == 0) && (contractRemark == null || contractRemark.length() == 0)) {
- 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+ 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
  			}
 		}
 		
 		CircularDetailReqDTO cdReqDTO = new CircularDetailReqDTO();
 		cdReqDTO.setCtCircularContractList(getManagedBean().getCircularVer().getCtCircularContracts());
-		circularDetailSO.validateSourcingLOA(cdReqDTO);
+		CircularDetailResDTO cdResDTO = circularDetailSO.validateSourcingLOA(cdReqDTO);
 		
-		circularDetailSO = null;
+		if(cdResDTO.getContractPhysicalNo() != null){
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750012, new String[]{cdResDTO.getContractPhysicalNo()});
+		}
+		circularDetailSO = null;	
+		
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(getManagedBean().getCircularVer().getStartDate());
+			sb.append(getManagedBean().getCircularVer().getEndDate());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setAction(outcome);
+		}
 	}
 
 	public void fileUpload(FileUploadEvent event) throws Exception {
@@ -1070,5 +1104,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			this.getManagedBean().getCircularVer().setExtendStartDate(null);
 			this.getManagedBean().getCircularVer().setExtendEndDate(null);
 		}
+	}
+	
+	public String preSubmitCircular(PmDigiSign pmDigiSign) {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveCircular(getManagedBean().getAction());
+	}
+	
+	public void disableUpdate(){
+		getManagedBean().setAutoUpdate(false);
 	}
 }

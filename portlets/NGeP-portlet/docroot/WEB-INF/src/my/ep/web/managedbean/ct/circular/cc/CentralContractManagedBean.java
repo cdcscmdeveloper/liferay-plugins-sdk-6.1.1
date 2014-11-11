@@ -27,6 +27,7 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -86,6 +87,10 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<String, PmUser> userMap;
 	private TreeNode centralZoneTrees;
+	
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
 
 	public boolean isUpdateAction() {
 		return updateAction;
@@ -338,5 +343,23 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
+	}
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
 	}
 }
