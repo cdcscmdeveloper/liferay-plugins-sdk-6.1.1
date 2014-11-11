@@ -3,19 +3,34 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table style="width: 100%;">
-	 <tr>
-	   <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" 
-	             action="#{panelBackingBean.backAction}" rendered="#{panelBackingBean.managedBean.action != null}" /></td>
-	    <td class="ppRightBtn">
-	         <f:event listener="#{panelBackingBean.preRenderView}" type="preRenderView" />	
-			 <ui:repeat var="action" value="#{panelBackingBean.managedBean.outComes}">
-			    <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
-				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" update="@form" 
-				   action="#{panelBackingBean.savePanelCircular(action)}" />
-			 </ui:repeat>	    			
-	    </td>
-	  </tr>
-	</table>	
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+					immediate="true" icon="ui-icon-back"
+					action="#{panelBackingBean.backAction}"
+					rendered="#{panelBackingBean.managedBean.action != null}" /></td>
+			<td class="ppRightBtn"><f:event
+					listener="#{panelBackingBean.preRenderView}" type="preRenderView" />
+				<ui:repeat var="action"
+					value="#{panelBackingBean.managedBean.outComes}">
+					<p:commandButton value="#{action}" styleClass="ui-button"
+						icon="ui-icon-#{fn:toLowerCase(action)}" update="@form"
+						action="#{panelBackingBean.savePanelCircular(action)}"
+						rendered="#{action != 'SUBMIT' and action != 'REJECT' and action != 'APPROVE'}" />
+					<p:commandButton value="#{action}" styleClass="ui-button"
+						icon="ui-icon-#{fn:toLowerCase(action)}" process="@form"
+						update="@form,@([id$=messages])"
+						actionListener="#{panelBackingBean.validateCircular(action)}"
+						action="#{panelBackingBean.disableUpdate}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
+						rendered="#{action == 'SUBMIT' or action == 'REJECT' or action == 'APPROVE'}" />
+				</ui:repeat> <ac:gpkiPopup
+					textBeforeSign="#{panelBackingBean.managedBean.textBeforeSign}"
+					postSignAction="#{panelBackingBean.preSubmitPanelCircular(gpkiBackingBean.pmDigiSign)}" />
+			</td>
+
+		</tr>
+	</table>
 </ui:composition>

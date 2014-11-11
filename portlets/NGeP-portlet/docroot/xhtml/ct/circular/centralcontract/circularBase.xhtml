@@ -21,7 +21,7 @@
          <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
-        <p:messages id="messages" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+        <p:messages id="messages" showSummary="false" escape="false" showDetail="true" autoUpdate="#{centralContractBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 	    <f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />	
           <ui:include src="circularButtons.xhtml" />
 		  <ui:include src="circularHeader.xhtml" />
