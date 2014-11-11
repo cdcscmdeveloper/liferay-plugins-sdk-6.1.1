@@ -71,8 +71,9 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.equiOwnr']}">
-						<h:outputText value="#{lbl['lbl.txt.yes']}" />
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}">
+						<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{shareBean.bumiFlg eq 1}"/>
+						<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{shareBean.bumiFlg eq 0}"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink
