@@ -2,8 +2,11 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -396,15 +399,18 @@ public class QTScheduleDetailBackingBean extends
 		if (scQt.isBsvRequired()) {
 			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
 			if (null != bsvDetails && !bsvDetails.isEmpty()) {
-				Date briefingDate=null;
+				Set<Date> dates = new HashSet<>();
+				//Date briefingDate=null;
 				for (ScQtBsv bsvs : bsvDetails) {
 					List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
 					for (ScQtBsvDtl bsvDtl : dtls) {
-						briefingDate = bsvDtl.getBsvDate();
-						if (null != briefingDate) {
-							return	DateUtils.minusDays(briefingDate, 1);
-						}
+						//briefingDate = bsvDtl.getBsvDate();
+						dates.add(bsvDtl.getBsvDate());
 					}
+					Date briefingDate = Collections.max(dates);
+					//if (null != briefingDate) {
+						return	DateUtils.minusDays(briefingDate, 1);
+					//}
 				}
 			}
 		} else {
