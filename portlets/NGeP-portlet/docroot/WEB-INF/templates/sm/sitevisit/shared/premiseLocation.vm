@@ -1,0 +1,56 @@
+<u>Premise Location</u>
+<br />
+<table>
+	<tr>
+		<td width="40%" class="txtBold">Ownership</td>
+		<td  width="40%" class="txtBold">Private, Purchasing Price (RM)</td>
+	</tr>
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Rent, Monthly Rate (RM)</td>
+	</tr>
+	
+	
+	<tr>
+		<td width="40%" class="txtBold">Area</td>
+		<td class="txtBold" width="40%">Overall Square Feet/Meter</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Enclosed Square Feet/Meter</td>
+	</tr>
+	
+	
+	<tr>
+		<td width="40%" class="txtBold">Floor</td>
+		<td class="txtBold" width="40%">Cement</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Tar</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold"  width="40%">Others</td>
+	</tr>
+	
+	
+	<tr>
+		<td width="40%" class="txtBold">Environment</td>
+		<td class="txtBold"  width="40%">Fenced</td>
+	</tr>
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Cleanliness</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Organized</td>
+	</tr>
+	
+
+</table>

@@ -1,0 +1,107 @@
+#include("/sm/sitevisit/shared/header.vm")
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;font-weight: bold;font-size: 12pt;'>$templateType - Company Information</font>
+	        </td>
+    	</tr>
+	</table>
+	
+	<table class="infoTable">
+		<tr>
+	        <td width="30%"><b>Accepted Application Date</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>Final Information Date</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>Company Name</b></td>
+	        <td>$companyName</td>
+    	</tr>
+    	
+    	<tr>
+	        <td><br /></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>ROC/ROB/ROS No.</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>Site Visit Address</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td><br /></td>
+    	</tr>
+    	
+        <tr>
+	        <td width="30%"><b>Postal Code</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>Town/City</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>State</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%"><b>District</b></td>
+    		<td></td>
+    	</tr>
+    	
+   	    <tr>
+	        <td width="30%"><b>MOF Registration No.</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>Application Reference No.</b></td>
+	        <td>$applNo</td>
+    	</tr>
+    	
+       	<tr>
+	        <td width="30%"><b>Scheduled Date of Visit</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+	        <td width="30%"><b>Visiting Date</b></td>
+	        <td></td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%" valign="top"><b>Visiting Officers</b></td>
+    		<td>1.<br />2.</td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%"><b>Assisting Officers</b></td>
+    		<td></td>
+    	</tr>
+    	
+    	<tr>
+    		<td width="30%" valign="top"><b>Interviewed Representatives</b></td>
+    		<td>
+    			Name<br />
+    			Designation<br /><br />
+    			Name<br />
+    			Designation<br /><br />
+    			Name<br />
+    			Designation<br />
+    		</td>
+    	</tr>
+	</table>
+	<br /><br />
+#include("/sm/sitevisit/shared/footer.vm")

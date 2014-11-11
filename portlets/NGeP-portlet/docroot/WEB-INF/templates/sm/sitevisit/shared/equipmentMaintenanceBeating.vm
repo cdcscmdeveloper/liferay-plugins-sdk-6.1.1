@@ -1,0 +1,44 @@
+<u class="txtBold">Tool/Equipment for Maintenance and Overhaul</u>
+<br /><br />
+<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No</th>
+			<th width="65%">Equipment Type</th>
+			<th width="15%">Available</th>
+			<th width="15%">Quantity/Set</th>
+		</tr>
+		
+	#if($equipmentMaintenance.size() > 0)
+		#foreach($equipMaint in $equipmentMaintenance)
+		<tr>
+			<td>$velocityCount</td>
+			<td class="txtBold">$equipMaint.codeName</td>
+			<td><br /></td>
+			<td><br /></td>
+		</tr>
+		#end
+	#end
+</table>
+<br /><br /><br />
+
+<u class="txtBold">Equipment for Panel Beating and Spray Painting</u>
+<br /><br />
+<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No</th>
+			<th width="65%">Equipment Type</th>
+			<th width="15%">Available</th>
+			<th width="15%">Quantity/Set</th>
+		</tr>
+		
+	#if($equipmentMaintenance.size() > 0)
+		#foreach($equipBeating in $equipmentBeating)
+		<tr>
+			<td>$velocityCount</td>
+			<td class="txtBold">$equipBeating.codeName</td>
+			<td><br /></td>
+			<td><br /></td>
+		</tr>
+		#end
+	#end
+</table>

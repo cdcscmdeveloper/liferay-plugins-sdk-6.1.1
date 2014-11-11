@@ -1,0 +1,12 @@
+<u>Employee</u>
+<br />
+
+<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="25%">Specialization</th>
+			<th width="25%">Name</th>
+			<th width="20%">IC No.</th>
+			<th width="25%">Experience</th>
+		</tr>
+</table>

@@ -1,0 +1,14 @@
+#include("/sm/sitevisit/shared/header.vm")
+
+<table width='100%'>
+	<tr align='center' style="background-color: #3366ff;">
+	    <td>
+	    	<font style='color:#ffffff;font-weight: bold;'>$templateType - Section E</font>
+	    </td>
+    </tr>
+    <tr><td><br /></td></tr>
+</table>
+
+
+#include("/sm/sitevisit/shared/recommendation.vm")
+#include("/sm/sitevisit/shared/footer.vm")
