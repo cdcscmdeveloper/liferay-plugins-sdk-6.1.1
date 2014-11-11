@@ -44,7 +44,7 @@
 								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
 								value="#{financialOrgBackingBean.generalInfoTab}" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}"
+						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringMenu"
 							rendered="#{financialOrgBackingBean.managedBean.pmFinancialSvc[0].serviceTypeCode.parameterCode eq 'FC'}"
 							update="@form">
 							<f:param name="disableValidation" value="" />

@@ -122,10 +122,8 @@
 				<td><p:inputText id="email" required="true"
 						label="#{lbl['lbl.pm.address.email']}" maxlength="80"
 						value="#{organisationBackingBean.managedBean.officeAddress.email}"
-						size="35" >
-						<f:validateRegex disabled="#{empty param['disableValidation']}"
-							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							</p:inputText></td>
+						size="35" />
+						</td>
 				<td><p:message for="email" id="emailMsg" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
