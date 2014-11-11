@@ -1,0 +1,11 @@
+<u>License/Insurance</u>
+<table>
+	#if($licenseInsurance.size() > 0)
+		#foreach($licenseIns in $licenseInsurance)
+		<tr>
+			<td width="40%" class="txtBold"><br /></td>
+			<td class="txtBold">$licenseIns.codeName</td>
+		</tr>
+		#end
+	#end
+</table>

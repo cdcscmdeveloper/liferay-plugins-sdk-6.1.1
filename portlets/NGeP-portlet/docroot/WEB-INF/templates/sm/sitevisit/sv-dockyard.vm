@@ -1,0 +1,5 @@
+#include("/sm/sitevisit/shared/header.vm")
+ 
+#include("/sm/sitevisit/shared/equity.vm")
+ 
+#include("/sm/sitevisit/shared/footer.vm")

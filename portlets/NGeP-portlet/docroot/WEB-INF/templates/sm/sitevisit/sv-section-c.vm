@@ -1,0 +1,29 @@
+#include("/sm/sitevisit/shared/header.vm")
+
+<table width='100%'>
+	<tr align='center' style="background-color: #3366ff;">
+	    <td>
+	    	<font style='color:#ffffff;font-weight: bold;'>$templateType - Section C</font>
+	    </td>
+    </tr>
+    <tr><td><br /></td></tr>
+</table>
+    #if($templateCode == "I" || $templateCode == "BP" || $templateCode == "RM" || $templateCode == "A" || $templateCode == "PG")
+    	#parse("/sm/sitevisit/shared/category-applicable.vm")
+    #elseif($templateCode == "L" || $templateCode == "B")
+    	#parse("/sm/sitevisit/shared/commLicenseInsurance.vm")
+    	<br /><br />
+    	#include("/sm/sitevisit/shared/premiseLocation.vm")
+    	<br /><br />
+		#parse("/sm/sitevisit/shared/equipmentMaintenanceBeating.vm")
+		<br /><br />
+		
+		#if($templateCode == "B")
+			#parse("/sm/sitevisit/shared/workshop_worker.vm")
+			<br /><br />
+		#end
+		
+		#parse("/sm/sitevisit/shared/machine.vm")
+    #end
+
+#include("/sm/sitevisit/shared/footer.vm")
