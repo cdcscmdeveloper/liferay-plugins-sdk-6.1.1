@@ -171,8 +171,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	  }
 	
 	  public void preRenderCircular() {
-		    getManagedBean().setAutoUpdate(true);
 		  	renewSesionObject();
+		  	getManagedBean().setAutoUpdate(true);
 		    getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		    FacesContext fc = FacesContext.getCurrentInstance();
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");

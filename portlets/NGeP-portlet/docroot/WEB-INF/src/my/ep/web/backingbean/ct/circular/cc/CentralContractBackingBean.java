@@ -155,8 +155,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	    	 return new FacesScopes();
 	}
 	
-	public void preRenderCircular() {
+	public void preRenderCircular() {			
 			renewSesionObject();
+			getManagedBean().setAutoUpdate(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}

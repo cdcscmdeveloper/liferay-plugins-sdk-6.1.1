@@ -112,6 +112,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -162,6 +163,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPar
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
@@ -261,6 +263,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			     setAmendmentContractVer(resDTO);
 			     resetbooleanValue();
+			     getManagedBean().setAutoUpdate(true);
 			
 			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) && 
 					this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
@@ -554,6 +557,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	               reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 		           reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 		           
+				   if(this.getManagedBean().getPmDigiSign() !=null){
+						reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+				   }	
+				   
 		           ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			       if (resDTO.isSuccessful()) {
 				         log.info("Record saved successfully");
@@ -602,12 +609,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  return null;		
 	   }
 	 
-	   private void validateContractAmendment(String action) {
-		   
+	   public void validateContractAmendment(String action) {
+		   getManagedBean().setAutoUpdate(true);
 		   if(getManagedBean().getContractVer().getCtAmendment()!=null && 
 				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
 				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
 				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
+			   RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 			   throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
 		   }
 		   
@@ -618,6 +627,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
 	 			String ap201Remark = getManagedBean().getContractVer().getAp201Remark().get(0).getRemark();
 	 			if((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (ap201Remark == null || ap201Remark.length() == 0)) {
+	 				RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
 	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 	 			}
 		   }
@@ -625,28 +636,54 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && !getManagedBean().getContractVer().getCtAmendment().isValueChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
+			   RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 			        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Type"});
 		 
 		   }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
+			   RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 				        throw new EpException(MessageConst.INFO_100022, new String[]{"File Reference No."});
 			 
 			   }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
+			   RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 		        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Title"});
 	       }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getDescription() == null || getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
+			   RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
 		        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Description"});
 	       }
 		   
 		   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 			     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
+			    	 RequestContext.getCurrentInstance().addCallbackParam("epException",
+								true);
 				     throw new EpException(MessageConst.ERROR_750002);
 		         }
 		   }
+		   
+		   
+		   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+					|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
+					|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+					//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+					StringBuilder sb = new StringBuilder();
+					sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+					sb.append(getManagedBean().getContractVer().getDocType());
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+					sb.append(action);			
+					getManagedBean().setTextBeforeSign(sb.toString());	
+					getManagedBean().setButtonAction(action);
+				}
 	  }
 	 
 	 public void changeField() {
@@ -2576,10 +2613,21 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  else 
 				  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 		     }
-       }
+       }	
 	
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
+	}
+	
+	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveContractAmendment(getManagedBean().getButtonAction());
+	}
+	
+	public void disableUpdate(){
+		getManagedBean().setAutoUpdate(false);
 	}
 }
