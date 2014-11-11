@@ -13,6 +13,8 @@ import javax.faces.model.SelectItem;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
+import my.ep.constant.ct.ContractConst;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -501,6 +503,18 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 
 	public ScLoaWitness getScLoaWitness() {
+		if(scLoaWitness==null) {
+			scLoaWitness = new ScLoaWitness();
+			String taskName = this.getTaskName();
+			if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
+					taskName.equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+				scLoaWitness.setPartyType(ContractConst.WITNES_TYPE_AGENCY);
+			}
+			else if(taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				scLoaWitness.setPartyType(ContractConst.WITNES_TYPE_SUPPLIER);
+			}
+		}
+		
 		return scLoaWitness;
 	}
 
