@@ -17,6 +17,20 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
+					&#160;
+					<p:graphicImage id="codeti" library="ep/images/design"
+						name="tooltips.png" />
+					<p:tooltip id="codett" for="codeti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.biz.nature.code']}" />
+					</p:tooltip>
+				</f:facet>
+				#{suppBizNature.pmBusinessNature.levelCode}
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.natureofbusiness']}" />
 					&#160;
 					<p:graphicImage id="bnti" library="ep/images/design"
