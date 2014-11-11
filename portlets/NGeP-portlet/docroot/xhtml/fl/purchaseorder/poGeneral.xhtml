@@ -21,10 +21,7 @@
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"
-						disabled="true" /></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
-				</td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -32,10 +29,7 @@
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
-						disabled="true" /></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
-				</td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
@@ -43,18 +37,12 @@
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"
-						disabled="true" /></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
-				</td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputText size="8" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
-						width="5" /> <p:inputText size="50" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}"/></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/>
-				</td>
+						width="5" /> <p:inputText size="50" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -70,8 +58,7 @@
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td style="width:190px;"><p:inputText size="25" 
 						value="#{purchaseRequestBackingBean.getParameterDesc(flOrderBB.managedBean.flRequest.procurementType)}"
-						disabled="true" /></td>
-				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
@@ -85,8 +72,7 @@
 						value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	</td>
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
@@ -97,8 +83,7 @@
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.approvedDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/>	</td>
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
