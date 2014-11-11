@@ -50,10 +50,7 @@
 									</p:inputText>																					
 									</c:if>
 																  
-								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
-								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
-									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
-								  </c:if>			
+								   			
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scStatus}" style="margin-top:5px;width:300px;">
@@ -68,7 +65,8 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.cancelled']}" itemValue="#{8}"></f:selectItem>																								
 									</p:selectOneMenu>
 								  </c:if>	
-								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.scPtjView}">
+								  
+								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPtjView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:130px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPtj}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
@@ -76,7 +74,7 @@
 										<f:selectItems value="#{reportBackingBean.orgProfileList}"></f:selectItems>										
 									</p:selectOneMenu>
 								  </c:if>
-								   <c:if test="#{smReportBackingBean.managedBean.rptGenBean.scDeskOfficerView}">
+								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scDeskOfficerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deskOfficer']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scDeskOfficer}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
@@ -106,7 +104,10 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}" itemValue="#{lbl['lbl.rpt.others']}"></f:selectItem>																																
 									</p:selectOneMenu>
 								  </c:if>
-								 
+								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
+								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
+									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
+								  </c:if>
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPInoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.purchaseindfltno']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText  value="#{reportBackingBean.scPIno}" style="margin-top:5px;width:290px;">										

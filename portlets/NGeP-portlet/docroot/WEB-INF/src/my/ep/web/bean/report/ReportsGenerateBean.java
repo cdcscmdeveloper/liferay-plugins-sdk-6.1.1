@@ -2,7 +2,6 @@ package my.ep.web.bean.report;
 
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.faces.model.SelectItem;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -188,6 +187,11 @@ public class ReportsGenerateBean {
 		private boolean flContractOrderView = false;
 		private boolean flContractRequestView = false;
 		private boolean flPurchaseOrderNoView = false;
+		//CT
+		private boolean ctContractNoView = false;
+		private boolean ctAgreementView = false;
+		private boolean ctStatusView = false;
+		private boolean ctContrMontrStatusView = false;
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -312,7 +316,67 @@ public class ReportsGenerateBean {
 		private String scPIDtlsPrcRptGroupVar=ReportConst.EMPTY_VAL;
 		private String scProcurementTypeVar=ReportConst.EMPTY_VAL;
 		private String scProcessRptQuotationNoVar=ReportConst.EMPTY_VAL;
+		//CT
+		private String ctContractNoVar=ReportConst.EMPTY_VAL;
+		private String ctAgreementVar=ReportConst.EMPTY_VAL;
+		private String ctStatusVar=ReportConst.EMPTY_VAL;
+		private String ctContrMontrStatusVar=ReportConst.EMPTY_VAL;
+		private String ctHiddenParamGroupVar=ReportConst.EMPTY_VAL;
 		
+		public boolean isCtContrMontrStatusView() {
+			return ctContrMontrStatusView;
+		}
+		public void setCtContrMontrStatusView(boolean ctContrMontrStatusView) {
+			this.ctContrMontrStatusView = ctContrMontrStatusView;
+		}
+		public String getCtContrMontrStatusVar() {
+			return ctContrMontrStatusVar;
+		}
+		public void setCtContrMontrStatusVar(String ctContrMontrStatusVar) {
+			this.ctContrMontrStatusVar = ctContrMontrStatusVar;
+		}
+		public String getCtHiddenParamGroupVar() {
+			return ctHiddenParamGroupVar;
+		}
+		public void setCtHiddenParamGroupVar(String ctHiddenParamGroupVar) {
+			this.ctHiddenParamGroupVar = ctHiddenParamGroupVar;
+		}
+		public boolean isCtContractNoView() {
+			return ctContractNoView;
+		}
+		public void setCtContractNoView(boolean ctContractNoView) {
+			this.ctContractNoView = ctContractNoView;
+		}
+		public boolean isCtAgreementView() {
+			return ctAgreementView;
+		}
+		public void setCtAgreementView(boolean ctAgreementView) {
+			this.ctAgreementView = ctAgreementView;
+		}
+		public boolean isCtStatusView() {
+			return ctStatusView;
+		}
+		public void setCtStatusView(boolean ctStatusView) {
+			this.ctStatusView = ctStatusView;
+		}
+		public String getCtContractNoVar() {
+			return ctContractNoVar;
+		}
+		public void setCtContractNoVar(String ctContractNoVar) {
+			this.ctContractNoVar = ctContractNoVar;
+		}
+		public String getCtAgreementVar() {
+			return ctAgreementVar;
+		}
+		public void setCtAgreementVar(String ctAgreementVar) {
+			this.ctAgreementVar = ctAgreementVar;
+		}
+		public String getCtStatusVar() {
+			return ctStatusVar;
+		}
+		public void setCtStatusVar(String ctStatusVar) {
+			this.ctStatusVar = ctStatusVar;
+		}
 		public boolean isScPrcRptGroupView() {
 			return scPrcRptGroupView;
 		}

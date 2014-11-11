@@ -720,8 +720,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUMM_RPT_PAN_ITM_NAME));	
 			break;
 		default:
-			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
-            //break;
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));           
 		}		
 	}
 }
