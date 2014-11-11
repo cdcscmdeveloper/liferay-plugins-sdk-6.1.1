@@ -584,4 +584,11 @@ public class ReportConst {
 	public static final String APPROVER = "APPROVER";
 	public static final String DESK_OFFICER = "DESK_OFFICER";
 	public static final String SUB_MOD_S1 = "S1";
+	
+	//Supplier Management
+	//SM - JSP
+	public static final String SM_PAYMENT_RECEIPT_JSP = "sm_payment_receipt.jsp";
+	
+	//SM - Report Parameter Key
+	public static final String PARAM_PAYMENT_ID = "pmntid";
 }
