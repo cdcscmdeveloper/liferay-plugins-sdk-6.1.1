@@ -33,10 +33,10 @@
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="#{lbl['lbl.sc.sp.proposal.no']}">
+				<p:column headerText="#{lbl['lbl.sc.proposal.no']}">
 					<h:outputText value="#{rowIndex+1}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.action']}">
+				<p:column headerText="#{lbl['lbl.sc.action']}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareMultileProposalAction(rowIndex+1)}"
 						value="Prepare" />
@@ -44,7 +44,9 @@
 			</p:dataTable>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" update="proposalid" />
+					action="#{supplierProposalDetailBackingBean.deleteMultipleProposal}"
+					icon="ui-icon-delete" update="proposalid"
+					process="@this,proposalid" partialSubmit="true" />
 
 			</div>
 		</h:panelGroup>

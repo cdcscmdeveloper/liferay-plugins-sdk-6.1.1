@@ -609,6 +609,7 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
+			
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
 
@@ -1411,8 +1412,6 @@ public class SPDetailBackingBean extends
 	public String prepareMultileProposalAction(int index) {
 		debugLogger("prepareMultileProposalAction");
 		getManagedBean().setProposalIndex(index);
-		System.out.println("index : "
-				+ this.getManagedBean().getProposalIndex());
 		
 		ScQt scQt = getManagedBean().getQt();
 		ScQtCheckList scQtCheckList = this.getManagedBean()
@@ -1485,7 +1484,7 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-
+				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
@@ -1645,6 +1644,7 @@ public class SPDetailBackingBean extends
 				}
 			}
 			this.getManagedBean().setScQtPRPExperiences(scQtPRPExperiences);
+			totalContractAmount();
 
 			ScQtProposalScore contractAmountScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
 
@@ -2388,8 +2388,8 @@ public class SPDetailBackingBean extends
 		List<ScQtProposal> list = this.getManagedBean().getQtProposalsList();
 
 		list = new ArrayList<ScQtProposal>();
-		if (this.getManagedBean().getPrepareProposal() > 3) {
-			throw new EpException("You Should Not Enter More than three");
+		if (getManagedBean().getPrepareProposal() > getManagedBean().getQt().getMaxProposal()) {
+			throw new EpException("Allowed maximum proposals are "+getManagedBean().getQt().getMaxProposal());
 		} else {
 			for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
 				ScQtProposal proposal = new ScQtProposal();
