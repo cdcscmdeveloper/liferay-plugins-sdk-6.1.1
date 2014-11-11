@@ -76,7 +76,11 @@
 		                      </h:outputText>
 		                  </p:column>
 		           
-		                  <p:column headerText="#{lbl['lbl.ct.schedule.type']}" style="width:15%;white-space:normal;">
+		                  <p:column style="width:15%;white-space:normal;">
+		                      <f:facet name="header">
+						     	<h:outputText value="#{lbl['lbl.ct.schedule.type']}"/>
+				               	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.schedule.type']}"/>
+				              </f:facet>
 		                      <p:selectOneMenu  value="#{payScheduleObj.scheduleType.parameterId}"
 		               		       id="scheduleTypeid" disabled="#{payScheduleObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" style="width:130px;"> 
                                    <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
