@@ -11,10 +11,12 @@ public class ReportConst {
 	public static final String MOD_CM_TTL = "lbl.module.catalogueManagement";
 	public static final String MOD_FL_TTL = "lbl.module.orderFulfillment";
 	public static final String MOD_SM_TTL = "lbl.module.supplierManagement";
+	public static final String MOD_CT_TTL = "lbl.module.contractManagement";
 	public static final String SC_MOD_VAL = "SC";
 	public static final String CM_MOD_VAL = "CM";
 	public static final String FL_MOD_VAL = "FL";
 	public static final String SM_MOD_VAL = "SM";	
+	public static final String CT_MOD_VAL = "CT";	
 	//SC Module reports start	
 	public static final String SPPPP_PEMATUHAN_OC_RPT_VAL = "SC_001";	
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "SC_002";	
@@ -322,6 +324,19 @@ public class ReportConst {
 	public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP = "List_offline_Supportg_Doc_Pendg_Submission.jsp";
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";
 	//SM Module report end
+	//CM Module reports start	
+	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
+	public static final String CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL = "CT_002";	
+	public static final String CT_LST_OF_CONTRACT_ALL_RPT_VAL = "CT_003";	
+	public static final String CT_LST_OF_CONTRACT_ACTIVE_RPT_VAL = "CT_004";	
+	public static final String CT_LST_OF_CONTRACT_INACTIVE_RPT_VAL = "CT_005";	
+	public static final String CT_CONTRACT_MONITORING_RPT_VAL = "CT_006";	
+	public static final String CT_LST_OF_ITEM_PRODUCT_RPT_VAL = "CT_007";	
+	public static final String CT_LST_OF_ITEM_SERVICE_RPT_VAL = "CT_008";	
+	public static final String CT_LST_OF_AMENDMENT_RPT_VAL = "CT_009";
+	public static final String CT_LST_OF_UPDATE_RPT_VAL = "CT_010";	
+	public static final String CT_LST_OF_SUSPENSION_RPT_VAL = "CT_011";	
+	public static final String CT_LST_OF_TERMINATION_RPT_VAL = "CT_012";	
 	//sm
 	public static final String AMP_SM_TO_DATE_EQ = "&createddateto=";
 	public static final String AMP_SM_FROM_DATE_EQ = "&createddatefrom=";
@@ -378,6 +393,7 @@ public class ReportConst {
 	public static final String AMP_USER_ACCESS_ROLE_EQ = "&LOGIN=";
 	//	
 	public static final String EMPTY_VAL = "";
+	public static final String ZERO_VAL = "0";
 	public static final String AMP_REPORT_NAME = "&report=";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
 	public static final String AMP_ITM_ID_EQ = "&itemid=";
@@ -468,7 +484,16 @@ public class ReportConst {
 	public static final String FL_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String FL_AMP_REPORT_ID_EQ = "&PREPORTID=";
 	public static final String FL_AMP_USER_ID_EQ = "&PUSER=";
-	//
+	//CT
+	public static final String CT_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
+	public static final String CT_AMP_AGREEMENT_EQ = "&PAGREEMENT=";
+	public static final String CT_AMP_STATUS_EQ = "&PSTATUS=";
+	public static final String CT_AMP_GROUP_EQ = "&PGROUP=";
+	public static final String CT_GROUP_VAL_ALL = "ALL";
+	public static final String CT_GROUP_VAL_CNTRNO= "CONTRACT_NO";
+	public static final String CT_GROUP_VAL_ACTIVE = "ACTIVE";
+	public static final String CT_GROUP_VAL_INACTIVE = "INACTIVE";
+	
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "lbl.rpt.search.PLZ_SEL_ONE_RPT_SEARCH";

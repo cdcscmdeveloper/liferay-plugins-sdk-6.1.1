@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+ 		
+		         <div>						 
+					 <table style="margin-top:10px;width:100%;" >
+						  <tr>
+						    <td width="100%">
+							    <h:panelGrid  id="ctReportCriteria" columns="4" style="width:85%;">
+							    	
+									 <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctContractNoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.ctContractNo}" style="margin-top:5px;width:290px;">										
+									</p:inputText>																					
+									</c:if>
+																  
+								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
+								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
+									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
+								  </c:if>			
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctAgreementView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.agreement']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctAgreement}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.yes']}" itemValue="#{lbl['lbl.rpt.yes']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.no']}" itemValue="#{lbl['lbl.rpt.no']}"></f:selectItem>										
+									</p:selectOneMenu>
+								  </c:if>	
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctStatus}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>										
+									</p:selectOneMenu>
+								  </c:if>
+								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctContrMontrStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctContrMontrStatus}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>									
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>										
+									</p:selectOneMenu>
+								  </c:if>
+								   			 			
+							    </h:panelGrid>							    
+						    </td>
+						  </tr>							  
+					</table>
+		       </div>
+		      
+  </ui:composition>
