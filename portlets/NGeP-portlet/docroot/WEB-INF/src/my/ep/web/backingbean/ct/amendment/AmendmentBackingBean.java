@@ -737,7 +737,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		   
 		   } else if(getManagedBean().getContractVer().getCtAmendment().isClauseChange() || getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
-			     getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
+			   // 10/11/2014 Lilian said clause change & item price change is still comply with AP201.
+			     //getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		  
 		   } else if(getManagedBean().getCtContract().getRecordStatusFlg().intValue()!=DbValueConst.RECORD_STATUS_ACTIVE) {
 			    getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
