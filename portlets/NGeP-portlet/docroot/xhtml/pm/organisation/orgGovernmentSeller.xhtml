@@ -64,7 +64,7 @@
 		<p:pickList id="approverpickList" value="#{organisationBackingBean.managedBean.supplierUsers}"
 				var="data" showTargetControls="true"
 				itemLabel="#{data.userName}"
-				itemValue="#{data}" converter="supplierPickListConverter">
+				itemValue="#{data}" >
 				<f:facet name="sourceCaption">#{lbl['lbl.pm.org.availableUers']}										
 			</f:facet>
 			<f:facet name="targetCaption">#{lbl['lbl.pm.org.selectedUsers']}										
