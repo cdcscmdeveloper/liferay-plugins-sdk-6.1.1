@@ -10,12 +10,28 @@
 		id="compExpCatPanHdr">
 		<p:dataTable var="expCategoryBean" widgetVar="suppExpCatCodesDtWidVar"
 			value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
-			selection="#{backingBean.managedBean.selectedCompExpCats}"
 			rowKey="#{expCategoryBean}" rowIndexVar="index"
 			id="suppExpCatCodesDtWidVar">
-			<ac:paginator for="suppExpCatCodesDtWidVar" />
+			
+			<p:column style="width:2%">
+				<ac:paginator for="suppExpCatCodesDtWidVar" />
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{backingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=suppExpCatCodesDtWidVar])"
+							listener="#{backingBean.selectAll}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
 
-			<p:column selectionMode="multiple" width="5%" />
+				<p:selectBooleanCheckbox
+					value="#{backingBean.managedBean.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{backingBean.selected(index)}" />
+				</p:selectBooleanCheckbox>
+
+			</p:column>
+			
 			<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 				<h:outputText value="*" style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;"/>
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
@@ -87,7 +103,7 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				action="#{backingBean.deleteSelectedCategoryFromCompanyExperience(backingBean.managedBean.selectedCompanyExperience)}"
 				update=":form:tt:suppExpCatCodesDtWidVar" partialSubmit="true"
-				process=":form:tt:compExpCatPanHdr" />
+				process="@this" />
 
 		</div>
 
