@@ -230,7 +230,7 @@
 					process="@this, newCommitteeApproverProfile, committeApproverPnlId"
 					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
 					icon="ui-icon-check"
-					update="@([id$=scmemberdtls]),@(.committeApproverPnlId)" />
+					update="@(.scmemberdtls, committeApproverPnlId)" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					styleClass="apply_button" process="@this"

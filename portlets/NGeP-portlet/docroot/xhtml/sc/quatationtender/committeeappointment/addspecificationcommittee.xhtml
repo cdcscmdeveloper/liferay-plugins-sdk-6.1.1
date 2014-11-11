@@ -230,8 +230,8 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this, newCommitteeProfile, scPanel"
-					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
-					icon="ui-icon-check" update="@(.scPanel),@([id$=scMemberDtl])"
+					action="#{qTCommitteBackingBean.okCommitteeAction}" 
+					icon="ui-icon-check" update="@(.scMemberDtl, scPanel)"
 					 />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
