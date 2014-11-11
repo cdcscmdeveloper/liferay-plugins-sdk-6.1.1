@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 124px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td colspan="2" style="width: 140px;"><p:inputText size="54"
+				<td colspan="2" style="width: 140px;"><p:inputText size="66"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
@@ -22,12 +22,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="preparedPtj"
+					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"
-						disabled="true" /></td>
-				<td style="width:180px;">
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
-				</td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
 				<td style="width: 146px;"><p:inputText disabled="true" size="20"
 						value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}" /></td>		
@@ -36,12 +33,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="issuePtj"
+					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"
-						disabled="true" /></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
-				</td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
 				<td><p:inputText disabled="true" size="20"
 						value="#{paymentMatchBackingBean.managedBean.stopInstrNo}" /></td>		
@@ -51,12 +45,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="chargedPtj"
+					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"
-						disabled="true" /></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
-				</td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.contract.no']}" /></td>
 				<td style="width: 25px;"><p:inputText size="20"
@@ -67,11 +58,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeName}" /></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/>
-				</td>
+					<p:spacer width="5" /> <p:inputText size="50" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
@@ -151,7 +139,6 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.desc']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="51" maxlength="24"
-						disabled="#{paymentMatchBackingBean.managedBean.buttonVal=='View'}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.desc']}"/></td>
