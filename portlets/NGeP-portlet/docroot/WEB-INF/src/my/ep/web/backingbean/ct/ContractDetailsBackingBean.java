@@ -827,64 +827,48 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				throw new EpException(MessageConst.ERROR_750013); // At least one row should be in Agency section.
 			}
 			
-		 if(reqDTO.getCtContract().isBondReq() && !contractVer.getCtPerformanceBonds().isEmpty()) {
+		 if(reqDTO.getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
 			 
-		        double bondAmount = 0.0;
-			
-		        for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
-					
-		        	if(performanceBond.getRecordStatusFlg().intValue() == 1) {
-		        		performanceBond.setRecordStatus(true);
-		        	} else {
-		        		performanceBond.setRecordStatus(false);
-		        	}
+			   if(contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty()) {
+				     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
+		
+			   } else {
+			                double bondAmount = 0.0;
+		                    for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
+					                if(performanceBond.getRecordStatusFlg().intValue() == 1) {
+		        	            	      performanceBond.setRecordStatus(true);
+		        	                } else {
+		        		                 performanceBond.setRecordStatus(false);
+		                 	        }
 		        	
-		        	if(performanceBond.isRecordStatus()) {
-					        bondAmount = bondAmount + performanceBond.getBondAmount();
-					
-					       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
-						         throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
-					       
-					      /* SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-			               
-					       String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			               String todate = dateFormat.format(performanceBond.getExpDate());
-						   
-			               int startDay = Integer.valueOf(expDate.substring(0, 2));
-						   int startMonth = Integer.valueOf(expDate.substring(3, 5));
-						   int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
-						   
-						   int endDay = Integer.valueOf(todate.substring(0, 2));
-						   int endMonth = Integer.valueOf(todate.substring(3, 5));
-						   int endYear = Integer.valueOf(todate.substring(6, todate.length()));
-			
-					      if(startDay != endDay || startMonth != endMonth  || startYear != endYear)
-						      throw new EpException(MessageConst.ERROR_750049); */
-					 }
-		        }
-				if(bondAmount != 0.0) {
-					int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
-					  if( retval >0 ){
-				    	throw new EpException(MessageConst.ERROR_750048);
-					  }
-					  if(retval < 0){
-						  throw new EpException(MessageConst.ERROR_750050);  
-					  }
-				}	
-			}
+		        	               if(performanceBond.isRecordStatus()) {
+					                   bondAmount = bondAmount + performanceBond.getBondAmount();
+                                       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
+						                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
+					                   }
+		                       }
+				       
+		                    if(bondAmount != 0.0) {
+					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
+					              if( retval >0 ){
+				                     	throw new EpException(MessageConst.ERROR_750048);
+					              }
+					             if(retval < 0){
+						             throw new EpException(MessageConst.ERROR_750050);  
+					            }
+					     }
+				     }	
+			  }
 		 
 		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 		    	
-		    	if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().isEmpty()) &&
-		    	       (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().isEmpty())) {
-		    		    
-		    		     if(getManagedBean().getCtContract().isFrequencySchedule()){
-		    		    	  throw new EpException(MessageConst.ERROR_100022,new String[] { "Fulfilment Schedule" });
-		 			     }else{
-		 			    	throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Payment" });
-		 			     }
-		    	   }
-		    		
+		    	   if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().isEmpty()) && getManagedBean().getCtContract().isFrequencySchedule()) {
+		    		   throw new EpException(MessageConst.ERROR_100022,new String[] { "Fulfilment Schedule" });
+		          
+		    	   } else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().isEmpty() && !getManagedBean().getCtContract().isFrequencySchedule()) {
+		    			throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Payment" });
+		 			}
+		    	 
 		    		 if(contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty()) {
 		    		      for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
 				                 if(progressivePayment.getPhaseNo()== null) {
@@ -2798,5 +2782,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     		ex.printStackTrace();
     	}
     	return null;
+    }
+    
+    public boolean getConditionalValue(){
+    	if(getManagedBean().isViewContract()) {
+    		return true;
+    	} else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode() == ParameterConst.FULFILMENT_TYPE_ONE_OFF
+    			&& getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 500000) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
 }

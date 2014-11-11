@@ -20,7 +20,8 @@
 			  </h:panelGrid>
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 			  <h:panelGrid columns="3">
-		 	  	<p:inputText for="physicalNo" maxlength="30" style="width:170px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+		 	  	<p:inputText for="physicalNo" maxlength="30" style="width:170px;" 
+		 	  	   disabled="#{contractDetailsBackingBean.getConditionalValue()}"
 		 	    	value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
 		 	    <p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
