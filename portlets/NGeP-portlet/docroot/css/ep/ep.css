@@ -1287,6 +1287,10 @@ important;
 	background-color: #F4F4F4;
 }
 
+.ui-chkbox-box.ui-state-disabled {
+	opacity: 1;
+}
+
 .ui-inputfield.ui-inputtext.ui-corner-all,.ui-selectonemenu.ui-corner-all,.ui-selectonemenu-panel.ui-corner-all,.ui-selectonemenu-label.ui-inputfield.ui-corner-all,.ui-selectonemenu-trigger.ui-state-default.ui-corner-right
 	{
 	-moz-border-radius: 0px;
