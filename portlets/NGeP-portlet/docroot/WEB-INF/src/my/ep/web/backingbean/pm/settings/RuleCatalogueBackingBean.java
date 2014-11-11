@@ -721,11 +721,11 @@ public class RuleCatalogueBackingBean extends
 						&& ruleTypeValue.getExpDate() == null) {
 					ruleTypeValue.setExpDate(currentDate);
 				}
-				if (!isValidDateRange(ruleTypeValue.getEffDate(),
-						ruleTypeValue.getExpDate())) {
-					throw new EpException(MessageConst.ERROR_770111,
-							new String[] { ruleType.getRuleTypeDesc() });
-				}
+//				if (!isValidDateRange(ruleTypeValue.getEffDate(),
+//						ruleTypeValue.getExpDate())) {
+//					throw new EpException(MessageConst.ERROR_770111,
+//							new String[] { ruleType.getRuleTypeDesc() });
+//				}
 
 			}
 			// TODO validation check/ Date overlapping
@@ -871,17 +871,18 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveFeeExemptionForOrgItem() {
+		log.info("..............saveFeeExemptionForOrgItem..............");
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForOrgAndItem());
 
-		for (PmFeeExemption exemption : exemptionList) {
-			if (!isValidDateRange(exemption.getEffDate(),
-					exemption.getExpDate())) {
-				throw new EpException(MessageConst.ERROR_770113,
-						new String[] {});
-			}
-		}
+//		for (PmFeeExemption exemption : exemptionList) {
+//			if (!isValidDateRange(exemption.getEffDate(),
+//					exemption.getExpDate())) {
+//				throw new EpException(MessageConst.ERROR_770113,
+//						new String[] {});
+//			}
+//		}
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getItemId().getItemId() == null) {// clear empty
 															// objects
@@ -1057,13 +1058,13 @@ public class RuleCatalogueBackingBean extends
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForContract());
 
-		for (PmFeeExemption exemption : exemptionList) {
-			if (!isValidDateRange(exemption.getEffDate(),
-					exemption.getExpDate())) {
-				throw new EpException(MessageConst.ERROR_770113,
-						new String[] {});
-			}
-		}
+//		for (PmFeeExemption exemption : exemptionList) {
+//			if (!isValidDateRange(exemption.getEffDate(),
+//					exemption.getExpDate())) {
+//				throw new EpException(MessageConst.ERROR_770113,
+//						new String[] {});
+//			}
+//		}
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getRequestItemId().getRequestNoteItemId() == null) {// clear
 																				// empty
@@ -1162,13 +1163,13 @@ public class RuleCatalogueBackingBean extends
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForComodity());
 
-		for (PmFeeExemption exemption : exemptionList) {
-			if (!isValidDateRange(exemption.getEffDate(),
-					exemption.getExpDate())) {
-				throw new EpException(MessageConst.ERROR_770113,
-						new String[] {});
-			}
-		}
+//		for (PmFeeExemption exemption : exemptionList) {
+//			if (!isValidDateRange(exemption.getEffDate(),
+//					exemption.getExpDate())) {
+//				throw new EpException(MessageConst.ERROR_770113,
+//						new String[] {});
+//			}
+//		}
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getFeeExemptionId() == null) {// set ExemptionType for
 														// new FeeExemptions
