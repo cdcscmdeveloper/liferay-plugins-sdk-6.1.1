@@ -12,6 +12,9 @@
 		<ac:title
 			value="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.notice' : 'lbl.sc.notice.board.tender.notice']}" />
 		<div class="clear"></div>
+		<p:messages id="tenderDetails" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" severity="error, info" />
+
 		<p:panel>
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
@@ -134,17 +137,17 @@
 
 		</p:panel>
 
-		
-			<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
-			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
-				<ui:param name="bsvDetails"
-					value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
-				<ui:include src="qtlocationbriefingdtls.xhtml"></ui:include>
-			</c:if>
-			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
-				<ui:include src="nbZones.xhtml"></ui:include>
-			</c:if>
-		
+
+		<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
+		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
+			<ui:param name="bsvDetails"
+				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
+			<ui:include src="qtlocationbriefingdtls.xhtml"></ui:include>
+		</c:if>
+		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+			<ui:include src="nbZones.xhtml"></ui:include>
+		</c:if>
+
 
 		<p:panel header="#{lbl['lbl.qt.nb.contactPersonDtl']}"
 			toggleable="true">
@@ -193,12 +196,12 @@
 
 				<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
 
-					<p:commandLink
-						action="#{noticeBoardBackingBean.downloadFile(document.scQtDocReportAttachment)}"
-						update="doctbl">
-						<p:graphicImage library="ep/images/design" name="download.png"
-							value="/resources/ep/images/design/download.png" />
-					</p:commandLink>
+					<p:commandButton icon="ui-icon-download"
+						style="background-color:transparent !important; border:0px none;"
+						ajax="false"
+						action="#{noticeBoardBackingBean.downloadFile(document.scQtDocReportAttachment)}" />
+
+
 
 				</p:column>
 
@@ -206,7 +209,9 @@
 			<p:spacer height="20px" />
 			<div align="right">
 				<p:commandButton ajax="false" value="Download All"
-					actionListener="#{noticeBoardBackingBean.downloadAllDocuments}" />
+					icon="ui-icon-download"
+					style="background-color:transparent !important; border:0px none;"
+					action="#{noticeBoardBackingBean.downloadAllQTDocuments(noticeBoardBackingBean.managedBean.scQt.qtId)}" />
 
 			</div>
 
