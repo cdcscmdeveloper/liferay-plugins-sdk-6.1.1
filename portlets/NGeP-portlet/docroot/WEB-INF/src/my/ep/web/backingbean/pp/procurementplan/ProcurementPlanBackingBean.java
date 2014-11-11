@@ -126,6 +126,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
+	
+	/**
+	 * Pre-loading from Create Plan
+	 */
+	public void preLoadingCreate(){
+		log.info("preLoadingCreate");
+		this.resetManagedBean();
+		this.retrievePlanTypeMapper();
+		initialPlanDetails();
+		loadDefaultButtons();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
+	}
+
 
 
 	/**
@@ -205,10 +220,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(id!=null && id>0){
 			loadPlanDetails(id, true);
 			loadDefaultButtons();
-		}else{
-			initialPlanDetails();
-			loadDefaultButtons();
 		}
+//		else{
+//			initialPlanDetails();
+//			loadDefaultButtons();
+//		}
 	
 		return NAV_TO_MAINTAIN;
 	}
