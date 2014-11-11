@@ -246,6 +246,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	  public void preRenderContract() {
 		    renewSesionObject();
+		    getManagedBean().setAutoUpdate(true);
 		    FacesContext fc = FacesContext.getCurrentInstance();
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_PAGE);
 	   }
@@ -710,21 +711,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
     	IContractSO contractSO = null;
     	try{
-	 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-	 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
-	 			String agencyRemark = getManagedBean().getContractVer().getAgencyRemarks().get(0).getRemark();
-	 			String zoneRemark = getManagedBean().getContractVer().getZoneRemarks().get(0).getRemark();
-	 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
-	 			String deductionRemark = getManagedBean().getContractVer().getDeductionRemarks().get(0).getRemark();
-	 			String scheduleRemark = getManagedBean().getContractVer().getScheduleRemarks().get(0).getRemark();
-	 			String settingRemark = getManagedBean().getContractVer().getSettingRemarks().get(0).getRemark();
-	 			if((remark == null || remark.length() == 0) && (agencyRemark == null || agencyRemark.length() == 0) &&  (zoneRemark == null || zoneRemark.length() == 0)
-	 					&& (itemRemark == null || itemRemark.length() == 0) && (deductionRemark == null || deductionRemark.length() == 0)
-	 					&& (scheduleRemark == null || scheduleRemark.length() == 0) && (settingRemark == null || settingRemark.length() == 0)) {
-	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-	 			}
-	 		}
-			
+    		   validateCtContractVer(action);
 			   ContractReqDTO reqDTO = new ContractReqDTO();
 			   reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			   reqDTO.setOutcome(action);
@@ -759,8 +746,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        reqDTO.setUserMap(getManagedBean().getUserMap());
 		        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			    reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-			 
-			    validateCtContractVer(reqDTO);
+			    if(this.getManagedBean().getPmDigiSign() !=null){
+					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+				}
+			    
 			    contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
 	            ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		      
@@ -804,17 +793,36 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
    
     
-    private void validateCtContractVer(ContractReqDTO reqDTO) throws EpException {
-		CtContractVer contractVer = reqDTO.getCtContractVer();
+    public void validateCtContractVer(String action) throws EpException {
+    	CtContractVer contractVer = getManagedBean().getContractVer();
 		Date today = new Date();
+		getManagedBean().setAutoUpdate(true);
+		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+ 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+ 			String agencyRemark = getManagedBean().getContractVer().getAgencyRemarks().get(0).getRemark();
+ 			String zoneRemark = getManagedBean().getContractVer().getZoneRemarks().get(0).getRemark();
+ 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+ 			String deductionRemark = getManagedBean().getContractVer().getDeductionRemarks().get(0).getRemark();
+ 			String scheduleRemark = getManagedBean().getContractVer().getScheduleRemarks().get(0).getRemark();
+ 			String settingRemark = getManagedBean().getContractVer().getSettingRemarks().get(0).getRemark();
+ 			if((remark == null || remark.length() == 0) && (agencyRemark == null || agencyRemark.length() == 0) &&  (zoneRemark == null || zoneRemark.length() == 0)
+ 					&& (itemRemark == null || itemRemark.length() == 0) && (deductionRemark == null || deductionRemark.length() == 0)
+ 					&& (scheduleRemark == null || scheduleRemark.length() == 0) && (settingRemark == null || settingRemark.length() == 0)) {
+ 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);	
+ 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 			}
+ 		}
 		
 		if(getManagedBean().isUpdateContract() && getManagedBean().getAttachmentList().isEmpty()){
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750051); 
 		}
 		
 		if(contractVer.getCtContractZones()!=null) {
 			for(CtContractZone contractZone : contractVer.getCtContractZones()) {
 				if(contractZone.getDeliveryTerm()==0) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
 				}
 			}
@@ -822,14 +830,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
 				|| contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
-			if(reqDTO.getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
+			if(getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
 					&& contractVer.getCtAgencies().size() == 0){
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_750013); // At least one row should be in Agency section.
 			}
 			
-		 if(reqDTO.getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
+		 if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
 			 
 			   if(contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty()) {
+				   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
 		
 			   } else {
@@ -844,6 +854,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        	               if(performanceBond.isRecordStatus()) {
 					                   bondAmount = bondAmount + performanceBond.getBondAmount();
                                        if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
+                                    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
 					                   }
 		                       }
@@ -851,9 +862,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		                    if(bondAmount != 0.0) {
 					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					              if( retval >0 ){
+					            	  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				                     	throw new EpException(MessageConst.ERROR_750048);
 					              }
 					             if(retval < 0){
+					            	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						             throw new EpException(MessageConst.ERROR_750050);  
 					            }
 					     }
@@ -863,19 +876,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 		    	
 		    	   if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().isEmpty()) && getManagedBean().getCtContract().isFrequencySchedule()) {
+		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 		    		   throw new EpException(MessageConst.ERROR_100022,new String[] { "Fulfilment Schedule" });
 		          
 		    	   } else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().isEmpty() && !getManagedBean().getCtContract().isFrequencySchedule()) {
+		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 		    			throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Payment" });
 		 			}
 		    	 
 		    		 if(contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty()) {
 		    		      for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
 				                 if(progressivePayment.getPhaseNo()== null) {
+				                	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				        	           throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
 				                  }
 				        
 				                 if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ) {
+				                	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				            	       throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
 				                  }
 			                 }
@@ -888,17 +905,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 					if(ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0 && 
 							!ctAgency.getOrgProfile().getParentOrgProfile().getOrgName().equalsIgnoreCase(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName())){
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_750015); 
 						// Approval document is mandatory for AP178 agency. Please upload the document.
 					}
 				}
 				if(ceilingAmt > contractVer.getCtContractValue().getContractAmount().doubleValue()){
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750014); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
 				
 			}
 			
-			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) && reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.getSelectedApprovers().size()==0) {
+			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_750017); //Approver is mandatory for document submission. Please select at least one approver.
 			}
 			
@@ -918,6 +938,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 							totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 						}
 						if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 							throw new EpException(MessageConst.ERROR_750016, new String[]{item.getItemName()});
 						}
 					}
@@ -928,6 +949,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			if(contractVer.getCtContractValue().getContractAmount().doubleValue() < ContractConst.CONTRACT_THRESHOLD_VALUE) {
 				if(contractVer.getCtAmendment().isItemPriceChange() || contractVer.getCtAmendment().isQuantityChange() 
 						|| contractVer.getCtAmendment().isValueChange()){
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750022);// If original contract value is less than RM500k (threshold value for tender), 
 							//CA only can extend the contract period and change the clause.
 				}
@@ -937,6 +959,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				c.add(Calendar.DATE, ContractConst.CONTRACT_EXTEND_BEFORE_DAYS);
 				
 				if(contractVer.getCtContractValue().getExpDate().before(c.getTime())){
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750023);//CA only can extend the contract period 3 months before contract expired.
 				}
 			}
@@ -956,11 +979,27 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						}
 					}
 					if(sumOfCeilingQuantites < maxCeilingQty.doubleValue()){
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_750024);//Total ceiling amount for all PTJ defined in contract must be equals to contract amount.
 					}
 				}
 			}
 		}
+		
+		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
+				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+				//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+				StringBuilder sb = new StringBuilder();
+				sb.append(contractVer.getCtContract().getContractNo());
+				sb.append(contractVer.getDocType());
+				sb.append(contractVer.getCtContractValue().getEffDate());
+				sb.append(contractVer.getCtContractValue().getExpDate());
+				sb.append(contractVer.getCtContractValue().getContractAmount());
+				sb.append(action);			
+				getManagedBean().setTextBeforeSign(sb.toString());	
+				getManagedBean().setButtonAction(action);
+			}
 	}
     
     public void setBondRecordStatus(CtContractVer contractVar){
@@ -2794,4 +2833,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     		return false;
     	}
     }
+    
+	public String preSubmitContract(my.ep.persistence.entity.pm.common.PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveContract(getManagedBean().getButtonAction());
+	}
+	
+	public void disableUpdate(){
+		getManagedBean().setAutoUpdate(false);
+	}
 }

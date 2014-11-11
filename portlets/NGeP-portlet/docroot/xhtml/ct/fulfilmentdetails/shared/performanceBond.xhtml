@@ -103,7 +103,7 @@
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;">
 					 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				         <p:ajax event="change" process="@form" update="tableBond" listener=""></p:ajax>
+				         <p:ajax event="change" process="@form" update="tableBond"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
