@@ -802,20 +802,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				return false;
 			//last
 			}else if(this.getManagedBean().isNewCategory()){
-				//tambah api baru
-				
-				/*CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setMainCatCode(this.getManagedBean().getPmCategoryL1().getCategoryL1Code());
-				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL1ByCode(reqDTO);
-				if(resDTO.getCategoryL1()!=null){
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setCategoryL2Id(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
+				reqDTO.setSubDivCode(this.getManagedBean().getPmCategoryL3().getCategoryL3Code());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL3ListByCode(reqDTO);
+				if(resDTO.getCategoryL3List()!=null && resDTO.getCategoryL3List().size()>0){
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 									MessageUtils.getMessage(
-											MessageConst.ERROR_775001,
+											MessageConst.ERROR_775003,
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return false;
-				}*/
+				}
 			}
 			
 		}catch(Exception e){
