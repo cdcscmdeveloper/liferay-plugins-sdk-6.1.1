@@ -583,6 +583,8 @@ public class QTCommitteBackingBean extends
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
+		RequestContext.getCurrentInstance().execute("screen2.hide()");
+
 	}
 
 	/**
@@ -950,6 +952,7 @@ public class QTCommitteBackingBean extends
 		}
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
+		// java.util.Collections.sort(scCommittee.getScCommitteeMembers());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
 		// Specification Committee validation
