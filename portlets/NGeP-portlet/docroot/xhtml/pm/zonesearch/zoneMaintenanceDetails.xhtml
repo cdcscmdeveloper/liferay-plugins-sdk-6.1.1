@@ -91,12 +91,17 @@
 			value="#{zoneBackingBean.managedBean.states}"
 			selection="#{zoneBackingBean.managedBean.selectedStates}"
 			rowKey="#{state.stateId}" rowIndexVar="index">
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:ajax event="rowSelect" listener="#{zoneBackingBean.removeDisabledStates}" update="searchStateId"></p:ajax>
+			<p:ajax event="rowUnselect" listener="#{zoneBackingBean.removeDisabledStates}" update="searchStateId"></p:ajax>
+			<p:ajax event="rowSelectCheckbox" listener="#{zoneBackingBean.removeDisabledStates}" update="searchStateId"></p:ajax>
+			<p:ajax event="rowUnselectCheckbox" listener="#{zoneBackingBean.removeDisabledStates}" update="searchStateId"></p:ajax>
+			<p:ajax event="rowDblselect" listener="#{zoneBackingBean.removeDisabledStates}" update="searchStateId"></p:ajax>
+			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{state.existingState}"/>
 			<ac:paginator for="searchStateId"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">
+			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%" >
 				<h:outputText value="#{state.stateCode}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.state.name']}" style="width :40%">
+			<p:column headerText="#{lbl['lbl.pm.state.name']}" style="width :40%" >
 				<h:outputText value="#{state.stateName}" />
 			</p:column>
 		</p:dataTable>

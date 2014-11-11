@@ -33,6 +33,7 @@ public class ZoneManagedBean extends BaseManagedBean {
 
 	private List<PmState> stateList;
 	private PmState selectState;
+	private List<PmZone> pmZonesList;
 
 	public ZoneManagedBean() {
 		pmZone = new PmZone();
@@ -203,6 +204,20 @@ public class ZoneManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneSearchBean(ZoneSearchBean zoneSearchBean) {
 		this.zoneSearchBean = zoneSearchBean;
+	}
+
+	/**
+	 * @return the pmZonesList
+	 */
+	public List<PmZone> getPmZonesList() {
+		return pmZonesList;
+	}
+
+	/**
+	 * @param pmZonesList the pmZonesList to set
+	 */
+	public void setPmZonesList(List<PmZone> pmZonesList) {
+		this.pmZonesList = pmZonesList;
 	}
 
 }
