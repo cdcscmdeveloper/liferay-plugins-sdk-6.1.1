@@ -557,6 +557,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().getPmCategoryL3().setCategoryTypeCode(parameterResDTO.getPmParameter());
 			}
 			
+			if (!validatePmCategoryL3()){
+				return "/xhtml/pm/category/categoryl3.xhtml"; 
+			}
+			
 			//remove basic category if any
 			log.info("this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
 			if(this.getManagedBean().getSelectedBasicCategory() != null && !this.getManagedBean().getSelectedBasicCategory().isEmpty()) {
@@ -722,7 +726,103 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 
 	public boolean validatePmCategoryL3(){
-		
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		try{
+			if(this.getManagedBean().getPmCategoryL3().getCategoryL3Code()==null || this.getManagedBean().getPmCategoryL3().getCategoryL3Code().isEmpty()){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(this.getManagedBean().getPmCategoryL3().getCategoryName()==null || this.getManagedBean().getPmCategoryL3().getCategoryName().isEmpty()){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(this.getManagedBean().isNewCategory() && this.getManagedBean().getPmCategoryL3().getSupplierTypeCodeVal()==0){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(!this.getManagedBean().isNewCategory() && (this.getManagedBean().getPmCategoryL3().getSupplierTypeCode()==null || this.getManagedBean().getPmCategoryL3().getSupplierTypeCode().getParameterId()==0)){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(this.getManagedBean().isNewCategory() && this.getManagedBean().getPmCategoryL3().getCategoryTypeCodeVal()==0){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(!this.getManagedBean().isNewCategory() && (this.getManagedBean().getPmCategoryL3().getCategoryTypeCode()==null || this.getManagedBean().getPmCategoryL3().getCategoryTypeCode().getParameterId()==0)){
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(
+											MessageConst.ERROR_715008,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return false;
+			}else if(this.getManagedBean().getPmCategoryL3().getPaidUpCapital()==null){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(this.getManagedBean().getPmCategoryL3().getBumiPercentage()==null || this.getManagedBean().getPmCategoryL3().getBumiPercentage()==0){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}else if(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() && (this.getManagedBean().getPmCategoryL3().getPmBasicCategory()==null || this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()==0)){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_775004,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			//last
+			}else if(this.getManagedBean().isNewCategory()){
+				//tambah api baru
+				
+				/*CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setMainCatCode(this.getManagedBean().getPmCategoryL1().getCategoryL1Code());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL1ByCode(reqDTO);
+				if(resDTO.getCategoryL1()!=null){
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(
+											MessageConst.ERROR_775001,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return false;
+				}*/
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			categoryCodeSO = null;
+		}
 		return true;
 	}
 	
