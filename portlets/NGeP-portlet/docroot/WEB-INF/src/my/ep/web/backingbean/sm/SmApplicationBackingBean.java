@@ -1830,6 +1830,8 @@ public class SmApplicationBackingBean extends
 				.getSelectedCompanyExperience());
 		getManagedBean().getSelectedCompanyExperience()
 				.getSmCompanyExperienceCats().add(cat);
+		getManagedBean().setSelected(false);
+		getManagedBean().setSelectedAll(false);
 
 	}
 
@@ -1871,7 +1873,8 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Category" });
 		}
-
+		getManagedBean().setSelected(false);
+		getManagedBean().setSelectedAll(false);
 	}
 
 	public void assignNewCompanyExperience() {
@@ -6073,6 +6076,47 @@ public class SmApplicationBackingBean extends
 							getManagedBean().isSupplierUser()));
 		}
 
+	}
+
+	public void selectAll() {
+
+		if (getManagedBean().isSelectedAll()) {
+			getManagedBean().setSelected(true);
+			getManagedBean().setSelectedCompExpCats(
+					getManagedBean().getSelectedCompanyExperience()
+							.getSmCompanyExperienceCats());
+		} else {
+			getManagedBean().setSelected(false);
+			getManagedBean().setSelectedCompExpCats(null);
+
+		}
+
+	}
+
+	public void selected(int index) {
+
+		List<SmCompanyExperienceCat> selectedCompExpCatsList = getManagedBean()
+				.getSelectedCompExpCats();
+
+		if (getManagedBean().isSelected()) {
+			if (selectedCompExpCatsList == null) {
+				selectedCompExpCatsList = new ArrayList<SmCompanyExperienceCat>();
+			}
+			selectedCompExpCatsList.add(getManagedBean()
+					.getSelectedCompanyExperience()
+					.getSmCompanyExperienceCats().get(index));
+
+		} else {
+
+			if (selectedCompExpCatsList.contains(getManagedBean()
+					.getSelectedCompanyExperience()
+					.getSmCompanyExperienceCats().get(index))) {
+				selectedCompExpCatsList.remove(getManagedBean()
+						.getSelectedCompanyExperience()
+						.getSmCompanyExperienceCats().get(index));
+			}
+		}
+		getManagedBean().setSelectedCompExpCats(selectedCompExpCatsList);
 	}
 
 	// private void generateSuppDocPdfFile(VelocityContext context)

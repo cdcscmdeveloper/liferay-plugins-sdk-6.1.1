@@ -294,6 +294,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SelectItem[] identificationTypes;
 	private SmAttachment cancellationAttachment;
 	private boolean disableIcEmail;
+	private boolean selectedAll;
+	private boolean selected;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2226,6 +2228,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisableIcEmail(boolean disableIcEmail) {
 		this.disableIcEmail = disableIcEmail;
+	}
+
+	public boolean isSelectedAll() {
+		return selectedAll;
+	}
+
+	public void setSelectedAll(boolean selectedAll) {
+		this.selectedAll = selectedAll;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 }
