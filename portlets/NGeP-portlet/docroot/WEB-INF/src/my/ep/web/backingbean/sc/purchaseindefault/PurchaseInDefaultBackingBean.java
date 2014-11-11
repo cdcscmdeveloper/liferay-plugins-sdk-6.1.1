@@ -225,7 +225,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				// validate  quantity
 				
 		    	if(scPurchaseInDefault.getQuantity() != null && scPurchaseInDefault.getQuantity().intValue() < 0){
-		    		throw new EpException(MessageConst.INFO_100033, new String[]{"Quatity" ,"0"});
+					throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "0"});
 		    	}
 				
 				if(scPurchaseInDefault.getContractedItem() != null) {
@@ -256,7 +257,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					super.renewSesionObject();
 					
 				} else {
-					throw new EpException("Failed.");
+					throw new EpException(MessageConst.ERROR_700020);
 				}
 			} finally {
 				purchaseInDefaultSO = null;
@@ -338,7 +339,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   }
 
 		   } else {
-			   throw new EpException("Failed.");
+			   throw new EpException(MessageConst.ERROR_700020);
 		   }
 		   
 	   } finally {
