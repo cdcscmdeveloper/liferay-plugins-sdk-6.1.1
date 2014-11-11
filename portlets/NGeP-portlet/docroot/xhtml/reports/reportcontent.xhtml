@@ -71,13 +71,15 @@
 		            </div>
 		            
 		           <h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
-		            <div align="right">		            		                    	
-		           <p:commandLink  actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="@form">
-				    <h:graphicImage  value="/resources/ep/images/design/icon_generate.png" />				   
-					</p:commandLink>										   
-				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" process="@form"  update="@form">
-				    <h:graphicImage value="/resources/ep/images/design/icon_reset.png" styleClass="tasklist_title1"/>
-				    </h:commandLink>					
+		            <div align="right">	
+		            <p:commandButton value="#{lbl['lbl.btn.generate']}"
+					icon="ui-icon-search"
+					action="#{reportBackingBean.generateReport}" oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
+					update="@form" process="@this" />
+					<p:commandButton value="#{lbl['lbl.so.reset']}"
+					action="#{reportBackingBean.resetReportForm}"
+					update="@form" icon="ui-icon-reset" resetValues="true"
+					partialSubmit="true" process="@this"/>           					
 				   </div>
 				   </h:panelGroup>
 
@@ -90,8 +92,6 @@
 								type="application/pdf" width="1100" height="500" />
 						</h:panelGroup>						
 					</p:dialog>
-					
-
 			<script type="text/javascript">
 			/*Function to hide the Iframe*/
 			function closeDialogBox(obj){
