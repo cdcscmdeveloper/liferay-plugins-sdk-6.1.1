@@ -5,20 +5,23 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:remove>
+
 	<p:panel header="#{lbl['lbl.sm.category']}">
 		<p:dataTable var="cType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
 			<p:column headerText="Category Type">
 				#{cType.pmParameter.pmParameterDescs[0].codeDesc}
 			</p:column>
 			
+			
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
-				<p:commandButton value="#{lbl['lbl.btn.download']}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.download']}"  ajax="false" action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cType.pmParameter.parameterCode)}">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
+				</p:commandButton>
 			</p:column>
 			
 		</p:dataTable>
 	</p:panel>
-	</ui:remove>
+	
 	
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}">
 		<p:dataTable var="addr" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}">
