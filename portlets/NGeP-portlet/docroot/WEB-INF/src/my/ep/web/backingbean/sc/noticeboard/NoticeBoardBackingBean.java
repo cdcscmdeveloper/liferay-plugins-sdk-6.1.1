@@ -1324,12 +1324,10 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
 	}
 
-	
-
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
 		IQTDetailSO detailSO;
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		NoticeBoardReqDTO boardReqDTO = new NoticeBoardReqDTO();
+		this.getManagedBean().setScQtDocReports(null);
+
 		QuationTenderResDTO resDTO = null;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1341,19 +1339,13 @@ public class NoticeBoardBackingBean extends
 			if (resDTO.getReports() != null && !resDTO.getReports().isEmpty()) {
 				this.getManagedBean().setScQtDocReports(resDTO.getReports());
 			}
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			boardReqDTO.setQtId(qtId);
-			NoticeBoardResDTO boardResDTO = qtNoticeBoardSO
-					.retrieveQtNoticeDtl(boardReqDTO);
-			ScQt scQt = boardResDTO.getScQt();
-			this.getManagedBean().setScQt(scQt);
+
 		} finally {
 			detailSO = null;
 		}
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-		qtDocumentsBackingBean.getManagedBean().setQt(
-				this.getManagedBean().getScQt());
+		qtDocumentsBackingBean.getManagedBean().setQt(null);
+		qtDocumentsBackingBean.getManagedBean().setQt(resDTO.getQtDetail());
 
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReports();
@@ -1378,13 +1370,14 @@ public class NoticeBoardBackingBean extends
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-	
-	public String constuctConditionFields(){
-		if(null != this.getManagedBean().getMinistryProfile()){
-		Long orgProfileId=this.getManagedBean().getMinistryProfile().getOrgProfileId();
-		if(null != orgProfileId){
-			return "parentOrgProfile.orgProfileId^"+orgProfileId;
-		}
+
+	public String constuctConditionFields() {
+		if (null != this.getManagedBean().getMinistryProfile()) {
+			Long orgProfileId = this.getManagedBean().getMinistryProfile()
+					.getOrgProfileId();
+			if (null != orgProfileId) {
+				return "parentOrgProfile.orgProfileId^" + orgProfileId;
+			}
 		}
 		return "";
 	}

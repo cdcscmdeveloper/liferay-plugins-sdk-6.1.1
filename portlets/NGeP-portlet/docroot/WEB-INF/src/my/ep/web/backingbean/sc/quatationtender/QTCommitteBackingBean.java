@@ -1159,14 +1159,14 @@ public class QTCommitteBackingBean extends
 		List<ScCommitteeMember> members = this.getManagedBean()
 				.getSelectedTabBean().getScQtCommittee().getScCommittee()
 				.getScCommitteeMembers();
-		for (ScCommitteeMember committeeMember : members) {
-			if (committeeMember.getIcPassport().equalsIgnoreCase(
-					member.getIcPassport())) {
+		for (int i = 0; i < members.size(); i++) {
+			if (members.get(i).getIcPassport()
+					.equalsIgnoreCase(member.getIcPassport())) {
 				List<PmParameterDesc> roles = getManagedBean().getRoleTypes();
-				for (PmParameterDesc parameter : roles) {
-					if (parameter.getPmParameter().getParameterId()
+				for (int j = 0; j < roles.size(); j++) {
+					if (roles.get(j).getPmParameter().getParameterId()
 							.equals(member.getMemberRole().getParameterId())) {
-						member.setMemberRole(parameter.getPmParameter());
+						member.setMemberRole(roles.get(j).getPmParameter());
 						break;
 					}
 				}
