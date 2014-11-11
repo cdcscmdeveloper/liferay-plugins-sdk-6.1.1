@@ -170,7 +170,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				throw new EpException(MessageConst.ERROR_770015);
 			}
 			//load user
-			PmUser pmUser = PmCommonUtil.retrieveUserById(id, false);
+			PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
 			pmUser.setPMP(pmUser.isPMP()?true:false);
 			pmUser.setIdentificationCode(pmUser.getIdentificationCode()==null ? new PmParameter() : pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());
@@ -202,8 +202,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private void populateUserAddress(PmUser pmUser){
 		logger.info("populateUserAddress");
 		try {
-			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUser.getUserId(), ProfileManagementConst.ADDRESS_USER);
-			this.getManagedBean().setUserAddress((addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : PmCommonUtil.getNewPmAddress());
+			List<PmAddressType> addressTypes  = pmUser.getPmAddressTypes();
+			PmAddressType userAddress = null;
+			for(PmAddressType addressType: addressTypes){
+				if(ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressType.getAddressType())){
+					userAddress = addressType;
+					break;
+				}
+				
+			}
+			this.getManagedBean().setUserAddress(userAddress!=null ? userAddress.getPmAddress() : PmCommonUtil.getNewPmAddress());
+//			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUser.getUserId(), ProfileManagementConst.ADDRESS_USER);
+//			this.getManagedBean().setUserAddress((addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : PmCommonUtil.getNewPmAddress());
 			
 	
 		} catch (Exception e) {
@@ -384,14 +394,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		if(StringUtils.isBlank(user.getEmail())){
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-		if(StringUtils.isBlank(user.getPreferredLanguage())){
-			throw new EpException(MessageConst.ERROR_770037);
-		}
-		if(user.getNotifyRemovalDay()==null 
-				|| (user.getNotifyRemovalDay()!=null 
-				&& user.getNotifyRemovalDay()==0)){
-			throw new EpException(MessageConst.ERROR_770038);
-		}
+//		if(StringUtils.isBlank(user.getPreferredLanguage())){
+//			throw new EpException(MessageConst.ERROR_770037);
+//		}
+//		if(user.getNotifyRemovalDay()==null 
+//				|| (user.getNotifyRemovalDay()!=null 
+//				&& user.getNotifyRemovalDay()==0)){
+//			throw new EpException(MessageConst.ERROR_770038);
+//		}
 
 	}
 	

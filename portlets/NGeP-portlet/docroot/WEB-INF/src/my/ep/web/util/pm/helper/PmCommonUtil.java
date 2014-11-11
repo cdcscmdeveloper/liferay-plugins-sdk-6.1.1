@@ -110,7 +110,32 @@ public class PmCommonUtil {
 		return pmAddress;
 	}
 	
-	
+	/**
+	 * retrieve pmUser without org info by id
+	 * @param id
+	 * @return PmUser
+	 */
+	public static PmUser retrieveUserWithoutOrgInfoById(Long id){
+		PmUser pmUser = new PmUser();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserProfileByUserId(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmUser = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
+		}finally{
+			userSO = null;
+		}		
+		return pmUser;
+	}
+
+
 	/**
 	 * set default notification mode and preferences
 	 * @param pmUser
