@@ -2189,6 +2189,8 @@ public class SpecificationBackingBean extends
 						localcheckList);
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
+				Collections.sort(this.getManagedBean()
+						.getScQtCheckSt2financeProposalList());
 
 			}
 		} finally {
@@ -10678,6 +10680,7 @@ public class SpecificationBackingBean extends
 											.getScQt().getEvaluationType()) && this
 									.getManagedBean().getScQt()
 									.isTechEvaluationReq())) {
+						this.getManagedBean().setScQtCheckSt2techProposal(null);
 						retriveTechnicalCheckList();
 					}
 					this.getManagedBean().setIndex(-1);
