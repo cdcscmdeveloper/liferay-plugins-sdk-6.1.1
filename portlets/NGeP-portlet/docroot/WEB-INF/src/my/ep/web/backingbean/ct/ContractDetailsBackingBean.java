@@ -2781,14 +2781,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	return true;
     }
     
-    public Date getExactDate() throws ParseException{
+    public Date getExactDate(){
     	
-    	  SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-    	   String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-          int startDay = Integer.valueOf(expDate.substring(0, 2));
-		   int startMonth = Integer.valueOf(expDate.substring(3, 5));
-		   int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
-		   String toDate = startDay + "/" + startMonth + "/"+ startYear;
-		   return (Date)dateFormat.parse(toDate);
+    	 SimpleDateFormat dateFormat = null;
+    	
+    	try{
+    	        dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+    	        String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+                int startDay = Integer.valueOf(expDate.substring(0, 2));
+		        int startMonth = Integer.valueOf(expDate.substring(3, 5));
+		        int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
+		        String toDate = startDay + "/" + startMonth + "/"+ startYear;
+		        return (Date)dateFormat.parse(toDate);
+    
+    	}catch(ParseException ex) {
+    		ex.printStackTrace();
+    	}
+    	return null;
     }
 }
