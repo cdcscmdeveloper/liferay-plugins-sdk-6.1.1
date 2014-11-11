@@ -259,6 +259,9 @@
 		</p:dataTable>
 		<p>&nbsp;</p>
 		<div class="ppRightBtn">
+		<p:commandButton style="float:right"
+				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
+				action="#{categoryBackingBean.addSubCategory()}" />
 			<ac:lov 
 			selectionMode="multiple"
 			id="pmMachineLovId" lovId="PM_MACHINE" size="26"
@@ -268,9 +271,7 @@
 				value="#{catalogueBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine.machineId}"
 				conditionField="recordStatus^1">
 			</ac:lov>
-			<p:commandButton
-				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
-				action="#{categoryBackingBean.addSubCategory()}" />
+			
 		</div>
 		</p:panel>
 		<ac:lovPopup />
