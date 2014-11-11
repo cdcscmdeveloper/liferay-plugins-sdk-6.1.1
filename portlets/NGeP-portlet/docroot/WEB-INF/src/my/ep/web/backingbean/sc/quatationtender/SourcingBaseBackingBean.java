@@ -354,32 +354,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
-		for (File file : files) {
-			zos.putNextEntry(new ZipEntry(file.getName()));
+		try {
+			for (File file : files) {
+				zos.putNextEntry(new ZipEntry(file.getName()));
 
-			// Get the file
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(file);
-			} catch (FileNotFoundException fnfe) {
-				zos.write(("ERROR: Could not find file " + file.getName())
-						.getBytes());
+				// Get the file
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(file);
+				} catch (FileNotFoundException fnfe) {
+					zos.write(("ERROR: Could not find file " + file.getName())
+							.getBytes());
+					zos.closeEntry();
+					continue;
+				}
+				BufferedInputStream fif = new BufferedInputStream(fis);
+				// Write the contents of the file
+				int data = 0;
+				while ((data = fif.read()) != -1) {
+					zos.write(data);
+				}
+				fif.close();
 				zos.closeEntry();
-				continue;
 			}
-			BufferedInputStream fif = new BufferedInputStream(fis);
-			// Write the contents of the file
-			int data = 0;
-			while ((data = fif.read()) != -1) {
-				zos.write(data);
-			}
-			fif.close();
-			zos.closeEntry();
-		}
-		zos.close();
-		response.flushBuffer();
+		} catch (Exception ex) {
 
-		FacesContext.getCurrentInstance().responseComplete();
+		} finally {
+			zos.close();
+			response.flushBuffer();
+
+			FacesContext.getCurrentInstance().responseComplete();
+		}
 	}
 
 	public void converthtmlToDocFile(String content, String filePath) {
@@ -588,7 +593,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (scRemarks.size() == 0
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
-					|| (workFlowStatus != null && prevRemark.getScWorkFlowStatus() !=null && !prevRemark.getScWorkFlowStatus().getWorkflowStatusId().equals(workFlowStatus.getWorkflowStatusId()))) {
+					|| (workFlowStatus != null
+							&& prevRemark.getScWorkFlowStatus() != null && !prevRemark
+							.getScWorkFlowStatus().getWorkflowStatusId()
+							.equals(workFlowStatus.getWorkflowStatusId()))) {
 
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
@@ -833,7 +841,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} else {
 
 			qtCategory.setPmCategoryL1(new PmCategoryL1());
-			//qtCategory.setPmCategoryL2(new PmCategoryL2());
+			// qtCategory.setPmCategoryL2(new PmCategoryL2());
 
 		}
 
@@ -895,8 +903,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return buffer.toString();
 	}
-	
-	public static String getMessageCommon(String name){
-		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+
+	public static String getMessageCommon(String name) {
+		return ResourceBundleUtils.getMessage(name,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
 	}
 }
