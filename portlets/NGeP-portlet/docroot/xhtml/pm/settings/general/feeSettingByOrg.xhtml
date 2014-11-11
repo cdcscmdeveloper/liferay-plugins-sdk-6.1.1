@@ -30,7 +30,7 @@
 					<f:facet name="header">
 					         <h:outputText value="*" styleClass="mandatory" /> <h:outputText value=" #{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			                   	</f:facet>
-					<ac:lov id="lovSupplier" lovId="SM_SUPPLIER" label="Organization / supplier Name"
+					<ac:lov id="lovSupplier" lovId="SM_SUPPLIER_WITH_PROFILE" label="Organization / supplier Name"
 						size="25" required="true" readonly="true"
 						headerText="Supplier" update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
 						postUpdateListener="ruleCatalogueBackingBean.updateOrgProfileForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem)"
@@ -100,10 +100,7 @@
 						update="@form">
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 					</p:commandLink>
-					<p:tooltip for="deleteFee">
-						<h:outputText value="#{lbl['lbl.Pm.settings.fee.remove.tooltip']}"
-							escape="false" />
-					</p:tooltip>
+					
 				</p:column>
 			</p:dataTable>
 
