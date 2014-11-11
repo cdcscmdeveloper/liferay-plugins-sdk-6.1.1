@@ -50,6 +50,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -310,7 +311,12 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
-	 public Date getCurrentDate() {
-	        return new Date();
-	    }
+	public Date getCurrentDate() {
+		 return new Date();
+	 }
+	 
+	 public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.suspension", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}
 }

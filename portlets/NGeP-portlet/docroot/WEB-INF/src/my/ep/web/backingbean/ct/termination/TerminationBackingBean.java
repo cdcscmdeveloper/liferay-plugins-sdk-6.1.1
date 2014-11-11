@@ -78,6 +78,7 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -626,5 +627,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     
     public boolean isApprover() {
 		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
+	}
+    
+    public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.termination", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
 	}
 }
