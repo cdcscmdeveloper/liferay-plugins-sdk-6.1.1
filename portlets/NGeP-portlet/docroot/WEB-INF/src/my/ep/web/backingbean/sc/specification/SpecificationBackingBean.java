@@ -7343,6 +7343,14 @@ public class SpecificationBackingBean extends
 			String totalNoOfYearsType = this.getManagedBean()
 					.getCompanyScoreType();
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
+			if (null != checkList && null != checkList.getScQtCheckListValue()) {
+				int year = Calendar.getInstance().get(Calendar.YEAR);
+				if (null != checkList.getScQtCheckListValue().getYear()) {
+					if (checkList.getScQtCheckListValue().getYear().intValue() > year) {
+						throw new EpException(MessageConst.ERROR_760169);
+					}
+				}
+			}
 			if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
 				ScQtCheckListScore noContract = this.getManagedBean()
 						.getScQtCheckListScore();
@@ -11304,6 +11312,20 @@ public class SpecificationBackingBean extends
 		if (evaluationType.equals("2")) {
 			getManagedBean().getScQt().setTechEvaluationReq(true);
 		}
+		List<ScQtCheckList> techCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+
+		if (null != techCheckList) {
+			for (ScQtCheckList qtCheckList : techCheckList) {
+				qtCheckList
+						.getScQtDoc()
+						.getTplSpecMaster()
+						.setScoringReq(
+								getManagedBean().getScQt()
+										.isTechEvaluationReq());
+
+			}
+		}
 	}
 
 	public void techEvaluationReqChanged() {
@@ -11313,15 +11335,15 @@ public class SpecificationBackingBean extends
 		// TODO - Get list of technical checklist to set score req.
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
-	
+
 		if (null != techCheckList) {
 			for (ScQtCheckList qtCheckList : techCheckList) {
 				qtCheckList.getScQtDoc().getTplSpecMaster()
 						.setScoringReq(isTechEvaluationReq);
-				
+
 			}
 		}
-		//this.getManagedBean().setScQtCheckSt2techProposal(localCheckList);
+		// this.getManagedBean().setScQtCheckSt2techProposal(localCheckList);
 		// specMaster.setScoringReq(isTechEvaluationReq);
 	}
 
