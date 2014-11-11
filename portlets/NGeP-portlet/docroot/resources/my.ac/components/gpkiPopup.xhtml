@@ -29,8 +29,10 @@
 						.val();
 				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
 				var pin = $("[id='#{pin.clientId}']").val();
+				var SignMethod = $("[id='#{SignMethod.clientId}']").val(); 
 			    sign_st(pin, plainText);
-			
+		
+				
 			}
 			function parseVerifyResult(msg) {
 				$(document).ready(
@@ -56,6 +58,7 @@
 							}
 
 						});
+				
 			}
 
 			function parseSignResult(msg) {
@@ -118,11 +121,18 @@
 			}
 		</script>
 
-		<p:dialog header="Digital Certificate Signing" widgetVar="gpki_dlg" resizable="false" modal="true">
+		<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg" resizable="false" modal="true">
 			<p:messages id="dlgMessages" for="somekey" showDetail="true" autoUpdate="true" closable="true" />
-			<h:panelGrid columns="4" cellpadding="4">
+			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+		        <p:outputLabel  value="#{lbl['lbl.cc.gpki.signmethod']}" />
+		        <p:selectOneRadio binding="#{SignMethod}" id="SignMethod" >
+		            <f:selectItem itemLabel="Token" itemValue="Token" />
+		            <f:selectItem itemLabel="Smart Card" itemValue="Smart Card" />
+		        </p:selectOneRadio>
+		    </h:panelGrid>
+				<h:panelGrid columns="4" cellpadding="4">
 				<h:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel for="password" value="Digital Certificate PIN" />
+				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
 			</h:panelGrid>
