@@ -1116,13 +1116,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   debugLogger("byBusinessEvent");
 		   if (getManagedBean().isByLocality()) {
 			   getManagedBean().setTabActiveIndex(0);
-			  String supplierLocLevel =  getManagedBean().getSupplierLocLevel();
-			   if(supplierLocLevel == null){
-				   supplierLocLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
-				   getManagedBean().getScQuote().setSupplierLocationLevel(getParameterByTypeAndCode(
-							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
-				}
-			   ptjLocality(supplierLocLevel);
+
+			   if(getManagedBean().getSupplierLocLevel() == null){
+				   getManagedBean().setSupplierLocLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
+			   }
+			   ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 			   
 		   } else{
 			   getManagedBean().setByLocality(Boolean.FALSE);
@@ -1139,6 +1137,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			   if(getManagedBean().getScQuote().getLocationDistrictCriterias() != null && getManagedBean().getScQuote().getLocationDistrictCriterias().size()>0){
 				   getManagedBean().getScQuote().getLocationDistrictCriterias().clear();
 			   }
+			   getManagedBean().setSupplierLocLevel(null); 
 		   }
 
 		   if (getManagedBean().isByBusinessNature()) {
@@ -3123,12 +3122,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quoteZone.setScQuote(quote);
 			quote.setQuoteZone(quoteZone);
 			quote.setZonal(Boolean.TRUE);
+			// zone location level by default - district 
+			if(getManagedBean().getLocationLevel() == null){
+				getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
+			}
 		
 		} else {
 			quote.setZonal(Boolean.FALSE);
 			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 			this.getManagedBean().getZoneTrees().clear();
+			getManagedBean().setLocationLevel(null);
 		}
 		
 		// product
