@@ -33,7 +33,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private PmCategoryL3 pmCategoryL3;
 	private String catLevel;
 	private boolean newCategory = false;
-	private boolean displayCategoryGrouping = true;
+	private boolean displayCategoryGrouping = false;
 	private List<PmParameterDesc> supplierType;
 	private List<PmParameterDesc> specialCategory;
 	private List<PmBasicCategory> selectedBasicCategory;
