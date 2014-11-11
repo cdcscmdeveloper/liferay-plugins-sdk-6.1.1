@@ -178,8 +178,8 @@
 			</h:panelGrid>
 		</p:panel>
 		
-		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" id="groupdetails">
-		<p:panel rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
+		<p:panel id="groupdetails">
+		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
 		<p:dataTable id="groupdetailsId" 
 			rowKey="#{pmBasicCategory.createdDate}"
 			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
