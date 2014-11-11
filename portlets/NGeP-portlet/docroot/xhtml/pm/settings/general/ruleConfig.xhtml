@@ -62,12 +62,13 @@
 		<p:column width="25%"
 			rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'C')}">
 			<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
 			<p:inputText value="#{typeValueObj.ruleValue}" size="20"
 				partialSubmit="true" process=":form:settingTabId"
-				update=":form:settingTabId"
+				update=":form:settingTabId" required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkIntegerField}" validatorMessage="Value should be a Digit!"
 				valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"></p:inputText>
 		</p:column>
 
