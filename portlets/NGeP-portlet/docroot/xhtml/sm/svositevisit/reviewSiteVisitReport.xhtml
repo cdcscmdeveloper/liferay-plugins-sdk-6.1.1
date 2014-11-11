@@ -11,7 +11,7 @@
 	<ui:param name="viewFlag" value="true" />
 	
 	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
-		<p:menuitem value="#{lbl[lbl.sm.svo.financial.info]}" update="tabIndex,outPnlSiteVisitReport" actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(0,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.svo.financial.info']}" update="tabIndex,outPnlSiteVisitReport" actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(0,'')}" />
 	
 		<c:forEach items="#{svoSiteVisitBackingBean.managedBean.indexPageMap}" var="entry">
 			<ui:param name="lblCategory" value="lbl.sm.sitevisit.category.categorycode_#{entry.value}" />

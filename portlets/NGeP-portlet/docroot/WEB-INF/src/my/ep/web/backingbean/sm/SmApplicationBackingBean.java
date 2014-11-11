@@ -117,6 +117,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
+import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
@@ -860,6 +861,12 @@ public class SmApplicationBackingBean extends
 					calcPersonnelListCount();
 					displayBumiRecommendNote();
 				}
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)) {
+					log.info("******* This is site visit review page ********");
+					assignViewSiteVisitReport();
+				}
+
 			}
 			assignValReqdToFalse();
 		}
@@ -1364,9 +1371,11 @@ public class SmApplicationBackingBean extends
 		StringBuffer sb = new StringBuffer();
 		String desc = null;
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.normal", null);
+			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.normal",
+					null);
 		} else {
-			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.special", null);
+			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.special",
+					null);
 		}
 		sb.append(desc);
 		getManagedBean().setCatTypeConfirm(sb.toString());
@@ -2322,7 +2331,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelFactorySaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedFactoryFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedFactoryFacility().getSmAddress()
+				.setPostcode("");
 		getManagedBean().getSelectedFactoryFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:factoryDialog");
 		RequestContext.getCurrentInstance().execute("factoryDialog.hide()");
@@ -2410,7 +2420,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelDockyardSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedDockyardFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedDockyardFacility().getSmAddress()
+				.setPostcode("");
 		getManagedBean().getSelectedDockyardFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:dockYardDialog");
 		RequestContext.getCurrentInstance().execute("dockYardDialog.hide()");
@@ -2495,7 +2506,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelWorkShopSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedWorkShopFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedWorkShopFacility().getSmAddress()
+				.setPostcode("");
 		getManagedBean().getSelectedWorkShopFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:workShopDialog");
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
@@ -2579,7 +2591,8 @@ public class SmApplicationBackingBean extends
 
 	public void cancelStoreSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedStoreFacility().getSmAddress().setPostcode("");
+		getManagedBean().getSelectedStoreFacility().getSmAddress()
+				.setPostcode("");
 		getManagedBean().getSelectedStoreFacility().setOwnershipType("");
 		RequestContext.getCurrentInstance().reset(":form:tt:storeDialog");
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
@@ -4101,15 +4114,31 @@ public class SmApplicationBackingBean extends
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			regSo.initiateSmDelPendingApplicationTask(reqDTO);
-
+			String msg = "";
+			SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(getManagedBean()
+					.getSmAppl().getApplId());
+			if (sts != null && sts.getPmStatus() != null) {
+				if (sts.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_PROCESS_FEE) == 0
+						|| sts.getPmStatus()
+								.getStatusId()
+								.compareTo(
+										SupplierManagementConst.PM_STATUS_PENDING_VERIFY_SUPP_DOCS) == 0) {
+					msg = MessageConst.INFO_700056;
+				} else {
+					msg = MessageConst.INFO_700057;
+				}
+			} else {
+				msg = "Application with no status is submitted";
+			}
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_700005,
-									new String[] {
-											"Delete pending application",
-											getManagedBean().getSmAppl()
-													.getApplNo() },
+							MessageUtils.getMessage(msg, new String[] {
+
+							getManagedBean().getSmAppl().getApplNo() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			renewSesionObject();
@@ -4395,11 +4424,44 @@ public class SmApplicationBackingBean extends
 				.setSplCategoryList(new ArrayList<SmSupplierCategory>());
 		for (SmSupplierCategory category : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
-			if (category.isSpecialCategory()) {
+			if (category.isSpecialCategory()
+					&& category.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 				getManagedBean().getSplCategoryList().add(category);
 			}
 		}
+		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
+	}
+
+	public void assignViewSiteVisitReport() {
+		log.info("**** assignViewSiteVisitReport *** ");
+		SvoSiteVisitBackingBean svo = new SvoSiteVisitBackingBean();
+		svo.getManagedBean().setAppId(getManagedBean().getSmAppl().getApplId());
+		svo.retrieveSiteVisitInfo("V");
+		// RequestContext.getCurrentInstance().execute(dialog + ".show()");
+	}
+
+	public String submitPODescisionForSiteVisit(String dialog, String decision) {
+		log.info("**** assignSiteVisitPopUp *** ");
+		List<String> updateIds = new ArrayList<String>();
+		updateIds.add(":form");
+		Boolean valid = SmApplicationUtil
+				.validateSiteVisitSelections(getManagedBean());
+		if (valid) {
+			getManagedBean().setShowParentMsg(true);
+			RequestContext.getCurrentInstance().update(updateIds);
+			RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+			return submitPOorApproverReviewToBPM(decision);
+		} else {
+			return null;
+		}
+	}
+
+	public void cancelSiteVisitAction(String dialog) {
+		getManagedBean().setShowParentMsg(true);
+		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}
 
 	public void cancelFinalApproveOrReject(String dialog) {
@@ -4425,9 +4487,8 @@ public class SmApplicationBackingBean extends
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
-	
-	public String finalDecisionDeletePendingAppln(String dialog,
-			String decision) {
+
+	public String finalDecisionDeletePendingAppln(String dialog, String decision) {
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
@@ -6013,34 +6074,31 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
-	
-	
 
-	
-//	private void generateSuppDocPdfFile(VelocityContext context)
-//			throws Exception {
-//		String appNo = getManagedBean().getSmAppl().getApplNo();
-//		String baseDir = File.separator + "docuRepo" + File.separator + "dev"
-//				+ File.separator + "ngep" + File.separator;
-//		String tempDir = baseDir + File.separator
-//				+ Calendar.getInstance().get(Calendar.YEAR) + File.separator
-//				+ SupplierManagementConst.FOLDER_NAME_SM + File.separator
-//				+ appNo + File.separator
-//				+ SupplierManagementConst.FOLDER_NAME_SUPPDOC;
-//
-//		File theDir = new File(tempDir);
-//		if (!theDir.exists()) {
-//			theDir.mkdir();
-//		}
-//		
-//		File newFile = new File(tempDir+ File.separator
-//				+ SupplierManagementConst.OFFLINE_SUPP_DOC_PRINT_LIST_FILENAME);
-//		if(!newFile.exists()){
-//			newFile.createNewFile();
-//		}
-//
-//		// DocumentGenerator.getInstance().generatePdfFromVelocity(
-//		// SupplierManagementConst.DOCPATH_OFFLINE_SUPP_DOC_PRINT_LIST,
-//		// context, new FileOutputStream(tempDir));
-//	}
+	// private void generateSuppDocPdfFile(VelocityContext context)
+	// throws Exception {
+	// String appNo = getManagedBean().getSmAppl().getApplNo();
+	// String baseDir = File.separator + "docuRepo" + File.separator + "dev"
+	// + File.separator + "ngep" + File.separator;
+	// String tempDir = baseDir + File.separator
+	// + Calendar.getInstance().get(Calendar.YEAR) + File.separator
+	// + SupplierManagementConst.FOLDER_NAME_SM + File.separator
+	// + appNo + File.separator
+	// + SupplierManagementConst.FOLDER_NAME_SUPPDOC;
+	//
+	// File theDir = new File(tempDir);
+	// if (!theDir.exists()) {
+	// theDir.mkdir();
+	// }
+	//
+	// File newFile = new File(tempDir+ File.separator
+	// + SupplierManagementConst.OFFLINE_SUPP_DOC_PRINT_LIST_FILENAME);
+	// if(!newFile.exists()){
+	// newFile.createNewFile();
+	// }
+	//
+	// // DocumentGenerator.getInstance().generatePdfFromVelocity(
+	// // SupplierManagementConst.DOCPATH_OFFLINE_SUPP_DOC_PRINT_LIST,
+	// // context, new FileOutputStream(tempDir));
+	// }
 }

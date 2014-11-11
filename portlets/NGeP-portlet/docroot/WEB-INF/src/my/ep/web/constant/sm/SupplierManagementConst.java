@@ -274,7 +274,8 @@ public class SupplierManagementConst {
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
 	public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20100";
-	//public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION = "20700";
+	// public static final String PM_STATUS_PENDING_APPLICATION_DECLARATION =
+	// "20700";
 	public static final String PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION = "20101";
 	public static final String PM_STATUS_PENDING_APPLICATION_VERIFICATION = "20102";
 	public static final String PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT = "20103";
@@ -298,6 +299,8 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PO_ESCALTED_TO_APPROVER = 20108;
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
+	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
+	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
@@ -341,8 +344,8 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_EDU_DIPLOMA = "4";
 	public static final String SUPPLIER_EDU_CERTIFIED = "5";
 	public static final String SUPPLIER_EDU_NOTDEFINED = "6";
-	
-	//PM Cert body
+
+	// PM Cert body
 	public static final String PM_CERT_BODY_OTHERS = "LL";
 
 	// Getters for panel info
