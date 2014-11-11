@@ -148,7 +148,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     					ParameterTypeConst.PRICE_TYPE, cmSupplierItem.getCmPricings().get(0).getPricingType()));
 
     		} else {
-    			throw new EpException("Price not found");
+    			throw new EpException(MessageConst.ERROR_760159);
     		}
 
     		requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
@@ -514,7 +514,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		    	List<ScRequestSupplierItem> requestSupplierItems =  new  ArrayList<ScRequestSupplierItem>();
 		    	// validate order quantity
 		    	if(scRequestSupplierItem.getRequestNoteItem().getQuantity() !=null && scRequestSupplierItem.getRequestNoteItem().getQuantity().intValue() <0){
-		    		throw new EpException(MessageConst.INFO_100033, new String[]{" Order Quatity" ,"0"});
+		    		throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "0"});
 		    	}
 		    	 // Add selected supplier item.
 		    	scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
@@ -546,7 +547,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						super.renewSesionObject();
 					
 				 } else{
-					 throw new EpException("Failed.");
+					 throw new EpException(MessageConst.ERROR_700020);
 				 }
 			} finally {
 				prInquirySO = null;
@@ -586,7 +587,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 					// clear data
 					super.renewSesionObject();
 			   }else{
-					throw new EpException("Failed.");
+				   throw new EpException(MessageConst.ERROR_700020);
 		   }
 		return null;
 	  }
@@ -750,7 +751,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				//redirect to RequestNote screen
 				return "commonRequestNote";
 			} else {
-				throw new EpException("Out of stock.");
+				throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.purchase.inquiry.out.of.stock",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			}
 		} else {
 			IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
@@ -769,7 +771,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				 successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_INQUIRY,getManagedBean().getScPrInquiry().getPrInquiryNo());
 			} else{
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 			return null;
 		}
