@@ -638,7 +638,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			out.write(buffer, 0, bytesRead);
 			buffer = new byte[4096];
 		}
-		
+		out.close();
+		docInputStream.close();
 		return null;
 	}
 	
