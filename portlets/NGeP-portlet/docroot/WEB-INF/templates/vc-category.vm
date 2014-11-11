@@ -76,23 +76,23 @@
     <tr align='left'>
         <td>
 		
-		<table border='1' >
+		<table style='border:10px;'>
 		
-		 <tr >
+		 <tr align='center'>
 		  	<th width='20' >BIL</th >
 		  	<th width='120' >TARIKH DAFTAR BIDANG</th >
-		  	<th width='100' >KOD BIDANG</th >
-		  	<th width='520' >KETERANGAN</th >
+		  	<th width='50' >KOD BIDANG</th >
+		  	<th width='570' >KETERANGAN</th >
 		  	<th width='60' >STATUS</th >
 		 </tr>
 		#set( $count = 1 )	
 		#foreach( $category in $categories )
 		 <tr >
-		  	<td width='20' >$count</td>
-		  	<td width='120' >$category.get(0)</td>
-		  	<td width='100' >$category.get(2)</td>
-		  	<td width='520' >$category.get(3)</td>
-		  	<td width='60' >$category.get(4)</td>
+		  	<th >$count</th>
+		  	<th >$category.get(0)</th>
+		  	<th >$category.get(2)</th>
+		  	<th >$category.get(3)</th>
+		  	<th >$category.get(4)</th>
 		 </tr>
 			#set( $count = $count + 1 )
 		#end
@@ -112,7 +112,7 @@
         </td>
     </tr>
     #end
-    #if ( $addDateAndCount != "")
+    #if ( $deleteDateAndCount != "")
     <tr align='left'>
         <td>
             <span style='font-size:11px;font-family: Albertus Medium;'>Bilangan Batal Bidang Pada</span>
