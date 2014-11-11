@@ -187,6 +187,7 @@
 				
 				<td><p:selectOneMenu id="suppBranch"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						style="width: 360px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="suppBranchList"

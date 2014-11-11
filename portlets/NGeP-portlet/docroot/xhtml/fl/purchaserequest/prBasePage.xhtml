@@ -93,6 +93,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top" />
 									<p:selectOneMenu style="width:350px; margin-bottom:5px;"
+										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
 										<p:ajax event="change" process="@this" update="approverpickList"
 											listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"  />
@@ -102,6 +103,7 @@
 								<h:panelGrid style="width:500px">
 									<p:pickList id="approverpickList" var="data" itemValue="#{data}" itemLabel="#{data}"
 										value="#{purchaseRequestBackingBean.managedBean.approverModel}"
+										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 										showTargetControls="true" filterMatchMode="contains">
 										<f:facet name="sourceCaption">#{lbl['lbl.fl.ptj.available']}
 										<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.available.approver']}"/>
