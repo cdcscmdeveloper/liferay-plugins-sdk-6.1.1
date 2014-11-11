@@ -38,29 +38,35 @@
         <td align='center'>
             <table width='100%'>
                 <tr align='left'>
-                	<td width='200' />
-                    <td width='180'>
+                	<td width='180' />
+                    <td width='160'>
                         <span style='font-size:11px;font-family: Albertus Medium;'>NO. SIJIL</span>
                     </td>
+					<td>:</td>
                     <td >
-                        <span style='font-size:11px;font-family: Times New Roman;'>: $mofCertSerialNo</span>
+                        <span style='font-size:11px;font-family: Times New Roman;'>$mofCertSerialNo</span>
                     </td>
                 </tr>
                 <tr align='left'>
-                    <td width='200' />
-                    <td width='180'>
+                    <td width='180' />
+                    <td width='160'>
                         <span style='font-size:11px;font-family: Albertus Medium;'>NO. RUJUKAN PENDAFTARAN</span>
                     </td>
+					<td>:</td>
                     <td>
-                        <span style='font-size:11px;font-family: Times New Roman;'>: $mofAccountNo</span>
+                        <span style='font-size:11px;font-family: Times New Roman;'>$mofAccountNo</span>
                     </td>
                 </tr>
                 <tr align='left'>
-                    <td width='200' />
-                    <td colspan='2'>
-                        <span style='font-size:11px;font-family: Albertus Medium;'>TEMPOH SAH LAKU &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span>
-                        <span style='font-size:11px;font-family: Times New Roman;'>: $effDate - $expDate</span>
+                    <td width='180' />					
+                    <td width='160'>
+                        <span style='font-size:11px;font-family: Albertus Medium;'>TEMPOH SAH LAKU</span>
                     </td>
+					<td>:</td>
+                    <td>
+                        <span style='font-size:11px;font-family: Times New Roman;'>$effDate - $expDate</span>
+                    </td>
+					
                 </tr>
             </table>
         </td>
