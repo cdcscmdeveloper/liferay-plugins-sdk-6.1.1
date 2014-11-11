@@ -296,6 +296,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disableIcEmail;
 	private boolean selectedAll;
 	private boolean selected;
+	private int personnelCountCheck;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2244,6 +2245,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	public int getPersonnelCountCheck() {
+		return personnelCountCheck;
+	}
+
+	public void setPersonnelCountCheck(int personnelCountCheck) {
+		this.personnelCountCheck = personnelCountCheck;
 	}
 
 }

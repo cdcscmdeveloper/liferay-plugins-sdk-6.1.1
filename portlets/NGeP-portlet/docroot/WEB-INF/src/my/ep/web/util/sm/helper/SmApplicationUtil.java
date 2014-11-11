@@ -148,9 +148,9 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
-	public static boolean validatePersonLimit(Long supplierId, String applType,
+	public static int validatePersonLimit(Long supplierId, String applType,
 			Long applId) {
-		boolean validPerCount = true;
+		int validPerCount = 0;
 		int count = 5;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
@@ -165,9 +165,12 @@ public class SmApplicationUtil {
 
 		if (resDTO.getSmPersonnelList() != null
 				&& resDTO.getSmPersonnelList().size() < count) {
-			validPerCount = true;
+			if(count == 5)
+				validPerCount = 1;
+			else
+				validPerCount = 2;
 		} else {
-			validPerCount = false;
+			validPerCount = 0;
 		}
 		return validPerCount;
 	}

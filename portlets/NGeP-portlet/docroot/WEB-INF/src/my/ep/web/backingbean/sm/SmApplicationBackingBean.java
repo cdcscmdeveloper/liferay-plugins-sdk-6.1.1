@@ -3197,6 +3197,11 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().setSelectedPersonnel(null);
 
 		assignSelShareHolderAddress(shr);
+		if(getManagedBean().getPersonnelCountCheck() == 0 || getManagedBean().getPersonnelCountCheck() == 1){
+			shr.setJustificationReqd(false);
+		} else if(getManagedBean().getPersonnelCountCheck() == 2){
+			shr.setJustificationReqd(true);
+		}
 		getManagedBean().setSelectedShareHolder(shr);
 		if (getManagedBean().isValidSmUserLimit()) {
 			getManagedBean().setUserWithRole(true);
@@ -5767,11 +5772,18 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmStaffTotals(),
 				getManagedBean().getSmAppl().getSupplierType());
 		getManagedBean().setPersonCalc(calcVO);
-		getManagedBean().setValidSmUserLimit(
-				SmApplicationUtil.validatePersonLimit(getManagedBean()
-						.getSmAppl().getSmSupplier().getSupplierId(),
-						getManagedBean().getSmAppl().getApplType(),
-						getManagedBean().getSmAppl().getApplId()));
+
+		int countCheck = SmApplicationUtil.validatePersonLimit(getManagedBean()
+				.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean()
+				.getSmAppl().getApplType(), getManagedBean().getSmAppl()
+				.getApplId());
+		
+		getManagedBean().setPersonnelCountCheck(countCheck);
+		if (countCheck == 0) {
+			getManagedBean().setValidSmUserLimit(false);
+		} else {
+			getManagedBean().setValidSmUserLimit(true);
+		}
 	}
 
 	private void calculateBumiPercentageTotals() {
