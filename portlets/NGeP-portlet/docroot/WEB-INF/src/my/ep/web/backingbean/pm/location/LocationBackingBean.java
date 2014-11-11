@@ -91,7 +91,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().getState().setPmCountry(new PmCountry());
 		getManagedBean().getDivision().setPmState(new PmState());
 		getManagedBean().getDistrict().setPmState(new PmState());
-		getManagedBean().getDistrict().setPmDivision(new PmDivision());
+		//getManagedBean().getDistrict().setPmDivision(new PmDivision());
 		getManagedBean().getCity().setPmDistrict(new PmDistrict());
 		this.getManagedBean().setStatus(1);
 
