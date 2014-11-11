@@ -149,7 +149,7 @@ public class NoticeBoardBackingBean extends
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
-			
+
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
@@ -195,6 +195,10 @@ public class NoticeBoardBackingBean extends
 								briefingResDTO.getScQtBsv());
 						bsvZoneBeans.add(briefingZoneBean);
 					}
+					this.getManagedBean().setLocationNodes(
+							LocationSingleton.getInstance().constuctTreeNode(
+									zoneDtls.get(0).getTplSpecZoneLocs()));
+
 				}
 
 				this.getManagedBean().setZoneBean(bsvZoneBeans);
@@ -218,7 +222,7 @@ public class NoticeBoardBackingBean extends
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-		//reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		// reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
@@ -686,7 +690,11 @@ public class NoticeBoardBackingBean extends
 	public void zoneTabChange(TabChangeEvent changeEvent) {
 		TplSpecZoneDtl specZoneDtl = ((BriefingZoneBean) changeEvent.getData())
 				.getTplSpecZoneDtl();
-		constructLocationTree(specZoneDtl.getTplSpecZoneLocs());
+
+		this.getManagedBean().setLocationNodes(
+				LocationSingleton.getInstance().constuctTreeNode(
+						specZoneDtl.getTplSpecZoneLocs()));
+
 	}
 
 	public void showLocationDtls(ScQtBsvDtl briefing) {
@@ -1324,7 +1332,8 @@ public class NoticeBoardBackingBean extends
 		NoticeBoardReqDTO boardReqDTO = new NoticeBoardReqDTO();
 		QuationTenderResDTO resDTO = null;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
@@ -1332,23 +1341,29 @@ public class NoticeBoardBackingBean extends
 			if (resDTO.getReports() != null && !resDTO.getReports().isEmpty()) {
 				this.getManagedBean().setScQtDocReports(resDTO.getReports());
 			}
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			boardReqDTO.setQtId(qtId);
-			NoticeBoardResDTO boardResDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(boardReqDTO);
+			NoticeBoardResDTO boardResDTO = qtNoticeBoardSO
+					.retrieveQtNoticeDtl(boardReqDTO);
 			ScQt scQt = boardResDTO.getScQt();
 			this.getManagedBean().setScQt(scQt);
 		} finally {
 			detailSO = null;
 		}
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-		qtDocumentsBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
-		
-		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReports();
+		qtDocumentsBackingBean.getManagedBean().setQt(
+				this.getManagedBean().getScQt());
+
+		List<ScQtDocReport> scQtDocReports = getManagedBean()
+				.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		for (ScQtDocReport scQtDocReport : scQtDocReports) {
-			ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
-			if(attachment == null) {
-				attachment = qtDocumentsBackingBean.generateDocumentAttachment(scQtDocReport);
+			ScQtDocReportAttachment attachment = scQtDocReport
+					.getScQtDocReportAttachment();
+			if (attachment == null) {
+				attachment = qtDocumentsBackingBean
+						.generateDocumentAttachment(scQtDocReport);
 				scQtDocReport.setScQtDocReportAttachment(attachment);
 			}
 			scAttachments.add(attachment);
