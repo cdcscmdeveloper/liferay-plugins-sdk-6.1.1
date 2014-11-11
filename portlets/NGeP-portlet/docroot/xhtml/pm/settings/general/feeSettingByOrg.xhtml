@@ -65,6 +65,7 @@
 						label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{feeObj.effDate}">
+						<p:ajax event="dateSelect" update="@([id$=FeeOrgExpDateId])" process="@this" />
 					</p:calendar>
 				</p:column>
 
@@ -73,11 +74,13 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-					<p:calendar showOn="button" id="expDate"
+					<p:calendar showOn="button" id="FeeOrgExpDateId"
 						mindate="#{ruleCatalogueBackingBean.managedBean.today}"
-						label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
+						label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true" validatorMessage="Expire Date should be greater than Effective Date"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{feeObj.expDate}">
+					   <f:attribute name="startDate" value="#{feeObj.effDate}" />
+                       <f:validator validatorId="primeDateRangeValidator" />
 					</p:calendar>
 				</p:column>
 

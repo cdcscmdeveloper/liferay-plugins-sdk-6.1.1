@@ -73,6 +73,18 @@ public class WebappBean {
         }
     }
     
+    public void checkFloatField(FacesContext ctx, UIComponent fieldName, Object obj){
+        String inputValue=(String)obj;
+        inputValue=inputValue==null? "":inputValue;
+        if(!inputValue.isEmpty()){
+           String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.integer.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+           String pattern="[0-9]*\\.?[0-9]+";  
+          if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+          }
+        }
+    }
+    
     public void validateNumbers(FacesContext ctx, UIComponent fieldName, Object obj){
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
