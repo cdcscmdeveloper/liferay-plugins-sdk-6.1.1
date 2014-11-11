@@ -80,7 +80,7 @@
 		   	        <p:outputLabel value="#{agencyData.recordStatusFlg == 1 ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
 		       </p:column>
 			</p:dataTable> 
-       	<div class="ppRightBtn">
+       	<div class="ppRightBtn" style="padding-top:5px">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" oncomplete="dlgAgency.show();" 
        		    action="#{contractDetailsBackingBean.resetAgencyDetails()}"  update=":form:dialogAgency" rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
        			<p:tooltip for="addBtn">
