@@ -63,13 +63,26 @@
 																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 																update=":form" />
 														</div></td>
-													<td><div align="right" style="width: 100%">
-															<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																icon="ui-icon-next" iconPos="right"
-																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-																update=":form" />
-														</div></td>
+													<td><c:choose>
+															<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+																<div align="right" style="width: 100%">
+																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+																		icon="ui-icon-next" iconPos="right"
+																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+																		update=":form" />
+																</div>
+															</c:when>
+															<c:otherwise>
+																<div align="right" style="width: 100%">
+																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+																		icon="ui-icon-next" iconPos="right"
+																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+																		update=":form" />
+																</div>
+															</c:otherwise>
+														</c:choose></td>
 												</tr>
 											</table>
 										</c:when>
@@ -83,13 +96,26 @@
 																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 																update=":form" />
 														</div></td>
-													<td><div align="right" style="width: 100%">
-															<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																icon="ui-icon-next" iconPos="right"
-																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-																update=":form" />
-														</div></td>
+													<td><c:choose>
+															<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+																<div align="right" style="width: 100%">
+																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+																		icon="ui-icon-next" iconPos="right"
+																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+																		update=":form" />
+																</div>
+															</c:when>
+															<c:otherwise>
+																<div align="right" style="width: 100%">
+																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+																		icon="ui-icon-next" iconPos="right"
+																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+																		update=":form" />
+																</div>
+															</c:otherwise>
+														</c:choose></td>
 												</tr>
 											</table>
 										</c:otherwise>
@@ -105,13 +131,26 @@
 														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 														update=":form" />
 												</div></td>
-											<td><div align="right" style="width: 100%">
-													<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-														icon="ui-icon-next" iconPos="right"
-														actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-														update=":form" />
-												</div></td>
+											<td><c:choose>
+													<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+														<div align="right" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+																icon="ui-icon-next" iconPos="right"
+																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+																update=":form" />
+														</div>
+													</c:when>
+													<c:otherwise>
+														<div align="right" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+																icon="ui-icon-next" iconPos="right"
+																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+																update=":form" />
+														</div>
+													</c:otherwise>
+												</c:choose></td>
 										</tr>
 									</table>
 								</c:otherwise>

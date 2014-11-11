@@ -8,6 +8,8 @@
 
 
 	<br />
+	<p:messages id="applicationRecSiteMsg" showSummary="false"
+		showDetail="true" autoUpdate="true" closable="true" />
 	<table>
 
 		<tr>
@@ -137,7 +139,8 @@
 	<table style="width: 100%">
 
 		<tr>
-			<td style="width:30%;word-wrap: break-word"><p:outputLabel value="#{lbl['lbl.sm.remarks.svc']}" /></td>
+			<td style="width: 30%; word-wrap: break-word"><p:outputLabel
+					value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" /></td>
 		</tr>
@@ -148,11 +151,12 @@
 		<p:panel rendered="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width:30%;word-wrap: break-word"><p:outputLabel value="#{lbl['lbl.sm.remarks.approver']}" /></td>
+					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
+							value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
 				</tr>
 				<tr>
-					<td style="width:30%;word-wrap: break-word"><p:outputLabel
+					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
 					<td><p:selectOneRadio>
 							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approve']}" />
@@ -166,20 +170,21 @@
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						onclick="svcDialog.hide();" update=":form"
-						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
+						partialSubmit="true" process="svcDialog"
+						action="#{backingBean.submitPODescisionForSiteVisit('svcDialog','SITE_VISIT')}" />
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						onclick="svcDialog.hide();" update=":form"
-						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT_AFTER_APPROVE')}" />
+						partialSubmit="true" process="svcDialog"
+						action="#{backingBean.submitPODescisionForSiteVisit('svcDialog','SITE_VISIT_AFTER_APPROVE')}" />
 				</c:when>
 				<c:otherwise>
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" disabled="true" />
 				</c:otherwise>
 			</c:choose>
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				onclick="svcDialog.hide();" immediate="true" />
+				action="#{backingBean.cancelSiteVisitAction('svcDialog')}"
+				partialSubmit="true" process="@this" />
 		</div>
 	</p:outputPanel>
 

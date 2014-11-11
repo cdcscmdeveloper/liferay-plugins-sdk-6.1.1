@@ -1229,7 +1229,8 @@ public class SmApplicationUtil {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
 				throw new EpException(MessageConst.ERROR_722509,
-						new String[] { SmCommonUtil.getMessage("label.sm.total.share", null) });
+						new String[] { SmCommonUtil.getMessage(
+								"label.sm.total.share", null) });
 			}
 		}
 		appl = null;
@@ -2633,6 +2634,27 @@ public class SmApplicationUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
 
 		return resDTO.getPmParameter();
+	}
+
+	public static boolean validateSiteVisitSelections(
+			SmApplicationManagedBean managedBean) {
+		boolean valid = true;
+		if (!managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& (managedBean.getSelectedCategories() == null || (managedBean
+						.getSelectedCategories() != null && managedBean
+						.getSelectedCategories().size() == 0))) {
+			valid = false;
+			throw new EpException(MessageConst.ERROR_722571);
+		}
+		if (managedBean.getSelectedFactoryFacilities() == null
+				|| (managedBean.getSelectedFactoryFacilities() != null && managedBean
+						.getSelectedFactoryFacilities().size() == 0)) {
+			valid = false;
+			throw new EpException(MessageConst.ERROR_722572);
+		}
+		return valid;
+
 	}
 
 	public static boolean siteVisitDataUpdate(
