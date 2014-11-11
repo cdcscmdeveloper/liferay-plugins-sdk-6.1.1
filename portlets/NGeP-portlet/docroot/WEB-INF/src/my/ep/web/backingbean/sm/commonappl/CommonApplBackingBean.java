@@ -227,7 +227,7 @@ public class CommonApplBackingBean extends
 				"Review Application (Escalated)")
 				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")
 				|| resDTO.getTaskName().equalsIgnoreCase(
-						"Review Application(Special Category)")
+						"Review Application (Special Category)")
 				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			log.info(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
@@ -249,7 +249,7 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean();
 				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Application(Special Category)")
+								"Review Application (Special Category)")
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								"Verify Application")) {
 					smApplBB.getManagedBean().setPoUser(true);
@@ -298,7 +298,7 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean();
 				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Application(Special Category)")
+								"Review Application (Special Category)")
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								"Verify Application")) {
 					smApplBB.getManagedBean().setPoUser(true);
