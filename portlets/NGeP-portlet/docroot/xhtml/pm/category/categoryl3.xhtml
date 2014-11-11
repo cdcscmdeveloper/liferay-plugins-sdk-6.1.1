@@ -110,7 +110,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.paid.capital']}" />
 					</h:panelGroup>
-					<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}" size="15" />
+					<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}" size="15" converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
