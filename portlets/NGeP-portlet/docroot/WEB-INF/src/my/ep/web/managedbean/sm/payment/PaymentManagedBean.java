@@ -18,7 +18,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "paymentMB")
 @SessionScoped
 public class PaymentManagedBean extends BaseManagedBean{
-
+	private static final long serialVersionUID = 1L;
+	
 	//private double amount;
 	private Long orderId;
 	private String billName;
