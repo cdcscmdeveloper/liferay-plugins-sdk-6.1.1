@@ -22,7 +22,8 @@
 				<p:row>
 					<p:column headerText="#{lbl['lbl.btn.select']}" 
 					   rendered="#{contractDetailsBackingBean.managedBean.updateContract or
-					      contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission}" />
+					      contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
+					      or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision}" />
 					<p:column headerText="#{lbl['lbl.ct.ref.no']}" />
 					<p:column headerText="#{lbl['lbl.ct.financial.inst']}" />
 					<p:column headerText="#{lbl['lbl.ct.amount']}" />
@@ -39,7 +40,8 @@
 			 </p:columnGroup>
 			<p:column selectionMode="multiple" style="width:2%;"
 				rendered="#{contractDetailsBackingBean.managedBean.updateContract or
-				contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission}" />
+				contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
+				 or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision}" />
 			
 			<p:column style="width:10%;">
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
@@ -86,7 +88,8 @@
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"
 						icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg" 
 						rendered="#{varBond.filePath == null and (contractDetailsBackingBean.managedBean.updateContract
-						or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission)}">
+						or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
+						or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision)}">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
@@ -100,7 +103,7 @@
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;">
 					 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				         <p:ajax event="change" process="@this" update=":form:bondId"></p:ajax>
+				         <p:ajax event="change" process="@form" update="tableBond" listener=""></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
@@ -108,7 +111,8 @@
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@form" 
 				  rendered="#{(contractDetailsBackingBean.managedBean.updateContract or  
-			        contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission) and !contractDetailsBackingBean.managedBean.viewContract}"
+			        contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
+			         or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision) and !contractDetailsBackingBean.managedBean.viewContract}"
 				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
@@ -117,7 +121,8 @@
 				<p:spacer width="1" />
 				<p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();"
 				  rendered="#{(contractDetailsBackingBean.managedBean.updateContract or  
-			        contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission) and !contractDetailsBackingBean.managedBean.viewContract}">
+			        contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
+			         or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision) and !contractDetailsBackingBean.managedBean.viewContract}">
 					<p:tooltip for="delPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 					</p:tooltip>
