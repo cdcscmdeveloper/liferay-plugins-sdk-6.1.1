@@ -37,14 +37,9 @@
 					</p:column>
 				</p:row>
 			 </p:columnGroup>
-			<p:column selectionMode="multiple" style="width:2%;" disabledSelection="true"
-				rendered="#{varBond.performanceBondId != null and (contractDetailsBackingBean.managedBean.updateContract or
-				contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission) 
-					and !contractDetailsBackingBean.managedBean.viewContract}" />
-			
 			<p:column selectionMode="multiple" style="width:2%;"
-				rendered="#{varBond.performanceBondId == null and (contractDetailsBackingBean.managedBean.updateContract or 
-				 contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission)}" />
+				rendered="#{contractDetailsBackingBean.managedBean.updateContract or
+				contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission}" />
 			
 			<p:column style="width:10%;">
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
@@ -105,7 +100,7 @@
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;">
 					 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				         <p:ajax process="@form"></p:ajax>
+				         <p:ajax event="change" process="@this" update=":form:bondId"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>

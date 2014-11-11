@@ -836,7 +836,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        	if(performanceBond.getRecordStatusFlg().intValue() == 1) {
 		        		performanceBond.setRecordStatus(true);
 		        	} else {
-		        		performanceBond.setRecordStatus(true);
+		        		performanceBond.setRecordStatus(false);
 		        	}
 		        	
 		        	if(performanceBond.isRecordStatus()) {
@@ -845,7 +845,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
 						         throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
 					       
-					       SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+					      /* SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			               
 					       String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			               String todate = dateFormat.format(performanceBond.getExpDate());
@@ -859,10 +859,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						   int endYear = Integer.valueOf(todate.substring(6, todate.length()));
 			
 					      if(startDay != endDay || startMonth != endMonth  || startYear != endYear)
-						      throw new EpException(MessageConst.ERROR_750049); 
+						      throw new EpException(MessageConst.ERROR_750049); */
 					 }
 		        }
-				/*if(bondAmount != 0.0) {
+				if(bondAmount != 0.0) {
 					int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					  if( retval >0 ){
 				    	throw new EpException(MessageConst.ERROR_750048);
@@ -870,7 +870,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					  if(retval < 0){
 						  throw new EpException(MessageConst.ERROR_750050);  
 					  }
-				}	*/
+				}	
 			}
 		 
 		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
