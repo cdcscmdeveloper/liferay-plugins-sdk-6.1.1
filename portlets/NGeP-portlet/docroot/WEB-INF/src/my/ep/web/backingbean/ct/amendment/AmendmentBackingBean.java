@@ -2577,4 +2577,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 		     }
        }
+	
+	public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}
 }
