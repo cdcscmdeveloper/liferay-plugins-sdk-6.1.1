@@ -680,20 +680,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			// location level 
 			if(quote.isZonal()){
-				if(getManagedBean().getLocationLevel() != null){
-					quote.setZoneLocatonLevel(getParameterByTypeAndCode(
+				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
 							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
-				}
-			} else{
+			} else {
 				quote.setZoneLocatonLevel(null);
 			}
 			// supplier location level by default - district 
 			if(getManagedBean().isByLocality()){
-				if(getManagedBean().getSupplierLocLevel() == null){
-					quote.setSupplierLocationLevel(getParameterByTypeAndCode(
+				quote.setSupplierLocationLevel(getParameterByTypeAndCode(
 							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
-				}	
-			} else{
+			} else {
 				quote.setSupplierLocationLevel(null);
 			}
 			
@@ -892,19 +888,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			
 			// location level 
 			if(quote.isZonal()){
-				if(getManagedBean().getLocationLevel() != null){
-					quote.setZoneLocatonLevel(getParameterByTypeAndCode(
+				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
 							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
-				}
 			} else{
 				quote.setZoneLocatonLevel(null);
 			}
 			// supplier location level
 			if(getManagedBean().isByLocality()){
-				if(getManagedBean().getSupplierLocLevel() == null){
-					quote.setSupplierLocationLevel(getParameterByTypeAndCode(
+				quote.setSupplierLocationLevel(getParameterByTypeAndCode(
 							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
-				}	
 			} else{
 				quote.setSupplierLocationLevel(null);
 			}
@@ -1255,7 +1247,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */	
 	public void deleteSupplier() {
 		debugLogger("deleteSupplier");
-		if (getManagedBean().getSelectedSupplierList() != null) {
+		if (getManagedBean().getSelectedSupplierList() != null && getManagedBean().getSelectedSupplierList().size() >0) {
 			for (ScQuoteSupplier supplier : getManagedBean()
 					.getSelectedSupplierList()) {
 				if(getManagedBean().getSupplierList().contains(supplier)){
@@ -1265,7 +1257,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else{
-			throw new EpException(MessageConst.ERROR_760158);
+			Locale locale = new FacesScopes().getUserLocale();
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.supp.tab.supp.list",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}
 	
@@ -1274,7 +1268,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */	
 	public void deleteGovtSeller() {
 		debugLogger("deleteGovtSeller");
-		if (getManagedBean().getSelectedGovtSellers() != null) {
+		if (getManagedBean().getSelectedGovtSellers() != null && getManagedBean().getSelectedGovtSellers().size() >0) {
 			for (ScQuoteSupplier govtSeller : getManagedBean()
 					.getSelectedGovtSellers()) {
 				if(getManagedBean().getGovtSellers().contains(govtSeller)){
@@ -1284,7 +1278,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else {
-			throw new EpException(MessageConst.ERROR_760158);
+			Locale locale = new FacesScopes().getUserLocale();
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.supp.tab.govt.seller",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}
 
@@ -1294,7 +1290,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public void deletePanelSupplier() {
 		debugLogger("deletePanelSupplier");
 
-		if (getManagedBean().getSelectedPanelSuppliers() != null) {
+		if (getManagedBean().getSelectedPanelSuppliers() != null && getManagedBean().getSelectedPanelSuppliers().size() >0 ) {
 			for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
 					.getSelectedPanelSuppliers()) {
 				if(getManagedBean().getPanelSuppliers().contains(scQuoteSupplier)){
@@ -1304,7 +1300,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else {
-			throw new EpException(MessageConst.ERROR_760158);
+			Locale locale = new FacesScopes().getUserLocale();
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.supp.tab.panel.supplier",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}	
 	
@@ -1747,12 +1745,19 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * To delete the selected TreeNode from the zone
 	 */
 	public void deleteZoneTreeNode() {
+		getManagedBean().setSelectedFlag(true);
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
 	    deleteTreeNodes(rootTrees);
 		
 		// zone details
 		if(!getManagedBean().getZoneTrees().isEmpty()){
 			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+		}
+		
+		if(getManagedBean().isSelectedFlag()){
+			Locale locale = new FacesScopes().getUserLocale();
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.ss.simple.quote.delivery.location",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 		
 		this.getManagedBean().setZoneIndex(-1);
@@ -1780,6 +1785,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 				for (TreeNode zoneTree : rootTree.getChildren()) {
 					if (zoneTree.isSelected()) {
+						getManagedBean().setSelectedFlag(false); // to check wheather zone selected  or not
 						 tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
 						 if(tplSpecZoneDtl.getPanelZone() != null){
 							 deletePanelItemSuppliers(tplSpecZoneDtl);
@@ -1787,7 +1793,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						 } else{
 							 deleteStateOrDivOrDist(tplSpecZoneDtl, null);
 						 }
-
+ 
 						 rootTrees.remove(row--);
 					} else {
 						
@@ -1818,6 +1824,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			for (TreeNode treeNode : treeNodes) {
 				if (treeNode.isSelected()) {
+					getManagedBean().setSelectedFlag(false); // to check wheather childs are selected or not
 					nodesToRemoved.add(treeNode);
 				} else {
 					if (treeNode.getChildren() != null && treeNode.getChildren().size() > 0) {

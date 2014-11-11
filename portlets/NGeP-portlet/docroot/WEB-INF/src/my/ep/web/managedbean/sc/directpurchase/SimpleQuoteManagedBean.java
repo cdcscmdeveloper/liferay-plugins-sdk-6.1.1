@@ -171,13 +171,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	
 	private boolean conformDlgBtnFlag;
-	
 	private String supplierLocLevel;
+	private boolean selectedFlag;
 
 	public SimpleQuoteManagedBean() {
 		super();
 	}
-
 
 	private IPagingDataModel<ScQuote> scQuoteDataModel = new ScQuotePagingDataModel();
 
@@ -1420,6 +1419,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	}
 	public void setSupplierLocLevel(String supplierLocLevel) {
 		this.supplierLocLevel = supplierLocLevel;
+	}
+	public boolean isSelectedFlag() {
+		return selectedFlag;
+	}
+	public void setSelectedFlag(boolean selectedFlag) {
+		this.selectedFlag = selectedFlag;
 	}
 	
 }
