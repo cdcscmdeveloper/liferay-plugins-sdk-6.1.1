@@ -17,7 +17,7 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<ui:fragment
-						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId eq '60400' or specificationBackingBean.managedBean.currentStatusId eq '60405')) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId eq '60400')))}">
+						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION)) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION)))}">
 						<p:commandButton value="Save" update="@all"
 							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"
 							icon="ui-icon-save">

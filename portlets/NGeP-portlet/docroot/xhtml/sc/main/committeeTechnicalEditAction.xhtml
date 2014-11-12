@@ -23,18 +23,18 @@
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;" icon="ui-icon-cancel" immediate="true"
 				onclick="createTechnicalDialog.show();"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;" icon="ui-icon-check"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
 				update="@all" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;" update="@all"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"
 				icon="ui-icon-save" />
@@ -50,6 +50,7 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
@@ -69,7 +70,7 @@
 
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:selectOneRadio
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
@@ -85,7 +86,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:selectOneRadio
-							disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400') or (!specificationBackingBean.managedBean.scQt.techEvaluationReq))}"
+							disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (!specificationBackingBean.managedBean.scQt.techEvaluationReq))}"
 							value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -122,7 +123,7 @@
 
 
 		<ac:templateSpec
-			editable="#{((specificationBackingBean.managedBean.currentStatusId eq '60400') or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId eq '60405'))}"
+			editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
 

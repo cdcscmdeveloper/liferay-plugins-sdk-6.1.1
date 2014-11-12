@@ -132,12 +132,12 @@
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'O' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification')}">
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="actionView"
@@ -158,7 +158,7 @@
 				style="width:16%;white-space: normal;text-align: center;">
 				<h:panelGroup id="uploadFinance">
 					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						update="financeProposaltwo"
 						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
 						<p:graphicImage library="ep/images/design" name="upload.png"
@@ -207,13 +207,13 @@
 		<div align="right">
 			<p:commandButton
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.stageTwoFincompilenceList}"
 				update="stageTwoFinPopup" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 			
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
@@ -221,7 +221,7 @@
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.deleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
 				update="financeProposaltwo">

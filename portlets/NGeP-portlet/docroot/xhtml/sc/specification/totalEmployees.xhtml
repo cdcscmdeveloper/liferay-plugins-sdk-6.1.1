@@ -22,7 +22,7 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;" icon="ui-icon-save"
 				action="#{specificationBackingBean.acceptCompanyScoring}">
 				<f:setPropertyActionListener
@@ -48,7 +48,7 @@
 		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}">
 			<h:panelGrid>
 				<p:selectOneRadio
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
 					<f:selectItem itemLabel="Employees Involves In This Project"
 						itemValue="false"></f:selectItem>
@@ -72,7 +72,7 @@
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu required="true"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="techTotalEmployeeAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
@@ -100,14 +100,14 @@
 						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								update="#{scoringPnlId}" icon="ui-icon-add"
 								actionListener="#{specificationBackingBean.addScoring(21)}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								process="@this" partialSubmit="true" icon="ui-icon-delete"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
 								update="#{scoringPnlId}">
 								<f:setPropertyActionListener
@@ -125,7 +125,7 @@
 								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 							</td>
 							<td><p:inputText id="totalEmployeesScore" required="true"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
 									maxlength="18">
