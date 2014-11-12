@@ -97,7 +97,7 @@
 				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" maxlength="200"
 				label="#{lbl[answerlbl]}" />
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText}" />
-			<p:inputText id="answerNumeric" style="width:85%;" styleClass="ppNumericAlign" 
+			<p:inputText id="answerNumeric" style="width:76%;" styleClass="ppNumericAlign" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
