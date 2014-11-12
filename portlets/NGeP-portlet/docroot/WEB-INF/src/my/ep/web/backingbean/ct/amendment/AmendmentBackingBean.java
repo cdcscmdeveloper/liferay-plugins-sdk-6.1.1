@@ -48,7 +48,6 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -79,8 +78,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -110,7 +107,6 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -125,7 +121,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -139,7 +134,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
-import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
@@ -611,14 +605,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	   public void validateContractAmendment(String action) {
 		   getManagedBean().setAutoUpdate(true);
-		   if(getManagedBean().getContractVer().getCtAmendment()!=null && 
-				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
-				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
-				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
-			   RequestContext.getCurrentInstance().addCallbackParam("epException",
-						true);
-			   throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
-		   }
+		   
+		   // Bug#1706: Letter of Acceptance is not mandatory
+//		   if(getManagedBean().getContractVer().getCtAmendment()!=null && 
+//				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
+//				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
+//				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
+//			   RequestContext.getCurrentInstance().addCallbackParam("epException",
+//						true);
+//			   throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
+//		   }
 		   
 		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || 
 				   (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
@@ -1300,111 +1296,111 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 //		log.debug("Exit formJadualHargaExcel()");
 	}
 	
-	private String getContent(String content, String parameterCode) {
-		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		Map<String, String> valuesMap = new HashMap<String, String>();
-		StringBuffer strBuff = new StringBuffer();
-		
-		if(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA.equalsIgnoreCase(parameterCode)) {
-			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-			AddressReqDTO addressReqDTO = new AddressReqDTO();
-			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-			AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
-			PmAddressType pmAddressType = null;
-			if(addressResDTO.getAddressTypeList().size()>0) {
-				pmAddressType = addressResDTO.getAddressTypeList().get(0);
-			}
-			
-			if(getManagedBean().getCtContract().isBondReq()){
-				strBuff.append("*3.1 mendepositkandenganKerajaan, suatu Bon PelaksanaandalambentukJaminan Bank/Jaminan Syarikat Kewangan/ JaminanInsurans " +
-						"yang takbolehbataldaripadasebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskandandidaftarkan di Malaysia " +
-						"denganjumlahsebanyak RM ${PERF_BOND_AMOUNT} yang merupakan${BOND_AMOUNT_IN_TEXT}peratus (${PERCENTAGE}%) darijumlahkontrakdantempohsahlakusehingga" +
-						"${NEW_BOND_DATE}. Dokumen bon PelaksanaantersebuthendaklahdikemukakankepadaKerajaandalamtempoh${BOND_SUBMISSION_PERIOD}" +
-						"haridaritarikhsuratinidisetujuterima;<br/><br/>");
-				strBuff.append("*3.2 SekiranyapembekalmendepositkankepadaKerajaanPolisiInsurans. Pembekalhendaklahmengemukakanresit-resit " +
-						"premium yang telahdibayarbagitujuanpemeriksaan.<br/><br/>");
-				strBuff.append("*3.4 Apa-apakegagalandalammematuhikehendak-kehendakpara 3 inidalamtempohmasa yang dinyatakan, " +
-						"kecualijikadiabaikandengannyataolehKerajaan, akanmenyebabkanpenerimaan LOA** " +
-						"initerbataldanselepasituKerajaantidaklahdenganapa-apacarajugabertanggungjawabkepadatuan.<br/><br/>");
-			}
-			
-			valuesMap.put("PERFORMANCE_BOND", strBuff.toString());
-			valuesMap.put("FILE_REF_NO", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
-			valuesMap.put("LOA_NO", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
-			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
-			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			
-			if(pmAddressType!=null) {
-				valuesMap.put("ADDRESS", AddressUtils.getFullAddress(pmAddressType.getPmAddress()));
-			}
-			else {
-				valuesMap.put("ADDRESS", "");	
-			}			
-			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getContractName());
-			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getCtContract().getContractPhysicalNo());
-			valuesMap.put("AMENDMENT_EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-			valuesMap.put("BOND_AMOUNT_IN_TEXT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-			valuesMap.put("PERCENTAGE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondPercentage() + "");
-			valuesMap.put("NEW_BOND_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-			valuesMap.put("BOND_SUBMISSION_PERIOD", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getMtoDuration() + "");
-			//valuesMap.put("NEW_CONTRACT_EFFECTIVE_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			valuesMap.put("CONTRACT_SIGNER_NAME", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getUserName());
-			valuesMap.put("CONTRACT_SIGNER_POSITION", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getDesignation());
-
-			StrSubstitutor sub = new StrSubstitutor(valuesMap);
-			content = sub.replace(content);
-		} 
-		else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
-			valuesMap.put("FILE_NO", getManagedBean().getCtContract().getQuotationTender().getFileNo());
-			valuesMap.put("SOURCING_NO", getManagedBean().getCtContract().getLoa().getFileExtNo());
-			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
-			valuesMap.put("SUCCESSFUL_SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
-			valuesMap.put("CONTRACT_VALUE",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
-			double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
-			valuesMap.put("NEW_CONTRACT_VALUE", contractValue + "");
-			IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
-			valuesMap.put("FULFILLMENT_TYPE", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
-			valuesMap.put("REFER_ATTACHMENT", "Refer Attachment");
-			for(CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()){
-				if(deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)){
-					valuesMap.put("DEDUCTION_AMOUNT", deduction.getAmount()+"");
-				}
-				else{
-					valuesMap.put("DEDUCTION_AMOUNT", "");
-				}
-			}
-			valuesMap.put("MONTHS", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
-			valuesMap.put("EFF_START_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			valuesMap.put("EFF_END_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-			if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
-				valuesMap.put("AMEND_EFF_EXP_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
-						+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
-			}
-			else {
-				valuesMap.put("AMEND_EFF_EXP_DATE", "");
-			}
-			valuesMap.put("EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-			valuesMap.put("BOND_VALUE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-			
-			StrSubstitutor sub = new StrSubstitutor(valuesMap);
-			content = sub.replace(content);
-		}
-		else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)) {
-			valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-			valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
-			valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
-			valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
-			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-			valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-			StrSubstitutor sub = new StrSubstitutor(valuesMap);
-			content = sub.replace(content);
-		}
-		return content;
-	}
+//	private String getContent(String content, String parameterCode) {
+//		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+//		Map<String, String> valuesMap = new HashMap<String, String>();
+//		StringBuffer strBuff = new StringBuffer();
+//		
+//		if(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA.equalsIgnoreCase(parameterCode)) {
+//			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+//			AddressReqDTO addressReqDTO = new AddressReqDTO();
+//			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+//			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+//			AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+//			PmAddressType pmAddressType = null;
+//			if(addressResDTO.getAddressTypeList().size()>0) {
+//				pmAddressType = addressResDTO.getAddressTypeList().get(0);
+//			}
+//			
+//			if(getManagedBean().getCtContract().isBondReq()){
+//				strBuff.append("*3.1 mendepositkandenganKerajaan, suatu Bon PelaksanaandalambentukJaminan Bank/Jaminan Syarikat Kewangan/ JaminanInsurans " +
+//						"yang takbolehbataldaripadasebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskandandidaftarkan di Malaysia " +
+//						"denganjumlahsebanyak RM ${PERF_BOND_AMOUNT} yang merupakan${BOND_AMOUNT_IN_TEXT}peratus (${PERCENTAGE}%) darijumlahkontrakdantempohsahlakusehingga" +
+//						"${NEW_BOND_DATE}. Dokumen bon PelaksanaantersebuthendaklahdikemukakankepadaKerajaandalamtempoh${BOND_SUBMISSION_PERIOD}" +
+//						"haridaritarikhsuratinidisetujuterima;<br/><br/>");
+//				strBuff.append("*3.2 SekiranyapembekalmendepositkankepadaKerajaanPolisiInsurans. Pembekalhendaklahmengemukakanresit-resit " +
+//						"premium yang telahdibayarbagitujuanpemeriksaan.<br/><br/>");
+//				strBuff.append("*3.4 Apa-apakegagalandalammematuhikehendak-kehendakpara 3 inidalamtempohmasa yang dinyatakan, " +
+//						"kecualijikadiabaikandengannyataolehKerajaan, akanmenyebabkanpenerimaan LOA** " +
+//						"initerbataldanselepasituKerajaantidaklahdenganapa-apacarajugabertanggungjawabkepadatuan.<br/><br/>");
+//			}
+//			
+//			valuesMap.put("PERFORMANCE_BOND", strBuff.toString());
+//			valuesMap.put("FILE_REF_NO", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+//			valuesMap.put("LOA_NO", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
+//			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
+//			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+//			
+//			if(pmAddressType!=null) {
+//				valuesMap.put("ADDRESS", AddressUtils.getFullAddress(pmAddressType.getPmAddress()));
+//			}
+//			else {
+//				valuesMap.put("ADDRESS", "");	
+//			}			
+//			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getContractName());
+//			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getCtContract().getContractPhysicalNo());
+//			valuesMap.put("AMENDMENT_EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+//			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+//			valuesMap.put("BOND_AMOUNT_IN_TEXT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+//			valuesMap.put("PERCENTAGE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondPercentage() + "");
+//			valuesMap.put("NEW_BOND_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+//			valuesMap.put("BOND_SUBMISSION_PERIOD", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getMtoDuration() + "");
+//			//valuesMap.put("NEW_CONTRACT_EFFECTIVE_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+//			valuesMap.put("CONTRACT_SIGNER_NAME", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getUserName());
+//			valuesMap.put("CONTRACT_SIGNER_POSITION", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getDesignation());
+//
+//			StrSubstitutor sub = new StrSubstitutor(valuesMap);
+//			content = sub.replace(content);
+//		} 
+//		else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
+//			valuesMap.put("FILE_NO", getManagedBean().getCtContract().getQuotationTender().getFileNo());
+//			valuesMap.put("SOURCING_NO", getManagedBean().getCtContract().getLoa().getFileExtNo());
+//			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
+//			valuesMap.put("SUCCESSFUL_SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+//			valuesMap.put("CONTRACT_VALUE",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
+//			double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
+//			valuesMap.put("NEW_CONTRACT_VALUE", contractValue + "");
+//			IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+//			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+//			parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
+//			valuesMap.put("FULFILLMENT_TYPE", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
+//			valuesMap.put("REFER_ATTACHMENT", "Refer Attachment");
+//			for(CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()){
+//				if(deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)){
+//					valuesMap.put("DEDUCTION_AMOUNT", deduction.getAmount()+"");
+//				}
+//				else{
+//					valuesMap.put("DEDUCTION_AMOUNT", "");
+//				}
+//			}
+//			valuesMap.put("MONTHS", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
+//			valuesMap.put("EFF_START_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+//			valuesMap.put("EFF_END_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+//			if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+//				valuesMap.put("AMEND_EFF_EXP_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
+//						+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
+//			}
+//			else {
+//				valuesMap.put("AMEND_EFF_EXP_DATE", "");
+//			}
+//			valuesMap.put("EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+//			valuesMap.put("BOND_VALUE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+//			
+//			StrSubstitutor sub = new StrSubstitutor(valuesMap);
+//			content = sub.replace(content);
+//		}
+//		else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)) {
+//			valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+//			valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
+//			valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
+//			valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
+//			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+//			valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+//			StrSubstitutor sub = new StrSubstitutor(valuesMap);
+//			content = sub.replace(content);
+//		}
+//		return content;
+//	}
 	
 	private String getContent(String parameterCode) {
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
