@@ -160,13 +160,12 @@
 								<TD>
 									<p:selectOneMenu value="#{reportBackingBean.scCreatedFromMonth}" style="margin-top:5px;width:90px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.generateMonthList()}"></f:selectItems>																																	
+										<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>																																	
 									</p:selectOneMenu>
 								</TD>				
 								<TD>
-									<p:selectOneMenu value="#{reportBackingBean.scCreatedFromYear}" style="margin-top:5px;width:80px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>	
+									<p:selectOneMenu value="#{reportBackingBean.scCreatedFromYear}" style="margin-top:5px;width:80px;">										
+										<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>	
 										<p:ajax event="change" listener="#{reportBackingBean.createdToDtUpdate}" process="@this"
 					 			         partialSubmit="true" update=":form:createDt"/>																																
 									</p:selectOneMenu>
@@ -177,13 +176,12 @@
 								<TD>
 									<p:selectOneMenu value="#{reportBackingBean.scCreatedToMonth}" style="margin-top:5px;width:90px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.generateMonthList()}"></f:selectItems>																																	
+										<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>																																	
 									</p:selectOneMenu>
 								</TD>				
-								<TD id="">
-									<p:selectOneMenu id="createDt" value="#{reportBackingBean.scCreatedToYear}" style="margin-top:5px;width:80px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>	
-										<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>																																
+								<TD>
+									<p:selectOneMenu id="createDt" value="#{reportBackingBean.scCreatedToYear}" style="margin-top:5px;width:80px;">										
+										<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>																																
 									</p:selectOneMenu>
 								</TD>
 							</TR>

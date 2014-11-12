@@ -136,9 +136,23 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private List<SelectItem> scProcureAllList = new ArrayList<SelectItem>();	
 	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();	
 	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();	
-	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();	
+	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
+	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();	
+	private List<String> scYearList = new ArrayList<String>();	
 	
 	
+	public List<SelectItem> getScMonthList() {
+		return scMonthList;
+	}
+	public void setScMonthList(List<SelectItem> scMonthList) {
+		this.scMonthList = scMonthList;
+	}
+	public List<String> getScYearList() {
+		return scYearList;
+	}
+	public void setScYearList(List<String> scYearList) {
+		this.scYearList = scYearList;
+	}
 	public List<SelectItem> getUserListbyprofileRole() {
 		return userListbyprofileRole;
 	}
@@ -1423,8 +1437,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				reportFileNameJSP = pmReport.getReportFilename();
 			}			
 			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
-				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,authoriztionList);
-			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){				
+				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,authoriztionList);				
+			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){	
+				generateMonthList();
+				generateYearList();
 				scReportBackingBean.criteriaVariablesByReportBySC(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){				
 				flReportBackingBean.criteriaVariablesByReportByFL(rptGenBean,authoriztionList);
@@ -1580,11 +1596,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}			
 		}
 	}
-	public List<SelectItem> generateMonthList(){		
-		return scReportBackingBean.generateMonthList();
+	public List<SelectItem> generateMonthList(){
+		scMonthList=scReportBackingBean.generateMonthList();
+		return scMonthList;
 	}
-	public List<String> generateYearList(){		
-		 return scReportBackingBean.generateYearList(); 
+	public List<String> generateYearList(){	
+		scYearList=scReportBackingBean.generateYearList(); 
+		 return scYearList;
 	}
 	public void createdToDtUpdate(){
 		this.setScCreatedToYear(this.getScCreatedFromYear());
@@ -1620,7 +1638,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		
 		if((getManagedBean().getModuleValue()!=null)&&(getManagedBean().getReportValue()!=null)){
 			if(!(getManagedBean().getReportValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
-				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getSmApplicationFromDate()==null)&&(this.getSmApplicationToDate()!=null))||((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationToDate()==null)))||(((this.getSmReceiveFromDate()==null)&&(this.getSmReceiveToDate()!=null))||((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()==null)))||(((this.getSmPrintedFromDate()==null)&&(this.getSmPrintedToDate()!=null))||((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedToDate()==null)))||(((this.getSmExpiryFromDate()==null)&&(this.getSmExpiryToDate()!=null))||((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryToDate()==null)))){
+				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getSmApplicationFromDate()==null)&&(this.getSmApplicationToDate()!=null))||((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationToDate()==null)))||(((this.getSmReceiveFromDate()==null)&&(this.getSmReceiveToDate()!=null))||((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()==null)))||(((this.getSmPrintedFromDate()==null)&&(this.getSmPrintedToDate()!=null))||((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedToDate()==null)))||(((this.getSmExpiryFromDate()==null)&&(this.getSmExpiryToDate()!=null))||((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryToDate()==null))||((this.getScCreatedToMonth()==null)&&(this.getScCreatedFromMonth()!=null)||(this.getScCreatedToMonth()!=null)&&(this.getScCreatedFromMonth()==null)))){
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
 			}
@@ -1652,8 +1670,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getScSoneCrtdFromDate()!=null)&&(this.getScSoneCrtdToDate()!=null)){
 				if(this.getScSoneCrtdFromDate().after(this.getScSoneCrtdToDate())){					
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
-				}
-			}
+				}	
+			}			
 			if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ+getManagedBean().getReportValue());
 			}

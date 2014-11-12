@@ -74,12 +74,12 @@
 		            <div align="right">	
 		            <p:commandButton value="#{lbl['lbl.btn.generate']}"
 					icon="ui-icon-search"
-					action="#{reportBackingBean.generateReport}" oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
-					update="@form" process="@this" />
+					actionListener="#{reportBackingBean.generateReport}" oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
+					update="@form" process="@form" />
 					<p:commandButton value="#{lbl['lbl.so.reset']}"
 					action="#{reportBackingBean.resetReportForm}"
-					update="@form" icon="ui-icon-reset" resetValues="true"
-					partialSubmit="true" process="@this"/>           					
+					update="@form" icon="ui-icon-reset" 
+					partialSubmit="true" process="@form"/>					        					
 				   </div>
 				   </h:panelGroup>
 
