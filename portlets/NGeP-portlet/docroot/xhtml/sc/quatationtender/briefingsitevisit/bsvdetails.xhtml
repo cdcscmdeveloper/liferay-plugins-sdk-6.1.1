@@ -139,12 +139,20 @@
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.so.desc']}">
-						<p:commandLink
-							action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
-							style="white-space: normal;word-wrap: break-word;"
-							partialSubmit="true" process="@this">
+						<c:if
+							test="#{QTStatusConst.BSV_COMPLETE eq sitevisitdtls.bsvStatus.statusId}">
+							<p:commandLink
+								rendered="#{QTStatusConst.BSV_COMPLETE ne sitevisitdtls.bsvStatus.statusId}"
+								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
+								style="white-space: normal;word-wrap: break-word;"
+								partialSubmit="true" process="@this">
+								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
+							</p:commandLink>
+						</c:if>
+						<c:if
+							test="#{QTStatusConst.BSV_COMPLETE ne sitevisitdtls.bsvStatus.statusId}">
 							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
-						</p:commandLink>
+						</c:if>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.so.date']}">
