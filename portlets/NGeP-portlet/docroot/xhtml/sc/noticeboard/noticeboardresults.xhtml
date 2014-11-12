@@ -4,15 +4,17 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-		
+
+
 	<p:tabView var="noticeboardresulttype" orientation="top"
 		value="#{noticeBoardBackingBean.retrieveParameterDescByType('NBT')}"
-		dynamic="true" cache="flase" activeIndex="#{noticeBoardBackingBean.managedBean.activeTabIndex}">
+		dynamic="true" cache="flase"
+		activeIndex="#{noticeBoardBackingBean.managedBean.activeTabIndex}">
 		<p:ajax event="tabChange"
-			listener="#{noticeBoardBackingBean.onTabChange}" update="@(.nbsrhresultsStyleClass)" />
+			listener="#{noticeBoardBackingBean.onTabChange}"
+			update="@(.nbsrhresultsStyleClass)" />
 		<p:tab id="nbresultTabs" title="#{noticeboardresulttype.codeName}">
-			<ui:include src="/xhtml/sc/noticeboard/resultdetails.xhtml"/>
+			<ui:include src="/xhtml/sc/noticeboard/resultdetails.xhtml" />
 		</p:tab>
 	</p:tabView>
 

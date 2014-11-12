@@ -7,6 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:messages id="supplierQualification" showDetail="true"
 		showSummary="false" autoUpdate="true" closable="true" />
+	<p:blockUI block=":form" trigger="nbCheckSupplierQualification"
+		widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
 	<p:panel header="Check Supplier Qualification" toggleable="true">
 		<div class="clear"></div>
 		<table style="margin: 0 auto;">
@@ -16,8 +20,10 @@
 				</td>
 				<td><p:inputText value="#{noticeBoardBackingBean.mofNo}"></p:inputText></td>
 				<td><p:commandButton value="Check" icon="ui-icon-check"
+						id="nbCheckSupplierQualification"
 						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
-						update="@form,table-wrapper">
+						update="@form,table-wrapper" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();">
 					</p:commandButton></td>
 			</tr>
 		</table>

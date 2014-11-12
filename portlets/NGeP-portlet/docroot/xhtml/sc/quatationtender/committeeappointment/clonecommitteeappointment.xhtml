@@ -141,10 +141,10 @@
 					selectionMode="checkbox">
 
 					<p:column headerText="#{lbl['lbl.so.bo.name']}">
-						<h:outputText style = "font-weight: bold;"
+						<h:outputText style="font-weight: bold;"
 							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
 							rendered="#{committeeNode.type == 'committee'}" />
-							
+
 						<h:outputText value="#{committeeNode.object.memberName}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
 							style="white-space: normal;word-wrap:break-word;" />
@@ -188,11 +188,11 @@
 				<p:spacer height="3" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
-						 icon="ui-icon-check"
-						update="@(.scMemberDtl)" />
+						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
+						icon="ui-icon-check" update="@(.scMemberDtl)" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						icon="ui-icon-cancel" onclick="screen2.hide();" />
+						icon="ui-icon-cancel" onclick="screen2.hide();"
+						update="@(.scMemberDtl)" />
 				</div>
 			</p:panel>
 		</p:panel>
