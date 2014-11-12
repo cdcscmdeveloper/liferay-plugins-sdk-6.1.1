@@ -1117,6 +1117,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void checkFinancialSpecStatus(ScQt scqt) {
+		retriveFinancialCheckList();
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
@@ -6821,7 +6822,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setDeliveryNonZoneList(nonZone);
 				}
 			}
-		
+
 		} finally {
 
 		}
@@ -9700,7 +9701,17 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
+						//retriveCommitteeEndorsment();
 						// retriveTechnicalSpecification();
+					}else{
+						specReqDTO.setScQt(fulfilMent);
+						specSO.validateSCFulfillmentSchedules(specReqDTO);
+						resDTO = specSO.saveQTDtl(specReqDTO);
+						renewSesionObject();
+						this.getManagedBean().setScQt(resDTO.getScQt());
+						getfulfilmentDtls(resDTO.getScQt());
+						//retriveFulfilmentDtls();
+						retriveCommitteeEndorsment();	
 					}
 
 				}
@@ -9772,21 +9783,33 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
+						//retriveCommitteeEndorsment();
 						// retriveTechnicalCheckList();
+					}else{
+						specReqDTO.setScQt(fulfilMentdtls);
+						specSO.validateSCFulfillmentSchedules(specReqDTO);
+						resDTO = specSO.saveQTDtl(specReqDTO);
+						renewSesionObject();
+						this.getManagedBean().setScQt(resDTO.getScQt());
+						getfulfilmentDtls(resDTO.getScQt());
+						//retriveFulfilmentDtls();
+						retriveCommitteeEndorsment();
 					}
 
 				}
 				break;
 
 			case 9:
-				/*
-				 * ScQt endorsment = constructSpecCommitteDtls().getScQt();
-				 * specReqDTO.setScQt(endorsment); resDTO =
-				 * specSO.saveQTDtl(specReqDTO); renewSesionObject();
-				 * this.getManagedBean().setScQt(resDTO.getScQt());
-				 * getfulfilmentDtls(resDTO.getScQt());
-				 * //retriveTechnicalCheckList();
-				 */break;
+
+				ScQt endorsment = constructSpecCommitteDtls().getScQt();
+				specReqDTO.setScQt(endorsment);
+				resDTO = specSO.saveQTDtl(specReqDTO);
+				renewSesionObject();
+				this.getManagedBean().setScQt(resDTO.getScQt());
+				getfulfilmentDtls(resDTO.getScQt());
+				retriveCommitteeEndorsment();
+				// retriveTechnicalCheckList();
+				break;
 
 			}
 			if (getManagedBean().getTempIndex() < activeIndex) {
@@ -10806,13 +10829,14 @@ public class SpecificationBackingBean extends
 
 	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists) {
 		if (null != savedCheckLists && !savedCheckLists.isEmpty()) {
-			if(null==this.getManagedBean().getScQtCheckSt2techProposal()){
-				this.getManagedBean().setScQtCheckSt2techProposal(new ArrayList<ScQtCheckList>());
+			if (null == this.getManagedBean().getScQtCheckSt2techProposal()) {
+				this.getManagedBean().setScQtCheckSt2techProposal(
+						new ArrayList<ScQtCheckList>());
 			}
-			if(null==this
-					.getManagedBean()
-					.getScQtCheckSt2financeProposalList()){
-				this.getManagedBean().setScQtCheckSt2financeProposalList(new ArrayList<ScQtCheckList>());
+			if (null == this.getManagedBean()
+					.getScQtCheckSt2financeProposalList()) {
+				this.getManagedBean().setScQtCheckSt2financeProposalList(
+						new ArrayList<ScQtCheckList>());
 			}
 			for (ScQtCheckList checkList : savedCheckLists) {
 				if (SourcingConstants.TECHNICAL_DOCTYPE
