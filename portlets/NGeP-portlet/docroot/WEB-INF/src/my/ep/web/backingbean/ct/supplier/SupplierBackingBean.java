@@ -466,7 +466,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
      
 	
 	public void validateChangeBankRequest(String action){
-		this.getManagedBean().setAutoUpdate(true);
+		getManagedBean().setAutoUpdate(true);
 		if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_750000);
@@ -533,24 +533,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	     log.info("SupplierBackingBean: Performance Testing saveFactoringRequest Function: Time taken to start >>>>"+ cal.getTime());
 	
 		try {
+			validateFactoringRequest(action);
 			ContractSupplierReqDTO reqDTO = new ContractSupplierReqDTO();
 			supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-
-			if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
-				throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Factoring Agreement" });
-			}
-			if(getManagedBean().isRemoveFactoring()){
-			    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
-				    throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Remove Factoring" });
-			  }
-			}
-			
-			if(!getManagedBean().isAgreeFactoringClause()) {
-				if(!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
-					throw new EpException(MessageConst.ERROR_750001);
-				}
-			}
 
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -568,6 +554,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 reqDTO.setUserMap(getManagedBean().getUserMap());
 		     reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			 reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			 
+				if(this.getManagedBean().getPmDigiSign() !=null){
+					   reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+					}   
 			    
 			ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -595,6 +585,40 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			supplierSO = null;		
 		}
 		return null;
+	}
+	
+	public void validateFactoringRequest(String action){
+		getManagedBean().setAutoUpdate(true);
+		if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Factoring Agreement" });
+		}
+		if(getManagedBean().isRemoveFactoring()){
+		    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
+		    	RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			    throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Remove Factoring" });
+		  }
+		}
+		
+		if(!getManagedBean().isAgreeFactoringClause()) {
+			if(!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+				throw new EpException(MessageConst.ERROR_750001);
+			}
+		}
+		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getContractNo());
+			sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+			sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
+			sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));			
+			sb.append(action);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(action);
+		}	
 	}
 	
 	public void flush(){
@@ -992,5 +1016,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
+	}
+	
+    public String preSubmitFactoringRequest(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveFactoringRequest(getManagedBean().getButtonAction());
 	}
 }
