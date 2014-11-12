@@ -118,11 +118,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
     private CmSupplierItem cmSupplierItem;
-    private String recentPriceDuration;
+    private String recentPriceDuration = ParameterConst.RECENT_PRICE_DURATION;
     private boolean tierAndPromoTierFlag;;
     private boolean zonalStandardAndPromoFlag;
     private String reportURL;
     private VCmSupplierItem vCmSupplierItem;
+    private boolean autoUpdate = Boolean.TRUE;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -907,6 +908,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	public void setvCmSupplierItem(VCmSupplierItem vCmSupplierItem) {
 		this.vCmSupplierItem = vCmSupplierItem;
+	}
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 	
 }
