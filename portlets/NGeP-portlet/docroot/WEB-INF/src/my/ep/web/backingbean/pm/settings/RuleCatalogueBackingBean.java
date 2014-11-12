@@ -875,16 +875,14 @@ public class RuleCatalogueBackingBean extends
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForOrgAndItem());
+		// add deleted list before update
+		exemptionList.addAll(this.getManagedBean()
+				.getDeletedOrgAndItemFeeExemptions());
+		System.out.print("............................exemptionList.size="
+				+ exemptionList.size());
 
-//		for (PmFeeExemption exemption : exemptionList) {
-//			if (!isValidDateRange(exemption.getEffDate(),
-//					exemption.getExpDate())) {
-//				throw new EpException(MessageConst.ERROR_770113,
-//						new String[] {});
-//			}
-//		}
 		for (PmFeeExemption exemption : exemptionList) {
-			if (exemption.getItemId().getItemId() == null) {// clear empty
+			if (exemption.getItemId() != null && exemption.getItemId().getItemId() == null) {// clear empty
 															// objects
 				exemption.setItemId(null);
 			}
@@ -902,27 +900,11 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
-			// fill up null Items with empty cmItem before return to view
-			this.getManagedBean().setFeeExemptionsForOrgAndItem(
-					new ArrayList<PmFeeExemption>());
-			for (PmFeeExemption exemption : exemptionList) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
-					exemption.setItemId(new CmItem());
-				}
-
-				this.getManagedBean().getFeeExemptionsForOrgAndItem()
-						.add(exemption);
-			}
 			// hit error and return
 			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
 
-		// add deleted list before update
-		exemptionList.addAll(this.getManagedBean()
-				.getDeletedOrgAndItemFeeExemptions());
-		System.out.print("............................exemptionList.size="
-				+ exemptionList.size());
+
 		IFeeExemptionSO exemptionSO = null;
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
@@ -1057,16 +1039,12 @@ public class RuleCatalogueBackingBean extends
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForContract());
-
-//		for (PmFeeExemption exemption : exemptionList) {
-//			if (!isValidDateRange(exemption.getEffDate(),
-//					exemption.getExpDate())) {
-//				throw new EpException(MessageConst.ERROR_770113,
-//						new String[] {});
-//			}
-//		}
+		// add deleted records before update
+				exemptionList.addAll(this.getManagedBean()
+						.getDeletedContractFeeExemptions());
+				
 		for (PmFeeExemption exemption : exemptionList) {
-			if (exemption.getRequestItemId().getRequestNoteItemId() == null) {// clear
+			if (exemption.getRequestItemId() != null && exemption.getRequestItemId().getRequestNoteItemId() == null) {// clear
 																				// empty
 																				// //
 																				// objects
@@ -1087,31 +1065,11 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
-			// fill up null ScRequestedItem with empty ScRequestedItem before
-			// return to view
-			this.getManagedBean().setFeeExemptionsForContract(
-					new ArrayList<PmFeeExemption>());
-			for (PmFeeExemption exemption : exemptionList) {
-
-				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
-				}
-				this.getManagedBean().getFeeExemptionsForContract()
-						.add(exemption);
-			}
+			
 			// hit error and return
 			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
-		// add deleted records before update
-		exemptionList.addAll(this.getManagedBean()
-				.getDeletedContractFeeExemptions());
+		
 
 		IFeeExemptionSO exemptionSO = null;
 		try {
@@ -1162,14 +1120,9 @@ public class RuleCatalogueBackingBean extends
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForComodity());
-
-//		for (PmFeeExemption exemption : exemptionList) {
-//			if (!isValidDateRange(exemption.getEffDate(),
-//					exemption.getExpDate())) {
-//				throw new EpException(MessageConst.ERROR_770113,
-//						new String[] {});
-//			}
-//		}
+		// add deleted records before update
+		exemptionList.addAll(this.getManagedBean()
+						.getDeletedComodityFeeExemptions());
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getFeeExemptionId() == null) {// set ExemptionType for
 														// new FeeExemptions
@@ -1180,9 +1133,7 @@ public class RuleCatalogueBackingBean extends
 			// hit error and return
 			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
-		// add deleted records before update
-		exemptionList.addAll(this.getManagedBean()
-				.getDeletedComodityFeeExemptions());
+		
 		IFeeExemptionSO exemptionSO = null;
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
