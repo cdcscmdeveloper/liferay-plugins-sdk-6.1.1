@@ -173,7 +173,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean conformDlgBtnFlag;
 	private String supplierLocLevel;
 	private boolean selectedFlag;
-
+    private boolean autoUpdate = Boolean.TRUE;
+    
 	public SimpleQuoteManagedBean() {
 		super();
 	}
@@ -1425,6 +1426,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	}
 	public void setSelectedFlag(boolean selectedFlag) {
 		this.selectedFlag = selectedFlag;
+	}
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 	
 }
