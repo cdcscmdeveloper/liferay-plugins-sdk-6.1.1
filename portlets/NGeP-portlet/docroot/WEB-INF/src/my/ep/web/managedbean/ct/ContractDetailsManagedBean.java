@@ -163,6 +163,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean autoUpdate;
 	private String textBeforeSign;
 	private String buttonAction;
+	private int counter;
 	
 	public String[] getAction() {
 		return action;
@@ -1001,5 +1002,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
+	}
+
+	public int getCounter() {
+		return counter;
+	}
+
+	public void setCounter(int counter) {
+		this.counter = counter;
 	}
 }

@@ -16,14 +16,14 @@
 	   <p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address" />
 	   <h:outputText styleClass="instruction" value=" #{lbl['lbl.ct.instruction.delivery.address2']}" escape="false"/><br/><br/>
   
-       <p:dataTable id="tableAgencyDetails" var="agencyData" 
-            value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
-            selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
+       <p:dataTable var="agencyData"  value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
+           id="tableAgencyDetails"  selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
+              
                <ac:paginator for="tableAgencyDetails"/>
                <p:ajax event="rowSelect" update=":form:agencyId" />
               
-               <p:column selectionMode="multiple" 
-                   style="width:2%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+               <p:column selectionMode="multiple" style="width:2%;" 
+                  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"></p:column>
             
                <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
 				    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
@@ -34,8 +34,7 @@
 				   <p:spacer width="5"/>
 				   <p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
 				       rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}" action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
-					   <p:graphicImage value="/css/images/design/address.png" 
-					       styleClass="ui-icon-address" title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
+					   <p:graphicImage value="/css/images/design/address.png"  styleClass="ui-icon-address" title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
 				   </p:commandLink>
 			    </p:column>
 			
@@ -47,16 +46,14 @@
            		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
            		        disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" maxlength="23"  styleClass="ppRightBtn">
 			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			 		    <p:ajax event="change" update=":form:tableAgencyDetails" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-                        	process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
+			 		    <p:ajax event="change" update=":form:tableAgencyDetails" process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
 				     </p:inputText>
 		    	</p:column>
 		   
 		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
-			      	<p:calendar id="agencyDateActive" 
-		               value="#{agencyData.effDate}"  showOn="button" readonlyInput="true" navigator="true"
-		               mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
-		               disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true"
+		               readonlyInput="true"   mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
+		               showOn="button"  disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		           </p:calendar>
 		          </p:column>
@@ -72,17 +69,17 @@
                		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
                	   </f:facet>
 		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
-		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
-		   	           agencyData.orgProfile.parentOrgProfile.orgName}"/>
+		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != agencyData.orgProfile.parentOrgProfile.orgName}"/>
 		       </p:column>
 		        
 		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
 		   	        <p:outputLabel value="#{agencyData.recordStatusFlg == 1 ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
 		       </p:column>
 			</p:dataTable> 
-       	<div class="ppRightBtn" style="padding-top:5px">
-       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" oncomplete="dlgAgency.show();" 
-       		    action="#{contractDetailsBackingBean.resetAgencyDetails()}"  update=":form:dialogAgency" rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
+       	<div class="ppRightBtn">
+       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
+       	        icon="ui-icon-add" partialSubmit="true" process="@this"	action="#{contractDetailsBackingBean.resetAgencyDetails}" 
+       	        update=":form:agencyies" rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
@@ -137,7 +134,7 @@
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency" icon="ui-icon-search" 
        		            action="#{contractDetailsBackingBean.searchAgencyDetails}" 
        		                onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
-			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" 
+			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 			            action="#{contractDetailsBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>
 			   <p:spacer height="2"/>
