@@ -2455,22 +2455,31 @@ public class SPDetailBackingBean extends
 	 * To redirect Supplier Proposal Screen..
 	 */
 	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String qtId = originalServletRequest.getParameter("qtId");
-		String encodedSupplierId = originalServletRequest
-				.getParameter("supplierId");
+		try {
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			String qtId = originalServletRequest.getParameter("qtId");
+			String encodedSupplierId = originalServletRequest
+					.getParameter("supplierId");
 
-		super.renewSesionObject();
+			super.renewSesionObject();
 
-		retrieveProposalChecklistDtls(Long.parseLong(qtId), encodedSupplierId,
-				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
+			retrieveProposalChecklistDtls(Long.parseLong(qtId), encodedSupplierId,
+					((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
+			
+		} catch (Exception e) {
+			handleException(e);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+		}
 	}
 
 	public void numOfEmployeesTypeChangeListener(AjaxBehaviorEvent event) {
