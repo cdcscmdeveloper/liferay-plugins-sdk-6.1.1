@@ -2150,7 +2150,13 @@ important;
 	height: 16 px !
 important;
 }
-
+.ui-icon-generate {
+	background-image: url('../images/design/document.png') !important;
+	background-position: center;
+	border-radius: 0 px;
+	height: 16 px !
+important;
+}
 .ui-icon-save {
 	background-image: url('../images/design/save.png') !important;
 	background-position: center;
