@@ -510,9 +510,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			
-			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
-			}
+			validateCircular(action);
 			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 			      validateCircular(action);
@@ -613,7 +611,23 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICircularSO.class);
-			validateCircular(action);			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if(getManagedBean().getCancelCircularReq().getCtCancelCircularList().size()==0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
+				}
+				
+				if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin())) {
+					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+				    }
+			    }
+			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0)) {
+	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
+			}
+						
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
@@ -674,19 +688,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			/*if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				if(getManagedBean().getCancelCircularReq().getCtCancelCircularList().size()==0) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException",
-							true);
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
-				}
-				
-				if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin())) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException",
-							true);
-					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
-				    }
-			    }
+			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+			}
 			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String remark = getManagedBean().getRemarkList().get(0).getRemark();
