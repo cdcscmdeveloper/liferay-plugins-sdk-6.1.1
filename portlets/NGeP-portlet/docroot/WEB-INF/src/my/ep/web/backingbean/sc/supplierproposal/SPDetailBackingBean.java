@@ -78,6 +78,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
+import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -92,6 +93,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.DateUtils;
@@ -609,7 +611,7 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-			
+
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
 
@@ -1090,7 +1092,9 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+				getManagedBean().setYear(
+						scQtProposalChecklist.getScQtCheckList()
+								.getScQtCheckListValue().getYear());
 				Calendar mindate = Calendar.getInstance();
 				mindate.set(getManagedBean().getYear().intValue(), 0, 1);
 				getManagedBean().setNonFedEffMinDate(mindate.getTime());
@@ -1117,7 +1121,9 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+				getManagedBean().setYear(
+						scQtProposalChecklist.getScQtCheckList()
+								.getScQtCheckListValue().getYear());
 				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
 
 			} // to check proposalchecklist is technicalspecification -
@@ -1412,14 +1418,14 @@ public class SPDetailBackingBean extends
 	public String prepareMultileProposalAction(int index) {
 		debugLogger("prepareMultileProposalAction");
 		getManagedBean().setProposalIndex(index);
-		
+
 		ScQt scQt = getManagedBean().getQt();
 		ScQtCheckList scQtCheckList = this.getManagedBean()
 				.getQtProposalChecklist().getScQtCheckList();
 		this.getManagedBean().setScQtCheckList(scQtCheckList);
 		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 		this.getManagedBean().setScQtDoc(scQtDoc);
-		
+
 		ITemplateSpecSO templateSpecSO;
 		try {
 			/*
@@ -1435,9 +1441,8 @@ public class SPDetailBackingBean extends
 			 * .retrieveTemplateSpecMaster(templateSpecBean);
 			 */
 
-			templateSpecSO = EpEjbBusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.COMMON_COMPONENT,
+			templateSpecSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 							ITemplateSpecSO.class);
 			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 			specReqDTO.setSpecMaster(scQtDoc.getTplSpecMaster());
@@ -1454,7 +1459,7 @@ public class SPDetailBackingBean extends
 		} finally {
 			templateSpecSO = null;
 		}
-		
+
 		this.getManagedBean().setPageUrl(getFinancialSpecUrl(scQt));
 		return NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE + "?faces-redirect=true";
 
@@ -1484,7 +1489,9 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+				getManagedBean().setYear(
+						scQtProposalChecklist.getScQtCheckList()
+								.getScQtCheckListValue().getYear());
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
@@ -1516,7 +1523,9 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+				getManagedBean().setYear(
+						scQtProposalChecklist.getScQtCheckList()
+								.getScQtCheckListValue().getYear());
 				pageUrl = retrieveFinCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_DETAILS
@@ -1576,18 +1585,18 @@ public class SPDetailBackingBean extends
 					this.getManagedBean().setZones(zones);
 					this.getManagedBean().setSelectedZone(zones.get(0));
 				}
-				
+
 			}
-			
+
 			return getFinancialSpecUrl(scQt);
 		} finally {
 			proposalSO = null;
 		}
 	}
-	
+
 	private String getFinancialSpecUrl(ScQt scQt) {
 		String specUrl = null;
-		
+
 		if (scQt.getMaxProposal() > 1) {
 			if (scQt.isZonal()) {
 				specUrl = NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE;
@@ -1597,7 +1606,7 @@ public class SPDetailBackingBean extends
 		} else {
 			specUrl = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE;
 		}
-		
+
 		return specUrl;
 	}
 
@@ -1611,7 +1620,7 @@ public class SPDetailBackingBean extends
 
 			List<ScQtProposalChecklist> techinicalProposalCheckLists = this
 					.getManagedBean().getTecCheckDetailsList();
-			
+
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
@@ -1940,13 +1949,24 @@ public class SPDetailBackingBean extends
 				}
 				getManagedBean().setEquityShareHolders(equityShareHolders);
 
-				// to set data for category codes
 
-				if (resDTO.getSmAppl().getSmSupplierCategories() != null
-						&& resDTO.getSmAppl().getSmSupplierCategories().size() != 0) {
-					for (SmSupplierCategory category : resDTO.getSmAppl()
-							.getSmSupplierCategories()) {
+				// To set supplier Basic Company details
+				if(getManagedBean().getSupplierFacilities() == null ){
+					getManagedBean().setSupplierFacilities(new ArrayList<SmFacility>());
+				}
 
+				for (SmFacility facility : resDTO.getSmAppl().getSmFacilities()) {
+
+					if (facility
+							.getFacilityType()
+							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
+							|| facility
+									.getFacilityType()
+									.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)) {
+						getManagedBean().setSmCompanyBasic(facility);
+						}
+					else{
+						getManagedBean().getSupplierFacilities().add(facility);
 					}
 
 				}
@@ -2091,37 +2111,39 @@ public class SPDetailBackingBean extends
 		getManagedBean().setNonFedMinDate(prpExperience.getEffectiveDate());
 		prpExperience.setExpiryDate(null);
 		prpExperience.setContractPeriod(0);
-		
-		/*if (prpExperience.getEffectiveDate() != null
-				&& prpExperience.getExpiryDate() != null) {
-			Calendar startCalendar = new GregorianCalendar();
-			startCalendar.setTime(prpExperience.getEffectiveDate());
-			Calendar endCalendar = new GregorianCalendar();
-			endCalendar.setTime(prpExperience.getExpiryDate());
-			int diffYear = endCalendar.get(Calendar.YEAR)
-					- startCalendar.get(Calendar.YEAR);
-			int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH)
-					- startCalendar.get(Calendar.MONTH);
-			prpExperience.setContractPeriod(diffMonth);
 
-		}*/
+		/*
+		 * if (prpExperience.getEffectiveDate() != null &&
+		 * prpExperience.getExpiryDate() != null) { Calendar startCalendar = new
+		 * GregorianCalendar();
+		 * startCalendar.setTime(prpExperience.getEffectiveDate()); Calendar
+		 * endCalendar = new GregorianCalendar();
+		 * endCalendar.setTime(prpExperience.getExpiryDate()); int diffYear =
+		 * endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+		 * int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) -
+		 * startCalendar.get(Calendar.MONTH);
+		 * prpExperience.setContractPeriod(diffMonth);
+		 * 
+		 * }
+		 */
 		int index = getManagedBean().getScQtPRPExperiences().indexOf(
 				prpExperience);
 		getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
 
-		//totalContractYears();
+		// totalContractYears();
 	}
 
 	public void expiryDateSelectListener(ScQtPRPExperience prpExperience) {
-		/*ScQtPRPExperience prpExperience = getManagedBean()
-				.getScQtPRPExperiences().get(index);*/
-		
-		int index = getManagedBean()
-				.getScQtPRPExperiences().indexOf(prpExperience);
+		/*
+		 * ScQtPRPExperience prpExperience = getManagedBean()
+		 * .getScQtPRPExperiences().get(index);
+		 */
+
+		int index = getManagedBean().getScQtPRPExperiences().indexOf(
+				prpExperience);
 		getManagedBean().setNonFedEffMaxDate(prpExperience.getExpiryDate());
-		
-		
-		if(prpExperience.getEffectiveDate() == null){
+
+		if (prpExperience.getEffectiveDate() == null) {
 			prpExperience.setExpiryDate(null);
 			getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
 			throw new EpException("Please Select Effective Date");
@@ -2210,8 +2232,7 @@ public class SPDetailBackingBean extends
 	public void addNonFederalGovtExperience() {
 		debugLogger("addNonFederalGovtExperience");
 		ScQtPRPExperience prpExperience = new ScQtPRPExperience();
-		
-		
+
 		try {
 			List<ScQtPRPExperience> experienceList = this.getManagedBean()
 					.getScQtPRPExperiences();
@@ -2221,7 +2242,7 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience scQtPRPExperience : experienceList) {
 				scQtPRPExperience.setBrandNew(false);
 			}
-			
+
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -2238,8 +2259,9 @@ public class SPDetailBackingBean extends
 				.getScQtPRPExperiences();
 		List<ScQtPRPExperience> selectedExperienceList = this.getManagedBean()
 				.getSelectedPRPExperiences();
-		
-		if(selectedExperienceList == null || selectedExperienceList.size() == 0){
+
+		if (selectedExperienceList == null
+				|| selectedExperienceList.size() == 0) {
 			throw new EpException("Please select a record to delete");
 		}
 		if (selectedExperienceList != null) {
@@ -2248,9 +2270,9 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 				tobeDeletedExperiences.add(scQtPRPExperience);
 				Iterator<ScQtPRPExperience> itr = experienceList.iterator();
-				while(itr.hasNext()){
+				while (itr.hasNext()) {
 					ScQtPRPExperience localQtPRPExperience = itr.next();
-					if(localQtPRPExperience.equals(scQtPRPExperience)){
+					if (localQtPRPExperience.equals(scQtPRPExperience)) {
 						itr.remove();
 						break;
 					}
@@ -2295,14 +2317,16 @@ public class SPDetailBackingBean extends
 
 	public void deleteCreditFacilities() {
 		debugLogger("deleteCreditFacilities");
-		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean().getScQtPRPCreditFacilities();
+		List<ScQtPRPCreditFacility> creditFacilitiesList = getManagedBean()
+				.getScQtPRPCreditFacilities();
 		List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
 				.getManagedBean().getSelectedPRPCreditFacilities();
-		
-		if(selectedCreditFacilitiesList == null ||selectedCreditFacilitiesList.size() == 0 ){
+
+		if (selectedCreditFacilitiesList == null
+				|| selectedCreditFacilitiesList.size() == 0) {
 			throw new EpException("Please select a record to delete");
 		}
-		
+
 		if (creditFacilitiesList.size() == selectedCreditFacilitiesList.size()) {
 			getManagedBean().setToBeDeletedCreditFacilities(
 					selectedCreditFacilitiesList);
@@ -2347,6 +2371,11 @@ public class SPDetailBackingBean extends
 				.getScQtPRPCashOnHand();
 		List<ScQtPRPCashOnHand> selectedCashOnHandList = this.getManagedBean()
 				.getSelectedPRPCashOnHand();
+
+		if (selectedCashOnHandList == null
+				|| selectedCashOnHandList.size() == 0) {
+			throw new EpException("Please select a record to delete");
+		}
 		if (cashOnHandList.size() == selectedCashOnHandList.size()) {
 			getManagedBean().setToBeDeletedCashOnHandList(
 					selectedCashOnHandList);
@@ -2361,6 +2390,10 @@ public class SPDetailBackingBean extends
 			getManagedBean().setToBeDeletedCashOnHandList(
 					toDeleteCashOnHandList);
 		}
+		
+		getManagedBean().setSelectedAll(false);
+		getManagedBean().setSelected(false);
+		getManagedBean().setSelectedPRPCashOnHand(null);
 
 		totalCashOnHandSum();
 	}
@@ -2388,8 +2421,10 @@ public class SPDetailBackingBean extends
 		List<ScQtProposal> list = this.getManagedBean().getQtProposalsList();
 
 		list = new ArrayList<ScQtProposal>();
-		if (getManagedBean().getPrepareProposal() > getManagedBean().getQt().getMaxProposal()) {
-			throw new EpException("Allowed maximum proposals are "+getManagedBean().getQt().getMaxProposal());
+		if (getManagedBean().getPrepareProposal() > getManagedBean().getQt()
+				.getMaxProposal()) {
+			throw new EpException("Allowed maximum proposals are "
+					+ getManagedBean().getQt().getMaxProposal());
 		} else {
 			for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
 				ScQtProposal proposal = new ScQtProposal();
@@ -2666,72 +2701,115 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSmChequeSignatories(bank.getSmChequeSignatories());
 
 	}
-	
-	public void selectAll(){
-		
-		if(getManagedBean().isSelectedAll()){
+
+	public void selectAll() {
+
+		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			getManagedBean().setSelectedPRPExperiences(getManagedBean().getScQtPRPExperiences());
-		}else {
+			getManagedBean().setSelectedPRPExperiences(
+					getManagedBean().getScQtPRPExperiences());
+		} else {
 			getManagedBean().setSelected(false);
 			getManagedBean().setSelectedPRPExperiences(null);
-			
+
 		}
-		
+
 	}
-	
-	public void selected(int index){
-		
+
+	public void selected(int index) {
+
 		List<ScQtPRPExperience> selectedExperienceList = getManagedBean()
 				.getSelectedPRPExperiences();
-		
-		if(getManagedBean().isSelected()){
-			if(selectedExperienceList == null){
+
+		if (getManagedBean().isSelected()) {
+			if (selectedExperienceList == null) {
 				selectedExperienceList = new ArrayList<ScQtPRPExperience>();
 			}
-			selectedExperienceList.add(getManagedBean().getScQtPRPExperiences().get(index));
-			
-		}else {
-			
-			if(selectedExperienceList.contains(getManagedBean().getScQtPRPExperiences().get(index))){
-				selectedExperienceList.remove(getManagedBean().getScQtPRPExperiences().get(index));
+			selectedExperienceList.add(getManagedBean().getScQtPRPExperiences()
+					.get(index));
+
+		} else {
+
+			if (selectedExperienceList.contains(getManagedBean()
+					.getScQtPRPExperiences().get(index))) {
+				selectedExperienceList.remove(getManagedBean()
+						.getScQtPRPExperiences().get(index));
 			}
 		}
 		getManagedBean().setSelectedPRPExperiences(selectedExperienceList);
 	}
-	
-	public void selectAllCreditFacilities(){
-		
-		if(getManagedBean().isSelectedAll()){
+
+	public void selectAllCreditFacilities() {
+
+		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			getManagedBean().setSelectedPRPCreditFacilities(getManagedBean().getScQtPRPCreditFacilities());
-		}else {
+			getManagedBean().setSelectedPRPCreditFacilities(
+					getManagedBean().getScQtPRPCreditFacilities());
+		} else {
 			getManagedBean().setSelected(false);
 			getManagedBean().setSelectedPRPCreditFacilities(null);
-			
+
 		}
 	}
-	
-	public void selectedCreditFaclity(int index){
-		
+
+	public void selectedCreditFacility(int index) {
+
 		List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean()
 				.getSelectedPRPCreditFacilities();
-		
-		if(getManagedBean().isSelected()){
-			if(selectedCreditFacilityList == null){
+
+		if (getManagedBean().isSelected()) {
+			if (selectedCreditFacilityList == null) {
 				selectedCreditFacilityList = new ArrayList<ScQtPRPCreditFacility>();
 			}
-			selectedCreditFacilityList.add(getManagedBean().getScQtPRPCreditFacilities().get(index));
-			
-		}else {
-			
-			if(selectedCreditFacilityList.contains(getManagedBean().getScQtPRPCreditFacilities().get(index))){
-				selectedCreditFacilityList.remove(getManagedBean().getScQtPRPCreditFacilities().get(index));
+			selectedCreditFacilityList.add(getManagedBean()
+					.getScQtPRPCreditFacilities().get(index));
+
+		} else {
+
+			if (selectedCreditFacilityList.contains(getManagedBean()
+					.getScQtPRPCreditFacilities().get(index))) {
+				selectedCreditFacilityList.remove(getManagedBean()
+						.getScQtPRPCreditFacilities().get(index));
 			}
 		}
-		getManagedBean().setSelectedPRPCreditFacilities(selectedCreditFacilityList);
+		getManagedBean().setSelectedPRPCreditFacilities(
+				selectedCreditFacilityList);
+	}
+
+	public void selectedCashOnHand(int index) {
+
+		List<ScQtPRPCashOnHand> selectedCashOnHandList = getManagedBean().getSelectedPRPCashOnHand();
+
+		if (getManagedBean().isSelected()) {
+			if (selectedCashOnHandList == null) {
+				selectedCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
+			}
+			selectedCashOnHandList.add(getManagedBean()
+					.getSelectedPRPCashOnHand().get(index));
+
+		} else {
+
+			if (selectedCashOnHandList.contains(getManagedBean()
+					.getSelectedPRPCashOnHand().get(index))) {
+				selectedCashOnHandList.remove(getManagedBean()
+						.getSelectedPRPCashOnHand().get(index));
+			}
+		}
+		getManagedBean().setSelectedPRPCashOnHand(
+				selectedCashOnHandList);
 	}
 	
-	
+	public void selectAllCashOnHand() {
+
+		if (getManagedBean().isSelectedAll()) {
+			getManagedBean().setSelected(true);
+			getManagedBean().setSelectedPRPCashOnHand(
+					getManagedBean().getScQtPRPCashOnHand());
+		} else {
+			getManagedBean().setSelected(false);
+			getManagedBean().setSelectedPRPCashOnHand(null);
+
+		}
+	}
 
 }
