@@ -41,6 +41,7 @@ import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -122,6 +123,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			          IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			          ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			          setSuspensionContractVer(contractSO.retrieveContractVerDtls(ctReqDTO));
+			          getManagedBean().setAutoUpdate(true);
 			          
 	     } catch(Exception e){
 			  e.printStackTrace();
@@ -208,6 +210,10 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		         reqDTO.setUserRole(getUserRole());
 	             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			     reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+			     
+				 if(this.getManagedBean().getPmDigiSign() !=null){
+					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+				 }
 			     ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			  
 			     if(resDTO.isSuccessful()) {
@@ -257,13 +263,30 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 } 
 	 
 	 public void validateSuspensionDetails(String outcome){
-		
+		 getManagedBean().setAutoUpdate(true);
+		 
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	      }
+		 
+		 
+		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
+					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+					//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+					StringBuilder sb = new StringBuilder();
+					sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+					sb.append(getManagedBean().getContractVer().getDocType());
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+					sb.append(outcome);			
+					getManagedBean().setTextBeforeSign(sb.toString());	
+					getManagedBean().setButtonAction(outcome);
+		}
 	 }
 		
 	private String getUserRole() {
@@ -318,5 +341,17 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.suspension", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
+	}
+	 
+	public String preSubmitContractSuspension(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		
+		return saveContractSuspension(getManagedBean().getButtonAction());
+	}
+		
+	public void disableUpdate(){
+		getManagedBean().setAutoUpdate(false);
 	}
 }

@@ -15,107 +15,114 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
  * Managed Bean For Contract Termination
  * 
  * @author Alam
- * @since 1/13/2014	 
+ * @since 1/13/2014
  */
 
-@ManagedBean(name ="terminationManagedBean")
+@ManagedBean(name = "terminationManagedBean")
 @SessionScoped
-public class TerminationManagedBean extends BaseManagedBean{
+public class TerminationManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String taskName;
 	private String[] action;
 	private String editorValue;
-	private String complaintCategory ="Breach The Obligation Of Tender / Contract";
+	private String complaintCategory = "Breach The Obligation Of Tender / Contract";
 	private String userLoginId;
 	private String externalPageUrl;
-	
+
 	private boolean disciplinaryValue;
 	private boolean termination;
 	private boolean mutualTermination;
 	private boolean remedy;
 	private boolean viewContract = false;
-	
+
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtTermination> terminationList;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	private String fileDirectory;
-	
+
 	private double performanceBondRuleAmt;
-	 private SelectItem[] terminationReasonDesc;
+	private SelectItem[] terminationReasonDesc;
+
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
+	private String buttonAction;
 
 	public String getTaskName() {
 		return taskName;
 	}
-	
+
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	
+
 	public String[] getAction() {
 		return action;
 	}
-	
+
 	public void setAction(String[] action) {
 		this.action = action;
 	}
-	
+
 	public String getEditorValue() {
 		return editorValue;
 	}
-	
+
 	public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
 	}
-	
+
 	public CtContract getCtContract() {
 		return ctContract;
 	}
-	
+
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
-	
+
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
-	
+
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
+
 	public String getUserLoginId() {
 		return userLoginId;
 	}
-	
+
 	public void setUserLoginId(String userLoginId) {
 		this.userLoginId = userLoginId;
 	}
-	
+
 	public List<CtRemark> getRemarkList() {
-		if(remarkList == null)
+		if (remarkList == null)
 			remarkList = new ArrayList<CtRemark>();
 		return remarkList;
 	}
-	
+
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
-	
+
 	public List<CtAttachment> getAttachmentList() {
-		if(attachmentList == null)
+		if (attachmentList == null)
 			attachmentList = new ArrayList<CtAttachment>();
 		return attachmentList;
 	}
-	
+
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
@@ -175,11 +182,11 @@ public class TerminationManagedBean extends BaseManagedBean{
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
 	}
-	
+
 	public String getExternalPageUrl() {
 		return externalPageUrl;
 	}
-	
+
 	public void setExternalPageUrl(String externalPageUrl) {
 		this.externalPageUrl = externalPageUrl;
 	}
@@ -206,5 +213,37 @@ public class TerminationManagedBean extends BaseManagedBean{
 
 	public void setTerminationReasonDesc(SelectItem[] terminationReasonDesc) {
 		this.terminationReasonDesc = terminationReasonDesc;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 }

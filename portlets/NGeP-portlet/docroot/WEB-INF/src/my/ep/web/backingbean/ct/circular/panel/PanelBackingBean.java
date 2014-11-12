@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -53,6 +54,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -792,11 +794,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getCircularVer().getCircularNo());
-			sb.append(getManagedBean().getCircularVer().getStartDate());
-			sb.append(getManagedBean().getCircularVer().getEndDate());
+			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action

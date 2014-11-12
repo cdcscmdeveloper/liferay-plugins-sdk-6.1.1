@@ -62,6 +62,7 @@ import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -84,6 +85,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -152,6 +154,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setAction(outcome);
 			getManagedBean().setTaskName(res.getTaskName());
+			getManagedBean().setAutoUpdate(true);
 			
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
@@ -224,21 +227,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 IContractSO contractSO = null;
 		 ContractReqDTO reqDTO = null;
 		 try{
-	 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-	 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
-	 			if((remark == null || remark.length() == 0)) {
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-	 			}
-	 		}
-		 		
-			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
-			if(getManagedBean().isMutualTermination() && getManagedBean().getAttachmentList().size()==0) {
-				throw new EpException(MessageConst.ERROR_750044);
-			}
-			
-			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().size()==0) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
-			}
+			 
+			validateContractTermination(action);
 			 
 			reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -266,6 +256,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(getManagedBean().getAttachmentList());
+		    
+			if(this.getManagedBean().getPmDigiSign() !=null){
+			   reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			}    
 		         
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if(resDTO.isSuccessful()) {
@@ -302,6 +296,45 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		  }
 		  return null;
 	 }
+	
+	public void validateContractTermination(String outcome){
+		this.getManagedBean().setAutoUpdate(true);
+		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+ 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+ 			if((remark == null || remark.length() == 0)) {
+ 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 			}
+ 		}
+		
+		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
+		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			throw new EpException(MessageConst.ERROR_750044);
+		}
+		
+		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().size()==0) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
+		}
+		
+		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE))){
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(outcome);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+		}
+		
+		
+	}
 	 
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		
@@ -632,5 +665,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.termination", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
+	}
+    
+    public String preSubmitContractTermination(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveContractTermination(getManagedBean().getButtonAction());
+	}
+	
+	public void disableUpdate(){
+		getManagedBean().setAutoUpdate(false);
 	}
 }

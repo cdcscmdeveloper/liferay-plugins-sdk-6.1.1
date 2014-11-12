@@ -22,6 +22,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -30,28 +31,28 @@ import my.ep.web.managedbean.BaseManagedBean;
  * Managed Bean For Contract Supplier
  * 
  * @author Alam
- * @since 7/11/2013	 
+ * @since 7/11/2013
  */
-@ManagedBean (name ="supplierManagedBean")
+@ManagedBean(name = "supplierManagedBean")
 @SessionScoped
 public class SupplierManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String[] action;
 	private String taskName;
-	
+
 	private Date effDate;
 	private Date expDate;
 	private Date loaDate;
-	
+
 	private boolean removeFactoring;
 	private boolean agreeFactoringClause;
-	
+
 	private Long loaId;
 	private int selectedIndex;
 	private Long contractVerId;
-	
+
 	private String loaNo;
 	private String contractNo;
 	private String contractName;
@@ -60,12 +61,12 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String originalAccountNo;
 	private String factoringBankName;
 	private String factoringBankAddress;
-	
+
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	private CtFactoring factoring;
 	private CtFactoring uploadFiles;
-	private List<PmFinancialAcc>  financialAccList;
+	private List<PmFinancialAcc> financialAccList;
 	private SelectItem[] financialBankBranch;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -76,19 +77,24 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private String accountNoAndName;
 	private PmUser supplierPmUser;
-	
+
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
-	
+
 	private SelectItem[] contractSupplierLoa;
 	private SelectItem[] listOfFinancialOrg;
-	
-	 private SelectItem[] populateContractList;
-	
-	public SupplierManagedBean(){
-		
+
+	private SelectItem[] populateContractList;
+
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
+	private String buttonAction;
+
+	public SupplierManagedBean() {
+
 	}
-	
+
 	public String[] getAction() {
 		return action;
 	}
@@ -96,47 +102,47 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setAction(String[] action) {
 		this.action = action;
 	}
-	
+
 	public String getContractNo() {
 		return contractNo;
 	}
-	
+
 	public void setContractNo(String contractNo) {
 		this.contractNo = contractNo;
 	}
-	
+
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
-	
+
 	public void setSelectedIndex(int selectedIndex) {
 		this.selectedIndex = selectedIndex;
 	}
-	
+
 	public CtFactoring getFactoring() {
 		return factoring;
 	}
-	
+
 	public void setFactoring(CtFactoring factoring) {
 		this.factoring = factoring;
 	}
-		
+
 	public SearchFilterBean getSearchFilterBean() {
 		return searchFilterBean;
 	}
-	
+
 	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
 		this.searchFilterBean = searchFilterBean;
 	}
-	
+
 	public List<CtContract> getContractList() {
 		return contractList;
 	}
-	
+
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
 	}
-	
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -148,9 +154,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setLoginUser(String loginUser) {
 		this.loginUser = loginUser;
 	}
-	
+
 	public List<CtRemark> getRemarkList() {
-		if(remarkList == null)
+		if (remarkList == null)
 			remarkList = new ArrayList<CtRemark>();
 		return remarkList;
 	}
@@ -160,8 +166,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 
 	public List<CtAttachment> getAttachmentList() {
-		if(attachmentList == null)
-		   attachmentList = new ArrayList<CtAttachment>();
+		if (attachmentList == null)
+			attachmentList = new ArrayList<CtAttachment>();
 		return attachmentList;
 	}
 
@@ -234,9 +240,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 
 	public List<PmFinancialAcc> getFinancialAccList() {
-		if(financialAccList == null)
+		if (financialAccList == null)
 			financialAccList = new ArrayList<PmFinancialAcc>();
-		 return financialAccList;
+		return financialAccList;
 	}
 
 	public void setFinancialAccList(List<PmFinancialAcc> financialAccList) {
@@ -276,7 +282,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 
 	public Map<Long, String> getFactoringCompMap() {
-		if(factoringCompMap==null) {
+		if (factoringCompMap == null) {
 			factoringCompMap = new HashMap<Long, String>();
 		}
 		return factoringCompMap;
@@ -311,13 +317,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 
 	public Map<String, SmSupplierBank> getSupplierBankAccountMap() {
-		if(supplierBankAccountMap==null) {
+		if (supplierBankAccountMap == null) {
 			supplierBankAccountMap = new HashMap<String, SmSupplierBank>();
 		}
 		return supplierBankAccountMap;
 	}
 
-	public void setSupplierBankAccountMap(Map<String, SmSupplierBank> supplierBankAccountMap) {
+	public void setSupplierBankAccountMap(
+			Map<String, SmSupplierBank> supplierBankAccountMap) {
 		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
 
@@ -344,7 +351,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setFinancialBankBranch(SelectItem[] financialBankBranch) {
 		this.financialBankBranch = financialBankBranch;
 	}
-	
+
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
@@ -376,9 +383,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
-	
+
 	public Map<String, PmUser> getUserMap() {
-		if(userMap==null) {
+		if (userMap == null) {
 			userMap = new HashMap<String, PmUser>();
 		}
 		return userMap;
@@ -410,5 +417,37 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setPopulateContractList(SelectItem[] populateContractList) {
 		this.populateContractList = populateContractList;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 }
