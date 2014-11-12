@@ -18,8 +18,8 @@
 		<p:dataTable id="technongovtid" var="technongovt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
 			rowKey="#{technongovt}" rowIndexVar="rowIndex" rows="10">
+			<ac:paginator for="technongovtid" />
 			<p:column style="width:2%">
-				<ac:paginator for="technongovtid" />
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
@@ -28,13 +28,11 @@
 							listener="#{supplierProposalDetailBackingBean.selectAll}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-
 				<p:selectBooleanCheckbox
 					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}" />
 				</p:selectBooleanCheckbox>
-
 			</p:column>
 
 			<p:column id="clientNameColId" >

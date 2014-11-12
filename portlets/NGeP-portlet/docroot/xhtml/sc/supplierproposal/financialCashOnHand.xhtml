@@ -6,16 +6,27 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.sp.cash.on.hand']}" toggleable="true">
+	<p:panel id="cashOnHandPanel" header="#{lbl['lbl.sc.sp.cash.on.hand']}"
+		toggleable="true">
 		<p:dataTable id="cashonhandid" var="cashonhand"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCashOnHand}"
-			rowKey="#{cashonhand}" rowIndexVar="rowIndex"
-			selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPCashOnHand}">
-
-			<p:column selectionMode="multiple" style="width:2%" />
-
+			rowKey="#{cashonhand}" rowIndexVar="rowIndex">
 			<ac:paginator for="cashonhand" />
-
+			<p:column style="width:2%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=cashonhandid])"
+							listener="#{supplierProposalDetailBackingBean.selectAllCashOnHand}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox
+					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{supplierProposalDetailBackingBean.selectedCashOnHand(rowIndex)}" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -26,10 +37,12 @@
 				<p:inputText value="#{cashonhand.bankName}" size="20"
 					required="true" maxlength="100"
 					label="#{lbl['lbl.sc.sp.bank.name']}"
-					rendered="#{cashonhand.brandNew eq true}" />
+					rendered="#{cashonhand.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,bankNameMsg" />
+				</p:inputText>
 				<p:message id="bankNameMsg" for="bankName" display="icon" />
 			</p:column>
-
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -39,7 +52,10 @@
 					rendered="#{cashonhand.brandNew eq false}" />
 				<p:inputText value="#{cashonhand.accountNum}" size="20"
 					required="true" maxlength="30" label="#{lbl['lbl.sc.sp.ac.no']}"
-					rendered="#{cashonhand.brandNew eq true}" />
+					rendered="#{cashonhand.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,accountNumMsg" />
+				</p:inputText>
 				<p:message id="accountNumMsg" for="accountNum" display="icon" />
 			</p:column>
 
@@ -58,7 +74,8 @@
 					rendered="#{cashonhand.brandNew eq true}">
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.accountType)}" />
-					<p:ajax event="change"
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this,accountTypeMsg"
 						listener="#{supplierProposalDetailBackingBean.accountTypeChange(cashonhand)}" />
 				</p:selectOneMenu>
 				<p:message id="accountTypeMsg" for="accountType" display="icon" />
@@ -74,7 +91,10 @@
 				<p:inputTextarea id="bankAddress" value="#{cashonhand.bankAddress}"
 					cols="35" rows="2" required="true" maxlength="100"
 					label="#{lbl['lbl.sc.sp.address']}"
-					rendered="#{cashonhand.brandNew eq true}" />
+					rendered="#{cashonhand.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,bankAddressMsg" />
+				</p:inputTextarea>
 				<p:message id="bankAddressMsg" for="bankAddress" display="icon" />
 			</p:column>
 
@@ -94,7 +114,7 @@
 					rendered="#{cashonhand.brandNew eq true}">
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalCashOnHandSum}"
-						update="@this, :form:totalcashonhand" />
+						update="@this,cashAmountMsg, :form:totalcashonhand" />
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -107,11 +127,11 @@
 				rendered="#{!statusHide}" process="@this,cashonhandid"
 				partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
-				update="cashonhandid" icon="ui-icon-add" />
+				update="@([id$=cashOnHandPanel])" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				rendered="#{!statusHide}" icon="ui-icon-delete"
-				update="cashonhandid, totalcashonhand"
+				rendered="#{!statusHide}" icon="ui-icon-delete" partialSubmit="true"
+				process="@this" update="@([id$=cashOnHandPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
 
 		</div>
