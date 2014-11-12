@@ -10806,6 +10806,14 @@ public class SpecificationBackingBean extends
 
 	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists) {
 		if (null != savedCheckLists && !savedCheckLists.isEmpty()) {
+			if(null==this.getManagedBean().getScQtCheckSt2techProposal()){
+				this.getManagedBean().setScQtCheckSt2techProposal(new ArrayList<ScQtCheckList>());
+			}
+			if(null==this
+					.getManagedBean()
+					.getScQtCheckSt2financeProposalList()){
+				this.getManagedBean().setScQtCheckSt2financeProposalList(new ArrayList<ScQtCheckList>());
+			}
 			for (ScQtCheckList checkList : savedCheckLists) {
 				if (SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(checkList.getDocCategory())) {
