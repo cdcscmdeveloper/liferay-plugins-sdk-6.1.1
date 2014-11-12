@@ -24,7 +24,7 @@
 						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:preparedOrgProfileId" readonly="true"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}|orgProfileId^#{contractRequestBackingBean.managedBean.orgProfileIds}^9">
 					</ac:lov></td>
