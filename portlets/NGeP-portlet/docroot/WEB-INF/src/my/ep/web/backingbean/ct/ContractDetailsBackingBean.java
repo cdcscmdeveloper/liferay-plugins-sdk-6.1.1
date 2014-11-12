@@ -853,10 +853,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        	
 		        	               if(performanceBond.isRecordStatus()) {
 					                   bondAmount = bondAmount + performanceBond.getBondAmount();
-                                       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
+                                       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
                                     	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
-					                   }
+                                       }
+					               }
 		                       }
 				       
 		                    if(bondAmount != 0.0) {
