@@ -16,7 +16,7 @@
 			<p:column style="width:2px;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="#{scoringPnlId}"
@@ -24,7 +24,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					value="#{checkListScoring.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
@@ -35,7 +35,7 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.from']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_fromRange" style="text-align:right"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
@@ -50,7 +50,7 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.to']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toRange" style="text-align:right"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
 					value="#{checkListScoring.rangeTo}" maxlength="18">
@@ -66,7 +66,7 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					label="#{lbl['lbl.sc.spec.stage2.score']}"
 					value="#{checkListScoring.score}" maxlength="18">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>

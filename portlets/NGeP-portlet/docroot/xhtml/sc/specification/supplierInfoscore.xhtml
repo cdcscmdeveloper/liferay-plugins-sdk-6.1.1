@@ -52,7 +52,7 @@
 								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 							</td>
 							<td><p:inputText id="totalSuppliersScore" required="true"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
 									maxlength="18">

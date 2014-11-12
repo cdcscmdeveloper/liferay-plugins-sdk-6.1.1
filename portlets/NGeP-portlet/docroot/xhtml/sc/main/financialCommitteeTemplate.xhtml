@@ -22,12 +22,12 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId !=QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION }"
 				style="float:right;" icon="ui-icon-check" update="@all"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId !=QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION }"
 				style="float:right;" update="@all"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',2)}"
 				icon="ui-icon-save" />
@@ -87,7 +87,7 @@
 
 
 		<ac:templateSpec
-			editable="#{((specificationBackingBean.managedBean.currentStatusId eq '60400') or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId eq '60405'))}"
+			editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION ) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
 
