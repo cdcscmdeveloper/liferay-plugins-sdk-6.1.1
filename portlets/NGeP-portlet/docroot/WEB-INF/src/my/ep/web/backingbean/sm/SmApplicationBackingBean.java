@@ -868,7 +868,9 @@ public class SmApplicationBackingBean extends
 					log.info("******* This is site visit review page ********");
 					assignViewSiteVisitReport();
 				}
-
+				
+				//to init page whether normal or special category type is allowed
+				initApplCategoryType();
 			}
 			assignValReqdToFalse();
 		}
@@ -1304,6 +1306,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
+		setApplicationCategorySelected();
+	}
+	
+	private void setApplicationCategorySelected() {
 		getManagedBean().getSmAppl().setCurrentActiveTab(
 				getManagedBean().getTabActiveIndex());
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
@@ -6071,6 +6077,27 @@ public class SmApplicationBackingBean extends
 
 		return itemList.toArray(new SelectItem[itemList.size()]);
 
+	}
+	
+	private void initApplCategoryType() {
+		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+			if (getManagedBean().getBasicCompanyFacility() != null
+					&& getManagedBean()
+							.getBasicCompanyFacility()
+							.getFacilityType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)) {
+				if (getManagedBean().getSmAppl() != null) {
+					getManagedBean()
+							.getSmAppl()
+							.setApplCategoryType(
+									SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL);
+					setApplicationCategorySelected();
+					assignApplnCategoryType();
+				}
+			}
+		}
 	}
 
 	private void displayBumiRecommendNote() {
