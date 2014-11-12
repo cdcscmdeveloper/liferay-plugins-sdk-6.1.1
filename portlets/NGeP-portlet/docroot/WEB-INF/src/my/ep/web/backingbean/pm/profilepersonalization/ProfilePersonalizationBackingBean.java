@@ -628,7 +628,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									null, "Update Portrait Successfull for Login ID: "
+									null, "Successfully update portrait for Login ID: "
 											+ this.getManagedBean().getSelectedUser().getLoginId()));
 				
 				
@@ -667,7 +667,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									null, "Delete Portrait Successfull for Login ID: "
+									null, "Successfully delete portrait for Login ID: "
 											+ this.getManagedBean().getSelectedUser().getLoginId()));
 				
 				
