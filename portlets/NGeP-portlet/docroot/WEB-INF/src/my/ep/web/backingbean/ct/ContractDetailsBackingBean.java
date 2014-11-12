@@ -1543,7 +1543,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			//Remove if already exist, avoid duplicate
 		  	for(CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
 		  		if(agency.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
-		  			throw new EpException(MessageConst.INFO_771000); 
+		  			 throw new EpException(MessageConst.INFO_771000,new String[]{agency.getOrgProfile().getOrgName()}); 
 		  		}
 		  	}
 			
