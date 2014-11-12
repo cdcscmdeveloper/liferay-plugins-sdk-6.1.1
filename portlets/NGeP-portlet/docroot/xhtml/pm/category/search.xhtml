@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 	
-	<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+	<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
 		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -18,31 +18,13 @@
 			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true" id="catSearch">
-		
-			<ui:remove>
-			<h:panelGrid columns="4" width="100%">
-				<h:outputLabel value="#{lbl['lbl.pm.main.category.code']}"></h:outputLabel>
-				<p:inputText value="#{categoryBackingBean.managedBean.mainCatCode}" size="40" />
-				
-				<h:outputLabel value="#{lbl['lbl.pm.main.category.desc']}"></h:outputLabel>
-				<p:inputText value="#{categoryBackingBean.managedBean.mainCatDesc}" size="40" />
-				
-				<h:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"></h:outputLabel>
-				<p:inputText value="#{categoryBackingBean.managedBean.subCatCode}" size="40" />
-				
-				<h:outputLabel value="#{lbl['lbl.pm.sub.category.desc']}"></h:outputLabel>
-				<p:inputText value="#{categoryBackingBean.managedBean.subCatDesc}" size="40" />
-				
-				<h:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"></h:outputLabel>
-				<p:inputText value="#{categoryBackingBean.managedBean.subDivCode}" size="40" />
-				
-				<h:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"></h:outputLabel>
-				<p:inputText value="#{categoryBackingBean.managedBean.subDivDesc}" size="40" />
-			</h:panelGrid>
-			</ui:remove>
 			
 			<h:panelGrid columns="2">
+				<h:panelGroup style="float: right">
+				<h:outputText value="* " styleClass="mandatory" />
 			    <h:outputLabel value="#{lbl['lbl.pm.category.level']}"></h:outputLabel>
+			    </h:panelGroup>
+			    
 			      <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{categoryBackingBean.managedBean.pmCategoryLevel}">    
 				 	 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}" itemValue="1" />
@@ -76,13 +58,13 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.pm.organisation.search']}"
 						icon="ui-icon-search"
-						action="#{categoryBackingBean.search}"
+						action="#{categoryBackingBean.SearchCategory}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						update="searchCategory" />
 						
 				<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
 						action="#{categoryBackingBean.resetCategory}"
-						update="catSearch" icon="ui-icon-reset"
+						update="catSearch,searchCategory" icon="ui-icon-reset"
 						resetValues="true" partialSubmit="true" process="@this" />
 						
 			</div>	
