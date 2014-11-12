@@ -1958,7 +1958,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			trBB = new TerminationBackingBean();
-			trBB.setTerminationContractVer(resDTO);
+			
+			if(resDTO.getCtContractVer().getCtTermination()==null) {
+				resDTO.getCtContractVer().setCtTermination(new CtTermination());
+			    if(resDTO.getCtContractVer().getCtTermination().getDecisionType() == null)
+				    resDTO.getCtContractVer().getCtTermination().setDecisionType(new PmParameter());
+			}
+	    	
+			trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	
+			
+		    trBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		    trBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			trBB.getManagedBean().setViewContract(false);
+			trBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+			trBB.getManagedBean().getContractVer().getDocType(), trBB.getManagedBean().getCtContract().getContractNo()));	
+			trBB.flush();
 		}catch(Exception e) {
 				e.printStackTrace();
 		} finally{
@@ -2158,13 +2173,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 	}
 	
-	public void resetAgencyDetails(){
-		setMinistryOwnerId();
-		getManagedBean().setPtjCodeName(null);		
-		getManagedBean().setPtjCodeNameSearchValues(null);
-		agencyDataModel.resetData();
-	}
-	
 	public void assignSelAgency(CtAgency agency) {
 		getManagedBean().setSelectedAgency(agency);
 		RequestContext.getCurrentInstance().execute("deliveryAddressDlg.show()");
@@ -2172,7 +2180,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	/*Implementation of search method for agency*/
 	public void searchAgencyDetails() {
 		try { 
-			   
+			getManagedBean().setCounter(0);  
 			agencyDataModel.reloadData();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2213,39 +2221,29 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			try {
 				// Filter By - parameterType
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"orgTypeCode.pmParameterType.parameterType",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							ParameterTypeConst.ORGANISATION_TYPES));
+				if(getManagedBean().getCounter() == 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
 				
 				// Filter By - Org Type
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							OrganizationType.DIVISION.value()));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
 				
 				// Filter By - Parent Org Profile Id
 				Long ministryProfileId = getManagedBean().getMinistryProfileId();
 				if (ministryProfileId == null) {
 					ministryProfileId = 0L;
 				}
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"parentOrgProfile.orgProfileId",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						ministryProfileId));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("parentOrgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),ministryProfileId));
 				
 				if(getManagedBean().getPtjCodeName() != null &&
 						(getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))){
 					   
 					if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code")){
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",
-								  						SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
+						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
 					    searchBean.getDataFilterBeans().add(filterBean);
 					
 					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name")){
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName",
-														SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
+						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
 					    searchBean.getDataFilterBeans().add(filterBean);
 					}
@@ -2258,6 +2256,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				 if(resDTO.isSuccessful()) {
 					 return resDTO.getOrgProfileResultBean();
 				 }
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -2641,8 +2640,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}	
 	    }
 	
-	public void setMinistryOwnerId(){
+	public void resetAgencyDetails(){
 		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
+		getManagedBean().setPtjCodeName(null);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+		getManagedBean().setCounter(1);
+		agencyDataModel.getList().clear();
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
