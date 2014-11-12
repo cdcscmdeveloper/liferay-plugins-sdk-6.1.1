@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 124px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td ><p:inputText size="66"
+				<td ><p:inputText size="59"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
@@ -22,7 +22,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
+					<p:spacer width="5" /> <p:inputText size="45" id="preparedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
@@ -31,9 +31,9 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
+				<td><p:inputText size="7" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
+					<p:spacer width="5" /> <p:inputText size="45" id="issuePtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
@@ -43,9 +43,9 @@
 			</tr>			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
+				<td><p:inputText size="7" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
+					<p:spacer width="5" /> <p:inputText size="45" id="chargedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 				<td style="width: 117px;"><p:outputLabel
@@ -56,9 +56,9 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
-				<td><p:inputText size="8" disabled="true"
+				<td><p:inputText size="7" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" disabled="true"
+					<p:spacer width="5" /> <p:inputText size="45" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
