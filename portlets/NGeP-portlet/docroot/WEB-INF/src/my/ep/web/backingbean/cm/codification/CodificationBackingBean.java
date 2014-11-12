@@ -119,8 +119,10 @@ public class CodificationBackingBean extends
 
 	private TreeNode rootNodes;
 	private TreeNode selectedNode;
+	private String itemTypeParameter;
 
 	public CodificationBackingBean() {
+		System.out.println(".................CodificationBackingBean................");
 		this.getManagedBean().setContractedItem(null);
 		CmUnspsc unspsc = new CmUnspsc();
 		unspsc.setUnspscTitle("item");
@@ -403,15 +405,21 @@ public class CodificationBackingBean extends
 				}
 				FacesScopes fs = new FacesScopes();
 				String itemType = fs.getParameter("itemType");
-
+				
 				log.info("............itemType=" + itemType);
-				if (itemType != null) {
-					if (itemType.equals("S") || itemType.equals("2")) {
+				if (itemType != null) {//save parameter first time it come from search button
+					 setItemTypeParameter(itemType);
+				}
+				log.info("............getItemTypeParameter=" + getItemTypeParameter());
+				//get parameter from backup property whenever table be reloaded
+                if(getItemTypeParameter() != null && !getItemTypeParameter().isEmpty()){
+				
+					if (getItemTypeParameter().equals("S") || getItemTypeParameter().equals("2")) {
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("unspscCode",
 										SearchOperator.OPERATOR_GREATER_EQUAL
 												.value(), "70000000"));
-					} else if (itemType.equals("P") || itemType.equals("1")) {
+					} else if (getItemTypeParameter().equals("P") || getItemTypeParameter().equals("1")) {
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("unspscCode",
 										SearchOperator.OPERATOR_LESS.value(),
@@ -2564,7 +2572,7 @@ public class CodificationBackingBean extends
 	}
 
 	public boolean productCode(String unspscCode) {
-		System.out.println("............productCode..........");
+
 		boolean flag = true;
 		String segmentCode = "";
 
@@ -2576,7 +2584,6 @@ public class CodificationBackingBean extends
 			flag = false;
 		}
 
-		System.out.println("flag:" + flag);
 
 		return flag;
 	}
@@ -2648,4 +2655,15 @@ public class CodificationBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "codificationView");
 	}
+
+	public String getItemTypeParameter() {
+		return itemTypeParameter;
+	}
+
+	public void setItemTypeParameter(String itemTypeParameter) {
+		log.info(".................setItemTypeParameter................");
+		this.itemTypeParameter = itemTypeParameter;
+	}
+	
+	
 }
