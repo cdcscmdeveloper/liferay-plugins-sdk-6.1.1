@@ -74,12 +74,12 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 					</h:panelGroup>
-					<h:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}" rendered="#{!categoryBackingBean.managedBean.newCategory}">
+					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}" rendered="#{!categoryBackingBean.managedBean.newCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
 						<f:selectItems
 							value="#{categoryBackingBean.managedBean.supplierType}"
 							var="supplierType" itemLabel="#{supplierType.codeName}" itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-					</h:selectOneMenu>
+					</p:selectOneMenu>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}" rendered="#{categoryBackingBean.managedBean.newCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
 						<f:selectItems

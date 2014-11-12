@@ -222,7 +222,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setPmCategoryL1(new PmCategoryL1());
 		this.getManagedBean().setCatLevel("1");
 		this.getManagedBean().setNewCategory(true);
-		return "/xhtml/pm/category/categoryl1.xhtml";
+		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true";
 	}
 	
 	public String addSubCategory() {
@@ -455,7 +455,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl3.xhtml";
+		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
 	
 	public String saveCategory() {
