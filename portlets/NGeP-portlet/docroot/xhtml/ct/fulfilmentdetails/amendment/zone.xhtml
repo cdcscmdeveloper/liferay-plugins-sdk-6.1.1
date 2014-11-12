@@ -36,12 +36,13 @@
             	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.term']}"/>
             </f:facet>
              <p:treeNode type="zone">
-                <p:inputText value="#{zoneTree.deliveryTerm}" disabled="true" rendered="#{zoneTree.zone != null}"  style="width:40px;" />
-                <p:spacer width="2" />
-                <p:outputLabel rendered="#{zoneTree.zone != null}" style="float:none;" value="#{lbl['lbl.ct.days']}" />
-                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" disabled="true" rendered="#{false and zoneTree.zone != null}"  style="width:80px;" >
-			       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
-			    </p:selectOneMenu>
+             	<h:panelGrid columns="2" style="width:30%;" styleClass="zone-tree-node">
+	                <p:inputText value="#{zoneTree.deliveryTerm}" disabled="true" rendered="#{zoneTree.zone != null}"  style="width:40px;" />
+	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" />
+	                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" disabled="true" rendered="#{false and zoneTree.zone != null}"  style="width:80px;" >
+				       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+				    </p:selectOneMenu>
+			    </h:panelGrid>
              </p:treeNode>
         </p:column>
       </p:treeTable>

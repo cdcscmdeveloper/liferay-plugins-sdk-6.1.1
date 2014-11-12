@@ -41,11 +41,12 @@
             	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.term']}"/>
             </f:facet>
              <p:treeNode type="zone">
-                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true"
-                     style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="#{lbl['lbl.ct.delivery.term']}"
-                     disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
-                <p:spacer width="2" />
-                <h:outputText rendered="#{zoneTree.zone != null}" style="float:none;" value="#{lbl['lbl.ct.days']}" ></h:outputText>
+             	<h:panelGrid columns="2" style="width:30%;" styleClass="zone-tree-node">
+	                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true"
+	                     style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="#{lbl['lbl.ct.delivery.term']}"
+	                     disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
+	                <h:outputText rendered="#{zoneTree.zone != null}" value="#{lbl['lbl.ct.days']}" ></h:outputText>
+             	</h:panelGrid>
              </p:treeNode>
         </p:column>
       </p:treeTable>
