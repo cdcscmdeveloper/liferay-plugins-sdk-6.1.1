@@ -1461,23 +1461,27 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			this.setScCreatedFromYear(outputDateFormat.format(currentDate).substring(6,10));
 			this.setScCreatedToYear(outputDateFormat.format(currentDate).substring(6,10));
 		}
-		if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL)))){
-			this.setToDate(currentDate);
-			this.setSmExpiryToDate(currentDate);
-			this.setScSoneCrtdToDate(currentDate);
-			Date newDate= new Date();
-			newDate.setMonth(0);
-			newDate.setDate(1);
-			this.setFromDate(newDate);
-			this.setSmExpiryFromDate(newDate);
-			this.setScSoneCrtdFromDate(newDate);			
+		if((getManagedBean().getModuleValue()!=null)&&((getManagedBean().getReportValue()!=null))){
+			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL)))){
+				this.setToDate(currentDate);
+				this.setSmExpiryToDate(currentDate);
+				this.setScSoneCrtdToDate(currentDate);
+				Date newDate= new Date();
+				newDate.setMonth(0);
+				newDate.setDate(1);
+				this.setFromDate(newDate);
+				this.setSmExpiryFromDate(newDate);
+				this.setScSoneCrtdFromDate(newDate);			
+			}
 		}
-		if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))&&(this.getSubModule().equalsIgnoreCase(ReportConst.SUB_MOD_S1))){
-			this.setScSoneCrtdToDate(currentDate);
-			Date newDate= new Date();
-			newDate.setMonth(0);
-			newDate.setDate(1);			
-			this.setScSoneCrtdFromDate(newDate);			
+		if((getManagedBean().getModuleValue()!=null)&&(this.getSubModule()!=null)){
+			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))&&(this.getSubModule().equalsIgnoreCase(ReportConst.SUB_MOD_S1))){
+				this.setScSoneCrtdToDate(currentDate);
+				Date newDate= new Date();
+				newDate.setMonth(0);
+				newDate.setDate(1);			
+				this.setScSoneCrtdFromDate(newDate);			
+			}
 		}
 	}	
 	public void retrieveState(){
