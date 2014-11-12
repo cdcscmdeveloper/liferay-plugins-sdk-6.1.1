@@ -467,7 +467,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				throw new EpException(MessageConst.ERROR_770046);
 			}
 			
-			if(pmUser.getNotifyRemovalDay()==null || pmUser.getNotifyRemovalDay()<=0){
+			if(pmUser.getNotifyRemovalDay()==null){
 				throw new EpException(MessageConst.ERROR_770047);
 			}	
 		}
