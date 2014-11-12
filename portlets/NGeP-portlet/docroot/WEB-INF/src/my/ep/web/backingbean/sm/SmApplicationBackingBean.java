@@ -840,6 +840,8 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil
 							.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 									.getSmAppl().getSmCompanyBasic());
+					//API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 				}
 
 				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -2172,6 +2174,8 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierCategory> categories = getManagedBean()
 					.getDeleteCategoryList();
 			deleteCatCodes(categories);
+			//API FOR LIST OF OVERLAPPING CATEGORIES
+			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Category Code" });
@@ -2198,6 +2202,8 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierCategory> categories = getManagedBean()
 					.getDeleteNewApplCategoryList();
 			deleteCatCodes(categories);
+			//API FOR LIST OF OVERLAPPING CATEGORIES
+			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Category Code" });
@@ -2232,9 +2238,11 @@ public class SmApplicationBackingBean extends
 								.getSelectedCategory());
 			}
 		}
-		validCat = SmApplicationUtil.validL3CategoryCode(getManagedBean()
+		boolean overLapCategory = false;
+		overLapCategory = SmApplicationUtil.validL3CategoryCodeForOverLapping(getManagedBean()
 				.getSelectedCategory().getPmCategoryL3().getCategoryL3Id(),
 				getManagedBean().getSmSupplier().getSupplierId());
+		getManagedBean().getSelectedCategory().setOverLapCategory(overLapCategory);
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getPmCategoryL1()
@@ -2306,6 +2314,8 @@ public class SmApplicationBackingBean extends
 			}
 			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 			assignValReqdToFalse();
+			//API FOR LIST OF OVERLAPPING CATEGORIES
+			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}

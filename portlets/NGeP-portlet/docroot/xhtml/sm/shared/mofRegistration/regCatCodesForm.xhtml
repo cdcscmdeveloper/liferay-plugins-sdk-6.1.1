@@ -10,6 +10,15 @@
 
 		<br />
 		<p:panel id="catCodeInfPan">
+			<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel escape="false"
+								value="#{backingBean.managedBean.overLappedCategoryMsg}"
+								style="color: red;font-weight: bold;float:left;" /></td>
+					</tr>
+				</table>
+			</c:if>
 			<c:choose>
 				<c:when
 					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
@@ -60,7 +69,7 @@
 				value="#{backingBean.managedBean.activeCategoryList}"
 				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 				selection="#{backingBean.managedBean.deleteNewApplCategoryList}"
-				rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}" 
+				rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="catDt" />
 				<p:ajax event="rowSelect"

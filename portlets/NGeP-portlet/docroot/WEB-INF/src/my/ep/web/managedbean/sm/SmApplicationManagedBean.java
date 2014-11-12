@@ -297,6 +297,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean selectedAll;
 	private boolean selected;
 	private int personnelCountCheck;
+	private String overLappedCategoryMsg;
+	private boolean overLappedCategoryExists;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2253,6 +2255,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPersonnelCountCheck(int personnelCountCheck) {
 		this.personnelCountCheck = personnelCountCheck;
+	}
+
+	public String getOverLappedCategoryMsg() {
+		return overLappedCategoryMsg;
+	}
+
+	public void setOverLappedCategoryMsg(String overLappedCategoryMsg) {
+		this.overLappedCategoryMsg = overLappedCategoryMsg;
+	}
+
+	public boolean isOverLappedCategoryExists() {
+		return overLappedCategoryExists;
+	}
+
+	public void setOverLappedCategoryExists(boolean overLappedCategoryExists) {
+		this.overLappedCategoryExists = overLappedCategoryExists;
 	}
 
 }
