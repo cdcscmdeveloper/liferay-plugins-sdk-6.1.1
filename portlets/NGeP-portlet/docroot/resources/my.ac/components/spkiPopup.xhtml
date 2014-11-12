@@ -18,12 +18,12 @@
         <span id="#{cc.clientId}">
         
     
-        <h:outputLabel value="*Please answer the following challenge question" />
+        <h:outputLabel value="#{lbl['lbl.cc.spki.title']}" />
           <h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
            <h:outputLabel value="#{spkiBackingBean.challengeQues1}" />
            <p:inputText value="#{spkiBackingBean.challsAnswer}" />
         
-            <h:outputLabel for="password" value="*Digital Certificate PIN" />
+            <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
             <p:password binding="#{pin}" id="password"  />
  			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" oncomplete="spki_dlg.hide();" />        
 		</h:panelGrid></span>
