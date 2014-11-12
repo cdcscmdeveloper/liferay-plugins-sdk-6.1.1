@@ -28,7 +28,8 @@
 			   	   </f:facet>
 		           <p:calendar id="agencyDateActive" value="#{data.effDate}" styleClass="calanderWidth"
 			            disabled="#{data.recordStatusFlg == 1 ? true : false}"  showOn="button" 
-			             mindate="#{suspensionBackingBean.currentDate}"  readonlyInput="true" navigator="true"
+			             mindate="#{suspensionBackingBean.currentDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			              readonlyInput="true" navigator="true"
 			             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			             <p:ajax event="dateSelect" update="agencyDateExp" />
 			       </p:calendar>
@@ -41,7 +42,8 @@
 			   	   	</f:facet>
 		            <p:calendar  id="agencyDateExp" value="#{data.expDate}" styleClass="calanderWidth"
 			          disabled="#{data.recordStatusFlg == 1 ? true : false}"  showOn="button" 
-			          mindate="#{data.effDate}" readonlyInput="true" navigator="true"
+			          mindate="#{data.effDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			          readonlyInput="true" navigator="true"
 			           pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			          <f:attribute name="startDate" value="#{data.effDate}" />
                       <f:validator validatorId="primeDateRangeValidator" />
