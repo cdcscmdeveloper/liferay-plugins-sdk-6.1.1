@@ -152,6 +152,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private SmAppl smAppl;
 	private List<TechnicalStaffBean> smPersonnelList;
 	private SmFacility smCompanyBasic;
+	private List<SmFacility> supplierFacilities; 
 	private  List<SmChequeSignatory> smChequeSignatories;
 	private List<SmPersonnel> equityShareHolders;
 	private SmPersonnleCalcVO personCalc;
@@ -1062,5 +1063,26 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setCheckListDefintionKey(String checkListDefintionKey) {
 		this.checkListDefintionKey = checkListDefintionKey;
 	}
+
+
+
+
+	/**
+	 * @return the supplierFacilities
+	 */
+	public List<SmFacility> getSupplierFacilities() {
+		return supplierFacilities;
+	}
+
+
+
+
+	/**
+	 * @param supplierFacilities the supplierFacilities to set
+	 */
+	public void setSupplierFacilities(List<SmFacility> supplierFacilities) {
+		this.supplierFacilities = supplierFacilities;
+	}
+	
 	
 }
