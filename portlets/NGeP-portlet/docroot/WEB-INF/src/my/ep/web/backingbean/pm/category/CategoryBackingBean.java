@@ -513,10 +513,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				if (this.getManagedBean().isNewCategory()){
 					this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL2());
 					this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().add(this.getManagedBean().getPmCategoryL2());
+					reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
+					categoryCodeSO.saveCategory(reqDTO);
 				}
 				
-				//reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
-				//categoryCodeSO.saveCategory(reqDTO);
+				//
 				
 				
 				result = resDTO.isSuccessful();
