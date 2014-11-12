@@ -75,6 +75,17 @@
 							<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
 						</p:selectOneRadio></td>
 				</tr>
+				<c:if test="#{not empty registrationBackingBean.managedBean.smSupp.createdDate}">
+					<tr>
+						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.basic.account.created.date']}" /></td>
+						<td class="tdContent"><p:calendar id="createdDateId"
+						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.basic.account.created.date']}"
+						value="#{registrationBackingBean.managedBean.smSupp.createdDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="true"
+						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
+						</td>
+					</tr>
+				</c:if>
 			</c:if>
 		</table>
 	</p:panel>
