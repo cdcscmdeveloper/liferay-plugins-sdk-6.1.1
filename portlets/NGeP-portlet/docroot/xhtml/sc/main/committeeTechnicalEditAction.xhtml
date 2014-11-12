@@ -122,7 +122,7 @@
 
 
 		<ac:templateSpec
-			editable="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId ne '60400'}"
+			editable="#{((specificationBackingBean.managedBean.currentStatusId eq '60400') or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId eq '60405'))}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
 
