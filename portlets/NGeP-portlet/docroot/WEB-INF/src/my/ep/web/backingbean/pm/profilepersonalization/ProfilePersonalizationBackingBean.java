@@ -195,7 +195,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 	
 	public String userImagePathWithDefaultImage(String loginId){
-		String imagePath = "/css/images/design/user_male_portrait.png";
+		logger.info("userImagePathWithDefaultImage");
+		String imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
 		imagePath = userImagePath(loginId);
 		return imagePath;
 	}
