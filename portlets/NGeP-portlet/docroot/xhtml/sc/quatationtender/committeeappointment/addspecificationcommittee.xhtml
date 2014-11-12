@@ -92,8 +92,7 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">
-								<h:outputText
-									value="#{existcommitteeuser.email}"
+								<h:outputText value="#{existcommitteeuser.email}"
 									style="white-space: normal;" />
 							</p:column>
 
@@ -229,15 +228,13 @@
 			</p:panel>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-					process="@this, newCommitteeProfile, scPanel"
-					action="#{qTCommitteBackingBean.okCommitteeAction}" 
-					icon="ui-icon-check" update="@(.scMemberDtl, scPanel)"
-					 />
+					action="#{qTCommitteBackingBean.okCommitteeAction}"
+					icon="ui-icon-check" update="@(.scMemberDtl)" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					styleClass="apply_button" process="@this"
+					styleClass="apply_button"
 					oncomplete="newspecificationcommittee.hide();"
-					icon="ui-icon-cancel" />
+					icon="ui-icon-cancel" update="@(.scMemberDtl)" />
 			</div>
 		</p:panel>
 	</p:dialog>
