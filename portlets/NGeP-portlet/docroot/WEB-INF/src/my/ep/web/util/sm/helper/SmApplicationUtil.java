@@ -165,7 +165,8 @@ public class SmApplicationUtil {
 
 		if (resDTO.getSmPersonnelList() != null
 				&& resDTO.getSmPersonnelList().size() < count) {
-			if(count == 5 || ((count == 10) && (resDTO.getSmPersonnelList().size() < 5)))
+			if (count == 5
+					|| ((count == 10) && (resDTO.getSmPersonnelList().size() < 5)))
 				validPerCount = 1;
 			else
 				validPerCount = 2;
@@ -1563,10 +1564,34 @@ public class SmApplicationUtil {
 		return resDTO;
 	}
 
-	public static boolean validL3CategoryCode(Long catL3Id, Long supplierId) {
+	public static void checkOverLappingCategories(
+			SmApplicationManagedBean managedBean) {
+		managedBean.setOverLappedCategoryMsg("");
+		managedBean.setOverLappedCategoryExists(false);
+		int i = 0;
+		StringBuffer sb = new StringBuffer();
+		sb.append(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg",
+				null));
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.isOverLapCategory()) {
+				managedBean.setOverLappedCategoryExists(true);
+				sb.append("<br/>").append(++i).append(".) ")
+						.append(cat.getPmCategoryL1().getCategoryL1Code())
+						.append(cat.getPmCategoryL2().getCategoryL2Code())
+						.append(cat.getPmCategoryL3().getCategoryL3Code());
+			}
+		}
+		if (managedBean.isOverLappedCategoryExists()) {
+			managedBean.setOverLappedCategoryMsg(sb.toString());
+		}
+	}
+
+	public static boolean validL3CategoryCodeForOverLapping(Long catL3Id,
+			Long supplierId) {
 		log.info("*** Validate the code with directors and equi owners ***** ");
 		IMofRegistrationSO mofRegistrationSO = null;
-		boolean validCategory = true;
+		boolean overLapCategory = false;
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -1577,12 +1602,13 @@ public class SmApplicationUtil {
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.checkValidCategoryForSupplier(reqDto);
 			if (resDTO.isInvalidCategory()) {
-				validCategory = false;
-				throw new EpException(MessageConst.ERROR_722548);
+				overLapCategory = true;
+				// throw new EpException(MessageConst.ERROR_722548);
 			} else {
-				validCategory = true;
+				overLapCategory = false;
 			}
-			return validCategory;
+			System.out.println("*** Over lap record *** " + overLapCategory);
+			return overLapCategory;
 		} finally {
 			mofRegistrationSO = null;
 		}
