@@ -1413,6 +1413,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		ctReportBackingBean = new CTReportBackingBean();
 		rptGenBean = new ReportsGenerateBean();	
 		getManagedBean().setRptGenBean(null);
+		this.setSubModule(null);
 		getManagedBean().setReportName(ReportConst.EMPTY_VAL);
 		stateLst = new ArrayList<SelectItem>();
 		districtLst = new ArrayList<SelectItem>();
@@ -2309,7 +2310,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Clear report criteria 
 	 */
 	public void resetReportForm(){		
-		retriveModuleList();
+		retriveModuleList();		
 		this.setFromDate(null);
 		this.setToDate(null);	
 		this.setScQuotationId(null);
