@@ -16,6 +16,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
@@ -89,9 +90,9 @@ public class EducationBackingBean extends
 	public String createEducation() {
 		debugLogger("createEducation");
 		PmEduField pmEduField = new PmEduField();
-		List<PmEduFieldRestr> refEduFieldRestr = new ArrayList<PmEduFieldRestr>();
+		List<PmEduFieldRestr> pmEduFieldRestr = new ArrayList<PmEduFieldRestr>();
 		this.getManagedBean().setPmEduField(pmEduField);
-		this.getManagedBean().setEduRestrList(refEduFieldRestr);
+		this.getManagedBean().setEduRestrList(pmEduFieldRestr);
 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 
@@ -194,6 +195,7 @@ public class EducationBackingBean extends
 				if (resDTO.isSuccessful()) {
 					return resDTO.getEducationSearchResultBean();
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -209,13 +211,13 @@ public class EducationBackingBean extends
 		debugLogger("goToMaintaincePage");
 		
 		this.getManagedBean().setPmEduField(pmEduField);
-		this.getManagedBean().setEduRestrList(null);
-
+		this.getManagedBean().setEduRestrList(pmEduField.getPmEduFieldRestrs());
+				
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 	}	
 	
 	/**
-	 * Validation message for pmfield details
+	 * Validation message for pmEdufield details
 	 * 
 	 */
 	private void validationMessage(PmEduField eduField){
@@ -226,7 +228,12 @@ public class EducationBackingBean extends
 		
 		if(StringUtils.isBlank(eduField.getFieldName())){
 			throw new EpException("Field Name is Mandatory");
-		}		
+		}	
+		
+		if(getManagedBean().getEduRestrList() == null || getManagedBean().getEduRestrList().isEmpty() ){
+			throw new EpException("Please Add at Least One Category");
+		}
+	
 	}	
 	
 	/**
@@ -237,18 +244,21 @@ public class EducationBackingBean extends
 		debugLogger("saveEducationDtls");
 		
 		PmEduField eduField = this.getManagedBean().getPmEduField();
-	//	List<PmEduField> pmEduFields = this.getManagedBean().getEduField();		
-	//	pmEduFields.add(eduField);
-			
-	//	PmEduFieldRestr eduFieldRes = this.getManagedBean().getEduFieldRetr();
-	//	eduFieldRes.setPmEduField(eduField);
+		eduField.setPmEduFieldRestrs(getManagedBean().getEduRestrList());
+		List<PmEduFieldRestr> eduFieldRestr = getManagedBean().getEduRestrList();		
 		
-	//	List<PmEduFieldRestr> eduFieldRestr = getManagedBean().getEduRestrList();
-	//	eduFieldRestr.add(eduFieldRes);
-		
-	//	eduField.setPmEduFieldRestrs(eduFieldRestr);
-		
+		eduField.setPmEduFieldRestrs(eduFieldRestr);
 		validationMessage(eduField);
+		
+		if(getManagedBean().getEduRestrList() != null || !getManagedBean().getEduRestrList().isEmpty()){
+			
+		  for(PmEduFieldRestr restr : eduField.getPmEduFieldRestrs()){
+		   restr.setPmEduField(eduField);
+		   restr.setPmCategoryL1(restr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1());
+		   restr.setPmCategoryL2(restr.getPmCategoryL3().getPmCategoryL2());
+		   restr.setPmCategoryL3(restr.getPmCategoryL3());
+		  }
+		}		
 		
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		reqDTO.setEduField(eduField);
