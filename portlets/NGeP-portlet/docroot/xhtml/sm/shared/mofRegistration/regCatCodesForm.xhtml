@@ -30,7 +30,7 @@
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-										itemValue="S" />
+										itemValue="S" itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
 									<p:ajax event="change" oncomplete="typeConfirmation.show()"
 										listener="#{backingBean.applicationCategorySelected}" />
 								</p:selectOneRadio></td>
