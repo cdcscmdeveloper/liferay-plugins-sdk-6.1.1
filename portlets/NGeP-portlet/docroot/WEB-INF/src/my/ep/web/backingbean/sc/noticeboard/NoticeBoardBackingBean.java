@@ -1350,6 +1350,7 @@ public class NoticeBoardBackingBean extends
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+		if(null != scQtDocReports && !scQtDocReports.isEmpty()){
 		for (ScQtDocReport scQtDocReport : scQtDocReports) {
 			ScQtDocReportAttachment attachment = scQtDocReport
 					.getScQtDocReportAttachment();
@@ -1361,6 +1362,7 @@ public class NoticeBoardBackingBean extends
 			scAttachments.add(attachment);
 		}
 		downloadAllFiles("NGeP-QT-Documents", scAttachments);
+		}
 	}
 
 	public boolean isVisible() {
