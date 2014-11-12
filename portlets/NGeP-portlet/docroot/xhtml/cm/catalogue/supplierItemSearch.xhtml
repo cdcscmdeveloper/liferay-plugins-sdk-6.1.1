@@ -214,10 +214,17 @@
 							#{supplierItem.uomName}
 							</p:column>
 							
-							<p:column width="8%" headerText="#{lbl['lbl.cm.best.price']}" style="white-space: normal">
+							<p:column width="8%" style="white-space: normal" >
+							
+								<f:facet name="header">
+							          <h:outputText value="#{lbl['lbl.cm.best.price']}" />
+							          <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/>
+							     </f:facet>
+							
 								<h:outputLabel value="#{supplierItem.bestPrice}" >
 									<f:convertNumber pattern="#,###.00" />
 								</h:outputLabel>
+								
 							</p:column>
 							
 							<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
