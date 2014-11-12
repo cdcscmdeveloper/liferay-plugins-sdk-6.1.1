@@ -101,15 +101,9 @@
 			<tr>
 				<td ><p:outputLabel
 						value="#{lbl['lbl.fl.invoice.no']}" /></td>
-				<td><table style="width: 100%">
-						<tr>
-							<td><p:inputText size="20" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}" /></td>
-							<td style="width:368px;"><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
-						</tr>
-					</table>
-				
-				</td>
+				<td>
+					<p:inputText size="20" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.submissionDate}">
