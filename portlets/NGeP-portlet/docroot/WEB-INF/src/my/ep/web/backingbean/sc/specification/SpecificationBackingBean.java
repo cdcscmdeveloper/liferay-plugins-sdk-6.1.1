@@ -648,8 +648,12 @@ public class SpecificationBackingBean extends
 		} else {
 			if (null == this.getManagedBean().getCtCircularVer()) {
 				throw new EpException(MessageConst.ERROR_760157);
-			}
-			if (this.getManagedBean().getScQt().isPanel()
+			}  if (QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
+					.getManagedBean().getCircularType())) {
+				if (null == this.getManagedBean().getCtPanelItem()) {
+					throw new EpException(MessageConst.ERROR_760157);
+				}
+			}if (this.getManagedBean().getScQt().isPanel()
 					&& QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
 							.getManagedBean().getCircularType())
 					&& QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
@@ -1793,22 +1797,28 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setAllStateCode(
 						tenderResDTO.getStateCode());
 				this.getManagedBean().setScQt(scQt);
-				this.getManagedBean().setCtPanelItem(
-						scQt.getScQtSupplierCriteria().getCtPanelItem());
+				if (null != scQt.getScQtSupplierCriteria()
+						&& null != scQt.getScQtSupplierCriteria()
+								.getCtPanelItem()) {
+					this.getManagedBean().setCtPanelItem(
+							scQt.getScQtSupplierCriteria().getCtPanelItem());
+					if(null!=scQt.getScQtSupplierCriteria().getCtPanelItem()
+									.getCtCircularVer()){
+					this.getManagedBean().setCtCircularVer(
+							scQt.getScQtSupplierCriteria().getCtPanelItem()
+									.getCtCircularVer());
+					}
+					this.getManagedBean().setPanelItemCategory(
+							getParameterDesc(scQt.getScQtSupplierCriteria()
+									.getCtPanelItem().getItemCategoryId()));
+					List<CtPanelItem> panelList = this.getManagedBean()
+							.getSelectpanelItem();
+					panelList = new ArrayList<CtPanelItem>();
 
-				this.getManagedBean().setCtCircularVer(
-						scQt.getScQtSupplierCriteria().getCtPanelItem()
-								.getCtCircularVer());
-				this.getManagedBean().setPanelItemCategory(
-						getParameterDesc(scQt.getScQtSupplierCriteria()
-								.getCtPanelItem().getItemCategoryId()));
-				List<CtPanelItem> panelList = this.getManagedBean()
-						.getSelectpanelItem();
-				panelList = new ArrayList<CtPanelItem>();
-
-				panelList.add(this.getManagedBean().getScQt()
-						.getScQtSupplierCriteria().getCtPanelItem());
-				this.getManagedBean().setSelectpanelItem(panelList);
+					panelList.add(this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getCtPanelItem());
+					this.getManagedBean().setSelectpanelItem(panelList);
+				}
 
 				if (null != this.getManagedBean().getCtCircularVer()) {
 					this.getManagedBean().setCircularExpDate(
@@ -9704,17 +9714,17 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
-						//retriveCommitteeEndorsment();
+						// retriveCommitteeEndorsment();
 						// retriveTechnicalSpecification();
-					}else{
+					} else {
 						specReqDTO.setScQt(fulfilMent);
 						specSO.validateSCFulfillmentSchedules(specReqDTO);
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
-						//retriveFulfilmentDtls();
-						retriveCommitteeEndorsment();	
+						// retriveFulfilmentDtls();
+						retriveCommitteeEndorsment();
 					}
 
 				}
@@ -9786,16 +9796,16 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
-						//retriveCommitteeEndorsment();
+						// retriveCommitteeEndorsment();
 						// retriveTechnicalCheckList();
-					}else{
+					} else {
 						specReqDTO.setScQt(fulfilMentdtls);
 						specSO.validateSCFulfillmentSchedules(specReqDTO);
 						resDTO = specSO.saveQTDtl(specReqDTO);
 						renewSesionObject();
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
-						//retriveFulfilmentDtls();
+						// retriveFulfilmentDtls();
 						retriveCommitteeEndorsment();
 					}
 
