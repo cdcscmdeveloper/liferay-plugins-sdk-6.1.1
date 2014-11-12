@@ -12,7 +12,7 @@
 			styleClass="chargeLineChange"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
-			style="width: 93%"
+			style="width: 100%"
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}" >
 			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:ajax event="select" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -116,12 +116,12 @@
 		<br />
 		<br />
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
-			<table style="width: 95%">
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:selectOneMenu id="votCode1" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{purchaseRequestBackingBean.managedBean.votFundId}"
-						style="width: 98px; margin-bottom: 5px;">
+						style="width: 110px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItems var="votCodeList"
 							value="#{purchaseRequestBackingBean.managedBean.votFundList}"
@@ -205,7 +205,7 @@
 				</tr>
 				
 			</table>
-			<table style="width: 95%;">
+			<table style="width: 100%;">
 			<tr>
 
 				<td colspan="4" style="text-align: right"><p:commandButton title="#{lbl['lbl.fl.btn.bulk.update']}"
