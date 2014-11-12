@@ -194,6 +194,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}	
 	}
 	
+	public String userImagePathWithDefaultImage(String loginId){
+		String imagePath = "/css/images/design/user_male_portrait.png";
+		imagePath = userImagePath(loginId);
+		return imagePath;
+	}
 
 	/**
 	 * populate user address to managed bean
@@ -596,72 +601,87 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	/**
-	 * delete portrait
+	 * Update portrait
 	 * @throws Exception
 	 */
-	public void deletePortrait() throws Exception{
-		logger.info("deletePortrait - START");
-		this.getManagedBean().getSelectedUser().setPortrait(null);
-		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		this.getManagedBean().setDeletePortrait(true);
-		/*
+	public void updatePortrait() throws Exception{
+		logger.info("updatePortrait - START");
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+		
 		try {
-			PmUser pmUser = this.getManagedBean().getSelectedUser();
-			reqDTO.setPmUser(pmUser);
+			if(this.getManagedBean().getSelectedUser().getPortrait()==null){
+				throw new EpException("Please select and upload a portrait."); //TODO
+			}
+			
+			reqDTO.setPortrait(this.getManagedBean().getSelectedUser().getPortrait());
+			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
+			
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserResDTO resDTO = userSO.deletePortrait(reqDTO); //saveuser2
+			resDTO = userSO.updatePortrait(reqDTO); 
+			
+			
 			if(resDTO!=null && resDTO.isSuccessful()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								null, "Delete Portrait Successfull for Login ID: "
-										+ resDTO.getPmUser().getLoginId()));
+			
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
+									null, "Update Portrait Successfull for Login ID: "
+											+ this.getManagedBean().getSelectedUser().getLoginId()));
+				
 				
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			throw new EpException("Failed to update portrait: " + e.getMessage()); //TODO
 		} finally {
 			userSO = null;
-		}*/
-		logger.info("deletePortrait - END");
+		}
+		logger.info("updatePortrait - END");
 	}
 	
-//	/**
-//	 * TODO: fix the remote updatePortrait
-//	 * @param pmUser
-//	 * @throws Exception
-//	 */
-//	private void uploadPortrait(PmUser pmUser) throws Exception{
-//		logger.info("uploadPortrait - START");
-//		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-//		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-//		byte[] bytes = pmUser.getPortrait();
-//		long userId;
-//		logger.debug("imageMaxSize: " + imageMaxSize);
-//		logger.debug("companyId: " + companyId);
-//		logger.debug("bytes: " + bytes);
-//		logger.debug("pmUser.getLoginId(): " + pmUser.getLoginId());
-//		if(bytes!=null){
-//			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
-//			if(user!=null){
-//				System.out.println("user id" + user.getUserId());
-//			}else{
-//				System.out.println("user null");
-//			}
-//			userId = user.getUserId();
-//			logger.debug("userId: " + userId);
-//			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
-//		}
-//		logger.info("uploadPortrait - END");
-//	}
+	/**
+	 * Update portrait
+	 * @throws Exception
+	 */
+	public void deletePortrait() throws Exception{
+		logger.info("deletePortrait - START");
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+		try {
+
+			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
+			
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
+			resDTO = userSO.deletePortrait(reqDTO); 
+			
+			
+			if(resDTO!=null && resDTO.isSuccessful()){
+				
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
+									null, "Delete Portrait Successfull for Login ID: "
+											+ this.getManagedBean().getSelectedUser().getLoginId()));
+				
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Failed to delete portrait: " + e.getMessage()); //TODO
+		} finally {
+			userSO = null;
+		}
+		logger.info("deletePortrait - END");
+	}
+
 	/**
 	 * Get user portrait 
 	 * @param event
@@ -673,6 +693,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+		updatePortrait();
 		logger.info("handlePortraitUpload - END");
 	}
 

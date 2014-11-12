@@ -22,23 +22,14 @@
 						</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
-							<c:choose>
-								<c:when test="#{profilePersonalizationBackingBean.managedBean.deletePortrait or profilePersonalizationBackingBean.managedBean.selectedUser.portrait == null}">
-									<h:graphicImage id="giUserImage"
-										value="/css/images/design/user_male_portrait.png"
-										style="margin-left:25px;" width="140" height="160" />				
-								</c:when>
-								<c:otherwise>
-									<h:graphicImage id="giUserImage"
-										value="#{profilePersonalizationBackingBean.userImagePath(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
+							<h:graphicImage id="giUserImage"
+										value="#{profilePersonalizationBackingBean.userImagePathWithDefaultImage(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
 										style="margin-left:25px;" width="140" height="160" />	
-								</c:otherwise>
-							</c:choose>	
 							<div align="left">
-								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
+								<p:commandButton value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
 									immediate="true" oncomplete="dlImageUpload.show();"  />
-								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" 
-									immediate="true" update="giUserImage" action="#{profilePersonalizationBackingBean.deletePortrait}" />
+								<p:commandButton value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" 
+									immediate="true" update="giUserImage" action="#{profilePersonalizationBackingBean.deletePortrait()}" />
 							</div>
 						</td>
 					</tr>
