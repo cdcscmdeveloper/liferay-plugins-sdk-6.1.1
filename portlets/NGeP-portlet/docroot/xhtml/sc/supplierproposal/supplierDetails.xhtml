@@ -82,12 +82,12 @@
 						value="#{smAppl.smCompanyBasic.faxNo}" /></td>
 			</tr>
 
-			<tr>
+		<!--  	<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{'yet to map'}" /></td>
 
-			</tr>
+			</tr> -->
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.web.site']}" /></td>
@@ -105,13 +105,13 @@
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.office.type']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{'need clarity about parameter type'}" disabled="true"
+						value="#{(supplierProposalDetailBackingBean.managedBean.smCompanyBasic.facilityType eq 'H') ? 'Home Office' : 'Business Office'}" disabled="true"
 						readonly="true" size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.ownership.type']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{(supplierProposalDetailBackingBean.managedBean.smCompanyBasic.ownershipType) ? 'Owned' : 'Rented'}"
+						value="#{(supplierProposalDetailBackingBean.managedBean.smCompanyBasic.ownershipType eq 'O') ? 'Owned' : 'Rented'}"
 						disabled="true" readonly="true" size="30" /></td>
 			</tr>
 		</table>
@@ -119,15 +119,17 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true">
 		<p:dataTable id="facility" rowIndexVar="index"
-			value="#{smAppl.smFacilities}" var="facility">
+			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
 			<ac:paginator for="facility"></ac:paginator>
 			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
 				<h:outputText value="#{facility.facilityName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}">
-				<h:outputText value="#{'need clarity about parameter type'}"></h:outputText>
-
+				<h:outputText rendered="#{facility.facilityType eq 'F'}" value="FACTORY"></h:outputText>
+				<h:outputText rendered="#{facility.facilityType eq 'D'}" value="DOCKYARD"></h:outputText>
+				<h:outputText rendered="#{facility.facilityType eq 'w'}" value="WORKSHOP"></h:outputText>
+				<h:outputText rendered="#{facility.facilityType eq 's'}" value="STORE"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}">
 				<h:outputText
