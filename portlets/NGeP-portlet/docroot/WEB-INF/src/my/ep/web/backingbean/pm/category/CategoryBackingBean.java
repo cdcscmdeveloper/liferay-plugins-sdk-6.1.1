@@ -23,6 +23,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -38,6 +39,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "categoryBackingBean")
@@ -53,6 +55,26 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	public CategoryBackingBean() {
 		
+	}
+	
+	public void SearchCategory() {
+		boolean hasSearchValue = false;
+		
+		if (getManagedBean().getPmCategoryLevel() != null && getManagedBean().getPmCategoryLevel().intValue()>0) {
+			hasSearchValue = true;
+		}
+
+		if(!hasSearchValue) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_721110,
+							new String[]{ResourceBundleUtils.getMessage("lbl.pm.category.level",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} 
+
+		searchCategory.reloadData();
 	}
 	
 	private class SearchCategoryPagingDataModel extends PagingDataModel<Object[]> {
@@ -90,12 +112,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					reqDTO.setSubDivDesc(getManagedBean().getSubDivDesc());
 				}
 				
-				/*if (getManagedBean().getMainCatCode() != null) {
-					reqDTO.setMainCatCode(getManagedBean().getMainCatCode());
-				}
-				if (getManagedBean().getMainCatDesc() != null) {
-					reqDTO.setMainCatDesc(getManagedBean().getMainCatDesc());
-				}*/
 				if (getManagedBean().getPmCategoryLevel() != null && getManagedBean().getPmCategoryLevel().intValue()>0) {
 					
 					reqDTO.setPmCategoryLevel(getManagedBean().getPmCategoryLevel());
@@ -106,12 +122,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						//resDTO.getCategoryResultBean().getResultList();
 						return resDTO.getCategoryResultBean();
 					}
-				}
-				
-				
-
-				
-
+				}/*else{
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_700004,
+									new String[]{"",ResourceBundleUtils.getMessage("lbl.pm.sub.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				}*/
+	
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -1009,6 +1029,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setSubCatDesc(null);
 		this.getManagedBean().setSubDivCode(null);
 		this.getManagedBean().setSubDivDesc(null);
+		this.getManagedBean().setPmCategoryLevel(0);
+		searchCategory.reloadData();
 	}
 	
 	public void resetLOV() {
