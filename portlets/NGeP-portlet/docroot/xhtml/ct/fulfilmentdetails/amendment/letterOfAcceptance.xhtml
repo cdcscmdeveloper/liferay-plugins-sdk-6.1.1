@@ -89,7 +89,7 @@
 			  <h:panelGrid columns="4">
 			  	  <p:outputLabel value="#{lbl['lbl.txt.attachment']}" />
 				  <p:commandButton icon="iconAttachment" 
-				       oncomplete="uploadLoaDlg.show();return false;" value="Upload" update="uploadLoaPg, uploadLoaDlg" />
+				       oncomplete="uploadLoaDlg.show();return false;" value="#{lbl['lbl.btn.upload']}" update="uploadLoaPg, uploadLoaDlg" />
 				 <p:spacer width="1" />
 				 <h:commandLink style="float:left;" styleClass="blue_font" 
 				     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.fileName}"
