@@ -37,7 +37,7 @@
 	<div align="left" class="header-info">
 		<table>
 			<tr>
-				<td width="5%">
+				<td width="6%">
 					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
 				</td>
 				<td class="header-info-text">
@@ -62,7 +62,7 @@
 				<td class="header-info-text">
 					#{pPlanBackingBean.getStatusDescById(pPlanBackingBean.managedBean.selectedPlan.status.statusId)}
 				</td>
-				<td width="5%">
+				<td width="8%">
 					<p:outputLabel value="#{lbl['lbl.pp.status.date']}"/>
 				</td>
 				<td class="header-info-text">
@@ -71,7 +71,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText> 
 				</td>
-				<td width="5%">
+				<td width="7%">
 					<p:outputLabel value="#{lbl['lbl.pp.status.by']}"/>
 				</td>
 				<td class="header-info-text">
