@@ -23,8 +23,9 @@
 							 
 							 <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physical.no']}" />
 			                 <h:panelGrid columns="3">
-			     	            <p:inputText for="centralphyNo" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-			       		             style="width:170px;"  maxlength="30" value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
+			     	            <p:inputText for="centralphyNo" style="width:170px;"  maxlength="30"
+			     	                 disabled="#{contractDetailsBackingBean.getConditionalValue()}"
+			       		             value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
 			      	            <p:spacer width="1"/>
 				                <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 				             </h:panelGrid>
