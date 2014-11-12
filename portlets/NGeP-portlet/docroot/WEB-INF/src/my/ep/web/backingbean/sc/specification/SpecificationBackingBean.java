@@ -6654,6 +6654,9 @@ public class SpecificationBackingBean extends
 			getManagedBean().setMinistryId(null);
 			getManagedBean().setDepartmentId(null);
 			getManagedBean().setPtjId(null);
+			this.getManagedBean().setStateCode(null);
+			this.getManagedBean().setDistrictCode(null);
+			this.getManagedBean().setDivisionCode(null);
 		} finally {
 
 		}
@@ -7870,7 +7873,7 @@ public class SpecificationBackingBean extends
 
 	public void retriveZonesByCircularNo() {
 		IPanelSupplierSO panelSupplierSO;
-		PanelSupplierResDTO resDTO = null;
+		PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
 		try {
 
 			PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
