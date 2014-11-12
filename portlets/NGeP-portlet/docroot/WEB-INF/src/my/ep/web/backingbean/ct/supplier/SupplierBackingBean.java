@@ -910,7 +910,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
 					     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
 				    else // Central Contract	
-				    	 reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+				    	 reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 				    
 	                resDTO = userSO.retrieveUserListByRole(reqDTO);
 				    List<PmUser> list = resDTO.getUserList();
