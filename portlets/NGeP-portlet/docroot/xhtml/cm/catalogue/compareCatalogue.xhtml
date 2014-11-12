@@ -9,7 +9,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
-		<p:messages id="catCmpMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="catCmpMsg" showDetail="true" autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" />
 
        <p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

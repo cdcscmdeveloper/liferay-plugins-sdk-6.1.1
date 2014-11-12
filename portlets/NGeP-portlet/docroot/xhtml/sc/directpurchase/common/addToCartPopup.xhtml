@@ -10,7 +10,7 @@
 		closable="false"
 		 modal="true" dynamic="true">
 		<p:panel id="addToCartId">
-		<p:messages id="cartmessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="cartmessages" showDetail="true" autoUpdate="#{!requestNoteBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
@@ -137,20 +137,18 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" process="@this addToCartId ,addToCartPopup"
-					    partialSubmit="true" 
+					<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" process="@form" partialSubmit="true" 
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
 						onstart="popupBlockWidget.show();" oncomplete="popupBlockWidget.hide();"
-						icon="ui-icon-submit" update="addToCartId ,@([id$=supplierItemViewID])"/>
+						icon="ui-icon-submit" update="addToCartId ,@([id$=btnId])"/>
 						
-					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
+					 <p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
 						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-cancel" oncomplete="addToCartPopup.hide();"
 						partialSubmit="true" />
 				</p:column>
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
-   <!--  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/> -->	  
     <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
 		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	  </p:blockUI>

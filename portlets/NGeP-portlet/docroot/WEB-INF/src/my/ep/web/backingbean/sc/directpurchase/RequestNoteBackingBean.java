@@ -906,6 +906,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		getManagedBean().setAddToCartFlag(cart);
 		// update item details data table
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		RequestContext.getCurrentInstance().execute("addToCartPopup.show();");
 	}
 	
@@ -977,6 +978,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			result.setTplSpecZone(SourcingZoneHelper.getInstance().createSpecZone(pricing.getCmSupplierZone(), 
 					zoneDtlMap, zone, scRequestNote.isBrandNew()));
 		}
+		getManagedBean().setZoneDtlMap(zoneDtlMap);
 		
 		if (zone.isBrandNew()) {
 			zone.setScRequestNote(scRequestNote);
@@ -1451,13 +1453,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		// request note counter
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
-		RequestContext.getCurrentInstance().update("btnId");
 		
 		// compare screen add to cart - page navigation to request note screen
 		if(cartFlag){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 		} 
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	public List<PmParameter>  getPriceTypeByPrice(List<ScSupplierItemPrice> supplierItemPrices) {

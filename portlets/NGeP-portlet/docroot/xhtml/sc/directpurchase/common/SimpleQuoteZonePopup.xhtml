@@ -7,7 +7,7 @@
 	<p:dialog header="#{lbl['lbl.sc.add.location']}" widgetVar="ZoneLocation" modal="true" 
 		width="470" height="410">
 		<p:panel id="zonePopupPanel">
-		<p:messages id="zoneMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  severity="error, info"/>
+		<p:messages id="zoneMsgId" showDetail="true" autoUpdate="#{!simpleQuoteBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false"  severity="error, info"/>
 			<table styleClass="noBorders tr,noBorders td" >
 				<TR>
 					<TD width="30%" valign="top">
