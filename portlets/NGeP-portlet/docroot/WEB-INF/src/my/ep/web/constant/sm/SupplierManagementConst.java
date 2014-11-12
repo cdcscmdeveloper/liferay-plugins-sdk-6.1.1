@@ -96,6 +96,10 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
+	
+	//Application Category Type
+	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
+	public static final String SM_APPL_CATEGORY_TYPE_SPECIAL = "S";
 
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
