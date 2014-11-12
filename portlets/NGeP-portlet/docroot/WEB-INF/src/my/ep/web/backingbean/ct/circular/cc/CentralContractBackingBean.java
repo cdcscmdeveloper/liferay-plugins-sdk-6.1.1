@@ -658,11 +658,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getCircularVer().getCircularNo());
-			sb.append(getManagedBean().getCircularVer().getStartDate());
-			sb.append(getManagedBean().getCircularVer().getEndDate());
+			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action

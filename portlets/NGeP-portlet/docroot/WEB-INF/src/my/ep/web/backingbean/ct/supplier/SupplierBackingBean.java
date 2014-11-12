@@ -67,6 +67,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -89,6 +90,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
@@ -185,6 +187,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			    Object obj = res.getPojo();
 		        getManagedBean().setAction(res.getAction());
 			    getManagedBean().setTaskName(res.getTaskName());
+			    getManagedBean().setAutoUpdate(true);
 			    
 			    if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
 				      
@@ -408,16 +411,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public String saveChangeBankRequest(String action) throws Exception {
 		IContractSO contractSO = null;
 		try {
-			if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
-				throw new EpException(MessageConst.ERROR_750000);
-			}
-			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-				 CtRemark remark = getManagedBean().getRemarkList().get(0);
-				 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
-					 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
-				 }
-		      }
+			validateChangeBankRequest(action);
 
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -441,6 +435,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 
 			reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+			
+			if(this.getManagedBean().getPmDigiSign() !=null){
+			   reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			}    
+			
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -465,6 +464,39 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return null;
 	}
      
+	
+	public void validateChangeBankRequest(String action){
+		this.getManagedBean().setAutoUpdate(true);
+		if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			throw new EpException(MessageConst.ERROR_750000);
+		}
+		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			 CtRemark remark = getManagedBean().getRemarkList().get(0);
+			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
+				 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+				 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
+			 }
+	    }
+		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(action);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(action);
+		}	
+		
+	}
+	
+	
 	private String getUserRole() {
 		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))
 			return RoleCode.MIN_CONTRACT_ADMIN.value();
@@ -950,4 +982,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public Date getCurrentDate() {
         return new Date();
     }
+    
+    public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveChangeBankRequest(getManagedBean().getButtonAction());
+	}
+	
+	public void disableUpdate(){
+		getManagedBean().setAutoUpdate(false);
+	}
 }
