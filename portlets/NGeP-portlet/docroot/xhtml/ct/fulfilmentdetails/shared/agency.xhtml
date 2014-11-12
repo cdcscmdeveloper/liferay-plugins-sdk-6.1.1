@@ -154,7 +154,7 @@
 		      </p:blockUI> 
              <f:facet name="footer">
 			  <h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId,:form:messages" 
 				    action="#{contractDetailsBackingBean.addAgencyDetails()}" icon="ui-icon-accept" onclick="dlgAgency.hide();"/>
 			  </h:panelGrid>
 			</f:facet>

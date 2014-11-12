@@ -1539,6 +1539,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		List<CtAgency> ctAgencyList = new ArrayList<CtAgency>();
 		
 		for(int i=0; i<selectedPmOrgProfile.length; i++) {
+			
+			//Remove if already exist, avoid duplicate
+		  	for(CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
+		  		if(agency.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
+		  			throw new EpException(MessageConst.INFO_771000); 
+		  		}
+		  	}
+			
 			CtAgency ctAgency = new CtAgency();
 			ctAgency.setEffDate(new Date());
 			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -1553,14 +1561,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  	
 		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
-		  
-		  	//Remove if already exist, avoid duplicate
-		  	for(CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
-		  		if(agency.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
-		  			ctAgencyList.remove(ctAgency);
-		  			ctAgency = null;
-		  		}
-		  	}
 		  
 		  	if(ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
 		  		for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
