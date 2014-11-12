@@ -1384,7 +1384,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
 					.getQtProposalChecklistId());
-
+			reqDTO.setYear(getManagedBean().getYear().intValue());
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
@@ -1516,7 +1516,7 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-
+				getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
 				pageUrl = retrieveFinCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_DETAILS
@@ -1611,7 +1611,7 @@ public class SPDetailBackingBean extends
 
 			List<ScQtProposalChecklist> techinicalProposalCheckLists = this
 					.getManagedBean().getTecCheckDetailsList();
-
+			
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey());
@@ -1880,7 +1880,7 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
+			reqDTO.setYear(getManagedBean().getYear().intValue());
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtProposalCheckListId(scQtProposalChecklist

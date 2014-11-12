@@ -20,14 +20,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.type']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{'yet to map'}" /></td>
+						value="#{smSupplier.businessType}" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{'what is the diff btw regno and roc no'}" /></td>
-				<!-- #{smSupplier.regNo} -->
+						value="#{smSupplier.epNo}" /></td>
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
@@ -39,7 +37,6 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
@@ -48,7 +45,6 @@
 				<td><p:inputText value="#{(smSupplier.bumi)? 'Yes' : 'No' }"
 						disabled="true" readonly="true" size="30" /></td>
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.eff.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].effDate}"
@@ -63,15 +59,12 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
 				<td><p:inputText
 						value="#{(smSupplier.manufacturer)? 'Manufacturer' : 'Distributor' }"
 						disabled="true" readonly="true" size="30" /></td>
-
 			</tr>
-
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
@@ -79,9 +72,7 @@
 						cols="30" autoResize="flase"
 						value="#{supplierProposalDetailBackingBean.getFullAddress(smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}"
 						style="width: 171px;margin-bottom: 5px;" /></td>
-
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
