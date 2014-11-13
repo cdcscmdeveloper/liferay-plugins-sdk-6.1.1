@@ -27,7 +27,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.effective.date']}"/>
 			   	  </f:facet>
 			      <p:calendar id="effDateActive" value="#{itemData.effDate}" readonlyInput="true" 
-			         disabled="#{itemData.recordStatusFlg == 1 ? true : false}" styleClass="calanderWidth"  showOn="button"  navigator="true"
+			         disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" styleClass="calanderWidth"  showOn="button"  navigator="true"
 			         mindate="#{suspensionBackingBean.currentDate}"  maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			         <p:ajax event="dateSelect" update="expDateActive" />
@@ -40,7 +40,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.expiry.date']}"/>
 			   	  </f:facet>
 			      <p:calendar id="expDateActive" value="#{itemData.expDate}"  styleClass="calanderWidth"
-			          showOn="button" disabled="#{itemData.recordStatusFlg == 1 ? true : false}" readonlyInput="true" navigator="true"
+			          showOn="button" disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" readonlyInput="true" navigator="true"
 			          mindate="#{itemData.effDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			          pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			          <f:attribute name="startDate" value="#{itemData.effDate}" />
@@ -53,7 +53,7 @@
 						<h:outputText value="#{lbl['lbl.ct.status']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.status']}"/>
 			   	   </f:facet>
-			       <p:selectOneMenu value="#{itemData.recordStatusFlg}" style="width:85px;">
+			       <p:selectOneMenu value="#{itemData.recordStatusFlg}" style="width:85px;" disabled="#{suspensionBackingBean.managedBean.viewOnly}">
 				         <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 				         <p:ajax event="change" process="@this" update=":form:itemId"

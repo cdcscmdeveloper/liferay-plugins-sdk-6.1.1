@@ -47,6 +47,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private boolean autoUpdate;
 	private String textBeforeSign;
 	private String buttonAction;
+	private boolean viewOnly = false;
 	
 	public String getEditorValue() {
 		return editorValue;
@@ -162,5 +163,13 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+
+	public boolean isViewOnly() {
+		return viewOnly;
+	}
+
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
 	}
 }
