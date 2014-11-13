@@ -69,7 +69,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
-import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
@@ -321,7 +320,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			resDTO = detailSO.retriveQTDocDetails(reqDTO);
+			resDTO = detailSO.retriveCloneQTDocDetails(reqDTO);
 			List<ScQtDocReport> scQtDocReports = resDTO.getReports();
 			this.getManagedBean().setCloneScQtDocReports(scQtDocReports);
 		} finally {
@@ -501,7 +500,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 
 		//clone tplDocSection Details
 		tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
-		List<TplDocSection> docSections = tplDocMaster.getTplDocSections();
+		List<TplDocSection> docSections = templateDocMaster.getTplDocSections();
 		for (TplDocSection tplDocSection : docSections) {
 			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
 			section.setDocSectionId(null);
@@ -522,6 +521,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		// Template Type
 		PmParameter templateType = getPmParameter(ParameterTypeConst.TEMPLATE_TYPE, ParameterConst.TEMPLATE_TYPE_MINISTRY);
 		tplDocMaster.setTemplateType(templateType);
+		
+		// Item Type
+		PmParameter itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT);
+		tplDocMaster.setItemTypeId(itemType);
 
 		// Status
 		PmStatus status = new PmStatus();
