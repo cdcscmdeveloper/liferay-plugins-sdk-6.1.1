@@ -326,7 +326,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
 				remainingQty = itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
-
+				if(itemAddr.getDeliveredQty() == null){
+					itemAddr.setDeliveredQty(new BigDecimal(0));
+				}
 				if(itemAddr.getDeliveredQty().doubleValue()>remainingQty.doubleValue()) {
 					itemAddr.setDeliveredQty(new BigDecimal(0));
 					itemAddr.setDeliveredAmt(new BigDecimal(0));
@@ -440,7 +442,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		unitPriceCal=itemAddress.getUnitPrice();
 		delQtyCal= itemAddress.getDeliveredQty();
 		remainingQty = itemAddress.getOrderedQty().subtract(itemAddress.getSumDeliveredQty()).add(itemAddress.getRejectedQty());
-		
+		if(delQtyCal == null){
+			delQtyCal = new BigDecimal(0);
+		}
 		if(delQtyCal.doubleValue()<0) {		
 			itemAddress.setDeliveredQty(new BigDecimal(0));
 			itemAddress.setDeliveredAmt(new BigDecimal(0));
