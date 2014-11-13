@@ -93,6 +93,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
 					</tr>
 				</table>
@@ -102,10 +103,11 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
+								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.manufacturingRemark}" /></td>
 
 					</tr>
@@ -166,8 +168,8 @@
 						value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{backingBean.managedBean.uomSelectItems}" var="select" 
-							itemLabel="select.label" itemValue="select.value"/>
+						<f:selectItems value="#{backingBean.managedBean.uomSelectItems}"
+							var="select" itemLabel="select.label" itemValue="select.value" />
 					</p:selectOneMenu> <p:message id="smManuMesUnitMsg" for="smManuMesUnit"
 						showSummary="true" showDetail="false" display="icon" /></td>
 
