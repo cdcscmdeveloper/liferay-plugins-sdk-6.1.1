@@ -246,13 +246,13 @@
 				<f:facet name="header">
 					#{lbl['lbl.pm.machine.code']}
 				</f:facet>
-				<h:outputText value="" />
+				<h:outputText value="#{pmMachineCategory.pmMachine.machineCode}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.machine.desc']}
 				</f:facet>
-				<h:outputText value="" />
+				<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
             </p:column>
 			
 
@@ -267,9 +267,11 @@
 			id="pmMachineLovId" lovId="PM_MACHINE" size="26"
 				headerText="Machine Lov" readonly="true"
 				buttonLabel="#{lbl['lbl.btn.add']}" buttonIcon="ui-icon-add"
-				saveObject="catalogueBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine"
-				value="#{catalogueBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine.machineId}"
-				conditionField="recordStatus^1">
+				saveObject="categoryBackingBean.managedBean.pmMachine"
+				value="#{categoryBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine.machineId}"
+				conditionField="recordStatus^1"
+				postUpdateListener="#{categoryBackingBean.updateMachine()}"
+				update=":form:machineDetails">
 			</ac:lov>
 			
 		</div>
