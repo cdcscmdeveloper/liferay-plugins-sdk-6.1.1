@@ -54,7 +54,7 @@
                                 <p:outputLabel value="#{data.clauseDescription}" 
                                    rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
         	                       ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
-                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="1" cols="180"
+                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="1" style="width:450px;"
                                      disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking or contractDetailsBackingBean.managedBean.viewContract}"
                                      rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode ==
         	                         ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">

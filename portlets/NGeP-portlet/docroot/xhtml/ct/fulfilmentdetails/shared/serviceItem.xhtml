@@ -33,33 +33,33 @@
 		        	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;"/>
 		      </p:column>  
 		    
-		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:15%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:11%; white-space:normal;">
 		        <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
 		      </p:column>        
 		      
-		      <p:column headerText="#{lbl['lbl.sc.frequency.per.uom']}" style="width:15%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.sc.frequency.per.uom']}" style="width:8%; white-space:normal;">
 		        	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomFrequency}" />
 		      </p:column> 
 		      
-		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.day']}"  style="text-align: right;width:15%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.day']}"  style="text-align: right;width:8%; white-space:normal;">
 		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerDay}" />
 		      </p:column>
 		      
-		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.month']}"  style="text-align: right;width:15%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.month']}"  style="text-align: right;width:8%; white-space:normal;">
 		          	<p:outputLabel value="#{data.uomPerMonth}" />
 		      </p:column>
 		      
-		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.year']}"  style="text-align: right;width:15%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.year']}"  style="text-align: right;width:8%; white-space:normal;">
 		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear}" />
 		      </p:column>
 		      
-		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="text-align: right; width:20%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="text-align: right; width:10%; white-space:normal;">
 		          <h:outputText value="#{data.minimumOrderQty}">
      		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		          </h:outputText>		        
 		      </p:column>  
 		      
-		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
+		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%; white-space:normal;">
 		            <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		      </p:column>   
 		        

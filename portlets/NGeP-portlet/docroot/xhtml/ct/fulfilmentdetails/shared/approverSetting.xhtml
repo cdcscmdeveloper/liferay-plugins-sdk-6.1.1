@@ -9,8 +9,8 @@
   <p:panel id="settingId" header="#{lbl['lbl.ct.panel.approver.list']}" toggleable="true" toggleSpeed="500" 
       rendered="#{contractDetailsBackingBean.isContractAdmin() and contractDetailsBackingBean.managedBean.contractVer.docType==ParameterConst.doctypeContractCreation}" >
 		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approver.list']}"/> -->
-		<h:panelGrid columns="1">
-			<p:spacer height="1" />
+		<h:panelGrid columns="2">
+			<p:spacer width="50" />
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{contractDetailsBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}"

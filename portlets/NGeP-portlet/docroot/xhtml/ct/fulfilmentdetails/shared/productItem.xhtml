@@ -20,7 +20,7 @@
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		 
 		         <p:column filterBy="#{ctItemVar.itemName}"
-		              style="width:30%; white-space:normal;" filterMatchMode="contains">
+		              style="width:28%; white-space:normal;" filterMatchMode="contains">
 		              <f:facet name="header">
 		                    <h:outputText id="productItemDisc" value="#{lbl['lbl.ct.item.desc']}"/>
 		                        &#160; <p:graphicImage id="productItem"
@@ -32,11 +32,11 @@
 		              <p:outputLabel value="#{ctItemVar.itemName}" style="float:left;"/>
 		         </p:column>       
 		     
-		         <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%; white-space:normal;">
+		         <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:15%; white-space:normal;">
 		              <p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;"/>
 		         </p:column>        
 		  
-		         <p:column style="text-align: right;width:15%; white-space:normal;">
+		         <p:column style="text-align: right;width:14%; white-space:normal;">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
@@ -46,7 +46,7 @@
 		            </h:outputText>
 		         </p:column>   
 		   
-		         <p:column style="text-align: right;width:15%;">
+		         <p:column style="text-align: right;width:14%;white-space:normal;">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
@@ -56,7 +56,7 @@
 	             	</h:outputText>
 		         </p:column>     
 		  
-		         <p:column style="width:10%; white-space:normal;">
+		         <p:column style="width:13%; white-space:normal;">
 		         	<f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.type.of.goods']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.type.of.goods']}"/>
@@ -67,7 +67,7 @@
 	                  	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" onclick="importedDlg.show();return false;" />	
 		          </p:column> 
 		    
-		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
+		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%; white-space:normal;">
 		               <p:outputLabel value="#{ctItemVar.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		           </p:column>  
 		                

@@ -7,23 +7,26 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="factoringId" header="#{lbl['lbl.ct.panel.factoring']}"    toggleable="true"  toggleSpeed="500"> 
 		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.dtls']}"/>     -->
-         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth180" >  
+         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthFact220" >  
             
                <p:outputLabel  value="#{lbl['lbl.ct.factoring.company']}"/>  
-               <p:inputText disabled="true" style="width:200px;" 
+               <p:inputText disabled="true" style="width:620px;" 
                   value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.financialOrg.finOrgName}"  />  
-       
+                  
+              
                <p:outputLabel  value="#{lbl['lbl.ct.factoring.branch']}"  />  
-               <p:inputText  disabled="true" style="width:200px;"
+               <p:inputText  disabled="true" style="width:620px;"
                   value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.pmFinancialBranch.branchName}" />
-       
-              <p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}"/>  
+       </h:panelGrid>
+        <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidthFact220" >  
+                  <p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}"/>  
               <p:inputText  disabled="true" style="width:200px;"
                  value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.authRefNo}" />  
+       
       		 
       		 <p:outputLabel  value="#{lbl['lbl.ct.effective.date']}"  /> 
       		 <h:panelGrid columns="3">
-             	<p:inputText disabled="true" style="width:200px;" 
+             	<p:inputText disabled="true" style="width:100px;" 
                 	value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.effDate}">
                		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
              	</p:inputText>  
@@ -33,7 +36,7 @@
              
       		 <p:outputLabel  value="#{lbl['lbl.ct.expiry.date']}" />
       		 <h:panelGrid columns="3">
-             	<p:inputText disabled="true" style="width:200px;"
+             	<p:inputText disabled="true" style="width:100px;"
                  	value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.expDate}">
                  	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
               	</p:inputText>
@@ -43,14 +46,17 @@
                
      		  <p:outputLabel  value="#{lbl['lbl.ct.approved.date']}" />
               <h:panelGrid columns="3">
-              	<p:inputText  disabled="true" style="width:200px;" 
+              	<p:inputText  disabled="true" style="width:100px;" 
                    	value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.approvedDate}" >
                 	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
               	</p:inputText>
               	<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.approved.date']}" />
 			  </h:panelGrid>
+			  </h:panelGrid>
               
+             <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthFact220" >  
+      
    			  <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"  />
               <h:panelGrid columns="3">
               	<p:inputText   disabled="true" style="width:200px;"
