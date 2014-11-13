@@ -30,6 +30,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -75,6 +76,11 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    public SuspensionBackingBean(){
 	    	if(this.getManagedBean().getAction() == null) 
 	    		this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
+	    	
+	    	HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+	        HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
+	    	if(originalServletRequest.getParameter(ContractConst.CONTRACT_VER_ID) != null)
+	    		getManagedBean().setViewOnly(true);
 	    }
 	 
 	   private FacesScopes getFacesScopes(){
@@ -90,8 +96,21 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			          HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			          HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			          String taskId = originalServletRequest.getParameter("taskId");
+			          String contractVerId = originalServletRequest.getParameter(ContractConst.CONTRACT_VER_ID);
+			          IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			          
+			          if(contractVerId!=null) {
+			        	  ContractReqDTO reqDTO = new ContractReqDTO();
+			        	  reqDTO.setContractVerId(Long.parseLong(contractVerId));
+			        	  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			        	  reqDTO.setUpdateAction(false);
+			        	  ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			        	  getManagedBean().setViewOnly(true);
+			        	  setSuspensionContractVer(resDTO);
+			        	  return;
+			          }
 			          if(taskId==null) 
-				      return;
+			        	  return;
 		
 			          FacesScopes face = new FacesScopes();
 			          String token =face.getBPMAuthenticationCtxToken();
@@ -120,8 +139,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 					  ctReqDTO.setContractId(new Long(dataType.getContractId()));
 					  ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 					  
-			          IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			          ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+					  ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			          setSuspensionContractVer(contractSO.retrieveContractVerDtls(ctReqDTO));
 			          getManagedBean().setAutoUpdate(true);
 			          
@@ -154,7 +172,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 		    }
 		    
-		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	    
+		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	  }
 	
