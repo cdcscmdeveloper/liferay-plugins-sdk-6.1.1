@@ -2186,69 +2186,71 @@ public class QTDetailBackingBean extends
 						backingBean.retrievePmStateList();
 					}
 				}
-				Date publishDate = this.getManagedBean().getQt()
-						.getPublishDate();
-				Date bsvDate = null;
-				if (getManagedBean().getQt().isZonal()) {
-					List<BriefingZoneBean> briefingBeans = getManagedBean()
-							.getBriefingZoneBean();
-					if (null != briefingBeans && !briefingBeans.isEmpty()) {
-						for (BriefingZoneBean briefing : briefingBeans) {
-							briefing.getScQtBsv().getScQtBsvDtls();
-							ScQtBsv bsv = briefing.getScQtBsv();
-							for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
-								bsvDate = bsvDtl.getBsvDate();
-								this.getManagedBean().setBsvDate(bsvDate);
-								getManagedBean().getQt().setClosingDate(
-										DateUtils.addDays(bsvDate, this
-												.getManagedBean().getQt()
-												.getPublishPeriod()));
-							}
-						}
-					} else {
-						if (null != publishDate) {
-							getManagedBean().getQt().setClosingDate(
-									DateUtils.addDays(getManagedBean().getQt()
-											.getPublishDate(), this
-											.getManagedBean().getQt()
-											.getPublishPeriod()));
-						}
-					}
-				} else {
-					if (getManagedBean().getBsvDtlBean() != null) {
-						List<ScQtBsvDtl> selectedBriefList = getManagedBean()
-								.getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
-						if (selectedBriefList != null
-								&& !selectedBriefList.isEmpty()) {
-							for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
-								bsvDate = scQtBsvDtl.getBsvDate();
-								this.getManagedBean().setBsvDate(bsvDate);
-								getManagedBean().getQt().setClosingDate(
-										DateUtils.addDays(bsvDate, this
-												.getManagedBean().getQt()
-												.getPublishPeriod()));
-							}
-						} else {
-							if (null != publishDate) {
-								getManagedBean().getQt().setClosingDate(
-										DateUtils.addDays(getManagedBean()
-												.getQt().getPublishDate(), this
-												.getManagedBean().getQt()
-												.getPublishPeriod()));
-							}
-						}
-					}
-				}
-				Date clsDate = this.getManagedBean().getQt().getClosingDate();
-				if (null != clsDate) {
-					this.getManagedBean().setProposalValidityUntil(
-							DateUtils.addDays(clsDate, this.getManagedBean()
-									.getQt().getQtValidityPeriod()));
-				}
+				
 				backingBean.getDeskOfficerAdminAssistant();
 			} finally {
 				detailSO = null;
 			}
+		}
+		
+		Date publishDate = this.getManagedBean().getQt()
+				.getPublishDate();
+		Date bsvDate = null;
+		if (getManagedBean().getQt().isZonal()) {
+			List<BriefingZoneBean> briefingBeans = getManagedBean()
+					.getBriefingZoneBean();
+			if (null != briefingBeans && !briefingBeans.isEmpty()) {
+				for (BriefingZoneBean briefing : briefingBeans) {
+					briefing.getScQtBsv().getScQtBsvDtls();
+					ScQtBsv bsv = briefing.getScQtBsv();
+					for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
+						bsvDate = bsvDtl.getBsvDate();
+						this.getManagedBean().setBsvDate(bsvDate);
+						getManagedBean().getQt().setClosingDate(
+								DateUtils.addDays(bsvDate, this
+										.getManagedBean().getQt()
+										.getPublishPeriod()));
+					}
+				}
+			} else {
+				if (null != publishDate) {
+					getManagedBean().getQt().setClosingDate(
+							DateUtils.addDays(getManagedBean().getQt()
+									.getPublishDate(), this
+									.getManagedBean().getQt()
+									.getPublishPeriod()));
+				}
+			}
+		} else {
+			if (getManagedBean().getBsvDtlBean() != null) {
+				List<ScQtBsvDtl> selectedBriefList = getManagedBean()
+						.getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
+				if (selectedBriefList != null
+						&& !selectedBriefList.isEmpty()) {
+					for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
+						bsvDate = scQtBsvDtl.getBsvDate();
+						this.getManagedBean().setBsvDate(bsvDate);
+						getManagedBean().getQt().setClosingDate(
+								DateUtils.addDays(bsvDate, this
+										.getManagedBean().getQt()
+										.getPublishPeriod()));
+					}
+				} else {
+					if (null != publishDate) {
+						getManagedBean().getQt().setClosingDate(
+								DateUtils.addDays(getManagedBean()
+										.getQt().getPublishDate(), this
+										.getManagedBean().getQt()
+										.getPublishPeriod()));
+					}
+				}
+			}
+		}
+		Date clsDate = this.getManagedBean().getQt().getClosingDate();
+		if (null != clsDate) {
+			this.getManagedBean().setProposalValidityUntil(
+					DateUtils.addDays(clsDate, this.getManagedBean()
+							.getQt().getQtValidityPeriod()));
 		}
 	}
 
