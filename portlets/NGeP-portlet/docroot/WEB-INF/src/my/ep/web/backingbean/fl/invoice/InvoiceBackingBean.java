@@ -764,6 +764,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			if(flBB.getManagedBean().getRemarkList().size() >0){
 				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
