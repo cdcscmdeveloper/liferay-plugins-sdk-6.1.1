@@ -84,6 +84,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -1504,6 +1505,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			assocBody.setPmCertBody(selectedCertBody);
 		}
+	}
+	
+	//display section levelcode in table
+	public String getSectionBusinessNatureLevelCode(Long sectionId) {
+		String retVal = "";
+		
+		if(sectionId!=null && sectionId.compareTo(new Long(0))==0){
+			if (CollectionUtils.isNotEmpty(getManagedBean().getBusinessNatureL1())) {
+				for (PmBusinessNature section : getManagedBean()
+						.getBusinessNatureL1()) {
+					if(sectionId.compareTo(section.getBusinessNatureId())==0){
+						retVal = section.getLevelCode()+" - ";
+						break;
+					}
+				}
+			}
+		}
+		
+
+		return retVal;
 	}
 
 }
