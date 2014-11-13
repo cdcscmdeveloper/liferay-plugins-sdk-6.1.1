@@ -2815,8 +2815,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public boolean getConditionalValue(){
     	if(getManagedBean().isViewContract()) {
     		return true;
-    	} else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode() == ParameterConst.FULFILMENT_TYPE_ONE_OFF
-    			&& getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 500000) {
+    	} else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+    			&& getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 500000 && !getManagedBean().getCtContract().isAgreement()) {
     		return true;
     	} else {
     		return false;
