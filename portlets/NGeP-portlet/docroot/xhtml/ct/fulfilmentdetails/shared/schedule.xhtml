@@ -150,7 +150,7 @@
                              <p:spacer width="1"/>
                            
                               <p:selectOneMenu id="fromProYear" value="#{progPaymentObj.startYear}" 
-                                  style="width:80px;"  disabled="#{progPaymentObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}">
+                                  style="width:70px;"  disabled="#{progPaymentObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}">
                                    <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
                                  <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId"  process="@form" 
                                     onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
@@ -168,7 +168,7 @@
                                   <p:spacer width="1"/>
                                 
                                   <p:selectOneMenu id="toProYear" value="#{progPaymentObj.endYear}" 
-                                       style="width:80px;" disabled="#{progPaymentObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}">
+                                       style="width:70px;" disabled="#{progPaymentObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}">
                                        <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
                                       <p:ajax event="change" update=":form:progPaymentTableId,:form:proAddButtionId"  process="@form" 
                                         onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/> 
@@ -186,7 +186,7 @@
 		                           </h:outputText>
 		                      </p:column>
                
-                              <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.percentage']}">
+                              <p:column style="width:14%;" headerText="#{lbl['lbl.ct.percentage']}">
                                  <h:panelGroup>
                                      <p:inputText value="#{progPaymentObj.percentage}" style="width:50px;" styleClass="ppRightBtn" 
                          	            disabled="#{progPaymentObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.percentage']}">
