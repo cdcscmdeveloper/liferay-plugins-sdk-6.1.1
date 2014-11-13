@@ -2717,7 +2717,7 @@ public class SmApplicationUtil {
 
 	}
 
-	public static boolean siteVisitDataUpdate(
+	public static void siteVisitDataUpdate(
 			SmApplicationManagedBean managedBean) {
 		SmSvTask svTask = new SmSvTask();
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
@@ -2795,7 +2795,8 @@ public class SmApplicationUtil {
 			templates.add(temp);
 		}
 		svTask.setSmSvTemplates(templates);
-		return updateSiteVisitTask(svTask);
+		managedBean.setSvTask(svTask);
+		//return updateSiteVisitTask(svTask);
 
 	}
 
