@@ -12,7 +12,7 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
 	
-	 <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" showSummary="false" />
+	 <p:messages showDetail="true" autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" showSummary="false" />
 	  <c:if test="#{requestNoteBackingBean.managedBean.titleChecker}">
 			<ac:title value="#{lbl['lbl.sc.request.note']}"/>
 	  </c:if>

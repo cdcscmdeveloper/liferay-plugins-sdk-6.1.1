@@ -123,7 +123,6 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -211,7 +210,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * return String
 	 */
 	public String saveAction(String outcome) {
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		RequestNoteResDTO requestNoteResDTO = null;
@@ -274,43 +272,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
 			requestNoteReqDTO.setToken(token);
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-		    requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
+		    requestNoteResDTO = getDirectPurchaseSO().saveRequestNote(requestNoteReqDTO);
 		    
 	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 	    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 	    	 requestNoteReqDTO.setToken(token);
 	    	 requestNoteReqDTO.setOutcome("");
-	    	 requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
+	    	 requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 	     }
 	    
-		if (requestNoteResDTO.isSuccessful()) {
-			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
-		/*	//if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, null, 
-						MessageUtils.getMessage(MessageConst.INFO_700025, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-				
-				//requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
-				//requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
-				//getManagedBean().setRequestNote(requestNoteResDTO.getRequestNoteDetail());
-				
-			} else{*/
-			
-				successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
-				// clear data
-				super.renewSesionObject();
-			//}
-		}else {
-			throw new EpException(MessageConst.ERROR_700020);
-		}
+	    if (requestNoteResDTO.isSuccessful()) {
+	    	ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
+	    	if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+	    		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+	    				FacesMessage.SEVERITY_INFO, null, 
+	    				MessageUtils.getMessage(MessageConst.INFO_700025, 
+	    						new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
+	    						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+
+	    		requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
+	    		requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
+	    		getManagedBean().setRequestNote(requestNoteResDTO.getRequestNoteDetail());
+
+	    	} else{
+
+	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
+	    		// clear data
+	    		super.renewSesionObject();
+	    	}
+	    }else {
+	    	throw new EpException(MessageConst.ERROR_700020);
+	    }
     }    
-	    finally {
-			directPurchaseSO = null;
-		}
-		return null;
+    finally {
+    	//directPurchaseSO = null;
+    }
+    return null;
 	}
 	
 	/**
@@ -320,7 +318,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public String submitAction(String outcome) {
 		debugLogger("submitAction");
 		RequestNoteResDTO requestNoteResDTO = null;
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		List<ScRequestNoteDtl>	requestNoteDtls = null;
@@ -381,12 +378,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setToken(ctxToken);
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setSubmit(Boolean.TRUE);
-				requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
+				requestNoteResDTO = getDirectPurchaseSO().saveRequestNote(requestNoteReqDTO);
 			} else {
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setToken(ctxToken);
 				requestNoteReqDTO.setOutcome(outcome);
-				requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
+				requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			}
 			
 			if (requestNoteResDTO.isSuccessful()) {
@@ -405,7 +402,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}    
 		finally {
-			directPurchaseSO = null;
+			//directPurchaseSO = null;
 		}
 		return null;
 	}
@@ -417,7 +414,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		renewSesionObject();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		String taskId = originalServletRequest.getParameter("taskId");
 		if (StringUtils.isNotBlank(taskId)) {
@@ -445,7 +441,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			requestNoteReqDTO.setRequestNoteId(dpId);
-			RequestNoteResDTO requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
+			RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
 			if(requestNoteResDTO.getRequestNoteDetail() != null){
 				requestNote = requestNoteResDTO.getRequestNoteDetail();
 			}
@@ -647,7 +643,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private RequestNoteResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
 		RequestNoteResDTO requestNoteResDTO = null;
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+		
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
@@ -672,7 +668,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setToken(ctxToken);
 			requestNoteReqDTO.setOutcome(outcome);
 			requestNoteReqDTO.setDigiSignData(digiSign);
-			requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
+			
+			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
@@ -706,7 +703,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}    
 		finally {
-			directPurchaseSO = null;
+			//directPurchaseSO = null;
 		}
 		return requestNoteResDTO;
 	}
@@ -714,11 +711,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		this.getManagedBean().setAction(outcome);
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
+		
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		} else {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			updateBPMTask(outcome, null);
 		}	
 	}
@@ -766,7 +769,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0) {
 			PmUser assignedUser = null;
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
 			if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
 				assignedUser= getUserById(getManagedBean().getAssignedToUserId());
@@ -800,7 +802,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						if(selectedReqDtl.getRequestItem() != null){							
 							reqDTO.setRequestItemId(selectedReqDtl.getRequestItem().getRequestNoteItemId());
 							reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-							RequestNoteResDTO resDTO = directPurchaseSO.getSuppItemByReqItemIdAndSupplierId(reqDTO);
+							RequestNoteResDTO resDTO = getDirectPurchaseSO().getSuppItemByReqItemIdAndSupplierId(reqDTO);
 							ScRequestSupplierItem supplierItem = resDTO.getSupplierItem();
 							
 							if (supplierItem != null) {
@@ -1187,7 +1189,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	public void addToRequestNote(boolean cartFlag) {
 		log.info("addToRequestNote");
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		List<ScRequestNoteDtl>	requestNoteDtls = getManagedBean().getRequestNoteDtls();
 		ScRequestSupplierItem requestSupplierItem = getManagedBean().getRequestSupplierItem();
 		ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
@@ -1339,7 +1340,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		requestSupplierItem.setRequestNoteItem(scRequestItem);
 		if(requestNote.getRequestNoteNo() == null || requestNote.getRequestNoteNo().isEmpty()){
-			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+			requestNote.setRequestNoteNo(getDirectPurchaseSO().generateRequestNoteNo());
 		}
 		
 		scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
@@ -1390,7 +1391,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setUomId(scRequestNoteDtl.getRequestItem().getUom().getUomId());
 	    requestNoteReqDTO.setViewSearchBean(viewSearchBean);
 	    requestNoteReqDTO.setCmSupplierItemIds(cmSupplieritemIds);
-	    directPurchaseSO.validateAddToCart(requestNoteReqDTO);
+	    getDirectPurchaseSO().validateAddToCart(requestNoteReqDTO);
 	    
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
@@ -2333,13 +2334,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	public void afterSavePostListener(ScRequestNoteDtl requestNoteDtl) {
 		log.info("afterSavePostLister");
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 
 		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
 			ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
-			RequestNoteResDTO requestNoteResTO =  directPurchaseSO.getPricesBySupplierItemId(requestNoteReqDTO);
+			RequestNoteResDTO requestNoteResTO =  getDirectPurchaseSO().getPricesBySupplierItemId(requestNoteReqDTO);
 			if(requestNoteResTO.getSupplierItemPrices() != null && requestNoteResTO.getSupplierItemPrices().size()>0){
 				requestSupplierItem.setSupplierItemPrices(requestNoteResTO.getSupplierItemPrices());
 			}
@@ -2651,14 +2651,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<ScRequestSupplierItem> supplierItems = null;
 		
 		if (!scRequestItem.isBrandNew()) {
-			IDirectPurchaseSO directPurchaseSO = null;
 			try {				
-				directPurchaseSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-				
 				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 				requestNoteReqDTO.setRequestItemId(scRequestItem.getRequestNoteItemId());
-				RequestNoteResDTO requestNoteResDTO = directPurchaseSO.getSuppItemWithPricesByReqItemId(requestNoteReqDTO);
+				RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getSuppItemWithPricesByReqItemId(requestNoteReqDTO);
 				supplierItems = requestNoteResDTO.getSupplierItems();
 				if (supplierItems != null) {
 					for(ScRequestSupplierItem supplierItem: supplierItems){			
@@ -2681,7 +2677,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 				
 			} finally {
-				directPurchaseSO = null;
+				//directPurchaseSO = null;
 			}
 		} else {
 			CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
@@ -2970,6 +2966,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
 	
+	private IDirectPurchaseSO getDirectPurchaseSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+	}
 	
 	private String getServerUrl() {
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
