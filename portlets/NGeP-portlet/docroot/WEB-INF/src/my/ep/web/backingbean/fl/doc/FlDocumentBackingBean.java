@@ -206,12 +206,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		String flDocId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
 		String statusId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusId");
 		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("buttonVal");
+		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
 		
 		System.out.println("docType::: "+docType);
 		System.out.println("flDocNo::: "+flDocNo);
 		System.out.println("flDocId::: "+flDocId);
 		System.out.println("buttonVal::: "+buttonVal);
-		System.out.println("statusId>>::: "+statusId);
+		System.out.println("statusDesc>>::: "+statusDesc);
 		
 		if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
@@ -470,6 +471,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		else if(docType.equals(ParameterConst.DOCTYPE_FULFILMENT_NOTE)){
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			reqDTO.setFulfilmentNoteId(Long.valueOf(flDocId));
+			reqDTO.setStatusDesc(statusDesc);
 			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
 			recNoteBB.getManagedBean().setButtonVal(buttonVal);
