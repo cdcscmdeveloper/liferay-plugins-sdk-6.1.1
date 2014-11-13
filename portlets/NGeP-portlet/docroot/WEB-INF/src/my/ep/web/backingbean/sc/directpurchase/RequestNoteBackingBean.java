@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -77,6 +78,7 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -114,12 +116,14 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -156,6 +160,8 @@ import com.liferay.portal.util.PortalUtil;
 public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteManagedBean> {
 	private static Logger log = Logger.getLogger(RequestNoteBackingBean.class);
 	private boolean flag;
+	private PmDigiSign pmDigiSign;
+	private String textBeforeSign;
 	
 	public static final String ZONE_SEPARATOR = "_";
 	
@@ -632,9 +638,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		return results;
 	}
-
-	public void approverAction(String outcome) {
-		debugLogger("approverAction");
+	
+	/**
+	 * @param action
+	 * @param object
+	 * @return
+	 */
+	private RequestNoteResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
+		debugLogger("updateBPMTask");
 		RequestNoteResDTO requestNoteResDTO = null;
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -647,7 +658,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
-
+			
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_REQUEST_NOTE, 
+						requestNote.getRequestNoteId(), requestNote.getRequestNoteNo());
+			}
+			
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
@@ -655,16 +671,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(ctxToken);
 			requestNoteReqDTO.setOutcome(outcome);
+			requestNoteReqDTO.setDigiSignData(digiSign);
 			requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
 			
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-//					IPurchaseRequestOsbSO purchaseReqSO = (IPurchaseRequestOsbSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestOsbSO.class);
-//					PurchaseRequestOSBReqDTO reqDTO = new PurchaseRequestOSBReqDTO();
-//					reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-//					reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-//					purchaseReqSO.splitPurchaseRequest(reqDTO);
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
 
@@ -696,6 +708,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		finally {
 			directPurchaseSO = null;
 		}
+		return requestNoteResDTO;
+	}
+
+	public void approverAction(String outcome) {
+		debugLogger("approverAction");
+		this.getManagedBean().setAction(outcome);
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+		} else {
+			updateBPMTask(outcome, null);
+		}	
 	}
 	 
 	public List<SmSupplier> getSuppliersBySelectedItems() {
@@ -2969,5 +2994,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
+	
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
+	
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getRequestNote().getRequestNoteNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}	
 	
 }
