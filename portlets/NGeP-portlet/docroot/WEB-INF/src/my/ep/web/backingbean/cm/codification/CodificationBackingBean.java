@@ -1045,7 +1045,7 @@ public class CodificationBackingBean extends
 			extCodeVO = new ExtensionCodeVO();
 			CmUnspsc selectedCommodity = this.getManagedBean()
 					.getSelectedUNSPSCObj();
-			log.info("..................selectedCommodity=" + selectedCommodity);
+			log.info("..................selectedCommodity.getUnspscCode()=" + selectedCommodity.getUnspscCode());
 
 			extCodeVO.setTypeId(selectedCommodity.getCmType().get(0)
 					.getTypeId());
@@ -1715,6 +1715,9 @@ public class CodificationBackingBean extends
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO comodityDTO = unspscSO.retrieveUNSPSCByCommodityCode(reqDTO);
+
 		String classCode = getParentCode(new Long(unspscObj.getUnspscCode()));
 
 		reqDTO.setUnspscCode(classCode);
@@ -1764,8 +1767,8 @@ public class CodificationBackingBean extends
 								.getColorName()));
 			}
 		}
-
-		for (CmBrand brand : unspscObj.getCmBrand()) {
+       
+		for (CmBrand brand : comodityDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName())) {
 				this.getManagedBean()
 						.getBrandCriteria()
@@ -1774,7 +1777,7 @@ public class CodificationBackingBean extends
 			}
 		}
 
-		for (CmType type : unspscObj.getCmType()) {
+		for (CmType type : comodityDTO.getCommodityObj().getCmType()) {
 			if (!StringUtils.isBlank(type.getTypeName())) {
 				this.getManagedBean()
 						.getTypeCriteria()
@@ -1783,7 +1786,7 @@ public class CodificationBackingBean extends
 			}
 		}
 
-		for (CmMeasurement measurement : unspscObj.getCmMeasurement()) {
+		for (CmMeasurement measurement : comodityDTO.getCommodityObj().getCmMeasurement()) {
 			if (!StringUtils.isBlank(measurement.getMeasurementName())) {
 				this.getManagedBean()
 						.getMeasurementCriteria()
@@ -1792,7 +1795,13 @@ public class CodificationBackingBean extends
 			}
 		}
 
+
+	if (this.getManagedBean().getCurrentTaskName() != null && this.getManagedBean().getCurrentTaskName().equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_REVIEW_REQUEST)) {
 		return "verifyExtensionSearch?faces-redirect=true";
+	 }
+	//if come from pending codification
+	return "searchExtensionToAssignItem?faces-redirect=true";
+	
 	}
 
 	public String returnToRecommendService(CmUnspsc unspscObj) {
@@ -2589,6 +2598,7 @@ public class CodificationBackingBean extends
 	}
 
 	public boolean isSelectedRequestItemProduct() {
+		log.info(".................this.getManagedBean().getSelectedRequestItem()="+this.getManagedBean().getSelectedRequestItem());
 		if (this.getManagedBean().getSelectedRequestItem() != null) {
 			return isProduct(this.getManagedBean().getSelectedRequestItem()
 					.getItemType());
@@ -2598,6 +2608,7 @@ public class CodificationBackingBean extends
 
 	public boolean isProduct(PmParameter item) {
 		String itemType = this.getParameterDesc(item);
+		log.info("...........itemType="+itemType);
 		if (itemType.equalsIgnoreCase("Product")) {
 			return true; // means less than
 		} else {
