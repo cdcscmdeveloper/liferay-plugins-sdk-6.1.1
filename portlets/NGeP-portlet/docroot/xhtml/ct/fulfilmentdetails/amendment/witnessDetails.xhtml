@@ -74,13 +74,10 @@
 					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" validator="#{webappBean.checkFaxNumber}"   />
 					        <p:message for="faxNo" display="icon"/>
 					   </h:panelGrid>
-					   
-				       <h:panelGrid columns="2" style="float:right;">
-			              <p:outputLabel value="*" styleClass="mandatory" />
+					    
 				  	      <p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
-				  	   </h:panelGrid>
 				        <h:panelGrid columns="3">
-					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="#{lbl['lbl.ct.mobile']}"
+					       <p:inputText id="mobileNo" style="width:150px;"    label="#{lbl['lbl.ct.mobile']}"
 					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
 					   </h:panelGrid>
