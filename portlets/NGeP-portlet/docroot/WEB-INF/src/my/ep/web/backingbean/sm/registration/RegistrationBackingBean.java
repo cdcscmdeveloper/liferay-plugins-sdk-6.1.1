@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +93,7 @@ import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 @ManagedBean(name = "registrationBackingBean")
@@ -1122,6 +1125,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 			}
+			
+			// sort
+			if(CollectionUtils.isNotEmpty(itemList)){
+				Collections.sort(itemList, new Comparator<SelectItem>() {
+					@Override
+					public int compare(final SelectItem s1, final SelectItem s2) {
+						return StringUtil.upperCase(s1.getLabel()).compareTo(
+								StringUtil.upperCase(s2.getLabel()));
+					}
+				});
+			}
+			
 			
 			log.info("------------->" + itemList.size());
 		} catch (Exception e) {
