@@ -1227,7 +1227,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		getManagedBean().setValidateWitness(false);
 		for (CtAgreementParty party : getManagedBean().getCtAgencySigner()) {
 	
-				if (party.equals(ctParty)) {
+			   if(ctParty.getOfficer() == null && ctParty.getOfficer().getUserId() == null){
+				   ctParty.setOfficerIc(null);
+				   ctParty.setOfficerPosition(null);
+			  
+			   } else if (party.equals(ctParty) && ctParty.getOfficer().getUserId() != null) {
 					   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 					   UserReqDTO reqDTO = new UserReqDTO();
 					   reqDTO.setUserId(ctParty.getOfficer().getUserId());
@@ -1236,7 +1240,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					   party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
 					   party.setOfficerPosition(resDTO.getPmUser().getDesignation());
 				 }
-				if(party.getOfficer().getUserId() != null 
+				
+			   if(party.getOfficer().getUserId() != null && ctParty.getOfficerIc() != null && party.getOfficer().getIdentificationNo() != null
 						 && party.getOfficer().getIdentificationNo().equalsIgnoreCase(ctParty.getOfficerIc())) {
 					counter++;
 					if(counter == 2) {
@@ -1244,7 +1249,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						 throw new EpException(MessageConst.WARN_754000, new String[]{ctParty.getOfficerIc()});
 					}
 				
-				} else if(getManagedBean().getAgencyWitnessIcNo() != null && !getManagedBean().getAgencyWitnessIcNo().isEmpty()
+				} else if(getManagedBean().getAgencyWitnessIcNo() != null && ctParty.getOfficerIc() != null
+						&& !getManagedBean().getAgencyWitnessIcNo().isEmpty()
 						&& getManagedBean().getAgencyWitnessIcNo().contains(ctParty.getOfficerIc())) {
 					getManagedBean().setValidateWitness(true);
 					throw new EpException(MessageConst.WARN_755000, new String[]{ctParty.getOfficerIc()});
@@ -1363,13 +1369,20 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			int counter = 0;
 			for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
-				if(party.getOfficerIc() != null && ctParty.getOfficerIc() != null && party.getOfficerIc().equalsIgnoreCase(ctParty.getOfficerIc())) {
+			
+				if(party.equals(ctParty) && ctParty.getOfficer().getUserId() == null){
+					party.setOfficerIc(null);
+					party.setOfficerPosition(null);
+				}
+				if(ctParty.getOfficer().getUserId() != null && 
+						 party.getOfficerIc() != null && ctParty.getOfficerIc() != null && party.getOfficerIc().equalsIgnoreCase(ctParty.getOfficerIc())) {
 					  counter++;
 					  if(counter == 2) {
 						    getManagedBean().setValidateWitness(true);
 						    throw new EpException(MessageConst.WARN_758000, new String[]{ctParty.getOfficerIc()});
 					  }
-				  } else if(getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty()
+				  } else if(getManagedBean().getSupplierOfficerIcNo() != null && ctParty.getOfficerIc() != null
+						  && !getManagedBean().getSupplierOfficerIcNo().isEmpty() && ctParty.getOfficer().getUserId() != null
 							&& getManagedBean().getSupplierOfficerIcNo().contains(ctParty.getOfficerIc())) {
 						getManagedBean().setValidateWitness(true);
 						throw new EpException(MessageConst.WARN_759000, new String[]{ctParty.getOfficerIc()});
@@ -1397,6 +1410,27 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
           } else if(getManagedBean().getAgencyWitnessIcNo().contains(str)){
 	             throw new EpException(MessageConst.WARN_762000, new String[]{str});
           }
+    }
+	
+	public void resetSignerValue(CtAgreementParty agreementParty){
+		   for(CtAgreementParty ctAgreementParty : getManagedBean().getCtAgencySigner()) {
+		         if(ctAgreementParty.equals(agreementParty)){
+		        	         ctAgreementParty.setOfficer(null);
+		        	        ctAgreementParty.setOfficerIc(null);
+		        	        ctAgreementParty.setOfficerPosition(null);
+		        	 
+		         }
+	       }
+	}
+	
+	public boolean getConditionalValue(){
+    	 if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+    			&& getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 500000
+    			&& !getManagedBean().getCtContract().isAgreement() ) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
 	
 	public boolean isSupplementValue() {
