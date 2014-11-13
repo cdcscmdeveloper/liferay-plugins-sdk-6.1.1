@@ -32,6 +32,7 @@
 				 </h:panelGrid>
 				 <h:panelGrid columns="5">
 					<p:inputText id="contractPhysicalNo" for="physicalNo"
+					    disabled="#{agreementBackingBean.getConditionalValue()}"
 						value="#{agreementBackingBean.managedBean.ctContract.contractPhysicalNo}"
 						style="width:170px;" maxlength="30" required="true" label="#{lbl['lbl.ct.physical.no']}" />
 					<p:spacer width="1" />

@@ -838,11 +838,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		 if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
 			 
-			   if(contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty()) {
-				   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
-		
-			   } else {
+			   if(contractVer.getCtPerformanceBonds() != null || !contractVer.getCtPerformanceBonds().isEmpty()) {
+				 
 			                double bondAmount = 0.0;
 		                    for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
 					                if(performanceBond.getRecordStatusFlg().intValue() == 1) {
