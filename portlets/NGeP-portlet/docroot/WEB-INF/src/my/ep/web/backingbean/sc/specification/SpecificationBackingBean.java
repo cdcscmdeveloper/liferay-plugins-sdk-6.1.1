@@ -8349,8 +8349,8 @@ public class SpecificationBackingBean extends
 				// BigDecimal techWeightage = new BigDecimal(100);
 				// MathContext mc = new MathContext(4);
 				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-				this.getManagedBean().setTechnicalWeightageScore(
-						new BigDecimal(total));
+				/*this.getManagedBean().setTechnicalWeightageScore(
+						new BigDecimal(total));*/
 			}
 		} finally {
 
@@ -9045,6 +9045,9 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> technicalScoring = this.getManagedBean()
 				.getTechnicalScoring();
 		if (technicalScoring != null && !technicalScoring.isEmpty()) {
+
+			techWeightageSum();
+
 			localChecklist.addAll(technicalScoring);
 			scQt.setScQtChecklists(localChecklist);
 		}
@@ -9053,6 +9056,7 @@ public class SpecificationBackingBean extends
 
 		if (financialScoring != null && !financialScoring.isEmpty()) {
 			ScQtCheckList finalFinSpec = null;
+			finWeightageSum();
 			for (ScQtCheckList checkList : financialScoring) {
 
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -9366,7 +9370,8 @@ public class SpecificationBackingBean extends
 				scQt.setScQtDeliveryLocs(null);
 			}
 		}
-		if (!this.getManagedBean().getCurrentStatusId().equals(60401L)) {
+		if (null != this.getManagedBean().getCurrentStatusId()
+				&& !this.getManagedBean().getCurrentStatusId().equals(60401L)) {
 			List<ScQtSpecificationRemark> remarks = this.getManagedBean()
 					.getSpecificationRemarks();
 			if (null != remarks) {
