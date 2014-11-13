@@ -302,12 +302,41 @@
 				 <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-						process="@this" partialSubmit="true"
-						action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
+						process="@this" partialSubmit="true" onsuccess="sqConformDlg.show();"
 						update="@([id$=requestListDataTable])" icon="ui-icon-delete" />
 				</c:if>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
+	
+	<p:confirmDialog message="#{lbl['lbl.sc.request.note.delete.conform.msg']}"
+			id="promptId" width="350px" height="50px" widgetVar="sqConformDlg"
+			severity="alert" closable="false"
+			header="#{lbl['lbl.sc.request.note.delete.conform.dlg.header']}">
+
+			<p:blockUI block="conformDlgId" widgetVar="promptWidget"
+				id="conformDlg">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+
+			<p:panel id="conformDlgId">
+				<p:panelGrid styleClass="noBorders tr,noBorders td">
+					<p:row>
+						<p:column width="100%" style="text-align:right">
+							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@([id$=requestListDataTable])" 
+								onstart="promptWidget.show()" onsuccess="sqConformDlg.hide();" partialSubmit="true" process="@this"
+								icon="ui-icon-accept" oncomplete="promptWidget.hide();"
+								actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
+						 
+						  <p:commandButton value="#{lbl['lbl.btn.no']}" 
+								partialSubmit="true" process="@this" icon="ui-icon-reject"
+								onclick="sqConformDlg.hide();" type="button" />
+								
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+		</p:confirmDialog>
+	
 </ui:composition>
