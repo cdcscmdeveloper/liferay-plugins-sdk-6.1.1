@@ -772,6 +772,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public String backAction() {
+		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 
@@ -780,6 +781,7 @@ public class SpecificationBackingBean extends
 	public String committeeBackAction() {
 		// this.getManagedBean().setScQtCheckSt2techProposal(null);
 		// retriveTechnicalCheckList();
+		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
@@ -8349,8 +8351,10 @@ public class SpecificationBackingBean extends
 				// BigDecimal techWeightage = new BigDecimal(100);
 				// MathContext mc = new MathContext(4);
 				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-				/*this.getManagedBean().setTechnicalWeightageScore(
-						new BigDecimal(total));*/
+				/*
+				 * this.getManagedBean().setTechnicalWeightageScore( new
+				 * BigDecimal(total));
+				 */
 			}
 		} finally {
 
@@ -10825,6 +10829,7 @@ public class SpecificationBackingBean extends
 
 				settemplateSpecList(savedCheckLists);
 				this.getManagedBean().setIndex(-1);
+				this.getManagedBean().setCheckListTitle("");
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
@@ -10855,6 +10860,7 @@ public class SpecificationBackingBean extends
 					settemplateSpecList(savedCheckLists);
 
 				}
+				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setIndex(-1);
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
@@ -11059,6 +11065,7 @@ public class SpecificationBackingBean extends
 				// retriveTechnicalSpecification();
 				settemplateSpecList(savedCheckLists);
 				this.getManagedBean().setIndex(-1);
+				this.getManagedBean().setCheckListTitle("");
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
@@ -11090,6 +11097,7 @@ public class SpecificationBackingBean extends
 
 				}
 				this.getManagedBean().setIndex(-1);
+				this.getManagedBean().setCheckListTitle("");
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
