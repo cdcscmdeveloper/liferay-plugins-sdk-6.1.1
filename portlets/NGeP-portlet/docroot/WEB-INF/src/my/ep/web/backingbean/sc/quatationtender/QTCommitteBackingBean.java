@@ -929,10 +929,11 @@ public class QTCommitteBackingBean extends
 								committeeMember.setMemberRole(resDTO
 										.getPmParameter());
 								break;
-							} /*else {
+							} else {
 								committeeMember.setMemberRole(users.get(i)
 										.getMemberRole());
-							}*/
+								break;
+							}
 						}
 					}
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
