@@ -237,8 +237,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSelectCtPanelItem(
 						this.getManagedBean().getCtPanelItem());
 			}
-
 			if (null != this.getManagedBean().getCtCircularVer()) {
+				//circularListSelect(this.getManagedBean().getCtCircularVer());
 				getManagedBean().getCtSearchBean().setCirCularNo(
 						this.getManagedBean().getCtCircularVer()
 								.getCircularNo());
@@ -246,6 +246,10 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getCtCircularVer().getDocType());
 				this.getManagedBean().setCircularVer(
 						this.getManagedBean().getCtCircularVer());
+				/*if (null != this.getManagedBean().getCtPanelItem()) {
+					this.getManagedBean().setSelectCtPanelItem(
+							this.getManagedBean().getCtPanelItem());
+				}*/
 			}
 		}
 		return "specificationview.xhtml";
@@ -648,12 +652,14 @@ public class SpecificationBackingBean extends
 		} else {
 			if (null == this.getManagedBean().getCtCircularVer()) {
 				throw new EpException(MessageConst.ERROR_760157);
-			}  if (QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
+			}
+			if (QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
 					.getManagedBean().getCircularType())) {
 				if (null == this.getManagedBean().getCtPanelItem()) {
 					throw new EpException(MessageConst.ERROR_760157);
 				}
-			}if (this.getManagedBean().getScQt().isPanel()
+			}
+			if (this.getManagedBean().getScQt().isPanel()
 					&& QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
 							.getManagedBean().getCircularType())
 					&& QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
@@ -1802,11 +1808,11 @@ public class SpecificationBackingBean extends
 								.getCtPanelItem()) {
 					this.getManagedBean().setCtPanelItem(
 							scQt.getScQtSupplierCriteria().getCtPanelItem());
-					if(null!=scQt.getScQtSupplierCriteria().getCtPanelItem()
-									.getCtCircularVer()){
-					this.getManagedBean().setCtCircularVer(
-							scQt.getScQtSupplierCriteria().getCtPanelItem()
-									.getCtCircularVer());
+					if (null != scQt.getScQtSupplierCriteria().getCtPanelItem()
+							.getCtCircularVer()) {
+						this.getManagedBean().setCtCircularVer(
+								scQt.getScQtSupplierCriteria().getCtPanelItem()
+										.getCtCircularVer());
 					}
 					this.getManagedBean().setPanelItemCategory(
 							getParameterDesc(scQt.getScQtSupplierCriteria()
@@ -3489,8 +3495,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setAllStateCode(orgResDto.getStateStatusId());
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCATION_LEVEL_STATE);
-		if (this.getManagedBean().getAllStateCode() == 1
-				|| this.getManagedBean().getAllStateCode() == 2) {
+		if (this.getManagedBean().getAllStateCode() == 2) {
 			types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
 		}
 		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
@@ -8245,11 +8250,11 @@ public class SpecificationBackingBean extends
 	}
 
 	// Circular List Set method
-	public void circularListSelect(SelectEvent selectEvent) {
+	public void circularListSelect(CtCircularVer circular) {
 		ICircularDetailSO circularDetailSO;
 		try {
 			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
-			CtCircularVer circular = (CtCircularVer) selectEvent.getObject();
+			// CtCircularVer circular = (CtCircularVer) selectEvent.getObject();
 			this.getManagedBean().setCtCircularVer(circular);
 
 			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
