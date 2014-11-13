@@ -705,6 +705,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 		reqDTO.setInvoiceId(new Long(invoiceId));
+		reqDTO.setDocType(ParameterConst.DOCTYPE_AP59);
 		FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setDocType(FulfilmentConst.DOC_TYPE_AP59);
