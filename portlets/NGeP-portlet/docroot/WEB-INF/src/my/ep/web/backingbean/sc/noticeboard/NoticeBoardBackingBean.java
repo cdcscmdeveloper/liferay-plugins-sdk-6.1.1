@@ -1383,5 +1383,9 @@ public class NoticeBoardBackingBean extends
 		}
 		return "";
 	}
+	
+	public NoticeBoardBackingBean(){
+		reset();
+	}
 
 }
