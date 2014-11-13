@@ -223,12 +223,15 @@ public class FacesScopes {
 
 	public String getUserScreenName() {
 		String screenName = "";
-		try {
-			User user = UserServiceUtil.getUserById(Long.valueOf(this
-					.getRequest().getRemoteUser()));
-			screenName = user.getScreenName();
-		} catch (Exception e) {
-			log.error(e.getMessage());
+		
+		if(this.getRequest().getRemoteUser() != null) {
+			try {
+				User user = UserServiceUtil.getUserById(Long.valueOf(this
+						.getRequest().getRemoteUser()));
+				screenName = user.getScreenName();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
 		}
 		return screenName;
 	}
