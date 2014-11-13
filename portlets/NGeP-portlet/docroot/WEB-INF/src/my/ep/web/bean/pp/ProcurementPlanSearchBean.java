@@ -18,7 +18,7 @@ public class ProcurementPlanSearchBean {
 	
 	private String year;
 	
-	private String ptj;
+	private PmOrgProfile ptj;
 	
 	private PmOrgProfile ministry;
 	
@@ -54,17 +54,21 @@ public class ProcurementPlanSearchBean {
 		this.year = year;
 	}
 
+	
+
 	/**
 	 * @return the ptj
 	 */
-	public String getPtj() {
+	public PmOrgProfile getPtj() {
+		if(ptj==null)
+			ptj = new PmOrgProfile();
 		return ptj;
 	}
 
 	/**
 	 * @param ptj the ptj to set
 	 */
-	public void setPtj(String ptj) {
+	public void setPtj(PmOrgProfile ptj) {
 		this.ptj = ptj;
 	}
 

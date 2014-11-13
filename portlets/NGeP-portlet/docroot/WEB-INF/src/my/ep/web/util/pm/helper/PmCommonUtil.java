@@ -477,6 +477,36 @@ public class PmCommonUtil {
 		return pmUserOrgs;
 	}
 	
+	/**
+	 * retrieve active PmUserOrgs without role
+	 * @param id
+	 * @param isDetail
+	 * @return List<PmUserOrg> 
+	 */
+	public static List<PmUserOrg> retrieveActiveOrgWithoutRole(Long id){
+		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			if(resDTO.isSuccessful()){
+				pmUserOrgs = resDTO.getUserOrgList();
+			}
+				
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770058 , new String[]{id.toString(), e.getMessage()}); 
+		}finally{
+			userSO = null;
+		}		
+		return pmUserOrgs;
+	}
+	
+	
 
 	/**
 	 * retrieve address type list by user id
