@@ -52,8 +52,8 @@
 			rowKey="#{circular.circularVerId}" rowIndexVar="index" lazy="true"
 			selection="#{specificationBackingBean.managedBean.circularVer}">
 			<ac:paginator for="circularList"></ac:paginator>
-			<p:ajax event="rowSelectRadio" process="@this"
-				listener="#{specificationBackingBean.circularListSelect}"
+			<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
+				listener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.circularVer)}"
 				update=":form:panelItemGroupList"></p:ajax>
 			<p:columnGroup>
 				<p:row>
