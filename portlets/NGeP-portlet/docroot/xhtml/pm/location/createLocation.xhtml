@@ -153,10 +153,10 @@
 							<f:selectItems var="stateLs"
 								value="#{locationBackingBean.managedBean.states}"
 								itemLabel="#{stateLs.stateName}" itemValue="#{stateLs.stateId}" />
-							<p:ajax event="change" update="stateIdd"  listener="#{locationBackingBean.retriveDistrictValues}" />
+							<p:ajax event="change" update="divisionval,stateIdd"  listener="#{locationBackingBean.retrieveDivisionList}" />
 						</p:selectOneMenu></td><td> <p:message id="statevalMsg" for="stateval" display="icon" /></td>
 				</tr>
-				<!-- <tr>
+				<tr>
 					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
 							value=" #{lbl['lbl.pm.division']}" /> </td>
 					<td><p:selectOneMenu
@@ -170,7 +170,7 @@
 								itemLabel="#{divisionLs.divisionName}" itemValue="#{divisionLs.divisionId}" />
 							
 						</p:selectOneMenu></td>
-				</tr> -->
+				</tr>
 				<tr>
 					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
 							value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
