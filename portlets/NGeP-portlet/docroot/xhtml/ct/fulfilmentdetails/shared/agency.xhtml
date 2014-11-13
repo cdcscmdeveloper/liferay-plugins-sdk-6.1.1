@@ -13,7 +13,7 @@
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address1']}" escape="false"/>
-	   <p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address" />
+	   <p:graphicImage value="/css/images/design/house.png" styleClass="ui-icon-address" />
 	   <h:outputText styleClass="instruction" value=" #{lbl['lbl.ct.instruction.delivery.address2']}" escape="false"/><br/><br/>
   
        <p:dataTable var="agencyData"  value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
@@ -34,7 +34,7 @@
 				   <p:spacer width="5"/>
 				   <p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
 				       rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}" action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
-					   <p:graphicImage value="/css/images/design/address.png"  
+					   <p:graphicImage value="/css/images/design/house.png"  
 					     styleClass="ui-icon-address" title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
 				   </p:commandLink>
 			    </p:column>
