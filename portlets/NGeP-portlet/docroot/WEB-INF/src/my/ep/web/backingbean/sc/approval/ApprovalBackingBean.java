@@ -4,8 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -54,6 +57,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.ApprovalCategory;
@@ -66,6 +71,7 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -507,90 +513,16 @@ public class ApprovalBackingBean extends
 		}
 		return tenderResDTO;
 	}
-
+	
 	public String updateReviceBpmTask() {
-		String outcome = this.getManagedBean().getAction();
-		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctxToken);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		String taskName = res.getTaskName();
-		try {
-			ScQt qt = this.getManagedBean().getQt();
-			qt.setScQtStatus(null);
-			qt.setScQtBriefings(null);
-			CommitteResDTO committeResDto = null;
-			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
-					|| SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				// setting the remarks to ScQtApprovalRemarks
-				ScQtApproval approval = this.getManagedBean().getScQtApproval();
-				if (null != approval && null != approval.getQtApprovalId()) {
-					finalizeRemarks(approval.getScQtApprovalRemarks());
-					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
-					qtApproval.add(approval);
-					qt.setScQtApprovals(qtApproval);
-				}
-
-				List<TabBean> qtCommittes = this.getManagedBean()
-						.getScCommitteeMemberTabList();
-				List<ScQtCommittee> committees = null;
-				if (null != qtCommittes && !qtCommittes.isEmpty()) {
-					committees = new ArrayList<ScQtCommittee>();
-					for (int i = 0; i < qtCommittes.size(); i++) {
-						ScQtCommittee qtCommittee = qtCommittes.get(i)
-								.getScQtCommittee();
-						PmStatus committeStatus = new PmStatus();
-						committeStatus.setStatusId(QTStatusConst.CM_REVISION);
-						qtCommittee.getScCommittee().setCommitteStatus(committeStatus);
-						qtCommittee.setQtCommitteRemarks(this.getManagedBean().getQtCommitteeRemarks());
-						committees.add(qtCommittee);
-					}
-					qt.setScQtCommittees(committees);
-				}
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setToken(ctxToken);
-				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
-				committeReqDTO.setOutcome(outcome);
-				removeEmptyRemarks(qt);
-				committeReqDTO.setScQt(qt);
-				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
-				committeResDto = committeSO.updateBPMAction(committeReqDTO);
-			}
-			if (null != committeResDto && committeResDto.isSuccessful()) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(outcome),
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			ex.printStackTrace();
+		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), null);
+		if (tenderResDTO.isSuccessful()) {
+			ScQt qt = tenderResDTO.getQtDetail();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(getMessgeConstant(this.getManagedBean().getAction()), new String[] {
+															getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), qt.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
 		return null;
 	}
@@ -826,6 +758,42 @@ public class ApprovalBackingBean extends
 				ParameterTypeConst.APPROVAL_DECISION_TYPE, searchBean);
 	}
 
+	public void handlePublishClosingDate() {
+		ScQt scQt = this.getManagedBean().getQt();
+		Date clsDate = null;
+		if (null != scQt.getPublishDate()) {
+			clsDate = DateUtils.addDays(scQt.getPublishDate(),
+					scQt.getPublishPeriod());
+			scQt.setClosingDate(clsDate);
+			getManagedBean().setProposalValidityUntil(
+					DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
+		}
+	}
+	
+	public Date handleMaximumPublishDate() {
+		ScQt scQt = this.getManagedBean().getQt();
+		Date publishDate = new Date();
+		if (scQt.isBsvRequired()) {
+			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
+			if (null != bsvDetails && !bsvDetails.isEmpty()) {
+				Set<Date> dates = new HashSet<>();
+				for (ScQtBsv bsvs : bsvDetails) {
+					List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
+					for (ScQtBsvDtl bsvDtl : dtls) {
+						dates.add(bsvDtl.getBsvDate());
+					}
+					Date briefingDate = Collections.max(dates);
+					return	DateUtils.minusDays(briefingDate, 1);
+				}
+			}
+		} else {
+			Calendar c1 = Calendar.getInstance();
+			c1.add(Calendar.YEAR, 50);
+			publishDate = c1.getTime();
+		}
+		return publishDate;
+	}
+	
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
