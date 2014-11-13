@@ -3170,12 +3170,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 		for(CtContractItem ctContractItem : flRequest.getCtContract().getLatestContractVer().getCtContractItems()){
-			if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
-				BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
-				if(flOrederedQty.intValue() <  ctContractItem.getMinimumOrderQty()){
-					throw new EpException(ctContractItem.getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is lesser than minimum quantity " +ctContractItem.getMinimumOrderQty());
+			if(ctContractItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
+					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
+					if(flOrederedQty.intValue() >  ctContractItem.getMinimumOrderQty()){
+						throw new EpException(ctContractItem.getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is more than maximum quantity " +ctContractItem.getMinimumOrderQty());
+					}
+				}
+			}else{
+				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
+					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
+					if(flOrederedQty.intValue() <  ctContractItem.getMinimumOrderQty()){
+						throw new EpException(ctContractItem.getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is lesser than minimum quantity " +ctContractItem.getMinimumOrderQty());
+					}
 				}
 			}
+			
 		}
 	}
 	
