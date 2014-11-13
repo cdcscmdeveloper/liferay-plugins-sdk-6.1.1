@@ -4428,6 +4428,7 @@ public class SpecificationBackingBean extends
 					tplSpecZoneDtl.setTplSpecZone(zoneCriteria);
 					zoneLocal.add(tplSpecZoneDtl);
 				}
+				scQt.setZonal(true);
 				qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
 						zoneLocal);
 
