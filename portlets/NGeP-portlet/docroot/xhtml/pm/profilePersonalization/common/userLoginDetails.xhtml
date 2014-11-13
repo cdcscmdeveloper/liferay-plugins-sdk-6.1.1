@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:outputPanel id="opLoginDet">
+		<div align="left" class="header-info">
+			<table style="width:100%">
+				<tr>
+					<td width="8%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.loginid']}" />  
+					</td>
+					<td class="header-info-text">
+						#{profilePersonalizationBackingBean.managedBean.selectedUser.loginId}
+					</td>
+					<td width="8%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.username']}" />
+					</td>
+					<td class="header-info-text">
+						#{profilePersonalizationBackingBean.managedBean.selectedUser.userName}
+					</td>
+					<td width="8%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.org.code']}" />  
+					</td>
+					<td class="header-info-text">
+					 	#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgCode} 
+					</td>
+					<td width="8%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.org.name']}" />  
+					</td>
+					<td width="25%" class="header-info-text">
+					 	#{profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}
+					</td>
+				</tr>
+			</table>
+		</div>	
+	</p:outputPanel>
+	<br/>
+</ui:composition>	
