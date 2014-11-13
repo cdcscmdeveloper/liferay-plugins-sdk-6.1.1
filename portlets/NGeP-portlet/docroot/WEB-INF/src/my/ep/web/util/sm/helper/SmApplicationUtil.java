@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -1607,7 +1609,7 @@ public class SmApplicationUtil {
 			} else {
 				overLapCategory = false;
 			}
-			System.out.println("*** Over lap record *** " + overLapCategory);
+			log.info("*** Over lap record *** " + overLapCategory);
 			return overLapCategory;
 		} finally {
 			mofRegistrationSO = null;
@@ -1764,6 +1766,35 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722567);
 		}
 		return result;
+	}
+
+	public static void checkEquityOwnerUpdateAllowance(
+			SmApplicationManagedBean managedBean) {
+		System.out
+				.println("******* check EquityOwner Update Allowance *********");
+		if (managedBean.getSmSupplier().getSmMofAccounts() != null) {
+			for (SmMofAccount account : managedBean.getSmSupplier()
+					.getSmMofAccounts()) {
+				if (account.getSupplierType().equalsIgnoreCase(
+						managedBean.getSmSupplier().getSmAppl()
+								.getSupplierType())
+						&& account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+					Calendar sixMonthAftEffDate = new GregorianCalendar();
+					sixMonthAftEffDate.setTime(account.getEffDate());
+					sixMonthAftEffDate.add(Calendar.MONTH, 6);
+					if (new Date().compareTo(sixMonthAftEffDate.getTime()) < 0) {
+						managedBean.setDisAllowOwnerEdit(true);
+					} else {
+						managedBean.setDisAllowOwnerEdit(false);
+					}
+				}
+			}
+		} else {
+			managedBean.setDisAllowOwnerEdit(false);
+		}
+		System.out.println("******* EquityOwner Update Allowance *********"
+				+ managedBean.isDisAllowOwnerEdit());
 	}
 
 	public static boolean validateBeforeProceed(Long supplierId,
@@ -2739,12 +2770,12 @@ public class SmApplicationUtil {
 		svTask.setSmSvCategories(smSvCategories);
 		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
 		for (PmParameter param : catParam) {
-			if (param.getParameterCode() == SupplierManagementConst.CAT_TYPE_TRANSPORTATION
-					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_WORKSHOP
-					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_INSURANCE
-					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_DOCKYARD
-					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING
-					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA) {
+			if (param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_TRANSPORTATION)
+					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP)
+					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_INSURANCE)
+					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)
+					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA)) {
 				SmSvTemplate temp = new SmSvTemplate();
 				temp.setPmParameter(param);
 				temp.setSmSvTask(svTask);
