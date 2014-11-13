@@ -26,6 +26,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -124,6 +125,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String reportURL;
     private VCmSupplierItem vCmSupplierItem;
     private boolean autoUpdate = Boolean.TRUE;
+    private String action;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -916,4 +918,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.autoUpdate = autoUpdate;
 	}
 	
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
 }

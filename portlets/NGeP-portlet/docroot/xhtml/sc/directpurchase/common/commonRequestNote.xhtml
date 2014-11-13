@@ -18,6 +18,9 @@
 	  </c:if>
 
 	<p:panel id="requestNoteId">
+			<ac:gpkiPopup textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
+			postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			
 			 <ui:include
 				src="/xhtml/sc/directpurchase/common/commonReqNoteButtons.xhtml" /> 
 			 <ui:include
