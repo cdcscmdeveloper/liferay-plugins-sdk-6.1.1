@@ -94,6 +94,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.machineryRemark}" /></td>
 					</tr>
 				</table>
@@ -103,10 +104,11 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
+								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.machineryRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.machineryRemark}" /></td>
 
 					</tr>
@@ -188,10 +190,14 @@
 						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.cash']}" itemValue="A" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.credit.card']}" itemValue="B" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.debit.card']}" itemValue="C" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.online.banking']}" itemValue="D" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.cash']}"
+							itemValue="A" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.credit.card']}"
+							itemValue="B" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.debit.card']}"
+							itemValue="C" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.online.banking']}"
+							itemValue="D" />
 					</p:selectOneMenu> <p:message id="smMachPurMthdMsg" for="smMachPurMthd"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>

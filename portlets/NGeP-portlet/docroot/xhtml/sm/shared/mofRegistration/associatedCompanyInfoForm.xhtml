@@ -90,6 +90,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.associateRemark}" /></td>
 					</tr>
 				</table>
@@ -99,10 +100,11 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
+								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.associateRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.associateRemark}" /></td>
 
 					</tr>

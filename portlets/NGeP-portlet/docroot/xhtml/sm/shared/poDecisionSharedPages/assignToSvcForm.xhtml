@@ -142,6 +142,7 @@
 			<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 					value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
+					maxlength="200"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" /></td>
 		</tr>
 	</table>
@@ -153,7 +154,8 @@
 				<tr>
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approver']}" /></td>
-					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
+					<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
+							maxlength="200" /></td>
 				</tr>
 				<tr>
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel

@@ -30,7 +30,8 @@
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-										itemValue="S" itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+										itemValue="S"
+										itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
 									<p:ajax event="change" oncomplete="typeConfirmation.show()"
 										listener="#{backingBean.applicationCategorySelected}" />
 								</p:selectOneRadio></td>
@@ -104,7 +105,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-					<p:inputTextarea id="otherDesc"
+					<p:inputTextarea id="otherDesc" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
 						value="#{catBean.otherDesc}" required="true"
 						rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
@@ -154,7 +155,7 @@
 				<p:column rendered="#{backingBean.managedBean.poUser}"
 					headerText="#{lbl['lbl.sm.catCodes.remark']}"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-					<p:inputTextarea value="#{catBean.poRemarks}"
+					<p:inputTextarea value="#{catBean.poRemarks}" maxlength="200"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 						id="poCatDecisionRmrk" required="#{catBean.poDecFlg == 0}" />
@@ -182,7 +183,7 @@
 				<p:column rendered="#{backingBean.managedBean.approverUser}"
 					headerText="#{lbl['lbl.sm.catCodes.remark']}"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-					<p:inputTextarea value="#{catBean.approverRemarks}"
+					<p:inputTextarea value="#{catBean.approverRemarks}" maxlength="200"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}"
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 						id="apprvrCatDecisionRmrk" required="#{catBean.apprvrDecFlg == 0}" />
@@ -226,7 +227,7 @@
 						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:inputTextarea id="otherDescR"
+					<p:inputTextarea id="otherDescR" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
 						value="#{catBeanR.otherDesc}" required="true"
 						rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}" />
@@ -267,7 +268,7 @@
 
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
-					<p:inputTextarea value="#{catBeanR.poRemarks}" />
+					<p:inputTextarea value="#{catBeanR.poRemarks}" maxlength="200"/>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
@@ -282,7 +283,7 @@
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
-					<p:inputTextarea value="#{catBeanR.approverRemarks}" />
+					<p:inputTextarea value="#{catBeanR.approverRemarks}" maxlength="200"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />

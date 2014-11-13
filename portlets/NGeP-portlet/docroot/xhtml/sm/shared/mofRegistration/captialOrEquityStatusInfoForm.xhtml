@@ -72,7 +72,8 @@
 								required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+								<p:ajax event="blur"
+									update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 									listener="#{backingBean.calculateCapital}" />
 							</p:inputText> <p:message id="authCapAmtMsg" for="authCapAmt"
 								showSummary="true" showDetail="false" display="icon" /></td>
@@ -93,14 +94,16 @@
 
 					<tr>
 						<td style="width: 21%;"><p:outputLabel
-								value="#{lbl['lbl.sm.equiStatus.ttlShare']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+								value="#{lbl['lbl.sm.equiStatus.ttlShare']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td style="width: 40%;"><p:inputText id="totalShrAmt"
 								size="10" label="#{lbl['lbl.sm.equiStatus.ttlShare']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalShare}"
 								required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+								<p:ajax event="blur"
+									update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 									listener="#{backingBean.calculateCapital}" />
 							</p:inputText> <p:message id="totalShrAmtMsg" for="totalShrAmt"
 								showSummary="true" showDetail="false" display="icon" /></td>
@@ -146,7 +149,8 @@
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}">
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+											<p:ajax event="blur"
+												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 												listener="#{backingBean.calculateCapital}" />
 										</p:inputText>
 									</p:column>
@@ -168,7 +172,8 @@
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}">
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+											<p:ajax event="blur"
+												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 												listener="#{backingBean.calculateCapital}" />
 										</p:inputText>
 									</p:column>
@@ -190,7 +195,8 @@
 											id="frgAmt">
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+											<p:ajax event="blur"
+												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 												listener="#{backingBean.calculateCapital}" />
 										</p:inputText>
 									</p:column>
@@ -214,7 +220,8 @@
 												label="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
 												id="gvtUtAmt">
-												<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+												<p:ajax event="blur"
+													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -239,7 +246,8 @@
 												id="gvtEquAmt">
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-												<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+												<p:ajax event="blur"
+													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 											</p:inputText>
 										</p:column>
@@ -262,7 +270,8 @@
 												id="lclAmt">
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-												<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+												<p:ajax event="blur"
+													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 											</p:inputText>
 										</p:column>
@@ -285,7 +294,8 @@
 												id="frgCmpAmt">
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-												<p:ajax event="blur" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+												<p:ajax event="blur"
+													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
 											</p:inputText>
 										</p:column>
@@ -315,6 +325,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.capitalRemark}" /></td>
 					</tr>
 				</table>
@@ -324,10 +335,11 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
+								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.capitalRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.capitalRemark}" /></td>
 
 					</tr>
