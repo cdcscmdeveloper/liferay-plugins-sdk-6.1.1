@@ -655,21 +655,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					
 					Date startDate = deliveryAddr.getStartDate();
 					int deliveryTerm = deliveryAddr.getDeliveryTerm();
-					if(deliveryAddr.getPmUom()!=null) {
-						if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-							Calendar calendar = Calendar.getInstance();
-							calendar.setTime(startDate);
-							calendar.add(Calendar.DATE, deliveryTerm);
-							deliveryAddr.setEndDate(calendar.getTime());
-						}else if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-							Calendar calendar = Calendar.getInstance();
-							calendar.setTime(startDate);
-							calendar.add(Calendar.MONTH, deliveryTerm);
-							deliveryAddr.setEndDate(calendar.getTime());
-						}
-					} else {
-						deliveryAddr.setEndDate(startDate);
-					}
+					
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(startDate);
+					calendar.add(Calendar.DATE, deliveryTerm);
+					deliveryAddr.setEndDate(calendar.getTime());
 					
 				}else{
 					deliveryAddr.setStartDate(getManagedBean().getFlRequest().getStartDate());
