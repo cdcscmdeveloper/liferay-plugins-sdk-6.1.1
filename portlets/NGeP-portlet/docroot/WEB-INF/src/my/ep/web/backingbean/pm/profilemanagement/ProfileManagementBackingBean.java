@@ -507,29 +507,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
+	 * retrieve user portrait, return default portrait if liferay return null
+	 * @param loginId
+	 * @return String
 	 */
-	public void handlePortraitUpload(FileUploadEvent event) throws Exception{
-		logger.info("handlePortraitUpload - START");
-		UploadedFile item = event.getFile();
-		byte[] bytes = item.getContents();
-		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
-		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		logger.info("handlePortraitUpload - END");
+	public String userImagePathWithDefaultImage(String loginId){
+		logger.info("userImagePathWithDefaultImage");
+		String imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
+		imagePath = userImagePath(loginId);
+		return imagePath;
 	}
+
 	
-	/**
-	 * clear user portrait 
-	 * @throws Exception
-	 */
-	public void clearPortraitUpload() throws Exception{
-		logger.info("clearPortraitUpload - START");
-		this.getManagedBean().getSelectedUser().setPortrait(null);  
-		this.getManagedBean().getSelectedUser().setReplacePortrait(false);
-		logger.info("clearPortraitUpload - END");
-	}
+	
 	
 	/**
 	 * USER PROFILE - END
@@ -1950,6 +1940,126 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("deleteAttachment - END");
 	}
 	
+	
+	
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handlePortraitUpload(FileUploadEvent event) throws Exception{
+		logger.info("handlePortraitUpload - START");
+		UploadedFile item = event.getFile();
+		byte[] bytes = item.getContents();
+		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
+		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+		updatePortrait();
+		this.getManagedBean().getSelectedUser().setPortrait(null);  
+		logger.info("handlePortraitUpload - END");
+	}
+	
+	/**
+	 * clear user portrait 
+	 * @throws Exception
+	 */
+	public void clearPortraitUpload() throws Exception{
+		logger.info("clearPortraitUpload - START");
+		this.getManagedBean().getSelectedUser().setPortrait(null);  
+		this.getManagedBean().getSelectedUser().setReplacePortrait(false);
+		logger.info("clearPortraitUpload - END");
+	}
+	
+	/**
+	 * Update portrait
+	 * @throws Exception
+	 */
+	public void updatePortrait() throws Exception{
+		logger.info("updatePortrait - START");
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+		
+		try {
+			if(this.getManagedBean().getSelectedUser().getPortrait()==null){
+				throw new EpException(MessageConst.ERROR_770114);
+			}
+			
+			reqDTO.setPortrait(this.getManagedBean().getSelectedUser().getPortrait());
+			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
+			
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.updatePortrait(reqDTO); 
+			
+			
+			if(resDTO!=null && resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770117, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
+			
+				
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770115, new String[]{e.getMessage()});
+		} finally {
+			userSO = null;
+		}
+		logger.info("updatePortrait - END");
+	}
+	
+	/**
+	 * Update portrait
+	 * @throws Exception
+	 */
+	public void deletePortrait() throws Exception{
+		logger.info("deletePortrait - START");
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+		try {
+
+			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
+			
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
+			resDTO = userSO.deletePortrait(reqDTO); 
+			
+			
+			if(resDTO!=null && resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770118, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
+			
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770116, new String[]{e.getMessage()});
+		} finally {
+			userSO = null;
+		}
+		logger.info("deletePortrait - END");
+	}
+
+
+	
+	
+	
 	/*
 	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
 		logger.info("checkOldPassword");
@@ -1970,21 +2080,21 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 */
 	
 
-	/**
-	 * delete portrait
-	 * @throws Exception
-	 */
-	public void deletePortrait() throws Exception{
-		logger.info("deletePortrait - START");
-		this.getManagedBean().getSelectedUser().setPortrait(null);
-		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		this.getManagedBean().setDeletePortrait(true);
-		logger.info("deletePortrait - END");
-	}
-	
-
-
-	
+//	/**
+//	 * delete portrait
+//	 * @throws Exception
+//	 */
+//	public void deletePortrait() throws Exception{
+//		logger.info("deletePortrait - START");
+//		this.getManagedBean().getSelectedUser().setPortrait(null);
+//		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+//		this.getManagedBean().setDeletePortrait(true);
+//		logger.info("deletePortrait - END");
+//	}
+//	
+//
+//
+//	
 	
 	
 //	/**
@@ -2095,25 +2205,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	
 	
-	public void dummyAddressSample(){
-		PmAddress pmAdress =this.getManagedBean().getUserAddress();
-		
-		System.out.println("dummyAddress");
-		pmAdress.setAddress1("add1");
-		pmAdress.setAddress2("add2");
-		pmAdress.setAddress3("add3");
-		this.getManagedBean().getSelectedUser().setEmail(this.getManagedBean().getSelectedUser().getUserName() + "@test.com");
-		pmAdress.setFaxNo("1234567890");
-		pmAdress.setMobileNo("1234567890");
-		pmAdress.setPhoneNo("1234567890");
-		pmAdress.getPmState().setStateId(54L);
-		pmAdress.getPmDistrict().setDistrictId(402L);
-		pmAdress.getPmCity().setCityId(1869L);
-		pmAdress.setPmDivision(null);
-		pmAdress.setPostcode("12345");
-		this.getManagedBean().setUserAddress(pmAdress);
-		
-	}
 
 //
 //

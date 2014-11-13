@@ -18,10 +18,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
 				</td>
 				<th>
-					
+					<p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
 				</th>
 				<td>
-					
+				 	<ac:lov id="lovSearchMinistry" lovId="PM_ORG_PROFILE" size="50" disabled="#{!pPlanBackingBean.isRoleBPK()}"
+		            	readonly="true" update=":form:lovSearchMinistry:lovSearchMinistry, :form:lovSearchPtj:lovSearchPtj"
+						headerText="#{lbl['lbl.pp.ministry']}"
+						value="#{pPlanBackingBean.managedBean.planSearchBean.ministry.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.planSearchBean.ministry"
+						conditionField="#{pPlanBackingBean.managedBean.filterOrgCondition}" 
+					/>
 				</td>
 			</tr>
 			<tr>
@@ -39,7 +45,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.ptj}"/>
+					<ac:lov id="lovSearchPtj" lovId="PM_ORG_PROFILE" size="50" disabled="#{pPlanBackingBean.isRolePlanner() or pPlanBackingBean.managedBean.planSearchBean.ministry.orgProfileId == null}"
+		            	readonly="true" update=":form:lovSearchPtj:lovSearchPtj"
+						headerText="#{lbl['lbl.pp.ptj']}"
+						value="#{pPlanBackingBean.managedBean.planSearchBean.ptj.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.planSearchBean.ptj"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|parentOrgProfile.orgProfileId^#{pPlanBackingBean.managedBean.planSearchBean.ministry.orgProfileId}" 
+					/>
+
 				</td>
 			</tr>
 			<tr>
@@ -51,19 +64,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterId}"
 						>
 						<f:selectItems value="#{pPlanBackingBean.getPlanTypeOptions()}"/>
+						<p:ajax event="change" update="somVotSearch"/>
 					</p:selectOneMenu>
 				</td>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
+					
 				</th>
 				<td>
-				 	<ac:lov id="lovSearchMinistry" lovId="PM_ORG_PROFILE" size="20" 
-		            	readonly="true" update=":form:lovSearchMinistry:lovSearchMinistry"
-						headerText="#{lbl['lbl.pp.ministry']}"
-						value="#{pPlanBackingBean.managedBean.planSearchBean.ministry.pmOrgValidity.orgName}" 
-						saveObject="pPlanBackingBean.managedBean.planSearchBean.ministry"
-						conditionField="#{pPlanBackingBean.managedBean.filterOrgCondition}" 
-					/>
+					
 				</td>
 			</tr>
 

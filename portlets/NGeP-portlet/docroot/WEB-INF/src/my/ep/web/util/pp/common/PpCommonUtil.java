@@ -21,6 +21,7 @@ import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -39,6 +40,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 /**
@@ -387,14 +389,21 @@ public class PpCommonUtil {
 		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
-	public static String getDocTitle(String planType){
+	public static String getDocTitle(PpPlan plan){
 		log.info("getDocTitle");
 		StringBuilder sb = new StringBuilder();
-		sb.append(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(planType) 
+		sb.append(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode()) 
 				? getMessageCommon("lbl.pp.procurement.plan")
 				: getMessageCommon("lbl.pp.expenditure.plan"));
 		sb.append(" ");
 		sb.append(getYear(0));
+
+		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
+			sb.append(" ");
+		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
+			sb.append(" ");
+			sb.append(ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.VOT_TYPE, plan.getVotFundType().getParameterCode()));
+		}
 	    return sb.toString();
 	}
     
