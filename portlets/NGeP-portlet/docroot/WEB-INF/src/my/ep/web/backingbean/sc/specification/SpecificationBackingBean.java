@@ -238,7 +238,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getCtPanelItem());
 			}
 			if (null != this.getManagedBean().getCtCircularVer()) {
-				//circularListSelect(this.getManagedBean().getCtCircularVer());
+				// circularListSelect(this.getManagedBean().getCtCircularVer());
 				getManagedBean().getCtSearchBean().setCirCularNo(
 						this.getManagedBean().getCtCircularVer()
 								.getCircularNo());
@@ -246,10 +246,11 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getCtCircularVer().getDocType());
 				this.getManagedBean().setCircularVer(
 						this.getManagedBean().getCtCircularVer());
-				/*if (null != this.getManagedBean().getCtPanelItem()) {
-					this.getManagedBean().setSelectCtPanelItem(
-							this.getManagedBean().getCtPanelItem());
-				}*/
+				/*
+				 * if (null != this.getManagedBean().getCtPanelItem()) {
+				 * this.getManagedBean().setSelectCtPanelItem(
+				 * this.getManagedBean().getCtPanelItem()); }
+				 */
 			}
 		}
 		return "specificationview.xhtml";
@@ -7409,6 +7410,10 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760139);
 
 					}
+					if (null != Score.getRangeTo()
+							&& Score.getRangeTo().intValue() > 100) {
+						throw new EpException(MessageConst.ERROR_760170);
+					}
 
 				}
 
@@ -7461,6 +7466,10 @@ public class SpecificationBackingBean extends
 								|| Score.getScore().intValue() <= 0) {
 							throw new EpException(MessageConst.ERROR_760139);
 
+						}
+						if (null != Score.getRangeTo()
+								&& Score.getRangeTo().intValue() > 100) {
+							throw new EpException(MessageConst.ERROR_760170);
 						}
 
 					}
@@ -7562,6 +7571,10 @@ public class SpecificationBackingBean extends
 							|| Score.getScore().intValue() <= 0) {
 						throw new EpException(MessageConst.ERROR_760139);
 
+					}
+					if (null != Score.getRangeTo()
+							&& Score.getRangeTo().intValue() > 100) {
+						throw new EpException(MessageConst.ERROR_760170);
 					}
 
 				}
