@@ -8,10 +8,10 @@
 
 
 	<p:dialog id="dlRejectReason" header="#{lbl['lbl.pp.reject.reason']}" 
-		widgetVar="dlRejectReasonWv" dynamic="true" width="1000" height="300">
-	 	<p:ajax event="close" update="@([id$=itaReason])" />
+		widgetVar="dlRejectReasonWv" dynamic="true" width="700" height="200">
+		<p:ajax event="close" listener="#{pPlanBackingBean.closeRejectReason}" update="opRejectReason"/>
 		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmRejectReason}" update="opRejectReason" oncomplete="dlRejectReasonWv.hide()" />
-		<p:remoteCommand name="cancelCmd"  action="#{pPlanBackingBean.cancelRejectReason}" update="opRejectReason"  oncomplete="dlRejectReasonWv.hide()" />
+		<p:remoteCommand name="cancelCmd"  update="opRejectReason"  oncomplete="dlRejectReasonWv.hide()" />
 		<p:outputPanel id="opRejectReason">
 		<!-- Validation Message -->
 		<p:messages id="messagesReason" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -31,17 +31,17 @@
 				</tr>
 				<tr>
 					<td>
-
-						<p:inputTextarea id="itaReason" cols="40" value="#{pPlanBackingBean.managedBean.selectedReasonDesc}" 
+						<p:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" 
 							disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}"
 							rendered="#{reasonIndex==0}" maxlength="1000">
-							<p:ajax event="change"  process="@this"/>
 						</p:inputTextarea>
 						<h:outputText value="#{reason.reasonDesc}" rendered="#{reasonIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+						
 					</td>
 				</tr>
 			</table>
 		</p:dataGrid>
+	
 		<br/>
 		<br/>  
  		<div class="ppRightBtn">

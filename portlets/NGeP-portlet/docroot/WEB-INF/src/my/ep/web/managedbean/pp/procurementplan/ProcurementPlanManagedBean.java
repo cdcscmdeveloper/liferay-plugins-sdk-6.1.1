@@ -36,7 +36,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean modeReview;
 	private boolean modeReviewEditable;
 	private boolean modeEditable;
-	
+	private boolean isSearch;
 	
 	private PpPlan selectedPlan;
 	private List<PpExpenditureItem> deleteEpItems;
@@ -44,14 +44,60 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private DualListModel<PmUser> approverModel;
 	private DualListModel<PmUser> verifierModel;
 	private List<PpRejectReason> selectedRejectReasons;
+	private boolean confirm;
 	private String selectedReasonDesc;
 	private List<PpRemark> selectedRemarks;
 	private BigDecimal epTotalBudget;
 	private BigDecimal epTotalPlan;
 	private BigDecimal epTotalNonEpAlloc;
 	private BigDecimal ppTotalEst;
+	private String temp;
 	
 	
+	
+
+	/**
+	 * @return the confirm
+	 */
+	public boolean isConfirm() {
+		return confirm;
+	}
+
+	/**
+	 * @param confirm the confirm to set
+	 */
+	public void setConfirm(boolean confirm) {
+		this.confirm = confirm;
+	}
+
+	/**
+	 * @return the isSearch
+	 */
+	public boolean isSearch() {
+		return isSearch;
+	}
+
+	/**
+	 * @param isSearch the isSearch to set
+	 */
+	public void setSearch(boolean isSearch) {
+		this.isSearch = isSearch;
+	}
+
+
+	/**
+	 * @return the temp
+	 */
+	public String getTemp() {
+		return temp;
+	}
+
+	/**
+	 * @param temp the temp to set
+	 */
+	public void setTemp(String temp) {
+		this.temp = temp;
+	}
 
 	/**
 	 * @return the selectedRemarks

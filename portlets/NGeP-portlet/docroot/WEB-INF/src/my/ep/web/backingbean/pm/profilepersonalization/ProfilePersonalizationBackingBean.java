@@ -194,6 +194,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}	
 	}
 	
+	/**
+	 * retrieve user portrait, return default portrait if liferay return null
+	 * @param loginId
+	 * @return String
+	 */
 	public String userImagePathWithDefaultImage(String loginId){
 		logger.info("userImagePathWithDefaultImage");
 		String imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
@@ -613,7 +618,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		
 		try {
 			if(this.getManagedBean().getSelectedUser().getPortrait()==null){
-				throw new EpException("Please select and upload a portrait."); //TODO
+				throw new EpException(MessageConst.ERROR_770119); 
 			}
 			
 			reqDTO.setPortrait(this.getManagedBean().getSelectedUser().getPortrait());
@@ -625,19 +630,19 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			
 			
 			if(resDTO!=null && resDTO.isSuccessful()){
-			
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									null, "Successfully update portrait for Login ID: "
-											+ this.getManagedBean().getSelectedUser().getLoginId()));
-				
-				
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770122, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Failed to update portrait: " + e.getMessage()); //TODO
+			throw new EpException(MessageConst.ERROR_770120, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}
@@ -664,19 +669,20 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			
 			
 			if(resDTO!=null && resDTO.isSuccessful()){
-				
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									null, "Successfully delete portrait for Login ID: "
-											+ this.getManagedBean().getSelectedUser().getLoginId()));
-				
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770123, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
 				
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Failed to delete portrait: " + e.getMessage()); //TODO
+			throw new EpException(MessageConst.ERROR_770121, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}

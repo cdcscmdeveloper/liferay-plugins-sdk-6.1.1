@@ -48,6 +48,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
+import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -96,6 +97,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	//Mapper for DDL object
 	public static Map<Long, Object> planTypeMapper;
+	public static Map<Long, Object> votTypeMapper;
 	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -119,10 +121,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void preLoading(){
 		log.info("preLoading");
-		this.resetPlanSearchBean();
+		
 		this.resetPageModeFlags();
 		this.resetManagedBean();
 		initialSearchPlan();
+		this.resetPlanSearchBean();
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -134,6 +138,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("preLoadingCreate");
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
+		this.retrieveVotTypeMapper();
 		initialPlanDetails();
 		loadDefaultButtons();
 		
@@ -216,7 +221,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
-		
+		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
 			loadPlanDetails(id, true);
 			loadDefaultButtons();
@@ -371,7 +376,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw new EpException("Unable to retrieve Org. Profile.");//TODO 
 		}
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		generateOrgFilter();
+	}
+	
+	
+	private void defaultSearchBeanValue(){
+		if(isRoleBPK()){
+			generateOrgFilter();
+		}else{
+			if(isRoleApprover()){
+				this.getManagedBean().getPlanSearchBean().setMinistry(this.getManagedBean().getCurrentActiveOrg());
+			}else{
+				this.getManagedBean().getPlanSearchBean().setMinistry(this.getManagedBean().getCurrentActiveOrg().getParentOrgProfile());
+				this.getManagedBean().getPlanSearchBean().setPtj(this.getManagedBean().getCurrentActiveOrg());
+			}
+		}
 	}
 	
 	
@@ -437,7 +455,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 					
 					ppPlan.setOrgProfile(pmOrgProfile); 
-					ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
+//					ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
+					if(ppPlan.getCurrentStatus()==null || (ppPlan.getCurrentStatus()!=null && ppPlan.getCurrentStatus().getPmStatus()==null)){
+						ppPlan.setCurrentStatus(new PpWorkflowStatus());
+						ppPlan.getCurrentStatus().setPmStatus(new PmStatus());
+					}
 					this.getManagedBean().setSelectedPlan(ppPlan);
 					if(fromList){
 						generatePageMode();
@@ -488,6 +510,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppPlan.setOrgProfile(pmOrgProfile);
 		ppPlan.setPpPlanActors(new ArrayList<PpPlanActor>());
 		ppPlan.setStatus(new PmStatus());
+		ppPlan.setCurrentStatus(new PpWorkflowStatus());
+		ppPlan.getCurrentStatus().setPmStatus(new PmStatus());
 		this.getManagedBean().setSelectedPlan(ppPlan);
 		
 		generatePageMode();
@@ -577,9 +601,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * Initial or load reject reasons
 	 * @param ppRejectReasons
 	 */
-	public void loadRejectReasons(List<PpRejectReason> ppRejectReasons) {
-		log.info("initialRejectReasons - Start");
-
+	public void initalRejectReasons(List<PpRejectReason> ppRejectReasons) {
+		log.info("initalRejectReasons - Start");
+		this.getManagedBean().setConfirm(false);
 		this.getManagedBean().setSelectedReasonDesc("");
 		boolean newReason = false;
 		//if first reason is not new
@@ -613,27 +637,85 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
 		
 		
-		log.info("initialRejectReasons - End");
+		RequestContext.getCurrentInstance().update(":form:dlRejectReason");
+		
+		log.info("initalRejectReasons - End");
 		
 	}
 	
-	//TODO REMOVE
-	public void cancelRejectReason(){
-		log.info("cancelRejectReason");
-		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-			this.getManagedBean().setSelectedReasonDesc("");
-		}
-	}
 	
-	//TODO REMOVE
-	public void confirmRejectReason(){
-		log.info("confirmRejectReason");
-		if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
-			if(!StringUtils.isBlank(this.getManagedBean().getSelectedReasonDesc())){
-				this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
-				this.getManagedBean().setSelectedReasonDesc("");
+	
+	/**
+	 * Initial or load reject reasons
+	 * @param ppRejectReasons
+	 */
+	public void loadRejectReasons(List<PpRejectReason> ppRejectReasons) {
+		log.info("loadRejectReasons - Start");
+		this.getManagedBean().setConfirm(false);
+		this.getManagedBean().setSelectedReasonDesc("");
+		boolean newReason = false;
+		
+		//if first reason is not new
+		if (!ppRejectReasons.isEmpty()){
+			if(!ppRejectReasons.get(0).isBrandNew()){
+				newReason = true;
 			}
 		}
+
+		// if reason is empty
+		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
+			newReason = true;
+		}
+		
+		if(newReason && this.getManagedBean().isModeReviewEditable()){
+			log.info("new reason added");
+			PpRejectReason reason = new PpRejectReason();
+			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			reason.setCreatedUser(getFacesScopes().getUserSessionBean());
+			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			reason.setChangedBy(reason.getCreatedBy());
+			reason.setChangedDate(reason.getCreatedDate());
+			PmRole roleCode = new PmRole();
+			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
+			reason.setRoleCode(roleCode);
+			ppRejectReasons.add(0, reason);
+		
+		
+		}
+
+		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
+		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
+		
+//		RequestContext.getCurrentInstance().update(":form:opRejectReason");
+		
+		log.info("loadRejectReasons - End");
+		
+	}
+	
+	/**
+	 * Handle reject reason close popup
+	 */
+	public void closeRejectReason(){
+		log.info("closeRejectReason");
+		if(!this.getManagedBean().isConfirm()){
+			if(this.getManagedBean().getSelectedRejectReasons()!=null && !this.getManagedBean().getSelectedRejectReasons().isEmpty()){
+			
+				this.getManagedBean().getSelectedRejectReasons().get(0).setReasonDesc(this.getManagedBean().getSelectedReasonDesc());
+				this.getManagedBean().setSelectedReasonDesc("");
+			
+			}
+		}
+		System.out.println("SelectedReasonDesc" + this.getManagedBean().getSelectedReasonDesc());
+		System.out.println("SelectedRejectReasons().get(0)" + this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
+//		RequestContext.getCurrentInstance().update(":form:opRejectReason");
+	}
+	
+	/**
+	 * Handle reject reason for confirm button
+	 */
+	public void confirmRejectReason(){
+		log.info("confirmRejectReason");
+		this.getManagedBean().setConfirm(true);
 	}
 	
 
@@ -646,6 +728,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		planTypeMapper = new HashMap<Long,Object>();
 		for(PmParameterDesc pmDesc: parameterDescs){
 			planTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+	}
+	
+	/**
+	 * Retrieve and set vot type into mapper
+	 */
+	private void retrieveVotTypeMapper(){
+		log.info("retrieveVotTypeMapper");
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, null);
+		votTypeMapper = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			votTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
 		}
 	}
 	
@@ -668,6 +762,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}else{
 			this.getManagedBean().getSelectedPlan().setPlanType(new PmParameter());
+		}
+	}
+	
+	/**
+	 * Generate/change plan view based selected vot type
+	 */
+	public void changeVotType(){
+		log.info("changeVotType");
+		Long votTypeId = this.getManagedBean().getSelectedPlan().getVotFundType().getParameterId();
+		if(votTypeId != null){
+			PmParameter votType = (PmParameter)votTypeMapper.get(votTypeId);
+			this.getManagedBean().getSelectedPlan().getVotFundType().setParameterCode(votType!=null? votType.getParameterCode() : null);
+		}else{
+			this.getManagedBean().getSelectedPlan().setVotFundType(new PmParameter());
 		}
 	}
 	
@@ -1265,7 +1373,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(!ppPlan.isBrandNew()){
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}	
-			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan.getPlanType().getParameterCode()));
+			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 			resDTO = reqSO.savePlan(reqDTO);
 			docType = 
@@ -1275,8 +1383,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					
 					
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully"); //TODO
-				
+				log.info("Record saved successfully"); 
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
@@ -1456,13 +1563,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		// ptj
-		if(planSearchBean.getPtj()!=null && !"".equalsIgnoreCase(planSearchBean.getPtj())){
-			log.info("+ getPtj "  +planSearchBean.getPtj());
+		if(planSearchBean.getPtj()!=null  && planSearchBean.getPtj().getOrgProfileId()!=null){
+			log.info("+ getPtj "  +planSearchBean.getPtj().getOrgProfileId());
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setCaseInsensitive(true);
-			bean.setSearchField("orgProfile.pmOrgValidity.orgName");
-			bean.setSearchValue(planSearchBean.getPtj());
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("orgProfile.orgProfileId");
+			bean.setSearchValue(planSearchBean.getPtj().getOrgProfileId());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
@@ -1511,7 +1617,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void resetPlanSearchBean(){
 		log.info("resetPlanSearchBean");
+		this.getManagedBean().setSearch(false);
 		this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
+		defaultSearchBeanValue();
 		ppPlanDataModel = new PpPlanDataModel();
 	}
 	
@@ -1520,6 +1628,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void searchPlan(){
 		log.info("searchPlan");
+		this.getManagedBean().setSearch(true);
 		ppPlanDataModel.reloadData();
 		
 	}
@@ -1562,13 +1671,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			
 			try {	
-				ISearchBean<PpPlan> searchBeanData = getSearchBeanData(searchBean);
-				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
-				reqDTO.setSearchBean(searchBeanData);
-				IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
-				ProcurementPlanResDTO resDTO = reqSO.retrievePlanBySearchBean(reqDTO);
-				if (resDTO.isSuccessful()) {
-					return resDTO.getPlanResultBean();
+				if(getManagedBean().isSearch()){
+					ISearchBean<PpPlan> searchBeanData = getSearchBeanData(searchBean);
+					ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
+					reqDTO.setSearchBean(searchBeanData);
+					IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+					ProcurementPlanResDTO resDTO = reqSO.retrievePlanBySearchBean(reqDTO);
+					if (resDTO.isSuccessful()) {
+						return resDTO.getPlanResultBean();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
