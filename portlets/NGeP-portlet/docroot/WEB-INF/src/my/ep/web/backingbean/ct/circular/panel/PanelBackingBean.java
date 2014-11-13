@@ -530,10 +530,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			}
 			
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin()) ) {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select at least one approver.",""));
-				return null;
-			}
+			
             
 			CircularReqDTO reqDTO = new CircularReqDTO();
 		    reqDTO.setUserMap(getManagedBean().getUserMap());
@@ -786,7 +783,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 			}*/
 		//}
-		
+		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin()) ) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",
+						true);
+			throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});				
+		}
+			
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
 				(getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark() == null || 
