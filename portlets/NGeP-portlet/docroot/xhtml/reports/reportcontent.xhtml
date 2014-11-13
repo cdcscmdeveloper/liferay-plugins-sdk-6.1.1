@@ -55,8 +55,7 @@
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.fromDate}" 
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
-																				
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
 									</p:calendar>
 								</TD>				
 								<TD>
@@ -68,21 +67,17 @@
 							</TR>
 						</TABLE>
 						</c:if>							
-		            </div>
-		            
+		            </div>		            
 		           <h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
-		            <p:commandButton value="#{lbl['lbl.btn.generate']}"
-					icon=""
-					actionListener="#{reportBackingBean.generateReport}" oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
-					update="@form" process="@form" />
-					<p:commandButton value="#{lbl['lbl.so.reset']}"
-					action="#{reportBackingBean.resetReportForm}"
-					update="@form" icon="ui-icon-reset" 
-					partialSubmit="true" process="@form"/>					        					
+		            <p:commandButton value="#{lbl['lbl.btn.generate']}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
+		            update="@form" partialSubmit="true" process="@form">
+        				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
+    				</p:commandButton> 	           
+					<p:commandButton value="#{lbl['lbl.so.reset']}"	action="#{reportBackingBean.resetReportForm}"
+					update="@form" icon="ui-icon-reset" partialSubmit="true" process="@form"/>					        					
 				   </div>
 				   </h:panelGroup>
-
 					<p:dialog id="reportGenDialog" widgetVar="reportGenDialog"
 						modal="true" header="Report" width="1100" height="500" 
 						resizable="false" position="right" closable="true"

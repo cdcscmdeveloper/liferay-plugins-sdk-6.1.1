@@ -1694,12 +1694,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)){
 				generateCTReport();			
 			}				
-			if(null!=constructedParamString && !ReportConst.EMPTY_VAL.equals(constructedParamString)){				
-				loadReportWithParamsString(constructedParamString);
+			if(null!=constructedParamString && !ReportConst.EMPTY_VAL.equals(constructedParamString)){										
+				try {
+					fileGenerateReport(reportFileNameJSP, constructedParamString);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				//loadReportWithParamsString(constructedParamString);
 				//loadReport(generatedURL);	
 				//loadReportWithParams(paramLst);
 				//getReportPdf();
-				//getStreamPDFFile(constructedParamString);//put try catch						
+				//getStreamPDFFile(constructedParamString);//put try catch
 			}
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
@@ -2449,6 +2454,42 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCtContractNo(null);	
 		this.setCtAgreement(null);	
 		this.setCtStatus(null);	
+	}
+	protected void fileGenerateReport(String reportFile, String paramConstrString) throws IOException {	
+		StringBuilder gnrtdURL = new StringBuilder();
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
+		gnrtdURL.append(paramConstrString); 
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));		
+		HttpURLConnection urlConnection = null;
+		URL obj = new URL(gnrtdURL.toString());
+	    urlConnection = (HttpURLConnection) obj.openConnection();  
+	    
+	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
+        
+	    PortletResponse portletResponse = (PortletResponse) FacesContext
+      	      .getCurrentInstance().getExternalContext().getResponse();
+	    HttpServletResponse res = PortalUtil
+	      	      .getHttpServletResponse(portletResponse);
+	    int position = reportFile.lastIndexOf(".jsp");
+	    if(position != -1) {
+	    	reportFile = reportFile.substring(0, position);
+	    }
+	    
+	    res.setHeader("Content-Disposition", "attachment; filename=\""
+    	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
+	    res.setHeader("Content-Transfer-Encoding", "binary");
+	    res.setContentType("application/pdf");
+	    res.flushBuffer();
+	    
+	    OutputStream out = res.getOutputStream();
+        	  
+	    byte[] b = new byte[128];
+        int size;
+        while ((size = buf.read(b, 0, b.length)) != -1) {
+        	out.write(b, 0, size);
+        }
+        buf.close();
+        out.close();
 	}
 	public void getStreamPDFFile(String paramConstrString) throws IOException {		
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
