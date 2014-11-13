@@ -3557,4 +3557,13 @@ public class QTDetailBackingBean extends
 		}
 	}
 
+	public String constuctConditionFields(){
+		if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+			Long orgProfileId=this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId();
+			if (null != orgProfileId) {
+				return "quotationTender.pmOrgProfile.orgProfileId^"+orgProfileId;
+			}
+		}
+		return "";
+	}
 }
