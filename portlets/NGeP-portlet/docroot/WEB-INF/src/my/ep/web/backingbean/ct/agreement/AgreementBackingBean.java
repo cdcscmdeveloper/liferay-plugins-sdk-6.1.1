@@ -498,9 +498,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 	
 	public Long getPtjParentId(){
-		      Long ministryId = getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null ? getManagedBean()
+		   /*   Long ministryId = getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null ? getManagedBean()
 				.getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId(): getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId();
-        return ministryId;
+    */    return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId();
 	}
 	
 	public SelectItem[] getPtjCodeName() {
@@ -924,7 +924,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void addAgencySignerParty() {
 		try {
 			   
-			if(!getManagedBean().isValidateWitness()){
+			if(!getManagedBean().isValidateWitness()) {
+				for(CtAgreementParty agreementParty  : getManagedBean().getCtAgencySigner()) {
+					if(agreementParty.getOfficer().getUserId() == null){
+						throw new EpException(MessageConst.ERROR_100022, new String[] {"Contract Signer"});
+					 }
+				 }
 			     CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			     ctAgreementParty.setAgreementPartyType(new PmParameter());
 			     ctAgreementParty.setAgreementPartyType(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
@@ -1433,6 +1438,33 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     	}
     }
 	
+	public void agySignerDuplicateUpdateRecord(int index, List<CtAgreementParty> agencyList, PmOrgProfile ptjProfile) {
+	
+		try {
+			
+			if(null != agencyList && !agencyList.isEmpty()) {
+                  int counter =0;
+				  for (int i = 0; i < agencyList.size(); i++) {
+					      CtAgreementParty agreementParty = agencyList.get(i);
+					       if(agreementParty.getOrgProfile().getOrgProfileId() == ptjProfile.getOrgProfileId()){
+					    	   counter++;
+					    	   if(counter == 2) {
+					    		   throw new EpException(MessageConst.WARN_764000,new String[] { agreementParty.getOrgProfile().getOrgName() });
+					       }
+					}
+				}
+				
+				  CtAgreementParty agreementParty = agencyList.get(index);
+				  agreementParty.setOfficerIc(null);
+				  agreementParty.setOfficerPosition(null);
+			      getManagedBean().getCtAgencySigner().remove(index);
+			      getManagedBean().getCtAgencySigner().add(index, agreementParty);
+			}
+		} finally {
+
+		}
+	}
+		
 	public boolean isSupplementValue() {
 		return supplementValue;
 	}

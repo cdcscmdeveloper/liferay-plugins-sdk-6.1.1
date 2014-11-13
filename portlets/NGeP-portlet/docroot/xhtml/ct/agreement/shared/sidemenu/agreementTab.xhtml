@@ -32,8 +32,8 @@
 			padding: 10px;
          }
 		</style>
-		<p:panel>
-		    <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
+		<f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
+		<p:panel id="panelIdforMsags">
 	          <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			  <ui:include src="/xhtml/ct/agreement/agreementButtons.xhtml" />
 			  <ui:include src="/xhtml/ct/agreement/agreementHeader.xhtml" />
