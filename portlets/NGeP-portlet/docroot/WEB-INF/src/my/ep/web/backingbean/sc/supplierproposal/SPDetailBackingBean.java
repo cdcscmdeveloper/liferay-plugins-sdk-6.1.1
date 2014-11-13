@@ -2794,14 +2794,14 @@ public class SPDetailBackingBean extends
 				selectedCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
 			}
 			selectedCashOnHandList.add(getManagedBean()
-					.getSelectedPRPCashOnHand().get(index));
+					.getScQtPRPCashOnHand().get(index));
 
 		} else {
 
 			if (selectedCashOnHandList.contains(getManagedBean()
-					.getSelectedPRPCashOnHand().get(index))) {
+					.getScQtPRPCashOnHand().get(index))) {
 				selectedCashOnHandList.remove(getManagedBean()
-						.getSelectedPRPCashOnHand().get(index));
+						.getScQtPRPCashOnHand().get(index));
 			}
 		}
 		getManagedBean().setSelectedPRPCashOnHand(
