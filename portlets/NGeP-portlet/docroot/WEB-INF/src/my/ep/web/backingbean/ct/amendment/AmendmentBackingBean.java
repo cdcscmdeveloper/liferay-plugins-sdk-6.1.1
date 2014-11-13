@@ -342,11 +342,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    
 		    if(this.getManagedBean().isLetterOfAcceptance()){
 		    	   getLoaDocumentList();
-		     	   if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
-		    		     this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaAttachment(new ScLoaAttachment());
-		    		     this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setScLoa(
-		    			 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
-		    	   }
 		     }
 		    ConstructTabSideMenu();
 		/*    FacesContext fc = FacesContext.getCurrentInstance();
@@ -1521,6 +1516,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
+	    
+	    if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
+		     this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaAttachment(new ScLoaAttachment());
+		     this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setScLoa(
+			 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
+	   }
 	    
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFileName(item.getFileName());
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFileDesc(item.getFileName());
