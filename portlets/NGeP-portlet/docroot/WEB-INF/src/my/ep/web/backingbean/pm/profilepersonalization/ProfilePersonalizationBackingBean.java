@@ -22,6 +22,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -182,10 +183,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			//initial preference
 			PmCommonUtil.loadPmUserPreference(pmUser);
 			
+			//retrieve current active org
+			List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrgWithoutRole(id);
+			this.getManagedBean().setCurrentProfile(pmUserOrgs!=null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
+			
 			//load password
 			pmUser.setPassword(null);
-//			pmUser.setOldPassword(null);
 			pmUser.setConfirmPassword(null);
+
 			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setSelectedUser(pmUser);
 		} catch (Exception e) {

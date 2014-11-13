@@ -54,8 +54,28 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean deletePortrait;
 	private int selectedTabIndex;
 	private List<PmUserNotification> notifications;
+	private PmOrgProfile currentProfile;
 	
 	
+	
+/**
+	 * @return the currentProfile
+	 */
+	public PmOrgProfile getCurrentProfile() {
+		if(currentProfile==null){
+			currentProfile = new PmOrgProfile();
+			currentProfile.setPmOrgValidity(new PmOrgValidity());
+		}
+		return currentProfile;
+	}
+
+	/**
+	 * @param currentProfile the currentProfile to set
+	 */
+	public void setCurrentProfile(PmOrgProfile currentProfile) {
+		this.currentProfile = currentProfile;
+	}
+
 /**
 	 * @return the deletePortrait
 	 */
