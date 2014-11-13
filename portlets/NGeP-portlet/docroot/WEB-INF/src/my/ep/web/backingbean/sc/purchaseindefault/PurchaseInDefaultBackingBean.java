@@ -52,6 +52,7 @@ import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -92,6 +93,9 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<PurchaseInDefaultManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseInDefaultBackingBean.class);
+	private PmDigiSign pmDigiSign;
+	private String textBeforeSign;
+	
 	public PurchaseInDefaultBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -223,7 +227,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 				
 				// validate  quantity
-				
 		    	if(scPurchaseInDefault.getQuantity() != null && scPurchaseInDefault.getQuantity().intValue() < 0){
 					throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "0"});
@@ -300,52 +303,87 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}
 			debugLogger("END");
 		}
-
-
-   public void approverAction(String outcome) {
-	   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-	   try {
-		   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-		   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-		   // remarks
-		   scPurchaseInDefault.setRemarks(initializeRemarks(
-					scPurchaseInDefault,
-					scPurchaseInDefault.getCurrentStatus(),
-					scPurchaseInDefault.getRemarks(),
-					ScPIDRemark.class));
-		   
-		   if(!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-			   finalizeRemarks(scPurchaseInDefault.getRemarks());
-		   }
-		   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
-		   FacesScopes facesScopes = new FacesScopes();
-		   String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		   reqDTO.setToken(ctxToken);
-		   reqDTO.setTaskId(getManagedBean().getTaskId());
-		   reqDTO.setOutcome(outcome);
-		   PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
-			 
-		   if(resDTO.isSuccessful()){
-			   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-				   Long statusId = getManagedBean().getPidStatus().getStatusId();
-				   
-				   if(DPStatusConstants.PID_PENDING_VERIFICATION.equals(statusId)){
-					   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()); 
-				   } else  if(DPStatusConstants.PID_PENDING_APPROVAL.equals(statusId)){
-					   successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
-				   }
-			   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-				   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+   
+   
+	/**
+	 * @param action
+	 * @param object
+	 * @return PurchaseInDefaultResDTO
+	 */
+	private PurchaseInDefaultResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
+		 PurchaseInDefaultResDTO resDTO = null;
+		 IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+		   try {
+			   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+			   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+			   // remarks
+			   scPurchaseInDefault.setRemarks(initializeRemarks(
+						scPurchaseInDefault,
+						scPurchaseInDefault.getCurrentStatus(),
+						scPurchaseInDefault.getRemarks(),
+						ScPIDRemark.class));
+			   
+			   if(!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+				   finalizeRemarks(scPurchaseInDefault.getRemarks());
 			   }
+			   
+			   if (null != digiSign) {
+					updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, 
+							scPurchaseInDefault.getPurchaseInDefaultId(), scPurchaseInDefault.getPurchaseInDefaultNo());
+				}
+			   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
+			   FacesScopes facesScopes = new FacesScopes();
+			   String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			   reqDTO.setToken(ctxToken);
+			   reqDTO.setTaskId(getManagedBean().getTaskId());
+			   reqDTO.setOutcome(outcome);
+			   reqDTO.setDigiSignData(digiSign);
+			   resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
+				 
+			   if(resDTO.isSuccessful()){
+				   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+					   Long statusId = getManagedBean().getPidStatus().getStatusId();
+					   
+					   if(DPStatusConstants.PID_PENDING_VERIFICATION.equals(statusId)){
+						   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()); 
+					   } else  if(DPStatusConstants.PID_PENDING_APPROVAL.equals(statusId)){
+						   successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+					   }
+				   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+					   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+				   }
 
-		   } else {
-			   throw new EpException(MessageConst.ERROR_700020);
+			   } else {
+				   throw new EpException(MessageConst.ERROR_700020);
+			   }
+			   
+		   } finally {
+			   purchaseInDefaultSO = null;
 		   }
-		   
-	   } finally {
-		   purchaseInDefaultSO = null;
-	   }
-   }
+			
+		return resDTO;
+	}
+
+	public void approverAction(String outcome) {
+		debugLogger("approverAction");
+		this.getManagedBean().setAction(outcome);
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+			 getManagedBean().setAutoUpdate(Boolean.FALSE);
+			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+			} else if(isDigiSigningRequired(RoleCode.BPK_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				
+			} else if(isDigiSigningRequired(RoleCode.CT_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+		} else {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			updateBPMTask(outcome, null);
+		}	
+	}
+   
    
    /**
     * To get Approver Pick List  in Purchase In Default
@@ -665,4 +703,29 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		 }
 		 log.info(message);
 	 }
+		
+	 public void gpkiSignAction(PmDigiSign digiSign) {
+		 updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	 }
+
+	 public PmDigiSign getPmDigiSign() {
+		 return pmDigiSign;
+	 }
+
+	 public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		 this.pmDigiSign = pmDigiSign;
+	 }
+
+	 public String getTextBeforeSign() {
+		 StringBuilder sb = new StringBuilder();
+		 sb.append(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+		 sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		 textBeforeSign = sb.toString();
+		 return textBeforeSign;
+	 }
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+	 
 }

@@ -55,6 +55,8 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private boolean checkContractItem;
 	
 	private boolean titleChecker = Boolean.TRUE;
+	private String action;
+    private boolean autoUpdate = Boolean.TRUE;
     
 	public PurchaseInDefaultManagedBean() {
 	}
@@ -306,4 +308,19 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 		this.titleChecker = titleChecker;
 	}
 
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
 }

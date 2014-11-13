@@ -12,13 +12,16 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
 		 <ac:title value="#{lbl['lbl.sc.pid']}" />
 	</c:if>
-    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
+    <p:messages showDetail="true" autoUpdate="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info"  showSummary="false"/>
     
     <ui:param name="isPendingSubmissionStatus" value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingSubmission}" />
     
       <p:blockUI block=":form"  widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
+    
+    <ac:gpkiPopup textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
+		postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
     
    <h:panelGroup id="mailPanel">
 	<div class="ppRightBtn">
@@ -47,11 +50,14 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				  <ui:repeat var="bpmAction" value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
 					  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					  
-				     <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+					  <ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
+					  
+				      <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 						onstart="blockWidget.show();" 
 						oncomplete="blockWidget.hide();"
 						icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 						styleClass="ui-button"
+						update="#{isReject ? '@form' : ''}"
 						partialSubmit="true"
 						actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
 				 
