@@ -392,7 +392,13 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmSupplier(smApplSupplier);
-
+			if (!applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+					&& !applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				SmApplicationUtil
+						.checkEquityOwnerUpdateAllowance(getManagedBean());
+			}
 			retrieveBusinessTypeList();
 			assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
@@ -840,8 +846,9 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil
 							.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 									.getSmAppl().getSmCompanyBasic());
-					//API FOR LIST OF OVERLAPPING CATEGORIES
-					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+					// API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil
+							.checkOverLappingCategories(getManagedBean());
 				}
 
 				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -2180,7 +2187,7 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierCategory> categories = getManagedBean()
 					.getDeleteCategoryList();
 			deleteCatCodes(categories);
-			//API FOR LIST OF OVERLAPPING CATEGORIES
+			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
@@ -2199,6 +2206,7 @@ public class SmApplicationBackingBean extends
 				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
 			}
 		}
+		saveOrUpdateAppl();
 		SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 	}
 
@@ -2208,7 +2216,7 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierCategory> categories = getManagedBean()
 					.getDeleteNewApplCategoryList();
 			deleteCatCodes(categories);
-			//API FOR LIST OF OVERLAPPING CATEGORIES
+			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
@@ -2245,10 +2253,12 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		boolean overLapCategory = false;
-		overLapCategory = SmApplicationUtil.validL3CategoryCodeForOverLapping(getManagedBean()
-				.getSelectedCategory().getPmCategoryL3().getCategoryL3Id(),
-				getManagedBean().getSmSupplier().getSupplierId());
-		getManagedBean().getSelectedCategory().setOverLapCategory(overLapCategory);
+		overLapCategory = SmApplicationUtil.validL3CategoryCodeForOverLapping(
+				getManagedBean().getSelectedCategory().getPmCategoryL3()
+						.getCategoryL3Id(), getManagedBean().getSmSupplier()
+						.getSupplierId());
+		getManagedBean().getSelectedCategory().setOverLapCategory(
+				overLapCategory);
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getPmCategoryL1()
@@ -2320,7 +2330,7 @@ public class SmApplicationBackingBean extends
 			}
 			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 			assignValReqdToFalse();
-			//API FOR LIST OF OVERLAPPING CATEGORIES
+			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
@@ -2967,6 +2977,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
+		if (!getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& (shareHolderBean.isEquityOwner() || shareHolderBean
+						.isDirector())
+				&& getManagedBean().isDisAllowOwnerEdit()) {
+			throw new EpException(MessageConst.ERROR_722573);
+		}
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false);
@@ -3213,9 +3230,10 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().setSelectedPersonnel(null);
 
 		assignSelShareHolderAddress(shr);
-		if(getManagedBean().getPersonnelCountCheck() == 0 || getManagedBean().getPersonnelCountCheck() == 1){
+		if (getManagedBean().getPersonnelCountCheck() == 0
+				|| getManagedBean().getPersonnelCountCheck() == 1) {
 			shr.setJustificationReqd(false);
-		} else if(getManagedBean().getPersonnelCountCheck() == 2){
+		} else if (getManagedBean().getPersonnelCountCheck() == 2) {
 			shr.setJustificationReqd(true);
 		}
 		getManagedBean().setSelectedShareHolder(shr);
@@ -4614,9 +4632,11 @@ public class SmApplicationBackingBean extends
 
 			if (res.equalsIgnoreCase("SITE_VISIT")
 					|| res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
-				validSiteVisit = SmApplicationUtil
+				 SmApplicationUtil
 						.siteVisitDataUpdate(getManagedBean());
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
+				reqDTO.setSvTask(getManagedBean().getSvTask());
+				
 			}
 			if (res.equalsIgnoreCase("INQUIRY")) {
 				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
@@ -5793,7 +5813,7 @@ public class SmApplicationBackingBean extends
 				.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean()
 				.getSmAppl().getApplType(), getManagedBean().getSmAppl()
 				.getApplId());
-		
+
 		getManagedBean().setPersonnelCountCheck(countCheck);
 		if (countCheck == 0) {
 			getManagedBean().setValidSmUserLimit(false);
