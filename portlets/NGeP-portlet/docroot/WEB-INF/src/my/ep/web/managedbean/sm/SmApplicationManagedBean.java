@@ -52,6 +52,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -125,6 +126,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmStaffExperience selectedJobFunction;
 	private List<SmAssociationBody> selectedShrHldrProfBodies;
 	private SmAssociationBody selectedStfPrfBdy;
+	private SmSvTask svTask;
 	private List<SmRelatedCompany> selectedShrHldrRelatedCompanies;
 	private SmRelatedCompany selectedRelatedCompany;
 	private List<SmStaffAcademic> selectedShrHldrAcademics;
@@ -300,6 +302,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private int personnelCountCheck;
 	private String overLappedCategoryMsg;
 	private boolean overLappedCategoryExists;
+	private boolean disAllowOwnerEdit;
 	private Integer currYear;
 	
 	public List<String> getSupplierToPOList() {
@@ -489,6 +492,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		}
 		uomSelectItems = SmApplicationUtil.getUomSelectItems();
 		raceSelectItems = SmApplicationUtil.getRaceSelectItems();
+		svTask = new SmSvTask();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 		DateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -2274,6 +2278,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOverLappedCategoryExists(boolean overLappedCategoryExists) {
 		this.overLappedCategoryExists = overLappedCategoryExists;
+	}
+
+	public boolean isDisAllowOwnerEdit() {
+		return disAllowOwnerEdit;
+	}
+
+	public void setDisAllowOwnerEdit(boolean disAllowOwnerEdit) {
+		this.disAllowOwnerEdit = disAllowOwnerEdit;
+	}
+
+	public SmSvTask getSvTask() {
+		return svTask;
+	}
+
+	public void setSvTask(SmSvTask svTask) {
+		this.svTask = svTask;
 	}
 
 	public Integer getCurrYear() {
