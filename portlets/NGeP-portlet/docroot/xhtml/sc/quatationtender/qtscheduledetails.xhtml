@@ -73,12 +73,11 @@
 			<tr>
 				<td style="width: 204px;"><p:outputLabel
 						value="#{lbl['lbl.so.expectloadate']}" /></td>
-				<td><p:calendar
+				<td><p:calendar id="loaDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
-						id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
 						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonlyInput="true"
-						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
+						readonlyInput="true" showOn="button" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
@@ -263,8 +262,7 @@
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete"
 				action="#{qTScheduleDetailBackingBean.deleteContactPerson}"
-				update="cpersondetailsid"
-				rendered="#{qTDetailBB.managedBean.editable}" />
+				update="cpersondetailsid" />
 		</div>
 	</p:panel>
 	<p:spacer height="3" />
