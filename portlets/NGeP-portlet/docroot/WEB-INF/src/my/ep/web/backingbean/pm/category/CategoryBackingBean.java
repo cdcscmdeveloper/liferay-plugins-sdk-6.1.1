@@ -28,6 +28,8 @@ import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmMachine;
+import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -1054,6 +1056,36 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setDisplayCategoryGrouping(false);
 		}
 			
+	}
+	
+	public void updateMachine(){
+		if(this.getManagedBean().getPmMachine()!=null){
+			log.info("this.getManagedBean().getPmMachine().size() = "+this.getManagedBean().getPmMachine().size());
+		
+			ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+			
+			for(PmMachine pmMachine : this.getManagedBean().getPmMachine()){
+				PmMachineCategory pmMachineCategory = new PmMachineCategory();
+				pmMachineCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				
+				//parameter
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setPmMachineId(pmMachine.getMachineId());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmMachine(reqDTO);
+				pmMachineCategory.setCategoryTypeCode(resDTO.getPmMachine().getCategoryTypeCode());
+				
+				//log.info("resDTO.getPmMachine().getCategoryTypeCode().getParameterId() "+resDTO.getPmMachine().getCategoryTypeCode().getParameterId());
+				
+				pmMachineCategory.setCreatedDate(new Timestamp( new Date().getTime()));
+				pmMachineCategory.setCategoryL1id(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
+				pmMachineCategory.setCategoryL2id(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
+				pmMachineCategory.setPmMachine(resDTO.getPmMachine());
+				
+				this.getManagedBean().getPmCategoryL3().getPmMachineCategory().add(pmMachineCategory);
+				
+				log.info("this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size() "+this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size());
+			}
+		}
 	}
 	
 	public void search() {

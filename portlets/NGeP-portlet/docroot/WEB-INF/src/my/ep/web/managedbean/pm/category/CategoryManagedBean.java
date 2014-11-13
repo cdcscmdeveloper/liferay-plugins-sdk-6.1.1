@@ -11,6 +11,8 @@ import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmMachine;
+import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -45,7 +47,10 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private String[] searchOperatorValue = new String[3];
 	private List<PmCategoryL3> selectedLOV;
 	private List<PmBasicCategory> pmBasicCategoryList;
-	
+	private List<PmMachine> pmMachine;
+	private List<PmMachine> selectedpmMachine;
+	private List<PmMachineCategory> pmMachineCategory;
+	private List<PmMachineCategory> selectedpmMachineCategory;
 	
 	public String getCatLevel() {
 		return catLevel;
@@ -258,6 +263,39 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 
 	public void setDisplayCategoryGrouping(boolean displayCategoryGrouping) {
 		this.displayCategoryGrouping = displayCategoryGrouping;
+	}
+
+	public List<PmMachineCategory> getPmMachineCategory() {
+		return pmMachineCategory;
+	}
+
+	public void setPmMachineCategory(List<PmMachineCategory> pmMachineCategory) {
+		this.pmMachineCategory = pmMachineCategory;
+	}
+
+	public List<PmMachineCategory> getSelectedpmMachineCategory() {
+		return selectedpmMachineCategory;
+	}
+
+	public void setSelectedpmMachineCategory(
+			List<PmMachineCategory> selectedpmMachineCategory) {
+		this.selectedpmMachineCategory = selectedpmMachineCategory;
+	}
+
+	public List<PmMachine> getPmMachine() {
+		return pmMachine;
+	}
+
+	public void setPmMachine(List<PmMachine> pmMachine) {
+		this.pmMachine = pmMachine;
+	}
+
+	public List<PmMachine> getSelectedpmMachine() {
+		return selectedpmMachine;
+	}
+
+	public void setSelectedpmMachine(List<PmMachine> selectedpmMachine) {
+		this.selectedpmMachine = selectedpmMachine;
 	}
 
 
