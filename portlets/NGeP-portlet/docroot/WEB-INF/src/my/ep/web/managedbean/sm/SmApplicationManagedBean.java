@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -299,6 +300,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private int personnelCountCheck;
 	private String overLappedCategoryMsg;
 	private boolean overLappedCategoryExists;
+	private Integer currYear;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -492,6 +494,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				CommonConstants.DEFAULT_DATE_FORMAT);
 		today = df.format(new Date());
 		currDate = new Date();
+		currYear = Calendar.getInstance().get(Calendar.YEAR);
 		System.out.println("*** Date String *** " + df.format(new Date()));
 	}
 
@@ -2271,6 +2274,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOverLappedCategoryExists(boolean overLappedCategoryExists) {
 		this.overLappedCategoryExists = overLappedCategoryExists;
+	}
+
+	public Integer getCurrYear() {
+		return currYear;
+	}
+
+	public void setCurrYear(Integer currYear) {
+		this.currYear = currYear;
 	}
 
 }
