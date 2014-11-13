@@ -22,6 +22,10 @@
   		/WEB-INF/config/faces-config/sm/faces-config-sm.xml
 		</param-value>
 	</context-param>
+<context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>server</param-value>
+</context-param>
 	<context-param>
 		<param-name>com.sun.faces.expressionFactory</param-name>
 		<param-value>org.jboss.el.ExpressionFactoryImpl</param-value>
