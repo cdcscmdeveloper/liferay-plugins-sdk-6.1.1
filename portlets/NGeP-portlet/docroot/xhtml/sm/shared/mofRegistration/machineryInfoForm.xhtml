@@ -201,6 +201,17 @@
 						value="#{backingBean.managedBean.selectedMachine.guarantorName}"
 						size="35" /></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purchase.year']}" /></td>
+				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
+						required="#{backingBean.managedBean.valueReqd}" validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
+						label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
+						value="#{backingBean.managedBean.selectedMachine.purchaseYear}"
+						size="35">
+						<f:validateLongRange minimum="1950" maximum="#{backingBean.managedBean.currYear}" />
+					</p:inputText> <p:message id="smMachPurYrMsg" for="smMachPurYr"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
 
 
 		</table>
