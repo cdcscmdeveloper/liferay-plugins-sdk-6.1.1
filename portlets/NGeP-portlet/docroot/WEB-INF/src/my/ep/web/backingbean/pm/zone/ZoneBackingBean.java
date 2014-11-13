@@ -8,7 +8,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -18,6 +17,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
@@ -35,8 +35,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "zoneBackingBean")
 @ViewScoped
@@ -54,7 +52,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	public void preLoading() {
 		log.info("preLoading");
 		this.resetZoneSearchBean();
-
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);
@@ -72,16 +69,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	}
 
-	public void zoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IZoneSO.class);
-		ZoneResDTO zoneResDTO = zoneSO.retrieveZoneList();
-		zoneResDTO.setSuccessful(true);
-		getManagedBean().setPmZonesList(zoneResDTO.getZoneList());
-
-	}
-
 	public void searchZone() {
 		searchZone.reloadData();
 	}
@@ -94,18 +81,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	public String addZone() {
 		getManagedBean().setPmZone(new PmZone());
 		getManagedBean().setZoneStateList(new ArrayList<PmZoneState>());
-		zoneList();
 		return NAV_TO_ADD;
 	}
 
-	public void reset() {
-
-		this.getManagedBean().setPmZone(new PmZone());
-
-	}
-
 	public String saveZone() {
-		log.info("SavingZone");
+
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -114,9 +94,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
 		List<PmZoneState> zones = getManagedBean().getZoneStateList();
-		System.out.println("Record Status"
-				+ getManagedBean().getPmZone().getRecordStatusFlg());
-
 		PmZone zone = this.getManagedBean().getPmZone();
 		if (zone.isBrandNew()) {
 
@@ -131,7 +108,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zones.addAll(stateZones);
 		}
 
-		zone.setPmZoneStates(zones);
 		reqDTO.setPmZone(zone);
 
 		ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);
@@ -155,17 +131,16 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
-		getManagedBean().setPmZone(resDTO.getPmZone());	
+		getManagedBean().setPmZone(resDTO.getPmZone());
 		getManagedBean().setSelectedZones(resDTO.getPmZone().getPmZoneStates());
-		System.out.println("ZoneListSize:: "+resDTO.getPmZone().getPmZoneStates().size());
-		//getManagedBean().setZoneStateList(resDTO.getPmZone().getPmZoneStates());
+		getManagedBean().setZoneStateList(resDTO.getPmZone().getPmZoneStates());
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
 		StateResDTO stateResDTO = stateSO.retrieveStateList();
 		List<PmState> stList = stateResDTO.getStateList();
 		if (resDTO.getPmZone().getPmZoneStates() != null
-				&& !resDTO.getPmZone().getPmZoneStates().isEmpty())
+				&& !resDTO.getPmZone().getPmZoneStates().isEmpty()) {
 			for (PmZone pmzone : getManagedBean().getPmZonesList()) {
 				if (pmzone.getPmZoneStates() != null
 						&& !pmzone.getPmZoneStates().isEmpty()) {
@@ -174,11 +149,14 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							if (state.getPmState().getStateId() == pmState
 									.getStateId()) {
 								pmState.setExistingState(true);
+							} else {
+								pmState.setExistingState(false);
 							}
 						}
 					}
 				}
 			}
+		}
 
 		this.getManagedBean().setStates(stList);
 
@@ -255,8 +233,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 								IZoneSO.class);
 				ZoneResDTO resDTO = zoneSO.searchZoneData(zoneReqDTO);
 				if (resDTO.isSuccessful()) {
-					getManagedBean().setPmZonesList(
-							resDTO.getZoneResultBean().getResultList());
+
 					return resDTO.getZoneResultBean();
 				}
 			} catch (Exception e) {
@@ -268,40 +245,18 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 
-	private void retrievePmStateList() {
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateResDTO resDTO = stateSO.retrieveStateList();
-
-		List<PmState> stList = resDTO.getStateList();
-		if (getManagedBean().getPmZonesList() != null
-				&& !getManagedBean().getPmZonesList().isEmpty())
-			for (PmZone zone : getManagedBean().getPmZonesList()) {
-				if (zone.getPmZoneStates() != null
-						&& !zone.getPmZoneStates().isEmpty()) {
-					for (PmZoneState state : zone.getPmZoneStates()) {
-						for (PmState pmState : stList) {
-							if (state.getPmState().getStateId() == pmState
-									.getStateId()) {
-								pmState.setExistingState(true);
-							}
-						}
-					}
-				}
-			}
-
-		this.getManagedBean().setStates(stList);
-	}
-
 	public void addState() {
-
+		zoneList();
 		if (getManagedBean().getPmState() == null) {
 			this.getManagedBean().setPmState(new PmState());
 		}
-		getManagedBean().setSelectedStates(null);
-		this.getManagedBean().setSelectState(null);
+		if (this.getManagedBean().getSelectedStates() != null
+				&& !this.getManagedBean().getSelectedStates().isEmpty()) {
+			this.getManagedBean().setSelectedStates(null);
+		}
+		
 		retrievePmStateList();
+		
 
 	}
 
@@ -323,72 +278,63 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 
-	public void selectAll(AjaxBehaviorEvent event) {
-		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
-		List<PmZoneState> pmZoneList = getManagedBean().getZoneStateList();
-		if (pmZoneList != null) {
-			for (PmZoneState zoneState : pmZoneList) {
-				if (flag) {
-					zoneState.setSelected(true);
-				} else {
-					zoneState.setSelected(false);
-				}
-			}
-		}
-	}
-
 	public void okZoneAction() {
-		List<PmZoneState> zoneList = getManagedBean().getZoneStateList();
-		List<String> itemIds = new ArrayList<String>();
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateReqDTO reqStateDTO = new StateReqDTO();
 		for (PmState state : getManagedBean().getSelectedStates()) {
 			PmZoneState zoneState = new PmZoneState();
-			zoneState.setPmState(state);
+			reqStateDTO.setStateId(state.getStateId());
+			StateResDTO resStateDTO = stateSO.retriveStateByID(reqStateDTO);
+			PmState newState = resStateDTO.getPmState();
+			zoneState.setPmState(newState);
+			zoneState.setPmZone(getManagedBean().getPmZone());
+			this.getManagedBean().getZoneStateList().add(zoneState);
+			
+		}
+		
+		
+	}
 
-			if (this.getManagedBean().getZoneStateList().isEmpty()) {
-				this.getManagedBean().getZoneStateList().add(zoneState);
-			} else {
-				for (PmZoneState zone : this.getManagedBean()
-						.getZoneStateList()) {
-					itemIds.add(zone.getPmState().getStateCode());
-				}
-				if (itemIds.size() > 0) {
-					if (itemIds.contains(state.getStateId())) {
+	private void retrievePmStateList() {
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateResDTO resDTO = stateSO.retrieveStateList();
 
-					} else {
-
-						zoneList.add(zoneState);
-						this.getManagedBean().setZoneStateList(zoneList);
+		List<PmState> stList = resDTO.getStateList();
+		if (getManagedBean().getPmZonesList() != null
+				&& !getManagedBean().getPmZonesList().isEmpty())
+			for (PmZone zone : getManagedBean().getPmZonesList()) {
+				if (zone.getPmZoneStates() != null
+						&& !zone.getPmZoneStates().isEmpty()) {
+					for (PmZoneState state : zone.getPmZoneStates()) {
+						for (PmState pmState : stList) {
+							if (state.getPmState().getStateId() == pmState
+									.getStateId()) {
+								pmState.setExistingState(true);
+							}
+							
+						}
 					}
 				}
 			}
-		}
 
+		this.getManagedBean().setStates(stList);
 	}
-
-	public void okZoneAction1() {
-
-		if (this.getManagedBean().getSelectedStates() != null
-				&& !this.getManagedBean().getSelectedStates().isEmpty()) {
-			for (PmState state : getManagedBean().getSelectedStates()) {
-				PmZoneState zoneState = new PmZoneState();
-				zoneState.setPmState(state);
-
-				this.getManagedBean().getZoneStateList().add(zoneState);
-			}
-			if (this.getManagedBean().getZoneStateList() != null) {
-
-			} else {
-				throw new EpException(MessageConst.ERROR_770021);
-			}
-		} else {
-			throw new EpException(MessageConst.ERROR_770022);
-		}
-		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
-
-	}
-
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getStatusOptions();
+	}
+
+	public void zoneList() {
+		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IZoneSO.class);
+		ZoneResDTO zoneResDTO = zoneSO.retrieveZoneList();
+		zoneResDTO.setSuccessful(true);
+		getManagedBean().setPmZonesList(zoneResDTO.getZoneList());
+
 	}
 
 	public SelectItem[] getRecordStatusOptions() {

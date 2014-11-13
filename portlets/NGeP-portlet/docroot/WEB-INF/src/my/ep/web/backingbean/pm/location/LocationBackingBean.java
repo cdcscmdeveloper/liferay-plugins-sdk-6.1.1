@@ -42,7 +42,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -82,16 +81,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public void resetLocation() {
-		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().setState(new PmState());
-		getManagedBean().getState().setPmCountry(defaultCountry);
 		getManagedBean().setCity(new PmCity());
 		getManagedBean().setDivision(new PmDivision());
 		getManagedBean().setDistrict(new PmDistrict());
 		getManagedBean().getState().setPmCountry(new PmCountry());
 		getManagedBean().getDivision().setPmState(new PmState());
 		getManagedBean().getDistrict().setPmState(new PmState());
-		//getManagedBean().getDistrict().setPmDivision(new PmDivision());
+		getManagedBean().getDistrict().setPmDivision(new PmDivision());
 		getManagedBean().getCity().setPmDistrict(new PmDistrict());
 		this.getManagedBean().setStatus(1);
 
@@ -117,8 +114,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
 		log.info("getSearchBeanData - Start");
+
 		LocationSearchBean lSearchBean = this.getManagedBean()
 				.getLocationSearchBean();
+
 		if (lSearchBean.getLocationType() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationType",
@@ -335,7 +334,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							IDivisionSO.class);
 			DivisionResDTO resDTO = divisionSO
 					.retrieveDivisionDtlById(divisionReqDTO);
-			System.out.println("State Name"+resDTO.getPmDivision().getPmState().getStateName());
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
 		}
 		if (locationType
@@ -348,8 +346,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							IDistrictSO.class);
 			DistrictResDTO resDTO = districtSO
 					.retriveDistrictDtlByID(districtReqDTO);
-			System.out.println("State Name"+resDTO.getPmDistrict().getPmState().getStateName());
-			getManagedBean().setDistrict(resDTO.getPmDistrict());
+			this.getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 		}
 		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
@@ -359,8 +356,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			ICitySO citySO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 			CityResDTO resDTO = citySO.retriveCityByDtlId(cityReqDTO);
-			System.out.println("DistName"+resDTO.getPmCity().getPmDistrict().getDistrictName());
-			this.getManagedBean().getCity().getPmDistrict().setDistrictId(resDTO.getPmCity().getPmDistrict().getDistrictId());
 			this.getManagedBean().setCity(resDTO.getPmCity());
 
 		}
@@ -572,17 +567,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						IDivisionSO.class);
 		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
 		getManagedBean().setDivisions(resDTO.getDivisionList());
-
-		/*
-		 * if (resDTO.getDivisionList().size() == 0) { DistrictReqDTO
-		 * districtReqDTO = new DistrictReqDTO();
-		 * districtReqDTO.setStateId(stateId); IDistrictSO districtSO =
-		 * (IDistrictSO) BusinessDelegate .getInstance().getServiceObject(
-		 * ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-		 * DistrictResDTO districtResDTO = districtSO
-		 * .retriveDistrictListByStateID(districtReqDTO);
-		 * getManagedBean().setDistricts(districtResDTO.getDistrictList()); }
-		 */
 	}
 
 	public void retriveDistrictValues(AjaxBehaviorEvent e) {

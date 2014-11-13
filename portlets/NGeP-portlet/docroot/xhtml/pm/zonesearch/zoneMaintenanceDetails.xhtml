@@ -56,17 +56,17 @@
 			<h:outputText value="#{lbl['lbl.pm.state']}" />
 		</f:facet>
 		<p:dataTable id="selectedStateId"
-			value="#{zoneBackingBean.managedBean.zoneStateList}" var="state"
-			rowIndexVar="index" rowKey="#{state}"
+			value="#{zoneBackingBean.managedBean.zoneStateList}" var="zoneState"
+			rowIndexVar="index" rowKey="#{zoneState}"
 			selection="#{zoneBackingBean.managedBean.selectedZones}">
 			<ac:paginator for="selectedStateId"></ac:paginator>
 
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">
-				<h:outputText value="#{state.pmState.stateCode}" />
+				<h:outputText value="#{zoneState.pmState.stateCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.state.name']}" style="width :40%">
-				<h:outputText value="#{state.pmState.stateName}" />
+				<h:outputText value="#{zoneState.pmState.stateName}" />
 			</p:column>
 
 		</p:dataTable>
@@ -74,7 +74,7 @@
 		<div align="right">
 
 			<p:commandButton value="Add" process="@this"
-				action="#{zoneBackingBean.addState}"
+				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"
 				oncomplete="statelistpopup.show();" icon="ui-icon-add" />
 
 			<p:commandButton value="Delete" icon="ui-icon-delete"
@@ -87,6 +87,8 @@
 	<p:dialog id="stateSearch" header="SELECT STATE"
 		widgetVar="statelistpopup" modal="true" width="600" height="300"
 		resizable="false">
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			severity="error, info" />
 		<p:dataTable id="searchStateId" var="state"
 			value="#{zoneBackingBean.managedBean.states}"
 			selection="#{zoneBackingBean.managedBean.selectedStates}"
