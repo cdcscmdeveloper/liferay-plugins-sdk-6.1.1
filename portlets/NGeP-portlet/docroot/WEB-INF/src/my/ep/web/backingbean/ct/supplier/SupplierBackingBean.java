@@ -547,6 +547,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			getManagedBean().getFactoring().setSmSupplier(getManagedBean().getCtContract().getSmSupplier());
 			getManagedBean().getFactoring().setLoa(getManagedBean().getCtContract().getLoa());
 			reqDTO.setFactoring(getManagedBean().getFactoring());
+			reqDTO.setCtContract(getManagedBean().getFactoring().getCtContract());
 
 			reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
