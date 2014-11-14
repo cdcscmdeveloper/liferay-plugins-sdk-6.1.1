@@ -2485,6 +2485,7 @@ public class SpecificationBackingBean extends
 						ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
 						scoreWeightage.setScore(new BigDecimal(0));
 						// scoreWeightage.setScQtScoreOfferPrices(null);
+						scoreWeightage.setWeightage(new BigDecimal(0));
 						setUserDetails(scoreWeightage);
 						list.setQtScoreWeightage(scoreWeightage);
 
@@ -2503,9 +2504,11 @@ public class SpecificationBackingBean extends
 							list.getQtScoreWeightage().setWeightage(
 									new BigDecimal(0));
 						}
-						financialWeightage = financialWeightage
-								+ list.getQtScoreWeightage().getWeightage()
-										.intValue();
+						/*
+						 * financialWeightage = financialWeightage +
+						 * list.getQtScoreWeightage().getWeightage()
+						 * .intValue();
+						 */
 						sb.append(list.getTitle());
 						sb.append(",");
 
@@ -2541,6 +2544,8 @@ public class SpecificationBackingBean extends
 					for (ScQtScoreWeightage weightage : list) {
 						financialWeightageScore = financialWeightageScore
 								+ weightage.getScore().intValue();
+						financialWeightage = financialWeightage
+								+ weightage.getWeightage().intValue();
 					}
 
 					ScQtCheckList tmpCheckList = new ScQtCheckList();
@@ -7364,6 +7369,19 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	public void compareChecklistValueCurrentYear(
+			ScQtCheckListValue checkListValue) {
+		if (null != checkListValue) {
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+			if (null != checkListValue.getYear()) {
+				if (checkListValue.getYear().intValue() > year) {
+					throw new EpException(MessageConst.ERROR_760169);
+				}
+			}
+		}
+
+	}
+
 	public void acceptCompanyScoring() {
 		try {
 
@@ -7379,14 +7397,7 @@ public class SpecificationBackingBean extends
 			String totalNoOfYearsType = this.getManagedBean()
 					.getCompanyScoreType();
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
-			if (null != checkList && null != checkList.getScQtCheckListValue()) {
-				int year = Calendar.getInstance().get(Calendar.YEAR);
-				if (null != checkList.getScQtCheckListValue().getYear()) {
-					if (checkList.getScQtCheckListValue().getYear().intValue() > year) {
-						throw new EpException(MessageConst.ERROR_760169);
-					}
-				}
-			}
+
 			if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
 				ScQtCheckListScore noContract = this.getManagedBean()
 						.getScQtCheckListScore();
