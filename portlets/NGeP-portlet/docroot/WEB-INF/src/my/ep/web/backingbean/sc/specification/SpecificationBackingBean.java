@@ -1287,7 +1287,9 @@ public class SpecificationBackingBean extends
 				}
 				specReqDTO.setScoreSettings(scoreSetting);
 				specReqDTO.setScQt(scQtFinScore);
-				specSo.validateSCRecommandationSettings(specReqDTO);
+				if (!this.getManagedBean().isReadOnly()) {
+					specSo.validateSCRecommandationSettings(specReqDTO);
+				}
 
 			}
 
@@ -1367,7 +1369,9 @@ public class SpecificationBackingBean extends
 				}
 				specReqDTO.setScoreSettings(scoreSetting);
 				specReqDTO.setScQt(scQtRecommendation);
-				specSo.validateSCRecommandationSettings(specReqDTO);
+				if (!this.getManagedBean().isReadOnly()) {
+					specSo.validateSCRecommandationSettings(specReqDTO);
+				}
 			}
 
 			break;
@@ -9429,6 +9433,7 @@ public class SpecificationBackingBean extends
 			String[] outComes = this.getManagedBean().getOutComes();
 			Long statusId = this.getManagedBean().getCurrentStatusId();
 			String taskName = this.getManagedBean().getTaskName();
+			boolean readonly = this.getManagedBean().isReadOnly();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
 					.getDeliveryLocRemoveList();
@@ -9622,7 +9627,10 @@ public class SpecificationBackingBean extends
 
 					specReqDTO.setScoreSettings(scoreSetting);
 					specReqDTO.setScQt(this.getManagedBean().getScQt());
-					specSO.validateSCRecommandationSettings(specReqDTO);
+					if (!this.getManagedBean().isReadOnly()) {
+						specSO.validateSCRecommandationSettings(specReqDTO);
+					}
+
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9719,7 +9727,9 @@ public class SpecificationBackingBean extends
 
 					specReqDTO.setScoreSettings(scoreSetting);
 					specReqDTO.setScQt(delivery);
-					specSO.validateSCRecommandationSettings(specReqDTO);
+					if (!this.getManagedBean().isReadOnly()) {
+						specSO.validateSCRecommandationSettings(specReqDTO);
+					}
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9867,6 +9877,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setOutComes(outComes);
+			this.getManagedBean().setReadOnly(readonly);
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
