@@ -11422,7 +11422,7 @@ public class SpecificationBackingBean extends
 		SupplierSearchResDTO searchResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierSearchReqDTO);
 		this.getManagedBean().setTotalSuppliers(
-				searchResDTO.getResultBean().getTotalRecord());
+				searchResDTO.getCount());
 
 	}
 
