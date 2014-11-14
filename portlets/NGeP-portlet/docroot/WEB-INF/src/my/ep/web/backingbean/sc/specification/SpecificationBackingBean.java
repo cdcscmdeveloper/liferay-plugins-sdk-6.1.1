@@ -7412,9 +7412,14 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760139);
 
 					}
-					if (null != Score.getRangeTo()
-							&& Score.getRangeTo().intValue() > 100) {
-						throw new EpException(MessageConst.ERROR_760170);
+					if (null != checkList.getPmDocument()
+							&& QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
+									.equalsIgnoreCase(checkList.getPmDocument()
+											.getDocDefinitionKey())) {
+						if (null != Score.getRangeTo()
+								&& Score.getRangeTo().intValue() > 100) {
+							throw new EpException(MessageConst.ERROR_760170);
+						}
 					}
 
 				}
@@ -7469,11 +7474,11 @@ public class SpecificationBackingBean extends
 							throw new EpException(MessageConst.ERROR_760139);
 
 						}
-						if (null != Score.getRangeTo()
-								&& Score.getRangeTo().intValue() > 100) {
-							throw new EpException(MessageConst.ERROR_760170);
-						}
-
+						/*
+						 * if (null != Score.getRangeTo() &&
+						 * Score.getRangeTo().intValue() > 100) { throw new
+						 * EpException(MessageConst.ERROR_760170); }
+						 */
 					}
 
 					List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
@@ -7574,10 +7579,11 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760139);
 
 					}
-					if (null != Score.getRangeTo()
-							&& Score.getRangeTo().intValue() > 100) {
-						throw new EpException(MessageConst.ERROR_760170);
-					}
+					/*
+					 * if (null != Score.getRangeTo() &&
+					 * Score.getRangeTo().intValue() > 100) { throw new
+					 * EpException(MessageConst.ERROR_760170); }
+					 */
 
 				}
 				List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
@@ -10247,22 +10253,16 @@ public class SpecificationBackingBean extends
 				.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
-													new String[] {
-															"Specification For",
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									getMessgeConstant(this.getManagedBean()
+											.getLocalOutCome()),
+									new String[] { "Specification For",
+											qt.getQtNo() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
