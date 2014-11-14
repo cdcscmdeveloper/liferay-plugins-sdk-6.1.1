@@ -70,19 +70,28 @@
 						<td width="150px;"><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								id="rentedFacTypeId"
-								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
-								required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-								<f:selectItem
-									itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
-									itemValue="H" />
-								<f:selectItem
-									itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
-									itemValue="B" />
-
-							</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
-								showSummary="true" showDetail="false" display="icon" /></td>
+						
+						<p:outputPanel rendered="#{!backingBean.managedBean.disabledHomeOffice}">
+							<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio 
+									id="rentedFacTypeId"
+									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
+									<f:selectItem 
+										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
+										itemValue="H" />
+									
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
+										itemValue="B" />
+		
+								</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						 </p:outputPanel>
+						 <p:outputPanel rendered="#{backingBean.managedBean.disabledHomeOffice}">
+						 	<td colspan="3">
+								<b><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel></b>
+							</td>
+						 </p:outputPanel>
 
 					</tr>
 					<tr>
@@ -262,15 +271,27 @@
 						<td width="150px;"><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								required="true" id="ownedFacTypeId"
-								label="#{lbl['lbl.sm.facility.facilityType']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
-								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}" itemValue="H" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}" itemValue="B" />
-
-							</p:selectOneRadio> <p:message id="ownedFacTypeIdMsg" for="ownedFacTypeId"
-								showSummary="true" showDetail="false" display="icon" /></td>
+						<p:outputPanel rendered="#{!backingBean.managedBean.disabledHomeOffice}">
+							<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio 
+									id="rentedFacTypeId"
+									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
+									<f:selectItem 
+										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
+										itemValue="H" />
+									
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
+										itemValue="B" />
+		
+								</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						 </p:outputPanel>
+						 <p:outputPanel rendered="#{backingBean.managedBean.disabledHomeOffice}">
+						 	<td colspan="3">
+								<b><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel></b>
+							</td>
+						 </p:outputPanel>
 
 					</tr>
 					<tr>
