@@ -16,19 +16,25 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<ac:gpkiPopup 
+			textBeforeSign="#{purchaseRequestBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{purchaseRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
+		/>
 		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right">
-					<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
+					
+			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
-							styleClass="ui-button"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
+						<p:commandButton value="#{bpmAction}" styleClass="ui-button"
+								icon="ui-icon-#{fn:toLowerCase(bpmAction)}" process="@form"
+								update="@form"
+								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	
 					</ui:repeat>
+				
 				</td>
 			</tr>
 		</table>
