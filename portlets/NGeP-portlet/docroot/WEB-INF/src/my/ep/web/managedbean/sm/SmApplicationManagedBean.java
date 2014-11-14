@@ -303,6 +303,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String overLappedCategoryMsg;
 	private boolean overLappedCategoryExists;
 	private boolean disAllowOwnerEdit;
+	private boolean disabledHomeOffice;
 	private Integer currYear;
 	
 	public List<String> getSupplierToPOList() {
@@ -2302,6 +2303,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrYear(Integer currYear) {
 		this.currYear = currYear;
+	}
+
+	public boolean isDisabledHomeOffice() {
+		return disabledHomeOffice;
+	}
+
+	public void setDisabledHomeOffice(boolean disabledHomeOffice) {
+		this.disabledHomeOffice = disabledHomeOffice;
 	}
 
 }
