@@ -103,7 +103,7 @@ public class WebappBean {
        if(inputValue == null || inputValue.equalsIgnoreCase(""))
     	   return;
        String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.phone.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-       String pattern = "\\d{20}";
+       String pattern = "\\d+";
        if(!inputValue.matches(pattern)){
            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
        }
@@ -115,7 +115,7 @@ public class WebappBean {
         if(inputValue == null || inputValue.equalsIgnoreCase(""))
      	   return;
         String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-        String pattern = "\\d{20}";
+        String pattern = "\\d+";
         if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
         }
@@ -127,7 +127,7 @@ public class WebappBean {
         if(inputValue == null || inputValue.equalsIgnoreCase(""))
      	   return;
         String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.fax.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-        String pattern = "\\d{20}";
+        String pattern = "\\d+";
         if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
         }
