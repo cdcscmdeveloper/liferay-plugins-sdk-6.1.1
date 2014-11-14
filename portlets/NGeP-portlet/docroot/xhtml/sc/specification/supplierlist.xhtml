@@ -40,7 +40,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.status']}">
 					<h:outputText
-						value="#{specificationBackingBean.getStatusDescById(qtSupplier.supplier.pmStatus.statusId)}" />
+						value="#{specificationBackingBean.retriveSupplierDescById(qtSupplier.supplier.supplierId)}" />
 				</p:column>
 			</p:dataTable>
 
