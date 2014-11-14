@@ -586,9 +586,9 @@ public class SmApplicationBackingBean extends
 				&& !resDTO.getRemarksList().isEmpty()) {
 
 			sb.append(resDTO.getRemarksList().get(0).getRemark());
-//			for (SmRemark rem : resDTO.getRemarksList()) {
-//				sb.append(rem.getRemark()).append("\n");
-//			}
+			// for (SmRemark rem : resDTO.getRemarksList()) {
+			// sb.append(rem.getRemark()).append("\n");
+			// }
 		}
 		getManagedBean().setSupplierRemarks(sb.toString());
 
@@ -727,6 +727,29 @@ public class SmApplicationBackingBean extends
 
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
+		if ((getManagedBean().isApproverUser() || getManagedBean().isPoUser()
+				&& currentPageType
+						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY))) {
+			for (SmSupplierCategory cat : getManagedBean()
+					.getActiveCategoryList()) {
+				log.info(" ***** Cat code is ****** " + cat.getPoDecFlg());
+				for (SmSupplierCategory parentCat : getManagedBean()
+						.getSmAppl().getSmSupplierCategories()) {
+					if (parentCat.getSupplierCategoryId().equals(
+							cat.getSupplierCategoryId())) {
+						getManagedBean()
+								.getSmAppl()
+								.getSmSupplierCategories()
+								.set(getManagedBean().getSmAppl()
+										.getSmSupplierCategories()
+										.indexOf(parentCat), cat);
+						break;
+					}
+				}
+
+			}
+		}
+
 		if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
 				|| currentPageType
@@ -876,8 +899,9 @@ public class SmApplicationBackingBean extends
 					log.info("******* This is site visit review page ********");
 					assignViewSiteVisitReport();
 				}
-				
-				//to init page whether normal or special category type is allowed
+
+				// to init page whether normal or special category type is
+				// allowed
 				initApplCategoryType();
 			}
 			assignValReqdToFalse();
@@ -1316,7 +1340,7 @@ public class SmApplicationBackingBean extends
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
 		setApplicationCategorySelected();
 	}
-	
+
 	private void setApplicationCategorySelected() {
 		getManagedBean().getSmAppl().setCurrentActiveTab(
 				getManagedBean().getTabActiveIndex());
@@ -4633,11 +4657,10 @@ public class SmApplicationBackingBean extends
 
 			if (res.equalsIgnoreCase("SITE_VISIT")
 					|| res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
-				 SmApplicationUtil
-						.siteVisitDataUpdate(getManagedBean());
+				SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 				reqDTO.setSvTask(getManagedBean().getSvTask());
-				
+
 			}
 			if (res.equalsIgnoreCase("INQUIRY")) {
 				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
@@ -6099,7 +6122,7 @@ public class SmApplicationBackingBean extends
 		return itemList.toArray(new SelectItem[itemList.size()]);
 
 	}
-	
+
 	private void initApplCategoryType() {
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
