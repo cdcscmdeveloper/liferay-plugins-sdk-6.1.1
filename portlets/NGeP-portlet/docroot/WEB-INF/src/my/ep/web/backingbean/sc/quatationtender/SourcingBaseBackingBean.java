@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -54,6 +55,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -87,7 +90,6 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -908,5 +910,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return ResourceBundleUtils.getMessage(name,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
+	}
+	
+	public String retriveSupplierDescById(Long supplierId) {
+		
+		String status = "";
+		try {
+			ISupplierSearchSO suppSO =BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setSupplierId(supplierId);
+			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+			SupplierSearchResDTO resDTO = suppSO.retriveSupplierStatusDescById(reqDTO);
+			if (resDTO != null) {
+				status = resDTO.getSupplierStatus();
+			}
+		}finally{
+			
+		}
+
+		return status;
 	}
 }
