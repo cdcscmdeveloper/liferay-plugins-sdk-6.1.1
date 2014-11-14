@@ -111,7 +111,8 @@
 
 		</h:panelGroup>
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
+		<p:panel id="financialBankStmtScore"
+			header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -124,7 +125,8 @@
 							id="bankStatementAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="bankDetails"
+							<p:ajax event="change"
+								update="bankDetails,financialBankStmtScore"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="bankStatementAutoScoreId"
 							for="bankStatementAutoScore" display="icon"></p:message></td>

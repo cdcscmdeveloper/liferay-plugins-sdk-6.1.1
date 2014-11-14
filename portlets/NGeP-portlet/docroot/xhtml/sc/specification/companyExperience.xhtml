@@ -62,7 +62,8 @@
 							required="true"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 							maxlength="4">
-
+							<p:ajax event="blur" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 						</p:inputText> <p:message id="techGovCompanyId" for="techGovCompany"
 							display="icon"></p:message></td>
 				</tr>
@@ -120,7 +121,8 @@
 
 
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
+		<p:panel id="techCompanyExpContracts"
+			header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -132,7 +134,8 @@
 							required="true" label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="companyContract"
+							<p:ajax event="change"
+								update="companyContract,techCompanyExpContracts"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techGovNoOfContractsAutoScoreId"
 							for="techGovNoOfContractsAutoScore" display="icon"></p:message></td>
@@ -196,8 +199,8 @@
 
 		<p:spacer height="75"></p:spacer>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}"
-			toggleable="true">
+		<p:panel id="techGovNumberOfYearsUpdate"
+			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -207,7 +210,8 @@
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.companyScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="companyGovScore"
+							<p:ajax event="change"
+								update="companyGovScore,techGovNumberOfYearsUpdate"
 								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techGovNoOfYearsAutoScoreId"
 							for="techGovNoOfYearsAutoScore" display="icon"></p:message></td>

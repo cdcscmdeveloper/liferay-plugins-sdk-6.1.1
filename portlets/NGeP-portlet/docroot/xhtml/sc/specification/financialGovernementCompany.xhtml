@@ -58,7 +58,8 @@
 							required="true"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 							maxlength="4">
-
+							<p:ajax event="blur" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 						</p:inputText> <p:message id="finGovCompanyYrs" for="finSpecGovCompany"
 							display="icon"></p:message></td>
 				</tr>
@@ -112,7 +113,7 @@
 
 		<p:spacer height="75"></p:spacer>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
+		<p:panel id="financialGovernmentContracts" header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -125,7 +126,7 @@
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="financialGovernment"
+							<p:ajax event="change" update="financialGovernment,financialGovernmentContracts"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="financialGovAutoScoreMsg"
 							for="financialGovAutoScore" display="icon"></p:message></td>

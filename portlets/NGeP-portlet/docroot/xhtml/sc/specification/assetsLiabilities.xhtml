@@ -73,9 +73,10 @@
 				</tr>
 			</table>
 		</p:panel>
-<p:spacer height="75"></p:spacer>
+		<p:spacer height="75"></p:spacer>
 
-		<p:panel header="#{lbl['lbl.sc.spec.asset.score.net.amount']}"
+		<p:panel id="financialAssetsLiabilityScore"
+			header="#{lbl['lbl.sc.spec.asset.score.net.amount']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -88,7 +89,8 @@
 							id="assetLiabilityAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="assetLiabilitie"
+							<p:ajax event="change"
+								update="assetLiabilitie,financialAssetsLiabilityScore"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="assetLiabilityAutoScoreId"
 							for="assetLiabilityAutoScore" display="icon"></p:message></td>

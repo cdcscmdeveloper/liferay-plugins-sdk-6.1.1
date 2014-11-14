@@ -64,8 +64,8 @@
 			</h:panelGrid>
 		</p:panel>
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.score.tot.employees']}"
-			toggleable="true">
+		<p:panel id="technicalTotalEmployees"
+			header="#{lbl['lbl.sc.spec.score.tot.employees']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -77,7 +77,8 @@
 							id="techTotalEmployeeAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="totalEmployees"
+							<p:ajax event="change"
+								update="totalEmployees,technicalTotalEmployees"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techTotalEmployeeAutoScoreMsg"
 							for="techTotalEmployeeAutoScore" display="icon"></p:message></td>

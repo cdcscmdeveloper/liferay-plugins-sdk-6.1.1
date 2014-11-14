@@ -98,7 +98,8 @@
 			</tr>
 		</table>
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
+		<p:panel id="financialCreditFacilityScores"
+			header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -111,7 +112,8 @@
 							id="fincreditFacilityAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="creditFacility"
+							<p:ajax event="change"
+								update="creditFacility,financialCreditFacilityScores"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="fincreditFacilityAutoScoreId"
 							for="fincreditFacilityAutoScore" display="icon"></p:message></td>
