@@ -42,7 +42,11 @@
 				<h:outputText value="#{financeList.scQtCheckList.title}" />
 			</p:column>
 
-			<p:column />
+			<p:column style="white-space : normal">
+			<h:outputText rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'UP'}" value="#{lbl['lbl.sc.attachment']}"/>
+			<h:outputText rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF'}" value="#{lbl['lbl.sc.prepare']}"/>
+			<h:outputText rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}" value="#{lbl['lbl.sc.view']}"/>
+			</p:column>
 
 			<p:column>
 
