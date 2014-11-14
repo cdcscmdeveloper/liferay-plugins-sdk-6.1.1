@@ -825,6 +825,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				flItemAddr.setItemType(contractedItem.getItemType());
 				flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 				flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
+				if(contractedItem.getScRequestItem().getCmItem()!=null) {
+					flItemAddr.setItemCode(contractedItem.getScRequestItem().getCmItem().getExtensionCode());
+				} else {
+					flItemAddr.setItemCode(contractedItem.getScRequestItem().getTempUnspscCode());
+				}					
 				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 					if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 						long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
@@ -3091,6 +3096,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				flItemAddr.setItemType(flTempItem.getScRequestItem().getItemType());
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
 				flItemAddr.setCmItem(flTempItem.getScRequestItem().getCmItem());
+				if(flTempItem.getScRequestItem().getCmItem()!=null) {
+					flItemAddr.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
+				} else {
+					flItemAddr.setItemCode(flTempItem.getScRequestItem().getTempUnspscCode());
+				}				
 				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 					if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 						long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
