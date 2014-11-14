@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -63,57 +65,60 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
-
 /**
  * @author siew mei
- *
+ * 
  */
 public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
-	
+
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
 	private T managedBean;
-	
+
 	@SuppressWarnings("unchecked")
-	public BaseBackingBean(){
-		if (log.isDebugEnabled()){
+	public BaseBackingBean() {
+		if (log.isDebugEnabled()) {
 			log.debug("In BaseBackingBean constructor");
-			
+
 		}
 		Class<?> clazz = this.getClass();
 		Type type = clazz.getGenericSuperclass();
-		//while (true) {
-		    if(log.isDebugEnabled()) { 
-    			log.debug("#######Clazz = " + clazz);
-    			log.debug("#######type = " + type);
-		    }
+		// while (true) {
+		if (log.isDebugEnabled()) {
+			log.debug("#######Clazz = " + clazz);
+			log.debug("#######type = " + type);
+		}
 
-			/*if (clazz == null) {
-				break;
-			}*/
-			if (type != null && type instanceof ParameterizedType) {
-				this.managedBeanClazz = (Class<T>) ((ParameterizedType) type)
-						.getActualTypeArguments()[0];
-				if (null != managedBeanClazz){
-					ManagedBean managedBeanAnnotation = managedBeanClazz.getAnnotation(ManagedBean.class);
-					if (null != managedBeanAnnotation){
-						managedBeanName = managedBeanAnnotation.name()/* + getConcatId()*/;
-					}
-					
-					if (StringUtils.isBlank(managedBeanName)) {
-						managedBeanName = StringUtils.uncapitalize(managedBeanClazz.getSimpleName());
-					}
+		/*
+		 * if (clazz == null) { break; }
+		 */
+		if (type != null && type instanceof ParameterizedType) {
+			this.managedBeanClazz = (Class<T>) ((ParameterizedType) type)
+					.getActualTypeArguments()[0];
+			if (null != managedBeanClazz) {
+				ManagedBean managedBeanAnnotation = managedBeanClazz
+						.getAnnotation(ManagedBean.class);
+				if (null != managedBeanAnnotation) {
+					managedBeanName = managedBeanAnnotation.name()/*
+																 * +
+																 * getConcatId()
+																 */;
+				}
+
+				if (StringUtils.isBlank(managedBeanName)) {
+					managedBeanName = StringUtils.uncapitalize(managedBeanClazz
+							.getSimpleName());
 				}
 			}
-		//}
-		
-		if (log.isDebugEnabled()){
+		}
+		// }
+
+		if (log.isDebugEnabled()) {
 			log.debug("managedBeanName:" + managedBeanName);
 		}
 	}
-	
-	
+
 	/**
 	 * @return the managedBeanClazz
 	 */
@@ -122,265 +127,279 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 
 	/**
-	 * @param managedBeanClazz the managedBeanClazz to set
+	 * @param managedBeanClazz
+	 *            the managedBeanClazz to set
 	 */
 	public void setManagedBeanClazz(Class<T> managedBeanClazz) {
 		this.managedBeanClazz = managedBeanClazz;
 	}
-	
-	public void renewSesionObject(){
-		if (log.isDebugEnabled()){
+
+	public void renewSesionObject() {
+		if (log.isDebugEnabled()) {
 			log.debug("In renewSesionObject");
 		}
-		
-		try{
+
+		try {
 			FacesScopes facesScopes = new FacesScopes();
 			@SuppressWarnings("unchecked")
-			T tmpBean = (T)facesScopes.removeFromSession(managedBeanName);
-			
+			T tmpBean = (T) facesScopes.removeFromSession(managedBeanName);
+
 			log.info("remove managedBean from session:" + tmpBean);
-			
+
 			managedBean = null;
-		} catch(Exception ex){
+		} catch (Exception ex) {
 			log.error("Failed to renew managed bean: " + managedBeanName, ex);
 		}
-		
-		//return managedBean;
+
+		// return managedBean;
 	}
-	
+
 	/**
 	 * @return the managedBean
 	 */
-	public T getManagedBean() {		
-		if (managedBean == null && null !=managedBeanName){
-			/*FacesScopes facesScopes = new FacesScopes();
-			@SuppressWarnings("unchecked")
-			T tmpBean = (T)facesScopes.getSessionScope(managedBeanName);
-			if(null == tmpBean){
-				managedBean = createNewSesionObject();
-			}else{
-				managedBean = tmpBean;
-			}*/
+	public T getManagedBean() {
+		if (managedBean == null && null != managedBeanName) {
+			/*
+			 * FacesScopes facesScopes = new FacesScopes();
+			 * 
+			 * @SuppressWarnings("unchecked") T tmpBean =
+			 * (T)facesScopes.getSessionScope(managedBeanName); if(null ==
+			 * tmpBean){ managedBean = createNewSesionObject(); }else{
+			 * managedBean = tmpBean; }
+			 */
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			managedBean = facesContext.getApplication().evaluateExpressionGet(
-					facesContext, "#{" + managedBeanName + "}", managedBeanClazz);
-			
+					facesContext, "#{" + managedBeanName + "}",
+					managedBeanClazz);
+
 			if (log.isDebugEnabled()) {
 				log.debug("managedBean:" + managedBean);
 			}
 		}
-		
+
 		return managedBean;
-		
+
 	}
 
-	/*private String getConcatId(){
-		String concatId = "";
-		
-		
-		FacesScopes facesScope = new FacesScopes();
-		
-		String portletId = (String)facesScope.getRequestScope(WebKeys.PORTLET_ID);
-		
-		String pageId = null;
-		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-		if (themeDisplay!=null){
-			pageId = String.valueOf(themeDisplay.getPlid());
-			facesScope.setSessionScope("title", themeDisplay.getPortletDisplay().getTitle());
-		}
-		
-		if (StringUtils.isNotBlank(portletId) && StringUtils.isNotBlank(pageId)){
-			concatId = "_" + portletId + "_" + pageId;
-		}
-		
-		return concatId;
-	}*/
-	
+	/*
+	 * private String getConcatId(){ String concatId = "";
+	 * 
+	 * 
+	 * FacesScopes facesScope = new FacesScopes();
+	 * 
+	 * String portletId =
+	 * (String)facesScope.getRequestScope(WebKeys.PORTLET_ID);
+	 * 
+	 * String pageId = null; ThemeDisplay themeDisplay =
+	 * (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY); if
+	 * (themeDisplay!=null){ pageId = String.valueOf(themeDisplay.getPlid());
+	 * facesScope.setSessionScope("title",
+	 * themeDisplay.getPortletDisplay().getTitle()); }
+	 * 
+	 * if (StringUtils.isNotBlank(portletId) && StringUtils.isNotBlank(pageId)){
+	 * concatId = "_" + portletId + "_" + pageId; }
+	 * 
+	 * return concatId; }
+	 */
+
 	/* Utility method */
-	public String userImagePath(String userId){
+	public String userImagePath(String userId) {
 		FacesScopes facesScopes = new FacesScopes();
 		String imagePath = "";
-		if (userId != null){
+		if (userId != null) {
 			User user = null;
-			ThemeDisplay themeDisplay = (ThemeDisplay)facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY);
-			try{
-				user = UserLocalServiceUtil.getUserByScreenName(themeDisplay.getCompanyId(), userId);
-				if (user!= null){
-					imagePath ="/.."+ user.getPortraitURL((ThemeDisplay)facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY));
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest()
+					.getAttribute(WebKeys.THEME_DISPLAY);
+			try {
+				user = UserLocalServiceUtil.getUserByScreenName(
+						themeDisplay.getCompanyId(), userId);
+				if (user != null) {
+					imagePath = "/.."
+							+ user.getPortraitURL((ThemeDisplay) facesScopes
+									.getRequest().getAttribute(
+											WebKeys.THEME_DISPLAY));
 				}
-			}catch(Exception ex){
-				log.error( ex.getMessage(), ex);
+			} catch (Exception ex) {
+				log.error(ex.getMessage(), ex);
 			}
 		}
 
 		return imagePath;
 
 	}
-	
-	public boolean compareUserName(String username){
+
+	public boolean compareUserName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
-		if(username!=null && username.equals(facesScopes.getUserScreenName())) {
+		if (username != null
+				&& username.equals(facesScopes.getUserScreenName())) {
 			return true;
 		} else {
 			return false;
 		}
-	}	
+	}
 
-	/*protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS> toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
-		List<RETURN_CLASS> list = new ArrayList<RETURN_CLASS>();
-		
-		for (ValueBean<RETURN_CLASS> valueBean : valueBeans) {
-			list.add(valueBean.getEntity());
-		}
-		
-		return list;
-	}
-	
-	public <ENTITY_CLASS extends BaseEntity> void addListBySelectedList(List<ENTITY_CLASS> list, List<ENTITY_CLASS> selectedList) {		
-		for (ENTITY_CLASS entity : selectedList) {			
-			if (entity.isSelected()) {
-				entity.setSelected(false);
-				
-				list.add(entity);
-			}
-		}
-	}
-	
-	public <ENTITY_CLASS extends BaseEntity> void deleteRowsAction(DataValueBean<ENTITY_CLASS> dataValueBean) {		
-		List<ENTITY_CLASS> displayedList = dataValueBean.getDisplayedList();
-		List<ENTITY_CLASS> removedList = dataValueBean.getRemovedList();
-		List<ENTITY_CLASS> listToBeRemoved = new ArrayList<ENTITY_CLASS>();
-		
-		for (ENTITY_CLASS entity : displayedList) {
-			if (entity.isSelected()) {
-				entity.setDeleted(true);
-				
-				listToBeRemoved.add(entity);
-			}
-		}
-		
-		// remove from display list.
-		displayedList.removeAll(listToBeRemoved);
-		
-		// added into removed list.
-		removedList.addAll(listToBeRemoved);
-	}
-	
-	public <ENTITY_CLASS extends BaseEntity> void selectAllAction(boolean selectAll, List<ENTITY_CLASS> list) {		
-		for (ENTITY_CLASS valueBean : list) {
-			valueBean.setSelected(selectAll);
-		}
-    }*/
-	
-	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected, List<ENTITY_CLASS> list) {
+	/*
+	 * protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS>
+	 * toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
+	 * List<RETURN_CLASS> list = new ArrayList<RETURN_CLASS>();
+	 * 
+	 * for (ValueBean<RETURN_CLASS> valueBean : valueBeans) {
+	 * list.add(valueBean.getEntity()); }
+	 * 
+	 * return list; }
+	 * 
+	 * public <ENTITY_CLASS extends BaseEntity> void
+	 * addListBySelectedList(List<ENTITY_CLASS> list, List<ENTITY_CLASS>
+	 * selectedList) { for (ENTITY_CLASS entity : selectedList) { if
+	 * (entity.isSelected()) { entity.setSelected(false);
+	 * 
+	 * list.add(entity); } } }
+	 * 
+	 * public <ENTITY_CLASS extends BaseEntity> void
+	 * deleteRowsAction(DataValueBean<ENTITY_CLASS> dataValueBean) {
+	 * List<ENTITY_CLASS> displayedList = dataValueBean.getDisplayedList();
+	 * List<ENTITY_CLASS> removedList = dataValueBean.getRemovedList();
+	 * List<ENTITY_CLASS> listToBeRemoved = new ArrayList<ENTITY_CLASS>();
+	 * 
+	 * for (ENTITY_CLASS entity : displayedList) { if (entity.isSelected()) {
+	 * entity.setDeleted(true);
+	 * 
+	 * listToBeRemoved.add(entity); } }
+	 * 
+	 * // remove from display list. displayedList.removeAll(listToBeRemoved);
+	 * 
+	 * // added into removed list. removedList.addAll(listToBeRemoved); }
+	 * 
+	 * public <ENTITY_CLASS extends BaseEntity> void selectAllAction(boolean
+	 * selectAll, List<ENTITY_CLASS> list) { for (ENTITY_CLASS valueBean : list)
+	 * { valueBean.setSelected(selectAll); } }
+	 */
+
+	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected,
+			List<ENTITY_CLASS> list) {
 		if (list != null) {
 			for (ENTITY_CLASS entity : list) {
 				entity.setSelected(selected);
 			}
 		}
 	}
-	
-	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(List<ENTITY_CLASS> list) {
+
+	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(
+			List<ENTITY_CLASS> list) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteSelectedRowsAction");
 		}
-		
-		if (list != null) {
-			List<ENTITY_CLASS> toBeRemovedList = new ArrayList<ENTITY_CLASS>();
-			
-			for (ENTITY_CLASS entity : list) {
-				if (entity.isSelected()) {
-					toBeRemovedList.add(entity);
+		try {
+			if (list != null) {
+				List<ENTITY_CLASS> toBeRemovedList = new ArrayList<ENTITY_CLASS>();
+
+				for (ENTITY_CLASS entity : list) {
+					if (entity.isSelected()) {
+						toBeRemovedList.add(entity);
+					}
 				}
+				if (toBeRemovedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteRowsAction(list, toBeRemovedList);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
 			}
-			
-			deleteRowsAction(list, toBeRemovedList);
+		} finally {
+
 		}
 	}
-	
-	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, ENTITY_CLASS toBeRemoved) {
+
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list,
+			ENTITY_CLASS toBeRemoved) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
-		
+
 		if (list != null && toBeRemoved != null) {
-			list.remove(toBeRemoved);	
+			list.remove(toBeRemoved);
 		}
 	}
-	
-	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
+
+	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list,
+			List<ENTITY_CLASS> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
-		
+
 		if (list != null && toBeRemovedList != null) {
-			list.removeAll(toBeRemovedList);	
+			list.removeAll(toBeRemovedList);
 		}
 	}
-	
+
 	/**
 	 * Create search bean.
 	 * 
 	 * @param classz
-	 * 			the return class type.
+	 *            the return class type.
 	 * @param componentId
-	 * 			the component id.
-	 * @return	ISearchBean instance.
+	 *            the component id.
+	 * @return ISearchBean instance.
 	 */
-	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
-		return new SearchBean<RETURN_CLASS>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
+	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(
+			Class<RETURN_CLASS> classz, String componentId) {
+		return new SearchBean<RETURN_CLASS>(
+				EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
 				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
-	
+
 	/**
 	 * Get parameter id select items by parameter type for dropdown.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getDropdownValues(String parameterType) {
 		return getDropdownValuesBySearchBean(parameterType, null);
 	}
-	
+
 	/**
-	 * Get parameter id select items by parameter type and search bean for dropdown.
+	 * Get parameter id select items by parameter type and search bean for
+	 * dropdown.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @param searchBean
-	 * 			the search bean instance
+	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownValuesBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescListBySearchBean(parameterType, searchBean);
-			
-		    items = new SelectItem[parameterDescs.size()+1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-		    int i = 1;
-		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterId(), 
-		    			parameterDesc.getCodeName());
-		    }
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
-					null, 
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							e.toString(),
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-		
-	    return items;
+
+		return items;
 	}
-	
+
 	/**
 	 * Get parameter code select items by parameter type for dropdown.
 	 * 
@@ -390,247 +409,251 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public SelectItem[] getDropdownCodeValues(String parameterType) {
 		return getDropdownCodeValuesBySearchBean(parameterType, null);
 	}
-	
+
 	/**
-	 * Get parameter code select items by parameter type and search bean for dropdown.
+	 * Get parameter code select items by parameter type and search bean for
+	 * dropdown.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @param searchBean
-	 * 			the search bean instance
+	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
-		
+
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescListBySearchBean(parameterType, searchBean);
-			
-		    items = new SelectItem[parameterDescs.size()+1];
-		    
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-		    int i = 1;
-		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterCode(), 
-		    			parameterDesc.getCodeName());
-		    }
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size() + 1];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterCode(), parameterDesc.getCodeName());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
-					null, 
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							e.toString(), 
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-		
-	    return items;
+
+		return items;
 	}
-	
+
 	/**
 	 * Get Parameter description by parameter.
 	 * 
 	 * @param parameter
-	 * 			the PmParameter instance.
+	 *            the PmParameter instance.
 	 * @return parameter description
 	 */
 	public String getParameterDesc(PmParameter parameter) {
-		if (parameter != null && StringUtils.isNotBlank(parameter.getParameterType())) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
 			return ParameterHelper.getInstance().getParameterDesc(
-					parameter.getParameterType(),
-					parameter.getParameterCode());	
+					parameter.getParameterType(), parameter.getParameterCode());
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Get Parameter description by type and code.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @param parameterCode
-	 * 			the parameter code
+	 *            the parameter code
 	 * @return parameter description
 	 */
-	public String getParameterDesc(String parameterType, String parameterCode) {		
-		return ParameterHelper.getInstance().getParameterDesc(
-				parameterType, parameterCode);
+	public String getParameterDesc(String parameterType, String parameterCode) {
+		return ParameterHelper.getInstance().getParameterDesc(parameterType,
+				parameterCode);
 	}
-	
+
 	/**
 	 * Get parameter by parameter type and code.
 	 * 
 	 * @param parameterType
-	 * 		the parameter type
+	 *            the parameter type
 	 * @param parameterCode
-	 * 		the parameter code
+	 *            the parameter code
 	 * @return the PmParameter instance
 	 */
-	public PmParameter getParameterByTypeAndCode(String parameterType, String parameterCode) {
-		return ParameterHelper.getInstance().getParameterByTypeAndCode(parameterType, parameterCode);
+	public PmParameter getParameterByTypeAndCode(String parameterType,
+			String parameterCode) {
+		return ParameterHelper.getInstance().getParameterByTypeAndCode(
+				parameterType, parameterCode);
 	}
-	
+
 	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getStatusDropdownValues(String moduleCode, 
+	public SelectItem[] getStatusDropdownValues(String moduleCode,
 			String docType) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
-		
+
 		try {
 			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
 					.getStatusDescList(moduleCode, docType);
-			
-		    items = new SelectItem[statusDescs.size()+1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-		    int i = 1;
-		    for(PmStatusDesc statusDesc : statusDescs) {
-		    	items[i++] = new SelectItem(
-		    			statusDesc.getPmStatus().getStatusId(), 
-		    			statusDesc.getStatusName());
-		    }
+
+			items = new SelectItem[statusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDesc : statusDescs) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
-					null, new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, 
-							e.toString(), 
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-		
-	    return items;
+
+		return items;
 	}
-	
+
 	/**
 	 * Get Status description by status id.
 	 * 
 	 * @param statusId
-	 * 			the status id.
+	 *            the status id.
 	 * @return status description
 	 */
-	public String getStatusDescById(Long statusId) {		
+	public String getStatusDescById(Long statusId) {
 		String statusDesc = null;
-		
+
 		if (statusId != null) {
 			// Get the status description.
 			PmStatusDesc pmStatusDesc = StatusHelper.getInstance()
 					.getStatusDescById(statusId);
-			
+
 			if (pmStatusDesc != null) {
 				statusDesc = pmStatusDesc.getStatusName();
 			}
 		}
-		
+
 		return statusDesc;
 	}
-	
+
 	/**
 	 * Get parameter code select items by parameter type for radio buttons.
 	 * 
 	 * @param parameterType
-	 * 			the parameter type
+	 *            the parameter type
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
-	
-	public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+
+	public SelectItem[] getRadioButtonCodeValuesBySearchBean(
+			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescListBySearchBean(parameterType, searchBean);
-			
-		    items = new SelectItem[parameterDescs.size()];
-		    int i = 0;
-		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterCode(), 
-		    			parameterDesc.getCodeName());
-		    }
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterCode(), parameterDesc.getCodeName());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
-					null, 
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							e.toString(), 
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-		
-	    return items;
+
+		return items;
 	}
-	
+
 	public SelectItem[] getRadioButtonValues(String parameterType) {
 		SelectItem[] items = null;
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescList(parameterType);
-			
-		    items = new SelectItem[parameterDescs.size()];
-		    int i = 0;
-		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterId(), 
-		    			parameterDesc.getCodeName());
-		    }
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescList(parameterType);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
-					null, 
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							e.toString(), 
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-		
-	    return items;
-	}
-	
-	public void commonUploadFile(FileUploadEvent event, String path){
 
-//		String tempDir = "C://Ngep//doc//"+moduleName+"//";
-		String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tempDir += "/" + path; 
-		
+		return items;
+	}
+
+	public void commonUploadFile(FileUploadEvent event, String path) {
+
+		// String tempDir = "C://Ngep//doc//"+moduleName+"//";
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += "/" + path;
+
 		String uploadDir = "";
-		
+
 		UploadedFile file = event.getFile();
-		
+
 		uploadDir = tempDir + file.getFileName();
-		
-//		genFile(uploadDir, file.getContents());
+
+		// genFile(uploadDir, file.getContents());
 		genFile(tempDir, file);
 
 	}
-	
-	public StreamedContent commonDownload(String path, String displayFileName) throws IOException {
-		String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+
+	public StreamedContent commonDownload(String path, String displayFileName)
+			throws IOException {
+		String filePath = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		filePath += "/" + path;
-		
+
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
-		
+
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
-//		response.setContentType("application/vnd.ms-excel");
-//		response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename="+displayFileName);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="
+				+ displayFileName);
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
-		
+
 		FileInputStream docInputStream = new FileInputStream(new File(filePath));
-		
+
 		OutputStream out = response.getOutputStream();
 		byte[] buffer = new byte[4096];
 		int bytesRead;
@@ -642,34 +665,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		docInputStream.close();
 		return null;
 	}
-	
+
 	/**
 	 * @param messageCode
 	 * @param docType
 	 * @param docTypeCode
 	 * @param docNo
 	 */
-	public void successMessage(String messageCode, String docType, String docTypeCode, String docNo){
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-				FacesMessage.SEVERITY_INFO, null, 
-				MessageUtils.getMessage(messageCode, 
-						new String[]{getParameterDesc(docType, docTypeCode), docNo}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+	public void successMessage(String messageCode, String docType,
+			String docTypeCode, String docNo) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(
+								messageCode,
+								new String[] {
+										getParameterDesc(docType, docTypeCode),
+										docNo },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
-	public void genFile(String uploadDir, UploadedFile file){
+	public void genFile(String uploadDir, UploadedFile file) {
 
 		File dir = new File(uploadDir);
-		log.info(" dir.exists()"+ dir.exists());		  
-		if(!dir.exists()) {
+		log.info(" dir.exists()" + dir.exists());
+		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		
-		try {	
-			
-			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + file.getFileName()));
+
+		try {
+
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
+					new FileOutputStream(uploadDir + "/" + file.getFileName()));
 
 			bufferedOutputStream.write(file.getContents());
 
@@ -678,61 +709,65 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				bufferedOutputStream.close();
 			}
 
-
-
-		}catch(Exception e) {
+		} catch (Exception e) {
 			log.error(e);
 		}
 
-
 	}
-	
-	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
+
+	protected void generateReport(String reportFile,
+			Map<String, String> paramMap) throws IOException {
 		String reportUrl = generateReportURL(reportFile, paramMap);
-		
+
 		HttpURLConnection urlConnection = null;
 		URL obj = new URL(reportUrl);
-	    urlConnection = (HttpURLConnection) obj.openConnection();  
-	    
-	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
-        
-	    PortletResponse portletResponse = (PortletResponse) FacesContext
-      	      .getCurrentInstance().getExternalContext().getResponse();
-	    HttpServletResponse res = PortalUtil
-	      	      .getHttpServletResponse(portletResponse);
-	    int position = reportFile.lastIndexOf(".jsp");
-	    if(position != -1) {
-	    	reportFile = reportFile.substring(0, position);
-	    }
-	    
-	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
-	    res.setHeader("Content-Transfer-Encoding", "binary");
-	    res.setContentType("application/pdf");
-	    res.flushBuffer();
-	    
-	    OutputStream out = res.getOutputStream();
-        	  
-	    byte[] b = new byte[128];
-        int size;
-        while ((size = buf.read(b, 0, b.length)) != -1) {
-        	out.write(b, 0, size);
-        }
-        buf.close();
-        out.close();
+		urlConnection = (HttpURLConnection) obj.openConnection();
+
+		BufferedInputStream buf = new BufferedInputStream(
+				urlConnection.getInputStream());
+
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = PortalUtil
+				.getHttpServletResponse(portletResponse);
+		int position = reportFile.lastIndexOf(".jsp");
+		if (position != -1) {
+			reportFile = reportFile.substring(0, position);
+		}
+
+		res.setHeader("Content-Disposition",
+				"attachment; filename=\"" + reportFile + "_"
+						+ ReportConst.REPORT_DATE_TIME.format(new Date())
+						+ ".pdf\"");//
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setContentType("application/pdf");
+		res.flushBuffer();
+
+		OutputStream out = res.getOutputStream();
+
+		byte[] b = new byte[128];
+		int size;
+		while ((size = buf.read(b, 0, b.length)) != -1) {
+			out.write(b, 0, size);
+		}
+		buf.close();
+		out.close();
 	}
-	
-	protected String generateReportURL(String reportFile, Map<String, String> paramMap) {
+
+	protected String generateReportURL(String reportFile,
+			Map<String, String> paramMap) {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
-		
+		String excPrevUrl = propertiesUtils
+				.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils
+				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
 		reportUrl.append(ReportConst.PARAM_SEPARATOR);
 		reportUrl.append(ReportConst.PARAM_KEY_REPORT);
 		reportUrl.append(ReportConst.VALUE_SEPARATOR);
 		reportUrl.append(reportFile);
-		
+
 		for (Entry<String, String> params : paramMap.entrySet()) {
 			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
@@ -740,31 +775,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			reportUrl.append(params.getValue());
 		}
 		reportUrl.append(excNextUrl);
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
 		return reportUrl.toString();
 	}
-	
+
 	public String getFullAddress(SmAddress smAddress) {
 		return AddressUtils.getFullAddress(smAddress);
 	}
-	
+
 	public String getFullAddress(PmAddress pmAddress) {
 		return AddressUtils.getFullAddress(pmAddress);
 	}
-	
+
 	public void handleException(Exception exception) {
-		ExceptionHandler expHandler = FacesContext.getCurrentInstance().getExceptionHandler();
+		ExceptionHandler expHandler = FacesContext.getCurrentInstance()
+				.getExceptionHandler();
 		if (expHandler instanceof EpExceptionHandler) {
-			((EpExceptionHandler)expHandler).handleException(exception);
+			((EpExceptionHandler) expHandler).handleException(exception);
 		}
 	}
 
 	public String escapeXhtml(String input) {
 		String output = "";
-		if(input != null) {
+		if (input != null) {
 			output = StringUtils.replace(input, "&", "&#38;");
 		}
 		return output;
