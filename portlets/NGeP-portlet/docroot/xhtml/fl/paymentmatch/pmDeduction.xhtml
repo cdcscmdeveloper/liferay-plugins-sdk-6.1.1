@@ -86,7 +86,7 @@
 		<div style="width: 100%; text-align: right" id="deductionButton">
 			<p:commandButton id="addButton"
 			rendered="#{paymentMatchBackingBean.checkCtDeduction('Add')}" 
-			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update=":form:deductionDataTable,:form:deductionButton:addButton"/>
+			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update=":form:deductionDataTable,:form:deductionButton"/>
 			<p:commandButton rendered="#{paymentMatchBackingBean.checkCtDeduction(null)}" 
 			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete" action="#{paymentMatchBackingBean.removeAddRow()}" update=":form:deductionDataTable"/>
 		</div>
