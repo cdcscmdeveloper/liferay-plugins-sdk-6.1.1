@@ -7916,10 +7916,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void paneltabChange(TabChangeEvent event) {
-		/*
-		 * if ("Supplier List".equalsIgnoreCase(event.getTab().getTitle())) { //
-		 * retriveZonesByCircularNo(); }
-		 */
+		
 
 	}
 
