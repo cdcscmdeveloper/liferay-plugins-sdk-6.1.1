@@ -32,6 +32,9 @@
 			padding: 10px;
          }
 		</style>
+		 <p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>				
 		<f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
 		<p:panel id="panelIdforMsags">
 	          <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />

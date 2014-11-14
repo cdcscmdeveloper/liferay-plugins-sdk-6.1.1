@@ -16,7 +16,7 @@
 		      </h:panelGrid>
         
               <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
-                   value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
+                   value="#{agreementBackingBean.managedBean.ctSupplierSigner}" widgetVar="supSignerObj"
                    selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
                    <ac:paginator for="agSupplierSigner"/>
 			       <p:column selectionMode="multiple" style="width:5%"/> 
@@ -34,7 +34,8 @@
                  
                        <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
                           <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown()}"/>
-                          <p:ajax event="change" update="suOfId,suOfPosition"
+                          <p:ajax event="change" update="suOfId,suOfPosition"   
+                              onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
                               process="@all" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar)}"/> 
                        </p:selectOneMenu>
                      </p:column>  
@@ -50,7 +51,8 @@
 		    </h:panelGrid>
 		    <div class="ppRightBtn"> 
 		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}"  update=":form:agSupplierSigner">
+		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" 
+		            onstart="blockWidget.show();" oncomplete="blockWidget.hide();" update=":form:agSupplierSigner">
 		    	   <p:tooltip for="addSupplierSignerBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
 				   </p:tooltip>
@@ -86,18 +88,21 @@
 		          </h:panelGrid>
        
                   <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" 
-                       value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
+                       value="#{agreementBackingBean.managedBean.ctSupplierWitness}" widgetVar="supWitnessObj"
                        selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
                        <ac:paginator for="witnessSign"/>
                        <p:column selectionMode="multiple" style="width:2%"/> 
                      
                        <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}">
-                           <p:inputText value="#{supplierWitnessVar.officerName}" style="width:95%;" maxlength="20" validator="#{webappBean.checkInputField}"/>
+                           <p:inputText value="#{supplierWitnessVar.officerName}" 
+                              style="width:95%;" maxlength="20" validator="#{webappBean.checkInputField}"/>
                         </p:column>
                        
                         <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
-                            <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="12" validator="#{webappBean.checkIntegerField}">
-                              <p:ajax event="blur" process="@form" listener="#{agreementBackingBean.addSupplierWitness(1)}"></p:ajax>
+                            <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.ic.no']}" 
+                                style="width:95%;" maxlength="12" validator="#{webappBean.checkIntegerField}">
+                              <p:ajax event="blur" listener="#{agreementBackingBean.addSupplierWitness(1)}"
+                                  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
                               </p:inputText>
                         </p:column> 	       
           
@@ -108,7 +113,8 @@
               </h:panelGrid>
               <div class="ppRightBtn"> 
 		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
-		                 process="@form" action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable">
+		                 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  process="@form" 
+		                 action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable">
 		    	        <p:tooltip for="addSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
 				        </p:tooltip>
