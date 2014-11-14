@@ -760,38 +760,6 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>svcassignment</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>svcassignment-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>SvoSiteVisit</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>svositevisit-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>questionnaire</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>questionnaire-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
 		<portlet-name>onlineRegistration</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
@@ -960,16 +928,7 @@
 			scQTMaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
-	<portlet>
-		<portlet-name>commonAppl</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>commonappl-portlet</css-class-wrapper>
-	</portlet>
+	
 	<portlet>
 		<portlet-name>SiteVisit</portlet-name>
 		<icon>/icon.png</icon>
@@ -1566,7 +1525,7 @@
 			<portlet-name>paymentResponse</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
