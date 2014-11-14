@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.pr;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -52,6 +53,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -102,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
@@ -308,6 +311,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
+			}
+			if(getManagedBean().getPmDigiSign() != null){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
@@ -2547,4 +2553,39 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	public void gpkiSignAction(String outcome) throws Exception{
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
+			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(false);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		}else{
+			fulfillmentRequestAction(outcome);
+		}
+	}
+	
+	
+	public String preSubmitFulfillmentRequest(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		
+		return fulfillmentRequestAction(getManagedBean().getButtonAction());
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(true);
+	}
+
 }
