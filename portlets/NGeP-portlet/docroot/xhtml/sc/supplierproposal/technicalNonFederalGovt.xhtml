@@ -35,35 +35,35 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column id="clientNameColId" >
+			<p:column id="clientNameColId" style="white-space : normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.agencyname']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.clientName}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputText id="clientName" value="#{technongovt.clientName}"
-					size="20" maxlength="50" required="true"
+				<p:inputTextarea id="clientName" value="#{technongovt.clientName}" rows="3" cols="20"
+					 maxlength="50" required="true" 
 					label="#{lbl['lbl.sc.sp.agencyname']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true" update="@this,clientNameMsg" />
-				</p:inputText>
+				</p:inputTextarea>
 				<p:message id="clientNameMsg" for="clientName" display="icon" />
 			</p:column>
 
-			<p:column>
+			<p:column style="white-space : normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.contracttitle']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.contractTitle}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputText id="contractTitle" value="#{technongovt.contractTitle}"
-					size="20" maxlength="50" required="true"
+				<p:inputTextarea id="contractTitle" value="#{technongovt.contractTitle}" rows="3"
+					cols="30" maxlength="1000" required="true"
 					label="#{lbl['lbl.sc.sp.contracttitle']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true" update="@this,contractTitleMsg" />
-				</p:inputText>
+				</p:inputTextarea>
 				<p:message id="contractTitleMsg" for="contractTitle" display="icon" />
 			</p:column>
 
@@ -94,7 +94,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 				<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}"
-					readonlyInput="true" showOn="button" navigator="true" size="15"
+					readonlyInput="true" showOn="button" navigator="true" size="9"
 					mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMinDate}"
 					maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
@@ -113,13 +113,13 @@
 					<h:outputText value="#{lbl['lbl.sc.sp.expirydt']}" />
 				</f:facet>
 				<h:panelGroup id="expDatePanelGroupID">
-					<h:outputText value="#{technongovt.expiryDate}"
+					<h:outputText value="#{technongovt.expiryDate}" 
 						rendered="#{technongovt.brandNew eq false}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 					<p:calendar id="expiryDate" value="#{technongovt.expiryDate}"
-						readonlyInput="true" showOn="button" navigator="true"
+						readonlyInput="true" showOn="button" navigator="true" size="9"
 						mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedMinDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
 						label="#{lbl['lbl.sc.sp.expirydt']}"
@@ -145,11 +145,12 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.remarks']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.remarks']}" style="white-space : normal">
 				<h:outputText value="#{technongovt.remark}"
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="20"
 					maxlength="300" rendered="#{technongovt.brandNew eq true}" >
+					<p:ajax process="@this" partialSubmit="true" update="@this"/>
 					</p:inputTextarea>
 			</p:column>
 
@@ -175,7 +176,7 @@
 							value="#{lbl['lbl.sc.sp.ttlnoofcontracts']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalContracts}"
-							readonly="true" disabled="true" size="30">
+							readonly="true" disabled="true" size="10">
 						</p:inputText></td>
 					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 							rendered="#{checklistScoreType eq '1'}" /> <h:outputText
@@ -191,7 +192,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalYears/12}"
-							readonly="true" disabled="true" size="30">
+							readonly="true" disabled="true" size="10">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 

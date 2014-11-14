@@ -21,11 +21,11 @@
 				rowKey="#{financenongovt}" rowIndexVar="rowIndex"
 				selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPExperiences}">
 
-				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
+				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}" style="white-space : normal">
 					#{financenongovt.clientName}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
+				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}" style="white-space : normal">
 					#{financenongovt.contractTitle}
 				</p:column>
 
@@ -71,7 +71,7 @@
 					<p:message id="contractAmtMsg" for="contractAmt" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.remarks']}">
+				<p:column headerText="#{lbl['lbl.sc.sp.remarks']}" style="white-space : normal">
 					<p:inputTextarea value="#{financenongovt.remark}" rows="3"
 						cols="20" disabled="#{statusHide}"/>
 				</p:column>
