@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.paymentmatch;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,7 +24,6 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -40,8 +40,6 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -63,7 +61,6 @@ import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -138,6 +135,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		if (getManagedBean().getFulfilmentRequest() == null) {
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
+		}
+		
+		if(getManagedBean().getFeeVotFund()==null) {
+			IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
+			ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(null);
+			getManagedBean().setFeeVotFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
 		}
 	}
 	
@@ -521,6 +524,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
 			if(deduction.getDeductionType().getParameterCode()!=null && 
 				!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
+			if(deduction.getDeductionAmt() == null){
+				deduction.setDeductionAmt(new BigDecimal(0));
+			}
 				totalDeductionAmt = totalDeductionAmt.add(deduction.getDeductionAmt());
 			}
 		}
@@ -659,6 +665,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
 	}
 	public void addDeductionRow(){
+		
 		FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
 		paymentDeduction.setFlPaymentAdvice(getManagedBean().getPaymentAdvice());
 		paymentDeduction.setDeductionType(new PmParameter());
@@ -666,8 +673,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		paymentDeduction.setPmVotFund(new PmVotFund());
 		paymentDeduction.setPmGlAccount(new PmGlAccount());
 		getManagedBean().getPaymentAdvice().getFlPaymentDeduction().add(paymentDeduction);
-		getGlAccountList(getManagedBean().getPaymentAdvice().getFlRequest().getIssuedOrgProfile());
-		getManagedBean().setVotFundList(getManagedBean().getPaymentAdvice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPmVotFunds());
 	}
 	
 	public void retrieveClauses(FlPaymentDeduction deduction){
@@ -678,15 +683,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				}
 			}
 		}
-	}
-	
-	private void getGlAccountList(PmOrgProfile pmOrgProfile){
-		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
-		
-		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-		glAccountReqDTO.setPtjGroupId(pmOrgProfile.getPmPtjGroup().getPtjGroupId());
-		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
-		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
 	}
 	
 	public String retrieveMofNo(SmSupplier smSupplier) {
@@ -705,6 +701,45 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
+	}
+	
+	public boolean checkCtDeduction(String button){
+		String addbutton = button;
+		boolean haveDeductionList = false;
+		if(addbutton.equalsIgnoreCase("ADD")){
+			int deductionList = getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size();
+			int contractDeductions= getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().size();
+			if(deductionList > contractDeductions){
+				haveDeductionList = false;
+				return haveDeductionList;
+			}
+		}
+		
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
+			if(!getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().isEmpty()){
+				haveDeductionList = true;
+			}
+		}
+		
+		return haveDeductionList;
+	}
+	
+	public void removeAddRow(){
+		try {
+			if(this.getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null){
+				Iterator<FlPaymentDeduction> iterator = this.getManagedBean().getPaymentAdvice().getFlPaymentDeduction().iterator();
+				while(iterator.hasNext()){
+					FlPaymentDeduction  paymentDeduction = iterator.next();
+					if(getManagedBean().getSelectedDeductions().contains(paymentDeduction)){
+						iterator.remove();
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
 	}
 	
 }

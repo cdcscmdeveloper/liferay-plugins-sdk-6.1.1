@@ -40,6 +40,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private List<CtDeductionClause> ctDeductionClauseList;
 	private List<PmGlAccount> glAccountList;
 	private List<PmVotFund> votFundList;
+	private PmVotFund feeVotFund;
 	
 	// for Deduction panel display	
 	private String docType;
@@ -663,5 +664,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setAdjustmentCanDocNo(String adjustmentCanDocNo) {
 		this.adjustmentCanDocNo = adjustmentCanDocNo;
+	}
+
+	/**
+	 * @return the feeVotFund
+	 */
+	public PmVotFund getFeeVotFund() {
+		return feeVotFund;
+	}
+
+	/**
+	 * @param feeVotFund the feeVotFund to set
+	 */
+	public void setFeeVotFund(PmVotFund feeVotFund) {
+		this.feeVotFund = feeVotFund;
 	}
 }

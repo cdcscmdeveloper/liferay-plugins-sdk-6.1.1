@@ -45,14 +45,15 @@
 				</f:facet>
 				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
 					value="#{deduction.pmVotFund.votFundCode}" />
-					<p:selectOneMenu style="margin-bottom:15px;" value="#{deduction.pmVotFund.votFundId}" 
-					rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItems var="votFund"
-							value="#{paymentMatchBackingBean.managedBean.votFundList}"
-							itemLabel="#{votFund.votFundCode}"
-							itemValue="#{votFund.votFundId}" />
-					</p:selectOneMenu>				
+					<ac:lov id="dana" update="@form"
+						rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}"
+						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
+						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
+						readonly="true"
+						size="4"
+						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{paymentMatchBackingBean.managedBean.feeVotFund.votFundCode}^2"
+						value="#{deduction.pmVotFund.votFundCode}"	>
+					</ac:lov>				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gosodo']}">
 			<f:facet name="header" style="width:8%;">
@@ -61,14 +62,14 @@
 				</f:facet>
 				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
 					value="#{deduction.pmGlAccount.glAccCode}" />
-					<p:selectOneMenu style="margin-bottom:15px;" value="#{deduction.pmGlAccount.glAccountId}" 
-					rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItems var="glAccount"
-							value="#{paymentMatchBackingBean.managedBean.glAccountList}"
-							itemLabel="#{glAccount.glAccCode}"
-							itemValue="#{glAccount.glAccountId}" />
-					</p:selectOneMenu>				
+					<ac:lov id="gosodo" update="@form"
+						rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}"
+						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
+						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
+						readonly="true"
+						size="10"
+						value="#{deduction.pmGlAccount.glAccCode}"	>
+					</ac:lov>			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right">
 				<h:outputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" 
@@ -82,12 +83,12 @@
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton 
-			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
-			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update="deductionDataTable"/>
-			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
-			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete"/>
+		<div style="width: 100%; text-align: right" id="deductionButton">
+			<p:commandButton id="addButton"
+			rendered="#{paymentMatchBackingBean.checkCtDeduction('Add')}" 
+			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update=":form:deductionDataTable,:form:deductionButton:addButton"/>
+			<p:commandButton rendered="#{paymentMatchBackingBean.checkCtDeduction(null)}" 
+			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete" action="#{paymentMatchBackingBean.removeAddRow()}" update=":form:deductionDataTable"/>
 		</div>
 	</p:panel>
 	
@@ -107,4 +108,5 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	<ac:lovPopup />	
 </ui:composition>
