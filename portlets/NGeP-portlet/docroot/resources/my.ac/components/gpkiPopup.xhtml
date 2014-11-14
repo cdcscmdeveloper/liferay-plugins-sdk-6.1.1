@@ -30,8 +30,8 @@
 				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
 				var pin = $("[id='#{pin.clientId}']").val();
 				var SignMethod = $("[id='#{SignMethod.clientId}']").val(); 
-			    sign_st(pin, plainText);
-		
+				Aegis.alert("This SignMethod :"	+ SignMethod);
+				sign_st(pin, plainText);
 				
 			}
 			function parseVerifyResult(msg) {
@@ -130,12 +130,13 @@
 		            <f:selectItem itemLabel="Smart Card" itemValue="Smart Card" />
 		        </p:selectOneRadio>
 		    </h:panelGrid>
-				<h:panelGrid columns="4" cellpadding="4">
+			<h:panelGrid columns="4" cellpadding="4">
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
 			</h:panelGrid>
+			 <p:ajax event="close" update="@form"/>
 		</p:dialog>
 	</cc:implementation>
 </ui:composition>
