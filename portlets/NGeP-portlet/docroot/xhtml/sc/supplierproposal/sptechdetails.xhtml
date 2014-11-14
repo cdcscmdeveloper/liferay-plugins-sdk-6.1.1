@@ -45,7 +45,14 @@
 				<h:outputText value="#{techList.scQtCheckList.title}" />
 			</p:column>
 
-			<p:column />
+			<p:column style="white-space : normal">
+			<h:outputText rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP'}" value="#{lbl['lbl.sc.attachment']}"/>
+			<h:outputText rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}" value="#{lbl['lbl.sc.prepare']}"/>
+			<h:outputText rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'SP' or techList.scQtCheckList.definationType.parameterCode eq 'SD' or
+						(techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and techList.scQtCheckList.scQtCheckListValue.allEmployee)}" value="#{lbl['lbl.sc.view']}"/>
+			</p:column>
 
 			<p:column>
 				<ui:fragment
