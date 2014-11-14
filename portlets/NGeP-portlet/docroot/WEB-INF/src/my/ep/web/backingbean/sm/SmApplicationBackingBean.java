@@ -727,9 +727,9 @@ public class SmApplicationBackingBean extends
 
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
-		if ((getManagedBean().isApproverUser() || getManagedBean().isPoUser()
+		if ((getManagedBean().isApproverUser() || getManagedBean().isPoUser())
 				&& currentPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY))) {
+						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			for (SmSupplierCategory cat : getManagedBean()
 					.getActiveCategoryList()) {
 				log.info(" ***** Cat code is ****** " + cat.getPoDecFlg());
