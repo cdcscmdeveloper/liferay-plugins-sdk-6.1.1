@@ -18,7 +18,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -37,6 +36,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
+import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -52,6 +53,70 @@ import org.apache.log4j.Logger;
  */
 public class PpCommonUtil {
 	private static Logger log = Logger.getLogger(PpCommonUtil.class);
+	
+	/**
+	 * Retrieve remark list by docId and docType
+	 * @param docId
+	 * @param docType
+	 * @return List<PpRemark>
+	 */
+	public static List<PpRemark> retrieveRemark(Long docId, String docType){
+		log.info("retrieveRemark - Start");
+		List<PpRemark> remarks = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setDocId(docId);
+			reqDTO.setDocType(docType);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrieveRemark(reqDTO);
+			if (resDTO.isSuccessful()) {
+				remarks = resDTO.getRemarkList();
+			}
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
+		}
+		log.info("retrieveRemark - End");
+		return remarks;
+	}
+	/**
+	 * Retrieve reject reason list by docId and docType
+	 * @param docId
+	 * @param docType
+	 * @return  List<PpRejectReason> 
+	 */
+	public static List<PpRejectReason> retrieveRejectReason(Long docId, String docType){
+		log.info("retrieveRejectReason - Start");
+		List<PpRejectReason> rejectReasons = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setDocId(docId);
+			reqDTO.setDocType(docType);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrieveRejectReason(reqDTO);
+			if (resDTO.isSuccessful()) {
+				rejectReasons = resDTO.getRejectReasonList();
+			}
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
+		}
+		log.info("retrieveRejectReason - End");
+		return rejectReasons;
+	}
+
 	
 	/**
 	 * Retrieve plan by plan id
