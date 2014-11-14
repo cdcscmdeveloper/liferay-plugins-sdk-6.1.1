@@ -106,8 +106,9 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 139px"><p:outputLabel
-						value="#{lbl['lbl.fl.ap59.decision']}" /></td>
-				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{invoiceBackingBean.managedBean.statusId}" required="true">
+						value="#{lbl['lbl.fl.ap59.decision']}" />
+						 <p:outputLabel	value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{invoiceBackingBean.managedBean.statusId}" label="#{lbl['lbl.fl.ap59.decision']}" required="true">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="decision"
 							value="#{invoiceBackingBean.managedBean.decisionList}"
