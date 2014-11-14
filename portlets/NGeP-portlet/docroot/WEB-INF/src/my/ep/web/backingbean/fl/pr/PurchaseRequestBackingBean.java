@@ -847,6 +847,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				flItemAddr.setItemType(purchaseItem.getRequestItem().getItemType());
 				flItemAddr.setScRequestItem(purchaseItem.getRequestItem());
 				flItemAddr.setCmItem(purchaseItem.getRequestItem().getCmItem());
+				if(purchaseItem.getRequestItem().getCmItem()!=null) {
+					flItemAddr.setItemCode(purchaseItem.getRequestItem().getCmItem().getExtensionCode());
+				} else {
+					flItemAddr.setItemCode(purchaseItem.getRequestItem().getTempUnspscCode());
+				}
 				//zonal & zonal tier & zonal promo & tier promo
 				if(purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
