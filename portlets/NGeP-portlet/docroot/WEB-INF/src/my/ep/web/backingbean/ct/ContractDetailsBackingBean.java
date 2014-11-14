@@ -819,11 +819,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			throw new EpException(MessageConst.ERROR_750051); 
 		}
 		
-		if(contractVer.getCtContractZones()!=null) {
-			for(CtContractZone contractZone : contractVer.getCtContractZones()) {
-				if(contractZone.getDeliveryTerm()==0) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if(contractVer.getCtContractZones()!=null) {
+				for(CtContractZone contractZone : contractVer.getCtContractZones()) {
+					if(contractZone.getDeliveryTerm()==0) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+						throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
+					}
 				}
 			}
 		}
