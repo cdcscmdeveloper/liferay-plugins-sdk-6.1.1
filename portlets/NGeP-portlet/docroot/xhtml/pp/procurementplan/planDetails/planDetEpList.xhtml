@@ -18,36 +18,41 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	    	<p:columnGroup type="header">
 				<p:row>
 				 	<p:column selectionMode="multiple"  style="width:2%" />
-				    <p:column  width="12%">
+				    <p:column  width="10%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.object']}" />
 					     	<h:outputText value="* " styleClass="mandatory" />
 					    </f:facet>
 				    </p:column>
-			     	<p:column width="18%" headerText="#{lbl['lbl.pp.type.of.expenses']}" />
-				    <p:column width="10%">
+			     	<p:column width="15%" headerText="#{lbl['lbl.pp.type.of.expenses']}" />
+				    <p:column width="8%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
 					    </f:facet>
 				    </p:column>
-			        <p:column width="10%">
+			        <p:column width="8%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
 					    </f:facet>
 				    </p:column>
-			     	<p:column width="10%">
+			     	<p:column width="8%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="10%">
+				    <p:column width="8%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
 					    </f:facet>
 				    </p:column>
-			      	<p:column width="6%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+				    <p:column width="8%"  rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.ep.usage.target']}" />
+					    </f:facet>
+				    </p:column>
+			      	<p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
 					    </f:facet>
@@ -57,7 +62,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.justification']}" />
 					    </f:facet>
 				    </p:column>
-			        <p:column width="6%" rendered="#{!epItem.brandNew}">
+				    <p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+				    	<f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
+					    </f:facet>
+				    </p:column>
+			        <p:column width="6%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" >
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.last.updated']}" />
 					    </f:facet>
@@ -66,10 +76,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</p:columnGroup>
 		  
 			<p:column selectionMode="multiple"  style="width:2%" />
-	        <p:column>
+	        <p:column style="white-space:nowrap;">
 			    <ac:lov id="lovGOSO" lovId="PM_GOSO" size="10" update=":form:dtExpenditurePlan" 
 			    	required="#{!empty param['disableValidation']}"
-	            	readonly="true" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+	            	readonly="true" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}"
 					headerText="#{lbl['lbl.pp.goso.code']}"
 					value="#{epItem.pmSo.soCode}" 
 					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
@@ -81,9 +91,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		#{epItem.pmSo.soName}
 	        </p:column>
 	        <p:column>
-		  		<p:inputText style="width:90%" value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
+		  		<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
-		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
+		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update="dtExpenditurePlan" />
 		  		</p:inputText>
@@ -92,7 +102,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
 		  		<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
-		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
+		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update="dtExpenditurePlan"  />
 		  		</p:inputText>
@@ -104,24 +114,30 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
 			    #{lbl['lbl.pp.no.available']}
 	        </p:column>
-	        <p:column rendered="#{pPlanBackingBean.managedBean.modeReview}">
+	        <p:column rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+			    #{lbl['lbl.pp.no.available']}
+	        </p:column>
+	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
 			    	<p:ajax event="change" update="clEpReason"/>
 			    </p:selectBooleanCheckbox>
 			    &#160;
-			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.loadRejectReasons(epItem.ppRejectReasons)}"
+			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
 			    	disabled="#{!epItem.rejected}" id="clEpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
+			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}" 
 					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
 			 		style="width:90%" maxlength="1000" required="#{!empty param['disableValidation']}">
 			 		<p:ajax event="change"  process="@this"/>
 			 	</p:inputTextarea>
 	        </p:column>
-	        <p:column rendered="#{!epItem.brandNew}">
+	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+			     TODO
+	        </p:column>
+	        <p:column rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{epItem.changedDate}">
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -154,9 +170,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	#{lbl['lbl.pp.no.available']}
 					    </f:facet>
 					</p:column>
-					<p:column rendered="#{pPlanBackingBean.managedBean.modeReview}" footerText="&#160;"/>
+					<p:column rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+						<f:facet name="footer">
+					     	#{lbl['lbl.pp.no.available']}
+					    </f:facet>
+					</p:column>
+					<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeReview}"/>
 					<p:column footerText="&#160;" />
-					<p:column footerText="&#160;" rendered="#{!epItem.brandNew}" />
+				 	<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}"/>
+					<p:column footerText="&#160;" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" />
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>

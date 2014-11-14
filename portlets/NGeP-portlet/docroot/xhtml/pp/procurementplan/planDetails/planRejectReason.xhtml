@@ -20,10 +20,10 @@
 			<table class="ppRmkTable">
 				<tr>
 					<th rowspan="2" valign="top">
-						<h:graphicImage styleClass="smallUserImage" value="#{pPlanBackingBean.userImagePath(reason.createdUser.loginId)}" />
+						<h:graphicImage styleClass="smallUserImage" value="#{pPlanBackingBean.userImagePath(reason.userId)}" />
 					</th>
 					<td>
-						<h:outputText value="#{reason.createdUser.loginId}"/>,
+						<h:outputText value="#{reason.createdUsername}"/>,
 						<h:outputText id="reasonDate" value="#{reason.changedDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 						</h:outputText>
