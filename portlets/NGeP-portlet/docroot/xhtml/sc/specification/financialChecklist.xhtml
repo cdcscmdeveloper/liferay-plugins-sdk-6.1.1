@@ -11,13 +11,12 @@
 		toggleable="true">
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
-			
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
 			first="#{specificationBackingBean.managedBean.financialTableRow}"
 			rowKey="#{stageTwofunctional}">
-		<!-- 	<ac:paginator for="financeProposaltwo" /> -->
+			<!-- 	<ac:paginator for="financeProposaltwo" /> -->
 			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode ne 'TS'}" />
 
@@ -58,7 +57,10 @@
 			<p:column style="width:42%;white-space: normal;">
 
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.stage.title']}" />
 				</f:facet>
 				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
@@ -172,16 +174,21 @@
 						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{supplierProposalDetailBackingBean.downloadFile(stageTwofunctional.scQtCheckListAttachment)}" />
-				<!-- 	<h:outputText
+					<!-- 	<h:outputText
 						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText> -->
 				</h:panelGroup>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
-				style="width:5%;text-align: center;">
+			<p:column style="width:5%;text-align: center;">
+				<f:facet name="header">
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.readOnly}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.stage.action']}" />
+				</f:facet>
 				<h:panelGroup id="actionView">
 					<p:commandLink
-						
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD') and (stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'))}">
 
@@ -193,7 +200,6 @@
 					</p:commandLink>
 
 					<p:commandLink
-						
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
 
@@ -219,7 +225,6 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,financeProposaltwo" partialSubmit="true"
-			
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
 				update="@all,financeProposaltwo" icon="ui-icon-add" />
 

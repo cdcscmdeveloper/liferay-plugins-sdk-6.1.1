@@ -94,7 +94,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly}">
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+					</ui:fragment></td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
 						label="#{lbl['lbl.sc.spec.ful.type']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -109,8 +112,10 @@
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
 				</td>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
-						value="*" styleClass="mandatory"></p:outputLabel></td>
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly}">
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+					</ui:fragment></td>
 				<td><p:inputMask id="contract" required="true" size="30"
 						mask="9?99" placeHolder="" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
