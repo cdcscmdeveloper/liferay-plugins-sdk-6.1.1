@@ -59,6 +59,7 @@ public class SupplierUserActivationBackingBean extends
 	}
 
 	public void prerenderSupplierActivation() {
+		log.info("****prerenderSupplierActivation - start******");
 		HttpServletRequest originalServletRequest = new FacesScopes().getOriginalServletRequest();
 		String personnelId = originalServletRequest.getParameter("pr");
 		String hashSupplierId = originalServletRequest.getParameter("sp");
@@ -95,9 +96,10 @@ public class SupplierUserActivationBackingBean extends
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
 				Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
-				System.out.println("----Activation Personnel ID----" + personnel.getPersonnelId());
-				System.out.println("----Activation Expiry Date----" + expiryDate);
+				log.info("----Activation Personnel ID----" + personnel.getPersonnelId());
+				log.info("----Activation Expiry Date----" + expiryDate);
 				if(new Date().before(expiryDate)) { 
+					log.info("****VALID - Before Expiry Date******");
 					this.getManagedBean().setValidActivation(true);
 /*					this.getManagedBean().setPersonnelId(Long.parseLong(personnelId));
 					this.getManagedBean().setSupplierId(supplierProfile.getSupplierId());*/
@@ -108,23 +110,31 @@ public class SupplierUserActivationBackingBean extends
 					return;
 					// display form to enter temp password
 				} else {
+					log.info("****VALID - Expired******");
 					// redirect & display activation expired
 					this.getManagedBean().setValidActivation(false);
 				}
 			} else {
 				// redirect & display invalid activation
 				this.getManagedBean().setValidActivation(false);
+				
+				log.info("****Hash String is not match******");
 			}
 		} else {
 			// redirect & display invalid activation
 			this.getManagedBean().setValidActivation(false);
+			log.info("****Activation - no personnel/supplierProfile ******");
 		}
 		
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/prerenderSupplierUser.xhtmls");
+		log.info("****Activation - no personnel/supplierProfile ******");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/prerenderSupplierUser.xhtml");
 	}
 	
 	public String activateSupplierUser() {
+		log.info("**********activateSupplierUser Start*********");
+		log.info("*********isValidActivation**********" + this.getManagedBean().isValidActivation());
 		if(this.getManagedBean().isValidActivation()) {
+			log.info("*********Activation - is Valid**********");
 			String personnelId = String.valueOf(this.getManagedBean().getSmPersonnel().getPersonnelId());
 			String supplierId = String.valueOf(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			String encrpKeyStr = this.getManagedBean().getEncrpKeyStr();
@@ -244,6 +254,7 @@ public class SupplierUserActivationBackingBean extends
 				throw new EpException(MessageConst.ERROR_721031);
 			}
 		} else {
+			log.info("*********Activation - Invalid**********");
 			log.info("Invalid Request.");
 			throw new EpException(MessageConst.ERROR_721032);
 		}
