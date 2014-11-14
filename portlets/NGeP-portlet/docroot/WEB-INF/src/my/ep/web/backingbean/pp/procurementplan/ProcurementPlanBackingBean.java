@@ -1763,12 +1763,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			try {	
 				if(getManagedBean().isSearch()){
+					boolean isPlanner = isRolePlanner();
 					ISearchBean<PpPlan> searchBeanData = getSearchBeanData(searchBean);
 					ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 					reqDTO.setSearchBean(searchBeanData);
 					IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 					ProcurementPlanResDTO resDTO = reqSO.retrievePlanBySearchBean(reqDTO);
 					if (resDTO.isSuccessful()) {
+						// result list icon
+						if(resDTO.getPlanResultBean()!=null && resDTO.getPlanResultBean().getResultList()!=null){
+							for(PpPlan ppPlan: resDTO.getPlanResultBean().getResultList()){
+								if(ppPlan.getStatus()!=null){
+									
+									if((ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId()) 
+											|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId()))
+											&& isPlanner){
+	
+										ppPlan.setUpdatable(true);
+									}
+								}
+							}
+						}
+						
 						return resDTO.getPlanResultBean();
 					}
 				}
