@@ -60,7 +60,7 @@
 
 		<ac:paginator for="ruleTypeValueTableID" />
 		<p:column width="25%"
-			rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A'}">
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A') or (ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'N') or (ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'))}">
 			<f:facet name="header">
 			<h:outputText value="*" styleClass="mandatory" />
 					                 #{lbl['lbl.pm.value']}
