@@ -30,9 +30,21 @@
 			<p:dataTable id="proposalid" var="proposalList"
 				value="#{supplierProposalDetailBackingBean.managedBean.qtProposalsList}"
 				rowKey="#{proposalList}" rowIndexVar="rowIndex">
-
-				<p:column selectionMode="multiple" style="width:2%" />
-
+				<p:column style="width:2%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=proposalid])"
+							listener="#{supplierProposalDetailBackingBean.selectAllMultipleProposal}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox
+					value="#{supplierProposalDetailBackingBean.managedBean.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{supplierProposalDetailBackingBean.selectedMultipleProposal(rowIndex)}" />
+				</p:selectBooleanCheckbox>
+				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.proposal.no']}">
 					<h:outputText value="#{rowIndex+1}" />
 				</p:column>
@@ -45,8 +57,8 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					action="#{supplierProposalDetailBackingBean.deleteMultipleProposal}"
-					icon="ui-icon-delete" update="proposalid"
-					process="@this,proposalid" partialSubmit="true" />
+					icon="ui-icon-delete" update="@([id$=proposalid])"
+					process="@this" partialSubmit="true" />
 
 			</div>
 		</h:panelGroup>
