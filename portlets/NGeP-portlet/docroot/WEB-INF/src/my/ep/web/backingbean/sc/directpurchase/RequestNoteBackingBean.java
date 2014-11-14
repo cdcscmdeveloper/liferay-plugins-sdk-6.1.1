@@ -746,6 +746,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	public void approverAction(String outcome) {
 		debugLogger("approverAction");
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		this.getManagedBean().setAction(outcome);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
