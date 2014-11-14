@@ -585,9 +585,10 @@ public class SmApplicationBackingBean extends
 		if (resDTO != null && resDTO.getRemarksList() != null
 				&& !resDTO.getRemarksList().isEmpty()) {
 
-			for (SmRemark rem : resDTO.getRemarksList()) {
-				sb.append(rem.getRemark()).append("\n");
-			}
+			sb.append(resDTO.getRemarksList().get(0).getRemark());
+//			for (SmRemark rem : resDTO.getRemarksList()) {
+//				sb.append(rem.getRemark()).append("\n");
+//			}
 		}
 		getManagedBean().setSupplierRemarks(sb.toString());
 
