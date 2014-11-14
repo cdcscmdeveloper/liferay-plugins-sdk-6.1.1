@@ -28,7 +28,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
@@ -52,9 +51,7 @@ public class BSVAttendanceBackingBean extends
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 
 	public BSVAttendanceBackingBean() {
-		if (getManagedBean().getScQt() == null) {
-			retrieveBriefingSiteVisitList(2029l);
-		}
+	
 	}
 
 	/**
@@ -366,7 +363,7 @@ public class BSVAttendanceBackingBean extends
 
 	public String updateBpmTask(String action) {
 		System.out.println("Succeesfully update the task");
-		BriefingReqDTO briefingReqDTO = null;
+		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 		briefingReqDTO.setOutcome(action);
 		briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		FacesScopes facesScopes = new FacesScopes();

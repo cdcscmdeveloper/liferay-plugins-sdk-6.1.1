@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -149,7 +150,7 @@ public class NoticeBoardBackingBean extends
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
-
+			scQt.getPublishDate().getMinutes();
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
@@ -797,16 +798,22 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	public Long getClosingDays(Date closingDate) {
+	public Long getClosingDays(String closingDate) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("getClosingDays");
 		}
 
 		Long closingDays = null;
+		Date clsDate = null;
+
+		clsDate = DateUtils.convertStringToDate(
+				CommonConstants.DEFAULT_DATETIME_FORMAT,
+				closingDate.replace("-", "/"));
+
 		Date currentDate = new Date();
 
-		if (closingDate != null && closingDate.after(currentDate)) {
-			closingDays = DateUtils.getDaysDifference(currentDate, closingDate);
+		if (closingDate != null && clsDate.after(currentDate)) {
+			closingDays = DateUtils.getDaysDifference(currentDate, clsDate);
 		}
 
 		return closingDays;
@@ -1350,18 +1357,18 @@ public class NoticeBoardBackingBean extends
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
-		if(null != scQtDocReports && !scQtDocReports.isEmpty()){
-		for (ScQtDocReport scQtDocReport : scQtDocReports) {
-			ScQtDocReportAttachment attachment = scQtDocReport
-					.getScQtDocReportAttachment();
-			if (attachment == null) {
-				attachment = qtDocumentsBackingBean
-						.generateDocumentAttachment(scQtDocReport);
-				scQtDocReport.setScQtDocReportAttachment(attachment);
+		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
+			for (ScQtDocReport scQtDocReport : scQtDocReports) {
+				ScQtDocReportAttachment attachment = scQtDocReport
+						.getScQtDocReportAttachment();
+				if (attachment == null) {
+					attachment = qtDocumentsBackingBean
+							.generateDocumentAttachment(scQtDocReport);
+					scQtDocReport.setScQtDocReportAttachment(attachment);
+				}
+				scAttachments.add(attachment);
 			}
-			scAttachments.add(attachment);
-		}
-		downloadAllFiles("NGeP-QT-Documents", scAttachments);
+			downloadAllFiles("NGeP-QT-Documents", scAttachments);
 		}
 	}
 
@@ -1383,8 +1390,8 @@ public class NoticeBoardBackingBean extends
 		}
 		return "";
 	}
-	
-	public NoticeBoardBackingBean(){
+
+	public NoticeBoardBackingBean() {
 		reset();
 	}
 
