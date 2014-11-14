@@ -199,10 +199,7 @@
 	<category name="Supplier Management">
 		<portlet id="sdoreview"></portlet>
 		<portlet id="disciplinaryAction"></portlet>
-		<portlet id="questionnaire"></portlet>
 		<portlet id="complaint"></portlet>
-		<portlet id="svcassignment"></portlet>
-		<portlet id="SvoSiteVisit"></portlet>
 		<portlet id="onlineRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
 
