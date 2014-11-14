@@ -985,7 +985,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				prInquiry.setScPIZone(zone);
 			}
     	}
-		
+		getManagedBean().setZoneDtlMap(zoneDtlMap);
+    	
     	if(pricing.getFromQty() != null){
     		result.setFromQty(pricing.getFromQty());
     	}
