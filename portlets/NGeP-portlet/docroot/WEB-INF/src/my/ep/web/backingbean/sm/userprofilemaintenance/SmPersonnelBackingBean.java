@@ -204,21 +204,27 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 	private boolean validatePersonLimit() {
 		boolean validPerCount = true;
-
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-		reqDTO.setApplId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getApplId());
-
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
-		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCountForSuppUserMaint(reqDTO);
-
-		if(resDTO.getSmPersonnelList() != null && resDTO.getSmPersonnelList().size() < 3){
-			validPerCount = false;
-		} else {
-			validPerCount = true;
-		}
 		
+		//check for role supplier admin and disable add button
+		if(this.getManagedBean().getUpdateSmPersonnel()!=null && this.getManagedBean().getUpdateSmPersonnel().getSmAppl()!=null 
+				&& this.getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier()!=null && 
+				this.getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getBusinessType().equalsIgnoreCase("A")){
+			validPerCount = true;
+		} else{
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setApplId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getApplId());
+
+			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+			PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCountForSuppUserMaint(reqDTO);
+
+			if(resDTO.getSmPersonnelList() != null && resDTO.getSmPersonnelList().size() < 3){
+				validPerCount = false;
+			} else {
+				validPerCount = true;
+			}
+		}
 		return validPerCount;
 	}
 
