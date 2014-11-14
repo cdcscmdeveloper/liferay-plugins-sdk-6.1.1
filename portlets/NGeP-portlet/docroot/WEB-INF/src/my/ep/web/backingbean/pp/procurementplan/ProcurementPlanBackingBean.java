@@ -455,7 +455,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 					
 					ppPlan.setOrgProfile(pmOrgProfile); 
-//					ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
+					ppPlan.setStatus(ppPlan.getCurrentStatus()!=null?ppPlan.getCurrentStatus().getPmStatus():new PmStatus());
 					if(ppPlan.getCurrentStatus()==null || (ppPlan.getCurrentStatus()!=null && ppPlan.getCurrentStatus().getPmStatus()==null)){
 						ppPlan.setCurrentStatus(new PpWorkflowStatus());
 						ppPlan.getCurrentStatus().setPmStatus(new PmStatus());
@@ -480,6 +480,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			
 		}catch(Exception e){
+			log.error(e);
 			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
@@ -597,52 +598,67 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 
 	
-	/**
-	 * Initial or load reject reasons
-	 * @param ppRejectReasons
-	 */
-	public void initalRejectReasons(List<PpRejectReason> ppRejectReasons) {
-		log.info("initalRejectReasons - Start");
-		this.getManagedBean().setConfirm(false);
-		this.getManagedBean().setSelectedReasonDesc("");
-		boolean newReason = false;
-		//if first reason is not new
-		if (!ppRejectReasons.isEmpty()){
-			if(!ppRejectReasons.get(0).isBrandNew()){
-				newReason = true;
-			}
+//	/**
+//	 * Initial or load reject reasons
+//	 * @param ppRejectReasons
+//	 */
+//	public void initalRejectReasons(List<PpRejectReason> ppRejectReasons) {
+//		log.info("initalRejectReasons - Start");
+//		this.getManagedBean().setConfirm(false);
+//		this.getManagedBean().setSelectedReasonDesc("");
+//		boolean newReason = false;
+//		//if first reason is not new
+//		if (!ppRejectReasons.isEmpty()){
+//			if(!ppRejectReasons.get(0).isBrandNew()){
+//				newReason = true;
+//			}
+//		}
+//
+//		// if reason is empty
+//		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
+//			newReason = true;
+//		}
+//		
+//		if(newReason && this.getManagedBean().isModeReviewEditable()){
+//			System.out.println("new reason");
+//			PpRejectReason reason = new PpRejectReason();
+//			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+//			reason.setCreatedUser(getFacesScopes().getUserSessionBean());
+//			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//			reason.setChangedBy(reason.getCreatedBy());
+//			reason.setChangedDate(reason.getCreatedDate());
+//			PmRole roleCode = new PmRole();
+//			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
+//			reason.setRoleCode(roleCode);
+//			ppRejectReasons.add(0, reason);
+//		
+//		} 
+//		
+//		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
+//		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
+//		
+//		
+//		RequestContext.getCurrentInstance().update(":form:dlRejectReason");
+//		
+//		log.info("initalRejectReasons - End");
+//		
+//	}
+	
+	public void retrieveEpRejectReasons(PpExpenditureItem epItem){
+		log.info("retrieveEpRejectReasons");
+		if(epItem.getPpRejectReasons()==null || epItem.getPpRejectReasons().isEmpty()){
+			epItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(epItem.getExpenditureItemId(), ParameterConst.DOCTYPE_PLAN_EXPENDITURE));
 		}
-
-		// if reason is empty
-		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
-			newReason = true;
-		}
-		
-		if(newReason && this.getManagedBean().isModeReviewEditable()){
-			System.out.println("new reason");
-			PpRejectReason reason = new PpRejectReason();
-			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			reason.setCreatedUser(getFacesScopes().getUserSessionBean());
-			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			reason.setChangedBy(reason.getCreatedBy());
-			reason.setChangedDate(reason.getCreatedDate());
-			PmRole roleCode = new PmRole();
-			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
-			reason.setRoleCode(roleCode);
-			ppRejectReasons.add(0, reason);
-		
-		} 
-		
-		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
-		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
-		
-		
-		RequestContext.getCurrentInstance().update(":form:dlRejectReason");
-		
-		log.info("initalRejectReasons - End");
-		
+		loadRejectReasons(epItem.getPpRejectReasons());
 	}
 	
+	public void retrievePpRejectReasons(PpProcurementItem ppItem){
+		log.info("retrievePpRejectReasons");
+		if(ppItem.getPpRejectReasons()==null || ppItem.getPpRejectReasons().isEmpty()){
+			ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
+		}
+		loadRejectReasons(ppItem.getPpRejectReasons());
+	}
 	
 	
 	/**
@@ -671,10 +687,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("new reason added");
 			PpRejectReason reason = new PpRejectReason();
 			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			reason.setCreatedUser(getFacesScopes().getUserSessionBean());
 			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
+			reason.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
 			PmRole roleCode = new PmRole();
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			reason.setRoleCode(roleCode);
@@ -682,11 +698,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 		}
-
+	
 		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
 		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
 		
-//		RequestContext.getCurrentInstance().update(":form:opRejectReason");
 		
 		log.info("loadRejectReasons - End");
 		
@@ -707,7 +722,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		System.out.println("SelectedReasonDesc" + this.getManagedBean().getSelectedReasonDesc());
 		System.out.println("SelectedRejectReasons().get(0)" + this.getManagedBean().getSelectedRejectReasons().get(0).getReasonDesc());
-//		RequestContext.getCurrentInstance().update(":form:opRejectReason");
 	}
 	
 	/**
@@ -1288,7 +1302,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(ppProcurementItem.getPpRejectReasons()!=null && !ppProcurementItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppProcurementItem.getPpRejectReasons().get(0);
 						if(rejectReason!=null && rejectReason.isBrandNew() && !StringUtils.isBlank(rejectReason.getReasonDesc())){
-							rejectReason.setItemSeq(seq);
+							rejectReason.setDocId(ppProcurementItem.getProcurementItemId());
+							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							rejectReasons.add(rejectReason);
 						}
 					}
@@ -1300,7 +1315,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(ppExpenditureItem.getPpRejectReasons()!=null && !ppExpenditureItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
 						if(rejectReason!=null && rejectReason.isBrandNew() && !StringUtils.isBlank(rejectReason.getReasonDesc())){
-							rejectReason.setItemSeq(seq);
+							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
+							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 							rejectReasons.add(rejectReason);
 						}
 					}
@@ -1332,6 +1348,80 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return remark;
 	}
 
+	private boolean planSubmitValidation(String action, PpPlan ppPlan){
+		log.info("planSubmitValidation - START");
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) 
+				||"VERIFY".equalsIgnoreCase(action) ){ //TODO
+			// no rejected item checked
+			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
+					if(ppItem.isRejected()){
+						throw new EpException("Procurement plan contains rejected items."); //TODO
+					}
+				}
+			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
+					if(epItem.isRejected()){
+						throw new EpException("Procurement plan contains rejected items."); //TODO
+					}
+				}
+			}
+		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)){
+			boolean isItemRejected = false;
+			//if rejected item checked, must supply with reason
+			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
+					if(ppItem.isRejected()){
+						isItemRejected = true;
+						if(ppItem.getPpRejectReasons()!=null && !ppItem.getPpRejectReasons().isEmpty()){
+							if(ppItem.getPpRejectReasons().get(0).isBrandNew()){
+								if(StringUtils.isBlank(ppItem.getPpRejectReasons().get(0).getReasonDesc())){
+									throw new EpException("Reject Reason is required for rejected item."); //TODO
+								}
+							}
+						}else{
+							throw new EpException("Reject Reason is required for rejected item."); //TODO
+						}
+					}
+
+				}
+			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
+					if(epItem.isRejected()){
+						isItemRejected = true;
+						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
+							if(epItem.getPpRejectReasons().get(0).isBrandNew()){
+								if(StringUtils.isBlank(epItem.getPpRejectReasons().get(0).getReasonDesc())){
+									throw new EpException("Reject Reason is required for rejected item."); //TODO
+								}
+							}
+						}else{
+							throw new EpException("Reject Reason is required for rejected item."); //TODO
+						}
+					}
+				}
+			}
+			
+			if(!isItemRejected){
+				//overall remark is required
+				remarkIsRequired();
+			}
+
+		}
+		log.info("planSubmitValidation - END");
+		return false;
+		
+	}
+	
+	private void remarkIsRequired(){
+		log.info("remarkIsRequired");
+		if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
+				throw new EpException("Plan Remark is required"); //TODO
+			}
+		}
+	}
+	
 	/**
 	 * Submit & update plan
 	 * @param action (outcome)
@@ -1354,6 +1444,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppPlan = this.getManagedBean().getSelectedPlan();
 			
 			//Validation
+			planSubmitValidation(action, ppPlan);
 			
 			//Get All Values
 			updatePlanActors(ppPlan);
