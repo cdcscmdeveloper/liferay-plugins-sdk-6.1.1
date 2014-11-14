@@ -168,8 +168,12 @@
 
 					</p:commandLink>
 					<p:spacer width="10" height="5" />
-					<h:outputText
-						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText>
+					<h:commandLink
+						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{supplierProposalDetailBackingBean.downloadFile(stageTwofunctional.scQtCheckListAttachment)}" />
+				<!-- 	<h:outputText
+						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText> -->
 				</h:panelGroup>
 			</p:column>
 
