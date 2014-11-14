@@ -752,7 +752,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				return "commonRequestNote";
 			} else {
 				throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.purchase.inquiry.out.of.stock",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			}
 		} else {
 			IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
