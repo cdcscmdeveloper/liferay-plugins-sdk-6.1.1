@@ -903,6 +903,9 @@ public class SmApplicationBackingBean extends
 				// to init page whether normal or special category type is
 				// allowed
 				initApplCategoryType();
+				
+				// init business premise whether show or hide home office
+				initBusinessPremise();
 			}
 			assignValReqdToFalse();
 		}
@@ -6145,17 +6148,22 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void displayBumiRecommendNote() {
+		getManagedBean().setBumiRecommendationNote("");
 		if (getManagedBean().getSmAppl() != null) {
 			String applType = getManagedBean().getSmAppl().getApplType() == null ? ""
 					: getManagedBean().getSmAppl().getApplType();
 			String suppType = "";
 
 			if (getManagedBean().isSupplierUser()) {
-				suppType = applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ? (getManagedBean()
-						.getNewSupplierType() == null ? "" : getManagedBean()
-						.getNewSupplierType()) : (getManagedBean().getSmAppl()
-						.getSupplierType() == null ? "" : getManagedBean()
-						.getSmAppl().getSupplierType());
+				if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+					suppType = StringUtils.isNotBlank(getManagedBean()
+							.getSmAppl().getSupplierType()) ? getManagedBean()
+							.getSmAppl().getSupplierType() : getManagedBean()
+							.getNewSupplierType();
+				} else {
+					suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
+							: getManagedBean().getSmAppl().getSupplierType();
+				}
 			} else {
 				suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
 						: getManagedBean().getSmAppl().getSupplierType();
@@ -6169,6 +6177,25 @@ public class SmApplicationBackingBean extends
 							getManagedBean().isSupplierUser()));
 		}
 
+	}
+	
+	private void initBusinessPremise() {
+		String suppType = "";
+		if (getManagedBean().getSmAppl() != null
+				&& getManagedBean().getBasicCompanyFacility() != null) {
+			suppType = StringUtils.isNotBlank(getManagedBean()
+					.getNewSupplierType()) ? getManagedBean()
+					.getNewSupplierType() : getManagedBean().getSmAppl()
+					.getSupplierType();
+		}
+		// hide home office for consultant
+		if (suppType.equalsIgnoreCase("J")) {
+			getManagedBean().setDisabledHomeOffice(true);
+			getManagedBean().getBasicCompanyFacility().setFacilityType(
+					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+		} else {
+			getManagedBean().setDisabledHomeOffice(false);
+		}
 	}
 
 	public void selectAll() {
