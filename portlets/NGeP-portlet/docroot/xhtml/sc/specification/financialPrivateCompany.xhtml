@@ -57,7 +57,8 @@
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
 							required="true" id="finPrivateYears"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}">
-
+							<p:ajax event="blur" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 						</p:inputText> <p:message id="finPrivateCmpnyYrs" for="finPrivateYears"
 							display="icon"></p:message></td>
 				</tr>
@@ -111,7 +112,8 @@
 
 
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
+		<p:panel id="financialPrivateContracts"
+			header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -124,7 +126,8 @@
 							id="financialPrivateAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="finPrivateCompany"
+							<p:ajax event="change"
+								update="finPrivateCompany,financialPrivateContracts"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="financialPrivateAutoScoreId"
 							for="financialPrivateAutoScore" display="icon"></p:message></td>

@@ -61,7 +61,8 @@
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 							maxlength="4">
-
+							<p:ajax event="blur" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 						</p:inputText> <p:message id="techPrivateYrs" for="techCompanyprivate"
 							display="icon"></p:message></td>
 				</tr>
@@ -123,7 +124,8 @@
 
 		<p:spacer height="75"></p:spacer>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
+		<p:panel id="companyExpPrivateContracts"
+			header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -136,7 +138,8 @@
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="companytechnicalPrivate"
+							<p:ajax event="change"
+								update="companytechnicalPrivate,companyExpPrivateContracts"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techPrivateNoOfAutoscoreMsg"
 							for="techPrivateNoOfAutoscore" display="icon"></p:message></td>
@@ -200,8 +203,8 @@
 
 		<p:spacer height="75"></p:spacer>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}"
-			toggleable="true">
+		<p:panel id="techcompanyExpPrivateNumbersOfYears"
+			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -212,9 +215,10 @@
 							id="techPrivateNoOfYearsAutoScore"
 							value="#{specificationBackingBean.managedBean.companyScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="companyprivateYears"
+							<p:ajax event="change" update="companyprivateYears,techcompanyExpPrivateNumbersOfYears"
 								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
-						</p:selectOneMenu> <p:message id="techPrivateNoOfYearsAutoScoreMsg"
+						</p:selectOneMenu> <p:message
+							id="techPrivateNoOfYearsAutoScoreMsg"
 							for="techPrivateNoOfYearsAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>

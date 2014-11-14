@@ -78,8 +78,8 @@
 			<p:inputText readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.cash']}"
-			toggleable="true">
+		<p:panel id="financialCashOnhandScore"
+			header="#{lbl['lbl.sc.spec.score.total.cash']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -91,7 +91,8 @@
 							id="cashOnHandAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="totalcashOnhand"
+							<p:ajax event="change"
+								update="totalcashOnhand,financialCashOnhandScore"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="cashOnHandAutoScoreId" for="cashOnHandAutoScore"
 							display="icon"></p:message></td>
