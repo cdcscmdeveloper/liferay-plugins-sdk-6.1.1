@@ -473,9 +473,11 @@ public class CommonApplBackingBean extends
 			if (resDTO != null && remResDTO.getRemarksList() != null
 					&& !remResDTO.getRemarksList().isEmpty()) {
 
-				for (SmRemark rem : remResDTO.getRemarksList()) {
-					sb.append(rem.getRemark()).append("\n");
-				}
+				sb.append(remResDTO.getRemarksList().get(0).getRemark());
+				
+//				for (SmRemark rem : remResDTO.getRemarksList()) {
+//					sb.append(rem.getRemark()).append("\n");
+//				}
 			}
 			smApplBB.getManagedBean().setSupplierRemarks(sb.toString());
 			smApplBB.getManagedBean().setSmAppl(appl);
