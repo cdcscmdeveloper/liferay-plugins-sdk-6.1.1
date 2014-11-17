@@ -132,9 +132,13 @@
 					value="*" styleClass="mandatory" /></td>
 			<td><p:inputText id="branchPostCode"
 					required="#{backingBean.managedBean.valueReqd}"
-					label="#{lbl['lbl.sm.postcode']}"
+					label="#{lbl['lbl.sm.postcode']}" 
+					validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="35" maxlength="10" /> <p:message id="branchPostCodeMsg"
+					size="35" maxlength="5" > 
+					<f:validator validatorId="postcodeValidator"/>
+					</p:inputText>
+					<p:message id="branchPostCodeMsg"
 					for="branchPostCode" showSummary="true" showDetail="false"
 					display="icon" /></td>
 		</tr>

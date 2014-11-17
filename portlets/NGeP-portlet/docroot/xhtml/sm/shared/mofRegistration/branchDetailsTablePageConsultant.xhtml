@@ -107,9 +107,12 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-			<td><p:inputText
+			<td><p:inputText validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="35" /></td>
+					size="5">
+					<f:validator validatorId="postcodeValidator"/>
+					</p:inputText>
+					</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
