@@ -7430,6 +7430,14 @@ public class SpecificationBackingBean extends
 			String totalNoOfYearsType = this.getManagedBean()
 					.getCompanyScoreType();
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
+			if (null != checkList && null != checkList.getScQtCheckListValue()) {
+				int year = Calendar.getInstance().get(Calendar.YEAR);
+				if (null != checkList.getScQtCheckListValue().getYear()) {
+					if (checkList.getScQtCheckListValue().getYear().intValue() > year) {
+						throw new EpException(MessageConst.ERROR_760169);
+					}
+				}
+			}
 
 			if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
 				ScQtCheckListScore noContract = this.getManagedBean()
