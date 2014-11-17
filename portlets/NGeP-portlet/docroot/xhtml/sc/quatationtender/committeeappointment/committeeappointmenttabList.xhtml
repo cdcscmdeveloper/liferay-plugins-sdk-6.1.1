@@ -33,13 +33,12 @@
 					value="#{lbl['lbl.so.addbtn']}" process="@this"
 					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
-					oncomplete="newspecificationcommittee.show();"
-					update="@(.scAddMember)" icon="ui-icon-add" />
+					oncomplete="newspecificationcommittee.show();" icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					process="@this, specificationcommitteeid"
 					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-					update="specificationcommitteeid" icon="ui-icon-delete"
+					update="@(.scMemberDtl)" icon="ui-icon-delete"
 					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}" />
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"

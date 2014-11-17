@@ -140,6 +140,10 @@
 					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
 					selectionMode="checkbox">
 
+					<p:ajax event="unselect"
+						listener="#{qTCommitteBackingBean.onNodeUnselect}"
+						/>
+
 					<p:column headerText="#{lbl['lbl.so.bo.name']}">
 						<h:outputText style="font-weight: bold;"
 							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
