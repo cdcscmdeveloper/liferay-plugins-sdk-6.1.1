@@ -859,7 +859,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					               }
 		                       }
 				       
-		                    if(bondAmount != 0.0) {
+		                    if(contractVer.getCtContract().getLoa().getBondAmt() != null) {
 					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					              if( retval >0 ){
 					            	  RequestContext.getCurrentInstance().addCallbackParam("epException", true);

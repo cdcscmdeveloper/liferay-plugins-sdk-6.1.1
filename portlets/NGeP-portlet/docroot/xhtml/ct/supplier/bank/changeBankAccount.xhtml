@@ -190,7 +190,7 @@
 							value="#{supplierBackingBean.populateBankAccountList}" />
 						<p:ajax event="change" process="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update=":form:bankId"
+							update=":form:bankId, :form:messages"
 							listener="#{supplierBackingBean.changeAccountActionListener}" />
 					</p:selectOneMenu>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.bank.name']}" />
@@ -202,7 +202,7 @@
 					value="#{supplierBackingBean.managedBean.accountNoAndName}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.bank.branch']}" />
-				<p:inputText id="bankBranch" disabled="true" style="width:270px;"
+				<p:inputText id="bankBranch" disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />
 
 				<h:panelGroup>
@@ -212,7 +212,7 @@
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
-					<p:inputTextarea id="bankAddress" rows="5" style="width:200px;"
+					<p:inputTextarea id="bankAddress" rows="4" style="width:200px;"
 						disabled="true" maxlength="250" autoResize="true"
 						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" />
 				</h:panelGrid>
