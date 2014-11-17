@@ -6170,6 +6170,10 @@ public class SmApplicationBackingBean extends
 				suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
 						: getManagedBean().getSmAppl().getSupplierType();
 			}
+			
+			if(getManagedBean().getBumiEquityPercentage()==null){
+				calculateCapital();
+			}
 			getManagedBean().setBumiRecommendationNote(
 					SmCommonUtil.displayBumiRecommendNote(getManagedBean()
 							.getSmAppl().getSmSupplierBanks(), getManagedBean()
