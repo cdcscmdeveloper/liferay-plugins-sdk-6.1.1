@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
@@ -107,7 +108,13 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 				// log.debug("Message: " + rootException.getMessage());
 			}
 
-			if (throwable instanceof EpException) {
+			if (throwable instanceof ViewExpiredException) {
+				msgCode = MessageConst.ERROR_100054;
+				isValidationException = true;
+				
+				break;
+				
+			} else if (throwable instanceof EpException) {
 				EpException epex = (EpException) throwable;
 				msgCode = epex.getMessage();
 				params = epex.getParameters();
