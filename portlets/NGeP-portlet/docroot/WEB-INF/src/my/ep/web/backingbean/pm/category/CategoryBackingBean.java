@@ -52,6 +52,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	private IPagingDataModel<Object[]> searchCategory = new SearchCategoryPagingDataModel();
 	private IPagingDataModel<PmCategoryL3> searchLOVPagingDataModel = new SearchLOVPagingDataModel();
+	private IPagingDataModel<PmMachine> searchLOVMachinePagingDataModel = new SearchLOVMachinePagingDataModel();
 	private boolean flag;
 	boolean result = false;
 
@@ -220,6 +221,63 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	private class SearchLOVMachinePagingDataModel extends PagingDataModel<PmMachine> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchLOVMachinePagingDataModel() {
+			super("searchLOVMachinePagingDataModel");
+		}
+
+		public ISearchResultBean<PmMachine> pageChangeListener(ISearchBean<PmMachine> searchBean) {
+			ICategoryCodeSO categoryCodeSO;
+			try {
+				categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				
+				/*if (getManagedBean().getSearchValue()[0] != null && !getManagedBean().getSearchValue()[0].equals("")) {
+					if(getManagedBean().getSearchFieldValue()[0].equals("1"))
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmCategoryL2.pmCategoryL1.categoryL1Code",
+										Integer.parseInt(getManagedBean().getSearchOperatorValue()[i]),
+										getManagedBean().getSearchValue()[i]));
+				}*/
+				
+				for(int i=0;i<2;i++){
+					if (getManagedBean().getSearchValue()[i] != null && !getManagedBean().getSearchValue()[i].equals("")) {
+						if (getManagedBean().getSearchFieldValue()[i] != null && !getManagedBean().getSearchFieldValue()[i].equals("")) {
+							if(getManagedBean().getSearchFieldValue()[i].equals("1"))
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("machineCode",
+												Integer.parseInt(getManagedBean().getSearchOperatorValue()[i]),
+												getManagedBean().getSearchValue()[i].toUpperCase()));
+							else if(getManagedBean().getSearchFieldValue()[i].equals("2"))
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("machineDesc",
+												Integer.parseInt(getManagedBean().getSearchOperatorValue()[i]),
+												getManagedBean().getSearchValue()[i].toUpperCase()));
+						}
+					}
+				}
+				
+				
+				reqDTO.setSearchMachineBean(searchBean);
+				CategoryCodeResDTO resDTO =categoryCodeSO.searchAllPmMachine(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					//resDTO.getCategoryResultBean().getResultList();
+					return resDTO.getPmMachineResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				categoryCodeSO = null;
+			}
+			return null;
+		}
+	}
+	
 	public String addCategory() {
 		this.getManagedBean().setPmCategoryL1(new PmCategoryL1());
 		this.getManagedBean().setCatLevel("1");
@@ -342,6 +400,27 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		
 		this.getManagedBean().getPmCategoryL3();
+	}
+	
+	public void addPmMachine() {
+		
+		List<SelectItem> searchField = new ArrayList<SelectItem>();
+		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.machine.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
+		searchField.add(new SelectItem(2, ResourceBundleUtils.getMessage("lbl.pm.machine.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
+		
+		List<SelectItem> searchOperator = new ArrayList<SelectItem>();
+		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), ResourceBundleUtils.getMessage("lbl.operator.equals",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+		SelectItem item2 = new SelectItem(SearchOperator.OPERATOR_STARTS_WITH.value(), ResourceBundleUtils.getMessage("lbl.operator.startWith",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+		SelectItem item3 = new SelectItem(SearchOperator.OPERATOR_END_WITH.value(), ResourceBundleUtils.getMessage("lbl.operator.endWith",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+		searchOperator.add(item1);
+		searchOperator.add(item2);
+		searchOperator.add(item3);
+		
+		
+		this.getManagedBean().setSearchField(searchField);
+		this.getManagedBean().setSearchOperator(searchOperator);
+		
+		
 	}
 	
 	public String editCategory(Long id) {
@@ -600,6 +679,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 			}
 			
+			//remove machine category if any
+			log.info("this.getManagedBean().getDeletedpmMachineCategory().size() = "+this.getManagedBean().getDeletedpmMachineCategory().size());
+			if(this.getManagedBean().getDeletedpmMachineCategory() != null && !this.getManagedBean().getDeletedpmMachineCategory().isEmpty()) {
+				CategoryCodeReqDTO categoryCodeReqDTO = new CategoryCodeReqDTO();
+				for(PmMachineCategory pmMachineCategory: this.getManagedBean().getDeletedpmMachineCategory()) {
+					
+					categoryCodeReqDTO.setPmMachineCategoryId(pmMachineCategory.getMachineCategoryId());
+					categoryCodeSO.deleteMachineCategory(categoryCodeReqDTO);
+				}
+			}
+			
 			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
@@ -661,6 +751,28 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 		}
 		//log.info("deleteBasicCategory this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
+	}
+	
+	public void deletePmMachine() {
+		log.info("In deletePmMachine");
+		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		
+		if(this.getManagedBean().getSelectedpmMachineCategory() != null && !this.getManagedBean().getSelectedpmMachineCategory().isEmpty()) {
+			log.info("before this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
+			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			for(PmMachineCategory pmMachineCategory: this.getManagedBean().getSelectedpmMachineCategory()) {
+				
+				//reqDTO.setPmBasicCategory(pmBasicCategory);
+				//categoryCodeSO.deleteBasicCategory(reqDTO);
+				
+				this.getManagedBean().getPmCategoryL3().getPmMachineCategory().remove(pmMachineCategory);
+				this.getManagedBean().getDeletedpmMachineCategory().add(pmMachineCategory);
+				
+				//reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				//categoryCodeSO.saveSubDivision(reqDTO);
+			}
+		}
+		log.info("deletePmMachine this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
 	}
 	
 	public boolean validatePmCategoryL1(){
@@ -987,6 +1099,61 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 	}
 	
+	public void populateToSavePmMachineLOV() {
+		log.info("In populateToSavePmMachineLOV");
+		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		
+		if(this.getManagedBean().getSelectedpmMachine() != null && !this.getManagedBean().getSelectedpmMachine().isEmpty()) {
+			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			if(this.getManagedBean().getPmCategoryL3().getPmMachineCategory()==null){
+				//if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()==0){
+					this.getManagedBean().getPmCategoryL3().setPmMachineCategory(new ArrayList<PmMachineCategory>());
+				//}
+			}
+			
+			for(PmMachine pmMachine: this.getManagedBean().getSelectedpmMachine()) {
+				
+				PmMachineCategory pmMachineCategory = new PmMachineCategory();
+				pmMachineCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				
+				//parameter
+				//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				//reqDTO.setPmMachineId(pmMachine.getMachineId());
+				//CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmMachine(reqDTO);
+				pmMachineCategory.setCategoryTypeCode(pmMachine.getCategoryTypeCode());
+				
+				//log.info("resDTO.getPmMachine().getCategoryTypeCode().getParameterId() "+resDTO.getPmMachine().getCategoryTypeCode().getParameterId());
+				
+				pmMachineCategory.setCreatedDate(new Timestamp( new Date().getTime()));
+				pmMachineCategory.setCategoryL1id(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
+				pmMachineCategory.setCategoryL2id(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
+				pmMachineCategory.setPmMachine(pmMachine);
+				
+				this.getManagedBean().getPmCategoryL3().getPmMachineCategory().add(pmMachineCategory);
+				
+				/*PmBasicCategory pmBasicCategory = new PmBasicCategory();
+				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				pmBasicCategory.setBasicCategoryL3(pmMachine.getCategoryL3Id());
+				pmBasicCategory.setBasicCategoryL2(pmMachine.getPmCategoryL2().getCategoryL2Id());
+				pmBasicCategory.setBasicCategoryL1(pmMachine.getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
+				pmBasicCategory.setCreatedDate(new Timestamp( new Date().getTime()));
+				
+				//for table display
+				pmBasicCategory.setBasicCategoryL1desc(pmMachine.getPmCategoryL2().getPmCategoryL1().getCategoryName());
+				pmBasicCategory.setBasicCategoryL2desc(pmMachine.getPmCategoryL2().getCategoryName());
+				pmBasicCategory.setBasicCategoryL3desc(pmMachine.getCategoryName());
+				pmBasicCategory.setCodeConcatenate(
+						pmMachine.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()+
+						pmMachine.getPmCategoryL2().getCategoryL2Code()+
+						pmMachine.getCategoryL3Code());
+				
+				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);*/
+			}
+		}
+		resetPmMachineLOV();
+		
+	}
+	
 	public void reloadSelectionPmCategoryL3() {
 		IParameterSO parameterSO;
 		try{
@@ -1018,6 +1185,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			
 			this.getManagedBean().setSelectedBasicCategory(new ArrayList<PmBasicCategory>() );
+			this.getManagedBean().setSelectedpmMachineCategory(new ArrayList<PmMachineCategory>() );
+			this.getManagedBean().setDeletedpmMachineCategory(new ArrayList<PmMachineCategory>() );
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally {
@@ -1042,6 +1211,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		getManagedBean().setSearchOperatorValue(new String[3]);
 		this.getSearchLOVPagingDataModel().resetData();
 		this.getManagedBean().setSelectedLOV(new ArrayList<PmCategoryL3>());
+	}
+	
+	public void resetPmMachineLOV() {
+		getManagedBean().setSearchValue(new String[3]);
+		getManagedBean().setSearchFieldValue(new String[3]);
+		getManagedBean().setSearchOperatorValue(new String[3]);
+		this.getSearchLOVMachinePagingDataModel().resetData();
+		this.getManagedBean().setSelectedpmMachine(new ArrayList<PmMachine>());
 	}
 	
 	public void updateCategoryLevel(){
@@ -1094,6 +1271,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	
 	public void searchLOV() {
 		searchLOVPagingDataModel.reloadData();
+	}
+	
+	public void searchPmMachineLOV() {
+		searchLOVMachinePagingDataModel.reloadData();
 	}
 	
 	public String backToSearch() {
@@ -1159,6 +1340,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
+	}
+
+	public IPagingDataModel<PmMachine> getSearchLOVMachinePagingDataModel() {
+		return searchLOVMachinePagingDataModel;
+	}
+
+	public void setSearchLOVMachinePagingDataModel(
+			IPagingDataModel<PmMachine> searchLOVMachinePagingDataModel) {
+		this.searchLOVMachinePagingDataModel = searchLOVMachinePagingDataModel;
 	}
 
 }

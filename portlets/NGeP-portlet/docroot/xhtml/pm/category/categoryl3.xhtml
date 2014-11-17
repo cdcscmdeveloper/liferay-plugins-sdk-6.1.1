@@ -230,17 +230,18 @@
 		</p:panel>
 		</p:panel>
 		
-		
-		<p:panel header="#{lbl['lbl.pm.special.equipment']}" toggleable="true" id="machineDetails">
+		<p:panel id="machineDetails">
+		<p:panel header="#{lbl['lbl.pm.special.equipment']}" toggleable="true">
 		<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
+			rowKey="#{pmMachineCategory.createdDate}"
+			selection="#{categoryBackingBean.managedBean.selectedpmMachineCategory}"
 			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmMachineCategory}"
+			
 			width="100%" var="pmMachineCategory">
 
-			<ac:paginator for="specialdetailsId"></ac:paginator>
+			<ac:paginator for="machineDetailsId"></ac:paginator>
 			
-			<ui:remove>
 			<p:column selectionMode="multiple" style="width:2%" />
-			</ui:remove>
 			
 			<p:column>
 				<f:facet name="header">
@@ -258,6 +259,8 @@
 
 		</p:dataTable>
 		<p>&nbsp;</p>
+		
+		<ui:remove>
 		<div class="ppRightBtn">
 		<p:commandButton style="float:right"
 				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
@@ -273,10 +276,22 @@
 				postUpdateListener="#{categoryBackingBean.updateMachine()}"
 				update=":form:machineDetails">
 			</ac:lov>
-			
 		</div>
-		</p:panel>
 		<ac:lovPopup />
+		</ui:remove>
+		
+		<div class="ppRightBtn">
+			<p:commandButton 
+				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+				action="#{categoryBackingBean.addPmMachine()}" oncomplete="lovPopupPmMachine.show();" update="lovPopupPmMachine"/>
+			<p:commandButton 
+				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
+				update="machineDetails"
+				action="#{categoryBackingBean.deletePmMachine()}" />
+		</div>
+		
+		</p:panel>
+		</p:panel>
 		
 		
 		<p:remoteCommand name="updateCategory" update="groupdetails,resultPanel" action="#{categoryBackingBean.populateToSaveLOV}" />
@@ -386,8 +401,94 @@
 			</p:panel>
 		</p:dialog>
 		
-		
-		
+		<p:remoteCommand name="updatePmMachine" update="machineDetails,resultPanel2" action="#{categoryBackingBean.populateToSavePmMachineLOV}" />
+		<p:dialog id="lovPopupPmMachine" widgetVar="lovPopupPmMachine" modal="true" width="700" position="top" >
+			<f:facet name="header">
+				<h:panelGroup id="lovTitle2">#{lbl['lbl.pm.special.equipment']}</h:panelGroup>
+			</f:facet>
+			
+			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
+				<h:panelGroup id="searchPanel2" style="width:100%;">
+					<h:panelGrid columns="3" id="lovCriteria2" cellpadding="0" cellspacing="0">
+					
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[0]}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchOperatorValue[0]}">
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchOperator}" />
+						</p:selectOneMenu>
+						<p:inputText value="#{categoryBackingBean.managedBean.searchValue[0]}" style="margin-top:6px;" />
+						
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchOperatorValue[1]}">
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchOperator}" />
+						</p:selectOneMenu>
+						<p:inputText value="#{categoryBackingBean.managedBean.searchValue[1]}" style="margin-top:6px;" />
+						
+						
+					</h:panelGrid>
+					
+					<table style="width:100%;"><tr><td style="text-align:right;">
+						<p:commandButton 
+							icon="ui-icon-search"
+							value="#{lbl['lbl.btn.search']}"
+							action="#{categoryBackingBean.searchPmMachineLOV}"
+							update="lovTb22">
+						</p:commandButton>		
+						<p:commandButton
+							icon="ui-icon-reset"
+							value="#{lbl['lbl.btn.reset']}"
+							action="#{categoryBackingBean.resetPmMachineLOV}"
+							update="searchPanel2,resultPanel2">
+						</p:commandButton>
+					</td></tr></table>
+				</h:panelGroup>
+			</p:panel>
+			
+			<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
+				<h:panelGroup id="resultPanel2" style="width:100%;">
+				
+				<p:dataTable id="lovTb22"
+				var="pmMachine" 
+				selection="#{categoryBackingBean.managedBean.selectedpmMachine}"
+				rowIndexVar="rowIndex"
+				rows="10"
+				lazy="true"
+				rowKey="#{pmMachine.machineId}"
+				value="#{categoryBackingBean.searchLOVMachinePagingDataModel}" >
+				<ac:paginator for="lovTb22" />
+				
+					<p:column selectionMode="multiple" style="width:2%" /> 
+					
+					<p:column headerText="#{lbl['lbl.pm.machine.code']}">
+						<h:outputText value="#{pmMachine.machineCode}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.pm.machine.desc']}">
+						<h:outputText value="#{pmMachine.machineDesc}" />
+					</p:column>
+				
+				</p:dataTable>
+				
+				</h:panelGroup>
+				
+				<table style="width:100%;"><tr><td style="text-align:right;">
+				<p:commandButton 
+					id="slbtn2"
+					value="#{lbl['lbl.btn.select']}"
+					
+					update="searchPanel2"
+					oncomplete="updatePmMachine();lovPopupPmMachine.hide();"
+					 />	
+
+				
+				</td></tr></table>
+			</p:panel>
+		</p:dialog>
 		
 		
 	</ui:define>

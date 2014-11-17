@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pm.category;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -51,6 +52,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private List<PmMachine> selectedpmMachine;
 	private List<PmMachineCategory> pmMachineCategory;
 	private List<PmMachineCategory> selectedpmMachineCategory;
+	private List<PmMachineCategory> deletedpmMachineCategory = new ArrayList<PmMachineCategory>();
 	
 	public String getCatLevel() {
 		return catLevel;
@@ -296,6 +298,15 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 
 	public void setSelectedpmMachine(List<PmMachine> selectedpmMachine) {
 		this.selectedpmMachine = selectedpmMachine;
+	}
+
+	public List<PmMachineCategory> getDeletedpmMachineCategory() {
+		return deletedpmMachineCategory;
+	}
+
+	public void setDeletedpmMachineCategory(
+			List<PmMachineCategory> deletedpmMachineCategory) {
+		this.deletedpmMachineCategory = deletedpmMachineCategory;
 	}
 
 
