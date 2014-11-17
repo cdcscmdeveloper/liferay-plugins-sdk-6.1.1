@@ -117,44 +117,44 @@
 				<f:facet name="header">
 
 					<p:row>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.fin.score.offer.price']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.fin.score.from.varience']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.fin.score.to.varience']}</p:column>
-						<p:column>#{lbl['lbl.sc.spec.fin.score.below.varience']}</p:column>
-						<p:column>#{lbl['lbl.sc.spec.fin.score.within.variance']}</p:column>
-						<p:column>#{lbl['lbl.sc.spec.fin.score.above.variance']}</p:column>
+						<p:column style="width:15%;" colspan="1">#{lbl['lbl.sc.spec.fin.score.offer.price']}</p:column>
+						<p:column style="width:15%;" colspan="1">#{lbl['lbl.sc.spec.fin.score.from.varience']}</p:column>
+						<p:column style="width:15%;" colspan="1">#{lbl['lbl.sc.spec.fin.score.to.varience']}</p:column>
+						<p:column style="width:20%;">#{lbl['lbl.sc.spec.fin.score.below.varience']}</p:column>
+						<p:column style="width:15%;text-align:center;">#{lbl['lbl.sc.spec.fin.score.within.variance']}</p:column>
+						<p:column style="width:20%;">#{lbl['lbl.sc.spec.fin.score.above.variance']}</p:column>
 					</p:row>
 				</f:facet>
 				<p:row>
-					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
-					<p:column style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column>#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
+					<p:column>
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}">
 
 						</p:inputText>
 					</p:column>
 
-					<p:column colspan="1" style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}">
 
 						</p:inputText>
 					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}">
 
 						</p:inputText>
 					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" size="15" disabled="true"
 							value="#{specificationBackingBean.managedBean.scoreVarience}" />
 					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}">
 
@@ -162,9 +162,9 @@
 					</p:column>
 				</p:row>
 				<p:row>
-					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.item']}</p:column>
-					<p:column style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column>#{lbl['lbl.sc.spec.fin.score.by.item']}</p:column>
+					<p:column>
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}">
 
@@ -172,26 +172,26 @@
 						</p:inputText>
 					</p:column>
 
-					<p:column colspan="1" style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}">
 
 						</p:inputText>
 					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}">
 
 						</p:inputText>
 					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" disabled="true" size="15"
 							value="#{specificationBackingBean.managedBean.scoreVarience}" />
 					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<p:inputText style="text-align:right;" maxlength="18"
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}">
 
