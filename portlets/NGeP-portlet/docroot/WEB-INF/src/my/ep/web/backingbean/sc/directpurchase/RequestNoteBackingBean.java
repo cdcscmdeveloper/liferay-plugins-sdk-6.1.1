@@ -3037,6 +3037,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 	
+	public void gpkiCancelAction() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
