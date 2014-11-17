@@ -6207,11 +6207,13 @@ public class SmApplicationBackingBean extends
 					.getBusinessTypeLs());
 			if (getManagedBean().getSmSupplier() != null) {
 				for (SelectItem selectItem : businessTypeSelectItems) {
-					if (selectItem.getValue().equals(
-							getManagedBean().getSmSupplier().getBusinessType())) {
-						getManagedBean().setBusinessTypeVal(
-								selectItem.getLabel().toString());
-						break;
+					if(selectItem.getValue()!=null && selectItem.getValue()!=null){
+						if (selectItem.getValue().equals(
+								getManagedBean().getSmSupplier().getBusinessType())) {
+							getManagedBean().setBusinessTypeVal(
+									selectItem.getLabel().toString());
+							break;
+						}
 					}
 				}
 			}
