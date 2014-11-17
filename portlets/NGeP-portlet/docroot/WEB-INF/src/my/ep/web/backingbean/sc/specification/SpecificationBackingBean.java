@@ -9333,6 +9333,14 @@ public class SpecificationBackingBean extends
 				.getTechnicalScoreSetting();
 		if (null != technicalScoreSetting
 				&& technicalScoreSetting.getSettingType() == 1) {
+			if (scQt.getEvaluationType().equalsIgnoreCase(
+					QTConstants.EVALUATION_TWO_TIER)
+					&& !this.getManagedBean().isReadOnly()) {
+				if (null != technicalScoreSetting.getPassingScore()
+						&& technicalScoreSetting.getPassingScore().intValue() <= 0) {
+					throw new EpException(MessageConst.ERROR_760172);
+				}
+			}
 			if (null != technicalScoreSetting.getPassingScore()
 					&& technicalScoreSetting.getPassingScore().intValue() > 100) {
 				throw new EpException(MessageConst.ERROR_760142);
@@ -9344,6 +9352,14 @@ public class SpecificationBackingBean extends
 				.getFinancialScoreSetting();
 		if (null != financialScoreSetting
 				&& financialScoreSetting.getSettingType() == 2) {
+			if (scQt.getEvaluationType().equalsIgnoreCase(
+					QTConstants.EVALUATION_TWO_TIER)
+					&& !this.getManagedBean().isReadOnly()) {
+				if (null != financialScoreSetting.getPassingScore()
+						&& financialScoreSetting.getPassingScore().intValue() <= 0) {
+					throw new EpException(MessageConst.ERROR_760174);
+				}
+			}
 			if (null != financialScoreSetting.getPassingScore()
 					&& financialScoreSetting.getPassingScore().intValue() > 100) {
 				throw new EpException(MessageConst.ERROR_760143);
@@ -9354,12 +9370,22 @@ public class SpecificationBackingBean extends
 		ScQtScoreSetting demoScoreSetting = this.getManagedBean()
 				.getDemoScoreSetting();
 		if (null != demoScoreSetting && demoScoreSetting.getSettingType() == 3) {
-			if (null != demoScoreSetting.getPassingScore()
-					&& demoScoreSetting.getPassingScore().intValue() > 100) {
-				throw new EpException(MessageConst.ERROR_760144);
+			if (scQt.isDemoRequired()
+					&& scQt.getEvaluationType().equalsIgnoreCase(
+							QTConstants.EVALUATION_TWO_TIER)
+					&& !this.getManagedBean().isReadOnly()) {
+				if (null != demoScoreSetting.getPassingScore()
+						&& demoScoreSetting.getPassingScore().intValue() <= 0) {
+					throw new EpException(MessageConst.ERROR_760173);
+				}
+				if (null != demoScoreSetting.getPassingScore()
+						&& demoScoreSetting.getPassingScore().intValue() > 100) {
+					throw new EpException(MessageConst.ERROR_760144);
+				}
 			}
 			scoreSetting.add(demoScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
+
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
@@ -11077,6 +11103,7 @@ public class SpecificationBackingBean extends
 			qtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
+			qtCheckList.getScQtDoc().getTplSpecMaster().setScoringReq(true);
 
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
