@@ -11,6 +11,7 @@
 		<cc:attribute name="beforeSignText" />
 		<cc:attribute name="postSignAction"
 			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
+		<cc:attribute name="postCancelAction" method-signature="void action()" />
 	</cc:interface>
 
 
@@ -136,7 +137,7 @@
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
 			</h:panelGrid>
-			 <p:ajax event="close" update="@form"/>
+			   <p:ajax event="close" listener="#{cc.attrs.postCancelAction}"/>
 		</p:dialog>
 	</cc:implementation>
 </ui:composition>
