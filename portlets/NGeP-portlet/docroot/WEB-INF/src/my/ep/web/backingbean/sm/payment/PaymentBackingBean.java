@@ -22,7 +22,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
@@ -53,8 +52,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean (name = "paymentBackingBean")
 @RequestScoped
@@ -464,23 +461,22 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				SmPaymentResponse smPaymentRes = new SmPaymentResponse();
 				SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
 				Long statusCode = null;
+				Long paymentId = smPayment.getPaymentId();
 				
 				log.info("Status Success 0>>>>>");
 				if(status.equals(SupplierManagementConst.MOL_SUCCESS)){
-					Long paymentId = smPayment.getPaymentId();
 					BigDecimal paymentAmount = smPayment.getPaymentAmt();
-					
 					log.info("paymentId>>>>" + paymentId);
 					log.info("orderId>>>>" + orderId);
 					log.info("paymentAmount>>>>" + paymentAmount);
 					log.info("txAmount>>>>" + txAmount);
 					
-					boolean test = (paymentId == ordId && paymentAmount.compareTo(txAmount) == 0);
+					/*boolean test = (paymentId == ordId && paymentAmount.compareTo(txAmount) == 0);
 					boolean payOrd = (paymentId == ordId);
 					boolean px = (paymentAmount.compareTo(txAmount) == 0);
 					log.info("test<>>>>>" + test);
 					log.info("payOrd<>>>>>" + payOrd);
-					log.info("px<>>>>>" + px);
+					log.info("px<>>>>>" + px);*/
 					
 					if(paymentId.longValue() == ordId.longValue() && paymentAmount.compareTo(txAmount) == 0){
 						log.info("current status>>>>" + smPayment.getPmStatus().getStatusId());
@@ -550,14 +546,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				
-				showPaymentResponse(status);
+				showPaymentResponse(status,paymentId);
 				this.renewSesionObject();
 			}else{
-				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);
+				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null);
 				this.renewSesionObject();
 			}
 		}else{
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);		
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null);		
 			this.renewSesionObject();
 			
 		}
@@ -658,14 +654,16 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return list;
     }
 	
-	public void showPaymentResponse(String status){
+	public void showPaymentResponse(String status, Long paymentId){
 		FacesContext fc = FacesContext.getCurrentInstance();
+		boolean paymentStatus = false;
 		
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS : 
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721059,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
+			paymentStatus = true;
 			break;
 
 		case SupplierManagementConst.MOL_FAIL : 
@@ -687,7 +685,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			break;
 
 		}
+		
+		if(paymentStatus && paymentId != null){
+			PaymentAcknowledgeBackingBean paymentAckBB = new PaymentAcknowledgeBackingBean();
+			paymentAckBB.getManagedBean().setPaymentId(paymentId);
+			paymentAckBB.getManagedBean().setPaymentStatus(true);
+		}
+		
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+
 	}
 	
 	private FacesScopes getFacesScopes() {
@@ -809,7 +815,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 			
-			showPaymentResponse(status);
+			showPaymentResponse(status,ordId);
 			this.renewSesionObject();
 		}
 		
