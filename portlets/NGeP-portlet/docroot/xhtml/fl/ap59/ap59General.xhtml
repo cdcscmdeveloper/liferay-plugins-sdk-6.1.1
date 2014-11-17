@@ -53,7 +53,11 @@
 						value="#{lbl['lbl.fl.ptj.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.pmOrgValidity.orgName}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.order.amt']}" /></td>
-				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.sumOrderedAmt}"/></td>
+				<td>
+					<p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.sumOrderedAmt}" style="text-align:right">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
