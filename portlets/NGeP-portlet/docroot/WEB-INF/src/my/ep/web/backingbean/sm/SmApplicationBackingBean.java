@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -903,7 +904,7 @@ public class SmApplicationBackingBean extends
 				// to init page whether normal or special category type is
 				// allowed
 				initApplCategoryType();
-				
+
 				// init business premise whether show or hide home office
 				initBusinessPremise();
 			}
@@ -5924,6 +5925,7 @@ public class SmApplicationBackingBean extends
 	public void retrieveBusinessTypeList() {
 		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
 		this.getManagedBean().setBusinessTypeLs(selectItems);
+		initTypeOfBusiness();
 	}
 
 	private void validatePaidCaptialAmt(boolean setNavigationCurrentPage) {
@@ -6178,7 +6180,7 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
-	
+
 	private void initBusinessPremise() {
 		String suppType = "";
 		if (getManagedBean().getSmAppl() != null
@@ -6195,6 +6197,24 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
 		} else {
 			getManagedBean().setDisabledHomeOffice(false);
+		}
+	}
+
+	private void initTypeOfBusiness() {
+		List<SelectItem> businessTypeSelectItems = new ArrayList<SelectItem>();
+		if (this.getManagedBean().getBusinessTypeLs() != null) {
+			businessTypeSelectItems = Arrays.asList(this.getManagedBean()
+					.getBusinessTypeLs());
+			if (getManagedBean().getSmSupplier() != null) {
+				for (SelectItem selectItem : businessTypeSelectItems) {
+					if (selectItem.getValue().equals(
+							getManagedBean().getSmSupplier().getBusinessType())) {
+						getManagedBean().setBusinessTypeVal(
+								selectItem.getValue().toString());
+						break;
+					}
+				}
+			}
 		}
 	}
 
