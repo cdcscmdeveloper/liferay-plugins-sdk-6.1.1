@@ -7469,7 +7469,7 @@ public class SpecificationBackingBean extends
 
 					}
 					if (null != checkList.getPmDocument()
-							&& QTConstants.FINANCIAL_ASSET_LIABILITY_CODE
+							&& QTConstants.FINANCIAL_CREDIT_FACILITY_CODE
 									.equalsIgnoreCase(checkList.getPmDocument()
 											.getDocDefinitionKey())) {
 						if (null != Score.getRangeTo()
