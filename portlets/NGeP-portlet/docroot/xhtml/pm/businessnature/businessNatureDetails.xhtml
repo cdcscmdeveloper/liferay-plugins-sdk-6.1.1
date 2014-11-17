@@ -14,7 +14,8 @@
 	   <tr> 
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /></td>
      	<td><p:selectOneMenu id="busLv" value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}" 
-     			style="width:178px;margin-bottom:5px;" required="true"> 
+     			style="width:178px;margin-bottom:5px;" required="true"
+     			disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"> 
   	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
 				<p:ajax event="change" update="@form" />
     	    </p:selectOneMenu></td>				
