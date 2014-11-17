@@ -1,12 +1,23 @@
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui" >
 	
     <ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.sm.paymentLbl']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="true"  />
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" />
+
+			<p:outputPanel rendered="#{(paymentAcknowledgeBackingBean.managedBean.paymentId != null) and (paymentAcknowledgeBackingBean.managedBean.paymentStatus)}">
+				<h:outputText value="#{lbl['lbl.sm.payment.click']} " />
+				<p:commandLink value="#{lbl['lbl.sm.payment.here']} " ajax="false">
+					<p:fileDownload value="#{paymentAcknowledgeBackingBean.printReceipt()}" />
+				</p:commandLink>
+				<h:outputText value=" #{lbl['lbl.sm.payment.to.download.receipt']}" />
+			</p:outputPanel>
 		</p:panel>
 	</ui:define>
 		    
