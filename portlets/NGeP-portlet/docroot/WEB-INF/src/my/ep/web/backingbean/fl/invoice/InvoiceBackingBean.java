@@ -217,7 +217,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan() && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
 					invoiceSO.sendCANNotification(reqDTO);
 				}
