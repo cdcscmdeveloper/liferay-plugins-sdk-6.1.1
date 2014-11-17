@@ -79,7 +79,8 @@
 			<table class="customTbl">
 				<tr>
 					<td valign="top"><p:outputLabel
-							value="#{lbl['lbl.sm.siteassign.sitevisitofficer']}" /></td>
+							value="#{lbl['lbl.sm.siteassign.sitevisitofficer']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td valign="top"><p:pickList id="pickList"
 							value="#{svcSiteAssignBackingBean.managedBean.svoUserList}"
 							var="off" itemLabel="#{off.userName}" itemValue="#{off}"
