@@ -1619,6 +1619,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
              }
              getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
              getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+             getManagedBean().setAutoUpdate(Boolean.FALSE);
 		}
 	}
 	
@@ -1672,7 +1673,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			}
 		}
-		//RequestContext.getCurrentInstance().execute("itemDtlPopup.show()");
+	    RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	/**
