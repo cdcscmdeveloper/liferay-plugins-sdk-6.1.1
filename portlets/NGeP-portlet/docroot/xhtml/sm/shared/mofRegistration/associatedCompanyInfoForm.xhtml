@@ -282,9 +282,13 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="assocCmpyPostCode"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.postcode']}"
+						label="#{lbl['lbl.sm.postcode']}" 
+						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
-						size="35" maxlength="10" /> <p:message id="assocCmpyPostCodeMsg"
+						size="35" maxlength="5" > 
+						<f:validator validatorId="postcodeValidator"/>
+						</p:inputText>
+						<p:message id="assocCmpyPostCodeMsg"
 						for="assocCmpyPostCode" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
