@@ -433,6 +433,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	
 	//retrieve the scQtDocReport for Syarat-syarat Am/ Arahan/Syarat-syarat Khas
 	private ScQtDocReport retriveRulesAndRegulationReport(ScQtDocReport scQtDocReport){
+		debugLogger("retriveRulesAndRegulationReport");
 		IQTDetailSO qTDetailSO = null;
 		try {
 			qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -453,6 +454,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	
 	//save to scQtDocReport
 	private ScQtDocReport saveScQtReportList(ScQtDocReport scQtDocReport){
+		debugLogger("saveScQtReportList");
 		QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
 		if(scQtDocReport.getQtReportId() == null) {
 			qTDetailBackingBean.validateQtDetails();
@@ -464,6 +466,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 	
 	private TplDocMaster saveClonedTplDocMaster(ScQtDocReport scQtDocReport){
+		debugLogger("saveClonedTplDocMaster");
 		IQTTemplateSO qtTemplateSO = null;
 		try {
 			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
@@ -483,6 +486,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	
 	private TplDocMaster cloneTplDocMasterDtls(ScQtDocReport scQtDocReport) 
 		throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
+		debugLogger("cloneTplDocMasterDtls");
 		
 		ScQt scQt = scQtDocReport.getScQt();
 		Long tplMasterId = retrieveStandardTplDocMaster(scQt).getDocMasterId();
@@ -492,22 +496,36 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster.cloneEntity();
 		tplDocMaster.setDocMasterId(null);
 		tplDocMaster.setOrgProfile(null);
-		tplDocMaster.setTplDocSectionCollection(null);
+		tplDocMaster.setTplDocSections(null);
+		//tplDocMaster.setTplDocSectionCollection(null);
 		tplDocMaster.setDocTitle(scQtDocReport.getTitle());
 		tplDocMaster.setDocName(scQtDocReport.getTitle());
 		
 		setUserDetails(tplDocMaster);
 
 		//clone tplDocSection Details
-		tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
+		/*tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
 		List<TplDocSection> docSections = templateDocMaster.getTplDocSections();
 		for (TplDocSection tplDocSection : docSections) {
 			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
 			section.setDocSectionId(null);
+			section.setParent(null); // Temporarily am setting null, need to confirm once
 			section.setTplDocMaster(tplDocMaster);
 			
 			setUserDetails(section);
 			tplDocMaster.getTplDocSections().add(section);
+		}*/
+		
+		tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+		List<TplDocSection> docSectionCOllection = templateDocMaster.getTplDocSectionCollection();
+		for (TplDocSection tplDocSection : docSectionCOllection) {
+			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
+			section.setDocSectionId(null);
+			section.setParent(null); // Temporarily am setting null, need to confirm once
+			section.setTplDocMaster(tplDocMaster);
+			
+			setUserDetails(section);
+			tplDocMaster.getTplDocSectionCollection().add(section);
 		}
 		
 		// Procurement Category
@@ -522,8 +540,22 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		PmParameter templateType = getPmParameter(ParameterTypeConst.TEMPLATE_TYPE, ParameterConst.TEMPLATE_TYPE_MINISTRY);
 		tplDocMaster.setTemplateType(templateType);
 		
-		// Item Type
-		PmParameter itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT);
+		// Item Type - Service & Product
+		PmParameter itemType = null;
+		if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_MTO)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_SERVICE);
+		} else if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_ICT)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT);
+		}
 		tplDocMaster.setItemTypeId(itemType);
 
 		// Status
@@ -537,6 +569,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 	
 	public TplDocMaster retrieveStandardTplDocMaster(ScQt scQt){
+		debugLogger("retrieveStandardTplDocMaster");
 		ITemplateDocSO templateDocSO = null;
 		try {
 			templateDocSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateDocSO.class);
@@ -555,7 +588,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				docMaster = docMasterList.get(0);
 				return docMaster;
 			}else{
-				throw new EpException("Please create Standard Document Template");
+				throw new EpException(MessageConst.ERROR_760171);
 			}
 		}finally{
 			templateDocSO = null;
@@ -563,6 +596,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 	
 	private TplDocMaster retrieveTplDocMasterById(Long masterId){
+		debugLogger("retrieveTplDocMasterById");
 		IQTTemplateSO qtTemplateSO = null;
 		try {
 			qtTemplateSO = (IQTTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
