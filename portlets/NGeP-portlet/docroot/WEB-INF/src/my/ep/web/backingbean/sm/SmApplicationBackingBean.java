@@ -6210,7 +6210,7 @@ public class SmApplicationBackingBean extends
 					if (selectItem.getValue().equals(
 							getManagedBean().getSmSupplier().getBusinessType())) {
 						getManagedBean().setBusinessTypeVal(
-								selectItem.getValue().toString());
+								selectItem.getLabel().toString());
 						break;
 					}
 				}
