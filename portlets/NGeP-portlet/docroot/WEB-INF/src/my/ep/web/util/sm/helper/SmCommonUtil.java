@@ -197,7 +197,7 @@ public class SmCommonUtil {
 		// setValidSmUserLimit(validatePersonLimit());
 		Locale locale = new FacesScopes().getUserLocale();
 		for (SmPersonnel per : personnelList) {
-			personVO = calcSumUpByPersonnel(per, personVO, supplierType,locale);
+			personVO = calcSumUpByPersonnel(per, personVO, supplierType, locale);
 		}
 		calcuteStaffSubTotalSummary(personVO);
 		return personVO;
@@ -214,7 +214,7 @@ public class SmCommonUtil {
 	}
 
 	private static SmPersonnleCalcVO calcSumUpByPersonnel(SmPersonnel per,
-			SmPersonnleCalcVO persCalcVo, String supplierType,Locale locale) {
+			SmPersonnleCalcVO persCalcVo, String supplierType, Locale locale) {
 		per.setRoleName("");
 		if (per.getPmCountry() != null
 				&& per.getPmCountry().getCountryId() != null) {
@@ -798,17 +798,24 @@ public class SmCommonUtil {
 		}
 
 	}
-	
-	public static String getSmBpmTaskTitle(String bpmOriginalTaskTitle){
-		String retVal = bpmOriginalTaskTitle==null?"":bpmOriginalTaskTitle;
-		
+
+	public static String getSmBpmTaskTitle(String bpmOriginalTaskTitle) {
+		String retVal = bpmOriginalTaskTitle == null ? ""
+				: bpmOriginalTaskTitle;
+
 		switch (retVal) {
 		case "Complete Site Visit Report":
-			retVal = SmCommonUtil.getMessage("lbl.sm.bpmtitle.complete.site.visit.report", null);
+			retVal = getMessage("lbl.sm.bpmtitle.complete.site.visit.report",
+					null);
+			break;
+
+		case "Assign Site Visit":
+			retVal = getMessage("lbl.sm.bpmtitle.assign.sitevisit",
+					null);
 			break;
 
 		}
-		
+
 		return retVal;
 	}
 }
