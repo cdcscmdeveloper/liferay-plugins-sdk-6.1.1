@@ -15,9 +15,8 @@
 				<td><p:inputText value="#{applNo}" disabled="true"
 						size="40" /></td>
 				
-				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
-				<td><p:inputText value="#{lbl[applType]}" disabled="true"
-						size="50" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']} : " /></td>
+				<td style="word-wrap: break-word" ><p:outputLabel value="#{lbl[applType]}"  styleClass="outputLabel-view" /></td>
 			</tr>
 	</table>
 </ui:composition>
