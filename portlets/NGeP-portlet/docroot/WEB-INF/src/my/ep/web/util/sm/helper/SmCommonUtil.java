@@ -813,6 +813,11 @@ public class SmCommonUtil {
 			retVal = getMessage("lbl.sm.bpmtitle.assign.sitevisit",
 					null);
 			break;
+		
+		case "Verify Supporting Documents":
+			retVal = getMessage("lbl.sm.bpmtitle.verify.suppdoc",
+					null);
+			break;
 
 		}
 
