@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +83,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -574,6 +576,10 @@ public class QTCommitteBackingBean extends
 				tabs.get(i).getScQtCommittee().getScCommittee()
 						.getScCommitteeMembers()
 						.addAll(tabs.get(i).getMembers());
+				Collections.sort(tabs.get(i).getScQtCommittee()
+						.getScCommittee().getScCommitteeMembers());
+
+				tabs.get(i).getMembers().clear();
 			}
 		}
 		FacesContext.getCurrentInstance().addMessage(
@@ -955,7 +961,7 @@ public class QTCommitteBackingBean extends
 		}
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
-		// java.util.Collections.sort(scCommittee.getScCommitteeMembers());
+		java.util.Collections.sort(scCommittee.getScCommitteeMembers());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
 		// Specification Committee validation
@@ -1245,7 +1251,7 @@ public class QTCommitteBackingBean extends
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
-		this.getManagedBean().setToBeDelCommitteMemebers(new ArrayList());
+		this.getManagedBean().setToBeDelCommitteMemebers(null);
 
 	}
 
@@ -1281,6 +1287,19 @@ public class QTCommitteBackingBean extends
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		reqDTO.setUser(new FacesScopes().getUserSessionBean());
 		committeSO.validateCommitteDtls(reqDTO);
+
+	}
+
+	public void onNodeUnselect(NodeUnselectEvent event) {
+		TreeNodeBean nodeBean = (TreeNodeBean) event.getTreeNode().getData();
+		if ("committee".equalsIgnoreCase(nodeBean.getType())) {
+			List<TreeNode> childNodes = event.getTreeNode().getChildren();
+			for (int i = 0; i < childNodes.size(); i++) {
+				childNodes.get(i).setSelected(false);
+			}
+		} else {
+			event.getTreeNode().setSelected(false);
+		}
 
 	}
 }

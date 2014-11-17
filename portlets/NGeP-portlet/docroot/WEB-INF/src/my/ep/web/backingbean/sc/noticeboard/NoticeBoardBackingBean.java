@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -150,7 +149,7 @@ public class NoticeBoardBackingBean extends
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
-			scQt.getPublishDate().getMinutes();
+
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
@@ -803,7 +802,7 @@ public class NoticeBoardBackingBean extends
 			log.debug("getClosingDays");
 		}
 
-		Long closingDays = null;
+		Long closingDays = 0l;
 		Date clsDate = null;
 
 		clsDate = DateUtils.convertStringToDate(
@@ -814,6 +813,9 @@ public class NoticeBoardBackingBean extends
 
 		if (closingDate != null && clsDate.after(currentDate)) {
 			closingDays = DateUtils.getDaysDifference(currentDate, clsDate);
+		} else if (closingDate != null && clsDate.equals(currentDate)) {
+			closingDays = DateUtils.getHoursDifference(clsDate, currentDate);
+
 		}
 
 		return closingDays;
@@ -1393,6 +1395,15 @@ public class NoticeBoardBackingBean extends
 
 	public NoticeBoardBackingBean() {
 		reset();
+	}
+
+	public boolean isShowHours(String clsDate) throws Exception {
+		Date closingDate = DateUtils.convertStringToDate(
+				CommonConstants.DEFAULT_DATETIME_FORMAT,
+				clsDate.replace("-", "/"));
+		return (DateUtils.getDaysDifference(
+				DateUtils.getCurrentDateWithoutTime(), closingDate) <= 0);
+
 	}
 
 }
