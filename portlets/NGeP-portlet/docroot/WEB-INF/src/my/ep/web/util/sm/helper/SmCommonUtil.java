@@ -798,4 +798,17 @@ public class SmCommonUtil {
 		}
 
 	}
+	
+	public static String getSmBpmTaskTitle(String bpmOriginalTaskTitle){
+		String retVal = bpmOriginalTaskTitle==null?"":bpmOriginalTaskTitle;
+		
+		switch (retVal) {
+		case "Complete Site Visit Report":
+			retVal = SmCommonUtil.getMessage("lbl.sm.bpmtitle.complete.site.visit.report", null);
+			break;
+
+		}
+		
+		return retVal;
+	}
 }
