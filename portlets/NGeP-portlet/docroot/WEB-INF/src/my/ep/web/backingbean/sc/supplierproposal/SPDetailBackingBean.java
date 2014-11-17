@@ -1106,6 +1106,8 @@ public class SPDetailBackingBean extends
 			// technical NO_OF_EMPLOYEE__PAGE
 			else if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES
 					.equalsIgnoreCase(docDefinitionKey)) {
+				
+				System.out.println("*****checklist id is*****"+scQtProposalChecklist.getScQtCheckList().getQtChecklistId());
 
 				pageUrl = retrieveEmployeeDtls(scQtProposalChecklist);
 
@@ -1218,7 +1220,7 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			ProposalResDTO resDTO = proposalSO.retrieveEmployeeDtls(reqDTO);
-
+		
 			ScQtPRPEmployee scQtPRPEmployee = resDTO.getScQtPRPEmployee();
 
 			if (resDTO.getScQtPRPEmployee() == null) {
@@ -1237,7 +1239,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtPRPEmployee(scQtPRPEmployee);
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
-
+			
 			return NAV_TO_NO_OF_EMPLOYEE__PAGE;
 
 		} finally {
@@ -2272,8 +2274,8 @@ public class SPDetailBackingBean extends
 				tobeDeletedExperiences = new ArrayList<ScQtPRPExperience>();
 			}
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
-				
-				if(!tobeDeletedExperiences.contains(scQtPRPExperience)){
+
+				if (!tobeDeletedExperiences.contains(scQtPRPExperience)) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
 				// experienceList.remove(selectedExperienceList.get(i));
@@ -2411,8 +2413,7 @@ public class SPDetailBackingBean extends
 		debugLogger("supplierProposalBackAction");
 		getManagedBean().setSelectedAll(false);
 		getManagedBean().setSelected(false);
-		getManagedBean()
-		.setDeletedPRPExperiences(null);
+		getManagedBean().setDeletedPRPExperiences(null);
 		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 	}
 
@@ -2734,11 +2735,13 @@ public class SPDetailBackingBean extends
 
 		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			List<ScQtPRPExperience> selectedExperiences= getManagedBean().getSelectedPRPExperiences();
-			if(selectedExperiences == null ){
+			List<ScQtPRPExperience> selectedExperiences = getManagedBean()
+					.getSelectedPRPExperiences();
+			if (selectedExperiences == null) {
 				selectedExperiences = new ArrayList<ScQtPRPExperience>();
 			}
-			for (ScQtPRPExperience scQtPRPExperience : getManagedBean().getScQtPRPExperiences()){
+			for (ScQtPRPExperience scQtPRPExperience : getManagedBean()
+					.getScQtPRPExperiences()) {
 				selectedExperiences.add(scQtPRPExperience);
 			}
 			getManagedBean().setSelectedPRPExperiences(selectedExperiences);
@@ -2777,13 +2780,15 @@ public class SPDetailBackingBean extends
 
 		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			List<ScQtPRPCreditFacility> creditFacilityList = getManagedBean().getScQtPRPCreditFacilities();
-			List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean().getSelectedPRPCreditFacilities();
-			if(selectedCreditFacilityList == null){
+			List<ScQtPRPCreditFacility> creditFacilityList = getManagedBean()
+					.getScQtPRPCreditFacilities();
+			List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean()
+					.getSelectedPRPCreditFacilities();
+			if (selectedCreditFacilityList == null) {
 				selectedCreditFacilityList = new ArrayList<ScQtPRPCreditFacility>();
 			}
-			for (ScQtPRPCreditFacility creditFacility : creditFacilityList){
-				if(! selectedCreditFacilityList.contains(creditFacility)){
+			for (ScQtPRPCreditFacility creditFacility : creditFacilityList) {
+				if (!selectedCreditFacilityList.contains(creditFacility)) {
 					selectedCreditFacilityList.add(creditFacility);
 				}
 			}
