@@ -32,7 +32,7 @@
 
 			</p:column>
 			
-			<p:column>
+			<p:column style="white-space : normal !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.bank.name']}" />
@@ -41,14 +41,14 @@
 					rendered="#{creditfacilities.brandNew eq false}" />
 				<p:inputText id="bankName" value="#{creditfacilities.bankName}"
 					size="30" rendered="#{creditfacilities.brandNew eq true}"
-					required="true" maxlength="100"
+					required="true" maxlength="50"
 					label="#{lbl['lbl.sc.sp.bank.name']}" >
 					<p:ajax process="@this" partialSubmit="true" update="@this,bankNameMsg" />
 					</p:inputText>
 				<p:message id="bankNameMsg" for="bankName" display="icon" />
 			</p:column>
 
-			<p:column>
+			<p:column style="white-space : normal !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.address']}" />
