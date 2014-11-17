@@ -873,7 +873,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				     }	
 			  }
 		 
-		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) 
+		    		&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 		    	
 		    	   if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().isEmpty()) && getManagedBean().getCtContract().isFrequencySchedule()) {
 		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
