@@ -208,7 +208,8 @@
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purchase.year']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purchase.year']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
 						required="#{backingBean.managedBean.valueReqd}" validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
 						label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
