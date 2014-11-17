@@ -2235,14 +2235,14 @@ public class QTDetailBackingBean extends
 										.getManagedBean().getQt()
 										.getPublishPeriod()));
 					}
-				/*} else {
+				} else {
 					if (null != publishDate) {
 						getManagedBean().getQt().setClosingDate(
 								DateUtils.addDays(getManagedBean()
 										.getQt().getPublishDate(), this
 										.getManagedBean().getQt()
 										.getPublishPeriod()));
-					}*/
+					}
 				}
 			} else {
 				if (null != publishDate) {
