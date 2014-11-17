@@ -324,5 +324,25 @@ public class DateUtils {
 	    return c1.getTime();
 	}
 	
+	/**
+	 * Calculate the number of hours between date1 and date2.
+	 * 
+	 * @param date1 the date1
+	 * @param date2 the date2
+	 * 
+	 * @return long
+	 */
+	public static long getHoursDifference(Date date1, Date date2) {
+		Calendar calendar1 = Calendar.getInstance();
+	    Calendar calendar2 = Calendar.getInstance();	    
+	    calendar1.setTime(date1);
+	    calendar2.setTime(date2);	    
+	    long milliseconds1 = calendar1.getTimeInMillis();
+	    long milliseconds2 = calendar2.getTimeInMillis();
+	    long diff = milliseconds2 - milliseconds1;	    	        
+	    return (diff / (24 * 60 * 1000));
+	}
 	
+	
+
 }
