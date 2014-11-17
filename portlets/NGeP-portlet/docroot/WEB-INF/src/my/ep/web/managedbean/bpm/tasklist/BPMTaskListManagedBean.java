@@ -24,6 +24,7 @@ import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
@@ -236,6 +237,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
+							
+							//sm module
+							worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle()));
 						}
 					}
 					
