@@ -136,9 +136,9 @@
 							contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:260px;">
-		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement and !contractDetailsBackingBean.managedBean.directPurchase}">
+		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}"
-			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract or contractDetailsBackingBean.managedBean.ctContract.agreement}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />

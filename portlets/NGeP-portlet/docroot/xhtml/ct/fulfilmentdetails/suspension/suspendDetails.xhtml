@@ -130,8 +130,7 @@
 							suspensionBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:330px;">
-		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement
-		   or  suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+		   <h:panelGrid columns="3" rendered="#{suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -177,7 +176,7 @@
 		   </h:panelGrid>	
 		    <h:panelGrid columns="3"
 		       rendered="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractAmount > suspensionBackingBean.managedBean.performanceBondRuleAmt and suspensionBackingBean.managedBean.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry
-		       or suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}" >
+		       and suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}" >
 			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	

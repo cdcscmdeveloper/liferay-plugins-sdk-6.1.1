@@ -129,8 +129,7 @@
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:260px;">
-		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement
-		       or suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+		   <h:panelGrid columns="3" rendered="#{amendmentBackingBeanmanagedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
@@ -158,7 +157,7 @@
 			 </h:panelGrid>
 	       </h:panelGrid>	
 	       <h:panelGrid columns="3" 
-	          rendered="#{suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+	          rendered="#{amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			  <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.ctContract.mto}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
@@ -168,7 +167,7 @@
 			  </h:panelGrid>
 		   </h:panelGrid>	 
 		   <h:panelGrid columns="3"
-		       rendered="#{suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+		       rendered="#{amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
 			   disabled="true" style="text-align:top;">
 			     <p:ajax event="change" update=":form:justificationPanel" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
@@ -180,7 +179,7 @@
 			  </h:panelGrid>
 		   </h:panelGrid>	
 		    <h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount > amendmentBackingBean.managedBean.performanceBondRuleAmt and amendmentBackingBean.managedBean.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry
-		    or  suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}" >
+		    and amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}" >
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
