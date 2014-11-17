@@ -449,6 +449,8 @@ public class SpecificationBackingBean extends
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSpecSO.class);
+			String zonelocationLevel = this.getManagedBean().getStateCode();
+			String locationLevael = this.getManagedBean().getLocalLevelCode();
 			int activeIndex = this.getManagedBean().getActiveIndex();
 
 			SpecificationResDTO resDTO = null;
@@ -561,6 +563,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setSelectpanelItem(panelList);
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setEvaluationTypeItem(evaluationTypeList);
+			this.getManagedBean().setStateCode(zonelocationLevel);
+			this.getManagedBean().setLocalLevelCode(locationLevael);
 		} /*
 		 * catch(Exception e){ e.printStackTrace(); }
 		 */
@@ -1760,6 +1764,7 @@ public class SpecificationBackingBean extends
 						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 						getManagedBean().setZoneTrees(null);
 						if (null != tenderResDTO.getLocationDetails()) {
+
 							if (null == this.getManagedBean()
 									.getTotalSuppliersSpecLoc()) {
 								this.getManagedBean().setTotalSuppliersSpecLoc(
@@ -1769,6 +1774,15 @@ public class SpecificationBackingBean extends
 									.addAll(tenderResDTO.getLocationDetails());
 							for (TplSpecLoc localLoc : tenderResDTO
 									.getLocationDetails()) {
+								if (null != scQt.getScQtSupplierCriteria()
+										&& null != scQt
+												.getScQtSupplierCriteria()
+												.getLocationLevel()) {
+									this.getManagedBean().setLocalLevelCode(
+											scQt.getScQtSupplierCriteria()
+													.getLocationLevel()
+													.getParameterCode());
+								}
 								getManagedBean().setZoneTrees(
 										new ArrayList<TreeNode>());
 								ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
@@ -1922,7 +1936,8 @@ public class SpecificationBackingBean extends
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			checkList.setTitle(panelItem.getItemName());
 			checkList.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
-			checkList.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
+			checkList
+					.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
 			checkList.setScoringReq(true);
 			checkList.setAction(checkListactionresDTO.getPmParameter());
 			checkList.setScQt(this.getManagedBean().getScQt());
@@ -2200,19 +2215,24 @@ public class SpecificationBackingBean extends
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 				if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
 					if (null != resDTO.getTechnicalCheckList()) {
-						//Collections.sort(resDTO.getTechnicalCheckList());
-						for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
-							if(checklist.getPmDocument() != null){
-								if (!checklist.getPmDocument().getDocDefinitionKey().contains(SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE)) {
+						// Collections.sort(resDTO.getTechnicalCheckList());
+						for (ScQtCheckList checklist : resDTO
+								.getTechnicalCheckList()) {
+							if (checklist.getPmDocument() != null) {
+								if (!checklist
+										.getPmDocument()
+										.getDocDefinitionKey()
+										.contains(
+												SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE)) {
 									localcheckList.add(checklist);
 								}
-							}else{
+							} else {
 								localcheckList.add(checklist);
 							}
 						}
 					}
 				} else {
-					//Collections.sort(resDTO.getTechnicalCheckList());
+					// Collections.sort(resDTO.getTechnicalCheckList());
 					localcheckList.addAll(resDTO.getTechnicalCheckList());
 				}
 
@@ -2220,8 +2240,8 @@ public class SpecificationBackingBean extends
 						localcheckList);
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
-				//Collections.sort(this.getManagedBean()
-						//.getScQtCheckSt2financeProposalList());
+				// Collections.sort(this.getManagedBean()
+				// .getScQtCheckSt2financeProposalList());
 
 			}
 		} finally {
@@ -2297,7 +2317,7 @@ public class SpecificationBackingBean extends
 				reqDTO.setScQt(this.getManagedBean().getScQt());
 				reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
 				resDTO = specSo.retrieveCheckLists(reqDTO);
-				//Collections.sort(resDTO.getFinancialCheckLists());
+				// Collections.sort(resDTO.getFinancialCheckLists());
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 			}
@@ -2389,7 +2409,7 @@ public class SpecificationBackingBean extends
 			List<ScQtCheckList> checkList = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
 			if (null != checkList && !checkList.isEmpty()) {
-				//Collections.sort(checkList);
+				// Collections.sort(checkList);
 				int score = 0;
 				float addScore = 0;
 				for (ScQtCheckList list : checkList) {
@@ -4032,7 +4052,7 @@ public class SpecificationBackingBean extends
 			// validate zone name
 			checkZoneExistsOrNot(zone, getManagedBean().getIndex());
 
-			if (this.getManagedBean().getStateCode()
+			if (locationLevel
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
 				// check whether state exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
@@ -4536,7 +4556,10 @@ public class SpecificationBackingBean extends
 						&& null != this.getManagedBean().getZoneGeneralTrees()
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
-
+					if (null != scQt.getZoneLocationLevel()) {
+						this.getManagedBean().setStateCode(
+								scQt.getZoneLocationLevel().getParameterCode());
+					}
 					retriveNonpanelZoneDtls(tenderResDTO.getZoneDetails());
 
 				}
@@ -4568,6 +4591,7 @@ public class SpecificationBackingBean extends
 			 */
 			if (isNotNullOREmpty(zonedtls)) {
 				for (TplSpecZoneDtl zone : zonedtls) {
+
 					ZonesBean zonesBean = new ZonesBean();
 					zonesBean.setTplSpecZoneDtl(zone);
 					zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
@@ -4691,7 +4715,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalChecklistAction(null);
 
 				List<String> recommendList = new ArrayList<String>();
-				recommendList.add(ParameterConst.CHECKLIST_ACTION_MANUAL_SUBMISSION);
+				recommendList
+						.add(ParameterConst.CHECKLIST_ACTION_MANUAL_SUBMISSION);
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmParameter.parameterCode",
@@ -4709,7 +4734,8 @@ public class SpecificationBackingBean extends
 
 				List<String> recommendList = new ArrayList<String>();
 				recommendList.add(ParameterConst.CHECKLIST_ACTION_VIEW);
-				recommendList.add(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+				recommendList
+						.add(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmParameter.parameterCode",
@@ -4726,7 +4752,8 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase(parameterCode)) {
 
 				List<String> recommendList = new ArrayList<String>();
-				recommendList.add(ParameterConst.CHECKLIST_ACTION_PRESENTATION_DEMO);
+				recommendList
+						.add(ParameterConst.CHECKLIST_ACTION_PRESENTATION_DEMO);
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmParameter.parameterCode",
@@ -6423,7 +6450,8 @@ public class SpecificationBackingBean extends
 			st2financeproposalList2
 					.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
 			st2financeproposalList2.setScoringReq(false);
-			st2financeproposalList2.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_UPLOAD);
+			st2financeproposalList2
+					.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_UPLOAD);
 
 			st2financeproposalList2.setScQt(this.getManagedBean().getScQt());
 
@@ -6541,7 +6569,8 @@ public class SpecificationBackingBean extends
 			st2technicalproposalList1
 					.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			st2technicalproposalList1.setScoringReq(false);
-			st2technicalproposalList1.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_UPLOAD);
+			st2technicalproposalList1
+					.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_UPLOAD);
 
 			st2technicalproposalList1.setScQt(this.getManagedBean().getScQt());
 			st2technicalproposalList1.setAction(new PmParameter());
@@ -7920,7 +7949,6 @@ public class SpecificationBackingBean extends
 	}
 
 	public void paneltabChange(TabChangeEvent event) {
-		
 
 	}
 
@@ -10910,8 +10938,8 @@ public class SpecificationBackingBean extends
 					if (this.getManagedBean().getIndex() == -1) {
 						this.getManagedBean().getScQtCheckSt2techProposal()
 								.add(checkList);
-						//Collections.sort(this.getManagedBean()
-						//		.getScQtCheckSt2techProposal());
+						// Collections.sort(this.getManagedBean()
+						// .getScQtCheckSt2techProposal());
 					} else {
 						this.getManagedBean().getScQtCheckSt2techProposal()
 								.remove(this.getManagedBean().getIndex());
@@ -10925,8 +10953,8 @@ public class SpecificationBackingBean extends
 						this.getManagedBean()
 								.getScQtCheckSt2financeProposalList()
 								.add(checkList);
-						//Collections.sort(this.getManagedBean()
-						//		.getScQtCheckSt2financeProposalList());
+						// Collections.sort(this.getManagedBean()
+						// .getScQtCheckSt2financeProposalList());
 					} else {
 						List<ScQtCheckList> finanicialCheckLists = this
 								.getManagedBean()
@@ -10940,7 +10968,7 @@ public class SpecificationBackingBean extends
 										checkList.getTitle())) {
 									finanicialCheckLists.remove(i);
 									finanicialCheckLists.add(checkList);
-									//Collections.sort(finanicialCheckLists);
+									// Collections.sort(finanicialCheckLists);
 								}
 							}
 						}
@@ -11227,7 +11255,8 @@ public class SpecificationBackingBean extends
 				.setParameterCode(ParameterConst.CHECKLIST_ACTION_INPUT);
 		ParameterResDTO checkListactionresDTO = parameterSo
 				.retrieveParameterByTypeAndCode(checkListActionType);
-		checkList.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
+		checkList
+				.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
 		// PmStatus status = new PmStatus();
 		// status.setStatusId(1l);
 		// checkList.setPmStatus(status);
@@ -11422,8 +11451,7 @@ public class SpecificationBackingBean extends
 						ISupplierSearchSO.class);
 		SupplierSearchResDTO searchResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierSearchReqDTO);
-		this.getManagedBean().setTotalSuppliers(
-				searchResDTO.getCount());
+		this.getManagedBean().setTotalSuppliers(searchResDTO.getCount());
 
 	}
 
