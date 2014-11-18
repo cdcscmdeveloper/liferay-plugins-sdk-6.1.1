@@ -89,7 +89,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="5">
-				<p:inputText id="txtfrno" style="width:170px;" label="#{lbl['lbl.ct.file.ref.no']}"
+				<p:inputText id="txtfrno" style="width:670px;" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
@@ -101,8 +101,8 @@
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<p:inputTextarea id="txtname" style="width:530px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="99" autoResize="false" />
+				<p:inputText id="txtname" style="width:670px;"  label="#{lbl['lbl.ct.amendment.title']}" 
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="100" />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -117,7 +117,7 @@
 			</h:panelGroup>
 			<h:panelGrid columns="2">
 				<p:inputTextarea id="txtdesc" rows="5"  label="#{lbl['lbl.ct.amendment.desc']}"
-					style="width:530px;margin-bottom: 5px;"  autoResize="false" maxlength="199"
+					style="width:670px;margin-bottom: 5px;"  autoResize="false" maxlength="200"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}" />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
