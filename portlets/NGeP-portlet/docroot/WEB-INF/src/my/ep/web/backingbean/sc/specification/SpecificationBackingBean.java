@@ -4371,8 +4371,10 @@ public class SpecificationBackingBean extends
 					}
 					qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
 							zoneLocal);
-					qtSupplierCriteria.setLocationLevel(scQt
-							.getZoneLocationLevel());
+					if (null != scQt.getEstimatedAmount()
+							&& scQt.getEstimatedAmount().intValue() <= 500000) {
+						qtSupplierCriteria.setLocationLevel(null);
+					}
 				}
 				qtSupplierCriteria.setScQt(scQt);
 				// TODO Need to remove below code...
@@ -5127,31 +5129,46 @@ public class SpecificationBackingBean extends
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
-		if (this.getManagedBean().getScQt().isZonal()) {
-			this.getManagedBean().getScQt().getZoneLocationLevel()
-					.setParameterId(location);
-			if (null != this.getManagedBean().getZoneGeneralTrees()
-					&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				this.getManagedBean().setZoneGeneralTrees(null);
-				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
-			}
+		if (null != location) {
+			if (this.getManagedBean().getScQt().isZonal()) {
+				if (null != this.getManagedBean().getScQt()
+						.getZoneLocationLevel()) {
+					this.getManagedBean().getScQt().getZoneLocationLevel()
+							.setParameterId(location);
+				}
+				if (null != this.getManagedBean().getZoneGeneralTrees()
+						&& !this.getManagedBean().getZoneGeneralTrees()
+								.isEmpty()) {
+					this.getManagedBean().setZoneGeneralTrees(null);
+					this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
+				}
 
-		} else {
-			this.getManagedBean().getScQt().getScQtSupplierCriteria()
-					.getLocationLevel().setParameterId(location);
-			if (null != getManagedBean().getZoneTrees()
-					&& !getManagedBean().getZoneTrees().isEmpty()) {
-				getManagedBean().setZoneTrees(null);
 			}
-		}
+		}/*
+		 * else { this.getManagedBean().getScQt().getScQtSupplierCriteria()
+		 * .getLocationLevel().setParameterId(location); if (null !=
+		 * getManagedBean().getZoneTrees() &&
+		 * !getManagedBean().getZoneTrees().isEmpty()) {
+		 * getManagedBean().setZoneTrees(null); } }
+		 */
 	}
 
 	public void selectSupplierLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
-
-		this.getManagedBean().getScQt().getScQtSupplierCriteria()
-				.getLocationLevel().setParameterId(location);
+		if (null != location) {
+			if (null != this.getManagedBean().getScQt()
+					.getScQtSupplierCriteria()
+					&& null != this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getLocationLevel()) {
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.getLocationLevel().setParameterId(location);
+			}
+			if (null != getManagedBean().getZoneTrees()
+					&& !getManagedBean().getZoneTrees().isEmpty()) {
+				getManagedBean().setZoneTrees(null);
+			}
+		}
 	}
 
 	// User And Auto Score Select Methods in spec committee
@@ -10430,7 +10447,7 @@ public class SpecificationBackingBean extends
 				zoneCriteria.setScQtSupplierCriteria(supplierCriteria);
 				supplierCriteria.setQtZoneCriterias(zoneCriteria);
 			}
-			supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
+			// supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
 			supplierCriteria.setScQtLocCriteria(null);
 			scQt.setZoneLocationLevel(new PmParameter());
 
