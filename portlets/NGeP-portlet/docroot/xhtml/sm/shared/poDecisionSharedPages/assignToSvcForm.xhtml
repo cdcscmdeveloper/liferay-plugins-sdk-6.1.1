@@ -34,7 +34,7 @@
 
 	<br />
 	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true">
-		<p:dataTable var="assocBean"
+		<p:dataTable var="assocBean" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 			selection="#{backingBean.managedBean.selectedAssocCompanies}"
 			rowKey="#{assocBean}" rowIndexVar="index" id="svdHeadOff">
@@ -57,7 +57,7 @@
 	</p:panel>
 	<br />
 	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
-		<p:dataTable var="branchBean" id="svcBrDt"
+		<p:dataTable var="branchBean" id="svcBrDt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 			selection="#{backingBean.managedBean.selectedBranches}"
 			rowKey="#{branchBean}" rowIndexVar="index">
@@ -79,7 +79,7 @@
 	</p:panel>
 	<br />
 	<p:panel header="#{lbl['lbl.sm.facilities']}" toggleable="true">
-		<p:dataTable var="fac"
+		<p:dataTable var="fac" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.smAppl.smFacilities}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 			rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
@@ -102,7 +102,7 @@
 	<br />
 	<p:panel header="#{lbl['lbl.sm.category.categories']}"
 		toggleable="true">
-		<p:dataTable var="catBean"
+		<p:dataTable var="catBean" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.splCategoryList}"
 			selection="#{backingBean.managedBean.selectedCategories}"
 			rowKey="#{catBean}" rowIndexVar="index" id="svcCatDt">
@@ -139,10 +139,9 @@
 	<table style="width: 100%">
 
 		<tr>
-			<td style="width: 30%; word-wrap: break-word"><p:outputLabel
+			<td style="width: 40%; word-wrap: break-word"><p:outputLabel
 					value="#{lbl['lbl.sm.remarks.svc']}" /></td>
-			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
-					maxlength="200"
+			<td><p:inputTextarea cols="70" style="margin-bottom:5px;" maxlength="200"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" /></td>
 		</tr>
 	</table>
@@ -154,15 +153,19 @@
 				<tr>
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approver']}" /></td>
-					<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
-							maxlength="200" /></td>
+					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" 
+					      maxlength="200" value="#{backingBean.managedBean.poSecReview.remarkToApprover}" />
+					</td>
 				</tr>
 				<tr>
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
-					<td><p:selectOneRadio>
-							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approve']}" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.reject']}" />
+					<td><p:selectOneRadio
+							value="#{backingBean.managedBean.poSecReview.recommendation}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approve']}"
+								value="#{lbl['lbl.sm.recommendation.approve']}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.reject']}"
+								value="#{lbl['lbl.sm.recommendation.reject']}" />
 						</p:selectOneRadio></td>
 				</tr>
 
