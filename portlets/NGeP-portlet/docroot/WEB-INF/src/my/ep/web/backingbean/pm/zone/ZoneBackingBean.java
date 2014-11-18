@@ -85,6 +85,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public String saveZone() {
+		System.out.println("SelectedZoneState::"
+				+ getManagedBean().getSelectedZones().size());
+		System.out.println("ZoneStateList::"
+				+ getManagedBean().getZoneStateList().size());
 
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
@@ -93,19 +97,19 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		if (getManagedBean().getZoneStateList().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
-		List<PmZoneState> zones = getManagedBean().getZoneStateList();
+		List<PmZoneState> zones = new ArrayList<PmZoneState>();
 		PmZone zone = this.getManagedBean().getPmZone();
 		if (zone.isBrandNew()) {
 
 			List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
 
 			for (PmZoneState zoneSta : stateZones) {
-				getManagedBean().setZoneStateList(stateZones);
-
+				
 				zoneSta.setPmZone(zone);
 
 			}
 			zones.addAll(stateZones);
+			zone.setPmZoneStates(zones);
 		}
 
 		reqDTO.setPmZone(zone);
@@ -254,9 +258,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				&& !this.getManagedBean().getSelectedStates().isEmpty()) {
 			this.getManagedBean().setSelectedStates(null);
 		}
-		
+
 		retrievePmStateList();
-		
 
 	}
 
@@ -291,10 +294,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zoneState.setPmState(newState);
 			zoneState.setPmZone(getManagedBean().getPmZone());
 			this.getManagedBean().getZoneStateList().add(zoneState);
-			
+
 		}
-		
-		
+
 	}
 
 	private void retrievePmStateList() {
@@ -315,7 +317,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 									.getStateId()) {
 								pmState.setExistingState(true);
 							}
-							
+
 						}
 					}
 				}
@@ -323,6 +325,35 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 		this.getManagedBean().setStates(stList);
 	}
+
+	private void retrieveStateList() {
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateResDTO resDTO = stateSO.retrieveStateList();
+
+		List<PmState> stList = resDTO.getStateList();
+		if (getManagedBean().getSelectedZones() != null
+				&& !getManagedBean().getSelectedZones().isEmpty())
+			for (PmZone zone : getManagedBean().getPmZonesList()) {
+				if (zone.getPmZoneStates() != null
+						&& !zone.getPmZoneStates().isEmpty()) {
+					for (PmZoneState state : zone.getPmZoneStates()) {
+						for (PmState pmState : stList) {
+							if (state.getPmState().getStateId() == pmState
+									.getStateId()) {
+								pmState.setExistingState(true);
+							} else {
+								pmState.setExistingState(false);
+							}
+						}
+					}
+				}
+			}
+
+		this.getManagedBean().setStates(stList);
+	}
+
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getStatusOptions();
 	}
