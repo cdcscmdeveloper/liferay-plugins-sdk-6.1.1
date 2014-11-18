@@ -19,10 +19,11 @@
 
 			<ui:include src="technicalchecklistbuttons.xhtml"></ui:include>
 		</div>
-
+		<p:spacer height="4"></p:spacer>
 		<ui:include src="checklistHeader.xhtml" />
+		<p:spacer height="4"></p:spacer>
+		<ui:include
+			src="#{supplierProposalDetailBackingBean.managedBean.pageUrl}" />
 
-		<ui:include src="#{supplierProposalDetailBackingBean.managedBean.pageUrl}" />
-		
 	</ui:define>
 </ui:composition>
