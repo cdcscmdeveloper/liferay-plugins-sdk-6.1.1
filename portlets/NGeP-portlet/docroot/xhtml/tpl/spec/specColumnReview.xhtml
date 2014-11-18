@@ -16,7 +16,7 @@
 			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 			oncomplete="#{scoringSetPopup}.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
-			rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId and isScoringReq}">
+			rendered="#{((!isSpecTypeFinancial and !isQuestionTypeItem) or isSpecTypeFinancial) and !empty question.answerTypeCode.parameterId}">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
