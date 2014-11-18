@@ -71,7 +71,7 @@ public class FinancialOrgBackingBean extends
 	public static final int GENERRAL = 0;
 	public static final int FACTRING_BRANCH = 1;
 	// Default value
-		public static final boolean SEARCH_DEFAULT = false;
+	public static final boolean SEARCH_DEFAULT = false;
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "financialOrgSearchMain";
 	private IPagingDataModel<PmFinancialOrg> searchFinancialOrg = new FinancialOrgPagingDataModel();
@@ -127,7 +127,7 @@ public class FinancialOrgBackingBean extends
 									.getServiceType()));
 			isEmpty = false;
 		}
-		if(isEmpty && !isSearchable){
+		if (isEmpty && !isSearchable) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
@@ -136,12 +136,12 @@ public class FinancialOrgBackingBean extends
 		}
 		if (fSearchBean.getRegNumber() != null
 				&& fSearchBean.getRegNumber().trim().length() > 0) {
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("bizRegNumber",
-						SearchOperator.OPERATOR_LIKE.value(), getManagedBean()
-								.getFinancialOrgSearchBean().getRegNumber(),
-						true));
-		isEmpty = false;
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("bizRegNumber",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getFinancialOrgSearchBean()
+									.getRegNumber(), true));
+			isEmpty = false;
 		}
 
 		log.info("getSearchBeanData - End");
@@ -251,15 +251,17 @@ public class FinancialOrgBackingBean extends
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		/*
-		 * parameterReqDTO
-		 * .setParameterType(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
-		 * parameterReqDTO.setParameterCode(getManagedBean().getRegTypeId());
-		 * ParameterResDTO parameterResDTO = parameterSO
-		 * .retrieveParameterByTypeAndCode(parameterReqDTO); if
-		 * (!getManagedBean().getRegTypeId().isEmpty()) {
-		 * financialOrg.setCompanyTypeCode(parameterResDTO.getPmParameter()); }
-		 */
+
+		if (getManagedBean().getRegType() != null
+				&& !getManagedBean().getRegType().isEmpty()) {
+			parameterReqDTO
+					.setParameterType(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
+			parameterReqDTO.setParameterCode(getManagedBean().getRegType());
+			ParameterResDTO parameterResDTO1 = parameterSO
+					.retrieveParameterByTypeAndCode(parameterReqDTO);
+			financialOrg.setCompanyTypeCode(parameterResDTO1.getPmParameter());
+		}
+
 		if (financialOrg.isBrandNew()) {
 
 			for (PmFinancialSvc financialSvc : this.getManagedBean()
