@@ -1514,17 +1514,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	}
 	
-	public boolean profBodyOnChange(SmAssociationBody assocBody){
+	public boolean profBodyOnChange(PmCertBody certBody){
 		boolean stat = false;
-		log.info("profCertBodyMap>>>>>" + profCertBodyMap.size());
-		if(assocBody.getPmCertBody() != null){
-			if(assocBody.getPmCertBody().getCertBodyId() != null){
-				Long profId = assocBody.getPmCertBody().getCertBodyId();
-				//log.info("--------Professionnal Body ID---------" +profId);
-				PmCertBody selectedCertBody = profCertBodyMap.get(profId);
-				//log.info("selectedCertBody >>>> " + selectedCertBody.getBodyCode());
-				if(selectedCertBody != null){
 
+		if(certBody!= null){
+			if(certBody.getCertBodyId() != null){
+				Long profId = certBody.getCertBodyId();
+				PmCertBody selectedCertBody = profCertBodyMap.get(profId);
+				if(selectedCertBody != null){
 					if(selectedCertBody.getBodyCode().equalsIgnoreCase(SupplierManagementConst.PM_CERT_BODY_OTHERS)){
 						log.info("--------IS LAIN LAIN PROF--------" +selectedCertBody.getBodyCode());
 						stat = true;
