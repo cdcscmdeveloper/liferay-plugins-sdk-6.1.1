@@ -16,6 +16,7 @@
 		        <td>
 		        	<p:selectOneMenu value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId}" 
 		        		styleClass="ppDropDownWidthL" id="somCountry" 
+		        		required="#{!empty param['disableValidation'] and profilePersonalizationBackingBean.managedBean.addressEntered}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.country']}" >
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profilePersonalizationBackingBean.getCountryList()}"
@@ -33,8 +34,11 @@
 				</th>	  
 			    <td>
 			    	<p:inputText id="itUserAdd1" value="#{profilePersonalizationBackingBean.managedBean.userAddress.address1}" 
+			    		required="#{!empty param['disableValidation'] and profilePersonalizationBackingBean.managedBean.addressEntered}"
 			    		label="#{lbl['lbl.pm.profiles.userdetails.addressone']}"
-			    		styleClass="ppDisplayTextL" maxlength="35"/>
+			    		styleClass="ppDisplayTextL" maxlength="35">
+			    		<p:ajax event="change" listener="#{profilePersonalizationBackingBean.addressEntered}" />
+		    		</p:inputText>
 			    	<p:message id="itUserAdd1Msg" for="itUserAdd1" display="icon" />	
 	    		</td>	
 			    <th></th>
@@ -42,22 +46,34 @@
             </tr>
             <tr>       
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addresstwo']}" /></th>	  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address2}"
-			     		styleClass="ppDisplayTextL" maxlength="35"/></td>	   
+			    <td>
+			    	<p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address2}"
+			     		styleClass="ppDisplayTextL" maxlength="35">
+		     			<p:ajax event="change" listener="#{profilePersonalizationBackingBean.addressEntered}" />
+		     		</p:inputText>
+	     		</td>	   
 			    <th></th>
                 <td></td>
 			 </tr>
 			 <tr>   
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressthree']}" /></th>	  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address3}" 
-			   	 		styleClass="ppDisplayTextL" maxlength="35"/></td>	
+			    <td>
+					<p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address3}"
+			     		styleClass="ppDisplayTextL" maxlength="35">
+		     			<p:ajax event="change" listener="#{profilePersonalizationBackingBean.addressEntered}" />
+		     		</p:inputText>
+	     		</td>
 			    <th></th>
                 <td></td> 
 		    </tr>
 		    <tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressfour']}" /></th>	  
-		    	<td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address4}" 
-		    			styleClass="ppDisplayTextL" maxlength="35"/></td>	 
+		    	<td>
+					<p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address4}"
+			     		styleClass="ppDisplayTextL" maxlength="35">
+		     			<p:ajax event="change" listener="#{profilePersonalizationBackingBean.addressEntered}" />
+		     		</p:inputText>
+	     		</td>
 		    	<th></th>
                	<td></td>	
 		    </tr>
@@ -67,9 +83,12 @@
 				</th>	 
 		    	<td>
 		    		<p:inputText id="itPostcode"  
+		    			required="#{!empty param['disableValidation'] and profilePersonalizationBackingBean.managedBean.addressEntered}"
 		    			label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
 		    			value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" 
-		    			styleClass="ppDisplayTextL"  maxlength="10" />
+		    			styleClass="ppDisplayTextL"  maxlength="10">
+		    			<p:ajax event="change" listener="#{profilePersonalizationBackingBean.addressEntered}" />
+	    			</p:inputText>
 	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
     			</td>	
 		    	<th></th>
@@ -81,6 +100,7 @@
 				</th>  
 		        <td>
 		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthL" 
+		        		required="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId!=null}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId}" 
 		        		label="#{lbl['lbl.pm.profiles.userdetails.state']}">
@@ -99,7 +119,8 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />
                	</th>  
 		        <td>
-		        	<p:selectOneMenu id="somDivisionC" disabled="#{!profilePersonalizationBackingBean.managedBean.divisionFlagC}"
+		        	<p:selectOneMenu id="somDivisionC" 
+		        		disabled="#{!profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDivision.divisionId}" 
 		        		required="#{profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.division']}"
@@ -118,6 +139,7 @@
             	</th> 
 		        <td>
 		        	<p:selectOneMenu id="somDistrictC" 
+		        		required="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId!=null}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.district']}"
@@ -136,6 +158,7 @@
 		    	</td>
 		        <td>
 		        	<p:selectOneMenu id="somCityC" 
+		        		required="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId!=null}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null
 		        			or profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCity.cityId}"

@@ -125,39 +125,39 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MYACCOUNT);
 	}
-	/**
-	 * initial new pmUser object
-	 */
-	private void initialUserProfile(){
-		logger.info("initialUserProfile");
-		//load user attributes
-		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-		PmUser pmUser = new PmUser();
-		pmUser.setSalutationCode(new PmSalutation());
-		pmUser.setPmCountry(defaultCountry);
-		pmUser.setIdentificationCode(new PmParameter());
-		pmUser.setSalutationCode(new PmSalutation());
-		pmUser.setPMP(false);
-		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
-		pmUser.setOrgTypeCode(new PmParameter());
-	
-		pmUser.setNotifyByEmail(true);
-		
-		//initial preference
-		PmCommonUtil.loadPmUserPreference(pmUser);
-		
-		//initial address
-		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
-		
-		//load password
-		pmUser.setPassword(null);
-//		pmUser.setOldPassword(null);
-		pmUser.setConfirmPassword(null);
-		this.getManagedBean().setDeletePortrait(false);
-		this.getManagedBean().setSelectedUser(pmUser);
-		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
-	}
-	
+//	/**
+//	 * initial new pmUser object
+//	 */
+//	private void initialUserProfile(){
+//		logger.info("initialUserProfile");
+//		//load user attributes
+//		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+//		PmUser pmUser = new PmUser();
+//		pmUser.setSalutationCode(new PmSalutation());
+//		pmUser.setPmCountry(defaultCountry);
+//		pmUser.setIdentificationCode(new PmParameter());
+//		pmUser.setSalutationCode(new PmSalutation());
+//		pmUser.setPMP(false);
+//		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+//		pmUser.setOrgTypeCode(new PmParameter());
+//	
+//		pmUser.setNotifyByEmail(true);
+//		
+//		//initial preference
+//		PmCommonUtil.loadPmUserPreference(pmUser);
+//		
+//		//initial address
+//		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+//		
+//		//load password
+//		pmUser.setPassword(null);
+////		pmUser.setOldPassword(null);
+//		pmUser.setConfirmPassword(null);
+//		this.getManagedBean().setDeletePortrait(false);
+//		this.getManagedBean().setSelectedUser(pmUser);
+//		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
+//	}
+//	
 
 	/**
 	 * load pm user object by id
@@ -170,6 +170,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if(id==null){
 				throw new EpException(MessageConst.ERROR_770015);
 			}
+			
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
 			pmUser.setPMP(pmUser.isPMP()?true:false);
@@ -193,6 +194,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setSelectedUser(pmUser);
+			
+			//update address entered flag
+			addressEntered();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()});
@@ -349,6 +353,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}else if(2==address){ //district);
 			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
 		}
+		addressEntered();
 	}
 
 	/**
@@ -419,6 +424,19 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 //			throw new EpException(MessageConst.ERROR_770038);
 //		}
 
+	}
+	
+	public void addressEntered(){
+		PmAddress pmAddress = this.getManagedBean().getUserAddress();
+		//address is optional
+		if(pmAddress.getPmCountry().getCountryId()!=null || !StringUtils.isBlank(pmAddress.getAddress1()) ||
+				!StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId()!=null ||
+				pmAddress.getPmDistrict().getDistrictId()!=null || pmAddress.getPmDivision().getDivisionId()!=null
+				){
+			this.getManagedBean().setAddressEntered(true);
+		}else{
+			this.getManagedBean().setAddressEntered(false);
+		}
 	}
 	
 	/**
