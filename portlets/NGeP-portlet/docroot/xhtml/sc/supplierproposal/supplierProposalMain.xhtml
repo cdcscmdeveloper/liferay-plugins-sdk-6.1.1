@@ -8,17 +8,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:messages id="spMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
+		<p:messages id="spMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+
 		<table style="border: 0px; width: 100%">
 			<tr>
-				<td><ui:include src="supplierProposalButtons.xhtml" /> <ui:include
-						src="spheader.xhtml" /></td>
+				<td><ui:include src="supplierProposalButtons.xhtml" /></td>
 			</tr>
-			</table>
-			<p:panel>
-				<td valign="top"><ui:include src="spsubmenu.xhtml" /></td>
-			</p:panel>
-		
+		</table>
+		<table style="border: 0px; width: 100%">
+			<tr>
+				<td><ui:include src="spheader.xhtml" /></td>
+			</tr>
+		</table>
+		<p:spacer height="5"></p:spacer>
+		<p:panel>
+			<td valign="top"><ui:include src="spsubmenu.xhtml" /></td>
+		</p:panel>
+
 	</ui:define>
 </ui:composition>
