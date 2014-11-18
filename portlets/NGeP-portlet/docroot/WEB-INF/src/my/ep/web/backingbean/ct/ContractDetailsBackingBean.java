@@ -896,6 +896,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				                	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				            	       throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
 				                  }
+				                 
+                                 int value = Float.compare(progressivePayment.getPercentage(),100);
+				                 if(value == 0) {
+				                	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				        	           throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Percentage 100%" });
+				                  }
 			                 }
 		    	        }
 		          }
