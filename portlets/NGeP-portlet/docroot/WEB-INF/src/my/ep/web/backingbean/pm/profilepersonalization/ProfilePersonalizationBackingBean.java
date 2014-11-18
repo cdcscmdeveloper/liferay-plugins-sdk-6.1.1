@@ -166,7 +166,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private void loadUserProfile(Long id){
 		logger.info("loadUserProfile");
 		try {
-			initialUserProfile();
+//			initialUserProfile();
 			if(id==null){
 				throw new EpException(MessageConst.ERROR_770015);
 			}
