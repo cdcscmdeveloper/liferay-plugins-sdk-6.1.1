@@ -88,9 +88,14 @@
 				<p:ajax event="rowDblselect"
 					listener="#{backingBean.unSelectApporvedCategories}"
 					update=":form:tt:catCodeInfPan"></p:ajax>
-
-				<p:column selectionMode="multiple" style="width:2%"
-					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+				
+				<c:if test="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+					<p:column selectionMode="multiple" style="width:2%" />
+				</c:if>
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
 				<p:column style="width :350px;white-space : normal"
 					headerText="#{lbl['lbl.sm.catCodes.cate']}"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
