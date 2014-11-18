@@ -20,7 +20,7 @@
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profileManagementBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />  
-						<p:ajax event="change" update="somStateC" listener="#{profileManagementBackingBean.updateAddress(0)}"/>
+						<p:ajax event="change" update="pUserAddress" listener="#{profileManagementBackingBean.updateAddress(0)}"/>
                     </p:selectOneMenu>
                     <p:message id="somCountryMsg" for="somCountry" display="icon" />
                  </td>	  
