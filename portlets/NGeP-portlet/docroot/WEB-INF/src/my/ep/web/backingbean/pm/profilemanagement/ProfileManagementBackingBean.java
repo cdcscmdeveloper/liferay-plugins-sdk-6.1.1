@@ -514,7 +514,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public String userImagePathWithDefaultImage(String loginId){
 		logger.info("userImagePathWithDefaultImage");
 		String imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
-		imagePath = userImagePath(loginId);
+		if(!StringUtils.isBlank(loginId)){
+			imagePath = userImagePath(loginId);	
+		}
 		return imagePath;
 	}
 
