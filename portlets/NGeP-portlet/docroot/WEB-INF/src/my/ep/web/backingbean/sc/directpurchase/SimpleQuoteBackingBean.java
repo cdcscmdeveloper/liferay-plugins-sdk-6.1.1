@@ -27,7 +27,6 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -54,8 +53,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -91,7 +88,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -118,7 +114,6 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -910,7 +905,125 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
-		
+		// zone details
+		if(scQuote.getQuoteZone() != null){
+			List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+			List<ZonesBean> beans = getManagedBean().getBeans();
+
+			if(scQuote.getQuoteZone().getTplSpecZoneDtls() != null && scQuote.getQuoteZone().getTplSpecZoneDtls().size() >0){
+				for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone().getTplSpecZoneDtls() ) {
+					ZonesBean zonesBean = new ZonesBean();
+					if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
+						zonesBean.setTplSpecZoneDtl(tplSpecZoneDtl);
+						zonesBean.setTplSpecZoneLocs(tplSpecZoneDtl.getTplSpecZoneLocs());
+						beans.add(zonesBean);
+						if(tplSpecZoneDtl.getPanelZone() != null){
+							zoneTrees.add(constuctTreeNodeWithDisableChilds(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+						} else{
+							zoneTrees.add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+						}
+					}
+				}
+				getManagedBean().setZoneTrees(zoneTrees);
+
+				// to check duplicate state or division or district in multiple zones
+				getManagedBean().setBeans(beans);
+			}
+		}
+
+		// by locality
+		List<PmDivision> divisions = new ArrayList<PmDivision>();
+		if(scQuote.getLocationDivisionCriterias() != null) {
+			if(scQuote.getLocationDivisionCriterias().size() >0){
+				for (ScLocationDivisionCriteria locationDivisionCriteria : scQuote.getLocationDivisionCriterias() ) {
+					TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
+					divisions.add(locationDivisionCriteria.getPmDivision());
+					tplSpecZoneLoc.setPmDivision(locationDivisionCriteria.getPmDivision());
+				}
+			}
+		}	
+		List<PmDistrict> districts = new ArrayList<PmDistrict>();
+		if(scQuote.getLocationDistrictCriterias() != null) {
+			if(scQuote.getLocationDistrictCriterias().size() >0){
+
+				for (ScLocationDistrictCriteria locationDistrictCriteria : scQuote.getLocationDistrictCriterias() ) {
+					TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
+					districts.add(locationDistrictCriteria.getPmDistrict());
+					tplSpecZoneLoc.setPmDistrict(locationDistrictCriteria.getPmDistrict());
+				}
+			}
+		}
+
+		List<PmState> states = new ArrayList<PmState>();
+		if(districts.isEmpty() && divisions.isEmpty()){
+			if(scQuote.getLocationStateCriterias() != null) {
+				if(scQuote.getLocationStateCriterias().size() >0){
+					for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
+						states.add(locationStateCriteria.getPmState());
+						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
+						tplSpecZoneLoc.setPmState(locationStateCriteria.getPmState());
+					}
+				}
+			}
+		}
+
+		if(states.size() >0 || divisions.size() >0 || districts.size() >0){
+			getManagedBean().setByLocality(Boolean.TRUE);
+			List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree("", states,
+					districts, divisions, null,TplSpecZoneLoc.class));
+			getManagedBean().setLocationTrees(LocTrees.get(0).getChildren());
+		} else{
+			getManagedBean().setByLocality(Boolean.FALSE);
+		}
+
+		if(scQuote.getProcurementType() != null){
+			if(scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
+			} else {
+				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
+			} 
+		}
+
+		if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size() >0){
+			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
+		}
+
+		// zone location level by default - district 
+		if(scQuote.getZoneLocatonLevel() != null){
+			getManagedBean().setLocationLevel(scQuote.getZoneLocatonLevel().getParameterCode());
+		}
+
+		// supplier location level by default - district 
+		if(scQuote.getSupplierLocationLevel() != null){
+			getManagedBean().setSupplierLocLevel(scQuote.getSupplierLocationLevel().getParameterCode());
+		}
+
+		// business nature details
+		if(scQuote.getBusinessNatureCriterias() !=null && scQuote.getBusinessNatureCriterias().size() >0){
+			getManagedBean().setByBusinessNature(Boolean.TRUE);
+			getManagedBean().setBusinessNatureCriterias(scQuote.getBusinessNatureCriterias());
+		}
+
+		if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() >0){
+			// panel supplier
+			if(scQuote.getPanelItem() != null){
+				getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+
+			} else{
+
+				if(scQuote.getProcurementType() != null &&  scQuote.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+
+					// govt supplers
+					getManagedBean().setGovtSellers(scQuote.getScQuoteSuppliers());
+
+				} else { // supplier list
+					getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
+
+				}
+			}
+		}
 		
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(
@@ -919,15 +1032,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				scQuote.getRemarks(),
 				ScSQRemark.class));
 		
-		if(scQuote.getProcurementType() != null){
-			if(scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
-				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
-			} else {
-				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
-			} 
-		}
-		
-		getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		getManagedBean().setScQuote(scQuote);
 		procurementTypeEvent();
 	}
@@ -1605,31 +1709,19 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			return results;
 		}
 		
-	private ScQuoteZone getZone(TreeNode zoneLocation) {
-		ScQuoteZone result = null;
-		if (zoneLocation.getData() instanceof LocationDTO) {
-			LocationDTO locationDTO = (LocationDTO) zoneLocation.getData();
-			if (locationDTO.getZone() != null) {
-				//result = locationDTO.getZone();
-			} else {
-				if (zoneLocation.getChildren() != null
-						&& zoneLocation.getChildren().size() > 0) {
-					for (TreeNode childLocationNode : zoneLocation
-							.getChildren()) {
-						result = getZone(childLocationNode);
-					}
-				}
-			}
-		} else {
-			if (zoneLocation.getChildren() != null
-					&& zoneLocation.getChildren().size() > 0) {
-				for (TreeNode childLocationNode : zoneLocation.getChildren()) {
-					result = getZone(childLocationNode);
-				}
-			}
-		}
-		return result;
-	}
+	/*
+	 * private ScQuoteZone getZone(TreeNode zoneLocation) { ScQuoteZone result =
+	 * null; if (zoneLocation.getData() instanceof LocationDTO) { LocationDTO
+	 * locationDTO = (LocationDTO) zoneLocation.getData(); if
+	 * (locationDTO.getZone() != null) { //result = locationDTO.getZone(); }
+	 * else { if (zoneLocation.getChildren() != null &&
+	 * zoneLocation.getChildren().size() > 0) { for (TreeNode childLocationNode
+	 * : zoneLocation .getChildren()) { result = getZone(childLocationNode); } }
+	 * } } else { if (zoneLocation.getChildren() != null &&
+	 * zoneLocation.getChildren().size() > 0) { for (TreeNode childLocationNode
+	 * : zoneLocation.getChildren()) { result = getZone(childLocationNode); } }
+	 * } return result; }
+	 */
 	
    /**
 	* editZone Method for zone in simple quote
@@ -2387,40 +2479,37 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
-	private List<TplSpecQuestion>  cloneTplSpecQuetions(TplSpecMaster cloneMaster ,TplSpecMaster tplSpecMaster) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
-		List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
-		for (TplSpecQuestion tplSpecQuestion : cloneMaster.getTplSpecQuestions()) {
-			TplSpecQuestion question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
-			question.setSpecQuestionId(null);
-			question.setTplSpecAnswers(null);
-			question.setTplSpecScorings(null);
-			question.setTplSpecTierQties(null);
-			question.setBrandNew(Boolean.TRUE);
-			if(tplSpecMaster !=null){
-				question.setTplSpecMaster(tplSpecMaster);
-			} else{
-				question.setTplSpecMaster(cloneMaster);
-			}
-			
-			if(question.getTplSpecEstimations() !=null && question.getTplSpecEstimations().size() >0 ){
-				question.setTplSpecEstimations(cloneTplSpecEstimations(question));	
-			}
-			questions.add(question);
-		}
-		return questions;
-	}
+	/*
+	 * private List<TplSpecQuestion> cloneTplSpecQuetions(TplSpecMaster
+	 * cloneMaster ,TplSpecMaster tplSpecMaster) throws IllegalAccessException,
+	 * InstantiationException, InvocationTargetException, NoSuchMethodException{
+	 * List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>(); for
+	 * (TplSpecQuestion tplSpecQuestion : cloneMaster.getTplSpecQuestions()) {
+	 * TplSpecQuestion question = (TplSpecQuestion)
+	 * BeanUtils.cloneBean(tplSpecQuestion); question.setSpecQuestionId(null);
+	 * question.setTplSpecAnswers(null); question.setTplSpecScorings(null);
+	 * question.setTplSpecTierQties(null); question.setBrandNew(Boolean.TRUE);
+	 * if(tplSpecMaster !=null){ question.setTplSpecMaster(tplSpecMaster); }
+	 * else{ question.setTplSpecMaster(cloneMaster); }
+	 * 
+	 * if(question.getTplSpecEstimations() !=null &&
+	 * question.getTplSpecEstimations().size() >0 ){
+	 * question.setTplSpecEstimations(cloneTplSpecEstimations(question)); }
+	 * questions.add(question); } return questions; }
+	 */
 	
-	private List<TplSpecEstimation>  cloneTplSpecEstimations(TplSpecQuestion question) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
-		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
-		for (TplSpecEstimation specEstimation : question.getTplSpecEstimations()) {
-			 specEstimation = (TplSpecEstimation) BeanUtils.cloneBean(specEstimation);
-			 specEstimation.setSpecEstimationId(null);
-			 specEstimation.setEstimatedCost(null);
-			 specEstimation.setBrandNew(Boolean.TRUE);
-			 specEstimations.add(specEstimation);
-		}
-		return specEstimations;
-	}
+	/*
+	 * private List<TplSpecEstimation> cloneTplSpecEstimations(TplSpecQuestion
+	 * question) throws IllegalAccessException, InstantiationException,
+	 * InvocationTargetException, NoSuchMethodException{ List<TplSpecEstimation>
+	 * specEstimations = new ArrayList<TplSpecEstimation>(); for
+	 * (TplSpecEstimation specEstimation : question.getTplSpecEstimations()) {
+	 * specEstimation = (TplSpecEstimation) BeanUtils.cloneBean(specEstimation);
+	 * specEstimation.setSpecEstimationId(null);
+	 * specEstimation.setEstimatedCost(null);
+	 * specEstimation.setBrandNew(Boolean.TRUE);
+	 * specEstimations.add(specEstimation); } return specEstimations; }
+	 */
 	
 	
 	public void cloneAction(String productOrService){
@@ -3355,18 +3444,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return userName;
 	}
 	
-	private String  getMofNor(Long supplierId) {
-		String mofNo ="";
-		IMofAccountSO mofAccountSO	=	(IMofAccountSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-		MofAccountReqDTO accountReqDTO  = new MofAccountReqDTO();
-		accountReqDTO.setSupplierId(supplierId);
-		MofAccountResDTO mofAccountResDTO = mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
-		if(mofAccountResDTO.getMofAccount() != null){
-			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
-		}
-		return mofNo;
-	}
-
+	/*
+	 * private String getMofNor(Long supplierId) { String mofNo ="";
+	 * IMofAccountSO mofAccountSO =
+	 * (IMofAccountSO)BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+	 * IMofAccountSO.class); MofAccountReqDTO accountReqDTO = new
+	 * MofAccountReqDTO(); accountReqDTO.setSupplierId(supplierId);
+	 * MofAccountResDTO mofAccountResDTO =
+	 * mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
+	 * if(mofAccountResDTO.getMofAccount() != null){ mofNo =
+	 * mofAccountResDTO.getMofAccount().getMofNo(); } return mofNo; }
+	 */
 	public void onTabChange(TabChangeEvent event) {
 		if(event.getTab().getTitle().equalsIgnoreCase("Supplier List")){
 			//call supplier criteria 
