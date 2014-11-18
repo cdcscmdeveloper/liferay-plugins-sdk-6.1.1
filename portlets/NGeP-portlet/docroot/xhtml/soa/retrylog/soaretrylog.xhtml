@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:messages id="messages" autoUpdate="true" />
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="100%" valign="top">
+					<table width="100%">
+						<tr>
+							<td style="text-align: left; vertical-align: middle;"></td>
+							<td style="text-align: right;"><p:commandButton
+									value="#{lbl['lbl.portal.soa.btn.submit']}"
+									icon="ui-icon-submit"
+									action="#{soaRetryLogBackingBean.submitRetryLogList}"
+									update=":form:retryLogTable" /> <p:commandButton
+									value="#{lbl['lbl.portal.soa.btn.refresh']}"
+									icon="ui-icon-reset"
+									action="#{soaRetryLogBackingBean.refreshRetryLogList}"
+									update=":form:retryLogTable" /> <p:commandButton
+									value="#{lbl['lbl.portal.soa.btn.delete']}"
+									icon="ui-icon-delete"
+									action="#{soaRetryLogBackingBean.removeRetryLogList}"
+									update=":form:retryLogTable" /></td>
+						</tr>
+						<tr>
+							<td colspan="2" width="100%" valign="top"><p:dataTable
+									value="#{soaRetryLogBackingBean.retryLogDataModel}"
+									var="retrylog" id="retryLogTable" rows="10" rowIndexVar="index"
+									width="100%" rowKey="#{retrylog}" lazy="true"
+									selection="#{soaRetryLogBackingBean.managedBean.selectedRetryLogs}">
+
+									<ac:paginator for="retryLogTable" />
+
+									<p:column selectionMode="multiple" style="width:7%" />
+
+									<p:column headerText="#{lbl['lbl.portal.soa.tranid']}">
+							#{retrylog.osbTran.transId}
+									</p:column>
+									<p:column headerText="#{lbl['lbl.portal.soa.targetsystem']}">
+							#{retrylog.targetSystem}
+									</p:column>
+									<p:column headerText="#{lbl['lbl.portal.soa.version']}">
+							#{retrylog.serviceVersion}
+									</p:column>
+									<p:column headerText="#{lbl['lbl.portal.soa.servicename']}">
+							#{retrylog.serviceName}
+									</p:column>
+									<p:column headerText="#{lbl['lbl.portal.soa.datetime']}"
+										style="text-align: right;width:2%;">
+										<h:outputText value="#{retrylog.createdDate}">
+											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</ui:define>
+</ui:composition>
