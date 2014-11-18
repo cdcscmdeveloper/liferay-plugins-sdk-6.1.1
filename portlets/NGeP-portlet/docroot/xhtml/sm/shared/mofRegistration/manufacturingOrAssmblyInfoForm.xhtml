@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true">
-		<table style="width: 250px">
+		<table style="width: 100%">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -44,7 +44,7 @@
 				id="poManuBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.manufacturingVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.manufacturingVerified : false)}" />
 
-			<p:dataTable var="manBean" widgetVar="smManuDtWidVar"
+			<p:dataTable var="manBean" widgetVar="smManuDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
 				selection="#{backingBean.managedBean.selectedManufacturingList}"
 				rowKey="#{manBean}" rowIndexVar="index" id="manDt">

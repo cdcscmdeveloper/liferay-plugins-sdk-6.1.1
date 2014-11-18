@@ -10,7 +10,7 @@
 		id="smFacilityFactoryDtPanel">
 
 		<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
-			value="#{backingBean.managedBean.applFactoryFacilities}"
+			value="#{backingBean.managedBean.applFactoryFacilities}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 			rowKey="#{fac}" rowIndexVar="index" id="facDt">
 			<ac:paginator for="facDt" />

@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sm.busNtw.panHdr']}" toggleable="true">
-		<table style="width: 250px">
+		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -58,12 +58,12 @@
 					<td valign="middle" width="150px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.stateGov']}" /></td>
 
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+					<td width="7px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.statBody']}" /></td>
 
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+					<td width="13px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
 					<td valign="middle" width="170px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.glc']}" /></td>
