@@ -247,7 +247,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.justification']}"  style="width: 50%; white-space: pre-wrap;" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"/>
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
 				<td style="padding-top: 5px;"><p:inputTextarea cols="90" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"
-					id="persJust" label="#{lbl['lbl.sm.person.justification']}" value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
+					id="persJust" label="#{lbl['lbl.sm.person.justification']}" value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}" disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser or backingBean.managedBean.mofSupplier}"
 					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"/></td>	
 			</tr>
 			<tr>
