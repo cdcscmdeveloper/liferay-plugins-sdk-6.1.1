@@ -169,7 +169,7 @@
 		<h:panelGrid columns="2" style="width:740px;"
 			rendered="#{(agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       agreementBackingBean.managedBean.contractVer.ctContractValue.concession)
-	       and suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+	       and agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			<h:panelGroup>
 				<div style="height: 70px; width: 162px; vertical-align: top;">
 					<p:outputLabel id="justificationLbls"
