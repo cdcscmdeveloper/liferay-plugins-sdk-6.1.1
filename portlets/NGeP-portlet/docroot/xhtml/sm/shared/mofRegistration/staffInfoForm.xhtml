@@ -99,7 +99,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td style="padding-left: 38px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.staffRemark}" /></td>
@@ -109,12 +109,12 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td style="padding-left: 38px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.staffRemark}" /></td>
-						<td style="padding-left: 22px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.staffRemark}" /></td>
