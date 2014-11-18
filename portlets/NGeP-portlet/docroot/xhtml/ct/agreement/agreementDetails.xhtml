@@ -103,8 +103,7 @@
 		
 		<h:panelGrid style="width:230px;">
 				<h:panelGrid columns="3"
-					rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement
-					and suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
+					rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 					<p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true"/>
 					<p:spacer width="2" />
 					<h:panelGrid columns="2">
