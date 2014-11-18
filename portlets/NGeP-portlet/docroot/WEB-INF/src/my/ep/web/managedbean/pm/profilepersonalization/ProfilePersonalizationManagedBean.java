@@ -53,11 +53,25 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean divisionFlagC;
 	private boolean deletePortrait;
 	private int selectedTabIndex;
-
+	private boolean addressEntered;
 	private PmOrgProfile currentProfile;
 	
 	
 	
+/**
+	 * @return the addressEntered
+	 */
+	public boolean isAddressEntered() {
+		return addressEntered;
+	}
+
+	/**
+	 * @param addressEntered the addressEntered to set
+	 */
+	public void setAddressEntered(boolean addressEntered) {
+		this.addressEntered = addressEntered;
+	}
+
 /**
 	 * @return the currentProfile
 	 */
