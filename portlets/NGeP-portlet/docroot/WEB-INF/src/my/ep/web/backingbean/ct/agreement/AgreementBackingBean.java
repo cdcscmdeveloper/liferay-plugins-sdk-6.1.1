@@ -1397,22 +1397,30 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 	public void checkDuplicateAgencyWitness(String str){
 		
-			   if(getManagedBean().getAgencyOfficerIcNo().contains(str)) {
+			   if(getManagedBean().getAgencyOfficerIcNo() != null && 
+				  !getManagedBean().getAgencyOfficerIcNo().isEmpty() && getManagedBean().getAgencyOfficerIcNo().contains(str)) {
 	       		      throw new EpException(MessageConst.WARN_756000, new String[]{str});
-	       	   } else if(getManagedBean().getSupplierOfficerIcNo().contains(str)){
+	       	
+			   } else if(getManagedBean().getSupplierOfficerIcNo() != null && 
+	       			   !getManagedBean().getSupplierOfficerIcNo().isEmpty() && getManagedBean().getSupplierOfficerIcNo().contains(str)){
 	                    throw new EpException(MessageConst.WARN_760000, new String[]{str});
-       		   }  else if(getManagedBean().getSupplierWitnessIcNo().contains(str)){
+       		 
+			   }  else if(getManagedBean().getSupplierWitnessIcNo() != null 
+					   && !getManagedBean().getSupplierWitnessIcNo().isEmpty() && getManagedBean().getSupplierWitnessIcNo().contains(str)){
 		               throw new EpException(MessageConst.WARN_763000, new String[]{str});
 	       	   } 
 	}
 	
 	public void checkDuplicateSupplierWitness(String str){
 		
-		 if(getManagedBean().getSupplierOfficerIcNo().contains(str)) {
+		 if(getManagedBean().getSupplierOfficerIcNo() != null 
+				&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() && getManagedBean().getSupplierOfficerIcNo().contains(str)) {
 		        throw new EpException(MessageConst.WARN_760000, new String[]{str});
-	      } else if (getManagedBean().getAgencyOfficerIcNo().contains(str)) {
+	      } else if (getManagedBean().getAgencyOfficerIcNo() != null && 
+	    		  getManagedBean().getAgencyOfficerIcNo().isEmpty() && getManagedBean().getAgencyOfficerIcNo().contains(str)) {
         	   throw new EpException(MessageConst.WARN_756000, new String[]{str});
-          } else if(getManagedBean().getAgencyWitnessIcNo().contains(str)){
+          } else if(getManagedBean().getAgencyWitnessIcNo() != null 
+        		  && getManagedBean().getAgencyWitnessIcNo().isEmpty() && getManagedBean().getAgencyWitnessIcNo().contains(str)){
 	             throw new EpException(MessageConst.WARN_762000, new String[]{str});
           }
     }
