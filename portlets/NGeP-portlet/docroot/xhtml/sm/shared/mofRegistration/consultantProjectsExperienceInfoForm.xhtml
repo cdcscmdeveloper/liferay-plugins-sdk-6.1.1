@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
-		<table style="width: 250px">
+		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -43,7 +43,7 @@
 			<p:blockUI block=":form:tt:consInfPan" widgetVar="buiPoCons"
 				id="poConsBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
-			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar"
+			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
 				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
 				rowKey="#{consBean}" rowIndexVar="index" id="consDt">

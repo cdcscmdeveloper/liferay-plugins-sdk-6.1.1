@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true"
 		id="stfInfoHdrPanel">
-		<table style="width: 250px">
+		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -80,7 +80,7 @@
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText> <p:message for="nonBumStf" showDetail="false" showSummary="true"
 								display="icon" /></td>
-						<td width="150px"><p:outputLabel
+						<td width="250px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.frgnr']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText id="frgStf" size="4"

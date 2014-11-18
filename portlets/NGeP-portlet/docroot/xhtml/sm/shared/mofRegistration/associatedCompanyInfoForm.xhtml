@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true"
 		id="assocPanel">
-		<table style="width: 250px">
+		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -45,7 +45,7 @@
 				id="poAssocBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.associateVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.associateVerified : false)}" />
 
-			<p:dataTable var="assocBean" widgetVar="assocDtWidVar"
+			<p:dataTable var="assocBean" widgetVar="assocDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 				selection="#{backingBean.managedBean.selectedAssocCompanies}"
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">

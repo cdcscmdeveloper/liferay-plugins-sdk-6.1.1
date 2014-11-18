@@ -7,7 +7,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.offFacility']}" id="ofp"
 		toggleable="true">
-		<table style="width: 250px">
+		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -46,10 +46,10 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td width="150px;"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 100px; padding-bottom: 2px;"><p:selectOneRadio
+					<td style="padding-bottom: 2px;"><p:selectOneRadio
 							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
 							required="true">
@@ -67,7 +67,7 @@
 				<c:if
 					test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
-						<td width="150px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						
@@ -95,7 +95,7 @@
 
 					</tr>
 					<tr>
-						<td style="width: 17%"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.landLordName']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="landlordName"
@@ -268,7 +268,7 @@
 				<c:if
 					test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 					<tr>
-						<td width="150px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<p:outputPanel rendered="#{!backingBean.managedBean.disabledHomeOffice}">
@@ -295,7 +295,7 @@
 
 					</tr>
 					<tr>
-						<td width="150px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.ownerName']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:inputText id="fcltyOwnerName"
@@ -306,7 +306,7 @@
 								display="icon" /></td>
 					</tr>
 					<tr>
-						<td width="150px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="3" style="padding-bottom: 3px;"><p:calendar
@@ -321,7 +321,7 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
-						<td width="150px;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.purchasePrice']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:inputText size="35" id="purchasePrice"
