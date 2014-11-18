@@ -23,7 +23,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:20%">
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
-					maxlength="1"
+					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					size="1" style="margin-right: 3px !important;">
 					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
