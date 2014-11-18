@@ -818,6 +818,11 @@ public class SmCommonUtil {
 			retVal = getMessage("lbl.sm.bpmtitle.verify.suppdoc",
 					null);
 			break;
+			
+		case "Review Application (Special Category)":
+			retVal = getMessage("lbl.sm.bpmtitle.review.special.category",
+					null);
+			break;
 
 		}
 
