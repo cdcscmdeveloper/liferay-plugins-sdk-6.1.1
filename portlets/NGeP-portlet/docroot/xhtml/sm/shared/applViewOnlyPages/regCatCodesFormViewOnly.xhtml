@@ -51,14 +51,20 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<h:outputText
-						value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
-					<br />
-					<h:outputText
-						value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
-					<br />
-					<h:outputText
-						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+					<c:if test="#{not empty catBean.pmCategoryL1}">
+						<h:outputText
+							value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
+						<br />
+					</c:if>
+					<c:if test="#{not empty catBean.pmCategoryL2}">
+						<h:outputText
+							value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
+						<br />
+					</c:if>
+					<c:if test="#{not empty catBean.pmCategoryL3}">
+						<h:outputText
+							value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+					</c:if>
 				</p:column>
 				<p:column>
 					<p:outputLabel value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
@@ -140,14 +146,21 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<h:outputText
-						value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
-					<br />
-					<h:outputText
-						value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" />
-					<br />
-					<h:outputText
-						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+					<c:if test="#{not empty catBeanR.pmCategoryL1}">
+						<h:outputText
+							value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
+						<br />
+					</c:if>
+					<c:if test="#{not empty catBeanR.pmCategoryL2}">
+						<h:outputText
+							value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" />
+						<br />
+					</c:if>
+					<c:if test="#{not empty catBeanR.pmCategoryL3}">
+						<h:outputText
+							value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+					</c:if>
+					
 				</p:column>
 				<p:column>
 					<p:outputLabel value="#{catBeanR.otherDesc}"
