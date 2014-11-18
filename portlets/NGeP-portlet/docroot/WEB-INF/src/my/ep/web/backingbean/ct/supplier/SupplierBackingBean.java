@@ -449,7 +449,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				}
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
-								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
+								getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
@@ -549,8 +549,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setFactoring(getManagedBean().getFactoring());
 			reqDTO.setCtContract(getManagedBean().getFactoring().getCtContract());
 
-			reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());
 			
 			 reqDTO.setUserMap(getManagedBean().getUserMap());
 		     reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());

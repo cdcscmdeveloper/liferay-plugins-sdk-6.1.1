@@ -101,8 +101,8 @@
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<p:inputText id="txtname" style="width:530px;"  label="#{lbl['lbl.ct.amendment.title']}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="99" />
+				<p:inputTextarea id="txtname" style="width:530px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="99" autoResize="false" />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -128,7 +128,7 @@
 			<h:panelGrid columns="3"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3" >
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3">
 					<p:ajax event="blur" update="extStartDate, extEndDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" />
 					</p:inputText>
 				<p:spacer width="2" />
@@ -186,7 +186,8 @@
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				    mindate="#{amendmentBackingBean.currentDate}" >
-				        <p:ajax event="dateSelect" listener="#{amendmentBackingBean.changeAmendmentEffDate}" process="@this" update=":form:itemId,:form:serviceId"/> 
+				        <p:ajax event="dateSelect" process="@this"
+				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
 				</p:calendar>
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
@@ -195,8 +196,8 @@
 			</h:panelGrid>
 		</h:panelGrid>
 		
-		<h:panelGrid columns="2" style="width:100%"
-			columnClasses="columnWidth225" rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225"
+			 rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
 			!empty amendmentBackingBean.managedBean.amendHistoryList and amendmentBackingBean.bpkApprover}">
 			<h:panelGroup>
 				<div style="height: 35px; vertical-align: top;">
