@@ -21,9 +21,7 @@
 			  <p:columnGroup type="header">
 				<p:row>
 					<p:column headerText="#{lbl['lbl.btn.select']}" 
-					   rendered="#{contractDetailsBackingBean.managedBean.updateContract or
-					      contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
-					      or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision}" />
+					   rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" />
 					<p:column headerText="#{lbl['lbl.ct.ref.no']}" />
 					<p:column headerText="#{lbl['lbl.ct.financial.inst']}" />
 					<p:column headerText="#{lbl['lbl.ct.amount']}" />
@@ -39,9 +37,7 @@
 				</p:row>
 			 </p:columnGroup>
 			<p:column selectionMode="multiple" style="width:2%;"
-				rendered="#{contractDetailsBackingBean.managedBean.updateContract or
-				contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
-				 or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision}" />
+				rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" />
 			
 			<p:column style="width:10%;">
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
@@ -50,13 +46,13 @@
 		
 			<p:column style="width:30%;">
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}" 
-				    style="width:210px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+				    style="width:230px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 					   <f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
 				</p:selectOneMenu>
 			</p:column>
 			
 			<p:column style="width:12%;">
-				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="23"
+				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="23" validator="#{}"
 				    disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -65,12 +61,12 @@
 			
 			<p:column style="width:8%;">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
-					showOn="button" readonlyInput="true" navigator="true"
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-					mindate="#{varBond.effDate}" maxdate="#{varBond.expDate}"
+					showOn="button" readonlyInput="true" navigator="true" disabled="true"
+					mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+					maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
-					</p:calendar>
+				</p:calendar>
 			</p:column>
 			
 			<p:column style="width:8%;">
@@ -85,11 +81,8 @@
 			
 			<p:column styleClass="column-align-center" style="width:22%;">
 				<h:panelGroup id="uploadBondPg">
-					<p:commandButton oncomplete="uploadBondDlg.show();return false;"
-						icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg" 
-						rendered="#{varBond.filePath == null and (contractDetailsBackingBean.managedBean.updateContract
-						or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
-						or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision)}">
+					<p:commandButton oncomplete="uploadBondDlg.show();return false;" 
+					     icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
@@ -110,9 +103,7 @@
 		<div class="ppRightBtn">
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@form" 
-				  rendered="#{(contractDetailsBackingBean.managedBean.updateContract or  
-			        contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
-			         or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision) and !contractDetailsBackingBean.managedBean.viewContract}"
+				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
 				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
@@ -120,9 +111,7 @@
 				</p:commandButton>
 				<p:spacer width="1" />
 				<p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();"
-				  rendered="#{(contractDetailsBackingBean.managedBean.updateContract or  
-			        contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingSubmission
-			         or contractDetailsBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.fuPendingRevision) and !contractDetailsBackingBean.managedBean.viewContract}">
+				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
 					<p:tooltip for="delPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -136,8 +125,7 @@
 			<p:fileUpload style="display:inline;" mode="advanced"
 				fileUploadListener="#{contractDetailsBackingBean.fileUpload}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
-				update=":form:tableBond">
+				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:tableBond">
 			</p:fileUpload>
 		</p:dialog>
 		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
