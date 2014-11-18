@@ -53,7 +53,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean divisionFlagC;
 	private boolean deletePortrait;
 	private int selectedTabIndex;
-	private List<PmUserNotification> notifications;
+
 	private PmOrgProfile currentProfile;
 	
 	
@@ -145,20 +145,6 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
-	}
-
-	/**
-	 * @return the notifications
-	 */
-	public List<PmUserNotification> getNotifications() {
-		return notifications;
-	}
-
-	/**
-	 * @param notifications the notifications to set
-	 */
-	public void setNotifications(List<PmUserNotification> notifications) {
-		this.notifications = notifications;
 	}
 
 
