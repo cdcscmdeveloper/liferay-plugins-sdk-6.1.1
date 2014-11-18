@@ -917,30 +917,34 @@ public class QTCommitteBackingBean extends
 								.retrieveParameterByTypeAndCode(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
 					} else {
-						List<PmParameterDesc> roles = getManagedBean()
-								.getRoleTypes();
-						for (PmParameterDesc parameter : roles) {
-							if (parameter
-									.getPmParameter()
-									.getParameterCode()
-									.equals(users.get(i).getMemberRole()
-											.getParameterCode())) {
-								ParameterReqDTO reqDTO = new ParameterReqDTO();
-								reqDTO.setParameterCode(users.get(i)
-										.getMemberRole().getParameterCode());
-								reqDTO.setParameterType(users.get(i)
-										.getMemberRole().getParameterType());
-								ParameterResDTO resDTO = getParameterSO()
-										.retrieveParameterById(reqDTO);
-								committeeMember.setMemberRole(resDTO
-										.getPmParameter());
-								break;
-							} else {
-								committeeMember.setMemberRole(users.get(i)
-										.getMemberRole());
-								break;
-							}
-						}
+						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						reqDTO.setParameterId(users.get(i).getMemberRole()
+								.getParameterId());
+						ParameterResDTO resDTO = getParameterSO()
+								.retrieveParameterById(reqDTO);
+						committeeMember.setMemberRole(resDTO.getPmParameter());
+
+						/*
+						 * List<PmParameterDesc> roles = getManagedBean()
+						 * .getRoleTypes(); for (PmParameterDesc parameter :
+						 * roles) { if (parameter .getPmParameter()
+						 * .getParameterCode()
+						 * .equals(users.get(i).getMemberRole()
+						 * .getParameterCode())) { ParameterReqDTO reqDTO = new
+						 * ParameterReqDTO();
+						 * reqDTO.setParameterCode(users.get(i)
+						 * .getMemberRole().getParameterCode());
+						 * reqDTO.setParameterType(users.get(i)
+						 * .getMemberRole().getParameterType()); ParameterResDTO
+						 * resDTO = getParameterSO()
+						 * .retrieveParameterById(reqDTO);
+						 * committeeMember.setMemberRole(resDTO
+						 * .getPmParameter()); break; } else {
+						 * committeeMember.setMemberRole(users.get(i)
+						 * .getMemberRole()); break; }
+						 * 
+						 * }
+						 */
 					}
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
 					committeeMember.setScCommittee(scCommittee);
