@@ -558,6 +558,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_721033);
 			}else{
 				checkDuplicatedProfessionalBody();
+				for(SmAssociationBody assocBody : this.getManagedBean().getSmAppl().getSmAssociationBodies()){
+					if(assocBody.getSmAppl() == null){
+						assocBody.setSmAppl(this.getManagedBean().getSmAppl());
+					}
+				}		
 			}
 		}
 
