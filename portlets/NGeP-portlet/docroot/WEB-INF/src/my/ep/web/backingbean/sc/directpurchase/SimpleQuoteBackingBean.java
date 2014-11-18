@@ -161,7 +161,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public String simpleQuoteAction(Long docId, boolean panelItemFlag ,List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICatalogueSO.class);
-		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
 		if(scQuote == null){
@@ -185,7 +184,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 					QuoteReqDTO reqDTO = new QuoteReqDTO();
 					reqDTO.setPanelItemId(docId);
-					QuoteResDTO resDTO= quoteSO.getPanelSupplierByPanelItem(reqDTO);
+					QuoteResDTO resDTO= getQuoteSO().getPanelSupplierByPanelItem(reqDTO);
 					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
 					if(selectedPanelItem != null) {
 						if(selectedPanelItem.getItemCategoryId() != null){
@@ -319,7 +318,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		
 		scQuote.setMultipleQuote(Boolean.FALSE);
 		if(scQuote.getQuoteNo() == null){
-			scQuote.setQuoteNo(quoteSO.generateQuoteNo());
+			scQuote.setQuoteNo(getQuoteSO().generateQuoteNo());
 		}
 		
 		IStatusSO statusSO = null;
@@ -518,7 +517,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		CmItem cmItem = null;
 		PmUom uom = null;
 		String ItemName ="";
-		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		// TODO check flag for panel item or non contract item
 		if(ctPanelItem != null){
 			if(ctPanelItem.getScRequestItem() != null){
@@ -548,7 +546,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		// TODO checking  two digits in itemCode whether service or product
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-		QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlFirstTime(quoteReqDTO);
+		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlFirstTime(quoteReqDTO);
 		//get Template Spec Backing Bean
 		PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		TemplateSpecBackingBean  templateSpecBackingBean = (TemplateSpecBackingBean) portletSession.getAttribute("templateSpecBackingBean");
@@ -642,12 +640,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public String saveSimpleQuote(String outcome) {
 		debugLogger("saveSimpleQuote");
-		IQuoteSO quoteSO = null;
 		ScRequestNote requestNote = null;
 		String [] outcomes = getManagedBean().getOutComes();
 		String taskId  = getManagedBean().getTaskId();
 		try {
-			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
@@ -830,9 +826,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
-				quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
+				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
 			} else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
-				quoteResDTO = quoteSO.updateSimpleQuote(reqDTO);
+				quoteResDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 				renewSesionObject();
 			}
 			if (quoteResDTO.isSuccessful()) {
@@ -841,7 +837,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 					reqDTO.setQuoteId(scQuote.getQuoteId());
 					reqDTO.setFetchSubEntity(true);
-				    quoteResDTO = quoteSO.getQuoteDtl((reqDTO));
+				    quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
 		    		getManagedBean().setOutComes(outcomes);
 		    		getManagedBean().setTaskId(taskId);
 					reloadSimpleQuote(quoteResDTO.getQuoteBidDtl());
@@ -863,7 +859,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}  finally {
-			quoteSO = null;
+			//quoteSO = null;
 		}
 		return null;
 	}
@@ -1041,9 +1037,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public String submitSimpleQuote(String outcome) {
 		debugLogger("submitSimpleQuote");
-		IQuoteSO quoteSO = null;
 		try {
-			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			ScQuote quote = getManagedBean().getScQuote();
@@ -1235,10 +1229,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
 				reqDTO.setSubmit(Boolean.TRUE);
-				quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
+				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
 			} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 				reqDTO.setOutcome(outcome);
-				quoteResDTO = quoteSO.updateSimpleQuote(reqDTO);
+				quoteResDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 			} 
 			// submit prompt hiding
 			//RequestContext.getCurrentInstance().execute("promptWidget.hide()");
@@ -1257,13 +1251,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}  finally {
-			quoteSO = null;
+			//quoteSO = null;
 		}
 		return null;
 	}
 	
 	   public void approverAction(String outcome) {
-		   IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		   try {
 			   QuoteReqDTO reqDTO = new QuoteReqDTO();
 			   reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
@@ -1272,7 +1265,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			   reqDTO.setToken(token);
 			   reqDTO.setOutcome(outcome);
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
-			   QuoteResDTO resDTO = quoteSO.updateSimpleQuote(reqDTO);
+			   QuoteResDTO resDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 
 			   if(resDTO.isSuccessful()){
 				   if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
@@ -1292,7 +1285,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			   }
 
 		   } finally {
-			   quoteSO = null;
+			   //quoteSO = null;
 		   }
 	   } 
 
@@ -2402,12 +2395,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		
 		try {
 			if(getManagedBean().getSelectedQuote() != null && getManagedBean().getSelectedQuote().getQuoteDocs().size()>0) {
-				List<ScQuoteDoc>	quoteDocs = getManagedBean().getSelectedQuote().getQuoteDocs();
-				for (ScQuoteDoc quoteDoc : quoteDocs) {
-					// adding selected product or service question only
-					if(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode().equals(productOrService)){
-						reqDTO.setSpecMaster(quoteDoc.getSpecMaster());
-					} 
+				getManagedBean().getSelectedQuote();
+				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				quoteReqDTO.setQuoteId( getManagedBean().getSelectedQuote().getQuoteId());
+				QuoteResDTO quoteResDTO  = getQuoteSO().getQuoteDocByQuoteId(quoteReqDTO);
+				if(quoteResDTO.getQuoteDocs() != null && quoteResDTO.getQuoteDocs().size() >0){
+					List<ScQuoteDoc>	quoteDocs	 = quoteResDTO.getQuoteDocs();
+					for (ScQuoteDoc quoteDoc : quoteDocs) {
+						// adding selected product or service question only
+						if(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode().equals(productOrService)){
+							reqDTO.setSpecMaster(quoteDoc.getSpecMaster());
+						} 
+					}
 				}
 				
 				reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
@@ -2774,7 +2773,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
-		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		String taskId = originalServletRequest.getParameter("taskId");
 		if (StringUtils.isNotBlank(taskId)) {
@@ -2794,7 +2792,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 			quoteReqDTO.setQuoteId(quoteId);
 			quoteReqDTO.setFetchSubEntity(true);
-			QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtl((quoteReqDTO));
+			QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
 			ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 
 			if(scQuote.getJustificationType() == null){
@@ -3018,10 +3016,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr) && StringUtils.isNotBlank(hashSupplierIdStr)) {
-			IQuoteSO quoteSO;
 
 			try {
-				quoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 				Long quoteId = Long.valueOf(quoteIdStr);
@@ -3029,7 +3025,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quoteReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 				quoteReqDTO.setHashSupplierId(hashSupplierIdStr);
 				quoteReqDTO.setFetchSubEntity(true);
-				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
+				QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 
 				// clear session data.
@@ -3083,7 +3079,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						scQuote.getRemarks(),
 						ScSQRemark.class));
 
-				quoteSO.validateSupplierResponse(quoteReqDTO);
+				getQuoteSO().validateSupplierResponse(quoteReqDTO);
 
 			} catch (EpException e) {	
 				String message = e.getMessage();
@@ -3113,7 +3109,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} catch (Exception e) {
 				handleException(e);
 			} finally {
-				quoteSO = null;
+				//quoteSO = null;
 			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -3178,11 +3174,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public String supplierSubmit() {
 		debugLogger("supplierSubmit");
-		IQuoteSO quoteSO = null;
 		try {
-			quoteSO = (IQuoteSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQuoteSO.class);
+			
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 			
@@ -3201,7 +3194,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
-			QuoteResDTO quoteResDTO = quoteSO.saveSupplierResponse(reqDTO);
+			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
 				
@@ -3227,7 +3220,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}  finally {
-			quoteSO = null;
+			//quoteSO = null;
 		}
 		return null;
 	}
@@ -3239,14 +3232,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 
-		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		FacesScopes facesScopes = new FacesScopes();
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		quoteReqDTO.setQuoteId(scQuote.getQuoteId());
 		quoteReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 		quoteReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		quoteReqDTO.setFetchSubEntity(true);
-		QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
+		QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(quoteReqDTO);
 		scQuote = quoteResDTO.getQuoteBidDtl();
 
 		
@@ -3656,6 +3648,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
+	
 	public TreeNode constuctTreeNodeWithDisableChilds(TplSpecZoneDtl tplSpecZoneDtl,
 			List<TplSpecZoneLoc> specLocs) {
 		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
@@ -3705,5 +3698,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		}
 		return root;
+	}
+
+	private IQuoteSO getQuoteSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 	}
 }

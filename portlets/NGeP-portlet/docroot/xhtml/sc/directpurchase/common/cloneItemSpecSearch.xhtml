@@ -68,10 +68,9 @@
 					value="#{simpleQuoteBackingBean.managedBean.scQuoteDataModel}" var="scQuote"
 					selection="#{simpleQuoteBackingBean.managedBean.selectedQuote}"
 					selectionMode="single"
-					rowKey="#{scQuote}"
+					rowKey="#{scQuote.quoteId}" rows="5"
 					rowIndexVar="index" lazy="true">
 					<ac:paginator for="scQuoteDataModel" />
-					<p:column ></p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.sq.no']}">
 						<h:outputText value="#{scQuote.quoteNo}" />
@@ -108,8 +107,6 @@
 				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.cancel']}" onclick="cloneItemSpec.hide()" icon="ui-icon-cancel"
 					immediate="true" />
 			</div>
-
-
 
 		</p:panel>
 		</p:dialog>
