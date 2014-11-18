@@ -85,7 +85,7 @@
 
 
 		<p:dataTable
-			value="#{bpmTasklistBackingBean.managedBean.taskListDataModel}"
+			value="#{bpmTasklistBackingBean.managedBean.taskListDataModel}" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			lazy="true" rowIndexVar="rowIndex" rows="10" id="taskListId"
 			style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
 			<ac:paginator for="taskListId"></ac:paginator>
