@@ -24,16 +24,16 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemDisabled="#{profBody.certBodyId == null}" />	
 					<f:selectItems value="#{registrationBackingBean.managedBean.profCertBodyLs}"
 						var="profBody" itemLabel="#{profBody.bodyName}" itemValue="#{profBody.certBodyId}" />
-					<p:ajax event="change" update="profBodyId" partialSubmit ="profBodyId" />
+					<p:ajax event="change" update="profBodyId" />
 				</p:selectOneMenu>
 				<p:message id="profBodyNameMsg" for="profBodyName" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.profBody.others']}">
 				<p:inputText id="otherAssocId"  
-				disabled="#{!registrationBackingBean.profBodyOnChange(suppAssocBody)}"
+				disabled="#{!registrationBackingBean.profBodyOnChange(suppAssocBody.pmCertBody)}"
 				value="#{suppAssocBody.otherAssociation}" maxlength="200" label="#{lbl['lbl.sm.profBody.othersprofbody']}"
-				required="#{registrationBackingBean.profBodyOnChange(suppAssocBody) and !empty param['disableValidation']}"></p:inputText>
+				required="#{registrationBackingBean.profBodyOnChange(suppAssocBody.pmCertBody) and !empty param['disableValidation']}"></p:inputText>
 				<p:message id="otherAssocIdMsg" for="otherAssocId" display="icon" />
 			</p:column>
 			
