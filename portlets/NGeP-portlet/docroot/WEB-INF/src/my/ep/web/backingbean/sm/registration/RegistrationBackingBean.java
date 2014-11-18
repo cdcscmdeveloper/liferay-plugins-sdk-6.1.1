@@ -1514,15 +1514,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	}
 	
-	public void profBodyOnChange(SmAssociationBody assocBody){
-		log.info("Assoc >>>>>" + assocBody.getPmCertBody().getCertBodyId());
-		
-		if(assocBody.getPmCertBody().getCertBodyId() != null && !assocBody.getPmCertBody().getCertBodyId().equals("")){
-			Long profCertId = assocBody.getPmCertBody().getCertBodyId();
-			PmCertBody selectedCertBody = profCertBodyMap.get(profCertId);
+	public boolean profBodyOnChange(SmAssociationBody assocBody){
+		boolean stat = false;
+		log.info("profCertBodyMap>>>>>" + profCertBodyMap.size());
+		if(assocBody.getPmCertBody() != null){
+			if(assocBody.getPmCertBody().getCertBodyId() != null){
+				Long profId = assocBody.getPmCertBody().getCertBodyId();
+				//log.info("--------Professionnal Body ID---------" +profId);
+				PmCertBody selectedCertBody = profCertBodyMap.get(profId);
+				//log.info("selectedCertBody >>>> " + selectedCertBody.getBodyCode());
+				if(selectedCertBody != null){
 
-			assocBody.setPmCertBody(selectedCertBody);
+					if(selectedCertBody.getBodyCode().equalsIgnoreCase(SupplierManagementConst.PM_CERT_BODY_OTHERS)){
+						log.info("--------IS LAIN LAIN PROF--------" +selectedCertBody.getBodyCode());
+						stat = true;
+					}
+				}
+			}
 		}
+		return stat;
 	}
 	
 	//display section levelcode in table
@@ -1544,7 +1554,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		return retVal;
 	}
-
 }
 
 
