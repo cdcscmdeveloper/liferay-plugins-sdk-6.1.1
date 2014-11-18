@@ -2558,7 +2558,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
-	public void gpkiSignAction(String outcome) throws Exception{
+	public String gpkiSignAction(String outcome) throws Exception{
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -2574,8 +2574,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(false);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
 		}else{
-			fulfillmentRequestAction(outcome);
+			return fulfillmentRequestAction(outcome);
 		}
 	}
 	
