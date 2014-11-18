@@ -232,5 +232,11 @@
 		<category name="category.ep.oh">
 			<portlet id="online-help-display-portlet"></portlet>
 		</category>
+		
+		<!-- SOA - START -->
+		<category name="category.ep.soa">
+			<portlet id="soaRetryLog"></portlet>
+		</category>
+		<!-- SOA - END -->		
 	</category>
 </display>
