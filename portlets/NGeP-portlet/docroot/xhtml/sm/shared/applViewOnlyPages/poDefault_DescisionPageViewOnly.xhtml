@@ -31,31 +31,15 @@
 		</table>
 		
 		<br />
-		<table style="width: 50%;table-layout: fixed;">
-			<tr>
-				<td>
-					<c:choose>
-						<c:when
-							test="#{viewSmApplBackingBean.managedBean.personCalc.halfBumiStatus and viewSmApplBackingBean.managedBean.smAppl.applType ne 'C'}">
-							<p:outputLabel
-								value="#{lbl['lbl.sm.recommendation.halfBumi']}"
-								style="color: green;font-weight: bold;float:left;" />
-						</c:when>
-						<c:when
-							test="#{viewSmApplBackingBean.managedBean.personCalc.fullBumiStatus and viewSmApplBackingBean.managedBean.smAppl.applType ne 'C'}">
-							<p:outputLabel
-								value="#{lbl['lbl.sm.recommendation.fullBumi']}"
-								style="color: green;font-weight: bold;float:left;" />
-						</c:when>
-						<c:otherwise>
-							<p:outputLabel value="#{lbl['lbl.sm.recommendation.noBumi']}"
-								style="color: green;font-weight: bold;float:left;" />
-						</c:otherwise>
-					</c:choose>
-				</td>
-			</tr>
-		 </table>
-		 <br />
+		<c:if test="#{not empty viewSmApplBackingBean.managedBean.bumiRecommendationNote}">
+			<table style="width: 50%;table-layout: fixed;">
+				<tr>
+					<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
+							style="color: green;font-weight: bold;float:left;"/></td>
+				</tr>
+			</table>
+		</c:if>
+		<br />
 		
 		<p:separator />
 		<div>

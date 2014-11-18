@@ -305,6 +305,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disAllowOwnerEdit;
 	private boolean disabledHomeOffice;
 	private Integer currYear;
+	private String typeOfBusiness;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2311,6 +2312,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisabledHomeOffice(boolean disabledHomeOffice) {
 		this.disabledHomeOffice = disabledHomeOffice;
+	}
+
+	public String getTypeOfBusiness() {
+		return typeOfBusiness;
+	}
+
+	public void setTypeOfBusiness(String typeOfBusiness) {
+		this.typeOfBusiness = typeOfBusiness;
 	}
 
 }

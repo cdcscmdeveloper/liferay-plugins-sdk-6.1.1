@@ -19,6 +19,7 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -237,7 +238,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	private SmMofAccount getSingleSmMofAccount() {
 		SmMofAccount smMofAccount = new SmMofAccount();
-		try{
+		try {
 			List<SmMofAccount> accounts = getManagedBean().getSmAppl()
 					.getSmSupplier().getSmMofAccounts();
 			for (SmMofAccount account : accounts) {
@@ -249,7 +250,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					break;
 				}
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			log.error(ex.getMessage());
 		}
 		return smMofAccount;
@@ -308,12 +309,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
+		initBumiRecommendNote();
 
 		// testing by user
 		// getManagedBean().setApproverUser(false);
 		// getManagedBean().setSupplierUser(false);
 		// getManagedBean().setPoUser(true);
-//		getManagedBean().setViewSupplierProfile(true);
+		// getManagedBean().setViewSupplierProfile(true);
 	}
 
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
@@ -326,7 +328,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
-		if(getManagedBean().isViewSupplierProfile()){
+		if (getManagedBean().isViewSupplierProfile()) {
 			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		}
 		getManagedBean().setReviewApplicationExist(true);
@@ -467,8 +469,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	private void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
+		
+		if (getManagedBean().isPoUser()) {
+			setDefaultPoReviewSection();
+		}
 
-		setDefaultApproverReviewSection();
+		if (getManagedBean().isApproverUser()) {
+			setDefaultApproverReviewSection();
+		}
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
 		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
@@ -763,6 +771,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	private void setDefaultApproverReviewSection() {
+		boolean containsAppRev = false;
 		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null) {
 			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
@@ -776,6 +785,39 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
+		if (!containsAppRev) {
+			SmApplSectionReview appRev = new SmApplSectionReview();
+			appRev.setSmAppl(getManagedBean().getSmAppl());
+			appRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			getManagedBean().setApprvrSecReview(appRev);
+			getManagedBean().getSmAppl().getSmApplSectionReviews()
+					.add(getManagedBean().getApprvrSecReview());
+		}
+	}
+	
+	private void setDefaultPoReviewSection() {
+
+		boolean containsPORev = false;
+
+		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
+			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+					.getSmApplSectionReviews()) {
+				if (rev.getRoleType().equalsIgnoreCase(
+						SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+					getManagedBean().setPoSecReview(rev);
+					containsPORev = true;
+				}
+			}
+		}
+		if (!containsPORev) {
+			SmApplSectionReview poRev = new SmApplSectionReview();
+			poRev.setSmAppl(getManagedBean().getSmAppl());
+			poRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
+			getManagedBean().setPoSecReview(poRev);
+			getManagedBean().getSmAppl().getSmApplSectionReviews()
+					.add(getManagedBean().getPoSecReview());
+		}
+
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
@@ -978,6 +1020,26 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		}
+	}
+
+	private void initBumiRecommendNote() {
+		getManagedBean().setBumiRecommendationNote("");
+		if (getManagedBean().getSmAppl() != null) {
+			String applType = getManagedBean().getSmAppl().getApplType() == null ? ""
+					: getManagedBean().getSmAppl().getApplType();
+			String suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
+					: getManagedBean().getSmAppl().getSupplierType();
+
+			getManagedBean().setBumiRecommendationNote(
+					SmCommonUtil.displayBumiRecommendNote(getManagedBean()
+							.getSmAppl().getSmSupplierBanks(), getManagedBean()
+							.getPersonCalc(), getManagedBean()
+							.getCurrentPageType(), applType, suppType,
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getBumiPercent(), getManagedBean()
+									.isSupplierUser()));
+		}
+
 	}
 
 	public StreamedContent getFile() {

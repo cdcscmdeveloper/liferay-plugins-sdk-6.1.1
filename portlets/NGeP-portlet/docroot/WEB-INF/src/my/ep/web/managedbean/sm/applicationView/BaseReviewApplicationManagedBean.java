@@ -126,6 +126,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmFacility> applDockyardFacilities;
 	private List<SmFacility> applWorkShopFacilities;
 	private List<SmFacility> applStoreFacilities;
+	private String bumiRecommendationNote;
 
 	private String revTypeParam;
 	
@@ -806,6 +807,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
+	}
+
+	public String getBumiRecommendationNote() {
+		return bumiRecommendationNote;
+	}
+
+	public void setBumiRecommendationNote(String bumiRecommendationNote) {
+		this.bumiRecommendationNote = bumiRecommendationNote;
 	}
 
 }

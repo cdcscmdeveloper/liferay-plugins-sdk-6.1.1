@@ -13,7 +13,7 @@
 
 	<c:if
 		test='#{tasklistBackingBean.managedBean.taskName eq "Assign Site Visit"}'>
-			Assign Site Visit
+			#{lbl['lbl.sm.assign.site.visit']}
 		<ui:include src="/xhtml/svcassignation/assignSiteVisitView.xhtml"></ui:include>
 	</c:if>
 
