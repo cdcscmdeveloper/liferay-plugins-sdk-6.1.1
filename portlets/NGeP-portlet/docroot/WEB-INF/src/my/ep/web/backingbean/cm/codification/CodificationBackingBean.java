@@ -1046,7 +1046,7 @@ public class CodificationBackingBean extends
 			CmUnspsc selectedCommodity = this.getManagedBean()
 					.getSelectedUNSPSCObj();
 			log.info("..................selectedCommodity.getUnspscCode()=" + selectedCommodity.getUnspscCode());
-
+            log.info(".......selectedCommodity.getCmType().size="+selectedCommodity.getCmType().size());
 			extCodeVO.setTypeId(selectedCommodity.getCmType().get(0)
 					.getTypeId());
 			extCodeVO.setBrandId(selectedCommodity.getCmBrand().get(0)
@@ -1796,7 +1796,8 @@ public class CodificationBackingBean extends
 		}
 
 
-	if (this.getManagedBean().getCurrentTaskName() != null && this.getManagedBean().getCurrentTaskName().equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_REVIEW_REQUEST)) {
+	if (this.getManagedBean().getCurrentTaskName() != null && (this.getManagedBean().getCurrentTaskName().equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_REVIEW_REQUEST) || 
+			(this.getManagedBean().getCurrentTaskName().equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)))) {
 		return "verifyExtensionSearch?faces-redirect=true";
 	 }
 	//if come from pending codification
@@ -1818,22 +1819,30 @@ public class CodificationBackingBean extends
 		log.info("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
 
 		String currentTaskName = fs.getParameter("currentTaskName");
-
+		log.info("....%%%.....currentTaskName="+currentTaskName);
+	
 		// if (fs.hasRoleUser("CM_ADMIN")) {
 		// return "reviewUnspscCode?faces-redirect=true";
 		// } else if (fs.hasRoleUser("CD_OFFICER")) {
 		// return "reviewBeforeCreateTempCode?faces-redirect=true";
 		// }
-
+		 if(currentTaskName.equals("null") || currentTaskName == null){
+				log.info(".........$$$$$$$$$$$...........");
+				//if come from pending codification, no task
+				return NAV_TO_ASSIGN_PRODUCT_CODE+"?faces-redirect=true";
+		 }
+		 
 		if (currentTaskName != null
 				&& currentTaskName
 						.equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
 			return "reviewBeforeCreateTempCode?faces-redirect=true";
-		} else {
+		} else if(currentTaskName != null
+				&& currentTaskName.equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_REVIEW_REQUEST)){
+			// current task name is TASK_REVIEW_REQUEST
 			return "reviewUnspscCode?faces-redirect=true";
 		}
 
-		// return "";
+		 return "";
 
 	}
 
