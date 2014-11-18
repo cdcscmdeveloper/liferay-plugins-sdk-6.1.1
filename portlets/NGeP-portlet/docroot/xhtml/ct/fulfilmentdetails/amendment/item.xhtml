@@ -400,7 +400,8 @@
 		</h:panelGrid>
 		<p:outputPanel id="showServicePrice">
 			<p:spacer height="20" />
-			<h:panelGrid columns="1" style="width:100%"	rendered="#{amendmentBackingBean.managedBean.selectedServiceItem != null}">
+			<h:panelGrid columns="1" style="width:100%"	rendered="#{amendmentBackingBean.managedBean.selectedServiceItem != null
+				and amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}">
 				<p:dataTable id="servicePriceTable" var="ItemPricesVar"
 					value="#{amendmentBackingBean.managedBean.selectedServiceItem.ctItemPrices}" >
 					<ac:paginator for="servicePriceTable" />
