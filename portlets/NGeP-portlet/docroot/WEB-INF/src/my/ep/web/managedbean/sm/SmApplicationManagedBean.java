@@ -158,6 +158,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poUser;
 	private boolean supplierUser;
 	private boolean approverUser;
+	private boolean mofSupplier;
 	private String decisionAckMsg;
 	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
@@ -344,6 +345,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
 			setSupplierUser(true);
+			if(sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)){
+				setMofSupplier(true);
+			}
 			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
 		} else {
 			System.out.println("  *** UNKNOWN USER ****");
@@ -2320,6 +2325,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setTypeOfBusiness(String typeOfBusiness) {
 		this.typeOfBusiness = typeOfBusiness;
+	}
+
+	public boolean isMofSupplier() {
+		return mofSupplier;
+	}
+
+	public void setMofSupplier(boolean mofSupplier) {
+		this.mofSupplier = mofSupplier;
 	}
 
 }
