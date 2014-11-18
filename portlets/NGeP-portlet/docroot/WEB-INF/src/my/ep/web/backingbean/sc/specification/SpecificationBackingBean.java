@@ -10995,15 +10995,21 @@ public class SpecificationBackingBean extends
 								.getScQtCheckSt2financeProposalList();
 						if (null != finanicialCheckLists
 								&& !finanicialCheckLists.isEmpty()) {
+							boolean finspec = false;
 							for (int i = 0; i < finanicialCheckLists.size(); i++) {
 								ScQtCheckList qtCheckList = finanicialCheckLists
 										.get(i);
 								if (qtCheckList.getTitle().equalsIgnoreCase(
 										checkList.getTitle())) {
+									finspec = true;
 									finanicialCheckLists.remove(i);
 									finanicialCheckLists.add(checkList);
 									// Collections.sort(finanicialCheckLists);
 								}
+							}
+							if (!finspec) {
+								finanicialCheckLists.add(checkList);
+
 							}
 						}
 					}
@@ -11217,6 +11223,19 @@ public class SpecificationBackingBean extends
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 			specMaster.setScoringReq(getManagedBean().getScQt()
 					.isTechEvaluationReq());
+			if (getManagedBean().getScQt().isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = getManagedBean()
+						.getScQt().getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					specMaster.setTplSpecZone(supplierCriteria
+							.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			}
+
 			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
 					SourcingConstants.TECHNICAL_DOCTYPE);
 
@@ -11335,19 +11354,19 @@ public class SpecificationBackingBean extends
 			templateSpecBean.getSpecMaster().setScoringReq(
 					scQt.isTechEvaluationReq());
 		}
-		if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) {
-			if (scQt.isZonal()) {
-				ScQtSupplierCriteria supplierCriteria = scQt
-						.getScQtSupplierCriteria();
-				if (null != supplierCriteria
-						&& null != supplierCriteria.getQtZoneCriterias()) {
+		/* if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) { */
+		if (scQt.isZonal()) {
+			ScQtSupplierCriteria supplierCriteria = scQt
+					.getScQtSupplierCriteria();
+			if (null != supplierCriteria
+					&& null != supplierCriteria.getQtZoneCriterias()) {
 
-					templateSpecBean.getSpecMaster().setTplSpecZone(
-							supplierCriteria.getQtZoneCriterias());
+				templateSpecBean.getSpecMaster().setTplSpecZone(
+						supplierCriteria.getQtZoneCriterias());
 
-				}
 			}
 		}
+		// }
 
 		if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
 			return "/xhtml/sc/main/BusinessOwnerTechnicalSpecEdit.xhtml?faces-redirect=true";
