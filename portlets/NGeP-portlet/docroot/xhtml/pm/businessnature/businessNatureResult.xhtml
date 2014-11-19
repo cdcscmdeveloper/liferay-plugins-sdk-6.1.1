@@ -15,41 +15,48 @@
       <div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
 							 action="#{businessNatureBackingBean.retrieveBusinessNature}"
-						     update="businessNatureSR" process="businessNatureSearch"/>
+							 onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						     update="businessNatureDataModel" />
             <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" 
             				 action="#{businessNatureBackingBean.resetBusinessNatureSearch}" 
-            				 process="@this" update="businessNaturePanel" />
+            				 process="@this" update="businessNatureSearch,businessNatureDataModel" />
 	  </div>
     <br/>
 	<br/>
 	</p:panel>
 	
-	<p:panel id="businessResult" header="RESULT" toggleable="true">
-	<p:dataTable id="businessNatureSR" value="#{businessNatureBackingBean.businessNatureDataModel}"
-				var="businessNatureList" rows="10" rowIndexVar="index" lazy="true">	
-	   <ac:paginator for="businessNatureSR" />
+	<p:panel header="RESULT" toggleable="true">
+	<p:dataTable id="businessNatureDataModel" 
+		value="#{businessNatureBackingBean.businessNatureDataModel}"
+		var="businessNature" 
+		rows="10" 
+		rowIndexVar="index" 
+		lazy="true">	
+		
+	   <ac:paginator for="businessNatureDataModel" />
 		
        <p:column headerText="#{lbl['lbl.pm.bn.level']}" style="width:10%">
- 		<h:outputText value="#{businessNatureList.businessLevel}" />           
+ 		<h:outputText value="#{businessNature.businessLevel}" />           
        </p:column>
        
        <p:column headerText="#{lbl['lbl.pm.bn.code']}" style="width:10%"> 
-		<h:outputText value="#{businessNatureList.levelCode}" />        
+		<h:outputText value="#{businessNature.levelCode}" />        
        </p:column>  
        
         <p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%"> 
- 		<h:outputText value="#{businessNatureList.levelName}" />        
+ 		<h:outputText value="#{businessNature.levelName}" />        
        </p:column>              
      
        <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:10%">  
-   	    #{(businessNatureList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}                    
+       	<h:outputText value="#{lbl['lbl.pm.active']}" rendered="#{businessNature.recordStatusFlg==1}"/>
+       	<h:outputText value="#{lbl['lbl.pm.inactive']}" rendered="#{businessNature.recordStatusFlg!=1}"/>                  
        </p:column >
         
     	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%">
-   		 <p:commandLink action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNatureList)}"
-   		 			   process="@this" partialSubmit="true">
+   		 <p:commandLink action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNature)}" process="@this" partialSubmit="true">
      		<p:graphicImage library="ep/images/design" name="edit.png"
-     		 value="/resources/ep/images/design/edit.png" />
+								title="#{lbl['lbl.pm.edit.category']}"
+								value="/css/images/design/edit.png" />
     	 </p:commandLink>
    	 	</p:column>    
      </p:dataTable>

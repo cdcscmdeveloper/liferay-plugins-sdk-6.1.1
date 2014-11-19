@@ -11,15 +11,46 @@
 		<h:panelGrid columns="2">
 		
 		    <h:outputLabel value="Category Level"></h:outputLabel>
-		      <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{businessNatureBackingBean.managedBean.categoryLvl}">    
+		    <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{businessNatureBackingBean.managedBean.categoryLvl}">    
 			 	 <f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}" />
-              </p:selectOneMenu>
+			 	 <p:ajax event="change" listener="#{businessNatureBackingBean.updateCategoryLevel()}" update="businessNaturePanel" />
+            </p:selectOneMenu>
 	
-	        <h:outputLabel value="#{lbl['lbl.pm.search.codes']}"></h:outputLabel>
-            <p:inputText value="#{businessNatureBackingBean.managedBean.secLevelCode}" size="30"  />
+	        <h:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"></h:outputLabel>
+	        <h:panelGrid columns="3">
+	            <p:inputText value="#{businessNatureBackingBean.managedBean.secLevelCode}" size="30"  />
+				<h:outputLabel value="#{lbl['lbl.pm.bn.secname']}"></h:outputLabel>
+				<p:inputText value="#{businessNatureBackingBean.managedBean.secLevelName}" size="50" />		
+			</h:panelGrid>	
 			
-			<h:outputLabel value="#{lbl['lbl.pm.search.name']}"></h:outputLabel>
-			<p:inputText value="#{businessNatureBackingBean.managedBean.secLevelName}" size="50" />																
+			<h:outputLabel value="#{lbl['lbl.pm.bn.divcode']}" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}"></h:outputLabel>
+	        <h:panelGrid columns="3" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}">
+	            <p:inputText value="#{businessNatureBackingBean.managedBean.divLevelCode}" size="30"  />
+				<h:outputLabel value="#{lbl['lbl.pm.bn.divname']}"></h:outputLabel>
+				<p:inputText value="#{businessNatureBackingBean.managedBean.divLevelName}" size="50" />		
+			</h:panelGrid>	
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}"></h:outputLabel>
+	        <h:panelGrid columns="3" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}">
+	            <p:inputText value="#{businessNatureBackingBean.managedBean.groupLevelCode}" size="30"  />
+				<h:outputLabel value="#{lbl['lbl.pm.bn.groupname']}"></h:outputLabel>
+				<p:inputText value="#{businessNatureBackingBean.managedBean.groupLevelName}" size="50" />		
+			</h:panelGrid>	
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.classcode']}" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}"></h:outputLabel>
+	        <h:panelGrid columns="3" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}">
+	            <p:inputText value="#{businessNatureBackingBean.managedBean.classLevelCode}" size="30"  />
+				<h:outputLabel value="#{lbl['lbl.pm.bn.classname']}"></h:outputLabel>
+				<p:inputText value="#{businessNatureBackingBean.managedBean.classLevelName}" size="50" />		
+			</h:panelGrid>	
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.itemcode']}" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}"></h:outputLabel>
+	        <h:panelGrid columns="3" rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}">
+	            <p:inputText value="#{businessNatureBackingBean.managedBean.itemLevelCode}" size="30"  />
+				<h:outputLabel value="#{lbl['lbl.pm.bn.itemname']}"></h:outputLabel>
+				<p:inputText value="#{businessNatureBackingBean.managedBean.itemLevelName}" size="50" />		
+			</h:panelGrid>	
+																
 	
 		</h:panelGrid>
  </p:panel>
