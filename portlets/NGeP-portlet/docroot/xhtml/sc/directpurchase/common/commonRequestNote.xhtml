@@ -18,9 +18,7 @@
    <p:messages showDetail="true" autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" showSummary="false" />
 	<p:panel id="requestNoteId">
 			<ac:gpkiPopup textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
-			postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-			
-		  <ac:gpkiPopup textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
+			postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}" />
 			
 			 <ui:include
