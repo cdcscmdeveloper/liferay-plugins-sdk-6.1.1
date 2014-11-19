@@ -1302,7 +1302,7 @@ public class SmApplicationBackingBean extends
 						new PmCity());
 			}
 		}
-
+		initBusinessPremise();
 	}
 
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
@@ -6255,13 +6255,12 @@ public class SmApplicationBackingBean extends
 					.getSupplierType();
 		}
 		// hide home office for consultant
-		if (suppType.equalsIgnoreCase("J")) {
-			if (getManagedBean().getBasicCompanyFacility() == null) {
-				getManagedBean().setBasicCompanyFacility(new SmFacility());
-			}
+		if (suppType.equalsIgnoreCase("J")
+				&& getManagedBean().getBasicCompanyFacility() != null) {
 			getManagedBean().setDisabledHomeOffice(true);
 			getManagedBean().getBasicCompanyFacility().setFacilityType(
 					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+
 		} else {
 			getManagedBean().setDisabledHomeOffice(false);
 		}
