@@ -111,7 +111,7 @@
 					</h:commandLink> 
 					</h:panelGroup>
 				</p:column>
-                <p:column style="width:14%;">
+                <p:column style="width:30%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
@@ -177,7 +177,7 @@
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
 				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:7%; text-align:right; white-space: normal;">
+			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:7%;white-space: normal;">
 			    <h:panelGroup id="offerPriceId">
 						<h:panelGroup
 							rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard or
