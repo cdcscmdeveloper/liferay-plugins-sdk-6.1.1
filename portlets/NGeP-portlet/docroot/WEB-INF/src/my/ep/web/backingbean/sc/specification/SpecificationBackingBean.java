@@ -5521,18 +5521,20 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (resDTO.getCheckListScores() == null
-							|| resDTO.getScQtCheckListValue() == null) {
+					if (resDTO.getCheckListScores() == null) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
-						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-						setUserDetails(checkListValue);
-						checkListValue.setScQtCheckList(checkList);
+						// ScQtCheckListValue checkListValue = new
+						// ScQtCheckListValue();
+						// setUserDetails(checkListValue);
+						// checkListValue.setScQtCheckList(checkList);
 
-						checkList.setScQtCheckListValue(checkListValue);
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
+						// checkList.setScQtCheckListValue(checkListValue);
+						/*
+						 * this.getManagedBean().setCheckListScore( new
+						 * ArrayList<ScQtCheckListScore>());
+						 */
 
 					} else {
 
@@ -5843,19 +5845,20 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getCheckListScores()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
-						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-						setUserDetails(checkListValue);
+						// ScQtCheckListValue checkListValue = new
+						// ScQtCheckListValue();
+						// setUserDetails(checkListValue);
 
-						checkListValue.setScQtCheckList(checkList);
-						checkList.setScQtCheckListValue(checkListValue);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
+						// checkListValue.setScQtCheckList(checkList);
+						// checkList.setScQtCheckListValue(checkListValue);
+						/*
+						 * this.getManagedBean().setCheckListScore( new
+						 * ArrayList<ScQtCheckListScore>());
+						 */
 
 					} else {
 
@@ -6037,19 +6040,21 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getCheckListScores()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
-						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-						setUserDetails(checkListValue);
+						// ScQtCheckListValue checkListValue = new
+						// ScQtCheckListValue();
+						// setUserDetails(checkListValue);
 
-						checkListValue.setScQtCheckList(checkList);
+						// checkListValue.setScQtCheckList(checkList);
 
-						checkList.setScQtCheckListValue(checkListValue);
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
+						// checkList.setScQtCheckListValue(checkListValue);
+						/*
+						 * this.getManagedBean().setCheckListScore( new
+						 * ArrayList<ScQtCheckListScore>());
+						 */
 
 					} else {
 
@@ -9353,8 +9358,8 @@ public class SpecificationBackingBean extends
 			if (scQt.getEvaluationType().equalsIgnoreCase(
 					QTConstants.EVALUATION_TWO_TIER)
 					&& !this.getManagedBean().isReadOnly()) {
-				if (null != technicalScoreSetting.getPassingScore()
-						&& technicalScoreSetting.getPassingScore().intValue() <= 0) {
+				if (null == technicalScoreSetting.getPassingScore()
+						|| technicalScoreSetting.getPassingScore().intValue() <= 0) {
 					throw new EpException(MessageConst.ERROR_760172);
 				}
 			}
@@ -9372,8 +9377,8 @@ public class SpecificationBackingBean extends
 			if (scQt.getEvaluationType().equalsIgnoreCase(
 					QTConstants.EVALUATION_TWO_TIER)
 					&& !this.getManagedBean().isReadOnly()) {
-				if (null != financialScoreSetting.getPassingScore()
-						&& financialScoreSetting.getPassingScore().intValue() <= 0) {
+				if (null == financialScoreSetting.getPassingScore()
+						|| financialScoreSetting.getPassingScore().intValue() <= 0) {
 					throw new EpException(MessageConst.ERROR_760174);
 				}
 			}
@@ -9391,8 +9396,8 @@ public class SpecificationBackingBean extends
 					&& scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)
 					&& !this.getManagedBean().isReadOnly()) {
-				if (null != demoScoreSetting.getPassingScore()
-						&& demoScoreSetting.getPassingScore().intValue() <= 0) {
+				if (null == demoScoreSetting.getPassingScore()
+						|| demoScoreSetting.getPassingScore().intValue() <= 0) {
 					throw new EpException(MessageConst.ERROR_760173);
 				}
 				if (null != demoScoreSetting.getPassingScore()
