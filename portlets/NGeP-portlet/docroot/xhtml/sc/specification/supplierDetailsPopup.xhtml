@@ -9,7 +9,7 @@
 	<p:dialog id="popupSuppDtl" widgetVar="suppDetails" resizable="false"
 		position="top" styleClass="pop_up_top"
 		header="#{lbl['lbl.sc.supplier.details']}" width="500" height="800">
-		<table style="width: 100%" >
+		<table style="width: 100%">
 			<tr>
 				<td style="width: 154px;"><p:outputLabel
 						value="#{lbl['lbl.sc.ep.no']}" /></td>
@@ -79,7 +79,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
-				<td><p:inputTextarea rows="3" cols="32" readonly="true"
+				<td><p:inputTextarea rows="3" cols="32" readonly="true" rendered="#{specificationBackingBean.managedBean.supplierAddress ne null}"
 						value="#{specificationBackingBean.managedBean.supplierAddress.address1}"
 						disabled="true" style=" margin-bottom:5px;" /></td>
 			</tr>
@@ -93,7 +93,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.designation']}" /></td>
-				<td><p:inputText
+				<td><p:inputText rendered="#{specificationBackingBean.managedBean.personnel ne null}"
 						value="#{specificationBackingBean.managedBean.personnel.designation}"
 						size="30" readonly="true" disabled="true" /></td>
 			</tr>
