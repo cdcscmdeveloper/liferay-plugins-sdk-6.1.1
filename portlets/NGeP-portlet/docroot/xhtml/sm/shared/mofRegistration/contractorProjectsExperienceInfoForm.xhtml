@@ -137,7 +137,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="100"
+				<td><p:inputText maxlength="500"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
@@ -149,12 +149,11 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				<td><p:inputText label="#{lbl['lbl.sm.projDtls.contrVal']}"
-						id="contractorContractVal" maxlength="14"
+						id="contractorContractVal" maxlength="17"
 						required="#{backingBean.managedBean.valueReqd}"
 						value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 						size="35">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<f:converter converterId="currencyMandatoryConverter" />
 					</p:inputText> <p:message id="contractorContractValMsg"
 						for="contractorContractVal" showSummary="true" showDetail="false"
 						display="icon" /></td>
@@ -184,7 +183,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputTextarea maxlength="100"
+				<td><p:inputTextarea maxlength="255"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
