@@ -108,12 +108,10 @@
 					<p:selectOneMenu id="menuLoaId" style="width:210px;"
 						value="#{supplierBackingBean.managedBean.loaId}" required="true"
 						label="#{lbl['lbl.ct.loa.no']}">
-						<f:selectItems
-							value="#{supplierBackingBean.getContractSupplierLoa()}" />
-						<p:ajax event="change" process="@this"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form"
-							listener="#{supplierBackingBean.changeLoaActionListener()}" />
+						<f:selectItems value="#{supplierBackingBean.getContractSupplierLoa()}" />
+						<p:ajax event="change" process="@this" partialSubmit="true" update="@form"
+							 listener="#{supplierBackingBean.changeLoaActionListener()}" 
+						    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</p:selectOneMenu>
 					<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
