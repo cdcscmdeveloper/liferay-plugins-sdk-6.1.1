@@ -308,8 +308,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctContractNo;
 	private String ctAgreement;
 	private String ctStatus;
-	private String ctContrMontrStatus;	
+	private String ctContrMontrStatus;
+	private String ctComplete;
 	
+	public String getCtComplete() {
+		return ctComplete;
+	}
+	public void setCtComplete(String ctComplete) {
+		this.ctComplete = ctComplete;
+	}
 	public String getCtContrMontrStatus() {
 		return ctContrMontrStatus;
 	}
@@ -1777,6 +1784,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setPaymentTypeTotVar(ReportConst.CT_AMP_AGREEMENT_EQ+this.getCtAgreement());
 			}
+			if((this.getCtComplete()!=null)&&(this.getCtComplete()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtCompleteVar(ReportConst.CT_AMP_COMPLETE_EQ+this.getCtComplete());
+			}
 			if((this.getCtContrMontrStatus()!=null)&&(this.getCtContrMontrStatus()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCtContrMontrStatusVar(ReportConst.CT_AMP_STATUS_EQ+this.getCtContrMontrStatus());
 			}
@@ -1802,7 +1812,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			rptGenBean.setUrlReportJSPName(reportFileNameJSP);
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtHiddenParamGroupVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtHiddenParamGroupVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			

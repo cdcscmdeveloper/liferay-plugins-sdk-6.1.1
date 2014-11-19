@@ -336,7 +336,9 @@ public class ReportConst {
 	public static final String CT_LST_OF_AMENDMENT_RPT_VAL = "CT_009";
 	public static final String CT_LST_OF_UPDATE_RPT_VAL = "CT_010";	
 	public static final String CT_LST_OF_SUSPENSION_RPT_VAL = "CT_011";	
-	public static final String CT_LST_OF_TERMINATION_RPT_VAL = "CT_012";	
+	public static final String CT_LST_OF_TERMINATION_RPT_VAL = "CT_012";
+	public static final String CT_LST_OF_SUPPLIER_RPT_VAL = "CT_013";
+	public static final String CT_LST_OF_AGREEMENT_RPT_VAL = "CT_015";
 	//sm
 	public static final String AMP_SM_TO_DATE_EQ = "&createddateto=";
 	public static final String AMP_SM_FROM_DATE_EQ = "&createddatefrom=";
@@ -493,6 +495,7 @@ public class ReportConst {
 	public static final String CT_GROUP_VAL_CNTRNO= "CONTRACT_NO";
 	public static final String CT_GROUP_VAL_ACTIVE = "ACTIVE";
 	public static final String CT_GROUP_VAL_INACTIVE = "INACTIVE";
+	public static final String CT_AMP_COMPLETE_EQ = "&PCOMPLETE=";
 	
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
@@ -539,6 +542,7 @@ public class ReportConst {
 	public static final String NO_URL_PROVIDED_FOR_THIS_RPT = "lbl.rpt.search.criteria.NO_URL_PROVIDED_FOR_THIS_RPT";
 	public static final String RPT_IN_VALID = "reportInValid";
 	public static final String RPT_TRUE = "true";
+	public static final String RPT_FALSE = "false";
 	public static final String TO_DT_GTR_THN_FRM_DT = "lbl.rpt.search.date.TO_DT_GTR_THN_FRM_DT";
 	public static final String AMP_NO_OF_DAYS_EQ = "&noofdays=";
 	public static final String RECENT_PRICE_RPT_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?&report=";
