@@ -34,9 +34,9 @@
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,totalEmployeesMsg"></p:ajax>
 						</p:inputText>
-						<p:message id="totalEmployeesMsg" for="totalEmployees" size="10"
+						<p:message id="totalEmployeesMsg" for="totalEmployees" 
 							display="icon" />
-						<p:inputText disabled="true" style="text-align:right"
+						<p:inputText disabled="true" style="text-align:right" size="10"
 							rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"></p:inputText>
 					</h:panelGroup></td>
