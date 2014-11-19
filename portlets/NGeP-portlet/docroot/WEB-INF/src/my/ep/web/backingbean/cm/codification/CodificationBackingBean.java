@@ -1024,7 +1024,7 @@ public class CodificationBackingBean extends
 	public String insertContractedItemCodeForService(CmUnspsc commodity) {
 		this.getManagedBean().setSelectedUNSPSCObj(commodity);
 		return insertContractedItemCode();
-		
+
 	}
 
 	public String insertContractedItemCode() {
@@ -1056,7 +1056,7 @@ public class CodificationBackingBean extends
 				extCodeVO.setMeasurementId(Long.valueOf(String
 						.valueOf(objects[2])));
 				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-
+				log.info("color id = String.valueOf(objects[3])");
 				extCodeVO.setTypeName(String.valueOf(objects[4]));
 				extCodeVO.setBrandName(String.valueOf(objects[5]));
 				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
@@ -1131,7 +1131,7 @@ public class CodificationBackingBean extends
 					} else {
 						typeObj = new CmType();
 						typeObj.setTypeCode("00");
-						typeObj.setTypeName("NA");
+						typeObj.setTypeName("N/A");
 						typeObj.setUnspscId(codeResDTO.getCommodityObj());
 						codeReqDTO.setCmType(typeObj);
 						typeObj = codificationSO.addNewType(codeReqDTO)
@@ -1144,7 +1144,7 @@ public class CodificationBackingBean extends
 					} else {
 						brandObj = new CmBrand();
 						brandObj.setBrandCode("000");
-						brandObj.setBrandName("NA");
+						brandObj.setBrandName("N/A");
 						brandObj.setUnspscId(codeResDTO.getCommodityObj());
 						codeReqDTO.setCmBrand(brandObj);
 						brandObj = codificationSO.addNewBrand(codeReqDTO)
@@ -1158,7 +1158,7 @@ public class CodificationBackingBean extends
 					} else {
 						meaObj = new CmMeasurement();
 						meaObj.setMeasurementCode("000");
-						meaObj.setMeasurementName("NA");
+						meaObj.setMeasurementName("N/A");
 						meaObj.setUnspscId(codeResDTO.getCommodityObj());
 						codeReqDTO.setCmMeasurement(meaObj);
 						meaObj = codificationSO.addNewMeasurement(codeReqDTO)
@@ -1188,18 +1188,18 @@ public class CodificationBackingBean extends
 				newItem.setCmColor(colorObj);
 				newItem.setItemName(this.getManagedBean()
 						.getSelectedUNSPSCObj().getUnspscTitle()
-						+ " "
-						+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA")) ? "" : typeObj
-								.getTypeName())
-						+ " "
-						+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA")) ? ""
-								: brandObj.getBrandName())
-						+ " "
-						+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA")) ? ""
-								: meaObj.getMeasurementName())
-						+ " "
-						+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA"))  ? ""
-								: colorObj.getColorName()));
+						+ ((typeObj.getTypeName().equals("N/A") || typeObj
+								.getTypeName().equals("NA")) ? "" : " "
+								+ typeObj.getTypeName())
+						+ ((brandObj.getBrandName().equals("N/A") || brandObj
+								.getBrandName().equals("NA")) ? "" : " "
+								+ brandObj.getBrandName())
+						+ ((meaObj.getMeasurementName().equals("N/A") || meaObj
+								.getMeasurementName().equals("NA")) ? "" : " "
+								+ meaObj.getMeasurementName())
+						+ ((colorObj.getColorName().equals("N/A") || colorObj
+								.getColorName().equals("NA")) ? "" : " "
+								+ colorObj.getColorName()));
 
 				newItem.setExtensionCode(this.getManagedBean()
 						.getSelectedUNSPSCObj().getUnspscCode()
@@ -1890,9 +1890,8 @@ public class CodificationBackingBean extends
 
 		if (currentTaskName.equals("null") || currentTaskName == null) {
 			// if come from pending codification, no task
-			RequestContext.getCurrentInstance().execute(
-					"unspscPopUp.hide()");
-			
+			RequestContext.getCurrentInstance().execute("unspscPopUp.hide()");
+
 			return insertContractedItemCodeForService(comodityObj);
 			// return NAV_TO_ASSIGN_PRODUCT_CODE+"?faces-redirect=true";
 		}
@@ -1918,7 +1917,7 @@ public class CodificationBackingBean extends
 			} else {
 				typeObj = new CmType();
 				typeObj.setTypeCode("00");
-				typeObj.setTypeName("NA");
+				typeObj.setTypeName("N/A");
 				typeObj.setUnspscId(comodityObj);
 				reqDTO.setCmType(typeObj);
 				typeObj = unspscSO.addNewType(reqDTO).getCmType();
@@ -1930,7 +1929,7 @@ public class CodificationBackingBean extends
 			} else {
 				brandObj = new CmBrand();
 				brandObj.setBrandCode("000");
-				brandObj.setBrandName("NA");
+				brandObj.setBrandName("N/A");
 				brandObj.setUnspscId(comodityObj);
 				reqDTO.setCmBrand(brandObj);
 				brandObj = unspscSO.addNewBrand(reqDTO).getCmBrand();
@@ -1942,7 +1941,7 @@ public class CodificationBackingBean extends
 			} else {
 				meaObj = new CmMeasurement();
 				meaObj.setMeasurementCode("000");
-				meaObj.setMeasurementName("NA");
+				meaObj.setMeasurementName("N/A");
 				meaObj.setUnspscId(comodityObj);
 				reqDTO.setCmMeasurement(meaObj);
 				meaObj = unspscSO.addNewMeasurement(reqDTO).getCmMeasurement();
@@ -2403,7 +2402,7 @@ public class CodificationBackingBean extends
 		System.out
 				.println("..................requestNewExtensionCode....................");
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		
+
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 		this.getManagedBean().getRequestExtCodeList()
 				.addAll(bb.getManagedBean().getRequestExtCodeList());

@@ -250,7 +250,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				  }else{
 					  typeObj = new CmType();
 					  typeObj.setTypeCode("00");
-					  typeObj.setTypeName("NA");
+					  typeObj.setTypeName("N/A");
 					  typeObj.setUnspscId(commodity);
 					  codeReqDTO.setCmType(typeObj);
 					  typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
@@ -262,7 +262,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				else{
 					brandObj = new CmBrand();
 					brandObj.setBrandCode("000");
-					brandObj.setBrandName("NA");
+					brandObj.setBrandName("N/A");
 					brandObj.setUnspscId(commodity);
 					codeReqDTO.setCmBrand(brandObj);
 					brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
@@ -274,7 +274,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				else{
 					meaObj = new CmMeasurement();
 					meaObj.setMeasurementCode("000");
-					meaObj.setMeasurementName("NA");
+					meaObj.setMeasurementName("N/A");
 					meaObj.setUnspscId(commodity);
 					codeReqDTO.setCmMeasurement(meaObj);
 					meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
