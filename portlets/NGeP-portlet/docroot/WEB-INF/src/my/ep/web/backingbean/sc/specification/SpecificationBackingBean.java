@@ -7066,13 +7066,13 @@ public class SpecificationBackingBean extends
 
 		return isDate;
 	}
-	
+
 	public boolean supplierStatusDateComparision(Date enddate) {
 		boolean isDate = false;
 		Date d1 = new Date();
 
 		if (null != enddate) {
-			long days = DateUtils.getDaysDifference(d1,enddate);
+			long days = DateUtils.getDaysDifference(d1, enddate);
 			int day = (int) days;
 			if (day >= 0) {
 				isDate = true;
@@ -7081,7 +7081,6 @@ public class SpecificationBackingBean extends
 
 		return isDate;
 	}
-
 
 	public ScQtCheckListScore createCheckList() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
@@ -8264,7 +8263,6 @@ public class SpecificationBackingBean extends
 				// System.out.println("INcomeTax No : " +
 				// smCompanyBasic.getIncomeTaxNo());
 
-			
 				if (null != smCompanyBasic) {
 					if (null != smCompanyBasic.getSmCompanyAddresses()) {
 						for (SmCompanyAddress smCompanyAddress : smCompanyBasic
@@ -8274,12 +8272,11 @@ public class SpecificationBackingBean extends
 										smCompanyAddress.getAddressType())) {
 
 									getManagedBean().setSupplierBranch("HQ");
-									
-									  getManagedBean().setSupplierAddress(
-									  smCompanyAddress.getSmAddress());
-									
+
+									getManagedBean().setSupplierAddress(
+											smCompanyAddress.getSmAddress());
+
 									break;
-									
 
 								}
 							}
@@ -8734,6 +8731,15 @@ public class SpecificationBackingBean extends
 							getManagedBean().getScQt()
 									.getPmProcurementCategory()
 									.getParameterId());
+
+				}
+				else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
+						.equalsIgnoreCase(getManagedBean()
+								.getStandardTemplate())) {
+					if (null == getManagedBean().getQtNum()
+							|| "".equalsIgnoreCase(getManagedBean().getQtNum())) {
+						getManagedBean().setQtNum("QT");
+					}
 
 				}
 				if (null != getManagedBean().getSpecName()
