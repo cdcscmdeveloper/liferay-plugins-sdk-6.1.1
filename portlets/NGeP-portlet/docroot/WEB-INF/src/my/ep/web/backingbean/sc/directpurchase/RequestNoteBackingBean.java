@@ -2544,6 +2544,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return "catalogueSearch";
 	}
 	
+	public void cancelItemDetailPopup() {
+		log.info("cancelItemDetailPopup");
+		RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
+		getManagedBean().setAutoUpdate(true);
+	}
+	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
