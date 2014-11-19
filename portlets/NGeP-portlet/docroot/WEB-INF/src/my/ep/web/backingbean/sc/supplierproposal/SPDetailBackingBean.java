@@ -1106,8 +1106,6 @@ public class SPDetailBackingBean extends
 			// technical NO_OF_EMPLOYEE__PAGE
 			else if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES
 					.equalsIgnoreCase(docDefinitionKey)) {
-				
-				System.out.println("*****checklist id is*****"+scQtProposalChecklist.getScQtCheckList().getQtChecklistId());
 
 				pageUrl = retrieveEmployeeDtls(scQtProposalChecklist);
 
@@ -1123,6 +1121,10 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
+				System.out
+						.println("******qt checklist id TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV******"
+								+ scQtProposalChecklist.getScQtCheckList()
+										.getQtChecklistId());
 				getManagedBean().setYear(
 						scQtProposalChecklist.getScQtCheckList()
 								.getScQtCheckListValue().getYear());
@@ -1220,7 +1222,7 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			ProposalResDTO resDTO = proposalSO.retrieveEmployeeDtls(reqDTO);
-		
+
 			ScQtPRPEmployee scQtPRPEmployee = resDTO.getScQtPRPEmployee();
 
 			if (resDTO.getScQtPRPEmployee() == null) {
@@ -1239,7 +1241,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtPRPEmployee(scQtPRPEmployee);
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
-			
+
 			return NAV_TO_NO_OF_EMPLOYEE__PAGE;
 
 		} finally {
@@ -1420,50 +1422,11 @@ public class SPDetailBackingBean extends
 	public String prepareMultileProposalAction(int index) {
 		debugLogger("prepareMultileProposalAction");
 		getManagedBean().setProposalIndex(index);
+		
+		retrieveTemplateSpecBean();
 
-		ScQt scQt = getManagedBean().getQt();
-		ScQtCheckList scQtCheckList = this.getManagedBean()
-				.getQtProposalChecklist().getScQtCheckList();
-		this.getManagedBean().setScQtCheckList(scQtCheckList);
-		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
-		this.getManagedBean().setScQtDoc(scQtDoc);
-
-		ITemplateSpecSO templateSpecSO;
-		try {
-			/*
-			 * TemplateSpecBackingBean templateSpecBackingBean = new
-			 * TemplateSpecBackingBean(); TemplateSpecBean templateSpecBean =
-			 * getManagedBean() .getTemplateSpecBean(); TplSpecMaster specMaster
-			 * = scQtDoc.getTplSpecMaster();
-			 * templateSpecBean.setSpecMaster(specMaster); templateSpecBean
-			 * .setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			 * templateSpecBean.setSupplier(this.getManagedBean()
-			 * .getQtProposalChecklist().getScQtProposal()
-			 * .getScQtSupplier().getSmSupplier()); templateSpecBackingBean
-			 * .retrieveTemplateSpecMaster(templateSpecBean);
-			 */
-
-			templateSpecSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-							ITemplateSpecSO.class);
-			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			specReqDTO.setSpecMaster(scQtDoc.getTplSpecMaster());
-			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			specReqDTO.setSupplier(this.getManagedBean()
-					.getQtProposalChecklist().getScQtProposal()
-					.getScQtSupplier().getSmSupplier());
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.getTemplateMaster(specReqDTO);
-
-			TemplateSpecBean templateSpecBean = getManagedBean()
-					.getTemplateSpecBean();
-			templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
-		} finally {
-			templateSpecSO = null;
-		}
-
-		// this.getManagedBean().setPageUrl(NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE);
-		this.getManagedBean().setPageUrl(getFinancialSpecUrl(scQt));
+		this.getManagedBean().setPageUrl(NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE);
+		// this.getManagedBean().setPageUrl(getFinancialSpecUrl(scQt));
 		return NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE + "?faces-redirect=true";
 
 	}
@@ -1492,9 +1455,7 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(
-						scQtProposalChecklist.getScQtCheckList()
-								.getScQtCheckListValue().getYear());
+				// getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
@@ -1548,33 +1509,15 @@ public class SPDetailBackingBean extends
 
 	private String retrieveFinancialSpecDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+
+		this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
 		IQTProposalSO proposalSO = null;
-		String redirectPage = null;
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			ScQt scQt = getManagedBean().getQt();
-			ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList()
-					.getScQtDoc();
-			this.getManagedBean().setScQtDoc(scQtDoc);
-
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-			TemplateSpecBean templateSpecBean = getManagedBean()
-					.getTemplateSpecBean();
-			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
-
-			templateSpecBean.setSpecMaster(specMaster);
-			templateSpecBean
-					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-
-			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(getManagedBean().getSupplierId());
-			templateSpecBean.setSupplier(smSupplier);
-
-			templateSpecBackingBean
-					.retrieveTemplateSpecMaster(templateSpecBean);
-
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 
@@ -1590,11 +1533,61 @@ public class SPDetailBackingBean extends
 				}
 
 			}
+			if (scQt.getMaxProposal() == 1) {
+				retrieveTemplateSpecBean();
+			}
 
 			return getFinancialSpecUrl(scQt);
 		} finally {
 			proposalSO = null;
 		}
+	}
+
+	private void retrieveTemplateSpecBean() {
+
+		ScQtProposalChecklist qtProposalChecklist = getManagedBean()
+				.getQtProposalChecklist();
+		ScQtDoc scQtDoc = qtProposalChecklist.getScQtCheckList().getScQtDoc();
+		this.getManagedBean().setScQtDoc(scQtDoc);
+
+		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
+
+		ITemplateSpecSO templateSpecSO = null;
+		try {
+						
+			templateSpecSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			/*SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());*/
+			reqDTO.setSupplier(getManagedBean()
+					.getQtProposalChecklist().getScQtProposal()
+					.getScQtSupplier().getSmSupplier());
+			reqDTO.setSpecMaster(specMaster);
+			if(getManagedBean().getSelectedZone() != null){
+				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
+			}
+			
+			reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
+			TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
+			if(resDTO.isSuccessful()) {
+				specMaster = resDTO.getSpecMaster();
+				if (specMaster.getOrgProfile() == null) {
+					specMaster.setOrgProfile(new PmOrgProfile());
+				}
+				TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
+				templateSpecBean.setSpecMaster(specMaster);
+				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+				templateSpecBean.setSelectedSpecQuestion(null);
+				getManagedBean().setTemplateSpecBean(templateSpecBean);
+			}
+		} finally {
+
+			templateSpecSO = null;
+		}
+
 	}
 
 	private String getFinancialSpecUrl(ScQt scQt) {
@@ -2143,7 +2136,7 @@ public class SPDetailBackingBean extends
 
 		int index = getManagedBean().getScQtPRPExperiences().indexOf(
 				prpExperience);
-		getManagedBean().setNonFedEffMaxDate(prpExperience.getExpiryDate());
+		// getManagedBean().setNonFedEffMaxDate(prpExperience.getExpiryDate());
 
 		if (prpExperience.getEffectiveDate() == null) {
 			prpExperience.setExpiryDate(null);
@@ -2165,9 +2158,6 @@ public class SPDetailBackingBean extends
 
 		}
 		getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
-		System.out.println("*****experience in months is *****"
-				+ getManagedBean().getScQtPRPExperiences().get(index)
-						.getContractPeriod());
 		totalContractYears();
 	}
 
@@ -2275,7 +2265,8 @@ public class SPDetailBackingBean extends
 			}
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 
-				if (!tobeDeletedExperiences.contains(scQtPRPExperience)) {
+				if (!tobeDeletedExperiences.contains(scQtPRPExperience)
+						&& scQtPRPExperience.getQtPrpExperienceId() != null) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
 				// experienceList.remove(selectedExperienceList.get(i));
@@ -2424,6 +2415,9 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSelectedZone(specZoneDtl);
 		log.info("Selected Zone : "
 				+ this.getManagedBean().getSelectedZone().getZoneName());
+		if(getManagedBean().getQt().getMaxProposal()== 1){
+			retrieveTemplateSpecBean();
+		}
 
 		// Long zoneId = specZoneDtl.getSpecZoneId();
 	}
