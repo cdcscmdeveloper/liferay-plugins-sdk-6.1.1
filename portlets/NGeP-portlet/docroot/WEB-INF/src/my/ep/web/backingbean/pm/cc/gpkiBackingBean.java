@@ -91,7 +91,7 @@ public class gpkiBackingBean {
 		debugLogger("=================================obj.invoke===: ");
        
         return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
-	}x
+	}
 	
 
 		
