@@ -32,6 +32,7 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -104,7 +105,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-//		this.getManagedBean().setAppId(1256250);
+//		this.getManagedBean().setAppId(1256427);
 //		this.getManagedBean().setAppId(1009);
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
@@ -545,12 +546,26 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public String submitSiteVisitReport(){
+		log.info("******submitSiteVisitReport Start**********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
 		for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
+			svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
+			String tmpDesc = getTemplateNameFromLabel(svTemplate.getPmParameter().getParameterCode());
+			
+			if(svTemplate.getSelectedAddresses() == null){
+				log.info("-----svTemplate.getSelectedAddresses IS NULL-----" );
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(MessageConst.ERROR_721301, new String[]{tmpDesc});
+			}
+			
+			if(svTemplate.getSelectedAddresses().length < 1){
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(MessageConst.ERROR_721301, new String[]{tmpDesc});
+			}
+			
 			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
-
 				svTemplate.setSmSvMachines(new ArrayList<SmSvMachine>());
 				svTemplate.setSmSvEquipments(new ArrayList<SmSvEquipment>());
 				
@@ -576,6 +591,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				
 			}else if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 				svTemplate.setSmSvManufacturingDocs(new ArrayList<SmSvManufacturingDoc>());
+				svTemplate.setSmSvEquipments(new ArrayList<SmSvEquipment>());
 				
 				if(svTemplate.getFinancialDocLs() != null){
 					svTemplate.getSmSvManufacturingDocs().addAll(svTemplate.getFinancialDocLs());
@@ -594,9 +610,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 			
-			if(svTemplate.getSmSvTemplateAddresses() == null){
+			/*if(svTemplate.getSmSvTemplateAddresses() == null){
 				svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
-			}
+			}*/
 			
 			if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
 				for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
@@ -632,6 +648,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
+		
+		log.info("*****End of submitSiteVisitReport********");
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (resDTO.isSuccessful()) {
@@ -1561,5 +1579,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	public StreamedContent getFile() {
 		return file;
+	}
+	
+	public String getTemplateNameFromLabel(String templateType){
+		Locale locale = new FacesScopes().getUserLocale();
+		
+		String lblTemplate = "lbl.sm.sitevisit.category.categorycode_"+templateType;
+		String templDesc = ResourceBundleUtils.getMessage(lblTemplate,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+		return templDesc;
 	}
 }
