@@ -2211,6 +2211,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedCategoryCodes() {
+		SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
+				.getDeleteCategoryList(), getManagedBean().getSmAppl()
+				.getSmSupplier().getSupplierId());
 		if (getManagedBean().getDeleteCategoryList() != null
 				&& getManagedBean().getDeleteCategoryList().size() > 0) {
 			List<SmSupplierCategory> categories = getManagedBean()

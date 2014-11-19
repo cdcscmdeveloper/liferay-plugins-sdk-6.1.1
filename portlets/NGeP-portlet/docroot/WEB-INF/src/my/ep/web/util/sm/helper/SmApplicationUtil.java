@@ -1809,6 +1809,11 @@ public class SmApplicationUtil {
 		if (resDto.getSmSupplier() != null) {
 			SmSupplier smSupplier = resDto.getSmSupplier();
 			if (smSupplier.getSmAppl() != null
+					&& !smSupplier.getSmAppl().isQuestionnaire()) {
+				result = true;
+				throw new EpException(MessageConst.ERROR_722576);
+			}
+			if (smSupplier.getSmAppl() != null
 					&& smSupplier
 							.getSmAppl()
 							.getSupplierType()
@@ -2112,6 +2117,55 @@ public class SmApplicationUtil {
 		return resDTO.getCategoryL3List();
 	}
 
+	public static boolean checkCategoryPendingTransaction(
+			List<SmSupplierCategory> categories, Long supplierId) {
+		log.info("*** Validate the code having active transaction ***** ");
+		IMofRegistrationSO mofRegistrationSO = null;
+		boolean hasActiveTransactionCategory = false;
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSupplierId(supplierId);
+			StringBuffer sb = new StringBuffer();
+			int i = 0;
+			sb.append(SmCommonUtil.getMessage(
+					"lbl.sm.category.pendingTransaction", null));
+			for (SmSupplierCategory category : categories) {
+				if (category.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+					reqDto.setCatL3Id(category.getPmCategoryL3()
+							.getCategoryL3Id());
+					MofRegistrationResDTO resDTO = mofRegistrationSO
+							.hasActiveTransactionsForSupplierAndCategoryCode(reqDto);
+					log.info("**** Active Transactions ********"
+							+ resDTO.isHasActiveTransaction());
+					if (resDTO.isHasActiveTransaction()) {
+						hasActiveTransactionCategory = true;
+						sb.append("<br/>")
+								.append(++i)
+								.append(".) ")
+								.append(category.getPmCategoryL1()
+										.getCategoryL1Code())
+								.append(category.getPmCategoryL2()
+										.getCategoryL2Code())
+								.append(category.getPmCategoryL3()
+										.getCategoryL3Code());
+					}
+				}
+			}
+			log.info("*** Has active transaction  *** "
+					+ hasActiveTransactionCategory);
+			if (hasActiveTransactionCategory) {
+				throw new EpException(sb.toString());
+			}
+			return hasActiveTransactionCategory;
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
 	public static List<PmUom> retrieveUomList() {
 		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IUomSO.class);
@@ -2194,7 +2248,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	@SuppressWarnings("unused")
+	// @SuppressWarnings("unused")
 	public static List<PmStatusDesc> retrieveRegistrationStatusList() {
 		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
@@ -2717,8 +2771,7 @@ public class SmApplicationUtil {
 
 	}
 
-	public static void siteVisitDataUpdate(
-			SmApplicationManagedBean managedBean) {
+	public static void siteVisitDataUpdate(SmApplicationManagedBean managedBean) {
 		SmSvTask svTask = new SmSvTask();
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
 		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
@@ -2770,12 +2823,19 @@ public class SmApplicationUtil {
 		svTask.setSmSvCategories(smSvCategories);
 		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
 		for (PmParameter param : catParam) {
-			if (param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_TRANSPORTATION)
-					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP)
-					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_INSURANCE)
-					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)
-					|| param.getParameterCode().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA)) {
+			if (param.getParameterCode().equalsIgnoreCase(
+					SupplierManagementConst.CAT_TYPE_TRANSPORTATION)
+					|| param.getParameterCode().equalsIgnoreCase(
+							SupplierManagementConst.CAT_TYPE_WORKSHOP)
+					|| param.getParameterCode().equalsIgnoreCase(
+							SupplierManagementConst.CAT_TYPE_INSURANCE)
+					|| param.getParameterCode().equalsIgnoreCase(
+							SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| param.getParameterCode().equalsIgnoreCase(
+							SupplierManagementConst.CAT_TYPE_MANUFACTURING)
+					|| param.getParameterCode()
+							.equalsIgnoreCase(
+									SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA)) {
 				SmSvTemplate temp = new SmSvTemplate();
 				temp.setPmParameter(param);
 				temp.setSmSvTask(svTask);
@@ -2796,10 +2856,11 @@ public class SmApplicationUtil {
 		}
 		svTask.setSmSvTemplates(templates);
 		managedBean.setSvTask(svTask);
-		//return updateSiteVisitTask(svTask);
+		// return updateSiteVisitTask(svTask);
 
 	}
 
+	@SuppressWarnings("unused")
 	private static boolean updateSiteVisitTask(SmSvTask svTask) {
 		ISiteAssignSO siteSO = null;
 		boolean updateSuccess = true;
