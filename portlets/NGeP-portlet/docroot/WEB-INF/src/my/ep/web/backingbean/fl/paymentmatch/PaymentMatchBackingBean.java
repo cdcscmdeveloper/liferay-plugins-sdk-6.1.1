@@ -17,6 +17,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
@@ -45,6 +47,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -162,6 +165,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			validateDuplicateDeduction();
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700026;
@@ -264,7 +269,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
-			
 			// For PO No Deduction Panel 
 			getManagedBean().setDocType(paymentAdvice.getFlRequest().getDocType());
 			getManagedBean().setFulfilmentRequest(paymentAdvice.getFlRequest());
@@ -440,11 +444,20 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==0){
+			validateDuplicateDeduction();
+		}
 		if(selectedTabIndex==1){
+			validateDuplicateDeduction();
 			//populateChargeLineData();	
 			setClassName("@(.pmChargeLinePnlClass)");
 		}
+		
+		if(selectedTabIndex==2){
+			setClassName("@(.pmSummaryPnlClass)");
+		}
 		if(selectedTabIndex==3){
+			validateDuplicateDeduction();
 			calPmSummary();
 			setClassName("@(.pmSummaryPnlClass)");
 		}
@@ -742,4 +755,52 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	public void checkDeductionList(FlPaymentDeduction deduction){
+		  IParameterSO parameterSO = null;
+			 ParameterReqDTO reqDTO = null;
+				
+				reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(deduction.getDeductionType().getParameterId());
+				parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				deduction.setDeductionType(resDTO.getPmParameter());
+				
+	}
+	
+	public List<SelectItem> getDropdownValuesByCtDetails(){
+		if(getManagedBean().getPopulateDeductionList()== null || getManagedBean().getPopulateDeductionList().isEmpty()){
+			if (this.getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions() != null) {
+				for (CtDeduction obj : this.getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()) {
+					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().getPopulateDeductionList().add(new SelectItem(obj.getDeductionType().getParameterId(),getParameterDesc(obj.getDeductionType().getParameterType(), obj.getDeductionType().getParameterCode())));
+
+					}
+				}
+			}
+		}
+		return getManagedBean().getPopulateDeductionList();
+	}
+	
+	public void unselectDisabledRow(AjaxBehaviorEvent e) {
+
+	    for(FlPaymentDeduction paymentDeduction : getManagedBean().getSelectedDeductions()) {
+	        if(paymentDeduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
+	        	getManagedBean().getSelectedDeductions().remove(paymentDeduction);
+	        	break;
+	        }
+	    }
+	}
+	
+	public void validateDuplicateDeduction(){
+		List<FlPaymentDeduction> paymentDeductionList = getManagedBean().getPaymentAdvice().getFlPaymentDeduction();
+		HashMap<Long,String> deductionMap = new HashMap<Long,String>();
+		for(FlPaymentDeduction paymentDeduction : paymentDeductionList){
+			Long key = paymentDeduction.getDeductionType().getParameterId();
+			if(deductionMap.get(key) != null){
+				throw new EpException("Cannot have duplicate deduction type.");
+			}else{
+				deductionMap.put(key, paymentDeduction.getDeductionType().getParameterType());
+			}
+		}
+	}
 }

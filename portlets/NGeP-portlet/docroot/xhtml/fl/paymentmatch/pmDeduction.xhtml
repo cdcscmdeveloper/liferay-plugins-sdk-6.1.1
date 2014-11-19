@@ -10,19 +10,18 @@
 	<p:panel id="deductionPanel" header="#{lbl['lbl.fl.payment.match.deduction']}" toggleable="true">
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction']}" escape="false"/>
 		<p:dataTable id="deductionDataTable" var="deduction" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction}"
-			rowIndexVar="index"
+			rowIndexVar="index" rowStyleClass="selectable"
 			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
+			<p:ajax event="rowSelect" listener="#{paymentMatchBackingBean.unselectDisabledRow}" update="@this" />
 			<ac:paginator for="deductionDataTable" />
-			<p:column selectionMode="multiple" style="width:2%;text-align:center" disabledSelection="#{index == 0}"/>
+			<p:column selectionMode="multiple" style="width:2%;text-align:center" disabledSelection="#{index == 0}" />what is = #{index}
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}">
 				<h:outputText rendered="#{index == 0}" value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
-				<p:selectOneMenu rendered="#{index > 0}" value="#{deduction.deductionType.parameterCode}" >
-					<p:ajax event="change" process="@this" update=":form:deductionDataTable" />
-					<f:selectItem itemLabel="-- Select -- " itemValue="" />
+				<p:selectOneMenu id="deductionList" rendered="#{index > 0}" value="#{deduction.deductionType.parameterId}" >
+					<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 					<f:selectItems var="ctDeduction"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.latestContractVer.ctDeductions}"
-						itemLabel="#{paymentMatchBackingBean.getParameterDesc(ctDeduction.deductionType)}"
-						itemValue="#{ctDeduction.deductionType.parameterCode}" />
+						value="#{paymentMatchBackingBean.getDropdownValuesByCtDetails()}"/>
+						 <p:ajax event="change" process="@this" update=":form:deductionDataTable:deductionList" listener="#{paymentMatchBackingBean.checkDeductionList(deduction)}"/>
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
@@ -45,7 +44,7 @@
 				</f:facet>
 				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
 					value="#{deduction.pmVotFund.votFundCode}" />
-					<ac:lov id="dana" update="@form"
+					<ac:lov id="dana" update=":form:deductionDataTable:dana"
 						rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}"
 						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
@@ -62,7 +61,7 @@
 				</f:facet>
 				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
 					value="#{deduction.pmGlAccount.glAccCode}" />
-					<ac:lov id="gosodo" update="@form"
+					<ac:lov id="gosodo" update=":form:deductionDataTable:gosodo"
 						rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}"
 						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
@@ -85,10 +84,10 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right" id="deductionButton">
 			<p:commandButton id="addButton"
-			rendered="#{paymentMatchBackingBean.checkCtDeduction('Add')}" 
-			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update=":form:deductionDataTable,:form:addButton"/>
+			rendered="#{paymentMatchBackingBean.checkCtDeduction('Add')}"
+			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update="@form" />
 			<p:commandButton rendered="#{paymentMatchBackingBean.checkCtDeduction(null)}" 
-			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete" action="#{paymentMatchBackingBean.removeAddRow()}" update=":form:deductionDataTable"/>
+			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete" action="#{paymentMatchBackingBean.removeAddRow()}" update="@form"/>
 		</div>
 	</p:panel>
 	
