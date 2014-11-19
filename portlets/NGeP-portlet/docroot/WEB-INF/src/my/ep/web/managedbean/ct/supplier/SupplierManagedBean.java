@@ -77,6 +77,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private String accountNoAndName;
 	private PmUser supplierPmUser;
+	private PmUser contractAdmin;
+	private List<PmUser> contractAdminlist;
 
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
@@ -450,4 +452,22 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
+
+	public List<PmUser> getContractAdminlist() {
+		return contractAdminlist;
+	}
+
+	public void setContractAdminlist(List<PmUser> contractAdminlist) {
+		this.contractAdminlist = contractAdminlist;
+	}
+
+	public PmUser getContractAdmin() {
+		return contractAdmin;
+	}
+
+	public void setContractAdmin(PmUser contractAdmin) {
+		this.contractAdmin = contractAdmin;
+	}
+	
+	
 }
