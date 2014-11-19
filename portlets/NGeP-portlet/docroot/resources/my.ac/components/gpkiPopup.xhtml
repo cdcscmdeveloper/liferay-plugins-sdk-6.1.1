@@ -5,13 +5,14 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<cc:interface>
 		<cc:attribute name="beforeSignText" />
 		<cc:attribute name="postSignAction"
 			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
-		<cc:attribute name="postCancelAction" method-signature="void action()" />
+		<cc:attribute name="postCancelAction" method-signature="void action()"  required="false"/>
 	</cc:interface>
 
 
@@ -137,7 +138,9 @@
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
 			</h:panelGrid>
-			   <p:ajax event="close" listener="#{cc.attrs.postCancelAction}"/>
+			<c:if test="#{not empty cc.getValueExpression('postCancelAction')}">
+				<p:ajax event="close" listener="#{cc.attrs.postCancelAction}"/>
+			</c:if>
 		</p:dialog>
 	</cc:implementation>
 </ui:composition>
