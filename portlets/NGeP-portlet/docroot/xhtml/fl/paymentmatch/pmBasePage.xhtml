@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -14,10 +15,15 @@
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>	
+		</p:blockUI>
+		<ac:gpkiPopup 
+			textBeforeSign="#{paymentMatchBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{paymentMatchBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{paymentMatchBackingBean.enableAutoUpdate()}"
+		/>	
 		<f:event listener="#{paymentMatchBackingBean.preRenderView}"
 			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false"
+		<p:messages id="messages" showDetail="true" autoUpdate="#{paymentMatchBackingBean.managedBean.autoUpdate}" showSummary="false"
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
@@ -28,7 +34,7 @@
 						var="bpmAction"
 						value="#{paymentMatchBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form"
-							action="#{paymentMatchBackingBean.submitAction(bpmAction)}"
+							action="#{paymentMatchBackingBean.gpkiSignAction(bpmAction)}"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}" />							
 					</ui:repeat></td>

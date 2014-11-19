@@ -16,6 +16,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -51,6 +52,12 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	private List<PmCriteriaDesc> criteriaDescList;
 	private boolean docMaintainRemarks = false;
+	
+	//gpki signing
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
+	private String buttonAction;
 	
 	/**
 	 * @return the flRemark
@@ -306,6 +313,38 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
 		this.docMaintainRemarks = docMaintainRemarks;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 
 

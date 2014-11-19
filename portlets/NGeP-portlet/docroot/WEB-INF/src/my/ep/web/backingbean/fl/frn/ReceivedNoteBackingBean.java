@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.frn;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -46,6 +48,7 @@ import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -61,6 +64,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -104,7 +108,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
-			validateFulfilmentNote();
+			validateFulfilmentNote(action);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
@@ -132,6 +136,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
 			} else {
+				if(getManagedBean().getPmDigiSign() !=null){
+					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+				}
 				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			}
 			
@@ -196,7 +203,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();		
 		if(taskId != null){
 			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -346,7 +353,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		return resDTO.getPmCriteriaDesc().getCriteria();
 	}
 	
-	private void validateFulfilmentNote() {
+	public void validateFulfilmentNote(String outcome) {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{"Actual Received Date"});
 		}
@@ -371,7 +379,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					}
 				}		
 			}
-				
+		}
+		
+		Date today = new Date();
+		if(getManagedBean().getFulfilmentNote().getReceivedDate().after(today)){
+			throw new EpException("ERR-740012");
 		}
 	}
 	
@@ -412,5 +424,38 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
+	}
+	
+	public void gpkiSignAction(String outcome){
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
+			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		}else{
+			submitAction(outcome);
+		}
+	}
+	
+	public String preSubmitAction(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		return submitAction(getManagedBean().getButtonAction());
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
 	}
 }
