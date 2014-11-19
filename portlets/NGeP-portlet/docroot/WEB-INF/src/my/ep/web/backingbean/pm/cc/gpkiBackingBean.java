@@ -71,16 +71,16 @@ public class gpkiBackingBean {
 		
 	    Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
-
-		UserReqDTO reqDTO = new UserReqDTO();
-
-		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
-		UserResDTO resDTO = new UserResDTO();
-		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		debugLogger("userId====================================: "+userId);
-		debugLogger("resDTO=====================================: "+resDTO.getPmUser().getIdentificationCode());	
+//		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
+//
+//		UserReqDTO reqDTO = new UserReqDTO();
+//
+//		reqDTO.setUserId(userId);
+//		userSO.retrieveUserByUserId(reqDTO);
+//		UserResDTO resDTO = new UserResDTO();
+//		resDTO = userSO.retrieveUserByUserId(reqDTO);
+//		debugLogger("userId====================================: "+userId);
+//		debugLogger("resDTO=====================================: "+resDTO.getPmUser().getIdentificationCode());	
 		debugLogger("reflectAction=====================================: "+obj);		
 		
 		
