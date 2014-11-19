@@ -917,13 +917,16 @@ public class QTCommitteBackingBean extends
 								.retrieveParameterByTypeAndCode(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
 					} else {
-						ParameterReqDTO reqDTO = new ParameterReqDTO();
-						reqDTO.setParameterId(users.get(i).getMemberRole()
-								.getParameterId());
-						ParameterResDTO resDTO = getParameterSO()
-								.retrieveParameterById(reqDTO);
-						committeeMember.setMemberRole(resDTO.getPmParameter());
-
+						if (null != users.get(i).getMemberRole()
+								.getParameterId()) {
+							ParameterReqDTO reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterId(users.get(i).getMemberRole()
+									.getParameterId());
+							ParameterResDTO resDTO = getParameterSO()
+									.retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO
+									.getPmParameter());
+						}
 						/*
 						 * List<PmParameterDesc> roles = getManagedBean()
 						 * .getRoleTypes(); for (PmParameterDesc parameter :
