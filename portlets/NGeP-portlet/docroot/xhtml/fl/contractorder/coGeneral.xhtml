@@ -229,14 +229,14 @@
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="" /></td>
+						value="#{flOrderBB.managedBean.supplierAddress}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -244,26 +244,26 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="" /></td>
+									disabled="true" value="#{flOrderBB.managedBean.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true" value="" /></td>
+							<td><p:inputText size="19" disabled="true" value="#{flOrderBB.managedBean.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.contactPerson}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.contactEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText disabled="true" size="25" /></td>
+				<td><p:inputText disabled="true" size="25" value="#{flOrderBB.managedBean.contactPhoneNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>

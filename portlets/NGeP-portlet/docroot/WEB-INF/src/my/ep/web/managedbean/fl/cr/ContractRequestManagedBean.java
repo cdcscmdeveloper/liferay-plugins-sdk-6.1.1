@@ -235,6 +235,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	private PmVotFund feeVoteFund;
 	
+	//getFactoring address details
+	private String facSupplierAddress;
+	private String phoneNo;
+	private String faxNo;
+	private String contactEmail;
+	private String contactPerson;
+	private String contactPhoneNo;
+	
 	/**
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
 	 */
@@ -2241,6 +2249,90 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setAgentOrgProfileList(List<Long> agentOrgProfileList) {
 		this.agentOrgProfileList = agentOrgProfileList;
+	}
+
+	/**
+	 * @return the facSupplierAddress
+	 */
+	public String getFacSupplierAddress() {
+		return facSupplierAddress;
+	}
+
+	/**
+	 * @return the phoneNo
+	 */
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	/**
+	 * @return the faxNo
+	 */
+	public String getFaxNo() {
+		return faxNo;
+	}
+
+	/**
+	 * @return the contactEmail
+	 */
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	/**
+	 * @return the contactPerson
+	 */
+	public String getContactPerson() {
+		return contactPerson;
+	}
+
+	/**
+	 * @return the contactPhoneNo
+	 */
+	public String getContactPhoneNo() {
+		return contactPhoneNo;
+	}
+
+	/**
+	 * @param facSupplierAddress the facSupplierAddress to set
+	 */
+	public void setFacSupplierAddress(String facSupplierAddress) {
+		this.facSupplierAddress = facSupplierAddress;
+	}
+
+	/**
+	 * @param phoneNo the phoneNo to set
+	 */
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	/**
+	 * @param faxNo the faxNo to set
+	 */
+	public void setFaxNo(String faxNo) {
+		this.faxNo = faxNo;
+	}
+
+	/**
+	 * @param contactEmail the contactEmail to set
+	 */
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	/**
+	 * @param contactPerson the contactPerson to set
+	 */
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	/**
+	 * @param contactPhoneNo the contactPhoneNo to set
+	 */
+	public void setContactPhoneNo(String contactPhoneNo) {
+		this.contactPhoneNo = contactPhoneNo;
 	}
 
 }

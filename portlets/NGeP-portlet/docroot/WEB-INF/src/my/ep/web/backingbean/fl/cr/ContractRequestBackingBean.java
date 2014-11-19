@@ -34,6 +34,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -71,6 +72,8 @@ import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
@@ -132,6 +135,7 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -927,6 +931,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			///flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			if(null != resDTO.getFlFulfilmentRequest()){
+				Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+				contractSupplierReqDTO.setContractId(supplieContractId);
+				ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+				if(contractSupplierResDTO.getFactoring() != null){
+					contractSupplierResDTO.getFactoring();
+					resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+					if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+						contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
+						getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+					}
+					if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
+						contractSupplierResDTO.getFactoring().getPmFinancialBranch();
+					}
+				}
+			}	
+
 			if (coObj.getContractId().intValue() == 0) {//TODO
 				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -995,6 +1018,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			ctDTO.setContractId(getManagedBean().getContractId());
 			ContractResDTO contractResDTO = contractSO.retrieveContract(ctDTO);
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
+			if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring()){
+				if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrg()){
+					getSelectedFactoringCompDtl(getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrg().getFinancialOrgId());
+				}
+			}
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
 			getManagedBean().getFlRequest().setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
@@ -3196,6 +3224,35 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			
+		}
+	}
+	
+	public void getSelectedFactoringCompDtl(Long financialOrgId){
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		getManagedBean().setFacSupplierAddress(null);
+		getManagedBean().setPhoneNo(null);
+		getManagedBean().setFaxNo(null);
+		getManagedBean().setContactPerson(null);
+		getManagedBean().setContactEmail(null);
+		getManagedBean().setContactPhoneNo(null);
+		
+		if(financialOrgId!=null) {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialOrgId(financialOrgId);
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setFacSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+			}
 		}
 	}
 	

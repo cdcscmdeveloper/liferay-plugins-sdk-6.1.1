@@ -219,13 +219,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactPerson}"
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactEmail}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.mobile']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactEmail}"
+				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactMobileNo}"
 						 /></td>
 			</tr>
 			<tr>
@@ -240,14 +240,14 @@
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
 						value="#{lbl['lbl.fl.factoring.company']}" /></td>
-				<td><p:inputText disabled="true" size="51" /></td>
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.ctFactoring.financialOrg.finOrgName}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="" /></td>
+						value="#{contractRequestBackingBean.managedBean.facSupplierAddress}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -255,26 +255,26 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="" /></td>
+									disabled="true" value="#{contractRequestBackingBean.managedBean.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true" value="" /></td>
+							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="51" /></td>
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.contactPerson}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="51" /></td>
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.contactEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
-				<td><p:inputText disabled="true" size="15" /></td>
+				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.contactPhoneNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>
