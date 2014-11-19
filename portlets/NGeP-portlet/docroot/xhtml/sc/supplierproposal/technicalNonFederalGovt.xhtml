@@ -8,7 +8,6 @@
 
 	<p:panel id="nonFedExpPanel" header="#{lbl['lbl.sc.sp.non.gov']}"
 		toggleable="true">
-
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td>
@@ -34,8 +33,7 @@
 						listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-
-			<p:column id="clientNameColId" style="white-space : normal">
+			<p:column id="clientNameColId" style="white-space : normal;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.agencyname']}" />
@@ -153,10 +151,8 @@
 					<p:ajax process="@this" partialSubmit="true" update="@this"/>
 					</p:inputTextarea>
 			</p:column>
-
 		</p:dataTable>
 		<div class="ppRightBtn">
-
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" partialSubmit="true"
 				process="@all" rendered="#{!statusHide}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
@@ -168,7 +164,6 @@
 				action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
 
 		</div>
-
 		<h:panelGroup id="totalcontractyrs">
 			<table style="width: 100%">
 				<tr>
@@ -195,7 +190,6 @@
 							readonly="true" disabled="true" size="10">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-
 						</p:inputText></td>
 					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 							rendered="#{companyScoreType eq '1'}" /> <h:outputText
@@ -211,5 +205,4 @@
 			</table>
 		</h:panelGroup>
 	</p:panel>
-
 </ui:composition>

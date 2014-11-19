@@ -9,6 +9,8 @@
 	<c:if test="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 		<ui:include src="financialSpecificationDtlbyzone.xhtml" />
 	</c:if>
+	
+	
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 		<ac:templateSpec
 			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" />
