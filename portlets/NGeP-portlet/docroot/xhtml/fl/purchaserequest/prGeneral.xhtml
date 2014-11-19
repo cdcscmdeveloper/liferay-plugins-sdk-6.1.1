@@ -27,6 +27,7 @@
 						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="50"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
@@ -58,6 +59,7 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" 
 						update=":form:chargeOrgProfileId" size="50"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
 					</ac:lov></td>
 				<td>

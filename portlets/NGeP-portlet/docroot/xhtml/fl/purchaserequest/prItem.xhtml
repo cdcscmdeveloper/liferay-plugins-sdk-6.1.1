@@ -32,6 +32,7 @@
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
+					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />

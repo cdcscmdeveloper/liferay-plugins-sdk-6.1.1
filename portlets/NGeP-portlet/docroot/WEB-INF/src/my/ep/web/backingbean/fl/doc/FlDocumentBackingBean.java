@@ -19,6 +19,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -36,6 +37,8 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -264,6 +267,29 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			//flRequest.ctContract.ctFactoring.financialOrg.finOrgName
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			if(null != resDTO.getFlFulfilmentRequest()){
+				if(resDTO.getFlFulfilmentRequest().getCtContract().isFactored()){
+					Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					contractSupplierReqDTO.setContractId(supplieContractId);
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
+							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						}
+						if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
+							contractSupplierResDTO.getFactoring().getPmFinancialBranch();
+						}
+					}
+				}
+				
+			}
+			
+			
 			for(CtAgency agency : crBB.getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
 				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
 						(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && agency.getEffDate().after(new Date()))) {
@@ -405,6 +431,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			if(flOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
+				flOrderBB.getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId();
+				flOrderBB.getCrSelectedFactoringCompDtl(flOrderBB.getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}

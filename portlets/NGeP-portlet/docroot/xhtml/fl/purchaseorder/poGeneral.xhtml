@@ -188,7 +188,8 @@
 				<tr>
 					<td style="width: 142px;"><p:outputLabel
 							value="#{lbl['lbl.fl.factoring.company']}" /></td>
-					<td><p:selectOneMenu id="factoringComp" 
+					<td><p:selectOneMenu id="factoringComp"
+					disabled="#{flOrderBB.managedBean.buttonVal=='View'}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.financialOrgId}" 
 					style="width: 425px;margin-bottom:5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -204,7 +205,7 @@
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
 							value="#{lbl['lbl.fl.factoring.branch']}" /></td>
-					<td><p:selectOneMenu id="factoringBranch" disabled="#{empty flOrderBB.managedBean.factoringBranchList}"
+					<td><p:selectOneMenu id="factoringBranch" disabled="#{empty flOrderBB.managedBean.factoringBranchList or flOrderBB.managedBean.buttonVal=='View'}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.financialBranchId}" style="width: 325px;margin-bottom:5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="factoringBranch"
