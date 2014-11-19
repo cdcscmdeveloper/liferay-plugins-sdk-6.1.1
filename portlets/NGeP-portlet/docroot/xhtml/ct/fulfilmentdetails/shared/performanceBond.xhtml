@@ -81,13 +81,13 @@
 			
 			<p:column styleClass="column-align-center" style="width:22%;">
 				<h:panelGroup id="uploadBondPg">
-					<p:commandButton oncomplete="uploadBondDlg.show();return false;" 
-					     icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
+					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
+					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
 						value="#{varBond.fileName}"
-						style="float:left;" styleClass="blue_font"
+						style="float:right;" styleClass="blue_font"
 						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>
 			</p:column>

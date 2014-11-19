@@ -416,6 +416,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				 this.getManagedBean().setFrequencySchedule("P");
 			}
 			
+			if(getManagedBean().getContractVer().getCtPerformanceBonds() != null && !getManagedBean().getContractVer().getCtPerformanceBonds().isEmpty()){
+				   for(CtPerformanceBond bond : getManagedBean().getContractVer().getCtPerformanceBonds()){
+					   bond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					   bond.setExpDate(getExactDate());
+					   if(getManagedBean().getCtContract().getLoa().getBondAmt() != null)
+					       bond.setBondAmount(getManagedBean().getCtContract().getLoa().getBondAmt().doubleValue());
+				   }
+			}
+			
 			// Get performance bond rule amount
 			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
