@@ -1994,7 +1994,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					rptGenBean.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ+this.getScCreatedToMonth()+this.getScCreatedToYear());
 				}
 			}
-			if((this.getScQuotationNo()!=null)&&(this.getScQuotationNo()!=ReportConst.EMPTY_VAL)){				 
+			if((this.getScQuotationNo()!=null)&&(this.getScQuotationNo()!=ReportConst.EMPTY_VAL)){
+				quotationNumberValidation();
 				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+this.getScQuotationId());
 			}
 			if((this.getScDeskOfficer()!=null)&&(this.getScDeskOfficer()!=ReportConst.EMPTY_VAL)){				 
