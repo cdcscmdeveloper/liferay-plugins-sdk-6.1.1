@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -23,30 +22,31 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
     <ac:gpkiPopup textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
 		postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
     
-   <h:panelGroup id="mailPanel">
 	<div class="ppRightBtn">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
-	        <p:commandButton  immediate="true" 
+	       <p:commandButton  immediate="true" 
 	          partialSubmit="true" process="@this"
 	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 	          rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 			  style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}"  />
-			 
-			<p:commandButton immediate="true"  
-			   value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
-			   partialSubmit="true" process="@this" style="float:left;"
-			   rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-			   action="#{purchaseInDefaultBackingBean.backToPervious}" />
+			  
+		     <p:commandButton immediate="true"  
+				  value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+				  partialSubmit="true" process="@this" style="float:left;"
+				  rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+				  action="#{purchaseInDefaultBackingBean.backToPervious}" />
 					 
 		    <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 		      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			  icon="ui-icon-submit" update="mailPanel" process="@all"  partialSubmit="true"
+			  icon="ui-icon-submit" update="@form" process="@all"  partialSubmit="true"
 			  rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
 	  </div>
-	   <div class="ppRightBtn">
-				<c:choose>
-				<c:when test="#{!empty purchaseInDefaultBackingBean.managedBean.taskId}">
+	  <div>
+	     <c:if test="purchaseInDefaultBackingBean.managedBean.taskId ne null}">
+		   <table style="width: 100%">
+			 <tr>
+			  <td align="right">
 				  <ui:repeat var="bpmAction" value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
 					  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					  
@@ -62,8 +62,9 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
 				 
 				  </ui:repeat>
-				 </c:when>
-				 </c:choose>
+				  </td>
+				  </tr>
+			 </table>
 	 </div>
 			 
 	  <p:spacer height="5px" />
@@ -74,7 +75,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</td></td>
 			</tr>
 		</table>
-     </h:panelGroup>	
    			
 	</ui:define>
 	</ui:composition>
