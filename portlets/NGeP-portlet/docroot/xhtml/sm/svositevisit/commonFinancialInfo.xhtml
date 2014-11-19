@@ -90,7 +90,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
-				<p:inputTextarea rows="2" cols="40" autoResize="false" disabled="#{viewFlag}"
+				<p:inputTextarea rows="2" cols="40" autoResize="false" disabled="#{viewFlag}" maxlength="2500"
 					value="#{svoSiteVisitBackingBean.managedBean.remarkMap[finLsItem.pmParameter.parameterId].remark}" />
 			</p:column>
 		</p:dataTable>
