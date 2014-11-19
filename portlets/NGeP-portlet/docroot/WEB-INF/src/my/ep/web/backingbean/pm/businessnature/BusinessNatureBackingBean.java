@@ -60,7 +60,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	public String redirectBusinessSearch() {
 		debugLogger("redirectBusinessSearch");
 
-		return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
+		return "/xhtml/pm/businessnature/businessNatureMain.xhtml?faces-redirect=true";
 
 	}	
 	
@@ -74,7 +74,19 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		this.getManagedBean().setSecLevelCode(new String());
 		this.getManagedBean().setSecLevelName(new String());
 		
+		this.getManagedBean().setDivLevelCode(new String());
+		this.getManagedBean().setDivLevelName(new String());
 		
+		this.getManagedBean().setGroupLevelCode(new String());
+		this.getManagedBean().setGroupLevelName(new String());
+		
+		this.getManagedBean().setClassLevelCode(new String());
+		this.getManagedBean().setClassLevelName(new String());
+		
+		this.getManagedBean().setItemLevelCode(new String());
+		this.getManagedBean().setItemLevelName(new String());
+		
+		this.getManagedBean().setCategoryLvl(10L);
 	}
 	
 	
@@ -125,44 +137,67 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */
 	private ISearchBean<PmBusinessNature> getSearchBeanData(ISearchBean<PmBusinessNature> searchBean){		
 		
-		if (getManagedBean().getCategoryLvl() != null
-				&& !"".equals(getManagedBean().getCategoryLvl())) {
-			
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			codesSearchBean
-					.setSearchField("businessLevel");
-			codesSearchBean.setSearchValue(getManagedBean()
-					.getCategoryLvl());
+		if (getManagedBean().getCategoryLvl() != null && !"".equals(getManagedBean().getCategoryLvl())) {
+			SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+			codesSearchBean.setSearchField("businessLevel");
+			codesSearchBean.setSearchValue(getManagedBean().getCategoryLvl());
 			searchBean.getDataFilterBeans().add(codesSearchBean);
-		
-		}
-		
-		if (getManagedBean().getSecLevelCode() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
-		SearchFilterBean codesSearchBean = new SearchFilterBean(
-				SearchOperator.OPERATOR_LIKE.value());
-		codesSearchBean
-				.setSearchField("levelCode");
-		codesSearchBean
-				.setCaseInsensitive(true);
-		codesSearchBean.setSearchValue(getManagedBean()
-				.getSecLevelCode());
-		searchBean.getDataFilterBeans().add(codesSearchBean);
-	}
+			
+			//section
+			if(getManagedBean().getCategoryLvl()==10L){
+				if (getManagedBean().getSecLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
 
-	if (getManagedBean().getSecLevelName() != null
-			&& !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
-		SearchFilterBean codesSearchBean = new SearchFilterBean(
-				SearchOperator.OPERATOR_LIKE.value());
-		codesSearchBean
-				.setSearchField("levelName");
-		codesSearchBean
-				.setCaseInsensitive(true);
-		codesSearchBean.setSearchValue(getManagedBean()
-				.getSecLevelName());
-		searchBean.getDataFilterBeans().add(codesSearchBean);
-	}	
+				if (getManagedBean().getSecLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+			}
+			
+			if(getManagedBean().getCategoryLvl()==20L){
+				//division
+				if (getManagedBean().getDivLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getDivLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getSecLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getSecLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+			}
+		}
 
 	return searchBean;
 }	 		
@@ -187,23 +222,26 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		private static final long serialVersionUID = 1L;
 
 		public BusinessNaturePagingDataModel() {
-			super("businessNatureSR");
+			super("businessNatureDataModel");
 		}
 
 		@Override
 		public ISearchResultBean<PmBusinessNature> pageChangeListener(ISearchBean<PmBusinessNature> searchBean) {
 
 			try {	
-				ISearchBean<PmBusinessNature> searchBeanData = getSearchBeanData(searchBean);
-				BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
-				reqDTO.setBusinessNatureSearchBean(searchBeanData);
-				
-				IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().
-						getServiceObject("pm", IBusinessNatureSO.class);	
-				BusinessNatureResDTO  resDTO = reqSO.retrieveBusinessNatureBySearch(reqDTO);
-				if (resDTO.isSuccessful()) {
-					return resDTO.getBusinessNatureSearchResultBean();
+				if (getManagedBean().getCategoryLvl() != null && !"".equals(getManagedBean().getCategoryLvl())) {
+					ISearchBean<PmBusinessNature> searchBeanData = getSearchBeanData(searchBean);
+					BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+					reqDTO.setBusinessNatureSearchBean(searchBeanData);
+					reqDTO.setBusinessLevel(getManagedBean().getCategoryLvl().toString());
+					
+					IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);	
+					BusinessNatureResDTO  resDTO = reqSO.retrieveBusinessNatureBySearch(reqDTO);
+					if (resDTO.isSuccessful()) {
+						return resDTO.getBusinessNatureSearchResultBean();
+					}
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -265,5 +303,9 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		
 			return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
 	 }
+	
+	public void updateCategoryLevel(){
+		log.info("getManagedBean().getCategoryLvl() "+getManagedBean().getCategoryLvl());
+	}
 	
 }
