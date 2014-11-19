@@ -108,10 +108,12 @@
 					<p:selectOneMenu id="menuLoaId" style="width:210px;"
 						value="#{supplierBackingBean.managedBean.loaId}" required="true"
 						label="#{lbl['lbl.ct.loa.no']}">
-						<f:selectItems value="#{supplierBackingBean.getContractSupplierLoa()}" />
-						<p:ajax event="change" process="@this" partialSubmit="true" update="@form"
-							 listener="#{supplierBackingBean.changeLoaActionListener()}" 
-						    onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						<f:selectItems
+							value="#{supplierBackingBean.getContractSupplierLoa()}" />
+						<p:ajax event="change" process="@this"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form"
+							listener="#{supplierBackingBean.changeLoaActionListener()}" />
 					</p:selectOneMenu>
 					<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
@@ -138,11 +140,10 @@
 					<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 				</h:panelGrid>
-
-				<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
-				<p:inputText for="physicalNo" maxlength="30" style="width:200px;"
-					disabled="true"
-					value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}" />
+				
+				<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+				<p:inputText style="width:200px;" disabled="true"
+					value="#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 				<p:inputText style="width:200px;" disabled="true"
@@ -159,21 +160,34 @@
 				</p:inputText>
 
 				<p:outputLabel value="Ministry Name" />
-				<p:inputText style="width:200px;" disabled="true"
+				<p:inputText style="width:350px;" disabled="true"
 					value="#{supplierBackingBean.getMinistryAndPtjName(1)}" />
-
-				<p:outputLabel value="PTJ Name" />
-				<p:inputText style="width:200px;" disabled="true"
-					value="#{supplierBackingBean.getMinistryAndPtjName(2)}" />
+					
+					<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
+				<p:inputText for="physicalNo" maxlength="30" style="width:200px;"
+					disabled="true"
+					value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}" />
+				
+					
 				<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
-					<p:inputTextarea id="contractName" rows="3" style="width:200px;"
+					<p:inputTextarea id="contractName" rows="3" style="width:350px;"
 						value="#{supplierBackingBean.managedBean.ctContract.contractName}"
 						disabled="true" autoResize="false" />
+				</h:panelGrid>
+				
+			<h:panelGroup>
+					<div style="height: 40px; vertical-align: top;">
+						<p:outputLabel value="PTJ Name" />
+					</div>
+				</h:panelGroup>
+				<h:panelGrid>
+					<p:inputTextarea id="ptjName" rows="3" style="width:200px;" disabled="true"
+						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"  autoResize="false" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</p:panel>
@@ -195,7 +209,7 @@
 					<p:selectOneMenu id="factoringId"
 						label="#{lbl['lbl.ct.factoring.company']}" required="true"
 						disabled="#{supplierBackingBean.managedBean.removeFactoring}"
-						style="width:260px;"
+						style="width:360px;"
 						value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
 						<f:selectItems
 							value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
