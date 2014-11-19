@@ -25,6 +25,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
@@ -161,24 +162,28 @@ public class SmDeleteCategoryCodeBackingBean extends
 		try {
 			int delListSize = getManagedBean().getSelectedCategories().size();
 			log.info(" **** SIZE OF SELECTED *** " + delListSize);
-			// if (delListSize == getManagedBean().getSmAppl()
-			// .getSmSupplierCategories().size()) {
-			// getManagedBean().getSmAppl().getSmSupplierCategories().clear();
-			// } else {
+			SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
+					.getSelectedCategories(), getManagedBean().getSmSupplier()
+					.getSupplierId());
 			for (SmSupplierCategory selCat : getManagedBean()
 					.getSelectedCategories()) {
-				// getManagedBean().getSmAppl().getSmSupplierCategories()
-				// .remove(selCat);
 				selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
-				getManagedBean()
-						.getSmAppl()
-						.getSmSupplierCategories()
-						.set(getManagedBean().getSmAppl()
-								.getSmSupplierCategories().indexOf(selCat),
-								selCat);
+				for (SmSupplierCategory category : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (category.getSupplierCategoryId().equals(
+							selCat.getSupplierCategoryId())) {
+						getManagedBean()
+								.getSmAppl()
+								.getSmSupplierCategories()
+								.set(getManagedBean().getSmAppl()
+										.getSmSupplierCategories()
+										.indexOf(category), selCat);
+						break;
+
+					}
+				}
 
 			}
-			// }
 			updateSmAppl();
 			assignActiveCategoryList();
 			FacesContext
@@ -190,32 +195,21 @@ public class SmDeleteCategoryCodeBackingBean extends
 									"",
 									delListSize
 											+ " - Category Code(s) Deleted Successfully"));
-		} catch (Exception e) {
-			log.info("this is error");
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sample error message",
-							"PrimeFaces makes no mistakes"));
+		} finally {
+
 		}
 
 	}
 
 	private void updateSmAppl() {
-
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
-
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.updateApplication(reqDto);
+			mofRegistrationSO.updateApplication(reqDto);
 			retriveLatestApplAfterUpdate();
 
 		} catch (Exception e) {
