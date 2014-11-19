@@ -456,7 +456,22 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */
 	public String goToBusinessMaintaincePage(PmBusinessNature pmBusinessNature) {
 		debugLogger("goToBusinessMaintaincePage");
-		this.getManagedBean().setPmBusinessNature(pmBusinessNature);
+		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		try{
+			BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+			businessNatureReqDTO.setBusinessLevel(pmBusinessNature.getBusinessLevel());
+			businessNatureReqDTO.setBusinessNatureId(pmBusinessNature.getBusinessNatureId());
+			BusinessNatureResDTO businessNatureResDTO = businessNatureSO.retrieveBusinessNatureFetchAll(businessNatureReqDTO);
+			
+			this.getManagedBean().setPmBusinessNature(businessNatureResDTO.getBusinessNature());
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			businessNatureSO = null;
+		}
+			
+		
 
 		return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 	}	
