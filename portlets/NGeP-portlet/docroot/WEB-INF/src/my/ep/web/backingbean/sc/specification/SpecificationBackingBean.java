@@ -8732,8 +8732,7 @@ public class SpecificationBackingBean extends
 									.getPmProcurementCategory()
 									.getParameterId());
 
-				}
-				else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
+				} else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
 						.equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
 					if (null == getManagedBean().getQtNum()
@@ -10919,11 +10918,30 @@ public class SpecificationBackingBean extends
 				.getSpecName());
 		scQtCheckList.getScQtDoc().getTplSpecMaster()
 				.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
+				&& SourcingConstants.TECHNICAL_DOCTYPE
+						.equalsIgnoreCase(specType)) {
+			validateBusinessOwner(true);
+
+		}
 
 		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			scQtCheckList.setPmStatus(status);
+			if (getManagedBean().getScQt().isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = getManagedBean()
+						.getScQt().getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					scQtCheckList.getScQtDoc().getTplSpecMaster()
+							.setTplSpecZone(
+									supplierCriteria.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			}
 
 		} else {
 			PmStatus status = new PmStatus();
@@ -11280,8 +11298,9 @@ public class SpecificationBackingBean extends
 						.getScQt().getScQtSupplierCriteria();
 				if (null != supplierCriteria
 						&& null != supplierCriteria.getQtZoneCriterias()) {
-					specMaster.setTplSpecZone(supplierCriteria
-							.getQtZoneCriterias());
+					specMaster
+							.setTplSpecZone(
+									supplierCriteria.getQtZoneCriterias());
 				} else {
 					throw new EpException(
 							"Please choose the zones before proceed.");
