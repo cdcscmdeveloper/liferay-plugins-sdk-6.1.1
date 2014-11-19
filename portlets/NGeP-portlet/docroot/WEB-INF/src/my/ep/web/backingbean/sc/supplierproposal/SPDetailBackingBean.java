@@ -356,6 +356,7 @@ public class SPDetailBackingBean extends
 			// to delete the deleted experiences from db
 			reqDTO.setTobeRemovedExperience(getManagedBean()
 					.getDeletedPRPExperiences());
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
@@ -659,7 +660,7 @@ public class SPDetailBackingBean extends
 					SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 
 			reqDTO.setTobeUpdateProposalChecklist(finProposalChecklist);
-
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -1121,10 +1122,6 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				System.out
-						.println("******qt checklist id TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV******"
-								+ scQtProposalChecklist.getScQtCheckList()
-										.getQtChecklistId());
 				getManagedBean().setYear(
 						scQtProposalChecklist.getScQtCheckList()
 								.getScQtCheckListValue().getYear());
@@ -1405,9 +1402,6 @@ public class SPDetailBackingBean extends
 					loa.setContractDuration(new BigDecimal(0));
 				}
 				total = total + loa.getContractDuration().intValue();
-
-				// ScQtPRPExperience experience = (ScQtPRPExperience)
-				// experiencesList.get(i);
 			}
 			this.getManagedBean().setNoOfYears(total);
 			this.getManagedBean().setContractSize(list.size());
@@ -1422,7 +1416,7 @@ public class SPDetailBackingBean extends
 	public String prepareMultileProposalAction(int index) {
 		debugLogger("prepareMultileProposalAction");
 		getManagedBean().setProposalIndex(index);
-		
+
 		retrieveTemplateSpecBean();
 
 		this.getManagedBean().setPageUrl(NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE);
@@ -1455,7 +1449,9 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				// getManagedBean().setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear());
+				/*getManagedBean().setYear(
+						scQtProposalChecklist.getScQtCheckList()
+								.getScQtCheckListValue().getYear());*/
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
@@ -1554,33 +1550,36 @@ public class SPDetailBackingBean extends
 
 		ITemplateSpecSO templateSpecSO = null;
 		try {
-						
+
 			templateSpecSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 							ITemplateSpecSO.class);
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			/*SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(getManagedBean().getSupplierId());*/
-			reqDTO.setSupplier(getManagedBean()
-					.getQtProposalChecklist().getScQtProposal()
-					.getScQtSupplier().getSmSupplier());
+			/*
+			 * SmSupplier smSupplier = new SmSupplier();
+			 * smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			 */
+			reqDTO.setSupplier(getManagedBean().getQtProposalChecklist()
+					.getScQtProposal().getScQtSupplier().getSmSupplier());
 			reqDTO.setSpecMaster(specMaster);
-			if(getManagedBean().getSelectedZone() != null){
+			if (getManagedBean().getSelectedZone() != null) {
 				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 			}
-			
+
 			reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
-			TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
-			if(resDTO.isSuccessful()) {
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.getTemplateMaster(reqDTO);
+			if (resDTO.isSuccessful()) {
 				specMaster = resDTO.getSpecMaster();
-				if (specMaster.getOrgProfile() == null) {
+				/*if (specMaster.getOrgProfile() == null) {
 					specMaster.setOrgProfile(new PmOrgProfile());
-				}
-				TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
+				}*/
+				TemplateSpecBean templateSpecBean = getManagedBean()
+						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(specMaster);
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				templateSpecBean.setSelectedSpecQuestion(null);
+				//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+				//templateSpecBean.setSelectedSpecQuestion(null);
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
 			}
 		} finally {
@@ -1649,7 +1648,6 @@ public class SPDetailBackingBean extends
 				}
 			}
 			this.getManagedBean().setScQtPRPExperiences(scQtPRPExperiences);
-			totalContractAmount();
 
 			ScQtProposalScore contractAmountScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
 
@@ -1657,7 +1655,7 @@ public class SPDetailBackingBean extends
 				this.getManagedBean().setTotalContractAmount(
 						contractAmountScore.getCriteriaValue());
 			}
-
+			totalContractAmount();
 			return NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE;
 
 		} finally {
@@ -2190,6 +2188,7 @@ public class SPDetailBackingBean extends
 			experiencesList = new ArrayList<ScQtPRPExperience>();
 		}
 		for (ScQtPRPExperience experience : experiencesList) {
+
 			if (experience.getContractAmt() != null) {
 				if (totalContractAmount == null) {
 					totalContractAmount = BigDecimal.valueOf(0);
@@ -2266,7 +2265,8 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 
 				if (!tobeDeletedExperiences.contains(scQtPRPExperience)
-						&& scQtPRPExperience.getQtPrpExperienceId() != null) {
+						&& (scQtPRPExperience.getQtPrpExperienceId() != null || scQtPRPExperience
+								.getQtPrpExperienceId() != 0)) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
 				// experienceList.remove(selectedExperienceList.get(i));
@@ -2415,7 +2415,7 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSelectedZone(specZoneDtl);
 		log.info("Selected Zone : "
 				+ this.getManagedBean().getSelectedZone().getZoneName());
-		if(getManagedBean().getQt().getMaxProposal()== 1){
+		if (getManagedBean().getQt().getMaxProposal() == 1) {
 			retrieveTemplateSpecBean();
 		}
 
@@ -2496,13 +2496,6 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	public void numOfEmployeesTypeChangeListener(AjaxBehaviorEvent event) {
-
-		String viewBy = (String) event.getComponent().getAttributes()
-				.get("value");
-		// listener="#{supplierProposalDetailBackingBean.numOfEmployeesTypeChangeListener}"
-
-	}
 
 	public void creditTypeChange(ScQtPRPCreditFacility creditFacility) {
 		IParameterSO parameterSO = null;
