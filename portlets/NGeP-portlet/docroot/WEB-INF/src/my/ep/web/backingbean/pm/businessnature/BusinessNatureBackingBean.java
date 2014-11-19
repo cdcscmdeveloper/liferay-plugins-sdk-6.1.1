@@ -163,8 +163,8 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				
 			}
 			
+			//division
 			if(getManagedBean().getCategoryLvl()==20L){
-				//division
 				if (getManagedBean().getDivLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelCode())) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("levelCode");
@@ -192,6 +192,207 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				if (getManagedBean().getSecLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean.setSearchField("parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+			}
+			
+			//group
+			if(getManagedBean().getCategoryLvl()==30L){
+				if (getManagedBean().getGroupLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getGroupLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getGroupLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getGroupLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getGroupLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getGroupLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getDivLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getDivLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getSecLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getSecLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+			}
+			
+			//class
+			if(getManagedBean().getCategoryLvl()==40L){
+				if (getManagedBean().getClassLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getClassLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getClassLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getClassLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getClassLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getClassLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getGroupLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getGroupLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getGroupLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getGroupLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getGroupLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getGroupLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getDivLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getDivLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getSecLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getSecLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+			}
+			
+			//item
+			if(getManagedBean().getCategoryLvl()==50L){
+				if (getManagedBean().getItemLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getItemLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getItemLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getItemLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getItemLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getItemLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getClassLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getClassLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getClassLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getClassLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getClassLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getClassLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getGroupLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getGroupLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getGroupLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getGroupLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getGroupLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getGroupLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getDivLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getDivLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getDivLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getDivLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getSecLevelCode() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getManagedBean().getSecLevelCode());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+
+				if (getManagedBean().getSecLevelName() != null && !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName");
 					codesSearchBean.setCaseInsensitive(true);
 					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
