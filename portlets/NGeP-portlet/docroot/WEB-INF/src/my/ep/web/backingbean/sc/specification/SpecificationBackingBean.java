@@ -11133,6 +11133,21 @@ public class SpecificationBackingBean extends
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			// Code to construct financial checklist..
 			ScQt scQt = this.getManagedBean().getScQt();
+			if (scQt.isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = scQt
+						.getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					scQtCheckList
+							.getScQtDoc()
+							.getTplSpecMaster()
+							.setTplSpecZone(
+									supplierCriteria.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			}
 			if (null == scQt) {
 				throw new EpException("Qt id should not be null");
 			}
