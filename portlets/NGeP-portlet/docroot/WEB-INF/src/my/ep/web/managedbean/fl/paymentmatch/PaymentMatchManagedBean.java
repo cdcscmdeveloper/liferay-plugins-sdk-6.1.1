@@ -4,10 +4,12 @@
 package my.ep.web.managedbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
@@ -41,6 +43,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private List<PmGlAccount> glAccountList;
 	private List<PmVotFund> votFundList;
 	private PmVotFund feeVotFund;
+	private List<CtDeduction> ctDeductionList;
+	private List<SelectItem> populateDeductionList;
 	
 	// for Deduction panel display	
 	private String docType;
@@ -678,5 +682,36 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setFeeVotFund(PmVotFund feeVotFund) {
 		this.feeVotFund = feeVotFund;
+	}
+
+	/**
+	 * @return the ctDeductionList
+	 */
+	public List<CtDeduction> getCtDeductionList() {
+		return ctDeductionList;
+	}
+
+	/**
+	 * @param ctDeductionList the ctDeductionList to set
+	 */
+	public void setCtDeductionList(List<CtDeduction> ctDeductionList) {
+		this.ctDeductionList = ctDeductionList;
+	}
+
+	/**
+	 * @return the populateDeductionList
+	 */
+	public List<SelectItem> getPopulateDeductionList() {
+		if(populateDeductionList == null){
+			populateDeductionList = new ArrayList<SelectItem>();
+		}
+		return populateDeductionList;
+	}
+
+	/**
+	 * @param populateDeductionList the populateDeductionList to set
+	 */
+	public void setPopulateDeductionList(List<SelectItem> populateDeductionList) {
+		this.populateDeductionList = populateDeductionList;
 	}
 }

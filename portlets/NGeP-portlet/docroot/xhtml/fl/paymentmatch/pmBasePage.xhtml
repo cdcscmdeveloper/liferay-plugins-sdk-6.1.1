@@ -40,7 +40,8 @@
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu" 
 						activeIndex="#{paymentMatchBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form"
+						actionListener="#{paymentMatchBackingBean.onTabChange(0)}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
@@ -51,7 +52,8 @@
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.payment.match.deduction']}" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.payment.match.deduction']}" update="@form" 
+						actionListener="#{paymentMatchBackingBean.onTabChange(2)}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
