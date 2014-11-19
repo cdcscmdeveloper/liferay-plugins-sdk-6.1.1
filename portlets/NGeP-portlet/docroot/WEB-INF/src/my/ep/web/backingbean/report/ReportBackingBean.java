@@ -1774,7 +1774,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate CT module report  
 	 */	
 	public void generateCTReport(){	
-		if(((this.getCtContractNo()!=null)&&(this.getCtContractNo()!=ReportConst.EMPTY_VAL))||((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL))||((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))){			
+		if(((this.getCtContractNo()!=null)&&(this.getCtContractNo()!=ReportConst.EMPTY_VAL))||((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL))||((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL))||((this.getCtComplete()!=null)&&(this.getCtComplete()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))){			
 			if((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setPaymentTypeTotVar(ReportConst.CT_AMP_STATUS_EQ+this.getCtStatus());
 			}
