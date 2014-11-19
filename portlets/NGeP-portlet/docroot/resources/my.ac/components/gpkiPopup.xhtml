@@ -12,7 +12,10 @@
 		<cc:attribute name="beforeSignText" />
 		<cc:attribute name="postSignAction"
 			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
-		<cc:attribute name="postCancelAction" method-signature="void action()"  required="false"/>
+		<cc:attribute name="postCancelAction" method-signature="void action()"
+			required="false" />
+		<cc:attribute name="enableAutoUpdate" required="false"
+			method-signature="void action()" />
 	</cc:interface>
 
 
@@ -23,6 +26,15 @@
 			action="#{gpkiBackingBean.showError}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
 			value="#{cc.attrs.textBeforeSign}" />
+		<c:choose>
+			<c:when test="#{not empty cc.getValueExpression('enableAutoUpdate')}">
+				<p:remoteCommand name="autoUpdateAction"
+					action="#{cc.attrs.enableAutoUpdate}" />
+			</c:when>
+			<c:otherwise>
+				<p:remoteCommand name="autoUpdateAction" />
+			</c:otherwise>
+		</c:choose>
 		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
 
 		<script>
@@ -31,10 +43,10 @@
 						.val();
 				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
 				var pin = $("[id='#{pin.clientId}']").val();
-				var SignMethod = $("[id='#{SignMethod.clientId}']").val(); 
-// 				Aegis.alert("This SignMethod :"	+ SignMethod);
+				var SignMethod = $("[id='#{SignMethod.clientId}']").val();
+				// 				Aegis.alert("This SignMethod :"	+ SignMethod);
 				sign_st(pin, plainText);
-				
+
 			}
 			function parseVerifyResult(msg) {
 				$(document).ready(
@@ -48,19 +60,19 @@
 								var serialNo = obj.serial_no;
 								var validity = obj.cert_validity;
 								var subjectDn = obj.subject_dn;
-								gpki_dlg.hide();
+
 								msg = "This signature is *VALID*" + "\n"
 										+ "serialNo = " + serialNo + "\n"
 										+ "validity = " + validity + "\n"
 										+ "subjectDn = " + subjectDn;
-// 								Aegis.alert(msg);
+								// 								Aegis.alert(msg);
 							} else {
 								Aegis.alert("This signature is *INVALID* :"
 										+ statusMsg);
 							}
 
 						});
-				
+
 			}
 
 			function parseSignResult(msg) {
@@ -77,18 +89,19 @@
 									var ic = obj.ic_no;
 									var signedData = encodeURIComponent(obj.signed_data);
 									if (statusCode == "0") {
-										
-										var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
+
+										var textBeforeSign = $(
+												"[id='#{textBeforeSign.clientId}']")
 												.val();
 										var originalText = encodeURIComponent(Aegis
 												.hash(textBeforeSign));
 										var signedText = encodeURIComponent(signedData);
 										var serialNo = obj.serial_no;
 										verify(originalText, signedText);
-// 										Aegis.alert(signedText);
+										// 										Aegis.alert(signedText);
 
-// 										Aegis.alert(signedData);
-
+										// 										Aegis.alert(signedData);
+										autoUpdateAction();
 										postSignAction([ {
 											name : 'textBeforeSign',
 											value : textBeforeSign
@@ -99,17 +112,17 @@
 											name : 'serialNo',
 											value : serialNo
 										} ]);
-
+										gpki_dlg.hide();
 
 										/* put your logic to handle the result here */
-// 									} else if (statusCode == "50") {
-// 										Aegis.alert("Wrong PIN");
-// 									} else if (statusCode == "40") {
-// 										Aegis.alert("CERT_EXPIRED");
-// 									} else if (statusCode == "41") {
-// 										Aegis.alert("CERT_REVOKED");
-// 									} else if (statusCode == "43") {
-// 										Aegis.alert("CERT_NOT_YET_VALID");
+										// 									} else if (statusCode == "50") {
+										// 										Aegis.alert("Wrong PIN");
+										// 									} else if (statusCode == "40") {
+										// 										Aegis.alert("CERT_EXPIRED");
+										// 									} else if (statusCode == "41") {
+										// 										Aegis.alert("CERT_REVOKED");
+										// 									} else if (statusCode == "43") {
+										// 										Aegis.alert("CERT_NOT_YET_VALID");
 									} else {
 										errorAction([ {
 											name : 'statusCode',
@@ -123,23 +136,25 @@
 			}
 		</script>
 
-		<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg" resizable="false" modal="true">
-			<p:messages id="dlgMessages" for="somekey" showDetail="true" autoUpdate="true" closable="true" />
+		<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
+			resizable="false" modal="true">
+			<p:messages id="dlgMessages" for="somekey" showDetail="true"
+				autoUpdate="true" closable="true" />
 			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-		        <p:outputLabel  value="#{lbl['lbl.cc.gpki.signmethod']}" />
-		        <p:selectOneRadio binding="#{SignMethod}" id="SignMethod" >
-		            <f:selectItem itemLabel="Token" itemValue="Token" />
-		            <f:selectItem itemLabel="Smart Card" itemValue="Smart Card" />
-		        </p:selectOneRadio>
-		    </h:panelGrid>
+				<p:outputLabel value="#{lbl['lbl.cc.gpki.signmethod']}" />
+				<p:selectOneRadio binding="#{SignMethod}" id="SignMethod">
+					<f:selectItem itemLabel="Token" itemValue="Token" />
+					<f:selectItem itemLabel="Smart Card" itemValue="Smart Card" />
+				</p:selectOneRadio>
+			</h:panelGrid>
 			<h:panelGrid columns="4" cellpadding="4">
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
 			</h:panelGrid>
-			<c:if test="#{not empty cc.getValueExpression('postCancelAction')}">
-				<p:ajax event="close" listener="#{cc.attrs.postCancelAction}"/>
+			<c:if test="#{not empty cc.getValueExpression('postCancelAction')} ">
+				<p:ajax event="close" listener="#{cc.attrs.postCancelAction}" />
 			</c:if>
 		</p:dialog>
 	</cc:implementation>
