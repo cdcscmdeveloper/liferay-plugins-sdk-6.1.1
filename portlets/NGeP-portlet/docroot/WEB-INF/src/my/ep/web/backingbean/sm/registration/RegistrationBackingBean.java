@@ -638,7 +638,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		Long bizNatId  = this.getManagedBean().getSelectedBusinessNature().getLvl5();
 		
 		if(validateNatureBusiness(bizNatId)){
-			PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
+			PmBusinessNature bizNatObj = SmCommonUtil.retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
 			if(bizNatObj != null){
 				SmSupplierBusiness suppBusiness = new SmSupplierBusiness();
 				suppBusiness.setPmBusinessNature(bizNatObj);
@@ -741,7 +741,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 			}else{
 				if(validateNatureBusiness(this.getManagedBean().getSelectedBusinessNature().getLvl5().longValue())){
-					PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
+					PmBusinessNature bizNatObj = SmCommonUtil.retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
 					if(bizNatObj != null){
 						this.getManagedBean().getSelectedBusinessNature().setPmBusinessNature(bizNatObj);
 						RequestContext.getCurrentInstance().execute("bizDlg.hide()");
@@ -1170,15 +1170,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		log.info("************MAP Result***************" + bizNatureL5Map.size());
-	}
-	
-	public PmBusinessNature retrieveBusinessNatureById(Long bid){
-		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
-		reqDTO.setBusinessNatureId(bid);
-		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
-		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureById(reqDTO);
-
-		return resDTO.getBusinessNature();
 	}
 
 	public void resetBusinessNatureSelection(){
