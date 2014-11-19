@@ -14,15 +14,15 @@
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="false" />
 
-		
-
+		 <div class="clear"></div>
+		 
 		<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 			<table style="width: 100%; margin-bottom: 4px;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
-					<td><p:inputText disabled="true" size="20" 
-					value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}"/></td>
+					<td><p:inputText disabled="true" size="20"
+							value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}" /></td>
 					<td></td>
 					<td></td>
 				</tr>
@@ -43,7 +43,7 @@
 
 		</p:panel>
 
-		<h:panelGroup id="cmExtensionSearchID">
+		<h:panelGroup id="cmExtensionSearchToAssignID">
 
 			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 
@@ -91,7 +91,8 @@
 					<tr>
 						<td><h:outputText style="font-weight: bold;"
 								value="#{lbl['lbl.cm.extension.attr']}"></h:outputText></td>
-								
+
+
 					</tr>
 
 					<tr>
@@ -104,7 +105,7 @@
 									value="#{codificationBackingBean.managedBean.typeCriteria}" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-						<td><p:selectOneMenu
+						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.brandFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -130,15 +131,16 @@
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.colorCriteria}" />
 							</p:selectOneMenu></td>
-							
+
 					</tr>
 				</table>
 			</p:panel>
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search"
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					icon="ui-icon-search"
 					action="#{codificationBackingBean.extensionCodeSearch}"
-					update="itemTableID" />
+					update="itemTable2ID" />
 				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToSearchUnspscToAssign}" />
 			</div>
@@ -146,15 +148,15 @@
 
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-				<p:dataTable id="itemTableID"
+				<p:dataTable id="itemTable2ID"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
 					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedExtenstionForItem}"
 					lazy="true">
-						<p:column selectionMode="single" style="width:2%" />
-						
-					<ac:paginator for="itemTableID"></ac:paginator>
 
+					<ac:paginator for="itemTable2ID"></ac:paginator>
+
+					<p:column selectionMode="single" style="width:2%" />
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
@@ -186,26 +188,20 @@
 
 
 				</p:dataTable>
+                <div class="clear"></div>
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
+						action="#{codificationBackingBean.requestExtensionCodeII}" />
+
+					<p:commandButton value="#{lbl['lbl.cm.assign']}"
+						action="#{codificationBackingBean.insertContractedItemCode}"
+						icon="ui-icon-accept"></p:commandButton>
 
 
-
-
-
+				</div>
 
 			</p:panel>
 
-		<div class="clear"></div>
-		<div style="text-align: right;">
-			<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
-				action="#{codificationBackingBean.requestExtensionCodeII}" />
-		
-			<p:commandButton value="#{lbl['lbl.cm.assign']}"
-			   
-				action="#{codificationBackingBean.insertContractedItemCode}"
-				icon="ui-icon-accept" ></p:commandButton>
-
-
-		</div>
 		</h:panelGroup>
 
 
