@@ -210,16 +210,16 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	public void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		
-		Map<Long, List<FlStopInstrItem>> siItemsMap = new HashMap<Long, List<FlStopInstrItem>>();
+		Map<String, List<FlStopInstrItem>> siItemsMap = new HashMap<String, List<FlStopInstrItem>>();
 		List<FlStopInstrItem> flStopInstrItemList = null;
 		for (FlStopInstrItem flStopInstrItem : getManagedBean().getStopInstr().getStopInstrItems()) {
-			if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId())) {
-				flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId());
+			if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getItemCode())) {
+				flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getItemCode());
 			} else {
 				flStopInstrItemList = new ArrayList<FlStopInstrItem>();
 			}
 			flStopInstrItemList.add(flStopInstrItem);
-			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId(), flStopInstrItemList);
+			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode(), flStopInstrItemList);
 		}
 		
 		BigDecimal totalOrderAmt = new BigDecimal(0);
@@ -227,12 +227,12 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		BigDecimal totalRecalledAmt = new BigDecimal(0);
 		List<Long> flFulfilmentItemIds = null;
 		
-		for(Entry<Long, List<FlStopInstrItem>> itemEntry : siItemsMap.entrySet()){
+		for(Entry<String, List<FlStopInstrItem>> itemEntry : siItemsMap.entrySet()){
 			List<FlStopInstrItem> stopInstrItems = itemEntry.getValue();
 			FlStopInstrItem flsiItem = (FlStopInstrItem) stopInstrItems.get(0).cloneEntity(); 
 			flsiItem.setFlFulfilmentItem((FlFulfilmentItem)flsiItem.getFlFulfilmentItem().cloneEntity());
 			flsiItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getCmItem().getItemId().toString(), flsiItem, getManagedBean().getChargeLineItemRoot());
+			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode(), flsiItem, getManagedBean().getChargeLineItemRoot());
 			
 			totalOrderAmt = new BigDecimal(0);
 			totalReceiveAmt = new BigDecimal(0);
@@ -249,7 +249,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getFlFulfilmentItem().getSumRecalledAmt().add(chargeLineItem.getRecalledAmt()));						
 				} else {
 					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId());
-					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
 					chargeLineItem.getFlFulfilmentItem().setSumOrderedQty(chargeLineItem.getFlFulfilmentItemAddr().getOrderedQty());
 					chargeLineItem.getFlFulfilmentItem().setSumReceivedQty(chargeLineItem.getFlFulfilmentItemAddr().getChargeReceivedQty());
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty());
