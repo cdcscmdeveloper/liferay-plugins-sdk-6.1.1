@@ -59,14 +59,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.businessTypeVal}"></p:outputLabel> 
-					<!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
-					<p:inputText disabled="true" readonly="true" value="ROC - BERHAD"
-						rendered="#{backingBean.managedBean.smSupplier.businessType == 2}" />
-					<p:inputText disabled="true" readonly="true"
-						value="ROS - PERKONGSIAN"
-						rendered="#{backingBean.managedBean.smSupplier.businessType == 3}" /> -->
-					</td>
+					<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getBusinessType(backingBean.managedBean.smSupplier.businessType)}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.regNo}"
