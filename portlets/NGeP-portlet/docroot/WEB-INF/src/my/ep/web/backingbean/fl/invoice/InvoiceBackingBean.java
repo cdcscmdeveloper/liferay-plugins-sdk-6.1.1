@@ -217,9 +217,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan() && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
-					reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
-					invoiceSO.sendCANNotification(reqDTO);
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
+					if(resDTO.getInvoice().getAp59Status()==null || 
+						(resDTO.getInvoice().getAp59Status()!=null && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)) {
+						reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
+						invoiceSO.sendCANNotification(reqDTO);
+					}
 				}
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
@@ -431,7 +434,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
 		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
 		   
-		   if(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId().longValue() == data.getFlFulfilmentItem().getCmItem().getItemId().longValue()){
+		   if(flInvoiceItem.getFlFulfilmentItem().getItemCode().equalsIgnoreCase(data.getFlFulfilmentItem().getItemCode())){
 			   BigDecimal invoiceAmount=new BigDecimal(0);
 			   for(TreeNode subNode:childNode.getChildren()){
 				   FlInvoiceItem subData=(FlInvoiceItem)subNode.getData();
@@ -464,7 +467,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
 			//check item whther is exempted for this supplier.
 			if(!resDTO.isFeeExemption()){
-				reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
+				if(data.getFlFulfilmentItem().getCmItem()!=null) {
+					reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
+				} 
 				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
 				reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
@@ -813,13 +818,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
 		List<FlInvoiceItem> flInvoiceItemList = null;
 		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
-			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode())) {
-				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode());
+			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getItemCode())) {
+				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getItemCode());
 			} else {
 				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
 			}
 			flInvoiceItemList.add(flInvoiceItem);
-			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode(), flInvoiceItemList);
+			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItemList);
 		}
 		
 		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
@@ -830,14 +835,14 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
 			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
 			flInvoiceItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode(), flInvoiceItem, getManagedBean().getChargeLineItemRoot());
+			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItem, getManagedBean().getChargeLineItemRoot());
 			
 			BigDecimal totalOrderAmt = new BigDecimal(0);
 			BigDecimal totalReceiveAmt = new BigDecimal(0);
 			BigDecimal totalRecallAmt = new BigDecimal(0);
 			BigDecimal totalInvAmt = new BigDecimal(0);
 			for(FlInvoiceItem chargeLineItem : invoiceItems) {
-				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getExtensionCode(),chargeLineItem,childItemNode);
+				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
 				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
 				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
 				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());
