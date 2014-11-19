@@ -1320,6 +1320,28 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return categoryIds;
 	}
 	
+	// View Circular Attachmnets Download Method
+	public void downloadCircularDtls() throws IOException {
+		debugLogger("downloadCircularDtls");
+		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+		itemList = new ArrayList<CtPanelItem>();
+		itemList.add(this.getManagedBean().getCtPanelItem());
+
+		String filePath = this.getManagedBean().getCtCircularVer()
+				.getCircularFilePath();
+		String fileName = this.getManagedBean().getCtCircularVer()
+				.getCircularFileName();
+
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
+		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		actualFilePath.append(filePath);
+
+		downloadFile(actualFilePath.toString(), fileName);
+		this.getManagedBean().setSelectpanelItem(itemList);
+	}
+	
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
 		if (null != panelSupplier.getSupplier() && null != panelSupplier.getSupplier().getSmAppl() && null != panelSupplier.getSupplier().getSmAppl() .getSmPersonnels()) {
