@@ -6170,8 +6170,8 @@ public class SmApplicationBackingBean extends
 				suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
 						: getManagedBean().getSmAppl().getSupplierType();
 			}
-			
-			if(getManagedBean().getBumiEquityPercentage()==null){
+
+			if (getManagedBean().getBumiEquityPercentage() == null) {
 				calculateCapital();
 			}
 			getManagedBean().setBumiRecommendationNote(
@@ -6195,7 +6195,7 @@ public class SmApplicationBackingBean extends
 		}
 		// hide home office for consultant
 		if (suppType.equalsIgnoreCase("J")) {
-			if(getManagedBean().getBasicCompanyFacility()==null){
+			if (getManagedBean().getBasicCompanyFacility() == null) {
 				getManagedBean().setBasicCompanyFacility(new SmFacility());
 			}
 			getManagedBean().setDisabledHomeOffice(true);
@@ -6213,9 +6213,11 @@ public class SmApplicationBackingBean extends
 					.getBusinessTypeLs());
 			if (getManagedBean().getSmSupplier() != null) {
 				for (SelectItem selectItem : businessTypeSelectItems) {
-					if(selectItem.getValue()!=null && selectItem.getValue()!=null){
+					if (selectItem.getValue() != null
+							&& selectItem.getValue() != null) {
 						if (selectItem.getValue().equals(
-								getManagedBean().getSmSupplier().getBusinessType())) {
+								getManagedBean().getSmSupplier()
+										.getBusinessType())) {
 							getManagedBean().setBusinessTypeVal(
 									selectItem.getLabel().toString());
 							break;
@@ -6267,6 +6269,24 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedCompExpCats(selectedCompExpCatsList);
 	}
 
+	public String getBusinessType(String businessType) {
+		String retVal = "";
+		List<SelectItem> businessTypeItems = new ArrayList<SelectItem>();
+		if (StringUtils.isNotBlank(businessType)) {
+			if (getManagedBean().getBusinessTypeLs() != null
+					&& getManagedBean().getBusinessTypeLs().length > 0) {
+				businessTypeItems = Arrays.asList(getManagedBean()
+						.getBusinessTypeLs());
+				for (SelectItem item : businessTypeItems) {
+					if (businessType.equals(item.getValue())) {
+						retVal = item.getLabel();
+						break;
+					}
+				}
+			}
+		}
+		return retVal;
+	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
 	// String appNo = getManagedBean().getSmAppl().getApplNo();
