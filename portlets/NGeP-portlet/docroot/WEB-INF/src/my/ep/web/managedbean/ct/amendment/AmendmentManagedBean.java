@@ -123,6 +123,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean autoUpdate;
 	private String textBeforeSign;
 	private String buttonAction;
+	private int attachFileIndex;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -745,4 +746,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
+
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+	
 }

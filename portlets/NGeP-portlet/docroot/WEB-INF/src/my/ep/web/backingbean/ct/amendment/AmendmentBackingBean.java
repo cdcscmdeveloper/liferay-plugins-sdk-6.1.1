@@ -92,6 +92,7 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -259,10 +260,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     resetbooleanValue();
 			     getManagedBean().setAutoUpdate(true);
 			
-			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) && 
-					this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-				           this.getManagedBean().setBpkSaSkApprover(true);
-			     }
+//			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) && 
+//					this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+//				           this.getManagedBean().setBpkSaSkApprover(true);
+//			     }
 			
 	            if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
 			           this.getManagedBean().setPbConfirmMeeting(true);
@@ -2626,5 +2627,37 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
+	}
+	
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
+	}
+	
+	public void deleteAttachmentAction(int index) {
+		getManagedBean().getContractVer().getAp201Attachements().remove(index);
+	}
+	
+	public void ap201FileUpload(FileUploadEvent event) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		UploadedFile item = event.getFile();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		this.getManagedBean().getContractVer().getAp201Attachements().add(attachment);
 	}
 }
