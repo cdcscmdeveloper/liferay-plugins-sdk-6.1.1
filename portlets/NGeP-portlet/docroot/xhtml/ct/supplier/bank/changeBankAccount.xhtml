@@ -19,13 +19,17 @@
 }
 
 .columnWidth200 {
-	width: 190px;
+	width: 225px;
 	vertical-align: top;
 	text-align: right;
 }
 
 .columnWidth400 {
 	width: 400px;
+}
+
+.columnWidth300 {
+	width: 300px;
 }
 </style>
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -97,7 +101,7 @@
 			<br />
 			<br />
 			<h:panelGrid columns="4" style="width:100%;"
-				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth400">
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -124,15 +128,10 @@
 					style="width:200px;" disabled="true"
 					rendered="#{supplierBackingBean.managedBean.taskId != null}" />
 
-				<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
-				<h:panelGrid columns="3">
-					<p:inputText id="physicalNo" disabled="true" style="width:200px;"
-						value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}" />
-					<p:spacer width="1" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
-				</h:panelGrid>
-
+                <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+				<p:inputText style="width:200px;" disabled="true"
+					value="#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+				
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 				<p:inputText id="effDate" disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
@@ -148,22 +147,37 @@
 				</p:inputText>
 
 				<p:outputLabel value="Ministry Name" />
-				<p:inputText style="width:200px;" disabled="true"
+				<p:inputText style="width:350px;" disabled="true"
 					value="#{supplierBackingBean.getMinistryAndPtjName(1)}" />
-
-				<p:outputLabel value="PTJ Name" />
-				<p:inputText style="width:200px;" disabled="true"
-					value="#{supplierBackingBean.getMinistryAndPtjName(2)}" />
-
+					
+					<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+				<h:panelGrid columns="3">
+					<p:inputText id="physicalNo" disabled="true" style="width:200px;"
+						value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+				</h:panelGrid>
+					
 				<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
-					<p:inputTextarea id="contractName" rows="3" style="width:200px;"
+					<p:inputTextarea id="contractName" rows="3" style="width:350px;"
 						value="#{supplierBackingBean.managedBean.ctContract.contractName}"
 						disabled="true" autoResize="false" />
+				</h:panelGrid>
+			
+			<h:panelGroup>
+					<div style="height: 40px; vertical-align: top;">
+						<p:outputLabel value="PTJ Name" />
+					</div>
+				</h:panelGroup>
+				<h:panelGrid>
+					<p:inputTextarea id="ptjName" rows="3" style="width:200px;" disabled="true"
+						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"  autoResize="false" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</p:panel>
@@ -172,7 +186,7 @@
 			toggleable="true" toggleSpeed="500">
 			<h:panelGrid columns="4" style="width:100%;"
 				styleClass="top-aligned-columns"
-				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth400">
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -182,7 +196,7 @@
 				<h:panelGrid id="menuBankId" columns="3"
 					rendered="#{supplierBackingBean.managedBean.taskId==null}">
 					<p:selectOneMenu id="accountId" required="true"
-						style="width:270px;margin-bottom: 5px;"
+						style="width:360px;margin-bottom: 5px;"
 						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"
 						label="#{lbl['lbl.ct.bank.account.name']}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -212,7 +226,7 @@
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
-					<p:inputTextarea id="bankAddress" rows="4" style="width:200px;"
+					<p:inputTextarea id="bankAddress" rows="4" style="width:350px;"
 						disabled="true" maxlength="250" autoResize="true"
 						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" />
 				</h:panelGrid>
@@ -224,7 +238,7 @@
 			toggleable="true" toggleSpeed="500">
 			<h:panelGrid columns="4" style="width:100%;"
 				styleClass="top-aligned-columns"
-				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth400">
+				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
 				<p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}" />
 				<h:panelGrid columns="4" style="width:350px;">
