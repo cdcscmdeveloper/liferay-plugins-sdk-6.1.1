@@ -14,7 +14,7 @@
 			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
 			<p:ajax event="rowSelect" listener="#{paymentMatchBackingBean.unselectDisabledRow}" update="@this" />
 			<ac:paginator for="deductionDataTable" />
-			<p:column selectionMode="multiple" style="width:2%;text-align:center" disabledSelection="#{index == 0}" />what is = #{index}
+			<p:column selectionMode="multiple" style="width:2%;text-align:center" disabledSelection="#{index == 0}" />
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}">
 				<h:outputText rendered="#{index == 0}" value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
 				<p:selectOneMenu id="deductionList" rendered="#{index > 0}" value="#{deduction.deductionType.parameterId}" >
