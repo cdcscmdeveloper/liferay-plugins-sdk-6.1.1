@@ -440,6 +440,13 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmAppl(smAppl);
+			
+			if(fromBpm && !(getManagedBean().isApproverUser() || getManagedBean().isPoUser())){
+				boolean updateNeeded = resetDeactivatedPersonnel();
+				if(updateNeeded)
+					saveOrUpdateAppl();
+			}
+			
 			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
 				log.info("*** Empty list of staff *****"
 						+ smAppl.getSupplierType());
@@ -556,6 +563,21 @@ public class SmApplicationBackingBean extends
 		} finally {
 			// mofRegistrationSO = null;
 		}
+	}
+
+	private boolean resetDeactivatedPersonnel() {
+		boolean updateNecessary = false;
+		if(getManagedBean().getSmAppl().getSmPersonnels() != null && getManagedBean().getSmAppl().getSmPersonnels().size() > 0){
+			for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+				if(personnel.getRecordStatusFlg().equals(SupplierManagementConst.DELETED_RECORD_STATUS)){
+					personnel.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+					personnel.setEpRole(null);
+					personnel.setAuthorizedFlg(0);
+					updateNecessary = true;
+				}
+			}
+		}
+		return updateNecessary;
 	}
 
 	private SmAddress setDefaultBaseOfficeAddress(SmAddress addr) {
