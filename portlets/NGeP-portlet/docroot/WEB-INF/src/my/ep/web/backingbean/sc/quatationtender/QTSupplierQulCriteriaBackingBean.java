@@ -1251,7 +1251,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		SupplierSearchResDTO searchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-		this.getManagedBean().setTotalSuppliers(searchResDTO.getResultBean().getTotalRecord());
+		this.getManagedBean().setTotalSuppliers(searchResDTO.getCount());
 	}
 
 	private void getStatesNDistrict(List<? extends TplSpecLoc> locations, List<String> codes, String locLevel) {
