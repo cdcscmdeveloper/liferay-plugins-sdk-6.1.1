@@ -6187,8 +6187,7 @@ public class SmApplicationBackingBean extends
 
 	private void initBusinessPremise() {
 		String suppType = "";
-		if (getManagedBean().getSmAppl() != null
-				&& getManagedBean().getBasicCompanyFacility() != null) {
+		if (getManagedBean().getSmAppl() != null) {
 			suppType = StringUtils.isNotBlank(getManagedBean()
 					.getNewSupplierType()) ? getManagedBean()
 					.getNewSupplierType() : getManagedBean().getSmAppl()
@@ -6196,6 +6195,9 @@ public class SmApplicationBackingBean extends
 		}
 		// hide home office for consultant
 		if (suppType.equalsIgnoreCase("J")) {
+			if(getManagedBean().getBasicCompanyFacility()==null){
+				getManagedBean().setBasicCompanyFacility(new SmFacility());
+			}
 			getManagedBean().setDisabledHomeOffice(true);
 			getManagedBean().getBasicCompanyFacility().setFacilityType(
 					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
