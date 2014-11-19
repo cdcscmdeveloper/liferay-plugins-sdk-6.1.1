@@ -795,6 +795,12 @@
 						<f:selectItems value="#{backingBean.getDropdownValues('QL')}" />
 					</p:selectOneMenu> <p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
 						showSummary="true" showDetail="false" display="icon" /></td>
+				<td style="width: 20px"><p:graphicImage id="uidti"
+						value="/css/images/design/tooltips.png"  />
+					<p:tooltip id="uidtt" for="uidti">
+						<p:outputLabel escape="false"
+							value="#{lbl['lbl.sm.qualification.validation']}" />
+					</p:tooltip></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']}" />

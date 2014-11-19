@@ -2872,6 +2872,14 @@ public class SmApplicationBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.jobexperience.required.atleast.one", null));
 		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& (getManagedBean().getSelectedShareHolder().isProf() || getManagedBean().getSelectedShareHolder().isSemiProf() || getManagedBean().getSelectedShareHolder().isClerical())
+				&& (getManagedBean().getSelectedShareHolder().getSmStaffAcademics() == null || getManagedBean().getSelectedShareHolder().getSmStaffAcademics().isEmpty())) {
+
+			validShrHldr = false;
+			throw new EpException(MessageConst.ERROR_722575);
+		}
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -3503,6 +3511,34 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedStaffAcademic().setPmEduField(edu);
 				break;
 			}
+		}
+		
+		if(getManagedBean().getSelectedStaffAcademic().getQualificationLevelId() != null){
+			PmParameter param = SmApplicationUtil.retrievePmParameterById(getManagedBean().getSelectedStaffAcademic().getQualificationLevelId().longValue());
+			String qual = "";
+			if (param != null && param.getParameterCode() != null) {
+				qual = param.getParameterCode();
+				if(getManagedBean().getSelectedShareHolder().isProf()){
+					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_DIPLOMA)) {
+						throw new EpException(MessageConst.ERROR_722574,
+								new String[] { "Professional Staff",  "BACHELOR'S DEGREE"});
+					}
+				} else if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)) {
+						throw new EpException(MessageConst.ERROR_722574,
+								new String[] { "Semi-Professional Staff",  "DIPLOMA"});
+					}
+				} else if(getManagedBean().getSelectedShareHolder().isClerical()){
+					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)) {
+						throw new EpException(MessageConst.ERROR_722574,
+								new String[] { "Clerical Staff",  "CERTIFICATE"});
+					}
+				}
+
+			}	
 		}
 		if (getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
 				.contains(getManagedBean().getSelectedStaffAcademic())) {
