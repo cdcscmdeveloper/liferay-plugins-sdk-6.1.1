@@ -470,13 +470,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		Map<String, List<FlPaymentItem>> paymentItemsMap = new TreeMap<String, List<FlPaymentItem>>();
 		List<FlPaymentItem> flPaymentItemList = null;
 		for (FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
-			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getCmItem().getExtensionCode())) {
-				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getCmItem().getExtensionCode());
+			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getItemCode())) {
+				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getItemCode());
 			} else {
 				flPaymentItemList = new ArrayList<FlPaymentItem>();
 			}
 			flPaymentItemList.add(flPaymentItem);
-			paymentItemsMap.put(flPaymentItem.getFlItem().getCmItem().getExtensionCode(), flPaymentItemList);
+			paymentItemsMap.put(flPaymentItem.getFlItem().getItemCode(), flPaymentItemList);
 		}
 		
 		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
@@ -493,7 +493,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				flPaymentItem.setFlAdjustmentItem((FlAdjustmentItem) flPaymentItem.getFlAdjustmentItem().cloneEntity());
 			}
 			flPaymentItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getExtensionCode(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
+			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getItemCode(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
 			
 			BigDecimal totalOrderAmt = new BigDecimal(0);
 			BigDecimal totalReceiveAmt = new BigDecimal(0);
@@ -501,7 +501,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			BigDecimal totalInvAmt = new BigDecimal(0);
 			BigDecimal totalDanAmt = new BigDecimal(0);
 			for(FlPaymentItem chargeLineItem : paymentItems) {
-				new DefaultTreeNode(chargeLineItem.getFlItem().getCmItem().getExtensionCode(),chargeLineItem,childItemNode);
+				new DefaultTreeNode(chargeLineItem.getFlItem().getItemCode(),chargeLineItem,childItemNode);
 				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getFlInvoiceItem().getOrderedAmt());
 				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlInvoiceItem().getReceivedAmt());
 				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getFlInvoiceItem().getRecalledAmt());
