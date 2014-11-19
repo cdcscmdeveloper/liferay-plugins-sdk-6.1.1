@@ -565,8 +565,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			@Override
 			public int compare(FlFulfilmentItemAddr o1, FlFulfilmentItemAddr o2) {
 				return new CompareToBuilder().append(
-						o1.getScRequestItem().getCmItem().getExtensionCode(),
-						o2.getScRequestItem().getCmItem().getExtensionCode())
+						o1.getItemCode(),
+						o2.getItemCode())
 						.toComparison();
 			}
 		};
