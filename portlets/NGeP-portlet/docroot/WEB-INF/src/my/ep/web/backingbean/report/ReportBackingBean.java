@@ -2467,6 +2467,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCtContractNo(null);	
 		this.setCtAgreement(null);	
 		this.setCtStatus(null);	
+		this.setCtComplete(null);
 	}
 	protected void fileGenerateReport(String reportFile, String paramConstrString) throws IOException {	
 		StringBuilder gnrtdURL = new StringBuilder();
