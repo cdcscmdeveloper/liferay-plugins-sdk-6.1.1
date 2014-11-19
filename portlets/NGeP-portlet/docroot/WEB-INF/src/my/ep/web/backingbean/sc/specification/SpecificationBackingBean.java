@@ -7066,6 +7066,22 @@ public class SpecificationBackingBean extends
 
 		return isDate;
 	}
+	
+	public boolean supplierStatusDateComparision(Date enddate) {
+		boolean isDate = false;
+		Date d1 = new Date();
+
+		if (null != enddate) {
+			long days = DateUtils.getDaysDifference(d1,enddate);
+			int day = (int) days;
+			if (day >= 0) {
+				isDate = true;
+			}
+		}
+
+		return isDate;
+	}
+
 
 	public ScQtCheckListScore createCheckList() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
@@ -8232,6 +8248,8 @@ public class SpecificationBackingBean extends
 				}
 				SmPersonnel supplierHQPersonnel = this.getManagedBean()
 						.getPersonnel();
+				getManagedBean().setSupplierContact("");
+				getManagedBean().setSupplierEmail("");
 				if (null != supplierHQPersonnel) {
 					getManagedBean().setSupplierContact(
 							supplierHQPersonnel.getName());
@@ -8245,20 +8263,26 @@ public class SpecificationBackingBean extends
 
 				// System.out.println("INcomeTax No : " +
 				// smCompanyBasic.getIncomeTaxNo());
+
+			
 				if (null != smCompanyBasic) {
 					if (null != smCompanyBasic.getSmCompanyAddresses()) {
 						for (SmCompanyAddress smCompanyAddress : smCompanyBasic
 								.getSmCompanyAddresses()) {
-							if (null != smCompanyAddress)
+							if (null != smCompanyAddress) {
 								if (AddressType.CONTACT_ADDRESS.value().equals(
 										smCompanyAddress.getAddressType())) {
 
 									getManagedBean().setSupplierBranch("HQ");
-									getManagedBean().setSupplierAddress(
-											smCompanyAddress.getSmAddress());
-
+									
+									  getManagedBean().setSupplierAddress(
+									  smCompanyAddress.getSmAddress());
+									
 									break;
+									
+
 								}
+							}
 						}
 					}
 				}
