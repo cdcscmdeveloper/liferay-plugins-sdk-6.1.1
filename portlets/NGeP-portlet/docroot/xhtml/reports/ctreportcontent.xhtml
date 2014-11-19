@@ -48,6 +48,15 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>										
 									</p:selectOneMenu>
 								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctCompleteView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.complete']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctComplete}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.completed']}" itemValue="#{lbl['lbl.rpt.completed']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pending']}" itemValue="#{lbl['lbl.rpt.pending']}"></f:selectItem>										
+									</p:selectOneMenu>
+								  </c:if>
 								   			 			
 							    </h:panelGrid>							    
 						    </td>

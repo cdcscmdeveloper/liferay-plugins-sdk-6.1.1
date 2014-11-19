@@ -192,6 +192,7 @@ public class ReportsGenerateBean {
 		private boolean ctAgreementView = false;
 		private boolean ctStatusView = false;
 		private boolean ctContrMontrStatusView = false;
+		private boolean ctCompleteView = false;
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -322,7 +323,20 @@ public class ReportsGenerateBean {
 		private String ctStatusVar=ReportConst.EMPTY_VAL;
 		private String ctContrMontrStatusVar=ReportConst.EMPTY_VAL;
 		private String ctHiddenParamGroupVar=ReportConst.EMPTY_VAL;
-		
+		private String ctCompleteVar=ReportConst.EMPTY_VAL;
+	
+		public boolean isCtCompleteView() {
+			return ctCompleteView;
+		}
+		public void setCtCompleteView(boolean ctCompleteView) {
+			this.ctCompleteView = ctCompleteView;
+		}
+		public String getCtCompleteVar() {
+			return ctCompleteVar;
+		}
+		public void setCtCompleteVar(String ctCompleteVar) {
+			this.ctCompleteVar = ctCompleteVar;
+		}
 		public boolean isCtContrMontrStatusView() {
 			return ctContrMontrStatusView;
 		}
