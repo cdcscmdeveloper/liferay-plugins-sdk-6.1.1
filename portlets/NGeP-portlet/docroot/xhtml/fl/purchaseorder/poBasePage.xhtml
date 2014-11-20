@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -21,8 +22,12 @@
 					'#{flOrderBB.getPortletTitle()}');
 		</script>
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="#{flOrderBB.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info" />
+		<ac:gpkiPopup 
+			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
+			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{flOrderBB.enableAutoUpdate()}" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
@@ -32,16 +37,15 @@
 						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}" ajax='false'
+						<p:commandButton value="#{bpmAction}"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
-							process="@this" />
+							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"  update="@form"
+							action="#{flOrderBB.gpkiSignAction(bpmAction)}" />
 					</ui:repeat> </td></c:if><c:if
 						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
 						<td colspan="4" style="text-align: right">
-						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"
-							action="#{flOrderBB.fulfillmentOrderAction('STOP FULFILMENT')}">
+						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"  update="@form"
+							action="#{flOrderBB.gpkiSignAction('STOP FULFILMENT')}">
 							<f:param name="actionName" value="STOP" />
 						</p:commandButton>
 					</td></c:if>

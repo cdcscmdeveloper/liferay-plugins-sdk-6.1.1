@@ -42,6 +42,7 @@ import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
@@ -54,6 +55,7 @@ import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -107,6 +109,10 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		FulfilmentResDTO resDTO = null;
 		if(isFlFulfilmentApprover()) {
 			reqDTO.setApprover(Boolean.TRUE);
+		}
+		
+		if(getManagedBean().getPmDigiSign() != null){
+			reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 		}
 		resDTO = getFulfilmentOrderSO().stopFulfilment(reqDTO);
 		
@@ -312,5 +318,55 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	public String backToPervious() {
 		return "flDocSearch";
 	}
+	
+	public String gpkiSignAction(String outcome) throws Exception{
+		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
+				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
+				&&  !isSupplierRole()) {
+			// Temp setTextBeforeSign : DocNo+SAP
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
+			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else{
+			return saveStopInstruction(outcome);
+		}
+	}
+	
+	
+	public String preSubmitStopInstruction(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		
+		return saveStopInstruction(getManagedBean().getButtonAction());
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	private boolean isSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	
 	
 }

@@ -55,6 +55,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -76,6 +77,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -168,6 +170,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				reqDTO.setFulfilmentOrder(flOrder);
 				if(flOrder.getFlFulfilmentRequest().getCtContract() != null){
 					reqDTO.setContractRequest(true);
+				}
+				if(getManagedBean().getPmDigiSign() != null){
+					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				}
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING) 
@@ -758,5 +763,38 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					}
 				}
 			}
+		}
+		
+		public String gpkiSignAction(String outcome) throws Exception{
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				// Temp setTextBeforeSign : DocNo+SAP
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
+				sb.append(getManagedBean().getFulfilmentOrder().getSapOrderNo());
+				sb.append(outcome);
+				getManagedBean().setTextBeforeSign(sb.toString());
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}else{
+				return fulfillmentOrderAction(outcome);
+			}
+		}
+		
+		
+		public String preSubmitFulfillmentOrder(
+				PmDigiSign pmDigiSign) throws Exception {
+			if (pmDigiSign != null) {
+				this.getManagedBean().setPmDigiSign(pmDigiSign);
+			}
+			
+			return fulfillmentOrderAction(getManagedBean().getButtonAction());
+		}
+		
+		public void enableAutoUpdate(){
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			RequestContext.getCurrentInstance().update("@form");
 		}
 }

@@ -211,7 +211,7 @@
 				<td colspan="4" style="text-align: right"><p:commandButton title="#{lbl['lbl.fl.btn.bulk.update']}"
 						value="#{lbl['lbl.fl.bulk.update']}" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
-						update="chargeLineTbl,chargeAss,chargeLineSection"
+						update="chargeLineTbl,chargeAss,chargeLineSection,messages"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						action="#{purchaseRequestBackingBean.chargeLineApply}" /></td>
