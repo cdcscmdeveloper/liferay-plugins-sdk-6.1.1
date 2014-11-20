@@ -100,13 +100,13 @@ public class gpkiBackingBean {
 	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
 	    FacesContext facesContext = FacesContext.getCurrentInstance(); ;
 	    debugLogger("OriginalText====================================: "+statusCode);
-	    facesContext.addMessage(
-				"somekey",
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(
-								MessageConst.ERROR_776001,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));  
+//	    facesContext.addMessage(
+//				"somekey",
+//				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+//						MessageUtils.getMessage(
+//								MessageConst.ERROR_776001,
+//								MessageUtils.BUNDLE_COMMON_MESSAGES,
+//								new FacesScopes().getUserLocale())));  
 //								throw new EpException(MessageConst.ERROR_715026);
 //	FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
 	}
