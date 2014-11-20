@@ -269,7 +269,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal equiCompCapTotal;
 	private BigDecimal bumiEquityPercentage;
 	private boolean validResubmit;
-	private boolean resubmitWithActiveDraft;
+	private String resubmitInValidMsg;
 	private boolean draftedAppl;
 	private String currentPageType;
 	private boolean redirectToPersonPage;
@@ -2141,13 +2141,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.revisionApproverAppNoParam = revisionApproverAppNoParam;
 	}
 
-	public boolean isResubmitWithActiveDraft() {
-		return resubmitWithActiveDraft;
-	}
-
-	public void setResubmitWithActiveDraft(boolean resubmitWithActiveDraft) {
-		this.resubmitWithActiveDraft = resubmitWithActiveDraft;
-	}
 
 	public List<SmAssociationBody> getNonPersonnelProfBodyList() {
 		return nonPersonnelProfBodyList;
@@ -2333,6 +2326,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setMofSupplier(boolean mofSupplier) {
 		this.mofSupplier = mofSupplier;
+	}
+
+	public String getResubmitInValidMsg() {
+		return resubmitInValidMsg;
+	}
+
+	public void setResubmitInValidMsg(String resubmitInValidMsg) {
+		this.resubmitInValidMsg = resubmitInValidMsg;
 	}
 
 }
