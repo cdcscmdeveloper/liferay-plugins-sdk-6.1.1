@@ -106,9 +106,9 @@
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<p:inputText id="txtname" style="width:650px;"  label="#{lbl['lbl.ct.amendment.title']}" 
+				<p:inputTextarea id="txtname" style="width:650px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="100"
-					disabled="#{amendmentBackingBean.bpkApprover}" />
+					disabled="#{amendmentBackingBean.bpkApprover}" autoResize="false" />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
