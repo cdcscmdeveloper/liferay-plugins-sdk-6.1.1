@@ -89,9 +89,9 @@
 					listener="#{backingBean.unSelectApporvedCategories}"
 					update=":form:tt:catCodeInfPan"></p:ajax>
 				
-				<c:if test="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-					<p:column selectionMode="multiple" style="width:2%" />
-				</c:if>
+				
+				<p:column selectionMode="multiple" style="width:2%"
+					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
@@ -207,6 +207,7 @@
 
 					<p:row>
 						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
@@ -221,6 +222,10 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
 				<p:column style="width :350px;white-space : normal">
 					<h:outputText
 						value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
