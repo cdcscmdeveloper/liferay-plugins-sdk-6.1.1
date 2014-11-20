@@ -101,7 +101,7 @@ public class gpkiBackingBean {
 	    FacesContext facesContext = FacesContext.getCurrentInstance(); ;
 	    debugLogger("OriginalText====================================: "+statusCode);
 	    facesContext.addMessage(
-				null,
+				"somekey",
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(
 								MessageConst.ERROR_776001,
