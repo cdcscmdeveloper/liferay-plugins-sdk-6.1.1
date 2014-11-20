@@ -73,6 +73,17 @@
 
 			<ui:include src="/xhtml/sc/specification/specificationSignoff.xhtml" />
 			<!-- <ui:include src="signoff.xhtml" /> -->
+			<table style="width: 100%">
+				<tr>
+					<td><div align="left" style="width: 99%">
+							<p:commandButton value="#{lbl['lbl.sm.prev']}"
+								actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
+								action="#{evaluationBackingBean.updateSmAppl}"
+								icon="ui-icon-prev" update=":form" />
+						</div></td>
+
+				</tr>
+			</table>
 		</c:if>
 
 		<ui:include src="uploadEvaluation.xhtml"></ui:include>

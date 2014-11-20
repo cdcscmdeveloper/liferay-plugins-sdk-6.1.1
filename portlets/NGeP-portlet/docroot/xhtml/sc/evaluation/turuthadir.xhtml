@@ -21,7 +21,20 @@
 			rowKey="#{meetingAttendance}">
 			<ac:paginator for="turuthadir" />
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
+
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="turuthadir"
+							listener="#{evaluationBackingBean.selectAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.meetingAttendanceList)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{meetingAttendance.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column style="width:50%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -58,12 +71,15 @@
 				value="#{lbl['lbl.sc.eva.btn.add']}" process="@this,turuthadir"
 				partialSubmit="true" update="turuthadir"
 				oncomplete="tirutWidget.paginator.endLink.click();"
-				icon="ui-icon-add" 
-				action="#{evaluationBackingBean.addTurutDetails}" />
+				icon="ui-icon-add" action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				process="@this,turuthadir" partialSubmit="true"
-				icon="ui-icon-delete" update="turuthadir" 
-				actionListener="#{evaluationBackingBean.deleteTurutHadirDetails}" />
+				process="@this" partialSubmit="true"
+				icon="ui-icon-delete" update="turuthadir"
+				actionListener="#{evaluationBackingBean.deleteSelectedRowsAction(evaluationBackingBean.managedBean.meetingAttendanceList)}">
+				<f:setPropertyActionListener
+					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
 
 		</div>
 
