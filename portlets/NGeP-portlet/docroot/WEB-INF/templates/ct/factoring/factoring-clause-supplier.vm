@@ -35,6 +35,6 @@
       <div><br/></div>
       <div>.......................</div>
       <div>Nama: $supplierOfficerName</div>
-      <div>Jawatan: $supplierOfficerDesignation</div>
+      <div>b/p $supplierName</div>
    </body>
 </html>
