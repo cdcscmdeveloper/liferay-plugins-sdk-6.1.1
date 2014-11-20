@@ -86,7 +86,9 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		this.getManagedBean().setItemLevelCode(new String());
 		this.getManagedBean().setItemLevelName(new String());
 		
-		this.getManagedBean().setCategoryLvl(10L);
+		this.getManagedBean().setCategoryLvl(0L);
+		
+		businessNatureDataModel.reloadData();
 	}
 	
 	
@@ -430,7 +432,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		public ISearchResultBean<PmBusinessNature> pageChangeListener(ISearchBean<PmBusinessNature> searchBean) {
 
 			try {	
-				if (getManagedBean().getCategoryLvl() != null && !"".equals(getManagedBean().getCategoryLvl())) {
+				if (getManagedBean().getCategoryLvl() != null && !"".equals(getManagedBean().getCategoryLvl()) && getManagedBean().getCategoryLvl()>0L) {
 					ISearchBean<PmBusinessNature> searchBeanData = getSearchBeanData(searchBean);
 					BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 					reqDTO.setBusinessNatureSearchBean(searchBeanData);
