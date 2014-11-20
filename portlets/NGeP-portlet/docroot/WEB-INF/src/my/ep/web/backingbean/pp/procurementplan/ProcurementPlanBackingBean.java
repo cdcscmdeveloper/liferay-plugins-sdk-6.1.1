@@ -275,6 +275,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setModeReview(false);
 		this.getManagedBean().setModeReviewEditable(false);
 		this.getManagedBean().setModeEditable(false);
+		
 		if(!isRoleBPK()){
 	
 			
@@ -301,6 +302,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setModeReview(false);
 				this.getManagedBean().setModeReviewEditable(false);
 				if(isRolePlanner()){
+					this.getManagedBean().getSelectedPlan().setUpdatable(true);
 					this.getManagedBean().setModeEditable(true);
 				}
 			}
@@ -336,6 +338,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setModeReview(false);
 		this.getManagedBean().setModeReviewEditable(false);
 		this.getManagedBean().setModeEditable(false);
+	
+		
 		if(!StringUtils.isBlank(taskName)){
 			// DRAFT & REVISION & UPDATE
 			if(PPProcessNameConst.REVISE_PLAN.equalsIgnoreCase(taskName)
@@ -670,13 +674,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setConfirm(false);
 		this.getManagedBean().setSelectedReasonDesc("");
 		boolean newReason = false;
-		
+		if(ppRejectReasons==null){
+			ppRejectReasons = new ArrayList<PpRejectReason>();
+		}
+		/* enable for phase 2
 		//if first reason is not new
 		if (!ppRejectReasons.isEmpty()){
 			if(!ppRejectReasons.get(0).isBrandNew()){
 				newReason = true;
 			}
-		}
+		}*/
 
 		// if reason is empty
 		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
@@ -1297,30 +1304,26 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			rejectReasons = new ArrayList<PpRejectReason>();
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
-				int seq = 0;
 				for(PpProcurementItem ppProcurementItem:ppPlan.getPpProcurementItems()){
 					if(ppProcurementItem.getPpRejectReasons()!=null && !ppProcurementItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppProcurementItem.getPpRejectReasons().get(0);
-						if(rejectReason!=null && rejectReason.isBrandNew() && !StringUtils.isBlank(rejectReason.getReasonDesc())){
+						if(rejectReason!=null && !StringUtils.isBlank(rejectReason.getReasonDesc())){ //&& rejectReason.isBrandNew() add this for phase 2
 							rejectReason.setDocId(ppProcurementItem.getProcurementItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							rejectReasons.add(rejectReason);
 						}
 					}
-					seq++;
 				}
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
-				int seq = 0;
 				for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
 					if(ppExpenditureItem.getPpRejectReasons()!=null && !ppExpenditureItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
-						if(rejectReason!=null && rejectReason.isBrandNew() && !StringUtils.isBlank(rejectReason.getReasonDesc())){
+						if(rejectReason!=null &&!StringUtils.isBlank(rejectReason.getReasonDesc())){ //&& rejectReason.isBrandNew() add this for phase 2
 							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 							rejectReasons.add(rejectReason);
 						}
 					}
-					seq++;
 				}
 			}
 		}
