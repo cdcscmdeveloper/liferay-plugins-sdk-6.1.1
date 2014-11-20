@@ -24,6 +24,7 @@ import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -1236,8 +1237,14 @@ public class NoticeBoardBackingBean extends
 	 * TO register the supplier for Bsv...
 	 */
 	public void registerSupplierForBSV() {
-		List<BriefingZoneBean> zoneBeans = this.getManagedBean().getZoneBean();
 		List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
+		List<BriefingZoneBean> zoneBeans = null;
+		if (this.getManagedBean().getScQt().isZonal()) {
+			zoneBeans = this.getManagedBean().getZoneBean();
+		} else {
+			zoneBeans = new ArrayList<BriefingZoneBean>();
+			zoneBeans.add(this.getManagedBean().getNormalBsvBean());
+		}
 		for (BriefingZoneBean briefingZoneBean : zoneBeans) {
 			if (null != briefingZoneBean.getSelectedBriefingDtls()
 					&& !briefingZoneBean.getSelectedBriefingDtls().isEmpty()) {
@@ -1249,6 +1256,7 @@ public class NoticeBoardBackingBean extends
 			}
 
 		}
+
 		IQTBriefingSO qtBriefingSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTBriefingSO.class);
@@ -1276,8 +1284,7 @@ public class NoticeBoardBackingBean extends
 							bsvAttendance.setBsvRegistration(bsvRegistration);
 						}
 					} else {
-						throw new EpException(
-								"Please select At least one Attandant");
+						throw new EpException(MessageConst.ERROR_760184);
 					}
 					bsvRegistration.setBsvAttendance(attandance);
 					registrations.add(bsvRegistration);
@@ -1288,15 +1295,14 @@ public class NoticeBoardBackingBean extends
 									.get(0));
 						}
 					} else {
-						throw new EpException(
-								"Please select At least one Attandant");
+						throw new EpException(MessageConst.ERROR_760184);
 					}
 				}
 				bsvDetail.setQtBsvRegistrations(registrations);
 			}
 
 		} else {
-			throw new EpException("Please select Bsv To register");
+			throw new EpException(MessageConst.ERROR_760185);
 		}
 		reqDTO.setQtBriefingList(bsvDetails);
 		BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
