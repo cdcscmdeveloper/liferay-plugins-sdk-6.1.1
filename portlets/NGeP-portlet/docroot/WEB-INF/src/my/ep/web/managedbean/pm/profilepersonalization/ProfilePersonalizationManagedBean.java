@@ -55,7 +55,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	private boolean addressEntered;
 	private PmOrgProfile currentProfile;
-	
+	private PmUserOrg currentUserOrg;
 	
 	
 /**
@@ -70,6 +70,23 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setAddressEntered(boolean addressEntered) {
 		this.addressEntered = addressEntered;
+	}
+	
+	
+	
+
+/**
+	 * @return the currentUserOrg
+	 */
+	public PmUserOrg getCurrentUserOrg() {
+		return currentUserOrg;
+	}
+
+	/**
+	 * @param currentUserOrg the currentUserOrg to set
+	 */
+	public void setCurrentUserOrg(PmUserOrg currentUserOrg) {
+		this.currentUserOrg = currentUserOrg;
 	}
 
 /**
