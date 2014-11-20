@@ -85,7 +85,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				getManagedBean().getCtDateEnd() == null &&
 				(getManagedBean().getCtProductCode() == null || getManagedBean().getCtProductCode().length() == 0)) {
 			   		FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		   else {
