@@ -316,7 +316,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
 				}				
 				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750017);
+					throw new EpException(MessageConst.ERROR_750010);
 				}
 				validateOrderQuantity();
 				checkMinimumQtyItem(getManagedBean().getFlRequest());
@@ -1297,7 +1297,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
 
 			if(checkCeilingAmt.intValue() >  ctResDTO.getAgencyCeilingAmount().intValue()){
-				throw new EpException(MessageConst.ERROR_750014);
+				throw new EpException(MessageConst.ERROR_750007);
 			}
 		}
 	}
@@ -1328,7 +1328,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				checkCeilingQty = prevSumQty.add(sumOrderedQty);
 
 				if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
-					throw new EpException(MessageConst.ERROR_750016,new String[]{itemAddr.getCmItem().getItemName()});
+					throw new EpException(MessageConst.ERROR_750009,new String[]{itemAddr.getCmItem().getItemName()});
 				}
 			}
 		}
@@ -3086,7 +3086,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
 					(getManagedBean().getSearchItemType() == null)){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}else{
 				getContractItemPagingDataModel().reloadData();

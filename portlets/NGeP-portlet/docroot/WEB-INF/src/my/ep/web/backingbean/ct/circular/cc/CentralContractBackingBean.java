@@ -651,7 +651,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 		if(cdResDTO.getContractPhysicalNo() != null){
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750012, new String[]{cdResDTO.getContractPhysicalNo()});
+			throw new EpException(MessageConst.ERROR_750005, new String[]{cdResDTO.getContractPhysicalNo()});
 		}
 		circularDetailSO = null;	
 		
@@ -994,7 +994,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().getSearchEndDate() == null &&
 				getManagedBean().getSearchStatusId() == null) {
 					FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {

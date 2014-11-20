@@ -380,7 +380,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				getManagedBean().getSearchEndDate() == null &&
 				getManagedBean().getSearchStatusId() == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {
@@ -1498,7 +1498,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void updateZoneGeneralLocation() {
 		
 		if(getManagedBean().getZoneName() == null || getManagedBean().getZoneName() == ""){
-			throw new EpException(MessageConst.WARN_753000);
+			throw new EpException(MessageConst.WARN_755002);
 		}
 		
 		List<CtPanelZoneDtl> allNodes = new ArrayList<CtPanelZoneDtl>();
@@ -1516,7 +1516,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if(!getManagedBean().getSelectedPanelItems().getCtPanelZones().get(getManagedBean().getIndex()).getName().equalsIgnoreCase(getManagedBean().getZoneName())){
 					for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
 						   if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
-							   throw new EpException(MessageConst.WARN_752000);
+							   throw new EpException(MessageConst.WARN_755001);
 						   }
 				      }
 				}	
@@ -1529,7 +1529,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 		          for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
 					   if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
-						   throw new EpException(MessageConst.WARN_752000);
+						   throw new EpException(MessageConst.WARN_755001);
 					   }
 				   }
 			

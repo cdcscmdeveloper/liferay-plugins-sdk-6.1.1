@@ -573,7 +573,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				getManagedBean().getCtContractStatus() == 0 &&
 				getManagedBean().getTerminationTypeId() == null) {
 					FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {
@@ -826,7 +826,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		if(getManagedBean().isUpdateContract() && getManagedBean().getAttachmentList().isEmpty()){
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750051); 
+			throw new EpException(MessageConst.ERROR_750018); 
 		}
 		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
@@ -845,7 +845,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			if(getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
 					&& contractVer.getCtAgencies().size() == 0){
 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_750013); // At least one row should be in Agency section.
+				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			
 		 if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
@@ -873,11 +873,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					              if( retval >0 ){
 					            	  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				                     	throw new EpException(MessageConst.ERROR_750048);
+				                     	throw new EpException(MessageConst.ERROR_750015);
 					              }
 					             if(retval < 0){
 					            	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-						             throw new EpException(MessageConst.ERROR_750050);  
+						             throw new EpException(MessageConst.ERROR_750017);  
 					            }
 					     }
 				     }	
@@ -923,20 +923,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					if(ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0 && 
 							!ctAgency.getOrgProfile().getParentOrgProfile().getOrgName().equalsIgnoreCase(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName())){
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-						throw new EpException(MessageConst.ERROR_750015); 
+						throw new EpException(MessageConst.ERROR_750008); 
 						// Approval document is mandatory for AP178 agency. Please upload the document.
 					}
 				}
 				if(ceilingAmt > contractVer.getCtContractValue().getContractAmount().doubleValue()){
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750014); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+					throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
 				
 			}
 			
 			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_750017); //Approver is mandatory for document submission. Please select at least one approver.
+				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 			}
 			
 			if(contractVer.getCtContractItems() != null){
@@ -956,7 +956,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						}
 						if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-							throw new EpException(MessageConst.ERROR_750016, new String[]{item.getItemName()});
+							throw new EpException(MessageConst.ERROR_750009, new String[]{item.getItemName()});
 						}
 					}
 				}
@@ -967,7 +967,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				if(contractVer.getCtAmendment().isItemPriceChange() || contractVer.getCtAmendment().isQuantityChange() 
 						|| contractVer.getCtAmendment().isValueChange()){
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750022);// If original contract value is less than RM500k (threshold value for tender), 
+					throw new EpException(MessageConst.ERROR_750011);// If original contract value is less than RM500k (threshold value for tender), 
 							//CA only can extend the contract period and change the clause.
 				}
 			}
@@ -977,7 +977,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 				if(contractVer.getCtContractValue().getExpDate().before(c.getTime())){
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750023);//CA only can extend the contract period 3 months before contract expired.
+					throw new EpException(MessageConst.ERROR_750012);//CA only can extend the contract period 3 months before contract expired.
 				}
 			}
 			for (CtContractItem ctContractItem : contractVer.getCtContractItems()){
@@ -997,7 +997,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					}
 					if(sumOfCeilingQuantites < maxCeilingQty.doubleValue()){
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-						throw new EpException(MessageConst.ERROR_750024);//Total ceiling amount for all PTJ defined in contract must be equals to contract amount.
+						throw new EpException(MessageConst.ERROR_750013);//Total ceiling amount for all PTJ defined in contract must be equals to contract amount.
 					}
 				}
 			}
@@ -1559,7 +1559,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			//Remove if already exist, avoid duplicate
 		  	for(CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
 		  		if(agency.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
-		  			 throw new EpException(MessageConst.INFO_771000,new String[]{agency.getOrgProfile().getOrgName()}); 
+		  			 throw new EpException(MessageConst.INFO_758000,new String[]{agency.getOrgProfile().getOrgName()}); 
 		  		}
 		  	}
 			
@@ -1894,7 +1894,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			if(ceilingAmt >  this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
-				throw new EpException(MessageConst.ERROR_750014); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
     	}
     }
@@ -1916,7 +1916,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
 				ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0));
-				throw new EpException(MessageConst.ERROR_750016, new String[]{item.getItemName()});
+				throw new EpException(MessageConst.ERROR_750009, new String[]{item.getItemName()});
 			}
 		}
     }

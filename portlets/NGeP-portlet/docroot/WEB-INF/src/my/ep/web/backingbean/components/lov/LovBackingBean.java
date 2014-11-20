@@ -274,7 +274,7 @@ public class LovBackingBean implements Serializable {
 		if(StringUtils.isNotBlank(searchValue1.toString())) {
 			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField() == null ||
 					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField().length() == 0) {
-				throw new EpException(MessageConst.WARN_751000);
+				throw new EpException(MessageConst.WARN_755000);
 			}
 		}
 		
@@ -282,7 +282,7 @@ public class LovBackingBean implements Serializable {
 		if(StringUtils.isNotBlank(searchValue2.toString())) {
 			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchField() == null ||
 					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchField().length() == 0) {
-				throw new EpException(MessageConst.WARN_751000);
+				throw new EpException(MessageConst.WARN_755000);
 			}
 		}
 		
@@ -290,7 +290,7 @@ public class LovBackingBean implements Serializable {
 		if(StringUtils.isNotBlank(searchValue3.toString())) {
 			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(1)).getSearchField() == null ||
 					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(1)).getSearchField().length() == 0) {
-				throw new EpException(MessageConst.WARN_751000);
+				throw new EpException(MessageConst.WARN_755000);
 			}
 		}
 	}

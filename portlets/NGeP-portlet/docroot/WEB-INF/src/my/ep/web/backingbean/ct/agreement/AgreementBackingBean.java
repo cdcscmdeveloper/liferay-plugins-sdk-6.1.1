@@ -938,7 +938,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			     ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
 		        getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 			} else {
-				 throw new EpException(MessageConst.WARN_754000);
+				 throw new EpException(MessageConst.WARN_755003);
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -1179,7 +1179,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						ctAgreementParty.setOfficer(new PmUser());
 					    getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
 			    } else {
-			    	 throw new EpException(MessageConst.WARN_754000);
+			    	 throw new EpException(MessageConst.WARN_755003);
 			    }
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -1251,14 +1251,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					counter++;
 					if(counter == 2) {
 						getManagedBean().setValidateWitness(true);
-						 throw new EpException(MessageConst.WARN_754000, new String[]{ctParty.getOfficerIc()});
+						 throw new EpException(MessageConst.WARN_755003, new String[]{ctParty.getOfficerIc()});
 					}
 				
 				} else if(getManagedBean().getAgencyWitnessIcNo() != null && ctParty.getOfficerIc() != null
 						&& !getManagedBean().getAgencyWitnessIcNo().isEmpty()
 						&& getManagedBean().getAgencyWitnessIcNo().contains(ctParty.getOfficerIc())) {
 					getManagedBean().setValidateWitness(true);
-					throw new EpException(MessageConst.WARN_755000, new String[]{ctParty.getOfficerIc()});
+					throw new EpException(MessageConst.WARN_755004, new String[]{ctParty.getOfficerIc()});
 			   }
 		}
 	}
@@ -1274,19 +1274,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		       		   if(getManagedBean().getAgencyOfficerIcNo() != null && !getManagedBean().getAgencyOfficerIcNo().isEmpty()
 		       				    && getManagedBean().getAgencyOfficerIcNo().contains(agencyWitness.getOfficerIc())) {
 		       		            getManagedBean().setValidateWitness(true);
-		       		            throw new EpException(MessageConst.WARN_756000, new String[]{agencyWitness.getOfficerIc()});
+		       		            throw new EpException(MessageConst.WARN_755005, new String[]{agencyWitness.getOfficerIc()});
 		       		    } else if(getManagedBean().getAgencyWitnessIcNo() != null && !getManagedBean().getAgencyWitnessIcNo().isEmpty()
 		       		    		&& getManagedBean().getAgencyWitnessIcNo().contains(agencyWitness.getOfficerIc())){
 			                	 getManagedBean().setValidateWitness(true);
-	       		                 throw new EpException(MessageConst.WARN_757000, new String[]{agencyWitness.getOfficerIc()});
+	       		                 throw new EpException(MessageConst.WARN_755005, new String[]{agencyWitness.getOfficerIc()});
 		       		    }  else if(getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty()
 		       		    		&& getManagedBean().getSupplierOfficerIcNo().contains(agencyWitness.getOfficerIc())){
 		                	 getManagedBean().setValidateWitness(true);
-       		                 throw new EpException(MessageConst.WARN_760000, new String[]{agencyWitness.getOfficerIc()});
+       		                 throw new EpException(MessageConst.WARN_755009, new String[]{agencyWitness.getOfficerIc()});
 	       		        }  else if(getManagedBean().getSupplierWitnessIcNo() != null && !getManagedBean().getSupplierWitnessIcNo().isEmpty()
 		       		             && getManagedBean().getSupplierWitnessIcNo().contains(agencyWitness.getOfficerIc())){
 			                	 getManagedBean().setValidateWitness(true);
-	       		                  throw new EpException(MessageConst.WARN_763000, new String[]{agencyWitness.getOfficerIc()});
+	       		                  throw new EpException(MessageConst.WARN_755012, new String[]{agencyWitness.getOfficerIc()});
 		       		    } else {
 			                	 getManagedBean().getAgencyWitnessIcNo().add(agencyWitness.getOfficerIc());
 			            }
@@ -1328,22 +1328,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			       	         if(getManagedBean().getSupplierOfficerIcNo() != null && !getManagedBean().getSupplierOfficerIcNo().isEmpty() 
 			       	        		 && getManagedBean().getSupplierOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
 			       		                getManagedBean().setValidateWitness(true);
-			       		                throw new EpException(MessageConst.WARN_760000, new String[]{suplierWitness.getOfficerIc()});
+			       		                throw new EpException(MessageConst.WARN_755009, new String[]{suplierWitness.getOfficerIc()});
 			       	     
 			       	         } else if (getManagedBean().getSupplierWitnessIcNo() != null && !getManagedBean().getSupplierWitnessIcNo().isEmpty()
 			       	        		  && getManagedBean().getSupplierWitnessIcNo().contains(suplierWitness.getOfficerIc())) {
 				                	    getManagedBean().setValidateWitness(true);
-		       		                    throw new EpException(MessageConst.WARN_761000, new String[]{suplierWitness.getOfficerIc()});
+		       		                    throw new EpException(MessageConst.WARN_755010, new String[]{suplierWitness.getOfficerIc()});
 			       	      
 			       	         } else if (getManagedBean().getAgencyOfficerIcNo() != null && !getManagedBean().getAgencyOfficerIcNo().isEmpty()
 			       	        		&& getManagedBean().getAgencyOfficerIcNo().contains(suplierWitness.getOfficerIc())) {
 			                	    getManagedBean().setValidateWitness(true);
-	       		                    throw new EpException(MessageConst.WARN_756000, new String[]{suplierWitness.getOfficerIc()});
+	       		                    throw new EpException(MessageConst.WARN_755005, new String[]{suplierWitness.getOfficerIc()});
 		       	           
 			       	         } else if(getManagedBean().getAgencyWitnessIcNo() != null && !getManagedBean().getAgencyWitnessIcNo().isEmpty()
 			       	            	    && getManagedBean().getAgencyWitnessIcNo().contains(suplierWitness.getOfficerIc())){
 			       	            		getManagedBean().setValidateWitness(true);
-		       		                    throw new EpException(MessageConst.WARN_762000, new String[]{suplierWitness.getOfficerIc()});
+		       		                    throw new EpException(MessageConst.WARN_755011, new String[]{suplierWitness.getOfficerIc()});
 			       	          } else {
 				                	   getManagedBean().getSupplierWitnessIcNo().add(suplierWitness.getOfficerIc());
 				              }
@@ -1384,13 +1384,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					  counter++;
 					  if(counter == 2) {
 						    getManagedBean().setValidateWitness(true);
-						    throw new EpException(MessageConst.WARN_758000, new String[]{ctParty.getOfficerIc()});
+						    throw new EpException(MessageConst.WARN_755007, new String[]{ctParty.getOfficerIc()});
 					  }
 				  } else if(getManagedBean().getSupplierOfficerIcNo() != null && ctParty.getOfficerIc() != null
 						  && !getManagedBean().getSupplierOfficerIcNo().isEmpty() && ctParty.getOfficer().getUserId() != null
 							&& getManagedBean().getSupplierOfficerIcNo().contains(ctParty.getOfficerIc())) {
 						getManagedBean().setValidateWitness(true);
-						throw new EpException(MessageConst.WARN_759000, new String[]{ctParty.getOfficerIc()});
+						throw new EpException(MessageConst.WARN_755008, new String[]{ctParty.getOfficerIc()});
 				  }
 			}
 	}
@@ -1399,15 +1399,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 			   if(getManagedBean().getAgencyOfficerIcNo() != null && 
 				  !getManagedBean().getAgencyOfficerIcNo().isEmpty() && getManagedBean().getAgencyOfficerIcNo().contains(str)) {
-	       		      throw new EpException(MessageConst.WARN_756000, new String[]{str});
+	       		      throw new EpException(MessageConst.WARN_755005, new String[]{str});
 	       	
 			   } else if(getManagedBean().getSupplierOfficerIcNo() != null && 
 	       			   !getManagedBean().getSupplierOfficerIcNo().isEmpty() && getManagedBean().getSupplierOfficerIcNo().contains(str)){
-	                    throw new EpException(MessageConst.WARN_760000, new String[]{str});
+	                    throw new EpException(MessageConst.WARN_755009, new String[]{str});
        		 
 			   }  else if(getManagedBean().getSupplierWitnessIcNo() != null 
 					   && !getManagedBean().getSupplierWitnessIcNo().isEmpty() && getManagedBean().getSupplierWitnessIcNo().contains(str)){
-		               throw new EpException(MessageConst.WARN_763000, new String[]{str});
+		               throw new EpException(MessageConst.WARN_755012, new String[]{str});
 	       	   } 
 	}
 	
@@ -1415,13 +1415,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		 if(getManagedBean().getSupplierOfficerIcNo() != null 
 				&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() && getManagedBean().getSupplierOfficerIcNo().contains(str)) {
-		        throw new EpException(MessageConst.WARN_760000, new String[]{str});
+		        throw new EpException(MessageConst.WARN_755009, new String[]{str});
 	      } else if (getManagedBean().getAgencyOfficerIcNo() != null && 
 	    		  getManagedBean().getAgencyOfficerIcNo().isEmpty() && getManagedBean().getAgencyOfficerIcNo().contains(str)) {
-        	   throw new EpException(MessageConst.WARN_756000, new String[]{str});
+        	   throw new EpException(MessageConst.WARN_755005, new String[]{str});
           } else if(getManagedBean().getAgencyWitnessIcNo() != null 
         		  && getManagedBean().getAgencyWitnessIcNo().isEmpty() && getManagedBean().getAgencyWitnessIcNo().contains(str)){
-	             throw new EpException(MessageConst.WARN_762000, new String[]{str});
+	             throw new EpException(MessageConst.WARN_755011, new String[]{str});
           }
     }
 	
@@ -1457,7 +1457,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					       if(agreementParty.getOrgProfile().getOrgProfileId() == ptjProfile.getOrgProfileId()){
 					    	   counter++;
 					    	   if(counter == 2) {
-					    		   throw new EpException(MessageConst.WARN_764000,new String[] { agreementParty.getOrgProfile().getOrgName() });
+					    		   throw new EpException(MessageConst.WARN_755013,new String[] { agreementParty.getOrgProfile().getOrgName() });
 					       }
 					}
 				}

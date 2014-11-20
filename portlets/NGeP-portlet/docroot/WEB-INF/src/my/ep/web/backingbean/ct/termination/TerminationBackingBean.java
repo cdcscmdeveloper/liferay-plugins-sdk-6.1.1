@@ -310,7 +310,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.ERROR_750044);
+			throw new EpException(MessageConst.ERROR_750014);
 		}
 		
 		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().size()==0) {
