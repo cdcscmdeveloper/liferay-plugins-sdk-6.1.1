@@ -246,7 +246,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				}
 				
 			}
-			this.getManagedBean().setUserAddress(userAddress!=null ? userAddress.getPmAddress() : PmCommonUtil.getNewPmAddress());
+			
+			if(userAddress!=null){
+				this.getManagedBean().setUserAddress(userAddress.getPmAddress());
+			}else{
+				this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+				this.getManagedBean().getUserAddress().setPmCountry(new PmCountry());
+			}
+			
 //			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUser.getUserId(), ProfileManagementConst.ADDRESS_USER);
 //			this.getManagedBean().setUserAddress((addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : PmCommonUtil.getNewPmAddress());
 			
