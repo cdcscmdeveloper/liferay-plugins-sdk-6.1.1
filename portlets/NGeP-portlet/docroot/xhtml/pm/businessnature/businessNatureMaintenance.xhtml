@@ -26,8 +26,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			   <tr> 
 				<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /></td>
 		     	<td><p:selectOneMenu id="busLv" value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}" 
-		     			style="width:178px;margin-bottom:5px;" required="true"
-		     			disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"> 
+		     			style="width:178px;margin-bottom:5px;" disabled="true"> 
 		  	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
 						<p:ajax event="change" update="@form" />
 		    	    </p:selectOneMenu></td>				
@@ -36,7 +35,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-transform:uppercase" value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelCode}" 
-						disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="30" maxlength="10" /></td>
+						disabled="#{!businessNatureBackingBean.managedBean.brandNew}" size="30" maxlength="10" /></td>
 			  </tr>	
 			  <tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" />
@@ -52,7 +51,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
 		     	<td><p:selectOneMenu id="statusBusiness" style="width:178px;margin-bottom:5px;" 
 		     			value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}"
-		     			disabled="#{businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"> 
+		     			disabled="#{businessNatureBackingBean.managedBean.brandNew}"> 
 		  	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureStatus()}"></f:selectItems>
 		    	    </p:selectOneMenu></td>				
 			    </tr>
@@ -71,7 +70,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
@@ -82,7 +81,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}" 
 						saveObject="businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature"
 						conditionField="recordStatus^1"
-						disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}">
+						disabled="true">
 				</ac:lov> 
 				
 			</h:panelGrid>
@@ -95,25 +94,25 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.divcode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.divname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 				
 			</h:panelGrid>
 			
@@ -125,37 +124,37 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.divcode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.divname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.groupcode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.groupname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 			</h:panelGrid>
 			
 			<!-- Item -->
@@ -166,49 +165,49 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.divcode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.divname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.groupcode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.groupname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 			
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.classcode']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}" 
-				 disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}" size="5" />
+				 disabled="true" size="5" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="#{lbl['lbl.pm.bn.classname']}" />
 				</h:panelGroup>
 				<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}" size="100" 
-				disabled="#{!businessNatureBackingBean.managedBean.pmBusinessNature.brandNew}"/>
+				disabled="true"/>
 			</h:panelGrid>
 			
 			<ac:lovPopup /> 	

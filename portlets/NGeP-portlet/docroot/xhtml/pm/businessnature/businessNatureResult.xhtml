@@ -53,11 +53,49 @@
        </p:column >
         
     	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%">
+    	
+		<p:commandLink rendered="#{businessNature.businessLevel=='10'}"
+			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+			style="margin-right: 10px;"
+			update="@form">
+			<p:graphicImage library="ep/images/design" name="add.png"
+				title="#{lbl['lbl.pm.add.division.category']}"
+				value="/css/images/design/add.png" />
+		</p:commandLink>   
+		
+		<p:commandLink rendered="#{businessNature.businessLevel=='20'}"
+			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+			style="margin-right: 10px;"
+			update="@form">
+			<p:graphicImage library="ep/images/design" name="add.png"
+				title="#{lbl['lbl.pm.add.group.category']}"
+				value="/css/images/design/add.png" />
+		</p:commandLink>  
+		
+		<p:commandLink rendered="#{businessNature.businessLevel=='30'}"
+			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+			style="margin-right: 10px;"
+			update="@form">
+			<p:graphicImage library="ep/images/design" name="add.png"
+				title="#{lbl['lbl.pm.add.class.category']}"
+				value="/css/images/design/add.png" />
+		</p:commandLink>  
+		
+		<p:commandLink rendered="#{businessNature.businessLevel=='40'}"
+			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+			style="margin-right: 10px;"
+			update="@form">
+			<p:graphicImage library="ep/images/design" name="add.png"
+				title="#{lbl['lbl.pm.add.item.category']}"
+				value="/css/images/design/add.png" />
+		</p:commandLink>   	
+    	
    		 <p:commandLink action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNature)}" process="@this" partialSubmit="true">
      		<p:graphicImage library="ep/images/design" name="edit.png"
-								title="#{lbl['lbl.pm.edit.category']}"
-								value="/css/images/design/edit.png" />
+			title="#{lbl['lbl.pm.edit.category']}"
+			value="/css/images/design/edit.png" />
     	 </p:commandLink>
+					   
    	 	</p:column>    
      </p:dataTable>
 	</p:panel>

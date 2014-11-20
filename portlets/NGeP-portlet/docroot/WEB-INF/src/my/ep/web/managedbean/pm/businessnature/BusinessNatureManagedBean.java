@@ -33,6 +33,7 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 	private String classLevelName;
 	private String itemLevelCode;
 	private String itemLevelName;
+	private boolean brandNew = false;
 
 	private Long status;
 	
@@ -161,6 +162,14 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 
 	public void setItemLevelName(String itemLevelName) {
 		this.itemLevelName = itemLevelName;
+	}
+
+	public boolean isBrandNew() {
+		return brandNew;
+	}
+
+	public void setBrandNew(boolean brandNew) {
+		this.brandNew = brandNew;
 	}	
 	
 }
