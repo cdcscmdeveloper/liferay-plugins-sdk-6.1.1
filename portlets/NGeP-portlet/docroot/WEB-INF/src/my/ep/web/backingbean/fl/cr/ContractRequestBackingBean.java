@@ -3256,4 +3256,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
+	public String getPreparedPTJCondition() {
+		String condition = "parentOrgProfile.orgProfileId^"+getManagedBean().getFlRequest().getPreparedOrgProfile().getParentOrgProfile().getOrgProfileId();
+		if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			condition = condition + "|orgProfileId^"+getManagedBean().getOrgProfileIds()+"^9";
+		}
+		return condition;
+	}
 }
