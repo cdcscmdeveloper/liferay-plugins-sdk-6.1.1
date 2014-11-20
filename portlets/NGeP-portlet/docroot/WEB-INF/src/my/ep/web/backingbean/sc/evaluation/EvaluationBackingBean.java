@@ -76,6 +76,7 @@ import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -471,8 +472,6 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setScQt(qtResDTO.getQtDetail());
 			}
 
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			if (null == this.getManagedBean().getScQtMeetings()) {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 
@@ -3228,8 +3227,9 @@ public class EvaluationBackingBean extends
 
 			reqDtO.setProposalChecklist(this.getManagedBean()
 					.getQtProposalChecklist());
-			evaluationSO.saveProposalDetails(reqDtO);
-
+			EvaluationResDTO resDto = evaluationSO.saveProposalDetails(reqDtO);
+			this.getManagedBean().setQtProposalChecklist(
+					resDto.getProposalChecklist());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -3622,35 +3622,16 @@ public class EvaluationBackingBean extends
 	}
 
 	public void preRenderView() {
-		renewSesionObject();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
-		log.info("taskId : " + taskId);
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		// TODO
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		String taskName = res.getTaskName();
-		this.getManagedBean().setOutComes(res.getAction());
-		SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) obj;
-		this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
 
+		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+
+		this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
+		// FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 0);
-
+		String taskName = this.getManagedBean().getTaskName();
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
