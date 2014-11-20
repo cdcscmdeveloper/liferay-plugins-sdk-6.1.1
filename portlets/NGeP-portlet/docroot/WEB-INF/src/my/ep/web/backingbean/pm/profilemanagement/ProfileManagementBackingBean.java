@@ -239,7 +239,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void loadUserProfile(Long id){
 		logger.info("loadUserProfile - Start");
 		try {
-			initialUserProfile();
+//			initialUserProfile();
 			if(id==null){
 				throw new EpException(MessageConst.ERROR_770015); 
 			}
@@ -249,7 +249,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			pmUser.setIdentificationCode(pmUser.getIdentificationCode()==null ? new PmParameter() : pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());
 			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode()==null ? new PmParameter() : pmUser.getOrgTypeCode());
-			
+			pmUser.setPmUserOrgs(pmUser.getPmUserOrgs()==null ? new ArrayList<PmUserOrg>():pmUser.getPmUserOrgs() );
+	
 			populateUserAddress(pmUser);
 			
 			//load preference
@@ -262,7 +263,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			//load password
 			pmUser.setPassword(null);
-//			pmUser.setOldPassword(null);
 			pmUser.setConfirmPassword(null);
 			
 			this.getManagedBean().setSelectedUser(pmUser);
@@ -297,7 +297,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		//load user attributes
 		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		PmUser pmUser = new PmUser();
-		pmUser.setSalutationCode(new PmSalutation());
 		pmUser.setPmCountry(defaultCountry);
 		pmUser.setIdentificationCode(new PmParameter());
 		pmUser.setSalutationCode(new PmSalutation());
@@ -513,9 +512,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public String userImagePathWithDefaultImage(String loginId){
 		logger.info("userImagePathWithDefaultImage");
-		String imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
-		if(!StringUtils.isBlank(loginId)){
-			imagePath = userImagePath(loginId);	
+		String imagePath = "";
+	
+		imagePath = userImagePath(loginId);	
+		if(StringUtils.isBlank(imagePath)){
+			imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
 		}
 		return imagePath;
 	}
@@ -667,19 +668,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public String getRoleDescByRoleCode(String roleCode) {	
 		logger.info("getRoleDescByRoleCode");
-		String roleDesc = null;
-		
-		if (roleCode != null) {
-			// Get the role description.
-			PmRoleDesc pmRoleDesc = RoleHelper.getInstance()
-					.getRoleDescByCode(roleCode);
-			
-			if (pmRoleDesc != null) {
-				roleDesc = pmRoleDesc.getRoleName();
-			}
-		}
-		
-		return roleDesc;
+		return PmCommonUtil.getRoleDescByRoleCode(roleCode);
 	}
 	
 	/**
@@ -1951,12 +1940,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void handlePortraitUpload(FileUploadEvent event) throws Exception{
 		logger.info("handlePortraitUpload - START");
+		
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		updatePortrait();
-		this.getManagedBean().getSelectedUser().setPortrait(null);  
+		if(!this.getManagedBean().getSelectedUser().isBrandNew()){
+			updatePortrait();
+			this.getManagedBean().getSelectedUser().setPortrait(null);  
+		}
+
 		logger.info("handlePortraitUpload - END");
 	}
 	
@@ -1977,6 +1970,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void updatePortrait() throws Exception{
 		logger.info("updatePortrait - START");
+		
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = new UserResDTO();
@@ -2023,17 +2017,88 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void deletePortrait() throws Exception{
 		logger.info("deletePortrait - START");
+		if(this.getManagedBean().getSelectedUser().isBrandNew()){
+			this.getManagedBean().getSelectedUser().setPortrait(null);
+			this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+			this.getManagedBean().setDeletePortrait(true);
+		}else{
+			IUserSO userSO = null;
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			try {
+
+				reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
+				
+				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+				resDTO = userSO.deletePortrait(reqDTO); 
+				
+				
+				if(resDTO!=null && resDTO.isSuccessful()){
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(
+							    FacesMessage.SEVERITY_INFO,
+							    null,
+					    		MessageUtils.getMessage(MessageConst.INFO_770118, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+						    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+						    		new FacesScopes().getUserLocale())
+					    		));
+				
+					
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770116, new String[]{e.getMessage()});
+			} finally {
+				userSO = null;
+			}
+		}
+	
+		logger.info("deletePortrait - END");
+	}
+
+
+		
+	/**
+	 * reset password ui
+	 */
+	public void clearPassword(){
+		logger.info("clearPassword");
+		this.getManagedBean().getSelectedUser().setPassword(null);
+		this.getManagedBean().getSelectedUser().setConfirmPassword(null);
+	}
+	
+	/**
+	 * Change password
+	 * @throws Exception
+	 */
+	public void changePassword() throws Exception{
+		logger.info("changePassword - START");
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = new UserResDTO();
 		try {
 
-			reqDTO.setLoginId(this.getManagedBean().getSelectedUser().getLoginId());
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getLoginId())){
+				throw new EpException(MessageConst.ERROR_770125);
+			}
+			
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getPassword())){
+				throw new EpException(MessageConst.ERROR_770126);
+			}
+			
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getConfirmPassword())){
+				throw new EpException(MessageConst.ERROR_770127);
+			}
+			
+			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
 			
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		
-			resDTO = userSO.deletePortrait(reqDTO); 
+			resDTO = userSO.changePassword(reqDTO); 
 			
 			
 			if(resDTO!=null && resDTO.isSuccessful()){
@@ -2041,26 +2106,22 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						new FacesMessage(
 						    FacesMessage.SEVERITY_INFO,
 						    null,
-				    		MessageUtils.getMessage(MessageConst.INFO_770118, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+				    		MessageUtils.getMessage(MessageConst.INFO_770124, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
 					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
 					    		new FacesScopes().getUserLocale())
 				    		));
-			
+				clearPassword();
 				
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770116, new String[]{e.getMessage()});
+			throw new EpException(MessageConst.ERROR_770128, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}
-		logger.info("deletePortrait - END");
+		logger.info("changePassword - END");
 	}
-
-
-	
-	
+		
 	
 	/*
 	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{

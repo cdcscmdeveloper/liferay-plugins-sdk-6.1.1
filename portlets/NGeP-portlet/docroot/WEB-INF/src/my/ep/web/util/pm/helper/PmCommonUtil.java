@@ -63,6 +63,7 @@ import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserNotification;
@@ -95,6 +96,30 @@ import org.primefaces.model.UploadedFile;
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
 	private static final String FILE_DATETIME_FORMAT = "ddMMyyyyHHmmss";
+	
+	/**
+	 * Get Role description by role code.
+	 * 
+	 * @param roleCode
+	 * 			the role code.
+	 * @return role description
+	 */
+	public static String getRoleDescByRoleCode(String roleCode) {	
+		String roleDesc = null;
+		
+		if (roleCode != null) {
+			// Get the role description.
+			PmRoleDesc pmRoleDesc = RoleHelper.getInstance()
+					.getRoleDescByCode(roleCode);
+			
+			if (pmRoleDesc != null) {
+				roleDesc = pmRoleDesc.getRoleName();
+			}
+		}
+		
+		return roleDesc;
+	}
+	
 	
 	/**
 	 * initialize a complete Pm Address
