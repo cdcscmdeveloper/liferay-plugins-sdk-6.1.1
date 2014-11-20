@@ -420,8 +420,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				   for(CtPerformanceBond bond : getManagedBean().getContractVer().getCtPerformanceBonds()){
 					   bond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 					   bond.setExpDate(getExactDate());
-					   if(getManagedBean().getCtContract().getLoa().getBondAmt() != null)
-					       bond.setBondAmount(getManagedBean().getCtContract().getLoa().getBondAmt().doubleValue());
 				   }
 			}
 			
