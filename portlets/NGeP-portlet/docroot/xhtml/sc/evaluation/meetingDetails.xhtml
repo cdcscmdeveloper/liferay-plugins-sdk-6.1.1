@@ -21,7 +21,21 @@
 			editable="true" rowIndexVar="index" rowKey="#{meeting}">
 			<ac:paginator for="evaluationmeetingDetails" />
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
+
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="evaluationmeetingDetails"
+							listener="#{evaluationBackingBean.selectAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.scQtMeetings)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{meeting.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
 				style="width:30%">
 
@@ -60,7 +74,8 @@
 				<p:selectOneMenu id="meetingstatus" required="true"
 					label="#{lbl['lbl.sc.eva.mtng.status']}"
 					value="#{meeting.meetingStatus.statusId}">
-					<f:selectItems value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}"/>
+					<f:selectItems
+						value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -68,7 +83,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}">
 
 
-				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="30" maxlength="100"/>
+				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="30"
+					maxlength="100" />
 
 			</p:column>
 
@@ -90,9 +106,13 @@
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete"
-				action="#{evaluationBackingBean.deleteMeetingDetails}"
-				update="evaluationmeetingDetails" />
+				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				action="#{evaluationBackingBean.deleteSelectedRowsAction(evaluationBackingBean.managedBean.scQtMeetings)}"
+				update="evaluationmeetingDetails">
+				<f:setPropertyActionListener
+					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
 
 		</div>
 
