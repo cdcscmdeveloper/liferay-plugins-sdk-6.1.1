@@ -89,9 +89,9 @@
 					listener="#{backingBean.unSelectApporvedCategories}"
 					update=":form:tt:catCodeInfPan"></p:ajax>
 				
-				
-				<p:column selectionMode="multiple" style="width:2%"
-					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+				<p:outputPanel rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+					<p:column selectionMode="multiple" style="width:2%" />
+				</p:outputPanel>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
