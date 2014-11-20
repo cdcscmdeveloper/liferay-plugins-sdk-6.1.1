@@ -201,6 +201,18 @@ public class SmApplicationBackingBean extends
 									"lbl.sm.approvedApplicationCantProceed",
 									null));
 					this.getManagedBean().setValidResubmit(false);
+				} else if (sts
+						.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
+					getManagedBean()
+							.setResubmitInValidMsg(
+									SmCommonUtil
+											.getMessage(
+													"lbl.sm.approvedApplicationPendingFinalPay",
+													null));
+					this.getManagedBean().setValidResubmit(false);
 				}
 
 			}
@@ -468,13 +480,15 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmAppl(smAppl);
-			
-			if(fromBpm && !(getManagedBean().isApproverUser() || getManagedBean().isPoUser())){
+
+			if (fromBpm
+					&& !(getManagedBean().isApproverUser() || getManagedBean()
+							.isPoUser())) {
 				boolean updateNeeded = resetDeactivatedPersonnel();
-				if(updateNeeded)
+				if (updateNeeded)
 					saveOrUpdateAppl();
 			}
-			
+
 			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
 				log.info("*** Empty list of staff *****"
 						+ smAppl.getSupplierType());
@@ -595,10 +609,14 @@ public class SmApplicationBackingBean extends
 
 	private boolean resetDeactivatedPersonnel() {
 		boolean updateNecessary = false;
-		if(getManagedBean().getSmAppl().getSmPersonnels() != null && getManagedBean().getSmAppl().getSmPersonnels().size() > 0){
-			for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-				if(personnel.getRecordStatusFlg().equals(SupplierManagementConst.DELETED_RECORD_STATUS)){
-					personnel.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+		if (getManagedBean().getSmAppl().getSmPersonnels() != null
+				&& getManagedBean().getSmAppl().getSmPersonnels().size() > 0) {
+			for (SmPersonnel personnel : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (personnel.getRecordStatusFlg().equals(
+						SupplierManagementConst.DELETED_RECORD_STATUS)) {
+					personnel
+							.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
 					personnel.setEpRole(null);
 					personnel.setAuthorizedFlg(0);
 					updateNecessary = true;
@@ -700,7 +718,8 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
 						log.info("*** This is draft application *****");
 						throw new EpException(MessageConst.ERROR_722569);
-					}else if (sts.getPmStatus()
+					} else if (sts
+							.getPmStatus()
 							.getStatusId()
 							.compareTo(
 									SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
@@ -1649,7 +1668,8 @@ public class SmApplicationBackingBean extends
 				.getDistrictId(),
 				SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
 		getManagedBean().setSelectedAssocCompany(assocBean);
-		getManagedBean().getSelectedAssocCompany().setIsShareholding(new BigDecimal(0));
+		getManagedBean().getSelectedAssocCompany().setIsShareholding(
+				new BigDecimal(0));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
@@ -1667,7 +1687,8 @@ public class SmApplicationBackingBean extends
 						.getSmAddress().getPmCountry().getCountryId()));
 		getManagedBean().setAssocCompanyDistricts(new ArrayList<PmDistrict>());
 		getManagedBean().setAssocCompanyCities(new ArrayList<PmCity>());
-		getManagedBean().getSelectedAssocCompany().setIsShareholding(new BigDecimal(0));
+		getManagedBean().getSelectedAssocCompany().setIsShareholding(
+				new BigDecimal(0));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}

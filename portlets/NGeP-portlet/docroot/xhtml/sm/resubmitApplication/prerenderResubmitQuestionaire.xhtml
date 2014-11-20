@@ -15,12 +15,7 @@
 
 
 		<h:panelGroup rendered="#{!backingBean.managedBean.validResubmit}">
-			<p:outputLabel value="#{lbl['lbl.sm.resubmission.invalid']}"
-				style="float : left" />
-		</h:panelGroup>
-		<h:panelGroup
-			rendered="#{!backingBean.managedBean.resubmitWithActiveDraft}">
-			<p:outputLabel value="#{lbl['lbl.sm.activeDrftExist']}"
+			<p:outputLabel value="#{backingBean.managedBean.resubmitInValidMsg}"
 				style="float : left" />
 		</h:panelGroup>
 
