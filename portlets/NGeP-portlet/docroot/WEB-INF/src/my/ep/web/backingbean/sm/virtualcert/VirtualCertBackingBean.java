@@ -15,7 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.faces.bean.ManagedBean;
@@ -53,6 +55,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -689,6 +692,14 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		if(resDTO.getSmMofCerts().size() > 0){
 			this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
 		}
+	}
+	
+	public void printVirtualCertificate(String certNo) throws IOException{
+		//String paymentId = this.getManagedBean().getPaymentId().toString();
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("PCERTSERIALNO", certNo);
+		
+		generateReport("SM_VIRTUAL_VERIFICATION.jsp", paramMap);
 	}
 }
 
