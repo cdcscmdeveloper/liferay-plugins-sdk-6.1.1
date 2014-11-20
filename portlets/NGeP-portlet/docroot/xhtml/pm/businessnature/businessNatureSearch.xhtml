@@ -9,9 +9,12 @@
 	<p:panel id="businessNaturePanel">
 	
 		<h:panelGrid columns="2">
-		
-		    <h:outputLabel value="Category Level"></h:outputLabel>
-		    <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{businessNatureBackingBean.managedBean.categoryLvl}">    
+			<h:panelGroup style="float: right">
+				<h:outputText value="* " styleClass="mandatory" />
+			    <h:outputLabel value="Category Level"></h:outputLabel>
+			</h:panelGroup>
+		    <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{businessNatureBackingBean.managedBean.categoryLvl}">   
+		    	 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 			 	 <f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}" />
 			 	 <p:ajax event="change" listener="#{businessNatureBackingBean.updateCategoryLevel()}" update="businessNaturePanel" />
             </p:selectOneMenu>
