@@ -403,16 +403,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}	
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-						Map<String, String> paramMap = new HashMap<String, String>();
-						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo());
-						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-						CommonBackingBean commonBackingBean = new CommonBackingBean();
-						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_PURCHASE_ORDER);
-						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do.poco",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
-						commonBackingBean.getManagedBean().setParamMap(paramMap);
-						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-					}						
+//					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+//						Map<String, String> paramMap = new HashMap<String, String>();
+//						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo());
+//						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+//						CommonBackingBean commonBackingBean = new CommonBackingBean();
+//						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_PURCHASE_ORDER);
+//						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do.poco",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+//						commonBackingBean.getManagedBean().setParamMap(paramMap);
+//						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+//					}						
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null){
 					renewSesionObject();
