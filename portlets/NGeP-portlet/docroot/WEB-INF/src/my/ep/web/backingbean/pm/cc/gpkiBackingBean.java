@@ -108,7 +108,7 @@ public class gpkiBackingBean {
 //								MessageUtils.BUNDLE_COMMON_MESSAGES,
 //								new FacesScopes().getUserLocale())));  
 //								throw new EpException(MessageConst.ERROR_715026);
-//	FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
+	FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
 	}
 //	public void signAction() {
 ////	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
