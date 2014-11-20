@@ -160,6 +160,7 @@ public class SmApplicationBackingBean extends
 
 	public void prerenderResubmissionQuestionaire() {
 		log.info("**** Prerender Questions *************");
+
 		HttpServletRequest originalServletRequest = new FacesScopes()
 				.getOriginalServletRequest();
 		String applId = originalServletRequest.getParameter("apId");
@@ -178,33 +179,60 @@ public class SmApplicationBackingBean extends
 			}
 		} finally {
 		}
-
+		this.getManagedBean().setValidResubmit(true);
 		if (appl != null && supplierProfile != null) {
-			this.getManagedBean().setValidResubmit(true);
 			boolean activeExist = false;
 			activeExist = SmApplicationUtil
 					.checkActiveSmApplForSupp(supplierProfile);
-			if (!activeExist) {
-				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-				quesBackingBean.getManagedBean().setTargetUrl(xhtml);
-				quesBackingBean.getManagedBean().setSmSupp(supplierProfile);
-				quesBackingBean.getManagedBean().setSmAppl(appl);
-				quesBackingBean.retrieveQuestionnaire();
+			SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(appl
+					.getApplId());
+			if (sts != null && sts.getPmStatus() != null
+					&& sts.getPmStatus().getStatusId() != null) {
+				if (sts.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED) == 0
+						|| sts.getPmStatus()
+								.getStatusId()
+								.compareTo(
+										SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED) == 0) {
+					getManagedBean().setResubmitInValidMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.approvedApplicationCantProceed",
+									null));
+					this.getManagedBean().setValidResubmit(false);
+				}
 
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-				getManagedBean().setSmAppl(appl);
-				getManagedBean().setSmSupplier(supplierProfile);
-			} else {
-				this.getManagedBean().setResubmitWithActiveDraft(false);
+			}
+			if (this.getManagedBean().isValidResubmit()) {
+				if (!activeExist) {
+					QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+					quesBackingBean.getManagedBean().setTargetUrl(xhtml);
+					quesBackingBean.getManagedBean().setSmSupp(supplierProfile);
+					quesBackingBean.getManagedBean().setSmAppl(appl);
+					quesBackingBean.retrieveQuestionnaire();
+
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication()
+							.getNavigationHandler()
+							.handleNavigation(fc, null,
+									"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+					getManagedBean().setSmAppl(appl);
+					getManagedBean().setSmSupplier(supplierProfile);
+				} else {
+					getManagedBean().setResubmitInValidMsg(
+							SmCommonUtil.getMessage("lbl.sm.activeDrftExist",
+									null));
+					this.getManagedBean().setValidResubmit(false);
+
+				}
 			}
 		} else {
+			getManagedBean().setResubmitInValidMsg(
+					SmCommonUtil
+							.getMessage("lbl.sm.resubmission.invalid", null));
 			// redirect & display resubmit expired
 			this.getManagedBean().setValidResubmit(false);
-			this.getManagedBean().setResubmitWithActiveDraft(true);
 		}
 
 	}
@@ -672,6 +700,12 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
 						log.info("*** This is draft application *****");
 						throw new EpException(MessageConst.ERROR_722569);
+					}else if (sts.getPmStatus()
+							.getStatusId()
+							.compareTo(
+									SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
+						log.info("*** This is application with pending payment *****");
+						throw new EpException(MessageConst.ERROR_722577);
 					}
 					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
 				}
@@ -2901,8 +2935,14 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& (getManagedBean().getSelectedShareHolder().isProf() || getManagedBean().getSelectedShareHolder().isSemiProf() || getManagedBean().getSelectedShareHolder().isClerical())
-				&& (getManagedBean().getSelectedShareHolder().getSmStaffAcademics() == null || getManagedBean().getSelectedShareHolder().getSmStaffAcademics().isEmpty())) {
+				&& (getManagedBean().getSelectedShareHolder().isProf()
+						|| getManagedBean().getSelectedShareHolder()
+								.isSemiProf() || getManagedBean()
+						.getSelectedShareHolder().isClerical())
+				&& (getManagedBean().getSelectedShareHolder()
+						.getSmStaffAcademics() == null || getManagedBean()
+						.getSelectedShareHolder().getSmStaffAcademics()
+						.isEmpty())) {
 
 			validShrHldr = false;
 			throw new EpException(MessageConst.ERROR_722575);
@@ -3539,33 +3579,42 @@ public class SmApplicationBackingBean extends
 				break;
 			}
 		}
-		
-		if(getManagedBean().getSelectedStaffAcademic().getQualificationLevelId() != null){
-			PmParameter param = SmApplicationUtil.retrievePmParameterById(getManagedBean().getSelectedStaffAcademic().getQualificationLevelId().longValue());
+
+		if (getManagedBean().getSelectedStaffAcademic()
+				.getQualificationLevelId() != null) {
+			PmParameter param = SmApplicationUtil
+					.retrievePmParameterById(getManagedBean()
+							.getSelectedStaffAcademic()
+							.getQualificationLevelId().longValue());
 			String qual = "";
 			if (param != null && param.getParameterCode() != null) {
 				qual = param.getParameterCode();
-				if(getManagedBean().getSelectedShareHolder().isProf()){
+				if (getManagedBean().getSelectedShareHolder().isProf()) {
 					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
 							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)
 							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_DIPLOMA)) {
 						throw new EpException(MessageConst.ERROR_722574,
-								new String[] { "Professional Staff",  "BACHELOR'S DEGREE"});
+								new String[] { "Professional Staff",
+										"BACHELOR'S DEGREE" });
 					}
-				} else if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+				} else if (getManagedBean().getSelectedShareHolder()
+						.isSemiProf()) {
 					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
 							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)) {
 						throw new EpException(MessageConst.ERROR_722574,
-								new String[] { "Semi-Professional Staff",  "DIPLOMA"});
+								new String[] { "Semi-Professional Staff",
+										"DIPLOMA" });
 					}
-				} else if(getManagedBean().getSelectedShareHolder().isClerical()){
+				} else if (getManagedBean().getSelectedShareHolder()
+						.isClerical()) {
 					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)) {
-						throw new EpException(MessageConst.ERROR_722574,
-								new String[] { "Clerical Staff",  "CERTIFICATE"});
+						throw new EpException(
+								MessageConst.ERROR_722574,
+								new String[] { "Clerical Staff", "CERTIFICATE" });
 					}
 				}
 
-			}	
+			}
 		}
 		if (getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
 				.contains(getManagedBean().getSelectedStaffAcademic())) {

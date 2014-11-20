@@ -307,7 +307,10 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
+	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
+	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
+	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";

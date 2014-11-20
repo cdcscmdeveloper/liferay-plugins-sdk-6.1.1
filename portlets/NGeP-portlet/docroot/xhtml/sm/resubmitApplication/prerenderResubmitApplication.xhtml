@@ -18,7 +18,8 @@
 
 
 		<h:panelGroup rendered="#{!backingBean.managedBean.validResubmit}">
-			#{lbl['lbl.sm.resubmission.invalid']}
+			<p:outputLabel value="#{backingBean.managedBean.resubmitInValidMsg}"
+				style="float : left" />
 		</h:panelGroup>
 
 	</ui:define>
