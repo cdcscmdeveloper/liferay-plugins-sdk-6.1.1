@@ -143,6 +143,9 @@ public class SupplierManagementConst {
 	public static final String BPM_INQUIRY = "INQUIRY";
 	public static final String BPM_SUBMIT = "SUBMIT";
 	public static final String BPM_VERIFY = "VERIFY";
+	
+	// SDO Review
+	public static String SUPPORTING_DOC_ONLINE = "S";
 
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
@@ -700,6 +703,14 @@ public class SupplierManagementConst {
 
 	public String getPM_CERT_BODY_OTHERS() {
 		return PM_CERT_BODY_OTHERS;
+	}
+
+	public static String getSupportingDocOnline() {
+		return SUPPORTING_DOC_ONLINE;
+	}
+
+	public static void setSupportingDocOnline(String supportingDocOnline) {
+		SUPPORTING_DOC_ONLINE = supportingDocOnline;
 	}
 
 }
