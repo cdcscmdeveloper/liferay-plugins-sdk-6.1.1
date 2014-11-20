@@ -705,12 +705,8 @@ public class SupplierManagementConst {
 		return PM_CERT_BODY_OTHERS;
 	}
 
-	public static String getSupportingDocOnline() {
+	public String getSUPPORTING_DOC_ONLINE() {
 		return SUPPORTING_DOC_ONLINE;
-	}
-
-	public static void setSupportingDocOnline(String supportingDocOnline) {
-		SUPPORTING_DOC_ONLINE = supportingDocOnline;
 	}
 
 }
