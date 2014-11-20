@@ -16,16 +16,16 @@
 			<ac:paginator for="evaluationreport" />
 
 			<p:column headerText="#{lbl['lbl.sc.eva.report.content']}"
-				style="width:58%">
+				style="width:58%white-space: normal;">
 				<h:outputText value="#{scQtEvaluationReport.title}" />
 			</p:column>
 
-			<p:column style="width:10%;"
+			<p:column style="width:10%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.report.type']}">
 				#{evaluationBackingBean.getParameterDesc(scQtEvaluationReport.definationType)}
 			</p:column>
 
-			<p:column style="width:10%;" headerText="#{lbl['lbl.so.action']}">
+			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.so.action']}">
 				<p:commandLink
 					action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
