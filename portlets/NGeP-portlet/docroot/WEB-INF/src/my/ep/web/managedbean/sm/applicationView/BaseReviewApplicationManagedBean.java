@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -83,6 +84,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmAddress defaultAddr;
 	private String businessTypeVal;
 	private List<SmPersonnel> smapplShareHolders;
+	private List<SmSupplierCategory> activeCategoryList;
 
 	// temp added for testing
 	private boolean poUser;
@@ -815,6 +817,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setBumiRecommendationNote(String bumiRecommendationNote) {
 		this.bumiRecommendationNote = bumiRecommendationNote;
+	}
+
+	public List<SmSupplierCategory> getActiveCategoryList() {
+		return activeCategoryList;
+	}
+
+	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
+		this.activeCategoryList = activeCategoryList;
 	}
 
 }
