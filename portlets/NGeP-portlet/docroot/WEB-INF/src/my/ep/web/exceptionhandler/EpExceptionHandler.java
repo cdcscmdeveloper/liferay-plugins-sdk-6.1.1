@@ -138,7 +138,10 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 		}
 		
 		if (isValidationException) {
-			log.info("EpValidation: " + exception.getMessage());
+			StringBuilder msg = new StringBuilder("EpValidation: ")
+				.append(exception.getMessage())
+				.append(exception.getStackTrace() != null && exception.getStackTrace().length > 0 ? ": " + exception.getStackTrace()[0] : "");
+			log.info(msg);
 		} else {
 			log.error(exception.getMessage(), exception);
 		}
