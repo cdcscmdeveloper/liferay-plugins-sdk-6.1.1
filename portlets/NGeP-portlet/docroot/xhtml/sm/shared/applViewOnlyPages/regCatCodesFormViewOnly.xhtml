@@ -31,12 +31,13 @@
 			<br /> -->
 				
 			<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
-				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCategories}"
+				value="#{viewSmApplBackingBean.managedBean.activeCategoryList}"
 				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 				rendered="#{!(viewSmApplBackingBean.managedBean.smAppl.applType == 'R')}">
 				<ac:paginator for="catDt" />
 				<p:columnGroup type="header">
 					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
@@ -51,20 +52,20 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<c:if test="#{not empty catBean.pmCategoryL1}">
-						<h:outputText
-							value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
-						<br />
-					</c:if>
-					<c:if test="#{not empty catBean.pmCategoryL2}">
-						<h:outputText
-							value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
-						<br />
-					</c:if>
-					<c:if test="#{not empty catBean.pmCategoryL3}">
-						<h:outputText
-							value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-					</c:if>
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column>
+						<p:outputPanel rendered="#{not empty catBean.pmCategoryL1}">
+							<h:outputText value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" /><br />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{not empty catBean.pmCategoryL2}">
+							<h:outputText value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" /><br />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{not empty catBean.pmCategoryL3}">
+							<h:outputText value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+						</p:outputPanel>
+					
 				</p:column>
 				<p:column>
 					<p:outputLabel value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
@@ -125,13 +126,14 @@
 			
 			
 			<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
-				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCategories}"
+				value="#{viewSmApplBackingBean.managedBean.activeCategoryList}"
 				rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
 				rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R'}">
 				<ac:paginator for="catDtR" />
 				<p:columnGroup type="header">
 
 					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
@@ -146,20 +148,20 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<c:if test="#{not empty catBeanR.pmCategoryL1}">
-						<h:outputText
-							value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
-						<br />
-					</c:if>
-					<c:if test="#{not empty catBeanR.pmCategoryL2}">
-						<h:outputText
-							value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" />
-						<br />
-					</c:if>
-					<c:if test="#{not empty catBeanR.pmCategoryL3}">
-						<h:outputText
-							value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
-					</c:if>
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column>
+						
+						<p:outputPanel rendered="#{not empty catBeanR.pmCategoryL1}">
+							<h:outputText value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" /><br />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{not empty catBeanR.pmCategoryL2}">
+							<h:outputText value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" /><br />
+						</p:outputPanel>
+						<p:outputPanel rendered="#{not empty catBeanR.pmCategoryL3}">
+							<h:outputText value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+						</p:outputPanel>
 					
 				</p:column>
 				<p:column>
