@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.order.FlStopInstr;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -35,6 +36,12 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> reasonDescs;
 	
 	private String buttonVal;
+	
+	//gpki signing
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
+	private String buttonAction;
 	
 	public List<PmReasonDesc> getReasonDescs() {
 		if(reasonDescs==null) {
@@ -83,5 +90,37 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 }

@@ -274,7 +274,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 //		getManagedBean().setItemAddrVoteFundDisp(new FlFulfilmentItemAddr());
 		getManagedBean().setDeleteButtonHide(true);
-		
 	}
 
 	public String fulfillmentRequestAction(String action) throws Exception {
@@ -1646,6 +1645,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void chargeLineApply() {
 		IParameterSO parameterSO = null;
 		try {
+			getManagedBean().setAutoUpdate(true);
 			if(null == getManagedBean().getVotFundId()){
 				getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
 			}

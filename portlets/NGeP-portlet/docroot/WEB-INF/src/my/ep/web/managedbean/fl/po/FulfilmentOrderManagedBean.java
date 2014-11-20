@@ -17,6 +17,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -92,6 +93,13 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String rfcContactEmail;
 	private String rfcContactPerson;
 	private String rfcContactPhoneNo;
+	
+	
+	//gpki signing
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate;
+	private String textBeforeSign;
+	private String buttonAction;
 	
 	public String getTaskName() {
 		return taskName;
@@ -743,6 +751,38 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setRfcContactPhoneNo(String rfcContactPhoneNo) {
 		this.rfcContactPhoneNo = rfcContactPhoneNo;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 
 }
