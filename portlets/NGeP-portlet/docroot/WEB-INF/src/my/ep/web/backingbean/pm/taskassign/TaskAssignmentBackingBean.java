@@ -192,10 +192,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	public void roleCheckLocal(){
 		log.info("roleCheckLocal");
 		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
-			String tempRole = this.getManagedBean().getTempRole(); //TODO
-			if(RoleCode.EP_ADMIN.value().equalsIgnoreCase(tempRole)){
+//			String tempRole = this.getManagedBean().getTempRole(); //TODO
+			if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
 				this.getManagedBean().setFilterOrg(false);
-			}else if(RoleCode.MINISTRY_ADMIN.value().equalsIgnoreCase(tempRole)){
+			}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){ 
 				this.getManagedBean().setFilterOrg(true);
 				StringBuilder sb = new StringBuilder();
 				//parentId = orgProfileId
@@ -211,7 +211,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					}
 				}
 				this.getManagedBean().setUserActiveOrgs(sb.toString());
-			} else if(RoleCode.PTJ_ADMIN.value().equalsIgnoreCase(tempRole)){
+			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){ 
 				this.getManagedBean().setFilterOrg(true);
 				StringBuilder sb = new StringBuilder();
 				//parentId = parentOrg.orgProfileId
