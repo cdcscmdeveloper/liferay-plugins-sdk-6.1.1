@@ -34,7 +34,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +62,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -83,7 +81,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -1556,18 +1553,17 @@ public class SPDetailBackingBean extends
 							ITemplateSpecSO.class);
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			/*
-			 * SmSupplier smSupplier = new SmSupplier();
-			 * smSupplier.setSupplierId(getManagedBean().getSupplierId());
-			 */
-			reqDTO.setSupplier(getManagedBean().getQtProposalChecklist()
-					.getScQtProposal().getScQtSupplier().getSmSupplier());
+			
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setSupplier(smSupplier);
+			
 			reqDTO.setSpecMaster(specMaster);
 			if (getManagedBean().getSelectedZone() != null) {
 				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 			}
 
-			reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
+			//reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -1578,8 +1574,10 @@ public class SPDetailBackingBean extends
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(specMaster);
-				//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				//templateSpecBean.setSelectedSpecQuestion(null);
+				templateSpecBean.setContentType(reqDTO.getContentType());
+				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+				templateSpecBean.setSelectedSpecQuestion(null);
+				
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
 			}
 		} finally {
