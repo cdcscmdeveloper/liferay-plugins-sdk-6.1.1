@@ -22,7 +22,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -38,7 +37,6 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -179,14 +177,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode()==null ? new PmParameter() : pmUser.getOrgTypeCode());
 			
 			//load address
-			populateUserAddress(pmUser);
+//			populateUserAddress(pmUser); 19Nov2014
 			
 			//initial preference
 			PmCommonUtil.loadPmUserPreference(pmUser);
 			
 			//retrieve current active org
-			List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrgWithoutRole(id);
+			List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
 			this.getManagedBean().setCurrentProfile(pmUserOrgs!=null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
+			this.getManagedBean().setCurrentUserOrg(pmUserOrgs!=null ? pmUserOrgs.get(0) : null);
 			
 			//load password
 			pmUser.setPassword(null);
@@ -196,11 +195,23 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			this.getManagedBean().setSelectedUser(pmUser);
 			
 			//update address entered flag
-			addressEntered();
+//			addressEntered(); 19Nov2014
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()});
 		}	
+	}
+	
+	/**
+	 * Get Role description by role code.
+	 * 
+	 * @param roleCode
+	 * 			the role code.
+	 * @return role description
+	 */
+	public String getRoleDescByRoleCode(String roleCode) {	
+		logger.info("getRoleDescByRoleCode");
+		return PmCommonUtil.getRoleDescByRoleCode(roleCode);
 	}
 	
 	/**
@@ -210,8 +221,12 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 */
 	public String userImagePathWithDefaultImage(String loginId){
 		logger.info("userImagePathWithDefaultImage");
-		String imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
-		imagePath = userImagePath(loginId);
+		String imagePath = "";
+		
+		imagePath = userImagePath(loginId);	
+		if(StringUtils.isBlank(imagePath)){
+			imagePath = ProfileManagementConst.DEFAULT_PORTRAIT;
+		}
 		return imagePath;
 	}
 
@@ -496,7 +511,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				throw new EpException(MessageConst.ERROR_770046);
 			}
 			
-			if(pmUser.getNotifyRemovalDay()==null){
+			if(pmUser.getNotifyRemovalDay()==null || pmUser.getNotifyRemovalDay()<=0){
 				throw new EpException(MessageConst.ERROR_770047);
 			}	
 		}
@@ -574,10 +589,10 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		boolean addressEntered = false;
 		//validation
 		validateUser(user);	
-		addressEntered =validateUserAddress(this.getManagedBean().getUserAddress());		
+//		addressEntered =validateUserAddress(this.getManagedBean().getUserAddress()); 19Nov2014	
 		validatePreference(user);
 
-		loadUserAddress(user, addressEntered);
+//		loadUserAddress(user, addressEntered); 19Nov2014
 		
 		
 		IUserSO userSO = null;
@@ -587,7 +602,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setPmUser(user);
 
-			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveUser2
+			UserResDTO resDTO = userSO.saveUserWithoutOrg(reqDTO); //saveUser2
 
 			if (resDTO.isSuccessful()) {
 				/*
@@ -739,7 +754,66 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 		
+	/**
+	 * reset password ui
+	 */
+	public void clearPassword(){
+		logger.info("clearPassword");
+		this.getManagedBean().getSelectedUser().setPassword(null);
+		this.getManagedBean().getSelectedUser().setConfirmPassword(null);
+	}
 		
+	/**
+	 * Change password
+	 * @throws Exception
+	 */
+	public void changePassword() throws Exception{
+		logger.info("changePassword - START");
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+		try {
+
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getLoginId())){
+				throw new EpException(MessageConst.ERROR_770125);
+			}
+			
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getPassword())){
+				throw new EpException(MessageConst.ERROR_770126);
+			}
+			
+			if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getConfirmPassword())){
+				throw new EpException(MessageConst.ERROR_770127);
+			}
+			
+			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
+			
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
+			resDTO = userSO.changePassword(reqDTO); 
+			
+			
+			if(resDTO!=null && resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770124, new String[]{this.getManagedBean().getSelectedUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
+				clearPassword();
+				
+			}
+
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770128, new String[]{e.getMessage()});
+		} finally {
+			userSO = null;
+		}
+		logger.info("changePassword - END");
+	}
 	
 //	//TODO: testing
 //	public void handleFileUpload(FileUploadEvent event) {
@@ -787,5 +861,4 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 //		System.out.println("handleFileUploadTest - end");
 //	}
 
-	
 }
