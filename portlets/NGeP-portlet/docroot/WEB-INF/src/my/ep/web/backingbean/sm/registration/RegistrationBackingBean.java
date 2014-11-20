@@ -87,6 +87,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -924,6 +925,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
 		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureListByLevel(reqDTO);
+		
+		if(resDTO.getBusinessNatureList()!=null && CollectionUtils.isNotEmpty(resDTO.getBusinessNatureList())){
+			// sort
+			Collections.sort(resDTO.getBusinessNatureList(), new Comparator<PmBusinessNature>() {
+				@Override
+				public int compare(final PmBusinessNature p1, final PmBusinessNature p2) {
+					String levelCode1 = p1.getLevelCode()==null?"":p1.getLevelCode();
+					String levelCode2 = p2.getLevelCode()==null?"":p2.getLevelCode();
+					return StringUtils.upperCase(levelCode1).compareTo(
+							StringUtils.upperCase(levelCode2));
+				}
+			});
+		}
 
 		return resDTO.getBusinessNatureList();
 	}
