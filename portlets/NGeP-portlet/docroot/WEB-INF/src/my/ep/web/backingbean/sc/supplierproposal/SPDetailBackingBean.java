@@ -460,6 +460,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobeRemovedCreditFacilities(getManagedBean()
 					.getToBeDeletedCreditFacilities());
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -504,6 +505,7 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobecashOnHand(getManagedBean()
 					.getToBeDeletedCashOnHandList());
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -545,6 +547,7 @@ public class SPDetailBackingBean extends
 					.getScQtPRPBankStmts());
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -584,7 +587,7 @@ public class SPDetailBackingBean extends
 
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -704,7 +707,7 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklist.setPrpAssetLiabilities(scQtPRPAssetLiability);
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -744,7 +747,7 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklist.setScQtPRPCashOnHands(this.getManagedBean()
 					.getScQtPRPCashOnHand());
 			scQtProposalChecklist.setProposalScore(proposalScores);
-
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
@@ -1446,9 +1449,11 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				/*getManagedBean().setYear(
-						scQtProposalChecklist.getScQtCheckList()
-								.getScQtCheckListValue().getYear());*/
+				/*
+				 * getManagedBean().setYear(
+				 * scQtProposalChecklist.getScQtCheckList()
+				 * .getScQtCheckListValue().getYear());
+				 */
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
@@ -1553,7 +1558,7 @@ public class SPDetailBackingBean extends
 							ITemplateSpecSO.class);
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			
+
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setSupplier(smSupplier);
@@ -1569,8 +1574,8 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				specMaster = resDTO.getSpecMaster();
 				/*if (specMaster.getOrgProfile() == null) {
-					specMaster.setOrgProfile(new PmOrgProfile());
-				}*/
+				specMaster.setOrgProfile(new PmOrgProfile());
+			}*/
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(specMaster);
@@ -2255,16 +2260,15 @@ public class SPDetailBackingBean extends
 			throw new EpException("Please select a record to delete");
 		}
 
-		if (experienceList != null) {
+		if (experienceList != null && selectedExperienceList != null) {
 
 			if (tobeDeletedExperiences == null) {
 				tobeDeletedExperiences = new ArrayList<ScQtPRPExperience>();
 			}
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 
-				if (!tobeDeletedExperiences.contains(scQtPRPExperience)
-						&& (scQtPRPExperience.getQtPrpExperienceId() != null || scQtPRPExperience
-								.getQtPrpExperienceId() != 0)) {
+				if (scQtPRPExperience.getQtPrpExperienceId() != null || scQtPRPExperience
+								.getQtPrpExperienceId() != 0) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
 				// experienceList.remove(selectedExperienceList.get(i));
@@ -2322,20 +2326,37 @@ public class SPDetailBackingBean extends
 		List<ScQtPRPCreditFacility> selectedCreditFacilitiesList = this
 				.getManagedBean().getSelectedPRPCreditFacilities();
 
+		List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = getManagedBean()
+				.getToBeDeletedCreditFacilities();
+
 		if (selectedCreditFacilitiesList == null
 				|| selectedCreditFacilitiesList.size() == 0) {
 			throw new EpException("Please select a record to delete");
 		}
+		
+		if (selectedCreditFacilitiesList != null && creditFacilitiesList != null) {
+			
+			if (toDeleteCreditFacilitiesList == null) {
 
-		if (creditFacilitiesList.size() == selectedCreditFacilitiesList.size()) {
-			getManagedBean().setToBeDeletedCreditFacilities(
-					selectedCreditFacilitiesList);
-			creditFacilitiesList.clear();
-		} else if (selectedCreditFacilitiesList != null) {
-			List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
+				toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
+			}
+
 			for (ScQtPRPCreditFacility facility : selectedCreditFacilitiesList) {
-				toDeleteCreditFacilitiesList.add(facility);
-				creditFacilitiesList.remove(facility);
+
+				if (facility.getCreditFacilityId() != null
+						|| facility.getCreditFacilityId() != 0) {
+					toDeleteCreditFacilitiesList.add(facility);
+				}
+				
+				Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList.iterator();
+				while (itr.hasNext()) {
+					ScQtPRPCreditFacility localQtPRPCreditFacility = itr.next();
+					if (localQtPRPCreditFacility.equals(facility)) {
+						itr.remove();
+						break;
+					}
+				}
+
 			}
 			getManagedBean().setToBeDeletedCreditFacilities(
 					toDeleteCreditFacilitiesList);
@@ -2371,26 +2392,40 @@ public class SPDetailBackingBean extends
 				.getScQtPRPCashOnHand();
 		List<ScQtPRPCashOnHand> selectedCashOnHandList = this.getManagedBean()
 				.getSelectedPRPCashOnHand();
+		List<ScQtPRPCashOnHand> toDeleteCashOnHandList = getManagedBean()
+				.getToBeDeletedCashOnHandList();
 
 		if (selectedCashOnHandList == null
 				|| selectedCashOnHandList.size() == 0) {
 			throw new EpException("Please select a record to delete");
 		}
-		if (cashOnHandList.size() == selectedCashOnHandList.size()) {
-			getManagedBean().setToBeDeletedCashOnHandList(
-					selectedCashOnHandList);
-			cashOnHandList.clear();
-		} else if (selectedCashOnHandList != null) {
 
-			List<ScQtPRPCashOnHand> toDeleteCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
+		if (selectedCashOnHandList != null && cashOnHandList != null) {
+			if(toDeleteCashOnHandList == null){
+				toDeleteCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
+			}
+
 			for (ScQtPRPCashOnHand onHand : selectedCashOnHandList) {
-				toDeleteCashOnHandList.add(onHand);
+				if (onHand.getPrpCashOnHandId() != null || onHand.getPrpCashOnHandId() != 0){
+					toDeleteCashOnHandList.add(onHand);
+				}
+				
+				Iterator<ScQtPRPCashOnHand> itr = cashOnHandList.iterator();
+				while (itr.hasNext()) {
+					ScQtPRPCashOnHand localQtPRPCashOnHand = itr.next();
+					if (localQtPRPCashOnHand.equals(onHand)) {
+						itr.remove();
+						break;
+					}
+				}
+				
 				cashOnHandList.remove(onHand);
 			}
 			getManagedBean().setToBeDeletedCashOnHandList(
 					toDeleteCashOnHandList);
 		}
-
+		getManagedBean()
+		.setScQtPRPCashOnHand(cashOnHandList);
 		getManagedBean().setSelectedAll(false);
 		getManagedBean().setSelected(false);
 		getManagedBean().setSelectedPRPCashOnHand(null);
@@ -2493,7 +2528,6 @@ public class SPDetailBackingBean extends
 							CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
-
 
 	public void creditTypeChange(ScQtPRPCreditFacility creditFacility) {
 		IParameterSO parameterSO = null;
