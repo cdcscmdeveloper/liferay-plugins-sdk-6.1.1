@@ -26,7 +26,7 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
-						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}|orgProfileId^#{contractRequestBackingBean.managedBean.orgProfileIds}^9">
+						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}">
 					</ac:lov></td>
 				<td>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"/>
