@@ -210,7 +210,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 		for(CmSupplierZone suppZone : getManagedBean().getCmSupplierZoneList()){
-			if(zone.getSuppZoneId() == suppZone.getSuppZoneId()){
+			if((zone.getSuppZoneId() != 0 && (zone.getSuppZoneId() == suppZone.getSuppZoneId())) || zone.getSuppZoneName().equalsIgnoreCase(suppZone.getSuppZoneName())){
 				getManagedBean().setSelectedSupplierZone(suppZone);
 				getManagedBean().setZoneName(suppZone.getSuppZoneName());
 			}
