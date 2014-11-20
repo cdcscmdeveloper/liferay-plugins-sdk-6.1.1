@@ -139,7 +139,7 @@
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText maxlength="100"
+							<td><p:inputText maxlength="500"
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.projDtls.projTitle']}"
 									id="supConsExpPrjTtl"
@@ -152,7 +152,7 @@
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.clientName']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText maxlength="100"
+							<td><p:inputText maxlength="255"
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.projDtls.clientName']}"
 									id="supConsExpClntName"
@@ -166,12 +166,11 @@
 									value="#{lbl['lbl.sm.projDtls.projCost']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText label="#{lbl['lbl.sm.projDtls.projCost']}"
-									id="consultantProjCost" maxlength="14"
+									id="consultantProjCost" maxlength="17"
 									required="#{backingBean.managedBean.valueReqd}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35">
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<f:converter converterId="currencyMandatoryConverter" />
 								</p:inputText> <p:message id="consultantProjCostMsg" for="consultantProjCost"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
@@ -190,7 +189,7 @@
 							<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.refNo']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.refNo}"
-									size="35" maxlength="20" /></td>
+									size="35" maxlength="50" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -202,7 +201,7 @@
 						<tr>
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
-							<td><p:inputTextarea maxlength="40"
+							<td><p:inputTextarea maxlength="500"
 									value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
 									cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
@@ -228,11 +227,10 @@
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
 							<td><p:inputText id="consultantProjConsultFee"
-									label=" #{lbl['lbl.sm.projDtls.consultFee']}" maxlength="14"
+									label=" #{lbl['lbl.sm.projDtls.consultFee']}" maxlength="17"
 									value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
 									size="35">
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<f:converter converterId="currencyMandatoryConverter" />
 								</p:inputText> <p:message id="consultantProjConsultFeeMsg"
 									for="consultantProjConsultFee" showSummary="true"
 									showDetail="false" display="icon" /></td>
