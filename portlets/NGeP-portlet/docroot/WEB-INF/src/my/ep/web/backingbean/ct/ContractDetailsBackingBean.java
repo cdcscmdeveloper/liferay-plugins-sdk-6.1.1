@@ -391,6 +391,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().setDirectPurchase(true);
 		    	this.getManagedBean().setFlgPaymentTracking(false);
 		    }
+		    else {
+		    	this.getManagedBean().setDirectPurchase(false);
+		    }
 		    
 		    if(this.getManagedBean().getContractVer().getCtContractZones() != null && this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
 		    	     Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
