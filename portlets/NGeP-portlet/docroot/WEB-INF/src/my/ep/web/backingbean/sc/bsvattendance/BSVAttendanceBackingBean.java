@@ -618,9 +618,7 @@ public class BSVAttendanceBackingBean extends
 
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
+		}  finally {
 			qTBriefingSO = null;
 		}
 	}
