@@ -3222,7 +3222,7 @@ public class EvaluationBackingBean extends
 							IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDtO = new EvaluationReqDTO();
-
+			reqDtO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDtO.setProposalChecklist(this.getManagedBean()
 					.getQtProposalChecklist());
 			EvaluationResDTO resDto = evaluationSO.saveProposalDetails(reqDtO);
