@@ -884,6 +884,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		         		        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		         		        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
                                 supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+                                if(supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
+                                		&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 
 		         		
 		         		        List<Long> supplierIdList = new ArrayList<Long>();
 		         		        for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
@@ -902,6 +904,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			                    	   if(contractLoa.getLatestContractVer() != null)
 			        	                  items[i++] = new SelectItem(contractLoa.getLoa().getLoaId(), contractLoa.getLoa().getLoaNo());
 			                       } 
+                                }
 		                      getManagedBean().setContractSupplierLoa(items);
 		               } finally {
 		                    contractSupplierResDTO = null;
