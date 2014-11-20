@@ -825,10 +825,15 @@ public class SmCommonUtil {
 		case "Review Cancellation":
 			retVal = getMessage("lbl.sm.bpmtitle.review.cancelmof", null);
 			break;
+			
+		case "Review application (Escalated)":
+			retVal = getMessage("lbl.sm.bpmtitle.reviewappl.escalated", null);
+			break;
 
 		case "Make Payment":
 			retVal = getMessage("lbl.sm.bpmtitle.payment.reg.fee", null);
 			break;
+			
 		
 		case "Review Application":
 			if(bpmProcessId.equalsIgnoreCase("MOF Supplier Registration")){
