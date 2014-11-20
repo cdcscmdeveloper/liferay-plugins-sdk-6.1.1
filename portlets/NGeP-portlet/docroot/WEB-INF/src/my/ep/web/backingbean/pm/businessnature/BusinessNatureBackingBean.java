@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
@@ -20,11 +21,14 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.businessnature.BusinessNatureManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -533,27 +537,33 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */	
 	public String saveBusinessNatureDtls(){
 		
-		PmBusinessNature businessnature = getManagedBean().getPmBusinessNature();
-		validationMessage(businessnature);
+		IBusinessNatureSO iBusinessNatureSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);	
+		try{
+			PmBusinessNature businessnature = getManagedBean().getPmBusinessNature();
+			validationMessage(businessnature);
+			
+			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+			reqDTO.setBusinessNature(businessnature);
+			
+			BusinessNatureResDTO resDTO = iBusinessNatureSO.saveBusinessNatureDtls(reqDTO);
+			 this.getManagedBean().setPmBusinessNature(resDTO.getBusinessNature());
+			 if(resDTO.isSuccessful()){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.INFO_700004,
+										new String[]{"",ResourceBundleUtils.getMessage("lbl.pm.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			 }
+		 
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			iBusinessNatureSO = null;
+		}
 		
-		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
-		reqDTO.setBusinessNature(businessnature);
-		
-		IBusinessNatureSO iBusinessNatureSO= EpEjbBusinessDelegate.getInstance().
-		getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);	
-		
-		BusinessNatureResDTO resDTO = iBusinessNatureSO.saveBusinessNatureDtls(reqDTO);
-		 this.getManagedBean().setPmBusinessNature(resDTO.getBusinessNature());
-		 if(resDTO.isSuccessful()){
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
-			}
-		
-			return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
+		return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
 	 }
 	
 	public void updateCategoryLevel(){
