@@ -30,7 +30,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -40,12 +39,8 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -70,13 +65,10 @@ import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.dto.sc.specification.SpecificationReqDTO;
-import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -107,8 +99,8 @@ import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -2963,7 +2955,8 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-			reqDTO.setCommType(getManagedBean().getCommitteeType());
+				reqDTO.setCommType(EvaluationReport.getName(getManagedBean()
+					.getCommitteeType()));
 
 			if (null == this.getManagedBean().getScQtEvaluationReportList()) {
 				resDTO = evaluationSO.retriveReportDetails(reqDTO);
@@ -2977,6 +2970,7 @@ public class EvaluationBackingBean extends
 		} finally {
 			evaluationSO = null;
 		}
+
 	}
 
 	private void retrieveReportHeader() {
@@ -3107,6 +3101,8 @@ public class EvaluationBackingBean extends
 			int index = this.getManagedBean().getPrepareActiveIndex();
 			int tabindex = this.getManagedBean().getTabActiveIndex();
 			String committeeType = this.getManagedBean().getCommitteeType();
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			String taskName = this.getManagedBean().getTaskName();
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			if (!this.getManagedBean().isDemo()) {
@@ -3121,6 +3117,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setTabActiveIndex(tabindex);
+			this.getManagedBean().setCurrentStatusId(currentStatusId);
+			this.getManagedBean().setTaskName(taskName);
 			retriveMeetingDtls(qtId, committeeType, index);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
