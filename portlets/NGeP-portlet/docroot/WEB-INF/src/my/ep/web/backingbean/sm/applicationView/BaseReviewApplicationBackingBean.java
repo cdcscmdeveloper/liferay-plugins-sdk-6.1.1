@@ -437,6 +437,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmSupplierCategories() == null) {
 			getManagedBean().getSmAppl().setSmSupplierCategories(
 					new ArrayList<SmSupplierCategory>());
+		} else {
+			setActiveCategoryList();
 		}
 		setCategoryTypeConfirm();
 	}
@@ -469,7 +471,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	private void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
-		
+
 		if (getManagedBean().isPoUser()) {
 			setDefaultPoReviewSection();
 		}
@@ -794,7 +796,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.add(getManagedBean().getApprvrSecReview());
 		}
 	}
-	
+
 	private void setDefaultPoReviewSection() {
 
 		boolean containsPORev = false;
@@ -1007,6 +1009,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 
+	}
+
+	private void setActiveCategoryList() {
+		List<SmSupplierCategory> catList = new ArrayList<>();
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
+					|| cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				catList.add(cat);
+			}
+		}
+		getManagedBean().setActiveCategoryList(catList);
 	}
 
 	private void constructMessage() {
