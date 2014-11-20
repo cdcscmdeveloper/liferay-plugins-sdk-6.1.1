@@ -30,26 +30,17 @@
 						</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
-							<c:choose>
-								<c:when test="#{profileManagementBackingBean.managedBean.deletePortrait or profileManagementBackingBean.managedBean.selectedUser.portrait == null}">
-									<h:graphicImage id="giUserImage"
-										value="/css/images/design/user_male_portrait.png"
-										style="margin-left:25px;" width="140" height="160" />		
-								</c:when>
-								<c:otherwise>
-									<h:graphicImage id="giUserImage"
-										value="#{profileManagementBackingBean.userImagePath(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
-										style="margin-left:25px;" width="140" height="160" />			
-								</c:otherwise>
-							</c:choose>
-							
-							
-							<div align="left">
-								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
-									oncomplete="dlImageUpload.show();" immediate="true" />
-								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
-									action="#{profileManagementBackingBean.deletePortrait}" immediate="true" update="giUserImage" />
-							</div>
+							<p:outputPanel id="opPortrait" rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+								<h:graphicImage id="giUserImage"
+											value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
+											style="margin-left:25px;" width="140" height="160" />	
+								<div align="left">
+									<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
+										oncomplete="dlImageUpload.show();" immediate="true" />
+									<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
+										action="#{profileManagementBackingBean.deletePortrait}" immediate="true" update="giUserImage" />
+								</div>
+							</p:outputPanel>
 						</td>
 					</tr>
 				
@@ -85,7 +76,7 @@
 								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}">
-								<f:validateRegex pattern="^([a-zA-Z]+[\sa-zA-Z]{1,50})?$" />
+								<f:validateRegex pattern="^([a-zA-Z0-9]+[\sa-zA-Z0-9]{1,50})?$" />
 							</p:inputText>
 							<p:message id="itUserNameMsg" for="itUserName" display="icon" />
 						</td>
