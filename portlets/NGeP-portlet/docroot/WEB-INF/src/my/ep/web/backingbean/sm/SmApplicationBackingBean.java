@@ -1615,6 +1615,7 @@ public class SmApplicationBackingBean extends
 				.getDistrictId(),
 				SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
 		getManagedBean().setSelectedAssocCompany(assocBean);
+		getManagedBean().getSelectedAssocCompany().setIsShareholding(new BigDecimal(0));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
@@ -1632,6 +1633,7 @@ public class SmApplicationBackingBean extends
 						.getSmAddress().getPmCountry().getCountryId()));
 		getManagedBean().setAssocCompanyDistricts(new ArrayList<PmDistrict>());
 		getManagedBean().setAssocCompanyCities(new ArrayList<PmCity>());
+		getManagedBean().getSelectedAssocCompany().setIsShareholding(new BigDecimal(0));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
