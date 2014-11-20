@@ -99,12 +99,46 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	public String createBusinessNature() {
 		debugLogger("createBusinessNature");
 		PmBusinessNature pmBusinessNature = new PmBusinessNature();
+		pmBusinessNature.setBusinessLevel("10");
 
 		this.getManagedBean().setPmBusinessNature(pmBusinessNature);
+		this.getManagedBean().setBrandNew(true);
 
 		return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 
 	}	
+	
+	public String createBusinessNature(PmBusinessNature pmBusinessNature) {
+		
+		PmBusinessNature pmBusinessNature2 = new PmBusinessNature();
+		
+		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		try{
+			
+			if(Integer.valueOf(pmBusinessNature.getBusinessLevel())>10){
+				BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+				businessNatureReqDTO.setBusinessLevel(pmBusinessNature.getBusinessLevel());
+				businessNatureReqDTO.setBusinessNatureId(pmBusinessNature.getBusinessNatureId());
+				BusinessNatureResDTO businessNatureResDTO = businessNatureSO.retrieveBusinessNatureFetchAll(businessNatureReqDTO);
+				pmBusinessNature = businessNatureResDTO.getBusinessNature();
+			}
+			
+			pmBusinessNature2.setParentBusinessNature(pmBusinessNature);
+			pmBusinessNature2.setBusinessLevel(String.valueOf(Integer.valueOf(pmBusinessNature.getBusinessLevel())+10));
+			this.getManagedBean().setPmBusinessNature(pmBusinessNature2);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			businessNatureSO = null;
+		}
+		
+		
+		this.getManagedBean().setBrandNew(true);
+
+		return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
+
+	}
 	
 	/**
 	 * get status dropdown list
@@ -473,7 +507,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 			businessNatureSO = null;
 		}
 			
-		
+		this.getManagedBean().setBrandNew(false);
 
 		return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 	}	
