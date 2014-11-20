@@ -57,7 +57,7 @@
 			<h:panelGrid columns="5"  rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">  
 		    	<p:inputText id="dperiod" styleClass="ppRightBtn" style="width:45px;" validator="#{webappBean.validateDPeriod}"
 		              maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
-		              disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
+		              disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.delivery.period']}"/>
                 <p:spacer width="2" label="#{lbl['lbl.ct.delivery.period']}" />
                 <p:outputLabel value="#{lbl['lbl.ct.days']}" />
                 <p:selectOneMenu id="deliveryTerm" rendered="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
