@@ -799,33 +799,40 @@ public class SmCommonUtil {
 
 	}
 
-	public static String getSmBpmTaskTitle(String bpmOriginalTaskTitle) {
+	public static String getSmBpmTaskTitle(String bpmOriginalTaskTitle,
+			String bpmProcessId) {
 		String retVal = bpmOriginalTaskTitle == null ? ""
 				: bpmOriginalTaskTitle;
 
 		switch (retVal) {
 		case "Complete Site Visit Report":
-			retVal = getMessage("lbl.sm.bpmtitle.complete.site.visit.report",
+			retVal = getMessage("lbl.sm.bpmtitle.prepare.site.visit.report",
 					null);
 			break;
 
 		case "Assign Site Visit":
-			retVal = getMessage("lbl.sm.bpmtitle.assign.sitevisit",
-					null);
+			retVal = getMessage("lbl.sm.bpmtitle.assign.sitevisit", null);
 			break;
-		
+
 		case "Verify Supporting Documents":
-			retVal = getMessage("lbl.sm.bpmtitle.verify.suppdoc",
-					null);
+			retVal = getMessage("lbl.sm.bpmtitle.verify.suppdoc", null);
 			break;
-			
+
 		case "Review Application (Special Category)":
-			retVal = getMessage("lbl.sm.bpmtitle.review.special.category",
-					null);
+			retVal = getMessage("lbl.sm.bpmtitle.review.special.category", null);
+			break;
+
+		case "Review Cancellation":
+			retVal = getMessage("lbl.sm.bpmtitle.review.cancelmof", null);
+			break;
+
+		case "Make Payment":
+			retVal = getMessage("lbl.sm.bpmtitle.payment.reg.fee", null);
 			break;
 
 		}
 
 		return retVal;
 	}
+
 }
