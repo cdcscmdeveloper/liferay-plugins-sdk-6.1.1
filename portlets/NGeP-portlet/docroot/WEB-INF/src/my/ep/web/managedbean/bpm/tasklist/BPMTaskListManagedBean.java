@@ -239,7 +239,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							}
 							
 							//sm module
-							worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle()));
+							//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 						}
 					}
 					
