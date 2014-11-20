@@ -765,15 +765,32 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	public void checkDeductionList(FlPaymentDeduction deduction){
-		  IParameterSO parameterSO = null;
-			 ParameterReqDTO reqDTO = null;
-				
-				reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterId(deduction.getDeductionType().getParameterId());
-				parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-				deduction.setDeductionType(resDTO.getPmParameter());
-				
+		IParameterSO parameterSO = null;
+		ParameterReqDTO reqDTO = null;
+		if(deduction.getDeductionType().getParameterId() != null){
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(deduction.getDeductionType().getParameterId());
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			deduction.setDeductionType(resDTO.getPmParameter());
+		}else{
+			deduction.setDeductionDesc(null);
+			deduction.setPmGlAccount(null);
+			deduction.setPmVotFund(null);
+			deduction.setDeductionAmt(new BigDecimal(0));
+		}
+		
+
+		if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
+			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
+				if(ctDeduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
+					deduction.setDeductionAmt(new BigDecimal(ctDeduction.getAmount()));
+				}
+			}
+		}else{
+			deduction.setDeductionAmt(new BigDecimal(0));
+		}
+		
 	}
 	
 	public List<SelectItem> getDropdownValuesByCtDetails(){

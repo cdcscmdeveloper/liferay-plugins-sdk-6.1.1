@@ -21,11 +21,12 @@
 					<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 					<f:selectItems var="ctDeduction"
 						value="#{paymentMatchBackingBean.getDropdownValuesByCtDetails()}"/>
-						 <p:ajax event="change" process="@this" update=":form:deductionDataTable:deductionList" listener="#{paymentMatchBackingBean.checkDeductionList(deduction)}"/>
+						 <p:ajax event="change" process="@this" update=":form:deductionDataTable:fixedDeduction,:form:deductionDataTable:deductionAmtPnl" 
+						 listener="#{paymentMatchBackingBean.checkDeductionList(deduction)}"/>
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
-				<p:inputText rendered="#{index > 0}" value="#{deduction.deductionDesc}" />
+				<p:inputText rendered="#{index > 0}" value="#{deduction.deductionDesc}"/>
 			</p:column>
 			<p:column>
 			<f:facet name="header" style="width:8%;">
@@ -71,14 +72,20 @@
 					</ac:lov>			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right">
-				<h:outputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" 
-					rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				<p:inputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" 
-					rendered="#{!(deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee)}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>				
+				<p:outputPanel id="deductionAmtPnl">
+					<h:outputText styleClass="colFloatRight"
+						value="#{deduction.deductionAmt}"
+						rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+					<p:inputText styleClass="colFloatRight"
+						value="#{deduction.deductionAmt}"
+						rendered="#{!(deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee)}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</p:outputPanel>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
