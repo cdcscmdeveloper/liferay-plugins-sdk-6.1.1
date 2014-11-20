@@ -953,7 +953,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					context.put("factoringBankName", getManagedBean().getFactoringBankName());
 					context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress());
 					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
-					context.put("supplierOfficerDesignation", getFacesScopes().getUserSessionBean().getDesignation());
+					context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 				}
 				
 				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
