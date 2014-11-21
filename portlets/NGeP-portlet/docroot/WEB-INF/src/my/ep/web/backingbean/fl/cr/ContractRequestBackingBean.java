@@ -351,6 +351,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
+			checkContractAmount(flRequest);
 			checkCeilingAmount(flRequest);
 			checkCeilingQty(flRequest);
 			if(isRequisitioner()){
@@ -1277,6 +1278,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public boolean isApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
 
+	}
+	
+	private void checkContractAmount(FlFulfilmentRequest flRequest){
+		if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+			FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			BigDecimal prevSumAmt = itemSummarySO.retrieveContractAccumulatedAmount(reqDTO);
+			BigDecimal sumOrderedAmt = new BigDecimal(0);
+			for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+					sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+				}
+			}
+			BigDecimal checkTotalAmt = prevSumAmt.add(sumOrderedAmt);
+			if(checkTotalAmt.doubleValue()>flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().doubleValue()) {
+				throw new EpException(MessageConst.ERROR_740002, new String[]{flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().toString()});
+			}
+		}
 	}
 	
 	public void checkCeilingAmount(FlFulfilmentRequest flRequest){
