@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog id="newspecificationcommitteeid" position="top"
+	<p:dialog id="newspecificationcommitteeid" position="top" height="600"
+		width="1000"
 		header="New #{evaluationMeetingBackingBean.managedBean.committeeTypeDesc}"
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember">
@@ -91,34 +92,38 @@
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
-							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+							<p:column style="width:26%;white-space: normal;"
+								headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
 								<h:outputText value="#{existcommitteeuser.userName}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+							<p:column style="width:10%;white-space: normal;"
+								headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
 								<h:outputText value="#{existcommitteeuser.identificationNo}" />
 							</p:column>
 
-							<p:column
+							<p:column style="width:25%;white-space: normal;"
 								headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
 								<h:outputText value="#{existcommitteeuser.designation}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
-								<h:outputText
-									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
+							<p:column style="width:20%;white-space: normal;"
+								headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+								<h:outputText value="#{existcommitteeuser.email}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
 								<h:outputText value="#{existcommitteeuser.grade}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+							<p:column style="width:7%;white-space: normal;"
+								headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
 								<h:outputText
 									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
+							<p:column style="width:10%;white-space: normal;"
+								headerText="#{lbl['lbl.sc.eva.committee.role']}">
 								<ui:fragment rendered="#{existcommitteeuser.PMP == true}">
 									<h:outputText value="Chairperson" />
 								</ui:fragment>
