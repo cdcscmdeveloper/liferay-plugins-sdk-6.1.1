@@ -520,15 +520,53 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 * Validation message for business nature details
 	 * 
 	 */
-	private void validationMessage(PmBusinessNature businessNature){
-		debugLogger("validationMessage");
-		if(StringUtils.isBlank(businessNature.getLevelCode())){
-			throw new EpException("Business Nature Code is Mandatory");
+	private boolean validationMessage(PmBusinessNature businessNature){
+
+		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		try{
+			if(StringUtils.isBlank(businessNature.getLevelCode())){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}
+			
+			if(StringUtils.isBlank(businessNature.getLevelName())){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_715008,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return false;
+			}
+			
+			if(this.getManagedBean().isBrandNew()){
+				BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+				businessNatureReqDTO.setBusinessLevel(businessNature.getBusinessLevel());
+				businessNatureReqDTO.setLevelCode(businessNature.getLevelCode());
+				BusinessNatureResDTO businessNatureResDTO = businessNatureSO.retrieveBusinessNatureListByLevel(businessNatureReqDTO);
+				if(businessNatureResDTO.getBusinessNatureList().size()>0){
+					FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+								MessageConst.ERROR_775005,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+					return false;
+				}
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			businessNatureSO = null;
 		}
 		
-		if(StringUtils.isBlank(businessNature.getLevelName())){
-			throw new EpException("Business Nature Name is Mandatory");
-		}		
+		return true;		
 	}	
 	
 	/**
@@ -540,7 +578,11 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		IBusinessNatureSO iBusinessNatureSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);	
 		try{
 			PmBusinessNature businessnature = getManagedBean().getPmBusinessNature();
-			validationMessage(businessnature);
+			
+			if (!validationMessage(businessnature)){
+				return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
+			}
+			
 			
 			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 			reqDTO.setBusinessNature(businessnature);
