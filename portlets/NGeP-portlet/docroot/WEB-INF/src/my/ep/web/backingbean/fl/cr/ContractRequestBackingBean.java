@@ -3291,8 +3291,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFlRequest().getCtContract().getContractNo());
-			sb.append(df.format(getManagedBean().getFlRequest().getStartDate()));
-			sb.append(df.format(getManagedBean().getFlRequest().getEndDate()));
+//			sb.append(df.format(getManagedBean().getFlRequest().getStartDate()));
+//			sb.append(df.format(getManagedBean().getFlRequest().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
