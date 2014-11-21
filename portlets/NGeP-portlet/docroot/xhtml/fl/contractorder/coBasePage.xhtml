@@ -59,11 +59,11 @@
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu" 
 						activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="Order Summary" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>
