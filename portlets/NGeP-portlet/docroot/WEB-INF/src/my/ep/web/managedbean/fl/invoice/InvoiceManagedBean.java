@@ -16,6 +16,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -87,6 +88,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
+	//gpki signing
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate = true;
+	private String textBeforeSign;
+	private String buttonAction;
 	/**
 	 * @return the docType
 	 */
@@ -578,6 +584,30 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setAccountNoName(String accountNoName) {
 		this.accountNoName = accountNoName;
+	}
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+	public String getButtonAction() {
+		return buttonAction;
+	}
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 
 

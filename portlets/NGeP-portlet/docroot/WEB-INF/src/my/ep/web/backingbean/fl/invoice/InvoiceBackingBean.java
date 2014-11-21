@@ -65,6 +65,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -85,6 +86,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -174,6 +176,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
 					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
+				}
+				
+				if(null != getManagedBean().getPmDigiSign()){
+					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				}
 				reqDTO.setInvoice(getManagedBean().getInvoice());
 				resDTO = invoiceSO.invoiceModification(reqDTO);
@@ -879,6 +885,51 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
+	}
+	
+	public String gpkiSignAction(String outcome) throws Exception{
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
+			// Temp setTextBeforeSign : DocNo+Outcome
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else{
+			return submitAction(outcome);
+		}
+	}
+	
+	
+	public String preSubmitAction(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		
+		return submitAction(getManagedBean().getButtonAction());
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	private boolean isSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
 	}
 	
 }
