@@ -42,7 +42,20 @@
 			rowKey="#{meeting}">
 			<ac:paginator for="evaluationmeetingDetails" />
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<!-- <p:column selectionMode="multiple" style="width:2%"></p:column> -->
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="evaluationmeetingDetails"
+							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.scQtMeetings)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{meeting.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column style="width:30%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -50,9 +63,10 @@
 				</f:facet>
 
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
+					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
 					id="meetingDate" label="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
 					required="true"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"></p:calendar>
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
 			</p:column>
@@ -85,10 +99,15 @@
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete" process="@this,evaluationmeetingDetails"
-				partialSubmit="true"
-				action="#{evaluationMeetingBackingBean.deleteMeetingDetails}"
-				update="evaluationmeetingDetails" />
+				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				action="#{evaluationMeetingBackingBean.deleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings)}"
+				update="evaluationmeetingDetails">
+				<f:setPropertyActionListener
+					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
+
+
 
 		</div>
 
@@ -106,7 +125,20 @@
 			<ac:paginator for="evaluationpreparecommittee" />
 
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="evaluationpreparecommittee"
+							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{committeeMember.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
 				<h:outputText
 					value="#{committeeMember.scCommitteeMember.memberName}"></h:outputText>
@@ -143,7 +175,7 @@
 						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
-					<p:selectOneMenu id="meetingRoleId" 
+					<p:selectOneMenu id="meetingRoleId"
 						label="#{lbl['lbl.sc.eva.committee.role']}"
 						value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
@@ -169,11 +201,16 @@
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeDetails}"
 				icon="ui-icon-add" update=":form:newspecificationcommitteeid"
 				oncomplete="newspecificationcommittee.show();" />
+
+
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete" process="@this,evaluationpreparecommittee"
-				partialSubmit="true"
-				action="#{evaluationMeetingBackingBean.deleteCommitteeMembers}"
-				update="evaluationpreparecommittee" />
+				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				action="#{evaluationMeetingBackingBean.deleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"
+				update="evaluationpreparecommittee">
+				<f:setPropertyActionListener
+					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
 
 		</div>
 
