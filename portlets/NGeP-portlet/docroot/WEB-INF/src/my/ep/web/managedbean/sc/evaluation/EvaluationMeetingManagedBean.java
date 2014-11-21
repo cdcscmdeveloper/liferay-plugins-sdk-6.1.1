@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.evaluation;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -16,8 +17,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -62,6 +63,36 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private String committeeTypeDesc;
 	private List<ScQtMeeting> meetingRemoveList;
 	private List<ScQtCommitteeActivity> removeCommitteeList;
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private Date today=new Date();
+
+	/**
+	 * @return the today
+	 */
+	public Date getToday() {
+		return today;
+	}
+
+	/**
+	 * @param today the today to set
+	 */
+	public void setToday(Date today) {
+		this.today = today;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
 
 	public List<ScQtCommitteeActivity> getRemoveCommitteeList() {
 		return removeCommitteeList;
