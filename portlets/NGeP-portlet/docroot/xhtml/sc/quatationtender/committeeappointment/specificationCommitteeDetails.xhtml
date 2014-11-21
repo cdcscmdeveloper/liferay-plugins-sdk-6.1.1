@@ -14,7 +14,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
-						size="30" readonly="true" /></td>
+						size="30" readonly="true" disabled="true" /></td>
 				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}"
 						disabled="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee'}" /></td>
 				<td style="width: 130px"><p:outputLabel
