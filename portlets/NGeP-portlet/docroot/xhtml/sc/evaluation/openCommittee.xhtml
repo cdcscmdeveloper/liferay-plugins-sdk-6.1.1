@@ -15,8 +15,9 @@
 	<p:panel header="#{lbl['lbl.sc.eva.mtng.opn.committee']}"
 		toggleable="true">
 
-		<p:dataTable id="evaluationpreparecommittee" var="committeeMember" rows="10"
-			rowKey="#{committeeMember.qtCommitteeActivityId}" style="width:100%"
+		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
+			rows="10" rowKey="#{committeeMember.qtCommitteeActivityId}"
+			style="width:100%"
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
 			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}">
 			<ac:paginator for="evaluationpreparecommittee" />
@@ -80,7 +81,9 @@
 					value="#{evaluationBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
 			<p:column>
-				<p:selectBooleanCheckbox value="#{committeeMember.attended}" />
+				<p:selectBooleanCheckbox
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					value="#{committeeMember.attended}" />
 			</p:column>
 
 

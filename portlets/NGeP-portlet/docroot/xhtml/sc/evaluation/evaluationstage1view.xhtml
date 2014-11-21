@@ -35,6 +35,25 @@
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 			style="float:right;"
 			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
+
+		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
+			header="Revice Confirmation" resizable="false" width="325"
+			height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="Are you sure to send for Revise?" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+					oncomplete="reviceApprovalDlgs.hide();"
+					action="#{evaluationBackingBean.reviseProposalEvaluation}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					onclick="reviceApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
 		<p:spacer height="25"></p:spacer>
 		<ui:include src="evaluationstage1include.xhtml" />
 
