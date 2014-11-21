@@ -1645,7 +1645,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void chargeLineApply() {
 		IParameterSO parameterSO = null;
 		try {
-			getManagedBean().setAutoUpdate(true);
 			if(null == getManagedBean().getVotFundId()){
 				getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
 			}
