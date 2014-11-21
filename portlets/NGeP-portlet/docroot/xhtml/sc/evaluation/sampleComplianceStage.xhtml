@@ -20,10 +20,11 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
 		</div>
-<p:spacer height="75"></p:spacer>
+		<p:spacer height="75"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -44,7 +45,8 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
 			toggleable="true">
-			<p:dataTable var="sampleItem" id="sampleItemId" editable="true" rows="10"
+			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
+				rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{sampleItem}">
 				<ac:paginator for="sampleItemId" />
@@ -71,6 +73,7 @@
 						<h:outputText value="#{lbl['lbl.sc.eva.comp.sub.status']}"></h:outputText>
 					</f:facet>
 					<p:selectOneMenu id="sampleSubmissionId"
+						disabled="#{evaluationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.eva.comp.sub.status']}" required="true"
 						value="#{sampleItem. submissionStatus.parameterId}">
 
@@ -83,7 +86,9 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%">
-					<p:inputTextarea rows="2" cols="40" maxlength="100" value="#{sampleItem.remark}"></p:inputTextarea>
+					<p:inputTextarea rows="2" cols="40" maxlength="100"
+						disabled="#{evaluationBackingBean.managedBean.readOnly}"
+						value="#{sampleItem.remark}"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 

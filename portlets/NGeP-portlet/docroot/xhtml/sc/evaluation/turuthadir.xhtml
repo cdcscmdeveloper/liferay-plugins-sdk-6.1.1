@@ -41,6 +41,7 @@
 					<h:outputText value="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}" />
 				</f:facet>
 				<p:inputText size="70" value="#{meetingAttendance.name}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="attendanceNameId" required="true"
 					label="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}" maxlength="50"></p:inputText>
 				<p:message id="attendanceNameMessageId" for="attendanceNameId"
@@ -55,6 +56,7 @@
 				</f:facet>
 
 				<p:inputText size="70" value="#{meetingAttendance.icPassport}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="attendacePassportId" required="true"
 					label="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}" maxlength="15"></p:inputText>
 				<p:message id="attendancePassportMessageId"
@@ -68,13 +70,15 @@
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
 			<p:commandButton id="turutbutton"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.sc.eva.btn.add']}" process="@this,turuthadir"
 				partialSubmit="true" update="turuthadir"
 				oncomplete="tirutWidget.paginator.endLink.click();"
 				icon="ui-icon-add" action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				process="@this" partialSubmit="true"
-				icon="ui-icon-delete" update="turuthadir"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
+				process="@this" partialSubmit="true" icon="ui-icon-delete"
+				update="turuthadir"
 				actionListener="#{evaluationBackingBean.deleteSelectedRowsAction(evaluationBackingBean.managedBean.meetingAttendanceList)}">
 				<f:setPropertyActionListener
 					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
