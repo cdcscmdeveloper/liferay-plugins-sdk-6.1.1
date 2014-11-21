@@ -17,6 +17,15 @@
 			</script>
 		</h:panelGroup>
 
+		<h:panelGroup
+			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.smAppl.resubmit}">
+			<script>
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.review.resubmitApplication']}");
+			</script>
+		</h:panelGroup>
+
 	</ui:define>
 
 
@@ -96,8 +105,7 @@
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-				<p:fileUpload
-					allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
 					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
