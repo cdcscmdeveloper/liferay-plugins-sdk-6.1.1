@@ -53,6 +53,7 @@ import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RuleConfigHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -162,20 +163,23 @@ public class RuleCatalogueBackingBean extends
 
 			// /////////////////////////////////////////////////////////
 			// /getting general Rule///////////////////////
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IRuleSO.class);
-			RuleReqDTO reqRDTO = new RuleReqDTO();
-			FacesScopes fs = new FacesScopes();
-			reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
-
-			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
-
-			this.getManagedBean().setConfigRuleList(resRDTO.getRuleTypeList());
+//			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", IRuleSO.class);
+//			RuleReqDTO reqRDTO = new RuleReqDTO();
+//			FacesScopes fs = new FacesScopes();
+//			reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
+//
+//			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
+             
+			this.getManagedBean().setConfigRuleList(RuleConfigHelper.getInstance().getRuleTypeList());
 			this.getManagedBean().setSelectedRuleType(
-					this.getManagedBean().getConfigRuleList().get(0));
-			// this.getManagedBean().setTabActiveIndex(1);
+					RuleConfigHelper.getInstance().getRuleTypeList().get(0));
+		    //fill up ruleType's ruleValueList
+			for (PmConfigRule cRule : this.getManagedBean().getConfigRuleList()){
+				cRule.setConfigRuleValues(RuleConfigHelper.getInstance().getRuleTypeValueListByRuleType(cRule.getRuleType()));
+			}
 			// fill up category display value
-			for (PmConfigRule rule : resRDTO.getRuleTypeList()) {
+			for (PmConfigRule rule : this.getManagedBean().getConfigRuleList()) {
 				if (rule.getRuleDataTypeId().getParameterCode()
 						.equalsIgnoreCase("c")) {
 					for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
@@ -803,17 +807,16 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
 			// retrive updated list
-			reqDTO = new RuleReqDTO();
-			FacesScopes fs = new FacesScopes();
-			reqDTO.setLanguageCode(fs.getUserLocale().getLanguage());
-
-			resDTO = ruleSO.getRuleTypes(reqDTO);
-
 			this.getManagedBean().setConfigRuleList(resDTO.getRuleTypeList());
 			this.getManagedBean().setSelectedRuleType(
-					this.getManagedBean().getConfigRuleList().get(0));
+					resDTO.getRuleTypeList().get(0));
+			RuleConfigHelper.getInstance().relodeRuleTypeValueMap();
+			//fill up ruleType's ruleValueList
+			for (PmConfigRule cRule : this.getManagedBean().getConfigRuleList()){
+				cRule.setConfigRuleValues(RuleConfigHelper.getInstance().getRuleTypeValueListByRuleType(cRule.getRuleType()));
+			}
 			// fill up category display value
-			for (PmConfigRule rule : resDTO.getRuleTypeList()) {
+			for (PmConfigRule rule : this.getManagedBean().getConfigRuleList()) {
 				if (rule.getRuleDataTypeId().getParameterCode()
 						.equalsIgnoreCase("c")) {
 					for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
