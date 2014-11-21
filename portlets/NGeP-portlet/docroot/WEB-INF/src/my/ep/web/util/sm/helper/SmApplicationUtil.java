@@ -135,9 +135,11 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -2748,6 +2750,83 @@ public class SmApplicationUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
 
 		return resDTO.getPmParameter();
+	}
+
+	public static SmSupplierBasicInfoVO getSmSupplierBasicInfoVO(
+			SmApplicationManagedBean bean) {
+		SmSupplierBasicInfoVO smSupplierBasicInfoVO = bean.getBasicInfo();
+		if (smSupplierBasicInfoVO == null) {
+			smSupplierBasicInfoVO = new SmSupplierBasicInfoVO();
+		}
+		if (bean.getSmSupplier() != null
+				&& bean.getSmSupplier().getSmMofAccounts() != null) {
+			SmMofAccount smMofAccount = getActiveMofAccount(bean
+					.getSmSupplier().getSmMofAccounts(), bean.getSmAppl()
+					.getSupplierType());
+			smSupplierBasicInfoVO.setMofNo(smMofAccount.getMofNo());
+			smSupplierBasicInfoVO
+					.setStartDate(smMofAccount.getEffDate() == null ? ""
+							: DateUtils.dateToString("dd/MM/yyyy",
+									smMofAccount.getEffDate()));
+			smSupplierBasicInfoVO
+					.setEndDate(smMofAccount.getExpDate() == null ? ""
+							: DateUtils.dateToString("dd/MM/yyyy",
+									smMofAccount.getExpDate()));
+		}
+		smSupplierBasicInfoVO.setEpNo(bean.getSmSupplier() == null ? "" : bean
+				.getSmSupplier().getEpNo());
+		smSupplierBasicInfoVO.setRegNo(bean.getSmSupplier() == null ? "" : bean
+				.getSmSupplier().getRegNo());
+		if (bean.getSmAppl().getSmCompanyBasic() != null
+				&& bean.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& !bean.getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().isEmpty()) {
+			smSupplierBasicInfoVO.setAddress(bean.getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses().get(0));
+		}
+		SmPersonnel smPersonnel = getAdminPersonnel(bean.getSmAppl()
+				.getSmPersonnels());
+		if (smPersonnel != null) {
+			smSupplierBasicInfoVO.setAdminEmail(smPersonnel.getEmail());
+			smSupplierBasicInfoVO.setAdminPhoneNo(smPersonnel.getPhoneNo());
+			smSupplierBasicInfoVO.setAdminName(smPersonnel.getName());
+		}
+
+		return smSupplierBasicInfoVO;
+	}
+
+	private static SmMofAccount getActiveMofAccount(
+			List<SmMofAccount> smMofAccounts, String suppType) {
+		SmMofAccount smMofAccount = new SmMofAccount();
+
+		for (SmMofAccount account : smMofAccounts) {
+			if (account.getSupplierType() != null
+					&& account.getSupplierType().equalsIgnoreCase(suppType)
+					&& account.getRecordStatusFlg().compareTo(
+							DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+				smMofAccount = account;
+				break;
+			}
+		}
+		return smMofAccount;
+	}
+
+	private static SmPersonnel getAdminPersonnel(List<SmPersonnel> smPersonnels) {
+		SmPersonnel smPersonnelRetVal = null;
+		if (smPersonnels != null) {
+			for (SmPersonnel smPersonnel : smPersonnels) {
+				if (smPersonnel.getEpRole() != null
+						&& (smPersonnel.getEpRole().equalsIgnoreCase(
+								SupplierManagementConst.BASIC_SUPPLIER_ADMIN) || smPersonnel
+								.getEpRole()
+								.equalsIgnoreCase(
+										SupplierManagementConst.MOF_SUPPLIER_ADMIN))) {
+					smPersonnelRetVal = smPersonnel;
+					break;
+				}
+			}
+		}
+		return smPersonnelRetVal;
 	}
 
 	public static boolean validateSiteVisitSelections(
