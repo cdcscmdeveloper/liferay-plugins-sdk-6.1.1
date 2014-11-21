@@ -371,7 +371,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        }
 		        ScheduleDate();
 		 } if (getManagedBean().getContractVer().getCtProgressivePayments() != null
-				   && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() ){
+				   && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
 			     Collections.sort(getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
 			     for(CtProgressivePayment ctProgressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			    	 if(ctProgressivePayment.isUseInFulfilment()) {
@@ -382,41 +382,41 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			     ProgressiveDate();
 		   }
 		    
-		    if(this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
-		    	this.getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmParameter());
-		    	this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom().setParameterId(getParameterIdByTypeAndCode(ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS));
+		    if(getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
+		    	getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmParameter());
+		    	getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom().setParameterId(getParameterIdByTypeAndCode(ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS));
 		    }
 		  
 		    if(getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-		    	this.getManagedBean().setDirectPurchase(true);
-		    	this.getManagedBean().setFlgPaymentTracking(false);
+		    	getManagedBean().setDirectPurchase(true);
+		    	getManagedBean().setFlgPaymentTracking(false);
 		    }
 		    else {
 		    	this.getManagedBean().setDirectPurchase(false);
 		    }
 		    
-		    if(this.getManagedBean().getContractVer().getCtContractZones() != null && this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+		    if(getManagedBean().getContractVer().getCtContractZones() != null && this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
 		    	     Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
 		    		 retriveZonesByContractVer();
 		    }
 		  
 	    	getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 	    	getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
-		    renderUpdateCheckbox(this.getManagedBean().getContractVer());
+		    renderUpdateCheckbox(getManagedBean().getContractVer());
 		    this.getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		    
 	        this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			} 
-	        this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+	          getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			
-			if(this.getManagedBean().getCtContract().isFrequencySchedule()){
-			    this.getManagedBean().setFrequencySchedule("S");
-			}else{
-				 this.getManagedBean().setFrequencySchedule("P");
+			if(getManagedBean().getCtContract().isFrequencySchedule()){
+			    getManagedBean().setFrequencySchedule("S");
+			}else {
+				getManagedBean().setFrequencySchedule("P");
 			}
 			
 			if(getManagedBean().getContractVer().getCtPerformanceBonds() != null && !getManagedBean().getContractVer().getCtPerformanceBonds().isEmpty()){
@@ -478,13 +478,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		            getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);
 	                
 		  } if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
+		               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
 		               if(getManagedBean().getCtContract().isZonalPricing()) {
 			 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
 				      }
-		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-	                   if(this.getManagedBean().getCtContract().isFactored()){
-	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
+		               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
+	                   if(getManagedBean().getCtContract().isFactored()){
+	            	       getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
 		                }
         	          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
 		      }
@@ -908,7 +908,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				                  }
 				                 
                                  int value = Float.compare(progressivePayment.getPercentage(),100);
-				                 if(value == 0) {
+				                 if(value != 0) {
 				                	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				        	           throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Percentage 100%" });
 				                  }
