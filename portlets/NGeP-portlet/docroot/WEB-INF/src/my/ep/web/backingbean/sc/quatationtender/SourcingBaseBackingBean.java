@@ -713,11 +713,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
 		reportUrl.append(ReportConst.AMP_REPORT_NAME);
 		reportUrl.append(reportName);
+		
 		for (Entry<String, String> params : paramMap.entrySet()) {
+			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
+			reportUrl.append(ReportConst.VALUE_SEPARATOR);
 			reportUrl.append(params.getValue());
 		}
 		reportUrl.append(excNextUrl);
