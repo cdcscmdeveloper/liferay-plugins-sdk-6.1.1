@@ -62,14 +62,14 @@
 
 			</p:dataTable>
 
-
+			<p:spacer height="20px"></p:spacer>
 			<div style="text-align: center;">
 				<h:outputText value="#{lbl['lbl.nb.supplier.criteria.qualify']}"
-					style="font-size:18px;"
+					style="font-size:18px;" escape="false"
 					rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
 				<h:outputText value="#{lbl['lbl.nb.supplier.criteria.disqualify']}"
-					style="font-size:18px;"
+					style="font-size:18px;" escape="false"
 					rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 			</div>
 		</p:panel>

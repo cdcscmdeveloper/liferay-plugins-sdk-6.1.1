@@ -34,7 +34,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.notice.board.ministry']}" /></td>
 
-				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE"
+				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE_MINSTRY"
 						headerText="MinistryOrgProfile Lov" update=":form:openPtj"
 						saveObject="noticeBoardBackingBean.managedBean.ministryProfile"
 						value="#{noticeBoardBackingBean.managedBean.ministryProfile.orgName}"
@@ -44,7 +44,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
-				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE"
+				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ"
 						headerText="PTJOrgProfile Lov"
 						saveObject="noticeBoardBackingBean.managedBean.ptjProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjProfile.orgName}"
