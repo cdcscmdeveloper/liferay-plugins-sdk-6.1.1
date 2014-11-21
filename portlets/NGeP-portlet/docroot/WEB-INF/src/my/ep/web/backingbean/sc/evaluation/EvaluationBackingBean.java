@@ -32,7 +32,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -50,8 +49,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -69,10 +66,10 @@ import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
@@ -98,7 +95,6 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -115,6 +111,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
@@ -658,6 +655,11 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
+
 	public String evaluationBackaction() {
 
 		return "evaluationstage1view.xhtml";
@@ -814,7 +816,9 @@ public class EvaluationBackingBean extends
 			List<String> evalstage = new ArrayList<String>();
 			evalstage.add(QTConstants.COMPLIANCE_CHECK);
 			reqDTO.setResultStages(evalstage);
-			evaluationSO.prepareComplianceSummaryResults(reqDTO);
+			if (!this.getManagedBean().isReadOnly()) {
+				evaluationSO.prepareComplianceSummaryResults(reqDTO);
+			}
 			EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 			summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			List<String> qualifiedstage = new ArrayList<String>();
@@ -997,7 +1001,9 @@ public class EvaluationBackingBean extends
 				List<String> resultStg = new ArrayList<String>();
 				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 				evalReqDTO.setResultStages(resultStg);
-				evaluationSo.prepareEvaluationResultsByStage(evalReqDTO);
+				if (!this.getManagedBean().isReadOnly()) {
+					evaluationSo.prepareEvaluationResultsByStage(evalReqDTO);
+				}
 				EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 				summaryReqDTO
 						.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -1053,8 +1059,10 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				evaluationSo
-						.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
+				if (!this.getManagedBean().isReadOnly()) {
+					evaluationSo
+							.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
+				}
 
 			}
 
@@ -1068,9 +1076,10 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-
-				evaluationSo
-						.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
+				if (!this.getManagedBean().isReadOnly()) {
+					evaluationSo
+							.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
+				}
 
 			}
 			// }
@@ -2955,7 +2964,7 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-				reqDTO.setCommType(EvaluationReport.getName(getManagedBean()
+			reqDTO.setCommType(EvaluationReport.getName(getManagedBean()
 					.getCommitteeType()));
 
 			if (null == this.getManagedBean().getScQtEvaluationReportList()) {
@@ -3103,6 +3112,7 @@ public class EvaluationBackingBean extends
 			String committeeType = this.getManagedBean().getCommitteeType();
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			String taskName = this.getManagedBean().getTaskName();
+			boolean readoonly = this.getManagedBean().isReadOnly();
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			if (!this.getManagedBean().isDemo()) {
@@ -3119,6 +3129,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setTabActiveIndex(tabindex);
 			this.getManagedBean().setCurrentStatusId(currentStatusId);
 			this.getManagedBean().setTaskName(taskName);
+			this.getManagedBean().setReadOnly(readoonly);
 			retriveMeetingDtls(qtId, committeeType, index);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -3493,70 +3504,102 @@ public class EvaluationBackingBean extends
 		return evalResDTO;
 	}
 
+	public String reviseProposalEvaluation() {
+		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(this
+				.getManagedBean().getLocalOutCome(), null);
+		if (resDTO.isSuccessful()) {
+			ScQtCommittee qtCommittee = resDTO.getQtCommittee();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(this
+															.getManagedBean()
+															.getLocalOutCome()),
+													new String[] {
+															"Prepare Evaluation Submitted Successfully",
+															qtCommittee
+																	.getScQt()
+																	.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
+	}
+
 	public String submitPrepareEvaluationDetails(String outCome) {
 
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode("en");
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		if (isDigiSigningRequired(RoleCode.EC_CHAIRPERSON.value())
-				|| isDigiSigningRequired(RoleCode.OC_CHAIRPERSON.value())
-				|| isDigiSigningRequired(RoleCode.EC_CHAIRPERSON.value())
-				|| isDigiSigningRequired(RoleCode.EC_CHAIRPERSON.value())) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(this.getManagedBean()
+				.getCommitteeType());
+		CommitteResDTO CommitteeresDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		if (member.getMemberRole().getParameterCode()
+				.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+			this.getManagedBean().setLocalOutCome(outCome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
 		} else {
+			this.getManagedBean().setLocalOutCome(outCome);
 
-			EvaluationResDTO resDTO = updateEvaluationCommitteDtls(outCome,
-					null);
-			if (resDTO.isSuccessful()) {
-				ScQtCommittee qtCommittee = resDTO.getQtCommittee();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(outCome),
-														new String[] {
-																"Prepare Evaluation Submitted Successfully",
-																qtCommittee
-																		.getScQt()
-																		.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+				/*
+				 * retriveCommitteeEndorsment(); List<ScQtSpecificationRemark>
+				 * remarks = this.getManagedBean() .getSpecificationRemarks();
+				 * if (null != remarks) { for (int i = 0; i < remarks.size();
+				 * i++) { String userRemark = remarks.get(i).getRemark(); if
+				 * (null == userRemark || "".equals(userRemark)) { throw new
+				 * EpException(MessageConst.ERROR_760154); } } }
+				 */
 
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				RequestContext.getCurrentInstance().execute(
+						"reviceApprovalDlgs.show()");
+			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
+					|| outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+
+				EvaluationResDTO resDTO = updateEvaluationCommitteDtls(outCome,
+						null);
+				if (resDTO.isSuccessful()) {
+					ScQtCommittee qtCommittee = resDTO.getQtCommittee();
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															getMessgeConstant(outCome),
+															new String[] {
+																	"Prepare Evaluation Submitted Successfully",
+																	qtCommittee
+																			.getScQt()
+																			.getQtNo() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}
 			}
 		}
-
-		/*
-		 * FacesScopes facesScopes = new FacesScopes(); String ctxToken =
-		 * facesScopes.getBPMAuthenticationCtxToken();
-		 * 
-		 * IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		 * IQTEvaluationSO.class); EvaluationReqDTO reqDTO =
-		 * evaluationPreparation();
-		 * 
-		 * reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		 * reqDTO.setToken(ctxToken);
-		 * reqDTO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
-		 * reqDTO.setOutcome(outCome); EvaluationResDTO resDTO =
-		 * evaluationso.updateBPMAction(reqDTO);
-		 * 
-		 * // Code to renew the session Object.. renewSesionObject();
-		 * FacesContext.getCurrentInstance().addMessage( null, new
-		 * FacesMessage(FacesMessage.SEVERITY_INFO,
-		 * "Prepare Evaluation Submitted Successfully",
-		 * "Prepare Evaluation Submitted Successfully"));
-		 */
 
 		return null;
 
@@ -3622,6 +3665,7 @@ public class EvaluationBackingBean extends
 	public void preRenderView() {
 
 		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+		FacesScopes facesScopes = new FacesScopes();
 
 		this.getManagedBean().setEvaluationPayLoad(evaluationDataType);
 		// FacesScopes facesScopes = new FacesScopes();
@@ -3630,6 +3674,26 @@ public class EvaluationBackingBean extends
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 0);
 		String taskName = this.getManagedBean().getTaskName();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(this.getManagedBean()
+				.getCommitteeType());
+		CommitteResDTO CommitteeresDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		if (member.getMemberRole().getParameterCode()
+				.contains(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
+
+			this.getManagedBean().setReadOnly(false);
+
+		} else {
+			this.getManagedBean().setReadOnly(true);
+		}
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
@@ -3736,49 +3800,69 @@ public class EvaluationBackingBean extends
 			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport
 					.getScQt().getQtNo());
 
+			StringBuilder filename = new StringBuilder();
+			// replace white space due to firefox
+			filename.append(scQtEvaluationReport.getTitle().replaceAll("\\s",
+					"_"));
+
 			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generateCoverPdfFromVelocity(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
-
 			} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generateMeetingDetailsPdfFromVelocity(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generateCommitteeDetailsPdfFromVelocity(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_SHORTLISTED
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generatePematuhan1Pdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_ASSESSMENT_METHOD
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generateKaedah1Pdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_SHORTLISTED
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generatePematuhan2Pdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generateKaedah2Pdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_TECH_FIN_EVALUATION
 					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
 				generateAnalisisKeputusanPenilaianTeknikalPdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
@@ -3792,25 +3876,31 @@ public class EvaluationBackingBean extends
 	private void generateAnalisisKeputusanPenilaianTeknikalPdf(
 			ScAttachment attachment, ScQt qt) throws Exception {
 		debugLogger("generateAnalisisKeputusanPenilaianTeknikalPdf");
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_EV_ANALYSIS_TECH_FIN_EVALUATION);
 		populateAttachmentDetails(attachment);
 
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		String reportId = "";
 		String reportName = "";
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPTPH_EC_RPT_JSP;
+			reportId = "SC_026";
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_FEC_RPT_JSP;
+			reportId = "SC_015";
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_TEC_RPT_JSP;
+			reportId = "SC_007";
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
@@ -3818,25 +3908,31 @@ public class EvaluationBackingBean extends
 	private void generateKaedah2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateKaedah2Pdf");
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_EV_EVALUATION_ASSESSMENT_METHOD);
 		populateAttachmentDetails(attachment);
 
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		String reportId = "";
 		String reportName = "";
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP;
+			reportId = "SC_025";
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP;
+			reportId = "SC_006";
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP;
+			reportId = "SC_014";
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
@@ -3844,25 +3940,31 @@ public class EvaluationBackingBean extends
 	private void generatePematuhan2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generatePematuhan2Pdf");
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_EV_EVALUATION_SHORTLISTED);
 		populateAttachmentDetails(attachment);
 
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		String reportId = "";
 		String reportName = "";
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_EC_RPT_JSP;
+			reportId = "SC_024";
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_TEC_RPT_JSP;
+			reportId = "SC_005";
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_FEC_RPT_JSP;
+			reportId = "SC_013";
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
@@ -3870,22 +3972,27 @@ public class EvaluationBackingBean extends
 	private void generateKaedah1Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateKaedah1Pdf");
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_EV_COMPLIANCE_ASSESSMENT_METHOD);
 		populateAttachmentDetails(attachment);
 
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		String reportId = "";
 		String reportName = "";
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP;
+			reportId = "SC_022";
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP;
+			reportId = "SC_002";
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
@@ -3893,29 +4000,33 @@ public class EvaluationBackingBean extends
 	private void generatePematuhan1Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generatePematuhan1Pdf");
-		attachment
-				.setFileName(SourcingConstants.DOCNAME_EV_COMPLIANCE_SHORTLISTED);
 		populateAttachmentDetails(attachment);
 
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		String reportId = "";
 		String reportName = "";
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPP1_PEMATUHAN_EC_RPT_JSP;
+			reportId = "SC_021";
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPPP_PEMATUHAN_OC_RPT_JSP;
+			reportId = "SC_001";
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
 	private void generateCommitteeDetailsPdfFromVelocity(
 			ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_COMMITTEE_DTLS);
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
@@ -4039,7 +4150,6 @@ public class EvaluationBackingBean extends
 
 	private void generateMeetingDetailsPdfFromVelocity(ScAttachment attachment,
 			ScQt qt) throws Exception {
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_MEETING_DTLS);
 		populateAttachmentDetails(attachment);
 
 		CommonUtils commonUtils = new CommonUtils();
@@ -4095,7 +4205,6 @@ public class EvaluationBackingBean extends
 
 	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScQt qt)
 			throws Exception {
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_COVER);
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
