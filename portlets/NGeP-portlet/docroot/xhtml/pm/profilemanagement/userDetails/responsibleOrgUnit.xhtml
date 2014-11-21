@@ -9,7 +9,7 @@
 		
 	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.responsible.org']}" toggleable="true">
 		<br/>
-	   	<p:dataTable id="dtOrgUnit" var="orgUnit" styleClass="dtOrgUnit"
+	   	<p:dataTable id="dtOrgUnit" var="orgUnit" styleClass="dtOrgUnit" 
 		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs}"
 		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
 		     selectionMode="single"
@@ -18,13 +18,13 @@
 				<f:param name="disableValidation" value="" />     
 			</p:ajax>
 			<ac:paginator for="dtOrgUnit"/>
-		    <p:column>
+		    <p:column width="15%">
 			    <f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
 			     	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}" />
 			    </f:facet>
 		   
-				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
+				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" 
 					disabled="#{!orgUnit.brandNew}" id="somOrgType"  required="#{!empty param['disableValidation']}" 
 					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
@@ -36,12 +36,12 @@
 	            </p:selectOneMenu>		 
 	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
-	        <p:column>
+	        <p:column width="10%">
 			    <f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
 			    </f:facet>
-			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" 
+			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="12" 
 			    	required="#{!empty param['disableValidation']}" 
 	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -54,10 +54,10 @@
 				</ac:lov> 
 				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
 		    </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
+	        <p:column   style="white-space:nowrap; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
-	        <p:column> 
+	        <p:column width="8%"> 
 	        	<f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" />
@@ -70,7 +70,7 @@
 				</p:calendar>
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
+	        <p:column width="8%" headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
 			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS" navigator="true" 
 			  		readonlyInput="true" yearRange="-99:-16" label="#{lbl['lbl.pm.profiles.resorg.table.expdate']}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -86,7 +86,7 @@
 	          	</p:selectOneMenu>         
 	        </p:column>     
 	         -->   
-	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
       		    <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
       		    	immediate="true" update="dtOrgUnit">
 					<p:graphicImage value="/css/images/design/delete.png"/>
