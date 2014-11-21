@@ -592,10 +592,9 @@ public class SmApplicationBackingBean extends
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
 				// set basic info for cancel mof
-				getManagedBean()
-						.setBasicInfo(
-								SmApplicationUtil
-										.getSmSupplierBasicInfoVO(getManagedBean()));
+				getManagedBean().setBasicInfo(
+						SmApplicationUtil
+								.getSmSupplierBasicInfoVO(getManagedBean()));
 			}
 			getManagedBean()
 					.setSupplierParentCatList(
@@ -1419,6 +1418,17 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
 
+	}
+
+	public void assignCategoryApproveOrRejectDate(SmSupplierCategory category) {
+		if (getManagedBean().isPoUser()) {
+			log.info("***** PO DECISION SELECTED **** "
+					+ category.getPoDecFlg());
+		} else if (getManagedBean().isApproverUser()) {
+			log.info("***** APPROVER DECISION SELECTED **** "
+					+ category.getApprvrDecFlg());
+		}
+		category.setApprovedDate(new Date());
 	}
 
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
