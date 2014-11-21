@@ -591,6 +591,11 @@ public class SmApplicationBackingBean extends
 			if (smAppl.getApplType().equalsIgnoreCase(
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
+				// set basic info for cancel mof
+				getManagedBean()
+						.setBasicInfo(
+								SmApplicationUtil
+										.getSmSupplierBasicInfoVO(getManagedBean()));
 			}
 			getManagedBean()
 					.setSupplierParentCatList(
