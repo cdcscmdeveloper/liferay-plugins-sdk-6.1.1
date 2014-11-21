@@ -830,6 +830,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+	    	getZoneObjDetails();
 			if(contractVer.getCtContractZones()!=null) {
 				for(CtContractZone contractZone : contractVer.getCtContractZones()) {
 					if(contractZone.getDeliveryTerm()==0) {
