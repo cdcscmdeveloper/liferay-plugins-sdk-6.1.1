@@ -10,7 +10,8 @@
 		id="smWorkShopDtPanel">
 
 		<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
-			value="#{backingBean.managedBean.applWorkShopFacilities}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{backingBean.managedBean.applWorkShopFacilities}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedWorkShopFacilities}"
 			rowKey="#{work}" rowIndexVar="index" id="workDt">
 			<ac:paginator for="workDt" />
@@ -19,10 +20,10 @@
 			<p:column headerText="#{lbl['lbl.sm.workshop.name']}">
 				<h:outputText value="#{work.facilityName}" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.workshop.address']}">
-				<h:outputText
-					value="#{work.smAddress.address1},#{work.smAddress.address2},#{work.smAddress.address3}" />
+			<p:column headerText="#{lbl['lbl.sm.workshop.address']}"
+				style="width :60%;white-space : normal">
+				<p:outputLabel value="#{backingBean.getFullAddress(work.smAddress)}"
+					style="float : left" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink partialSubmit="true" process="@this"
@@ -36,44 +37,47 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}" partialSubmit="true" process="@this"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				partialSubmit="true" process="@this"
 				action="#{backingBean.assignNewWorkshopBean}"
 				update=":form:tt:workShopDialog" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" partialSubmit="true"
-				process="smWorkShopDtPanel"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				partialSubmit="true" process="smWorkShopDtPanel"
 				action="#{backingBean.deleteSelectedWorkShops}"
 				update=":form:tt:workDt" />
 		</div>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="500px" header="#{lbl['lbl.sm.workshop.information']}"
+	<p:dialog width="500px" height="500px"
+		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="workShopDialog">
 		<p:messages id="workShopDialogMsg" showSummary="false"
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.facilityType}" readonly="true"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.facility.name']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.name']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35" maxlength="50"
-						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.facility.name']}"
-						id="smWrkShpName"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.facility.name']}" id="smWrkShpName"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}" />
 					<p:message id="smWrkShpNameMsg" for="smWrkShpName"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="35"
-						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.address']}"
-						id="smWrkShpAddr"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.address']}" id="smWrkShpAddr"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address1}"
 						size="35" /> <p:message id="smWrkShpAddrMsg" for="smWrkShpAddr"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -187,12 +191,11 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.postcode']}" maxlength="5"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
-						size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"> 
-						<f:validator validatorId="postcodeValidator"/>
-						</p:inputText>
-						<p:message id="smFacWrkShpPosCodeMsg"
-						for="smFacWrkShpPosCode" showSummary="true" showDetail="false"
-						display="icon" /></td>
+						size="35"
+						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
+						<f:validator validatorId="postcodeValidator" />
+					</p:inputText> <p:message id="smFacWrkShpPosCodeMsg" for="smFacWrkShpPosCode"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -218,7 +221,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.area.feat']}" /></td>
-				<td><p:inputText id="smWrkShpArea" label="#{lbl['lbl.sc.spec.area.feat']}"
+				<td><p:inputText id="smWrkShpArea"
+						label="#{lbl['lbl.sc.spec.area.feat']}"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}"
 						size="35">
 						<f:convertNumber
@@ -227,14 +231,16 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.facility.ownerType']}" id="smWrkShpOwnType"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']} " itemValue="R" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']} "
+							itemValue="R" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
+							itemValue="O" />
 						<p:ajax event="change"
 							listener="#{backingBean.workShopOwnerTypeSel}"
 							update="workPan,workPanLbl" />
@@ -247,16 +253,17 @@
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
 						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
-						<p:outputLabel value="*" styleClass="mandatory" 
-						rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O' or 
-							backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}"/>
+						<p:outputLabel value="*" styleClass="mandatory"
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O' or 
+							backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="workPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
 							<p:inputText label="#{lbl['lbl.cm.price']}" id="smWrkShpPrice"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
-								size="20" required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
+								size="20"
+								required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -265,9 +272,11 @@
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
-							<p:inputText label="#{lbl['lbl.sm.facility.rent.rm']}" id="smWrkShpRent"
+							<p:inputText label="#{lbl['lbl.sm.facility.rent.rm']}"
+								id="smWrkShpRent"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
-								size="20" required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
+								size="20"
+								required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -278,10 +287,11 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="50" id="smWrkShpOwnName"
-						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.facility.ownerName']}"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.facility.ownerName']}"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.ownerName}"
 						size="35" /> <p:message id="smWrkShpOwnNameMsg"
 						for="smWrkShpOwnName" showSummary="true" showDetail="false"
@@ -295,8 +305,10 @@
 				action="#{backingBean.addOrUpdateWorkshopToSmAppl}"
 				partialSubmit="true" process="workShopDialog"
 				update=":form:tt:workDt, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this" partialSubmit="true"
-				action="#{backingBean.cancelWorkShopSaveorUpdate}" update=":form:tt:workShopDialog, @([id$=Msg])"/>
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				process="@this" partialSubmit="true"
+				action="#{backingBean.cancelWorkShopSaveorUpdate}"
+				update=":form:tt:workShopDialog, @([id$=Msg])" />
 		</div>
 	</p:dialog>
 </ui:composition>
