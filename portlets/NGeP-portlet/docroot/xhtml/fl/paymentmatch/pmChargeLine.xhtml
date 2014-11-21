@@ -21,7 +21,7 @@
 				listener="#{paymentMatchBackingBean.onNodeUnSelect()}"
 				update="@(.chargeLineSection)" />				
 			<p:column style="white-space:normal;">
-				<f:facet name="header" style="width:8%;">
+				<f:facet name="header" style="width:10%;">
 					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
@@ -33,7 +33,7 @@
 				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.uom']}">
+			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
@@ -118,17 +118,15 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.votFundCode}"
-							size="9" disabled="true" /></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
-					</td>
+							size="9" disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
 					<td><p:inputText
-							size="9" disabled="true" value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
+							size="12" disabled="true" value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.gosodo']}" /></td>
 					<td><p:inputText
-							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}" /></td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
+							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
