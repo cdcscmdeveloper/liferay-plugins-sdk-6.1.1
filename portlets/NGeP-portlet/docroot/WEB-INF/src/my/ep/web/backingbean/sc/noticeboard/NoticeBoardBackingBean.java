@@ -700,7 +700,23 @@ public class NoticeBoardBackingBean extends
 
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
+		StringBuffer address = new StringBuffer(briefing.getAddress()
+				.getAddress1());
+		address.append(",");
+		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
+			address.append(briefing.getAddress().getAddress2());
+			address.append(",");
+		}
+		if (!StringUtils.isBlank(briefing.getAddress().getAddress3())) {
+			address.append(briefing.getAddress().getAddress3());
+			address.append(",");
+		}
+		if (!StringUtils.isBlank(briefing.getAddress().getAddress4())) {
+			address.append(briefing.getAddress().getAddress4());
+
+		}
+
+		this.getManagedBean().setAddress(address.toString());
 	}
 
 	public String showPriceSchedules(Long qtId) {
