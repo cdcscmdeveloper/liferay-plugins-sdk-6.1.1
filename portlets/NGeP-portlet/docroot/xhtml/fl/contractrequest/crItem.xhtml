@@ -223,7 +223,11 @@
 			rowKey="#{delAddr}"
 			selection="#{contractRequestBackingBean.managedBean.selectedAddrTypeList}">
 			<ac:paginator for="delAddr" />
-			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
+			<p:column selectionMode="multiple" style="width:2%;text-align:center">
+				<f:facet name="header" >
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.address.selectall']}"/>	
+				</f:facet>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.address']}" style="white-space:normal;">
 				<h:outputText
 					value="#{contractRequestBackingBean.getFullAddress(delAddr.pmAddress)}"
