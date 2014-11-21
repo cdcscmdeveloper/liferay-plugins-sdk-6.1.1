@@ -187,6 +187,38 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int evaluationfinancialTableRow;
 	private int evaluationsampleTableRow;
 	private List<TplSpecZoneDtl> specZoneDtls;
+	private String localOutCome;
+	private boolean readOnly;
+
+	
+
+	/**
+	 * @return the readOnly
+	 */
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	/**
+	 * @param readOnly the readOnly to set
+	 */
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	/**
+	 * @return the localOutCome
+	 */
+	public String getLocalOutCome() {
+		return localOutCome;
+	}
+
+	/**
+	 * @param localOutCome the localOutCome to set
+	 */
+	public void setLocalOutCome(String localOutCome) {
+		this.localOutCome = localOutCome;
+	}
 
 	public List<TplSpecZoneDtl> getSpecZoneDtls() {
 		return specZoneDtls;
