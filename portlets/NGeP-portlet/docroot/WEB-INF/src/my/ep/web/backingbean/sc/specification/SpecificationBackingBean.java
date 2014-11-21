@@ -9384,9 +9384,7 @@ public class SpecificationBackingBean extends
 				.getTechnicalScoreSetting();
 		if (null != technicalScoreSetting
 				&& technicalScoreSetting.getSettingType() == 1) {
-			if (scQt.getEvaluationType().equalsIgnoreCase(
-					QTConstants.EVALUATION_TWO_TIER)
-					&& !this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly()) {
 				if (null == technicalScoreSetting.getPassingScore()
 						|| technicalScoreSetting.getPassingScore().intValue() <= 0) {
 					throw new EpException(MessageConst.ERROR_760172);
@@ -9403,9 +9401,7 @@ public class SpecificationBackingBean extends
 				.getFinancialScoreSetting();
 		if (null != financialScoreSetting
 				&& financialScoreSetting.getSettingType() == 2) {
-			if (scQt.getEvaluationType().equalsIgnoreCase(
-					QTConstants.EVALUATION_TWO_TIER)
-					&& !this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly()) {
 				if (null == financialScoreSetting.getPassingScore()
 						|| financialScoreSetting.getPassingScore().intValue() <= 0) {
 					throw new EpException(MessageConst.ERROR_760174);
