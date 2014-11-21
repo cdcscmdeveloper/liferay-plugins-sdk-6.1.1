@@ -96,10 +96,16 @@
 					<h:outputText
 						value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"></h:outputText>
 				</c:if>
+				<c:if
+				test="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
+				<h:outputLabel value="Location Level" />
+				<h:outputText value="All States"
+					/>
+					</c:if>
 			</h:panelGrid>
-			<p:spacer height="20px"></p:spacer>
+			<p:spacer height="30px"></p:spacer>
 			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" style="font-weight:bold;font-size:medium"/>
-			<p:spacer height="10px"></p:spacer>
+			<p:spacer height="20px"></p:spacer>
 			<p:dataTable style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.categoryList}"
 				var="scQtCategory" id="restrcatcode">
@@ -134,7 +140,7 @@
 				</p:column>
 			</p:dataTable>
 
-			<p:spacer height="20px"></p:spacer>
+			<p:spacer height="30px"></p:spacer>
 			<c:if
 				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 				<h:outputText value="#{lbl['lbl.so.location.list']}"  style="font-weight:bold;font-size:medium"/>
