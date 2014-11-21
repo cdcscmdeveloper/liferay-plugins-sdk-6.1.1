@@ -2175,7 +2175,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void onContractExtensionChecked() {
 		if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
-			getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(3); // default to 3 month
+			getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(1); // default to 1 month
 			Calendar c = Calendar.getInstance();
 			c.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			c.add(Calendar.DATE, 1);
