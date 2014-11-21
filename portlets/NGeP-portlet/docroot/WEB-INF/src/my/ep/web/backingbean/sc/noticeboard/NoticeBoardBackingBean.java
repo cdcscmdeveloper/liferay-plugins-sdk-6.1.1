@@ -893,6 +893,14 @@ public class NoticeBoardBackingBean extends
 
 				}
 
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("QT_TYPE",
+								SearchOperator.OPERATOR_EQUALS.value(), "O"));
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("IS_PANEL",
+								SearchOperator.OPERATOR_EQUALS.value(), 0));
+
 				// Filter By - Title
 				if (StringUtils.isNotBlank(getManagedBean().getTitle())) {
 					searchBean.getDataFilterBeans().add(
