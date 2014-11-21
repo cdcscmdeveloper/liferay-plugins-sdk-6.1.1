@@ -437,7 +437,7 @@ public class SpecificationBackingBean extends
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification For ",
+								getMessageCommon("lbl.sc.specification.for"),
 								this.getManagedBean().getScQt().getQtNo() },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
@@ -602,10 +602,7 @@ public class SpecificationBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_700004,
-									new String[] {
-											"Specification Details For ",
-											this.getManagedBean().getScQt()
-													.getQtNo() },
+									new String[] {getMessageCommon("lbl.sc.specification.details.for"), this.getManagedBean().getScQt().getQtNo() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
@@ -950,12 +947,14 @@ public class SpecificationBackingBean extends
 			}
 
 			if (resDTO.isSuccessful()) {
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""
-
-						));
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(MessageConst.INFO_700004, 
+										new String[] { getMessageCommon("lbl.sc.template.spec") },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			}
 		} finally {
 			qtTemplateSO = null;
@@ -2236,13 +2235,34 @@ public class SpecificationBackingBean extends
 					localcheckList.addAll(resDTO.getTechnicalCheckList());
 				}
 
-				this.getManagedBean().setScQtCheckSt2techProposal(
-						localcheckList);
-				this.getManagedBean().setScQtCheckSt2financeProposalList(
-						resDTO.getFinancialCheckLists());
+				this.getManagedBean().setScQtCheckSt2techProposal(localcheckList);
+				this.getManagedBean().setScQtCheckSt2financeProposalList(resDTO.getFinancialCheckLists());
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
-
+			}
+		} finally {
+			specSo = null;
+		}
+	}
+	
+	/**
+	 * Will be called to get financial check list if not exist in managed bean
+	 */
+	public void retriveFinancialCheckList() {
+		IQTSpecSO specSo = null;
+		SpecificationResDTO resDTO = null;
+		try {
+			this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+			if (null == this.getManagedBean().getScQtCheckSt2financeProposalList()
+					|| this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()) {
+				
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				reqDTO.setScQt(this.getManagedBean().getScQt());
+				reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
+				resDTO = specSo.retrieveCheckLists(reqDTO);
+				// Collections.sort(resDTO.getFinancialCheckLists());
+				this.getManagedBean().setScQtCheckSt2financeProposalList(resDTO.getFinancialCheckLists());
 			}
 		} finally {
 			specSo = null;
@@ -2297,33 +2317,6 @@ public class SpecificationBackingBean extends
 		}
 		return checkListList;
 
-	}
-
-	/**
-	 * Will be called to get financial check list if not exist in managed bean
-	 */
-	public void retriveFinancialCheckList() {
-		IQTSpecSO specSo = null;
-		SpecificationResDTO resDTO = null;
-		try {
-			this.getManagedBean().setScQtCheckSt2financeProposalList(null);
-			if (null == this.getManagedBean()
-					.getScQtCheckSt2financeProposalList()
-					|| this.getManagedBean()
-							.getScQtCheckSt2financeProposalList().isEmpty()) {
-				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-				specSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-				reqDTO.setScQt(this.getManagedBean().getScQt());
-				reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
-				resDTO = specSo.retrieveCheckLists(reqDTO);
-				// Collections.sort(resDTO.getFinancialCheckLists());
-				this.getManagedBean().setScQtCheckSt2financeProposalList(
-						resDTO.getFinancialCheckLists());
-			}
-		} finally {
-			specSo = null;
-		}
 	}
 
 	public ScQtScoreSetting constructScoreSetting(int settingType) {
@@ -7620,11 +7613,14 @@ public class SpecificationBackingBean extends
 				financialChecklistEditAction(this.getManagedBean().getIndex(),
 						updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
 			}
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Scores Successfully Saved. ",
-							"Scores Successfully Saved."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_700004, 
+									new String[] { getMessageCommon("lbl.sc.scores"),"" },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 
 		} finally {
 
@@ -7812,9 +7808,11 @@ public class SpecificationBackingBean extends
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Scores Successfully Saved. ",
-							"Scores Successfully Saved."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_700004, 
+									new String[] { getMessageCommon("lbl.sc.scores"),"" },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 		} finally {
 
 		}
@@ -7888,10 +7886,14 @@ public class SpecificationBackingBean extends
 			throws FileNotFoundException, IOException {
 
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
-
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"The file was uploaded successfully.", null);
-		FacesContext.getCurrentInstance().addMessage(null, message);
+		
+		/*FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700003, 
+								new String[] { getMessageCommon("lbl.sc.file") },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));*/
 
 		ScQtCheckListAttachment attachment = scQtChecklist
 				.getScQtCheckListAttachment();
@@ -7952,8 +7954,7 @@ public class SpecificationBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										getMessgeConstant(action),
-										new String[] { "Specification For ",
-												qt.getQtNo() },
+										new String[] { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
@@ -7975,7 +7976,7 @@ public class SpecificationBackingBean extends
 			 * FacesContext.getCurrentInstance().addMessage( null, new
 			 * FacesMessage(FacesMessage.SEVERITY_INFO, null,
 			 * MessageUtils.getMessage( getMessgeConstant(action), new String[]
-			 * { "Specification For ", qt.getQtNo() },
+			 * { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
 			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
 			 * FacesScopes().getUserLocale())));
 			 * 
@@ -10065,18 +10066,12 @@ public class SpecificationBackingBean extends
 							.getCurrentInstance()
 							.addMessage(
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															getMessgeConstant(action),
-															new String[] {
-																	"Specification Preparation And Scoring For",
-																	qt.getQtNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+									new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+											MessageUtils.getMessage(
+												getMessgeConstant(action),
+												new String[] { "Specification Preparation And Scoring For", qt.getQtNo() },
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
 
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
@@ -10389,10 +10384,8 @@ public class SpecificationBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(
-									getMessgeConstant(this.getManagedBean()
-											.getLocalOutCome()),
-									new String[] { "Specification For",
-											qt.getQtNo() },
+									getMessgeConstant(this.getManagedBean().getLocalOutCome()),
+									new String[] { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
@@ -10715,22 +10708,14 @@ public class SpecificationBackingBean extends
 				ScQt qt = resDTO.getScQt();
 				// Code to renew the session Object..
 				renewSesionObject();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
+				FacesContext.getCurrentInstance().addMessage(
 								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
-														new String[] {
-																"Specification Creation For ",
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(
+											getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
+											new String[] { "Specification Creation For ", qt.getQtNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
@@ -10754,17 +10739,12 @@ public class SpecificationBackingBean extends
 							new FacesMessage(
 									FacesMessage.SEVERITY_INFO,
 									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getLocalOutCome()),
-													new String[] {
-															"Specification Preparation And Scoring For",
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+									MessageUtils.getMessage(
+											getMessgeConstant(
+											this.getManagedBean().getLocalOutCome()),
+											new String[] { "Specification Preparation And Scoring For", qt.getQtNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
@@ -10780,12 +10760,10 @@ public class SpecificationBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(
-									getMessgeConstant(this.getManagedBean()
-											.getLocalOutCome()),
-									new String[] { "Specification For",
-											qt.getQtNo() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+								getMessgeConstant(this.getManagedBean().getLocalOutCome()),
+								new String[] { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
@@ -10797,24 +10775,14 @@ public class SpecificationBackingBean extends
 				.getManagedBean().getLocalOutCome(), null);
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
+			FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getLocalOutCome()),
-													new String[] {
-															"Specification Preparation And Scoring For",
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+										getMessgeConstant(this.getManagedBean().getLocalOutCome()),
+										new String[] { "Specification Preparation And Scoring For", qt.getQtNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
