@@ -3614,7 +3614,7 @@ public class EvaluationBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		reqDtO.setOutcome(action);
 		if (null != digiSign) {
-			updatePmDigiSignData(pmDigiSign, this.getManagedBean()
+			updatePmDigiSignData(digiSign, this.getManagedBean()
 					.getCommitteeType(), scQt.getQtId(), scQt.getQtNo());
 		}
 		reqDtO.setDigiSignData(digiSign);
