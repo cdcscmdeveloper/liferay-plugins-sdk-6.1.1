@@ -667,7 +667,7 @@ public class QTDetailBackingBean extends
 								.getScCommitteeMembers().isEmpty()) {
 							if (!QTStatusConst.CM_COMPLETE.equals(tabBean
 									.getScQtCommittee().getScCommittee()
-									.getCommitteStatus())
+									.getCommitteStatus().getStatusId())
 									&& !this.getManagedBean().isSaveFlow()) {
 								PmStatus committeStatus = new PmStatus();
 								committeStatus
@@ -1303,7 +1303,9 @@ public class QTDetailBackingBean extends
 			}
 			copyBoMembersToSpecCommitte(specCommitte, boCommitte);
 			boolean isEnable = false;
-			if (currentStatus >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
+			if (QTStatusConst.CM_REVISION.equals(specCommitte.getScCommittee().getCommitteStatus().getStatusId())) {
+				isEnable = false;
+			} else if (currentStatus >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
 				isEnable = true;
 			}
 			committeTabs.add(new TabBean(
@@ -1583,6 +1585,11 @@ public class QTDetailBackingBean extends
 				qt.setModified(true);
 				// check if its Pending Schedule and Documents , only execute
 				// this part
+				
+				if (null == this.getManagedBean().getScQtDocReportList()) {
+					retrieveDocumentTabDtl();
+					qt.setScQtDocReports(this.getManagedBean().getScQtDocReportList());
+				}
 				if (null != qt.getScQtDocReports()
 						&& !qt.getScQtDocReports().isEmpty()) {
 					QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
