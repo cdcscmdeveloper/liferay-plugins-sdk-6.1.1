@@ -655,23 +655,10 @@ public class QTDetailBackingBean extends
 		List<ScQtCommittee> qtCommitteList = null;
 		if (null != committeTabs) {
 			qtCommitteList = new ArrayList<ScQtCommittee>();
-			for (TabBean tabBean : committeTabs) {
+			for (int i = 0; i < committeTabs.size(); i++) {
+				TabBean tabBean = committeTabs.get(i);
 				if (!QTConstants.FINALIZATION_SECRETARY_TAB
 						.equalsIgnoreCase(tabBean.getTitleName())) {
-
-					/*
-					 * List<ScCommitteeMember> committeMembers = tabBean
-					 * .getScQtCommittee().getScCommittee()
-					 * .getScCommitteeMembers();
-					 */
-
-					/*
-					 * if (null != tabBean.getMembers() &&
-					 * !tabBean.getMembers().isEmpty()) {
-					 * committeMembers.addAll(tabBean.getMembers());
-					 * 
-					 * }
-					 */
 
 					if (!"BO".equals(tabBean.getScQtCommittee()
 							.getScCommittee().getCommitteeType()
@@ -688,6 +675,9 @@ public class QTDetailBackingBean extends
 								tabBean.getScQtCommittee().getScCommittee()
 										.setCommitteStatus(committeStatus);
 							}
+						} else {
+							tabBean.getScQtCommittee().getScCommittee()
+									.setApprovalReq(false);
 						}
 					}
 
@@ -2186,15 +2176,14 @@ public class QTDetailBackingBean extends
 						backingBean.retrievePmStateList();
 					}
 				}
-				
+
 				backingBean.getDeskOfficerAdminAssistant();
 			} finally {
 				detailSO = null;
 			}
 		}
-		
-		Date publishDate = this.getManagedBean().getQt()
-				.getPublishDate();
+
+		Date publishDate = this.getManagedBean().getQt().getPublishDate();
 		Date bsvDate = null;
 		if (getManagedBean().getQt().isZonal()) {
 			List<BriefingZoneBean> briefingBeans = getManagedBean()
@@ -2216,17 +2205,15 @@ public class QTDetailBackingBean extends
 				if (null != publishDate) {
 					getManagedBean().getQt().setClosingDate(
 							DateUtils.addDays(getManagedBean().getQt()
-									.getPublishDate(), this
-									.getManagedBean().getQt()
-									.getPublishPeriod()));
+									.getPublishDate(), this.getManagedBean()
+									.getQt().getPublishPeriod()));
 				}
 			}
 		} else {
 			if (getManagedBean().getBsvDtlBean() != null) {
 				List<ScQtBsvDtl> selectedBriefList = getManagedBean()
 						.getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
-				if (selectedBriefList != null
-						&& !selectedBriefList.isEmpty()) {
+				if (selectedBriefList != null && !selectedBriefList.isEmpty()) {
 					for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
 						bsvDate = scQtBsvDtl.getBsvDate();
 						this.getManagedBean().setBsvDate(bsvDate);
@@ -2238,8 +2225,8 @@ public class QTDetailBackingBean extends
 				} else {
 					if (null != publishDate) {
 						getManagedBean().getQt().setClosingDate(
-								DateUtils.addDays(getManagedBean()
-										.getQt().getPublishDate(), this
+								DateUtils.addDays(getManagedBean().getQt()
+										.getPublishDate(), this
 										.getManagedBean().getQt()
 										.getPublishPeriod()));
 					}
@@ -2247,18 +2234,17 @@ public class QTDetailBackingBean extends
 			} else {
 				if (null != publishDate) {
 					getManagedBean().getQt().setClosingDate(
-							DateUtils.addDays(getManagedBean()
-									.getQt().getPublishDate(), this
-									.getManagedBean().getQt()
-									.getPublishPeriod()));
+							DateUtils.addDays(getManagedBean().getQt()
+									.getPublishDate(), this.getManagedBean()
+									.getQt().getPublishPeriod()));
 				}
 			}
 		}
 		Date clsDate = this.getManagedBean().getQt().getClosingDate();
 		if (null != clsDate) {
 			this.getManagedBean().setProposalValidityUntil(
-					DateUtils.addDays(clsDate, this.getManagedBean()
-							.getQt().getQtValidityPeriod()));
+					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
+							.getQtValidityPeriod()));
 		}
 	}
 
@@ -3567,11 +3553,13 @@ public class QTDetailBackingBean extends
 		}
 	}
 
-	public String constuctConditionFields(){
+	public String constuctConditionFields() {
 		if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
-			Long orgProfileId=this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId();
+			Long orgProfileId = this.getManagedBean().getQt().getPmOrgProfile()
+					.getOrgProfileId();
 			if (null != orgProfileId) {
-				return "quotationTender.pmOrgProfile.orgProfileId^"+orgProfileId;
+				return "quotationTender.pmOrgProfile.orgProfileId^"
+						+ orgProfileId;
 			}
 		}
 		return "";
