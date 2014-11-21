@@ -850,7 +850,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		 if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
 			 
-			   if(contractVer.getCtPerformanceBonds() != null && !contractVer.getCtPerformanceBonds().isEmpty()) {
+			   if(contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
 				 
 			                double bondAmount = 0.0;
 		                    for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
