@@ -721,6 +721,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
     	IContractSO contractSO = null;
     	try{
+    		getZoneObjDetails();
     		   validateCtContractVer(action);
 			   ContractReqDTO reqDTO = new ContractReqDTO();
 			   reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -734,7 +735,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
                     getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemList());
                     getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemServiceList());
             
-                getZoneObjDetails();
                 setBondRecordStatus(getManagedBean().getContractVer());
               
                 if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
