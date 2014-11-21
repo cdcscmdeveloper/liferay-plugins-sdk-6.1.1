@@ -46,6 +46,7 @@ import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -62,6 +63,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -229,6 +231,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				if(null != getManagedBean().getTaskId()){
 					reqDTO.setTaskId(getManagedBean().getTaskId());
 				}
+				
+				if(null != getManagedBean().getPmDigiSign()){
+					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+				}
+				
 				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
 				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 				if(flBB.getManagedBean().getRemarkList().size() >0){
@@ -629,5 +636,51 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	public String backToPervious() {
 		return "flDocSearch";
 	}
+	
+	public String gpkiSignAction(String outcome) throws Exception{
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
+			// Temp setTextBeforeSign : DocNo+Outcome
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else{
+			return createDeliveryOrder(outcome);
+		}
+	}
+	
+	
+	public String preSubmitDeliveryOrder(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		
+		return createDeliveryOrder(getManagedBean().getButtonAction());
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	private boolean isSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
 	
 }

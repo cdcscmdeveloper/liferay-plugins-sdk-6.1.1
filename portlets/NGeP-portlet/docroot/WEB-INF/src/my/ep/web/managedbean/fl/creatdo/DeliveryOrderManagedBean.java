@@ -20,6 +20,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -90,6 +91,12 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean docMaintainRemarks = false;
 	
 	private String fromPageUrl;
+	
+	//gpki signing
+	private PmDigiSign pmDigiSign;
+	private boolean autoUpdate = true;
+	private String textBeforeSign;
+	private String buttonAction;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -647,6 +654,38 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setFromPageUrl(String fromPageUrl) {
 		this.fromPageUrl = fromPageUrl;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
 	}
 
 	
