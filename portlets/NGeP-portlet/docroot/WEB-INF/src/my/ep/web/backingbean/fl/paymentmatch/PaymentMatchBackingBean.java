@@ -831,12 +831,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	public void gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+//			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
-			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
+//			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
+//			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
