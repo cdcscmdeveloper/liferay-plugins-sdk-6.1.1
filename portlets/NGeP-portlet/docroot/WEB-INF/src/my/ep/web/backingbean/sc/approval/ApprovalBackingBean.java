@@ -439,12 +439,14 @@ public class ApprovalBackingBean extends
 					"reviceApprovalDlg.show()");
 		} else {
 			this.getManagedBean().setAction(action);
-			if (null != this.getManagedBean().getQt().getPublishDate()) {
-				detailSO.validateScheduleDetails(reqDTO);
-			}
-			if (this.getManagedBean().getQt().isBsvRequired()) {
-				reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				detailSO.validatePublicationBsvDetails(reqDTO);
+			if ("Publication Approval".equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
+				if (null != this.getManagedBean().getQt().getPublishDate()) {
+					detailSO.validateScheduleDetails(reqDTO);
+				}
+				if (this.getManagedBean().getQt().isBsvRequired()) {
+					reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+					detailSO.validatePublicationBsvDetails(reqDTO);
+				}
 			}
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}
