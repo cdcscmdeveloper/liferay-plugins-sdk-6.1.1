@@ -36,7 +36,7 @@
 	</tr>
 	<tr>
 		<td>
-    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Ahli Ahli Jawatankuasa</span>
+    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perlantikan Jawatankuasa</span>
     		<br /><br />
 		</td>
 	</tr>
@@ -49,7 +49,7 @@
 					<td>Jawatan</td>
 					<td>Gred</td>
 					<td>Kad Pengenalan No.</td>
-					<td>Jabatan </td>
+					<td>PTJ</td>
 					<td>Peranan</td>
 				</tr>
 				#foreach( $committeeMember in $committeeActivities )
@@ -58,7 +58,7 @@
 					<td>$committeeMember.scCommitteeMember.designation</td>
 					<td>$committeeMember.scCommitteeMember.grade</td>
 					<td>$committeeMember.scCommitteeMember.icPassport</td>
-					<td></td>
+					<td>$committeeMember.scCommitteeMember.pmOrgProfile.orgName</td>
 					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
 				</tr>
 				#end
