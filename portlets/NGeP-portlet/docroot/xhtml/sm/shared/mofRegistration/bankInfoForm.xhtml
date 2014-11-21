@@ -48,7 +48,8 @@
 			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
 				selection="#{backingBean.managedBean.selectedBanks}"
-				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="bankDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
@@ -67,6 +68,12 @@
 						rendered="#{bankBean.accountPurpose eq 'R'}" />
 					<h:outputText value="#{lbl['lbl.sm.bankDtls.both.regandpay']}"
 						rendered="#{bankBean.accountPurpose eq 'B'}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
+					style="width :50%;white-space : normal">
+					<p:outputLabel
+						value="#{backingBean.getFullAddress(bankBean.smAddress)}"
+						style="float : left" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
@@ -102,7 +109,8 @@
 				header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']} 
 			#{backingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
 				<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
-				<p:dataTable id="signatory" var="auth" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				<p:dataTable id="signatory" var="auth"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
 					rowKey="#{auth}" rowIndexVar="index">
 					<ac:paginator for="signatory" />

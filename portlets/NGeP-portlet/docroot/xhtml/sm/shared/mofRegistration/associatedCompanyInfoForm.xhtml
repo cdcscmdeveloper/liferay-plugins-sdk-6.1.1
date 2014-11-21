@@ -45,7 +45,8 @@
 				id="poAssocBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.associateVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.associateVerified : false)}" />
 
-			<p:dataTable var="assocBean" widgetVar="assocDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable var="assocBean" widgetVar="assocDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 				selection="#{backingBean.managedBean.selectedAssocCompanies}"
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
@@ -57,9 +58,11 @@
 					<h:outputText value="#{assocBean.companyName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.companyaddress']}">
-					<h:outputText
-						value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
+					style="width: 60%;white-space: normal;">
+					<p:outputLabel
+						value="#{backingBean.getFullAddress(assocBean.smAddress)}"
+						style="float : left" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:asDisp"
@@ -274,15 +277,13 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="assocCmpyPostCode"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.postcode']}" 
+						label="#{lbl['lbl.sm.postcode']}"
 						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
-						size="35" maxlength="5" > 
-						<f:validator validatorId="postcodeValidator"/>
-						</p:inputText>
-						<p:message id="assocCmpyPostCodeMsg"
-						for="assocCmpyPostCode" showSummary="true" showDetail="false"
-						display="icon" /></td>
+						size="35" maxlength="5">
+						<f:validator validatorId="postcodeValidator" />
+					</p:inputText> <p:message id="assocCmpyPostCodeMsg" for="assocCmpyPostCode"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
