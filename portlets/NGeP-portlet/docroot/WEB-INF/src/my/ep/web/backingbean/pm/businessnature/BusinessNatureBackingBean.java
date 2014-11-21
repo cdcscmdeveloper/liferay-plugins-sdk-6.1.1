@@ -17,7 +17,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchOperator;
@@ -590,13 +589,28 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 			BusinessNatureResDTO resDTO = iBusinessNatureSO.saveBusinessNatureDtls(reqDTO);
 			 this.getManagedBean().setPmBusinessNature(resDTO.getBusinessNature());
 			 if(resDTO.isSuccessful()){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(MessageConst.INFO_700004,
-										new String[]{"",ResourceBundleUtils.getMessage("lbl.pm.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				 
+				 if (this.getManagedBean().isBrandNew()){
+					 if(Integer.valueOf(this.getManagedBean().getPmBusinessNature().getBusinessLevel())>10){
+						 
+						 BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+						 businessNatureReqDTO.setBusinessLevel(this.getManagedBean().getPmBusinessNature().getParentBusinessNature().getBusinessLevel());
+						 businessNatureReqDTO.setBusinessNatureId(this.getManagedBean().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
+						 BusinessNatureResDTO businessNatureResDTO = iBusinessNatureSO.retrieveBusinessNatureFetchAll(businessNatureReqDTO);
+						 
+						 businessNatureResDTO.getBusinessNature().getChildBusinessNatures().add(this.getManagedBean().getPmBusinessNature());
+						 reqDTO.setBusinessNature(businessNatureResDTO.getBusinessNature());
+						 iBusinessNatureSO.saveBusinessNatureDtls(reqDTO);
+					 }
+				 }
+				 
+				 FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_700004,
+							new String[]{"",ResourceBundleUtils.getMessage("lbl.pm.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 			 }
 		 
 		}catch(Exception e){
