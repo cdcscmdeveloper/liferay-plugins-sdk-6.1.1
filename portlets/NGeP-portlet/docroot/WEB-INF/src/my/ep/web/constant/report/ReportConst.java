@@ -72,27 +72,27 @@ public class ReportConst {
 	
 	//S1 Report
 	//JSP
-		public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
-		public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "sc_oc_method_of_asses_1b.jsp";
+		public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "SC_OC_SHLIST_1A.jsp";
+		public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "SC_OC_METHOD_OF_ASSESS_1B.jsp";
 		public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
 		public static final String SC_AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
-		public static final String SC_SPPSAP2_TEC_RPT_JSP = "sc_tec_shlisttech_eval_2a.jsp";
-		public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "sc_tec_techasses_2b.jsp";
-		public static final String SC_AKPT_TEC_RPT_JSP = "sc_tec_eval_tech_2c.jsp";
+		public static final String SC_SPPSAP2_TEC_RPT_JSP = "SC_TEC_SHLISTTECH_EVAL_2A.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "SC_TEC_TECHASSES_2B.jsp";
+		public static final String SC_AKPT_TEC_RPT_JSP = "SC_TEC_EVAL_TECH_2C.jsp";
 		public static final String SC_TECSPEC_TEC_RPT_JSP = "sc_tec_spec_techpapers_2d.jsp";
 		public static final String SC_OVRL_TECRES_WITH_WEI_TEC_RPT_JSP = "sc_tec_overall_with_wei_2f.jsp";
 		public static final String SC_OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_JSP = "sc_tec_overall_tech_2e.jsp";
-		public static final String SC_SPPSAP2_FEC_RPT_JSP = "sc_fec_shlist_level2_3a.jsp";
-		public static final String SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP = "sc_fec_fin_asses_level2_3b.jsp";
-		public static final String SC_AKPT_FEC_RPT_JSP = "sc_fec_price_eval_3c.jsp";
+		public static final String SC_SPPSAP2_FEC_RPT_JSP = "SC_FEC_SHLIST_LEVEL2_3A.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP = "SC_FEC_FIN_ASSES_LEVEL2_3B.jsp";
+		public static final String SC_AKPT_FEC_RPT_JSP = "SC_FEC_PRICE_EVAL_3C.jsp";
 		public static final String SC_HARGA_TAWARAN_FEC_RPT_JSP = "sc_fec_priceoffer_3d.jsp";
 		public static final String SC_OVRL_FINRS_FEC_RPT_JSP = "sc_fec_overall_fin_3e.jsp";
-		public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_shortlist_asses_4a.jsp";
-		public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_method_of_asses_4b.jsp";
+		public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_SHORTLIST_ASSES_4A.jsp";
+		public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_METHOD_OF_ASSES_4B.jsp";
 		public static final String SC_PDW_EC_RPT_JSP = "sc_ec_method_of_asses_4l.jsp";	
-		public static final String SC_SPPSAP2_EC_RPT_JSP = "sc_ec_gen_spec_4c.jsp";
-		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "sc_ec_gen_spec_4d.jsp";
-		public static final String SC_AKPTPH_EC_RPT_JSP = "sc_ec_price_eval_4e.jsp";
+		public static final String SC_SPPSAP2_EC_RPT_JSP = "SC_EC_GEN_SPEC_4C.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_4D.jsp";
+		public static final String SC_AKPTPH_EC_RPT_JSP = "SC_EC_PRICE_EVAL_4E.jsp";
 		public static final String SC_TECSPEC_EC_RPT_JSP = "sc_ec_tech_spec_4f.jsp";	
 		public static final String SC_PSDAK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_govt_4j.jsp";
 		public static final String SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_non_govt_4k.jsp";
@@ -562,6 +562,8 @@ public class ReportConst {
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
 	public static final String PARAM_DOC_NO = "PNO";
 	public static final String PARAM_USER_ID = "PUSER";
+	public static final String PARAM_QUOTE_ID_EQ = "qtid";
+	public static final String PARAM_KEY_REPORT_ID = "preportid";
 	
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
