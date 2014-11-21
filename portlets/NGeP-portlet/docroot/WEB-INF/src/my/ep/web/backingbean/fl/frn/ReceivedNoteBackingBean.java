@@ -432,8 +432,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
-			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
+			//sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
+			//sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
