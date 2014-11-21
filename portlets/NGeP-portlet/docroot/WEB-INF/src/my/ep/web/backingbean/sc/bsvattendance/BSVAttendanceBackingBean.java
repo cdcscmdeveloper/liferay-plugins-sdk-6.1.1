@@ -34,6 +34,7 @@ import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -51,7 +52,7 @@ public class BSVAttendanceBackingBean extends
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 
 	public BSVAttendanceBackingBean() {
-	
+
 	}
 
 	/**
@@ -96,10 +97,11 @@ public class BSVAttendanceBackingBean extends
 						if (null != briefingResDTO.getScQtBsv()
 								&& briefingResDTO.getScQtBsv().getQtBsvId() != null) {
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-							
-							scQtBsv.setBsvRemarks(initializeRemarks(
-									scQtBsv, null, scQtBsv.getBsvRemarks(), ScQtBSVRemark.class));
-							
+
+							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
+									null, scQtBsv.getBsvRemarks(),
+									ScQtBSVRemark.class));
+
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
 									briefingResDTO.getBriefingList(),
@@ -121,9 +123,9 @@ public class BSVAttendanceBackingBean extends
 				BriefingZoneBean briefingZoneBean = null;
 				if (null != resDTO.getScQtBsv()
 						&& resDTO.getScQtBsv().getQtBsvId() != null) {
-					scQtBsv.setBsvRemarks(initializeRemarks(
-							scQtBsv, null, scQtBsv.getBsvRemarks(), ScQtBSVRemark.class));
-					
+					scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv, null,
+							scQtBsv.getBsvRemarks(), ScQtBSVRemark.class));
+
 					briefingZoneBean = new BriefingZoneBean(null,
 							resDTO.getBriefingList(),
 							resDTO.getSiteVisitList(), scQtBsv);
@@ -505,10 +507,26 @@ public class BSVAttendanceBackingBean extends
 
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
+		StringBuffer address = new StringBuffer(briefing.getAddress()
+				.getAddress1());
+		address.append(",");
+		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
+			address.append(briefing.getAddress().getAddress2());
+			address.append(",");
+		}
+		if (!StringUtils.isBlank(briefing.getAddress().getAddress3())) {
+			address.append(briefing.getAddress().getAddress3());
+			address.append(",");
+		}
+		if (!StringUtils.isBlank(briefing.getAddress().getAddress4())) {
+			address.append(briefing.getAddress().getAddress4());
+
+		}
+
+		this.getManagedBean().setAddress(address.toString());
 	}
 
-		public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
+	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
 		log.debug("businessNatureListener");
 		List<ScQtBsvRegistration> bsvRegistrations = new ArrayList<ScQtBsvRegistration>();
 		if (mofAccounts != null) {
@@ -618,7 +636,7 @@ public class BSVAttendanceBackingBean extends
 
 			}
 
-		}  finally {
+		} finally {
 			qTBriefingSO = null;
 		}
 	}
