@@ -14,7 +14,7 @@
 		<div class="clear"></div>
 		<p:messages id="tenderDetails" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
-
+		<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
 		<p:panel>
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
@@ -70,8 +70,7 @@
 				<h:outputText
 					value="#{DateUtils.addDays(noticeBoardBackingBean.managedBean.scQt.closingDate,noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod)}">
 
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.spec.evaluation.type']}"></h:outputLabel>
 
@@ -98,47 +97,72 @@
 						value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"></h:outputText>
 				</c:if>
 			</h:panelGrid>
-		</p:panel>
-		<p:panel header="#{lbl['lbl.qt.nb.categoryCodeList']}"
-			toggleable="true">
-
-			<p:dataTable
+			<p:spacer height="20px"></p:spacer>
+			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" style="font-weight:bold;font-size:medium"/>
+			<p:spacer height="10px"></p:spacer>
+			<p:dataTable style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.categoryList}"
 				var="scQtCategory" id="restrcatcode">
 
 				<ac:paginator for="restrcatcode" />
 
-				<p:column headerText="#{lbl['lbl.so.category']}">
+				<p:column headerText="#{lbl['lbl.so.category']}"
+					style="width:22%;white-space: normal;">
 
 					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}" />
 					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}" />
 					<h:outputText value="#{ scQtCategory.pmCategoryL3.categoryL3Code}" />
 
 				</p:column>
-				<p:column headerText="Main-Category">
+				<p:column headerText="Main-Category"
+					style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryName}" />
 				</p:column>
-				<p:column headerText="Sub-Category">
+				<p:column headerText="Sub-Category"
+					style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryName}" />
 				</p:column>
-				<p:column headerText="Sub-Category Division">
+				<p:column headerText="Sub-Category Division"
+					style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
 				</p:column>
-				<p:column headerText="Category Type">
-					<h:outputText
-						value="#{noticeBoardBackingBean.getParameterDesc(scQtCategory.pmCategoryL3.categoryTypeCode)}" />
-				</p:column>
+
 				<p:column headerText="#{lbl['lbl.so.mandatory']}"
-					style="width: 150px;">
+					style="width:12%;white-space: normal;">
 					<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
 						disabled="true" />
 				</p:column>
 			</p:dataTable>
 
+			<p:spacer height="20px"></p:spacer>
+			<c:if
+				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
+				<h:outputText value="#{lbl['lbl.so.location.list']}"  style="font-weight:bold;font-size:medium"/>
+				<p:spacer height="10px"></p:spacer>
+				<p:dataTable
+					value="#{noticeBoardBackingBean.managedBean.locationNodes}"
+					var="locTree" style="width:100%">
+					<p:column headerText="#{lbl['lbl.so.location']}">
+						<p:tree value="#{locTree}" var="location">
+							<p:treeNode type="state">
+								<h:outputText value="#{location.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
+							<p:treeNode type="city">
+								<h:outputText value="#{location.pmCity.cityName}" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
+				</p:dataTable>
+
+			</c:if>
 		</p:panel>
 
-
-		<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
 		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:param name="bsvDetails"
 				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
@@ -152,24 +176,25 @@
 		<p:panel header="#{lbl['lbl.qt.nb.contactPersonDtl']}"
 			toggleable="true">
 
-			<p:dataTable var="contactPerson"
+			<p:dataTable var="contactPerson" style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.contactPersons}"
 				styleClass="test" rows="20">
 
-				<p:column headerText="#{lbl['lbl.qt.nb.name']}">
+				<p:column headerText="#{lbl['lbl.qt.nb.name']}"
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{contactPerson.name}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.telNo']}"
-					style="width:100px;">
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{contactPerson.phoneNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.qt.nb.faxNo']}"
-					style="width:120px;">
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{contactPerson.faxNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.email']}"
-					style="width:120px;">
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{contactPerson.email}" />
 				</p:column>
 
@@ -210,6 +235,7 @@
 			<div align="right">
 				<p:commandButton ajax="false" value="Download All"
 					icon="ui-icon-download"
+					rendered="#{noticeBoardBackingBean.managedBean.scQtDocReports ne null and noticeBoardBackingBean.managedBean.scQtDocReports.size()>0}"
 					style="background-color:transparent !important; border:0px none;"
 					action="#{noticeBoardBackingBean.downloadAllQTDocuments(noticeBoardBackingBean.managedBean.scQt.qtId)}" />
 

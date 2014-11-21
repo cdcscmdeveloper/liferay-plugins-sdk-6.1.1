@@ -6,166 +6,148 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.qt.nb.location']}" toggleable="true">
 
-		<p:dataTable
-			value="#{noticeBoardBackingBean.managedBean.locationNodes}"
-			var="locTree" style="width:100%">
-			<p:column headerText="#{lbl['lbl.so.location']}">
-				<p:tree value="#{locTree}" var="location">
-					<p:treeNode type="state">
-						<h:outputText value="#{location.pmState.stateName}" />
-					</p:treeNode>
-					<p:treeNode type="division">
-						<h:outputText value="#{location.pmDivision.divisionName}" />
-					</p:treeNode>
-					<p:treeNode type="district">
-						<h:outputText value="#{location.pmDistrict.districtName}" />
-					</p:treeNode>
-					<p:treeNode type="city">
-						<h:outputText value="#{location.pmCity.cityName}" />
-					</p:treeNode>
-				</p:tree>
-			</p:column>
-		</p:dataTable>
-	</p:panel>
 	<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
-	<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
-		<p:panel header="Briefing And Site Visit Details" toggleable="true">
-			<div>
-				<h:outputText value="All Attandence required for Briefing">
+		<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
+			<p:panel header="Briefing And Site Visit Details" toggleable="true">
+				<div>
+					<h:outputText value="All Attandence required for Briefing"
+						rendered="#{bsvDetails.scQtBsv.allBriefingReq}">
+					</h:outputText>
+				</div>
+				<p:spacer width="10px"></p:spacer>
+				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}" style="width:100%">
+					<ac:paginator for="brfsitdtl"></ac:paginator>
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:30%;white-space: normal;">
+						<h:outputText value="#{brfsitdtl.bsvDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:18%;white-space: normal;">
+						<h:outputText value="#{brfsitdtl.bsvDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}"
+						style="width:20%;white-space: normal;">
+						<p:commandLink style="margin-right:20px;;"
+							actionListener="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
+							oncomplete="popupLoc.show()" update="@(.locationpopup)">
+							<h:outputText value="#{brfsitdtl.location}" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:5%;white-space: normal;">
+						<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+						style="width:9%;white-space: normal;">
+						<h:outputText
+							value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+		</c:if>
+		<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
+
+			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
+				<h:outputText value="All Attandence required for Briefing"
+					rendered="#{bsvDetails.scQtBsv.allBriefingReq}">
 				</h:outputText>
-			</div>
-			<p:spacer width="10px"></p:spacer>
-			<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}">
-				<ac:paginator for="brfsitdtl"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-					<h:outputText value="#{brfsitdtl.bsvDesc}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-					style="width:25px">
-					<h:outputText value="#{brfsitdtl.bsvDate}">
-						<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-					</h:outputText>
-				</p:column>
+				<p:spacer width="10px;">
+				</p:spacer>
+				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}" style="width:100%">
+					<ac:paginator for="brfsitdtl"></ac:paginator>
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:30%;white-space: normal;">
+						<h:outputText value="#{brfsitdtl.bsvDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:18%;white-space: normal;" >
+						<h:outputText value="#{brfsitdtl.bsvDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.location']}"
-					style="width:100px;">
-					<p:commandLink style="margin-right:20px;;"
-						actionListener="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
-						oncomplete="popupLoc.show()" update="@(.locationpopup)">
-						<h:outputText value="#{brfsitdtl.location}" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:35px;">
-					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-					style="width:15px;">
-					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
-					style="width:150px;">
-					<h:outputText
-						value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
-				</p:column>
-				
-			</p:dataTable>
+					<p:column headerText="#{lbl['lbl.so.location']}"
+						style="width:20%;white-space: normal;">
+						<p:commandLink style="margin-right:20px;;"
+							action="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
+							oncomplete="popupLoc.show()" update="@(.locationpopup)">
+							<h:outputText value="#{brfsitdtl.location}" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:5%;white-space: normal;">
+						<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+					</p:column>
 
-		</p:panel>
+					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+						style="width:9%;white-space: normal;">
+						<h:outputText
+							value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
+			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
+				<h:outputText value="All Attandence required for SiteVisit"
+					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}">
+				</h:outputText>
+				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}" style="width:100%">
+					<ac:paginator for="sitevisitDtls"></ac:paginator>
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:30%;white-space: normal;">
+						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+						style="width:18%;white-space: normal;" >
+						<h:outputText value="#{sitevisitDtls.bsvDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.location']}"
+						style="width:20%;white-space: normal;">
+						<p:commandLink style="margin-right:20px;"
+							action="#{noticeBoardBackingBean.showLocationDtls(sitevisitDtls)}"
+							oncomplete="popupLoc.show()" update="@(.locationpopup)">
+							<h:outputText value="#{sitevisitDtls.location}" />
+						</p:commandLink>
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+						style="width:5%;white-space: normal;">
+						<h:outputLabel value="#{sitevisitDtls.maxNoOfAttendance}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+						style="width:9%;white-space: normal;">
+
+						<h:outputText
+							value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+		</c:if>
+
 	</c:if>
-	<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
 
-		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
-			<h:outputText value="All Attandence required for Briefing">
-			</h:outputText>
-			<p:spacer width="10px;">
-			</p:spacer>
-			<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}">
-				<ac:paginator for="brfsitdtl"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-					<h:outputText value="#{brfsitdtl.bsvDesc}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-					style="width:25px;">
-					<h:outputText value="#{brfsitdtl.bsvDate}">
-						<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.location']}"
-					style="width:100px;">
-					<p:commandLink style="margin-right:20px;;"
-						action="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
-						oncomplete="popupLoc.show()" update="@(.locationpopup)">
-						<h:outputText value="#{brfsitdtl.location}" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:35px;">
-					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-					style="width:15px;">
-					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
-					style="width:150px;">
-					<h:outputText
-						value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
-				</p:column>
-				
-			</p:dataTable>
-
-		</p:panel>
-
-		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
-
-			<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}">
-				<ac:paginator for="sitevisitDtls"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-					style="width:25px;">
-					<h:outputText value="#{sitevisitDtls.bsvDate}">
-						<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.location']}"
-					style="width:100px;">
-					<p:commandLink style="margin-right:20px;"
-						action="#{noticeBoardBackingBean.showLocationDtls(sitevisitDtls)}"
-						oncomplete="popupLoc.show()" update="@(.locationpopup)">
-						<h:outputText value="#{sitevisitDtls.location}" />
-					</p:commandLink>
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:35px;">
-					<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-					style="width:15px;">
-					<h:outputLabel value="#{sitevisitDtls.maxNoOfAttendance}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
-					style="width:150px;">
-
-					<h:outputText
-						value="#{noticeBoardBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
-				</p:column>
-				
-			</p:dataTable>
-
-		</p:panel>
-	</c:if>
-	
-</c:if>
-	
 
 </ui:composition>
