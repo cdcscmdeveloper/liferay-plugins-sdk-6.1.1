@@ -60,6 +60,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
+import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import com.liferay.portal.model.Role;
 
@@ -307,6 +308,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disabledHomeOffice;
 	private Integer currYear;
 	private String typeOfBusiness;
+	private SmSupplierBasicInfoVO basicInfo;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2334,6 +2336,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setResubmitInValidMsg(String resubmitInValidMsg) {
 		this.resubmitInValidMsg = resubmitInValidMsg;
+	}
+
+	public SmSupplierBasicInfoVO getBasicInfo() {
+		return basicInfo;
+	}
+
+	public void setBasicInfo(SmSupplierBasicInfoVO basicInfo) {
+		this.basicInfo = basicInfo;
 	}
 
 }
