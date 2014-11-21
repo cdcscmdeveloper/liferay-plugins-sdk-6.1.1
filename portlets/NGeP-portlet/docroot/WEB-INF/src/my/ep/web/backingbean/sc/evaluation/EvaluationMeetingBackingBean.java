@@ -250,16 +250,14 @@ public class EvaluationMeetingBackingBean extends
 								qtRemarkList);
 					}
 					List<ScQtCommitteRemarks> remark = initializeRemarks(this
-							.getManagedBean().getScQtCommittee(), null, qtRemarkList,
-							ScQtCommitteRemarks.class);
+							.getManagedBean().getScQtCommittee(), null,
+							qtRemarkList, ScQtCommitteRemarks.class);
 					// qtRemarkList.addAll(remark);
 					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 
 				}
 
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			meetingSO = null;
 		}
@@ -610,10 +608,14 @@ public class EvaluationMeetingBackingBean extends
 			String[] outComes = this.getManagedBean().getOutComes();
 			Long qtId = this.getManagedBean().getQt().getQtId();
 			String committeeType = this.getManagedBean().getCommitteeType();
+			String taskName = this.getManagedBean().getTaskName();
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			meetingso.saveQTDtl(metReqDtO);
 			renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
+			this.getManagedBean().setTaskName(taskName);
+			this.getManagedBean().setCurrentStatusId(currentStatusId);
 			retriveMeetingDetails(qtId, committeeType);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1124,32 +1126,14 @@ public class EvaluationMeetingBackingBean extends
 
 	public void prerenderView() {
 
-		renewSesionObject();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
-		log.info("taskId : " + taskId);
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		// TODO
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		String taskName = res.getTaskName();
-		this.getManagedBean().setOutComes(res.getAction());
-		SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) obj;
+		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+
 		this.getManagedBean().setPayLoad(evaluationDataType);
+		// FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		retriveMeetingDetails(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType());
+		String taskName = this.getManagedBean().getTaskName();
 		if (SCProcessNameConst.COORDINATE_EC_MEETING.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.COORDINATE_OC_MEETING
 						.equalsIgnoreCase(taskName)
