@@ -535,10 +535,10 @@ public class SpecificationBackingBean extends
 							new ArrayList<TreeNode>());
 				}
 
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				// retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				// retriveBusinessOwnerQualificationCriteri();
-				// retriveTechnicalSpecification();
+				//.getManagedBean().setScQt(resDTO.getScQt());
+				 retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+				 retriveBusinessOwnerQualificationCriteri();
+				//retriveTechnicalSpecification();
 				retriveFinancialSpecification();
 				break;
 			case 4:
