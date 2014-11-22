@@ -469,7 +469,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);  
 			       }
 	 		          
-		           if(getManagedBean().getCtContract().isFactored()) {
+		           if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
 	            	      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
 	                     
 		           } if(getManagedBean().isFlgPaymentTracking()) {
@@ -505,6 +505,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	    } this.getManagedBean().setFulfilmentMenuModel(fulfilmentMenuModel);
     }
 	
+    public boolean checkFactoringExpiryDate() {
+    	if(getManagedBean().getCtContract().getCtFactoring() != null) {
+    	    int temp =  getManagedBean().getCtContract().getCtFactoring().getExpDate().compareTo(new Date());
+   		      if(temp > 0 || temp == 0)
+    		       return true;
+    	}
+    	return false;
+    }
+    
 	public void fulfilmentTabChangeAction(Integer selectedTabIndex) {
 		if (log.isDebugEnabled()) {
 			log.debug("fulfilmentTabChangeAction");
@@ -824,7 +833,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  			}
  		}
 		
-		if(getManagedBean().isUpdateContract() && getManagedBean().getAttachmentList().isEmpty()){
+		if(getManagedBean().isUpdateContract() && 
+		    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750018); 
 		}
