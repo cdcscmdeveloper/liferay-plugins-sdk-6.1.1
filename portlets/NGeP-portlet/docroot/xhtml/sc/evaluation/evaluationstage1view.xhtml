@@ -10,6 +10,8 @@
 
 
 	<ui:define name="contentSection">
+		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
 			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 		<ui:fragment

@@ -87,7 +87,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100"
-						disabled="#{evaluationBackingBean.managedBean.readOnly}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.memberOnly}"
 						value="#{sampleItem.remark}"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
