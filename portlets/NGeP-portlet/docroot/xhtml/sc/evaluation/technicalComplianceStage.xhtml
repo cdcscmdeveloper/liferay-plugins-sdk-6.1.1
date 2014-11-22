@@ -80,7 +80,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
 					<p:selectOneMenu
-						disabled="#{complianceTechnicalSupplier.submitted eq 'false' or evaluationBackingBean.managedBean.readOnly}"
+						disabled="#{((complianceTechnicalSupplier.submitted eq 'false') or (evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.memberOnly))}"
 						value="#{complianceTechnicalSupplier.compliance}">
 
 						<f:selectItems
@@ -94,7 +94,7 @@
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 						<p:inputTextarea rows="2" cols="40" maxlength="200"
-							disabled="#{evaluationBackingBean.managedBean.readOnly}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.memberOnly}"
 							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
 					</ui:fragment>
 				</p:column>
