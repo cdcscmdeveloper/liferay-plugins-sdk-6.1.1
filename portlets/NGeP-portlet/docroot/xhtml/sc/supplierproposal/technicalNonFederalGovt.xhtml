@@ -40,11 +40,12 @@
 				</f:facet>
 				<h:outputText value="#{technongovt.clientName}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea id="clientName" value="#{technongovt.clientName}" rows="3" cols="20"
-					 maxlength="50" required="true" 
+				<p:inputTextarea id="clientName" value="#{technongovt.clientName}"
+					rows="3" cols="20" maxlength="50" required="true"
 					label="#{lbl['lbl.sc.sp.agencyname']}"
 					rendered="#{technongovt.brandNew eq true}">
-					<p:ajax process="@this" partialSubmit="true" update="@this,clientNameMsg" />
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,clientNameMsg" />
 				</p:inputTextarea>
 				<p:message id="clientNameMsg" for="clientName" display="icon" />
 			</p:column>
@@ -56,11 +57,13 @@
 				</f:facet>
 				<h:outputText value="#{technongovt.contractTitle}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea id="contractTitle" value="#{technongovt.contractTitle}" rows="3"
-					cols="30" maxlength="1000" required="true"
+				<p:inputTextarea id="contractTitle"
+					value="#{technongovt.contractTitle}" rows="3" cols="30"
+					maxlength="1000" required="true"
 					label="#{lbl['lbl.sc.sp.contracttitle']}"
 					rendered="#{technongovt.brandNew eq true}">
-					<p:ajax process="@this" partialSubmit="true" update="@this,contractTitleMsg" />
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,contractTitleMsg" />
 				</p:inputTextarea>
 				<p:message id="contractTitleMsg" for="contractTitle" display="icon" />
 			</p:column>
@@ -76,9 +79,10 @@
 					size="20" maxlength="30" required="true"
 					label="#{lbl['lbl.sc.sp.contractno']}"
 					rendered="#{technongovt.brandNew eq true}">
-					<p:ajax process="@this" partialSubmit="true" update="@this,contractNoMsg"/>
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,contractNoMsg" />
 				</p:inputText>
-				<p:message id="contractNoMsg" for="contractNo" display="icon"/>
+				<p:message id="contractNoMsg" for="contractNo" display="icon" />
 			</p:column>
 
 			<p:column>
@@ -111,7 +115,7 @@
 					<h:outputText value="#{lbl['lbl.sc.sp.expirydt']}" />
 				</f:facet>
 				<h:panelGroup id="expDatePanelGroupID">
-					<h:outputText value="#{technongovt.expiryDate}" 
+					<h:outputText value="#{technongovt.expiryDate}"
 						rendered="#{technongovt.brandNew eq false}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -143,13 +147,14 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.remarks']}" style="white-space : normal">
+			<p:column headerText="#{lbl['lbl.sc.sp.remarks']}"
+				style="white-space : normal">
 				<h:outputText value="#{technongovt.remark}"
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="20"
-					maxlength="300" rendered="#{technongovt.brandNew eq true}" >
-					<p:ajax process="@this" partialSubmit="true" update="@this"/>
-					</p:inputTextarea>
+					maxlength="300" rendered="#{technongovt.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true" update="@this" />
+				</p:inputTextarea>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
@@ -181,7 +186,8 @@
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							value="#{noOfContracts.userScore}" maxlength="18"
-							style="text-align:right" rendered="#{checklistScoreType eq '2'}"></p:inputText></td>
+							disabled="#{pageDisable}" style="text-align:right"
+							rendered="#{checklistScoreType eq '2'}"></p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
@@ -199,7 +205,7 @@
 							value="#{noOfYears.autoScore}" style="text-align:right"
 							rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
 							maxlength="18" style="text-align:right"
-							value="#{noOfYears.userScore}"
+							value="#{noOfYears.userScore}" disabled="#{pageDisable}"
 							rendered="#{companyScoreType eq '2'}"></p:inputText></td>
 				</tr>
 			</table>

@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.sp.noofemployees']}" toggleable="true">
-	<p:spacer height="2"></p:spacer>
+		<p:spacer height="2"></p:spacer>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td><h:outputText
@@ -34,7 +34,7 @@
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,totalEmployeesMsg"></p:ajax>
 						</p:inputText>
-						<p:message id="totalEmployeesMsg" for="totalEmployees" 
+						<p:message id="totalEmployeesMsg" for="totalEmployees"
 							display="icon" />
 						<p:inputText disabled="true" style="text-align:right" size="10"
 							rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
@@ -50,7 +50,8 @@
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						value="#{noOfContracts.userScore}" maxlength="18"
-						style="text-align:right" rendered="#{checklistScoreType eq '2'}"></p:inputText></td>
+						disabled="#{pageDisable}" style="text-align:right"
+						rendered="#{checklistScoreType eq '2'}"></p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>

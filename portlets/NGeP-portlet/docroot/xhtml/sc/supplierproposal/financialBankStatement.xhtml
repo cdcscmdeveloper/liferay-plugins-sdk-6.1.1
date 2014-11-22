@@ -71,7 +71,8 @@
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							value="#{noOfContracts.userScore}" maxlength="18"
-							style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+							disabled="#{pageDisable}" style="text-align:right"
+							rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
 				</tr>
 			</table>
 		</h:panelGroup>
