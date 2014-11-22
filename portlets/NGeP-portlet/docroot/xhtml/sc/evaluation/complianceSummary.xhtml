@@ -16,7 +16,7 @@
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
-			rows="10" editable="true" rowIndexVar="index" style="width: 1000px;"
+			rows="10" editable="true" rowIndexVar="index" 
 			value="#{evaluationBackingBean.managedBean.complianceSummaryQualSuppliers}"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
@@ -56,7 +56,7 @@
 		<p:dataTable var="disQualifiedSupplier"
 			value="#{evaluationBackingBean.managedBean.complianceSummaryDisQualSuppliers}"
 			id="complianceDisQualifiedSupplier" editable="true" rows="10"
-			rowIndexVar="index" style="width: 1000px;"
+			rowIndexVar="index" 
 			rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="complianceDisQualifiedSupplier" />
 
