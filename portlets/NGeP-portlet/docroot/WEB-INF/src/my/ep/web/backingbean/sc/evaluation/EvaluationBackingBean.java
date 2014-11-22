@@ -96,7 +96,7 @@ import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
-import my.ep.util.MessageUtils;
+import my.ep.util.MessageUtils;	
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -3004,10 +3004,14 @@ public class EvaluationBackingBean extends
 	public void retriveCommitteeEndorsment() {
 		ICommitteSO committeSO = null;
 		CommitteResDTO resDTO = null;
+		IQTDetailSO qtDetailSO;
+		QuationTenderResDTO resDto;
 		try {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 
 			reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
@@ -3015,6 +3019,46 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setEndorscommitteeMemberList(
 					resDTO.getCommitteActivities());
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			qtReqDTO.setDocType(this.getManagedBean().getCommitteeType());
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			resDto = qtDetailSO.retriveQtRemarks(qtReqDTO);
+
+			if (resDto.getRemarks() == null) {
+				if (null == this.getManagedBean().getEvaluationSignOffRemarks()) {
+					this.getManagedBean().setEvaluationSignOffRemarks(
+							new ArrayList<ScQtCommitteRemarks>());
+					initializeRemarks(
+							this.getManagedBean().getScQt(),
+							null,
+							this.getManagedBean().getEvaluationSignOffRemarks(),
+							ScQtCommitteRemarks.class);
+				}
+			}
+
+			else {
+
+				List<ScQtCommitteRemarks> remarkList = new ArrayList<ScQtCommitteRemarks>();
+				for (ScRemark remark : resDto.getRemarks()) {
+					ScQtCommitteRemarks qtRemark = (ScQtCommitteRemarks) remark;
+					remarkList.add(qtRemark);
+
+				}
+				if (null == this.getManagedBean().getEvaluationSignOffRemarks()
+						|| this.getManagedBean().getEvaluationSignOffRemarks()
+								.isEmpty()) {
+					this.getManagedBean().setEvaluationSignOffRemarks(
+							remarkList);
+					initializeRemarks(
+							this.getManagedBean().getScQt(),
+							null,
+							this.getManagedBean().getEvaluationSignOffRemarks(),
+							ScQtCommitteRemarks.class);
+				}
+			}
 
 		} finally {
 			committeSO = null;
@@ -3588,7 +3632,7 @@ public class EvaluationBackingBean extends
 													.getMessage(
 															getMessgeConstant(outCome),
 															new String[] {
-																	"Prepare Evaluation Submitted Successfully",
+																	"Prepare Evaluation",
 																	qtCommittee
 																			.getScQt()
 																			.getQtNo() },
