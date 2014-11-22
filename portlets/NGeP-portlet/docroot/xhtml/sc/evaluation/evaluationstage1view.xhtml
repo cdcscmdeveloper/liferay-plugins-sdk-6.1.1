@@ -35,6 +35,7 @@
 			</ui:repeat>
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 			style="float:right;"
 			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
 
