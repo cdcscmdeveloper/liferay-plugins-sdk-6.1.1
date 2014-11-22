@@ -11,7 +11,8 @@
 	<p:panel header="#{lbl['lbl.sc.sp.fed.gov']}" toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}"/> </td> <td>#{supplierProposalDetailBackingBean.managedBean.year}</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td>
+				<td>#{supplierProposalDetailBackingBean.managedBean.year}</td>
 			</tr>
 		</table>
 		<p:dataTable id="techgovtid" var="techgovt"
@@ -70,8 +71,9 @@
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
-						value="#{noOfContracts.userScore}" maxlength="18"
-						style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+						disabled="#{pageDisable}" value="#{noOfContracts.userScore}"
+						maxlength="18" style="text-align:right"
+						rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
@@ -88,7 +90,7 @@
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfYears.autoScore}" style="text-align:right"
 						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
-						maxlength="18" style="text-align:right"
+						maxlength="18" style="text-align:right" disabled="#{pageDisable}"
 						value="#{noOfYears.userScore}"
 						rendered="#{companyScoreType eq '2'}"></p:inputText></td>
 			</tr>

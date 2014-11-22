@@ -32,9 +32,9 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.bank.name']}" />
 				</f:facet>
-				<h:outputText  value="#{cashonhand.bankName}"
+				<h:outputText value="#{cashonhand.bankName}"
 					rendered="#{cashonhand.brandNew eq false}" />
-				<p:inputText id="bankName"  value="#{cashonhand.bankName}" size="20"
+				<p:inputText id="bankName" value="#{cashonhand.bankName}" size="20"
 					required="true" maxlength="100"
 					label="#{lbl['lbl.sc.sp.bank.name']}"
 					rendered="#{cashonhand.brandNew eq true}">
@@ -48,10 +48,11 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.ac.no']}" />
 				</f:facet>
-				<h:outputText  value="#{cashonhand.accountNum}"
+				<h:outputText value="#{cashonhand.accountNum}"
 					rendered="#{cashonhand.brandNew eq false}" />
-				<p:inputText id="accountNum" value="#{cashonhand.accountNum}" size="20"
-					required="true" maxlength="30" label="#{lbl['lbl.sc.sp.ac.no']}"
+				<p:inputText id="accountNum" value="#{cashonhand.accountNum}"
+					size="20" required="true" maxlength="30"
+					label="#{lbl['lbl.sc.sp.ac.no']}"
 					rendered="#{cashonhand.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,accountNumMsg" />
@@ -124,8 +125,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				rendered="#{!statusHide}" process="@all"
-				partialSubmit="true"
+				rendered="#{!statusHide}" process="@all" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
 				update="@([id$=cashOnHandPanel])" icon="ui-icon-add" />
 
@@ -155,7 +155,8 @@
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						value="#{noOfContracts.userScore}" maxlength="18"
-						style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+						disabled="#{pageDisable}" style="text-align:right"
+						rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>

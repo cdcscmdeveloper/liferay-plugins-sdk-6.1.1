@@ -7,13 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel id="creditFacilitiesPanel" header="#{lbl['lbl.sc.sp.credit.facilities']}"
-		toggleable="true">
+	<p:panel id="creditFacilitiesPanel"
+		header="#{lbl['lbl.sc.sp.credit.facilities']}" toggleable="true">
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="creditfaciitiesid" />
-			
+
 			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
@@ -31,7 +31,7 @@
 				</p:selectBooleanCheckbox>
 
 			</p:column>
-			
+
 			<p:column style="white-space : normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -42,9 +42,10 @@
 				<p:inputText id="bankName" value="#{creditfacilities.bankName}"
 					size="30" rendered="#{creditfacilities.brandNew eq true}"
 					required="true" maxlength="50"
-					label="#{lbl['lbl.sc.sp.bank.name']}" >
-					<p:ajax process="@this" partialSubmit="true" update="@this,bankNameMsg" />
-					</p:inputText>
+					label="#{lbl['lbl.sc.sp.bank.name']}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,bankNameMsg" />
+				</p:inputText>
 				<p:message id="bankNameMsg" for="bankName" display="icon" />
 			</p:column>
 
@@ -58,9 +59,10 @@
 				<p:inputTextarea id="bankAddress"
 					value="#{creditfacilities.bankAddress}" cols="35" rows="3"
 					required="true" maxlength="100" label="#{lbl['lbl.sc.sp.address']}"
-					rendered="#{creditfacilities.brandNew eq true}" >
-					<p:ajax process="@this" partialSubmit="true" update="@this,bankAddressMsg" />
-					</p:inputTextarea>
+					rendered="#{creditfacilities.brandNew eq true}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,bankAddressMsg" />
+				</p:inputTextarea>
 				<p:message id="bankAddressMsg" for="bankAddress" display="icon" />
 			</p:column>
 
@@ -79,7 +81,8 @@
 					rendered="#{creditfacilities.brandNew eq true}">
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.creditType)}" />
-					<p:ajax event="change" process="@this" partialSubmit="true" update="@this,creditTypeMsg"
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this,creditTypeMsg"
 						listener="#{supplierProposalDetailBackingBean.creditTypeChange(creditfacilities)}" />
 				</p:selectOneMenu>
 				<p:message id="creditTypeMsg" for="creditType" display="icon" />
@@ -134,13 +137,12 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				rendered="#{!statusHide}" process="@all"
-				partialSubmit="true"
+				rendered="#{!statusHide}" process="@all" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCreditFacilities}"
 				update="@([id$=creditFacilitiesPanel])" icon="ui-icon-add" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this" partialSubmit="true"
-				rendered="#{!statusHide}" icon="ui-icon-delete"
+			<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this"
+				partialSubmit="true" rendered="#{!statusHide}" icon="ui-icon-delete"
 				update="@([id$=creditFacilitiesPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteCreditFacilities}" />
 
@@ -188,7 +190,8 @@
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							value="#{noOfContracts.userScore}" maxlength="18"
-							style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+							disabled="#{pageDisable}" style="text-align:right"
+							rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
 				</tr>
 			</table>
 		</h:panelGroup>
