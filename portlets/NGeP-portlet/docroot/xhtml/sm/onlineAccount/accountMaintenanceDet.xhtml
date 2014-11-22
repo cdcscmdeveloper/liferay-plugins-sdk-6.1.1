@@ -10,10 +10,19 @@
 	<ui:define name="contentSection">
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{registrationBackingBean.updateOnlineAccount}" update="@([id$=Msg])">
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])">
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
 		</div>
+		
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+   			 #{lbl['lbl.sm.basic.msg.account.confirm.deactivate']}
+   			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{registrationBackingBean.updateOnlineAccount(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
+		
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 		<p:outputPanel id="outPnlRegForm">
 			<c:choose>
