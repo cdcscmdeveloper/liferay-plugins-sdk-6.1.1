@@ -3690,9 +3690,17 @@ public class EvaluationBackingBean extends
 				.contains(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
 
 			this.getManagedBean().setReadOnly(false);
+			this.getManagedBean().setMemberOnly(false);
+
+		}
+		if (member.getMemberRole().getParameterCode()
+				.contains(SourcingConstants.MEMBER_ROLE_MEMBER)) {
+			this.getManagedBean().setReadOnly(true);
+			this.getManagedBean().setMemberOnly(false);
 
 		} else {
 			this.getManagedBean().setReadOnly(true);
+			this.getManagedBean().setMemberOnly(true);
 		}
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)

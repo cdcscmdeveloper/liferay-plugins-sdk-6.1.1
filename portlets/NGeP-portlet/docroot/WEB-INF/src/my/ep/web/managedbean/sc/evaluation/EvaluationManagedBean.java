@@ -189,6 +189,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> specZoneDtls;
 	private String localOutCome;
 	private boolean readOnly;
+	private boolean memberOnly;
 
 	
 
@@ -197,6 +198,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public boolean isReadOnly() {
 		return readOnly;
+	}
+
+	/**
+	 * @return the memberOnly
+	 */
+	public boolean isMemberOnly() {
+		return memberOnly;
+	}
+
+	/**
+	 * @param memberOnly the memberOnly to set
+	 */
+	public void setMemberOnly(boolean memberOnly) {
+		this.memberOnly = memberOnly;
 	}
 
 	/**
