@@ -53,9 +53,21 @@
             <br/> <br/>
         </td>
     </tr>
-     <tr>
+    <tr>
         <td align="center">
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (NO. SEBUT HARGA/TENDER: $fileNo) </span>
+        	#if ( $procurementMode == "Q")
+            	<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (NO. SEBUT HARGA: $qtNo) </span>
+            	<br/> <br/>
+            #end
+            #if ( $procurementMode == "T")
+            	<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (TENDER: $qtNo) </span>
+            	<br/> <br/>
+            #end
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (FILE_NO: $fileNo) </span>
             <br/> <br/>
         </td>
     </tr>

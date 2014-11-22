@@ -27,7 +27,7 @@
 											required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 											label="#{lbl['lbl.so.briefdesc']}"
 											value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}"
-											style="margin-top:5px;" size="95" maxlength="50" /></td>
+											style="margin-top:5px;" size="95" maxlength="500" /></td>
 									<td><p:message id="briefdescMsg" for="briefdesc"
 											display="icon" /></td>
 								</tr>
@@ -53,7 +53,7 @@
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.so.location']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.location}"
-								style="margin-top:5px;" size="30" maxlength="450" /> <p:message
+								style="margin-top:5px;" size="30" maxlength="255" /> <p:message
 								id="brieflocationMsg" for="brieflocation" display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.so.state']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -156,7 +156,7 @@
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.so.coordinateofficer']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
-								size="95" maxlength="100" /> <p:message id="briefofficerMsg"
+								size="95" maxlength="255" /> <p:message id="briefofficerMsg"
 								for="briefofficer" display="icon" /></td>
 					</tr>
 					<tr>

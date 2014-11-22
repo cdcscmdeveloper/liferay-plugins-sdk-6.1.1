@@ -40,14 +40,12 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.closingdate']}" /></td>
-				<td><p:calendar id="closingDate"
+				<td><p:inputText id="closingDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
-						showOn="button" readonlyInput="true">
-						<p:ajax event="dateSelect" process="@this"
-							listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
-							update="proposalvalidityid" />
-					</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /></td>
+						readonly="true" disabled="true" style="margin-top:5px" size="30">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
@@ -104,8 +102,8 @@
 		<p:panel id="samplezoneid" header="#{lbl['lbl.so.sample.submission']}"
 			toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}">
-			<p:dataTable id="sampleid" var="samplesubmissiondtl"
-				style="width : 100%" editable="true" rowIndexVar="rowIndex"
+			<p:dataTable id="sampleid" var="samplesubmissiondtl" editable="true"
+				rowIndexVar="rowIndex"
 				value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmissionList}"
 				selection="#{qTScheduleDetailBackingBean.managedBean.selectedSubmissionList}"
 				styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
@@ -128,13 +126,12 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<div align="right" style="width: 100%;">
+			<div class="ppRightBtn">
 				<p:commandButton value="Apply" process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
 					update="sampledlg" icon="ui-icon-add"
 					oncomplete="sampledlg.show();" />
 			</div>
-
 		</p:panel>
 		<p:panel header="#{lbl['lbl.so.sample.submission']}" toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
@@ -252,7 +249,7 @@
 				<h:inputText value="#{contactpersondetails.email}" />
 			</p:column>
 		</p:dataTable>
-		
+
 		<p:spacer height="3" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
@@ -270,8 +267,7 @@
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
-			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex"
-			style="width : 100%;" rows="10">
+			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -284,12 +280,12 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
-						<p:ajax event="change" update="doaaid"
+					<p:ajax event="change" update="doaaid"
 						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin)}" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
-		
+
 		<p:spacer height="3" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
