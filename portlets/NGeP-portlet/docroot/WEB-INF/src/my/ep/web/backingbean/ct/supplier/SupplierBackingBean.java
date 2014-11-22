@@ -298,7 +298,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		         		        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 		         		        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
                                 supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-		         		
+                                if(supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
+                                		&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 
 		         		        List<Long> supplierIdList = new ArrayList<Long>();
 		         		        for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
 		         		              	supplierIdList.add(supplier.getSupplierId());
@@ -315,7 +316,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				            for (CtContract obj : list) {
 				            	  if(obj.getLatestContractVer() != null)
 				        		     items[i++] = new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo());
-				        	   } getManagedBean().setPopulateContractList(items);
+				        	   } 
+                           }getManagedBean().setPopulateContractList(items);
 		             } finally {
 		         	supplierSO = null;
 		         	reqDTO = null;
@@ -390,7 +392,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			        
 		    	   if (getManagedBean().getCtContract().getSmSupplier() != null && getManagedBean().getCtContract().getSmSupplier().getSmAppl() != null
 		    			 &&  getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-				          && !getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
+				          && getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				             for(SmSupplierBank obj : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 				            	
 				            	 if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {

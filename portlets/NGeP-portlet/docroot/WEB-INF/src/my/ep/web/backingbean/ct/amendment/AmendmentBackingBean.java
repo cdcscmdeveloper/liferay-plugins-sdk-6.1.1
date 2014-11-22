@@ -221,8 +221,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 
 			     FacesScopes face = new FacesScopes();
 			     String token = face.getBPMAuthenticationCtxToken();
-			     this.getManagedBean().setTaskId(taskId);
-			     this.getManagedBean().setSelectedTabIndex(0);
+			     getManagedBean().setTaskId(taskId);
+			     getManagedBean().setSelectedTabIndex(0);
 			     
 			     BpmRequestDTO reqDTO = new BpmRequestDTO();
 			     reqDTO.setCtxToken(token);
@@ -234,7 +234,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
                  IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			     BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			     Object obj = res.getPojo();
-			     this.getManagedBean().setTaskName(res.getTaskName());
+			     getManagedBean().setTaskName(res.getTaskName());
 			     ctReqDTO.setTaskName(res.getTaskName());
 			     String[] outcome = new String[res.getAction().length];
 			     int i = 0;
@@ -248,7 +248,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		       
 			     for (String action : res.getAction()) {
 				        outcome[i++] = action;
-			     }this.getManagedBean().setAction(outcome);
+			     }getManagedBean().setAction(outcome);
 			
 			     CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 			     ctReqDTO.setContractId(new Long(dataType.getContractId()));
@@ -266,20 +266,20 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 //			     }
 			
 	            if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-			           this.getManagedBean().setPbConfirmMeeting(true);
+			           getManagedBean().setPbConfirmMeeting(true);
 			           if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
-					          this.getManagedBean().setSignUpdateDecision(true);
+					        getManagedBean().setSignUpdateDecision(true);
 					  }
 	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-				             this.getManagedBean().setLetterOfAcceptance(true);
-				             this.getManagedBean().setPrepareLOA(true);
-				             this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.agency.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-				             this.getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.agency.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-				             if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
-					             this.getManagedBean().setDecisionPbQcLOA(true);
+				             getManagedBean().setLetterOfAcceptance(true);
+				             getManagedBean().setPrepareLOA(true);
+				             getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.agency.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+				             getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.agency.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+				             if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
+					             getManagedBean().setDecisionPbQcLOA(true);
 			                 } 
 				
-				             if (this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
+				             if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
 					              ctReqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 					              ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
 					              getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
@@ -655,8 +655,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   
 		   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 			     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
-			    	 RequestContext.getCurrentInstance().addCallbackParam("epException",
-								true);
+			    	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				     throw new EpException(MessageConst.ERROR_750002);
 		         }
 		   }
@@ -693,20 +692,20 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	   }
 		
 	   public void flushItem() {
-			this.getManagedBean().setItemPricing(false);
-			this.getManagedBean().setItemCeilingQuantity(false);
-			this.getManagedBean().setProductItem(false);
+			getManagedBean().setItemPricing(false);
+			getManagedBean().setItemCeilingQuantity(false);
+			getManagedBean().setProductItem(false);
 		}
 	
 	    public void resetbooleanValue(){
-	          this.getManagedBean().setBpkSaSkApprover(false);
-		      this.getManagedBean().setMemberSignOff(false);  
-		      this.getManagedBean().setPbConfirmMeeting(false);
-		      this.getManagedBean().setSignUpdateDecision(false);
-		      this.getManagedBean().setLetterOfAcceptance(false);
-		      this.getManagedBean().setPrepareLOA(false);
-		      this.getManagedBean().setDecisionPbQcLOA(false);
-		      this.getManagedBean().setSignOffDecision(false);
+	          getManagedBean().setBpkSaSkApprover(false);
+		      getManagedBean().setMemberSignOff(false);  
+		      getManagedBean().setPbConfirmMeeting(false);
+		      getManagedBean().setSignUpdateDecision(false);
+		      getManagedBean().setLetterOfAcceptance(false);
+		      getManagedBean().setPrepareLOA(false);
+		      getManagedBean().setDecisionPbQcLOA(false);
+		      getManagedBean().setSignOffDecision(false);
 	     }
 	 
 	    private String getUserRole() {		
