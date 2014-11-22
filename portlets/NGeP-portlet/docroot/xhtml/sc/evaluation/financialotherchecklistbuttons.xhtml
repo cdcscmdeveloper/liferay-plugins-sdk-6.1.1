@@ -10,8 +10,9 @@
 		value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
 
 	<c:if test="#{'TS' ne docDefinationKey}"> -->
-		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-			style="float:right;" icon="ui-icon-save" update="@all"
-			action="#{evaluationBackingBean.saveProposalScoreDtls}" />
+	<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+		disabled="#{evaluationBackingBean.managedBean.readOnly}"
+		style="float:right;" icon="ui-icon-save" update="@all"
+		action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 	<!-- </c:if> -->
 </ui:composition>

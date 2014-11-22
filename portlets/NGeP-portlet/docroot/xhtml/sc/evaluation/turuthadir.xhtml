@@ -17,8 +17,7 @@
 			widgetVar="tirutWidget"
 			value="#{evaluationBackingBean.managedBean.meetingAttendanceList}"
 			selection="#{evaluationBackingBean.managedBean.meetingAttendanceSelectList}"
-			editable="true" rowIndexVar="index" style="width:100%"
-			rowKey="#{meetingAttendance}">
+			editable="true" rowIndexVar="index" rowKey="#{meetingAttendance}">
 			<ac:paginator for="turuthadir" />
 
 			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
@@ -49,7 +48,7 @@
 
 
 			</p:column>
-			<p:column>
+			<p:column style="width:48%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}" />

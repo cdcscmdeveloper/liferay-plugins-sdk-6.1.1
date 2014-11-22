@@ -17,7 +17,6 @@
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
 			rows="10" rowKey="#{committeeMember.qtCommitteeActivityId}"
-			style="width:100%"
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
 			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}">
 			<ac:paginator for="evaluationpreparecommittee" />
@@ -26,16 +25,16 @@
 
 					<p:column colspan="1"
 						headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}"
-						style="width:18%" />
+						style="width:18%;white-space: normal" />
 					<p:column colspan="1"
 						headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}"
-						style="width:15%" />
+						style="width:15%;white-space: normal" />
 					<p:column colspan="1"
 						headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}"
-						style="width:15%" />
+						style="width:15%;white-space: normal" />
 					<p:column colspan="1"
 						headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}"
-						style="width:17%" />
+						style="width:17%;white-space: normal" />
 					<p:column colspan="1"
 						headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}"
 						style="width:10%" />
@@ -53,34 +52,34 @@
 			</p:columnGroup>
 
 
-			<p:column>
+			<p:column style="width:18%;white-space: normal">
 				<h:outputText
 					value="#{committeeMember.scCommitteeMember.memberName}"></h:outputText>
 			</p:column>
 
-			<p:column>
+			<p:column style="width:15%;white-space: normal">
 				<h:outputText
 					value="#{committeeMember.scCommitteeMember.icPassport}"></h:outputText>
 			</p:column>
-			<p:column>
+			<p:column style="width:15%;white-space: normal">
 				<h:outputText
 					value="#{committeeMember.scCommitteeMember.designation}"></h:outputText>
 			</p:column>
-			<p:column>
+			<p:column style="width:17%;white-space: normal">
 				<h:outputText value="#{committeeMember.scCommitteeMember.email}"></h:outputText>
 			</p:column>
-			<p:column>
+			<p:column style="width:10%">
 				<h:outputText value="#{committeeMember.scCommitteeMember.grade}"></h:outputText>
 			</p:column>
-			<p:column>
+			<p:column style="width:8%">
 				<h:outputText
 					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
-			<p:column>
+			<p:column style="width:15%">
 				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
-			<p:column>
+			<p:column style="width:2%;text-align: center;">
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{committeeMember.attended}" />
