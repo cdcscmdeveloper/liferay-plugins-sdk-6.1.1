@@ -2799,7 +2799,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     public boolean isAddAgencyButtonFlg() {
     	if(getManagedBean().isDirectPurchase()) {
-    		return false;
+    		//return false;
     	} else if(getManagedBean().isViewContract()) {
     		return false;
     	} else if(getManagedBean().getContractVer().getCtAgencies().size()>0) {
