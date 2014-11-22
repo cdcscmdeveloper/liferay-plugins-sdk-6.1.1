@@ -111,6 +111,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
 			}
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+				if("true".equalsIgnoreCase(getManagedBean().getFactoringCheck())){
+					if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId()){
+						throw new EpException(MessageConst.ERROR_745062);
+					}
+				}
+				
+			}
 			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
