@@ -190,8 +190,23 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String localOutCome;
 	private boolean readOnly;
 	private boolean memberOnly;
-
+    private List<ScQtCommitteRemarks> evaluationSignOffRemarks;
 	
+
+	/**
+	 * @return the evaluationSignOffRemarks
+	 */
+	public List<ScQtCommitteRemarks> getEvaluationSignOffRemarks() {
+		return evaluationSignOffRemarks;
+	}
+
+	/**
+	 * @param evaluationSignOffRemarks the evaluationSignOffRemarks to set
+	 */
+	public void setEvaluationSignOffRemarks(
+			List<ScQtCommitteRemarks> evaluationSignOffRemarks) {
+		this.evaluationSignOffRemarks = evaluationSignOffRemarks;
+	}
 
 	/**
 	 * @return the readOnly
