@@ -1351,22 +1351,24 @@ public class QTSupplierQulCriteriaBackingBean extends
 					getManagedBean().setPersonnel(smPersonnel);
 				}
 				SmPersonnel supplierHQPersonnel = this.getManagedBean().getPersonnel();
+				getManagedBean().setSupplierContact("");
+				getManagedBean().setSupplierEmail("");
 				if (null != supplierHQPersonnel) {
 					getManagedBean().setSupplierContact(supplierHQPersonnel.getName());
 					getManagedBean().setSupplierEmail(supplierHQPersonnel.getEmail());
 				}
+				
 				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier().getSmAppl().getSmCompanyBasic();
 				if (null != smCompanyBasic) {
 					if (null != smCompanyBasic.getSmCompanyAddresses()) {
 						for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
-							if (null != smCompanyAddress)
+							if (null != smCompanyAddress) {
 								if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
 									getManagedBean().setSupplierBranch("HQ");
 									getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
-									getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
-									getManagedBean().setSupplierEmail(getManagedBean().getPersonnel().getEmail());
 									break;
 								}
+							}
 						}
 					}
 				}
