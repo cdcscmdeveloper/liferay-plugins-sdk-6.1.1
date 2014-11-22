@@ -21,6 +21,7 @@ import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -935,4 +936,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return status;
 	}
+	
+	public boolean supplierStatusDateComparision(Date enddate) {
+		boolean isDate = false;
+		Date d1 = new Date();
+
+		if (null != enddate) {
+			long days = DateUtils.getDaysDifference(d1, enddate);
+			int day = (int) days;
+			if (day >= 0) {
+				isDate = true;
+			}
+		}
+
+		return isDate;
+	}
+
 }
