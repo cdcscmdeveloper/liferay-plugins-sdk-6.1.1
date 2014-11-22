@@ -40,7 +40,7 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
-				style="width:30%">
+				style="width:25%">
 
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -55,7 +55,7 @@
 					display="icon"></p:message>
 
 			</p:column>
-			<p:column>
+			<p:column style="width:25%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" />
@@ -70,7 +70,7 @@
 			</p:column>
 
 
-			<p:column>
+			<p:column style="width:10%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.eva.mtng.status']}" />
@@ -86,10 +86,11 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}">
+			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+				style="width:38%">
 
 
-				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="30"
+				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="45"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					maxlength="100" />
 
