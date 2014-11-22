@@ -52,6 +52,7 @@ import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -84,6 +85,7 @@ import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -228,11 +230,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		
-		
-		if(!validateBankInfo()){
-			return null;
-		}
-		
+		validateBankInfo();
+
 		//check the professional body if supplier type is consultant
 		if(this.getManagedBean().getSmAppl().getSupplierType() != null){
 			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
@@ -321,10 +320,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721002);
 		}
 		
-		if(!validateBankInfo()){
-			return null;
-		}
-		
+		validateBankInfo();
+
 		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
 			PmParameter identificationType = new PmParameter();
 			
@@ -540,32 +537,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String updateOnlineAccount() {
-		if(!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
-			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-				throw new EpException(MessageConst.ERROR_721011);
-			}
-		}
-
-		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
-			throw new EpException(MessageConst.ERROR_721002);
-		}
-		
-		if(!validateBankInfo()){
-			return null;
-		}
-		
-		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
-			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
-				throw new EpException(MessageConst.ERROR_721033);
-			}else{
-				checkDuplicatedProfessionalBody();
-				for(SmAssociationBody assocBody : this.getManagedBean().getSmAppl().getSmAssociationBodies()){
-					if(assocBody.getSmAppl() == null){
-						assocBody.setSmAppl(this.getManagedBean().getSmAppl());
-					}
-				}		
-			}
-		}
 
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
@@ -577,23 +548,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
 		}
 
-//		for(SmSupplierBusiness ssb : smSupp.getSmSupplierBusinesses()){
-//			ssb.setSmSupplier(smSupp);
-//		}
-
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IRegistrationSO.class);
-		RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
+		
+		try{
+			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
 
-		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-					FacesMessage.SEVERITY_INFO,
-					null,
-					MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			return "/xhtml/sm/onlinereg/outputMsg";
-		} else {
-			throw new EpException(MessageConst.ERROR_721006);
+			if (resDTO.isSuccessful()) {
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				return "/xhtml/sm/onlinereg/outputMsg";
+			} else {
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(MessageConst.ERROR_721006);
+			}
+		}catch(Exception ex){
+			throw new EpException(ex.getMessage());
+		}finally{
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 		}
 	}
 
@@ -1254,7 +1230,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
-	public boolean validateBankInfo(){
+	public void validateBankInfo(){
 		List<String> bankList = new ArrayList<String>();
 		for(SmSupplierBank suppBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()){
 			log.info("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinancialOrgId());
@@ -1271,9 +1247,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_721012);
 			}
 			bankList.add(uniqBank);
-
 		}
-		return true;
 	}
 
 /*	public void resetSessionData() {
@@ -1560,6 +1534,44 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 
 		return retVal;
+	}
+	
+	public String updateBasicSupplier(){
+		if(!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
+				throw new EpException(MessageConst.ERROR_721011);
+			}
+		}
+
+		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
+			throw new EpException(MessageConst.ERROR_721002);
+		}
+
+		validateBankInfo();
+
+		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
+				throw new EpException(MessageConst.ERROR_721033);
+			}else{
+				checkDuplicatedProfessionalBody();
+				for(SmAssociationBody assocBody : this.getManagedBean().getSmAppl().getSmAssociationBodies()){
+					if(assocBody.getSmAppl() == null){
+						assocBody.setSmAppl(this.getManagedBean().getSmAppl());
+					}
+				}		
+			}
+		}
+		
+		if(this.getManagedBean().getSmSupp().getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED){
+			if(SmApplicationUtil.hasActiveTransactions(this.getManagedBean().getSmSupp())){
+				throw new EpException(MessageConst.ERROR_721035);
+			}else{
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
+			}
+			return null;
+		}else{
+			return updateOnlineAccount();
+		}
 	}
 }
 
