@@ -631,6 +631,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo = null;
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			EvaluationResDTO resDTO = new EvaluationResDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			List<ScQtProposalChecklist> presentatiodemo = this.getManagedBean()
@@ -643,7 +644,9 @@ public class EvaluationBackingBean extends
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
 				reqDTO.setComplianceList(presentatiodemo);
 			}
-			evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
+			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
+			this.getManagedBean().setComplianceTechnicalProposalCheckList(
+					resDTO.getSaveComplianceList());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -3737,12 +3740,13 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setMemberOnly(false);
 
 		}
-		if (member.getMemberRole().getParameterCode()
+		else if (member.getMemberRole().getParameterCode()
 				.contains(SourcingConstants.MEMBER_ROLE_MEMBER)) {
 			this.getManagedBean().setReadOnly(true);
 			this.getManagedBean().setMemberOnly(false);
 
-		} else {
+		} else  if (member.getMemberRole().getParameterCode()
+				.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) { 
 			this.getManagedBean().setReadOnly(true);
 			this.getManagedBean().setMemberOnly(true);
 		}
