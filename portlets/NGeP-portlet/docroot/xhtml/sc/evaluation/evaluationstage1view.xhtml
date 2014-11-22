@@ -11,7 +11,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error, info" />
+			closable="true" showSummary="false" severity="error, info" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
 			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 		<ui:fragment
@@ -89,22 +89,12 @@
 			<ui:include src="report.xhtml" />
 		</c:if>
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
-			<ui:param name="committeeActivityList"
+			<!-- 	<ui:param name="committeeActivityList"
 				value="#{evaluationBackingBean.managedBean.endorscommitteeMemberList}"></ui:param>
 
-			<ui:include src="/xhtml/sc/specification/specificationSignoff.xhtml" />
-			<!-- <ui:include src="signoff.xhtml" /> -->
-			<table style="width: 100%">
-				<tr>
-					<td><div align="left" style="width: 99%">
-							<p:commandButton value="#{lbl['lbl.sm.prev']}"
-								actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
-								action="#{evaluationBackingBean.updateSmAppl}"
-								icon="ui-icon-prev" update=":form" />
-						</div></td>
+			<ui:include src="/xhtml/sc/specification/specificationSignoff.xhtml" /> -->
+			<ui:include src="signoff.xhtml" />
 
-				</tr>
-			</table>
 		</c:if>
 
 		<ui:include src="uploadEvaluation.xhtml"></ui:include>
