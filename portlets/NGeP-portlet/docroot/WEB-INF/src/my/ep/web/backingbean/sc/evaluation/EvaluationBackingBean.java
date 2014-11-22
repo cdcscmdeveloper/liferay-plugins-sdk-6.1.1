@@ -96,7 +96,7 @@ import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
-import my.ep.util.MessageUtils;	
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -4280,9 +4280,11 @@ public class EvaluationBackingBean extends
 			context.put("fec", commType);
 		}
 		context.put("title", qt.getQtTitle());
-		context.put("fileNo", qt.getQtNo());
-		context.put("ptjName", qt.getPmOrgProfile().getParentOrgProfile()
-				.getOrgName());
+		context.put("procurementMode", qt.getProcurementMode()
+				.getParameterCode());
+		context.put("qtNo", qt.getQtNo());
+		context.put("fileNo", qt.getFileNo());
+		context.put("ptjName", qt.getPmOrgProfile().getOrgName());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_EV_COVER, context,
@@ -4417,14 +4419,15 @@ public class EvaluationBackingBean extends
 				.cloneEntity();
 		tplDocMaster.setDocMasterId(null);
 		tplDocMaster.setOrgProfile(null);
-		tplDocMaster.setTplDocSectionCollection(null);
+		tplDocMaster.setTplDocSections(null);
+		//tplDocMaster.setTplDocSectionCollection(null);
 		tplDocMaster.setDocTitle(scQtEvaluationReport.getTitle());
 		tplDocMaster.setDocName(scQtEvaluationReport.getTitle());
 
 		setUserDetails(tplDocMaster);
 
 		// clone tplDocSection Details
-		tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
+		/*tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
 		List<TplDocSection> docSections = tplDocMaster.getTplDocSections();
 		for (TplDocSection tplDocSection : docSections) {
 			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
@@ -4433,6 +4436,18 @@ public class EvaluationBackingBean extends
 
 			setUserDetails(section);
 			tplDocMaster.getTplDocSections().add(section);
+		}*/
+		
+		tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+		List<TplDocSection> docSectionCOllection = templateDocMaster.getTplDocSectionCollection();
+		for (TplDocSection tplDocSection : docSectionCOllection) {
+			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
+			section.setDocSectionId(null);
+			section.setParent(null); // Temporarily am setting null, need to confirm once
+			section.setTplDocMaster(tplDocMaster);
+			
+			setUserDetails(section);
+			tplDocMaster.getTplDocSectionCollection().add(section);
 		}
 
 		// Procurement Category
@@ -4452,6 +4467,24 @@ public class EvaluationBackingBean extends
 				ParameterConst.TEMPLATE_TYPE_MINISTRY);
 		tplDocMaster.setTemplateType(templateType);
 
+		// Item Type - Service & Product
+		PmParameter itemType = null;
+		if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_MTO)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_SERVICE);
+		} else if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_ICT)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
+				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT);
+		}
+		tplDocMaster.setItemTypeId(itemType);
+		
 		// Status
 		PmStatus status = new PmStatus();
 		status.setStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT);
