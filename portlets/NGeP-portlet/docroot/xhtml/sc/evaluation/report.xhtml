@@ -25,14 +25,17 @@
 				#{evaluationBackingBean.getParameterDesc(scQtEvaluationReport.definationType)}
 			</p:column>
 
-			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.so.action']}">
+			<p:column style="width:10%;text-align: center;"
+				headerText="#{lbl['lbl.so.action']}">
 				<p:commandLink
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
 				</p:commandLink>
 				<p:commandButton id="download" icon="ui-icon-download"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{evaluationBackingBean.downloadReport(scQtEvaluationReport)}" />
@@ -41,6 +44,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton icon="ui-icon-download"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				action="#{evaluationBackingBean.downloadAllReports}" />
 		</div>
@@ -59,6 +63,7 @@
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
+									disabled="#{evaluationBackingBean.managedBean.readOnly}"
 									oncomplete="supportAttachDlg.show();"
 									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 									partialSubmit="true" process="@this"
@@ -87,9 +92,11 @@
 										</tr>
 										<tr>
 											<td><h:commandLink value="#{attachFile.fileName}"
+													disabled="#{evaluationBackingBean.managedBean.readOnly}"
 													styleClass="blue_font" immediate="true"
 													action="#{evaluationBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
+													disabled="#{evaluationBackingBean.managedBean.readOnly}"
 													action="#{evaluationBackingBean.deleteUploadFile}"
 													immediate="true" update="attachedIds">
 													<h:graphicImage library="ep/images/design" name="trash.png"
