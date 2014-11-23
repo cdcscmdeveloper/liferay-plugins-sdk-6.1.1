@@ -13,7 +13,8 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="defDelCatCodesApplMsgs" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" />
+			autoUpdate="true" closable="true" showSummary="false"></p:messages>
+
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.catcode.delete.msg']}"
@@ -28,13 +29,15 @@
 						value="#{deleteCategoryCodeBB.managedBean.termsAccepted}">
 						<p:ajax event="change" update=":form:delCatCmdBtn" />
 					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" />
+					<h:outputText value="Testing my code" /></td>
 			</tr>
 
 		</table>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="delCatCmdBtn"
-				action="#{deleteCategoryCodeBB.getRegCategoryCodes}"
+			<p:commandButton value="#{lbl['lbl.sm.button.proceed']}"
+				id="delCatCmdBtn"
+				action="#{deleteCategoryCodeBB.getRegCategoryCodes}" update=":form"
 				disabled="#{!deleteCategoryCodeBB.managedBean.termsAccepted}" />
 			<!-- <p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->

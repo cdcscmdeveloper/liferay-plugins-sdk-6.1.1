@@ -11,21 +11,23 @@ import javax.faces.event.ComponentSystemEvent;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
@@ -54,6 +56,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 			SmSupplier smApplSupplier = getCurrentSupplier();
 			log.info("**** Supplier Id is ********** "
 					+ smApplSupplier.getSupplierId());
+			// if (SmApplicationUtil.checkActiveSmApplForSupp(smApplSupplier)) {
+			// throw new EpException(MessageConst.ERROR_722542);
+			// }
 			SmAppl smAppl = smApplSupplier.getSmAppl();
 			if (smAppl != null) {
 				log.info("******** The application id is *******"
@@ -162,39 +167,57 @@ public class SmDeleteCategoryCodeBackingBean extends
 		try {
 			int delListSize = getManagedBean().getSelectedCategories().size();
 			log.info(" **** SIZE OF SELECTED *** " + delListSize);
+			if (getManagedBean().getActiveCategoryList().size() == delListSize) {
+				throw new EpException(MessageConst.ERROR_722578);
+			}
 			SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
 					.getSelectedCategories(), getManagedBean().getSmSupplier()
 					.getSupplierId());
+			Boolean invalidRemarks = false;
+			StringBuffer sb = new StringBuffer();
+			sb.append(SmCommonUtil.getMessage("lbl.sm.category.deleteRemarks",
+					null));
+			int i = 0;
 			for (SmSupplierCategory selCat : getManagedBean()
 					.getSelectedCategories()) {
-				selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
-				for (SmSupplierCategory category : getManagedBean().getSmAppl()
-						.getSmSupplierCategories()) {
-					if (category.getSupplierCategoryId().equals(
-							selCat.getSupplierCategoryId())) {
-						getManagedBean()
-								.getSmAppl()
-								.getSmSupplierCategories()
-								.set(getManagedBean().getSmAppl()
-										.getSmSupplierCategories()
-										.indexOf(category), selCat);
-						break;
+				if (selCat.getRemarks() == null
+						|| selCat.getRemarks().trim().equals("")) {
+					invalidRemarks = true;
+					sb.append("<br/>")
+							.append(++i)
+							.append(".) ")
+							.append(selCat.getPmCategoryL1()
+									.getCategoryL1Code())
+							.append(selCat.getPmCategoryL2()
+									.getCategoryL2Code())
+							.append(selCat.getPmCategoryL3()
+									.getCategoryL3Code());
+				}
+			}
+			if (invalidRemarks) {
+				throw new EpException(sb.toString());
+			} else {
+				for (SmSupplierCategory selCat : getManagedBean()
+						.getSelectedCategories()) {
+					selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 
-					}
 				}
 
+				updateSmAppl();
+				assignActiveCategoryList();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										"",
+										delListSize
+												+ SmCommonUtil
+														.getMessage(
+																"lbl.sm.category.categorySucessfullyDel",
+																null)));
 			}
-			updateSmAppl();
-			assignActiveCategoryList();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									"",
-									delListSize
-											+ " - Category Code(s) Deleted Successfully"));
 		} finally {
 
 		}
