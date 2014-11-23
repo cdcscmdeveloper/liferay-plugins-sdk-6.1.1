@@ -2087,6 +2087,8 @@ public class SmApplicationUtil {
 		log.info("** getApplCategoryType type ***"
 				+ managedBean.getSmAppl().getApplCategoryType());
 		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
+				.getBusinessType());
 		if (managedBean.getSmAppl().getApplCategoryType().equals("N")) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {
