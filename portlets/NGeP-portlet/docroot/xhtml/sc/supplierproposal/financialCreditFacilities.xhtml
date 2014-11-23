@@ -49,7 +49,7 @@
 				<p:message id="bankNameMsg" for="bankName" display="icon" />
 			</p:column>
 
-			<p:column style="white-space : normal;">
+			<p:column style="white-space : normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.address']}" />
@@ -126,7 +126,7 @@
 					rendered="#{creditfacilities.brandNew eq true}" required="true"
 					maxlength="19" label="#{lbl['lbl.sc.sp.amt.paid']}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
-						listener="#{supplierProposalDetailBackingBean.totalCreditFacilitiesSum}"
+						listener="#{supplierProposalDetailBackingBean.creditFacilityValidator(rowIndex)}"
 						update="@this,amtPaidMsg,@([id$=totalSummaryPG])" />
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

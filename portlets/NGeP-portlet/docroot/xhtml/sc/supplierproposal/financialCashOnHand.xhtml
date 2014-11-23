@@ -26,8 +26,8 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{supplierProposalDetailBackingBean.selectedCashOnHand(rowIndex)}" />
 				</p:selectBooleanCheckbox>
-			</p:column>
-			<p:column>
+			</p:column >
+			<p:column style="white-space : normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.bank.name']}" />
@@ -82,7 +82,7 @@
 				<p:message id="accountTypeMsg" for="accountType" display="icon" />
 			</p:column>
 
-			<p:column>
+			<p:column style="white-space : normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.address']}" />

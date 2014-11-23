@@ -2438,6 +2438,8 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSelectedAll(false);
 		getManagedBean().setSelected(false);
 		getManagedBean().setDeletedPRPExperiences(null);
+		getManagedBean().setToBeDeletedCashOnHandList(null);
+		getManagedBean().setToBeDeletedCreditFacilities(null);
 		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 	}
 
@@ -2799,20 +2801,21 @@ public class SPDetailBackingBean extends
 
 		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			List<ScQtPRPCreditFacility> creditFacilityList = getManagedBean()
-					.getScQtPRPCreditFacilities();
+			//List<ScQtPRPCreditFacility> creditFacilityList = ;
 			List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean()
 					.getSelectedPRPCreditFacilities();
+			List<ScQtPRPCreditFacility> creditFacilityList = getManagedBean()
+					.getScQtPRPCreditFacilities();
 			if (selectedCreditFacilityList == null) {
 				selectedCreditFacilityList = new ArrayList<ScQtPRPCreditFacility>();
 			}
-			for (ScQtPRPCreditFacility creditFacility : creditFacilityList) {
-				if (!selectedCreditFacilityList.contains(creditFacility)) {
-					selectedCreditFacilityList.add(creditFacility);
-				}
+			
+			for (int i=0; i< creditFacilityList.size(); i++ ){
+				selectedCreditFacilityList.add(getManagedBean()
+						.getScQtPRPCreditFacilities().get(i));
 			}
-			getManagedBean().setSelectedPRPCreditFacilities(
-					getManagedBean().getScQtPRPCreditFacilities());
+			
+			getManagedBean().setSelectedPRPCreditFacilities(selectedCreditFacilityList);
 		} else {
 			getManagedBean().setSelected(false);
 			getManagedBean().setSelectedPRPCreditFacilities(null);
@@ -2871,8 +2874,18 @@ public class SPDetailBackingBean extends
 
 		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			getManagedBean().setSelectedPRPCashOnHand(
-					getManagedBean().getScQtPRPCashOnHand());
+			List<ScQtPRPCashOnHand> selectedQtPRPCashOnHandList = getManagedBean()
+					.getSelectedPRPCashOnHand();
+			if (selectedQtPRPCashOnHandList == null) {
+				selectedQtPRPCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
+			}
+			
+			for(ScQtPRPCashOnHand qtPRPCashOnHand : getManagedBean()
+					.getScQtPRPCashOnHand()){
+				selectedQtPRPCashOnHandList.add(qtPRPCashOnHand);
+			}
+			
+			getManagedBean().setSelectedPRPCashOnHand(selectedQtPRPCashOnHandList);
 		} else {
 			getManagedBean().setSelected(false);
 			getManagedBean().setSelectedPRPCashOnHand(null);
@@ -2914,6 +2927,20 @@ public class SPDetailBackingBean extends
 			getManagedBean().setSelectMultipleProposalList(null);
 
 		}
+	}
+	
+	public void creditFacilityValidator(int index){
+		
+		ScQtPRPCreditFacility validateFacility =getManagedBean().getScQtPRPCreditFacilities().get(index);
+		
+		if(validateFacility.getAmtPaid().doubleValue() > validateFacility.getCreditAmt().doubleValue()){
+			
+			throw new EpException("Paid Amount can not be greater than Credit amount");
+			
+		}
+		
+		totalCreditFacilitiesSum();
+		
 	}
 
 }
