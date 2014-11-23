@@ -739,9 +739,19 @@ public class SmCommonUtil {
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
 					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setBumiPercentage(compBasic
+					.getBumiEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
 			log.debug("******* First Value of  setBumiPercent "
 					+ compBasic.getBumiPercent());
 			compBasic.setNonBumiPercent(compBasic
+					.getNonBumiEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setNonBumiPercentage(compBasic
 					.getNonBumiEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
@@ -825,21 +835,20 @@ public class SmCommonUtil {
 		case "Review Cancellation":
 			retVal = getMessage("lbl.sm.bpmtitle.review.cancelmof", null);
 			break;
-			
-//		case "Review application (Escalated)":
-//			retVal = getMessage("lbl.sm.bpmtitle.reviewappl.escalated", null);
-//			break;
+
+		// case "Review application (Escalated)":
+		// retVal = getMessage("lbl.sm.bpmtitle.reviewappl.escalated", null);
+		// break;
 
 		case "Make Payment":
 			retVal = getMessage("lbl.sm.bpmtitle.payment.reg.fee", null);
 			break;
-			
-		
-//		case "Review Application":
-//			if(bpmProcessId.equalsIgnoreCase("MOF Supplier Registration")){
-//				retVal = getMessage("lbl.sm.bpmtitle.reviewappl.newmof", null);
-//			}
-//			break;
+
+		// case "Review Application":
+		// if(bpmProcessId.equalsIgnoreCase("MOF Supplier Registration")){
+		// retVal = getMessage("lbl.sm.bpmtitle.reviewappl.newmof", null);
+		// }
+		// break;
 
 		}
 
