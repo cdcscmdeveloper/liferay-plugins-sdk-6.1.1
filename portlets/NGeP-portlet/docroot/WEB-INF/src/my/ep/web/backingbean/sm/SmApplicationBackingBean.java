@@ -1814,6 +1814,17 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateAssocBodiesToSmAppl() throws ParseException {
 		getManagedBean().getSelectedAssocBody().setSmAppl(
 				getManagedBean().getSmAppl());
+		if (getManagedBean().getSelectedAssocBody().getPmCertBody()
+				.getCertBodyId() != null) {
+			for (PmCertBody cert : getManagedBean().getProfBodyLs()) {
+				if (getManagedBean().getSelectedAssocBody().getPmCertBody()
+						.getCertBodyId().equals(cert.getCertBodyId())) {
+					getManagedBean().getSelectedAssocBody().setPmCertBody(cert);
+					break;
+				}
+			}
+
+		}
 		if (getManagedBean().getSmAppl().getSmAssociationBodies()
 				.contains(getManagedBean().getSelectedAssocBody())) {
 

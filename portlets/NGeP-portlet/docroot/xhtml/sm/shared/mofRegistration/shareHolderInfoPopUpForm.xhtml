@@ -41,10 +41,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="equiPerIdenType" required="true"
-						label="#{lbl['lbl.sm.identificationtype']}" disabled="#{backingBean.managedBean.disableIcEmail}"
+						label="#{lbl['lbl.sm.identificationtype']}"
+						disabled="#{backingBean.managedBean.disableIcEmail}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
-						<f:selectItems value="#{backingBean.managedBean.identificationTypes}" />
+						<f:selectItems
+							value="#{backingBean.managedBean.identificationTypes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{backingBean.assignPersonIdentType}"
 							update="equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan" />
@@ -59,7 +61,8 @@
 
 				<td><p:outputPanel id="equiPerDtlIdenTypePan">
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-							required="true" id="equiPerIcNum" disabled="#{backingBean.managedBean.disableIcEmail}"
+							required="true" id="equiPerIcNum"
+							disabled="#{backingBean.managedBean.disableIcEmail}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
@@ -69,7 +72,8 @@
 						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
 							showSummary="true" showDetail="false" display="icon" />
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-							required="true" id="equiPerPasptNum" disabled="#{backingBean.managedBean.disableIcEmail}"
+							required="true" id="equiPerPasptNum"
+							disabled="#{backingBean.managedBean.disableIcEmail}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
@@ -131,7 +135,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.email']}"
-						id="equiEmail" required="true" maxlength="80" disabled="#{backingBean.managedBean.disableIcEmail}"
+						id="equiEmail" required="true" maxlength="80"
+						disabled="#{backingBean.managedBean.disableIcEmail}"
 						validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
 						value="#{backingBean.managedBean.selectedShareHolder.email}"
 						size="35">
@@ -222,7 +227,8 @@
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						<p:ajax event="change" update="shrPrivPanel, @([id$=shareHolderAddrDialog])"
+						<p:ajax event="change"
+							update="shrPrivPanel, @([id$=shareHolderAddrDialog])"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
 			</tr>
@@ -244,11 +250,18 @@
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
 					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
 						showSummary="true" showDetail="false" display="icon" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.justification']}"  style="width: 50%; white-space: pre-wrap;" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"/>
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
-				<td style="padding-top: 5px;"><p:inputTextarea cols="90" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"
-					id="persJust" label="#{lbl['lbl.sm.person.justification']}" value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}" disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
-					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"/></td>	
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.person.justification']}"
+						style="width: 50%; white-space: pre-wrap;"
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
+				<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"
+						id="persJust" label="#{lbl['lbl.sm.person.justification']}"
+						value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
+						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}"
@@ -345,13 +358,15 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
-				<h:outputText value="#{jf.fromYear}" maxlength="4" label="#{lbl['lbl.sm.year.from']}" />
+				<h:outputText value="#{jf.fromYear}" maxlength="4"
+					label="#{lbl['lbl.sm.year.from']}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
-				<h:outputText value="#{jf.toYear}" maxlength="4" label="#{lbl['lbl.sm.year.to']}" />
+				<h:outputText value="#{jf.toYear}" maxlength="4"
+					label="#{lbl['lbl.sm.year.to']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
 				<p:commandLink update=":form:tt:equiJobFunctionInfo"
@@ -676,7 +691,8 @@
 							label="#{lbl['lbl.sm.prof.enddate']}" id="equiPrfBdyEndDt"
 							required="#{backingBean.managedBean.valueReqd}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							yearRange="-99:+10"
+							mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"
+							yearRange="0:+20"
 							value="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" />
 						<p:message id="equiPrfBdyEndDtMsg" for="equiPrfBdyEndDt"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -796,8 +812,8 @@
 					</p:selectOneMenu> <p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td style="width: 20px"><p:graphicImage id="uidti"
-						value="/css/images/design/tooltips.png"  />
-					<p:tooltip id="uidtt" for="uidti">
+						value="/css/images/design/tooltips.png" /> <p:tooltip id="uidtt"
+						for="uidti">
 						<p:outputLabel escape="false"
 							value="#{lbl['lbl.sm.qualification.validation']}" />
 					</p:tooltip></td>
