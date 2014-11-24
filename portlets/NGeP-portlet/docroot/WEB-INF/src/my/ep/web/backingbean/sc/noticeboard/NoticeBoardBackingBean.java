@@ -821,20 +821,23 @@ public class NoticeBoardBackingBean extends
 
 		Long closingDays = 0l;
 		Date clsDate = null;
+		if (!StringUtils.isEmpty(closingDate)) {
+			clsDate = DateUtils.convertStringToDate(
+					CommonConstants.DEFAULT_DATETIME_FORMAT,
+					closingDate.replace("-", "/"));
 
-		clsDate = DateUtils.convertStringToDate(
-				CommonConstants.DEFAULT_DATETIME_FORMAT,
-				closingDate.replace("-", "/"));
+			Date currentDate = new Date();
 
-		Date currentDate = new Date();
+			if (closingDate != null && clsDate.after(currentDate)) {
+				closingDays = DateUtils.getDaysDifference(currentDate, clsDate);
+			} else if (closingDate != null
+					&& (clsDate.equals(currentDate) || clsDate
+							.before(currentDate))) {
+				closingDays = DateUtils
+						.getHoursDifference(clsDate, currentDate);
 
-		if (closingDate != null && clsDate.after(currentDate)) {
-			closingDays = DateUtils.getDaysDifference(currentDate, clsDate);
-		} else if (closingDate != null && clsDate.equals(currentDate)) {
-			closingDays = DateUtils.getHoursDifference(clsDate, currentDate);
-
+			}
 		}
-
 		return closingDays;
 	}
 
@@ -1428,11 +1431,15 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public boolean isShowHours(String clsDate) throws Exception {
-		Date closingDate = DateUtils.convertStringToDate(
-				CommonConstants.DEFAULT_DATETIME_FORMAT,
-				clsDate.replace("-", "/"));
-		return (DateUtils.getDaysDifference(
-				DateUtils.getCurrentDateWithoutTime(), closingDate) <= 0);
+		if (!StringUtils.isEmpty(clsDate)) {
+			Date closingDate = DateUtils.convertStringToDate(
+					CommonConstants.DEFAULT_DATETIME_FORMAT,
+					clsDate.replace("-", "/"));
+			return (DateUtils.getDaysDifference(
+					DateUtils.getCurrentDateWithoutTime(), closingDate) <= 0);
+		} else {
+			return false;
+		}
 
 	}
 

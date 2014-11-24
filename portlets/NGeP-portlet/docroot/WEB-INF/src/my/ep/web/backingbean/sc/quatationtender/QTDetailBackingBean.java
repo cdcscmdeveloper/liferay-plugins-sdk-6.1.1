@@ -544,6 +544,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 
 			reqDTO.setQtId(qtId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
 
@@ -1235,7 +1236,7 @@ public class QTDetailBackingBean extends
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
-									null, scQtBsv.getBsvRemarks(),
+									this.getManagedBean().getQt().getCurrentWorkFlowStatus(), scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
@@ -1249,7 +1250,7 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
-					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, null,
+					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
 							qtBsv.getBsvRemarks(), ScQtBSVRemark.class));
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							null, resDTO.getBriefingList(),
@@ -1731,7 +1732,7 @@ public class QTDetailBackingBean extends
 										.getApprovalCategory()
 										.getParameterCode()));
 						qtApproval.setScQtApprovalRemarks(initializeRemarks(
-								qtApproval, null,
+								qtApproval, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
 						// qtApproval.setScQtApprovalAttachment(null);
@@ -2390,7 +2391,7 @@ public class QTDetailBackingBean extends
 					publicationApproval = new ScQtApproval();
 					publicationApproval
 							.setScQtApprovalRemarks(initializeRemarks(
-									publicationApproval, null,
+									publicationApproval, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
 									publicationApproval
 											.getScQtApprovalRemarks(),
 									ScQtApprovalRemark.class));
