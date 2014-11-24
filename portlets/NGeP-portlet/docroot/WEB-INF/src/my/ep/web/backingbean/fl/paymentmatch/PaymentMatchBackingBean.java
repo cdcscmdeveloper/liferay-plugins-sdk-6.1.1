@@ -374,7 +374,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return paymentAdvice;
 	}
 	
-	private void setAdjustmentDocNo(FlInvoice flInvoice) {
+	public void setAdjustmentDocNo(FlInvoice flInvoice) {
 		String adjustmentDocNo = "";
 		for(FlAdjustment flAdjustment : flInvoice.getFlAdjustments()) {
 			if(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
