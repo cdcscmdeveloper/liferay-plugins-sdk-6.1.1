@@ -18,8 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</th>
 			<td>
-				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" disabled="#{!pPlanBackingBean.managedBean.modeEditable 
-					|| !pPlanBackingBean.managedBean.selectedPlan.brandNew}"
+				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}"
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pp.plan.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterId}"
 					>
@@ -42,8 +41,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</th>
 			<td>
-				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" disabled="#{!pPlanBackingBean.managedBean.modeEditable
-					|| !pPlanBackingBean.managedBean.selectedPlan.brandNew}"
+				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}"
 					required="#{!empty param['disableValidation']}"
 					label="#{lbl['lbl.pp.plan.year']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
@@ -67,8 +65,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotType" 
 					required="#{!empty param['disableValidation'] and pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
-					disabled="#{(!pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure)
-						or (pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure)}"
+					disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
 					label="#{lbl['lbl.pp.vot.amanah.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
 				>
