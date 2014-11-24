@@ -56,6 +56,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -287,7 +288,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
-				 throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
+				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	      }
 		 
