@@ -77,85 +77,37 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  
 			<p:column selectionMode="multiple"  style="width:2%" />
 	        <p:column style="white-space:nowrap;">
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-        			 	<ac:lov id="lovGOSO" lovId="PM_GOSO" size="10" update=":form:dtExpenditurePlan" 
-					    	required="#{!empty param['disableValidation']}"
-			            	readonly="true" 
-			            	disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (epItem.brandNew or epItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}"
-							headerText="#{lbl['lbl.pp.goso.code']}"
-							value="#{epItem.pmSo.soCode}" 
-							saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
-							conditionField="recordStatus^1" 
-						/>
-						<p:message id="lovGOSOMsg" for="lovGOSO" display="icon" />	 
-        			</c:when>
-        			<c:otherwise>
-        				<ac:lov id="lovGOSO" lovId="PM_GOSO" size="10" update=":form:dtExpenditurePlan" 
-					    	required="#{!empty param['disableValidation']}"
-			            	readonly="true" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-							headerText="#{lbl['lbl.pp.goso.code']}"
-							value="#{epItem.pmSo.soCode}" 
-							saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
-							conditionField="recordStatus^1" 
-						/>
-						<p:message id="lovGOSOMsg" for="lovGOSO" display="icon" />	 
-        			</c:otherwise>
-	        	</c:choose>
-	        			
-			   
+   				<ac:lov id="lovGOSO" lovId="PM_GOSO" size="10" update=":form:dtExpenditurePlan" 
+   					disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
+			    	required="#{!empty param['disableValidation']}"
+	            	readonly="true" 
+					headerText="#{lbl['lbl.pp.goso.code']}"
+					value="#{epItem.pmSo.soCode}" 
+					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
+					conditionField="recordStatus^1" 
+				/>
+				<p:message id="lovGOSOMsg" for="lovGOSO" display="icon" />	 
 	        </p:column>	 
 	        <p:column>
 		  		#{epItem.pmSo.soName}
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-	        			<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
-				  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
-				  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (epItem.brandNew or epItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}">
-				  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-				  				update="dtExpenditurePlan" />
-				  		</p:inputText>
-				  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" /> 
-        			</c:when>
-        			<c:otherwise>
-        				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
-				  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
-				  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
-				  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-				  				update="dtExpenditurePlan" />
-				  		</p:inputText>
-				  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
-        			</c:otherwise>
-	        	</c:choose>
-		  		
+   				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
+		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
+		  				update="dtExpenditurePlan" />
+		  		</p:inputText>
+		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-	        			
-	        			<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
-				  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
-				  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (epItem.brandNew or epItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}">
-				  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-				  				update="dtExpenditurePlan"  />
-				  		</p:inputText>
-				  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" /> 
-        			</c:when>
-        			<c:otherwise>
-        				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
-				  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
-				  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
-				  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-				  				update="dtExpenditurePlan"  />
-				  		</p:inputText>
-				  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
-        			</c:otherwise>
-	        	</c:choose>
+   				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
+		  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
+		  				update="dtExpenditurePlan"  />
+		  		</p:inputText>
+		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
 	        <p:column>
 	        	<p:outputLabel id="otNonAllocAmt" value="#{epItem.nonEpAmt}" />
@@ -177,24 +129,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-        			 	<p:inputTextarea id="itaRemark" value="#{epItem.remark}" 
-        			 		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (epItem.brandNew or epItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}" 
-							label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-					 		style="width:90%" maxlength="1000" >
-					 		<p:ajax event="change"  process="@this"/>
-					 	</p:inputTextarea> 
-        			</c:when>
-        			<c:otherwise>
-        			 	<p:inputTextarea id="itaRemark" value="#{epItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
-							label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-					 		style="width:90%" maxlength="1000">
-					 		<p:ajax event="change"  process="@this"/>
-					 	</p:inputTextarea>
-        			</c:otherwise>
-	        	</c:choose>
+   			 	<p:inputTextarea id="itaRemark" value="#{epItem.remark}" 
+   			 		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}" 
+					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
+			 		style="width:90%" maxlength="1000">
+			 		<p:ajax event="change"  process="@this"/>
+			 	</p:inputTextarea>
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.updatable}">
 		      	<p:commandLink

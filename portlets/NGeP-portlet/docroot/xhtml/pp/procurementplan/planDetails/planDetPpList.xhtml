@@ -77,160 +77,66 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		 	</p:columnGroup>
 			<p:column selectionMode="multiple"/>
 	        <p:column>	
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}"> 
-	        			<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
-	        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}"
-							label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
-					 		style="width: 95%;" maxlength="1000" required="#{!empty param['disableValidation']}">
-					 		<p:ajax event="change" process="@this" />
-				 		</p:inputTextarea>
-	        			<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
-	        		</c:when>
-	        		<c:otherwise>
-	        			<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-							label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
-					 		style="width: 95%;" maxlength="1000" required="#{!empty param['disableValidation']}">
-					 		<p:ajax event="change" process="@this" />
-				 		</p:inputTextarea>
-				 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
-	        		</c:otherwise>
-	        	</c:choose>
+        		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
+        			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
+			 		style="width: 95%;" maxlength="1000" required="#{!empty param['disableValidation']}">
+			 		<p:ajax event="change" process="@this" />
+		 		</p:inputTextarea>
+		 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
 	        </p:column>	 
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}"> 
-				  		<p:selectOneMenu style="width:90%" id="somCategory" 
-							disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}"
-							label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
-								itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{obj.procurementCat.pmParameterDescs[0].codeName}"/>
-							<p:ajax event="change" update="somProcurementMethod" />
-						</p:selectOneMenu>
-						<p:message id="somCategoryMsg" for="somCategory" display="icon" />
-					</c:when>
-	        		<c:otherwise>
-	        			<p:selectOneMenu style="width:90%" id="somCategory" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-							label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
-								itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{obj.procurementCat.pmParameterDescs[0].codeName}"/>
-							<p:ajax event="change" update="somProcurementMethod" />
-						</p:selectOneMenu>
-						<p:message id="somCategoryMsg" for="somCategory" display="icon" />
-	        		</c:otherwise>
-        		</c:choose>
+       			<p:selectOneMenu style="width:90%" id="somCategory" 
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
+						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{obj.procurementCat.pmParameterDescs[0].codeName}"/>
+					<p:ajax event="change" update="somProcurementMethod" />
+				</p:selectOneMenu>
+				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-	        			<p:selectOneMenu style="width:90%" id="somProcurementMethod" 
-	        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}"
-							label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
-								var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{obj.procurementType.pmParameterDescs[0].codeName}"/>
-							<p:ajax event="change" process="@this" />
-						</p:selectOneMenu>
-						<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" /> 
-        			</c:when>
-	        		<c:otherwise>
-	        			<p:selectOneMenu style="width:90%" id="somProcurementMethod" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-							label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
-								var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{obj.procurementType.pmParameterDescs[0].codeName}"/>
-							<p:ajax event="change" process="@this" />
-						</p:selectOneMenu>
-						<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
-	        		</c:otherwise>
-        		</c:choose>
-		  		
+       			<p:selectOneMenu style="width:90%" id="somProcurementMethod" 
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
+						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{obj.procurementType.pmParameterDescs[0].codeName}"/>
+					<p:ajax event="change" process="@this" />
+				</p:selectOneMenu>
+				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
 	        <p:column  style="white-space:nowrap;">
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-	        			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
-			  				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}"
-					  		required="#{!empty param['disableValidation']}" navigator="true" 
-					  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" yearRange="-99:-16"
-							showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-							<p:ajax event="dateSelect" process="@this" />
-						</p:calendar>
-						<p:message id="effDateIdMsg" for="effDateId" display="icon" /> 
-        			</c:when>
-	        		<c:otherwise>
-	        			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
-			  				disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-					  		required="#{!empty param['disableValidation']}" navigator="true" 
-					  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" yearRange="-99:-16"
-							showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-							<p:ajax event="dateSelect" process="@this" />
-						</p:calendar>
-						<p:message id="effDateIdMsg" for="effDateId" display="icon" />
-	        		</c:otherwise>
-        		</c:choose>
-	  			
+       			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
+	  				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+			  		required="#{!empty param['disableValidation']}" navigator="true" 
+			  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" yearRange="-99:-16"
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
+				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}"> 
-	        			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" 
-	        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}" 
-				  			id="itEstAmt" label="#{lbl['lbl.pp.estimated.amount']}"
-				  			required="#{!empty param['disableValidation']}">
-				  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}" update=":form:dtProcurementPlan"/>
-				  		</p:inputText>
-				  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
-        			</c:when>
-	        		<c:otherwise>
-	        			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
-				  			id="itEstAmt" label="#{lbl['lbl.pp.estimated.amount']}"
-				  			required="#{!empty param['disableValidation']}">
-				  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}" update=":form:dtProcurementPlan"/>
-				  		</p:inputText>
-				  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
-	        		</c:otherwise>
-        		</c:choose>
+       			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" 
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}" 
+		  			id="itEstAmt" label="#{lbl['lbl.pp.estimated.amount']}"
+		  			required="#{!empty param['disableValidation']}">
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}" update=":form:dtProcurementPlan"/>
+		  		</p:inputText>
+		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}"> 
-	        			<p:inputText style="width:90%" value="#{ppItem.costCenterCode}" 
-	        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}">
-			  				<p:ajax event="change" process="@this" />
-		  				</p:inputText>
-        			</c:when>
-	        		<c:otherwise>
-	        			<p:inputText style="width:90%" value="#{ppItem.costCenterCode}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}" >
-			  				<p:ajax event="change" process="@this" />
-		  				</p:inputText>
-	        		</c:otherwise>
-        		</c:choose>
+       			<p:inputText style="width:90%" value="#{ppItem.costCenterCode}" 
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}">
+	  				<p:ajax event="change" process="@this" />
+  				</p:inputText>
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}">
-	        			<p:inputText style="width:90%" value="#{ppItem.costCenterName}" 
-				  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}">
-				  			<p:ajax event="change" process="@this" />
-				  		</p:inputText> 
-        			</c:when>
-	        		<c:otherwise>
-	        			<p:inputText style="width:90%" value="#{ppItem.costCenterName}" 
-				  			disabled="#{!pPlanBackingBean.managedBean.modeEditable}">
-				  			<p:ajax event="change" process="@this" />
-				  		</p:inputText>
-	        		</c:otherwise>
-        		</c:choose>
+       			<p:inputText style="width:90%" value="#{ppItem.costCenterName}" 
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}">
+		  			<p:ajax event="change" process="@this" />
+		  		</p:inputText>
            </p:column>
 	       <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
@@ -243,21 +149,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	<c:choose>
-	        		<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.pppPendingRevision
-	        			or pPlanBackingBean.managedBean.selectedPlan.status.statusId eq ProcurementPlanConst.ppePendingRevision}"> 
-	        			<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" 
-	        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and (ppItem.brandNew or ppItem.rejected or pPlanBackingBean.managedBean.selectedPlan.rejected))}"
-							label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-					 		style="width: 90%;" maxlength="1000"/>
-        			</c:when>
-	        		<c:otherwise>
-	        			<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-							label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-					 		style="width: 90%;" maxlength="1000"/>
-	        		</c:otherwise>
-        		</c:choose>
-	  		  	
+       			<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" 
+       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
+			 		style="width: 90%;" maxlength="1000"/>
 	        </p:column>
 	        <p:column  rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{ppItem.changedDate}" >
