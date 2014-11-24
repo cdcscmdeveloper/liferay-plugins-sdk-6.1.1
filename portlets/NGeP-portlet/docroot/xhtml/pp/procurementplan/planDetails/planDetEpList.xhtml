@@ -79,7 +79,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column style="white-space:nowrap;">
 			    <ac:lov id="lovGOSO" lovId="PM_GOSO" size="10" update=":form:dtExpenditurePlan" 
 			    	required="#{!empty param['disableValidation']}"
-	            	readonly="true" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}"
+	            	readonly="true" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !epItem.rejected}"
 					headerText="#{lbl['lbl.pp.goso.code']}"
 					value="#{epItem.pmSo.soCode}" 
 					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
@@ -93,7 +93,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
 		  		<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
-		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}">
+		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable and !epItem.rejected}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update="dtExpenditurePlan" />
 		  		</p:inputText>
@@ -102,7 +102,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
 		  		<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
-		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}">
+		  			disabled="#{!pPlanBackingBean.managedBean.modeEditable and !epItem.rejected}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update="dtExpenditurePlan"  />
 		  		</p:inputText>
@@ -128,7 +128,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.rejected}" 
+			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !epItem.rejected}" 
 					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
 			 		style="width:90%" maxlength="1000" required="#{!empty param['disableValidation']}">
 			 		<p:ajax event="change"  process="@this"/>
@@ -155,7 +155,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-					     	<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" />
+				     		<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" />
 					    </f:facet>
 					</p:column>
 					<p:column>

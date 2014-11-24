@@ -77,7 +77,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		 	</p:columnGroup>
 			<p:column selectionMode="multiple"/>
 	        <p:column>
-				<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}"
+				<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}"
 					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
 			 		style="width: 90%;" maxlength="1000" required="#{!empty param['disableValidation']}">
 			 		<p:ajax event="change" process="@this" />
@@ -85,7 +85,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            <p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />    
 	        </p:column>	 
 	        <p:column>
-		  		<p:selectOneMenu style="width:90%" id="somCategory" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}"
+		  		<p:selectOneMenu style="width:90%" id="somCategory" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
@@ -95,7 +95,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
 	        <p:column>
-		  		<p:selectOneMenu style="width:90%" id="somProcurementMethod" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}"
+		  		<p:selectOneMenu style="width:90%" id="somProcurementMethod" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}"
 					label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
@@ -106,7 +106,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column  style="white-space:nowrap;">
 	  			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
-	  				disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}"
+	  				disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}"
 			  		required="#{!empty param['disableValidation']}" navigator="true" 
 			  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" yearRange="-99:-16"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -115,7 +115,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
 	        <p:column>
-		  		<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}" 
+		  		<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}" 
 		  			id="itEstAmt" label="#{lbl['lbl.pp.estimated.amount']}"
 		  			required="#{!empty param['disableValidation']}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}" update=":form:dtProcurementPlan"/>
@@ -123,12 +123,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
 	        </p:column>
 	        <p:column>
-		  		<p:inputText style="width:90%" value="#{ppItem.costCenterCode}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}" >
+		  		<p:inputText style="width:90%" value="#{ppItem.costCenterCode}" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}" >
 	  	
   				</p:inputText>
 	        </p:column>
 	        <p:column>
-		  		<p:inputText style="width:90%" value="#{ppItem.costCenterName}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}">
+		  		<p:inputText style="width:90%" value="#{ppItem.costCenterName}" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}">
 		  			<p:ajax event="change" process="@this" />
 		  		</p:inputText>
 	        </p:column>
@@ -143,7 +143,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	  		  	<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable or !ppItem.rejected}"
+	  		  	<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" disabled="#{!pPlanBackingBean.managedBean.modeEditable and !ppItem.rejected}"
 					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
 			 		style="width: 90%;" maxlength="1000"/>
 	        </p:column>
