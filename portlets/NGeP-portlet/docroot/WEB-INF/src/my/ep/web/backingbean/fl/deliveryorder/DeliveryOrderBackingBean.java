@@ -313,7 +313,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 					commonBackingBean.getManagedBean().setParamMap(paramMap);
 					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-				}								
+				}		
+				RequestContext.getCurrentInstance().update("@form");
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
