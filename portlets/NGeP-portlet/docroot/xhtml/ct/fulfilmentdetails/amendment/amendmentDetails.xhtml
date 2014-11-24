@@ -145,14 +145,14 @@
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 		
-			<p:outputLabel value="#{lbl['lbl.ct.extension.start']}"
+			<p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extStartDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 
 			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			
-			<p:outputLabel value="#{lbl['lbl.ct.extension.end']}"
+			<p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extEndDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
 			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
