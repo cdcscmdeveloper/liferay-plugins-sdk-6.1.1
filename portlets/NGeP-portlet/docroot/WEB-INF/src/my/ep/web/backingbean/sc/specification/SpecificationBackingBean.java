@@ -6533,6 +6533,7 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
 					st2financeproposalList);
+			this.getManagedBean().setFinStandaraChecklist(false);
 		} finally {
 			statussO = null;
 		}
@@ -6644,6 +6645,7 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setScQtCheckSt2techProposal(
 					st2technicalproposalList);
+			this.getManagedBean().setTechStandaraChecklist(false);
 		} finally {
 			statussO = null;
 		}
