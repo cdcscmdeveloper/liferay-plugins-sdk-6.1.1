@@ -117,7 +117,7 @@
 
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
 
 
 						<p:selectOneMenu style="width:100px;"
@@ -133,7 +133,7 @@
 
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null }">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist }">
 
 
 						<p:selectOneMenu style="width:100px;"
@@ -151,7 +151,7 @@
 				style="width:8%;white-space: normal;">
 				<h:panelGroup id="technicalChecklistsupplier">
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
 						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
 							value="#{stageTwoTechnical.action.parameterId}">
 							<f:selectItems
@@ -163,7 +163,7 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
 						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
 							value="#{stageTwoTechnical.action.parameterId}">
 							<f:selectItems

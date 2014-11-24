@@ -99,7 +99,7 @@
 				style="width:10%;white-space: normal;">
 				<h:panelGroup id="financialCheckListtitle">
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title eq  null and stageTwofunctional.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title eq  null and stageTwofunctional.qtChecklistId eq null and !specificationBackingBean.managedBean.finStandaraChecklist}">
 						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
 							style="width:100px;">
 							<f:selectItems
@@ -111,7 +111,7 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null and stageTwofunctional.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null and stageTwofunctional.qtChecklistId eq null and !specificationBackingBean.managedBean.finStandaraChecklist}">
 						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
 							style="width:100px;">
 							<f:selectItems
