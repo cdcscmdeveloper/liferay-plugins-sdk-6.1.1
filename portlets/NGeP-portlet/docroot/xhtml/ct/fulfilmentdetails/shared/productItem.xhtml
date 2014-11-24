@@ -68,7 +68,7 @@
 		          </p:column> 
 		    
 		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%; white-space:normal;">
-		               <p:outputLabel value="#{ctItemVar.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		               <p:outputLabel value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		           </p:column>  
 		                
     	      </p:dataTable> 

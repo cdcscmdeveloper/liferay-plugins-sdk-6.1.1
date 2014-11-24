@@ -56,6 +56,7 @@
 		               readonlyInput="true"   mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
 		               showOn="button"  disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+		           	   <p:ajax event="dateSelect" update="agenyStatus" listener="#{contractDetailsBackingBean.checkAgencyStatus(agencyData)}"  /> 
 		           </p:calendar>
 		          </p:column>
 		   	
@@ -74,7 +75,7 @@
 		       </p:column>
 		        
 		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;">
-		   	        <p:outputLabel value="#{agencyData.recordStatusFlg == 1 ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
+		   	        <p:outputLabel id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
 		       </p:column>
 			</p:dataTable> 
        	<div class="ppRightBtn" style="padding-top:8px;">
