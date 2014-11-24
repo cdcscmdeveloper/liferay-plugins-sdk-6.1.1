@@ -11079,8 +11079,9 @@ public class SpecificationBackingBean extends
 	 * preparespec or scroing
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String completeTemplateSpecDetails(String flowType, String specType) {
+	public String completeTemplateSpecDetails(String flowType, String specType)  {
 
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
@@ -11209,7 +11210,40 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSpecSO.class);
-		SpecificationResDTO resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
+		SpecificationResDTO resDTO = new SpecificationResDTO();
+		try{
+			resDTO=specSO.saveOrUpdateTemplateSpecs(reqDTO);
+		}catch(EpException e){
+			
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				if(null!=reqDTO.getCheckLists()){
+					for(ScQtCheckList checkList:reqDTO.getCheckLists()){
+						if (SourcingConstants.TECHNICAL_DOCTYPE
+								.equalsIgnoreCase(checkList.getDocCategory())) {
+							PmStatus status=new PmStatus();
+							status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+							checkList.setPmStatus(status);
+							this.getManagedBean().setScQtChecklist(checkList);
+						}
+					}
+				}
+			}else{
+				if (SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
+					if(null!=reqDTO.getCheckLists()){
+						for(ScQtCheckList checkList:reqDTO.getCheckLists()){
+							if (SourcingConstants.FINANCIAL_DOCTYPE
+									.equalsIgnoreCase(checkList.getDocCategory())) {
+								PmStatus status=new PmStatus();
+								status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+								checkList.setPmStatus(status);
+								this.getManagedBean().setScQtChecklist(checkList);
+							}
+						}
+					}
+				}
+			}
+			//throw new Exception(e.getMessage());
+		}
 
 		// Need to redirect particualr page..
 		if (resDTO.isSuccessful()) {
