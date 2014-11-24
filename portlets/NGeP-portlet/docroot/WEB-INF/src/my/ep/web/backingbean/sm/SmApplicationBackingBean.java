@@ -6235,7 +6235,7 @@ public class SmApplicationBackingBean extends
 						&& (personnel.getEpRole().equalsIgnoreCase(
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
 								.getEpRole().equalsIgnoreCase(
-										RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+										RoleCode.BASIC_SUPPLIER_ADMIN.value()) || (personnel.isEquityOwner() && getManagedBean().isDisAllowOwnerEdit()))) {
 					iterator.remove();
 				}
 			}

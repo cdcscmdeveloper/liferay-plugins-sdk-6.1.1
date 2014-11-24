@@ -413,26 +413,26 @@
 							listener="#{backingBean.unSelectAdmin}"
 							update=":form:tt:persInfPan"></p:ajax>
 						<p:column selectionMode="multiple" width="5%"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}" />
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText value="#{person.name}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
 								rendered="#{person.equityOwner}" />
 							<h:outputText value="#{lbl['lbl.txt.no']}"
 								rendered="#{!person.equityOwner}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
 								rendered="#{person.authorizedFlg eq '1'}" />
 							<h:outputText value="#{lbl['lbl.txt.no']}"
@@ -440,7 +440,7 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.processing']}"
 								rendered="#{person.softcertFlg eq '3'}" />
@@ -454,11 +454,11 @@
 								rendered="#{person.softcertFlg eq '0'}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText value="#{person.roleName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
 								rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
@@ -471,7 +471,7 @@
 								rendered="#{person.contractSignerFlg eq 1}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<p:commandLink
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form"
