@@ -7949,14 +7949,26 @@ public class SpecificationBackingBean extends
 				ScQt qt = resDTO.getScQt();
 				// Code to renew the session Object..
 				renewSesionObject();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										getMessgeConstant(action),
-										new String[] { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				
+				if(qt.getMinistrySpecSecrataryId() == null){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_700026,
+											new String[] { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_700005,
+											new String[] { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
