@@ -322,29 +322,42 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	         getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 	    
 	         setBondRecordStatus(this.getManagedBean().getContractVer());
-	         if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 )
-		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());
+	         if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
+		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
+		           for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+		        	  checkAgencyStatus(ctAgency);		        	   
+		           }
+	         }
 	  
-	          if(getManagedBean().getContractVer().getCtContractItems().size() > 0) {
-	        	   
+	          if(getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
 	        	    getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
  		            getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
  		            getManagedBean().setSelectedItem(null);
- 		            getManagedBean().setSelectedServiceItem(null);
-	    	  
+ 		            getManagedBean().setSelectedServiceItem(null);	    	  
+ 		            
  		            for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-			             
+ 		            		// If effective date is after current date, status is still display old status
+			        	   if (item.getRecordStatusFlg() == 0) {				       		
+					       		if(item.getEffDate().after(getCurrentDate())) 
+					       			item.setChkStatus(true);
+					       		else 
+					       			item.setChkStatus(false);
+			        	   }
+			        	   else {
+					       		if(item.getEffDate().after(getCurrentDate())) 
+					       			item.setChkStatus(false);
+					       		else 
+					       			item.setChkStatus(true);		        		   
+			        	   }
  		            	   if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 			        	          Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-				                  getManagedBean().getCtItemServiceList().add(item);
-			           
+				                  getManagedBean().getCtItemServiceList().add(item);			           
  		            	   } else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			        	             Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 			        	             if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0)
 			        	        	       Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
 	        	                     this.getManagedBean().getCtItemList().add(item);
-			               }
-		             
+			               }		             
  		            } if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) 
 		                    Collections.sort(this.getManagedBean().getCtItemList(), new CtContractItem());
 	    	 
@@ -1572,6 +1585,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ctAgency.setEffDate(new Date());
 			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			ctAgency.setCeilingAmount(new BigDecimal(0));
+			ctAgency.setChkStatus(true);
 			
 			 IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2289,7 +2303,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if(getManagedBean().getSelectedItem()!=null) {
 			for(CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				if(ctItemCeilingQty.getCtAgency().getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				if(ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
 			}
@@ -2859,5 +2873,21 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.central.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
+	}
+	
+	public void checkAgencyStatus(CtAgency ctAgency){
+		// If effective date is after current date, status is still display old status
+ 	   if (ctAgency.getRecordStatusFlg() == 0) {
+	       		if(ctAgency.getEffDate().after(getCurrentDate())) 
+	       			ctAgency.setChkStatus(true);
+	       		else 
+	       			ctAgency.setChkStatus(false);
+ 	   }
+ 	   else {
+	       		if(ctAgency.getEffDate().after(getCurrentDate())) 
+	       			ctAgency.setChkStatus(false);
+	       		else 
+	       			ctAgency.setChkStatus(true);		        		   
+ 	   }
 	}
 }

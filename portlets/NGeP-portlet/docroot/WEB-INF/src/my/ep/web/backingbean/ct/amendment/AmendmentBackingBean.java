@@ -96,6 +96,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -376,11 +377,44 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
 				     getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
 			  
-			    } if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0) {
+			    }
+		  	    
+		  	    if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {         
+		  	    	for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+			        	// If effective date is after current date, status is still display old status
+			  	    	if (ctAgency.getRecordStatusFlg() == 0) {
+			  	    		if(ctAgency.getEffDate().after(getCurrentDate())) 
+			  	    			ctAgency.setChkStatus(true);
+			  	    		else 
+			  	    			ctAgency.setChkStatus(false);
+			  	    	}
+			  	    	else {
+			  	    		if(ctAgency.getEffDate().after(getCurrentDate())) 
+			  	    			ctAgency.setChkStatus(false);
+			  	    		else 
+			  	    			ctAgency.setChkStatus(true);		        		   
+			  	    	}
+		  	    	}
+		  	    }
+		  	    
+		  	    if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0) {
 			           this.getManagedBean().getCtItemList().clear();
 			           this.getManagedBean().getCtServiceItemList().clear();
 			           
 			           for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+			        	   // If effective date is after current date, status is still display old status
+			        	   if (item.getRecordStatusFlg() == 0) {				       		
+					       		if(item.getEffDate().after(getCurrentDate())) 
+					       			item.setChkStatus(true);
+					       		else 
+					       			item.setChkStatus(false);
+			        	   }
+			        	   else {
+					       		if(item.getEffDate().after(getCurrentDate())) 
+					       			item.setChkStatus(false);
+					       		else 
+					       			item.setChkStatus(true);		        		   
+			        	   }
 				            
 			        	    if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 					                getManagedBean().setItemProductExist(true);
@@ -2591,7 +2625,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if(getManagedBean().getSelectedItem()!=null) {
 			for(CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				if(ctItemCeilingQty.getCtAgency().getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				if(ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
 			}
