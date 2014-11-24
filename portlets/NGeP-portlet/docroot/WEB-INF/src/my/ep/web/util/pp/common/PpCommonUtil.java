@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
@@ -53,6 +54,38 @@ import org.apache.log4j.Logger;
  */
 public class PpCommonUtil {
 	private static Logger log = Logger.getLogger(PpCommonUtil.class);
+	
+	/**
+	 * Retrieve ppPlan by searchbean
+	 * @param searchBean
+	 * @return List<PpPlan> 
+	 */
+	public static List<PpPlan> retrievePlanBySearchBean(ISearchBean<PpPlan> searchBean){
+		log.info("retrievePlanBySearchBean - Start");
+		List<PpPlan> ppPlans = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setSearchBean(searchBean);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrievePlanBySearchBean(reqDTO);
+			if (resDTO.isSuccessful()) {
+				ppPlans = resDTO.getPlanList();
+			}
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
+		}
+		log.info("retrievePlanBySearchBean - End");
+		return ppPlans;
+	}
+
+	
 	
 	/**
 	 * Retrieve remark list by docId and docType
