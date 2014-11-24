@@ -6,8 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/><br/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.extension.period']}" escape="false"/><br/><br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
@@ -18,7 +17,7 @@
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{amendmentBackingBean.invalidContractExtendPeriod()
 								or amendmentBackingBean.bpkApprover}">
-					<p:ajax event="change" update=":form:typesOfAmend" process="@all"
+					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction" process="@all"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
@@ -129,6 +128,10 @@
 					disabled="#{amendmentBackingBean.bpkApprover}" />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
+		</h:panelGrid>
+		<h:panelGrid id="instruction"  columns="1" style="width:100%">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.extension.period']}" escape="false"
+				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/><br/>
 		</h:panelGrid>
 		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth225">
 			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}"
