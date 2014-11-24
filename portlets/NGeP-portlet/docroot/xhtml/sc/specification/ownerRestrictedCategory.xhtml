@@ -21,20 +21,19 @@
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
-				style="width:20%">
+				style="width:18%">
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
 					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					size="1" style="margin-right: 3px !important;">
+					style="margin-right: 3px !important;width:20px;">
 					<p:ajax event="blur"
 						update=":form:restrictedtabView:restrictedPnlId"
 						partialSubmit="true" process="@this"
 						listener="#{specificationBackingBean.updatedQtCategoryL1Code(cateGory)}"></p:ajax>
 				</p:inputText>
 				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
-					maxlength="2"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					size="1">
+					maxlength="2" style="width:20px;"
+					disabled="#{specificationBackingBean.managedBean.readOnly}">
 					<p:ajax event="blur"
 						update=":form:restrictedtabView:restrictedPnlId"
 						partialSubmit="true" process="@this"
@@ -68,7 +67,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
-				style="width:8%">
+				style="width:10%">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
