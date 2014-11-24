@@ -90,12 +90,16 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
-					style="width:35%">
+					style="width:35%;white-space: normal;">
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 						<p:inputTextarea rows="2" cols="40" maxlength="200"
-							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.memberOnly}"
+							rendered="#{!evaluationBackingBean.managedBean.readOnly}"
 							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
+						<h:outputText
+							rendered="#{evaluationBackingBean.managedBean.readOnly}"
+							value="#{complianceTechnicalSupplier.remark}">
+						</h:outputText>
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>
