@@ -122,6 +122,7 @@ import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
@@ -2850,5 +2851,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
+	}
+	
+	public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.ministry.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.central.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		}
+		return portletTitle;
 	}
 }
