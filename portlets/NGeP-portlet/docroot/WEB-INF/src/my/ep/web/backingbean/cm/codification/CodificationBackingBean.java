@@ -1056,7 +1056,6 @@ public class CodificationBackingBean extends
 				extCodeVO.setMeasurementId(Long.valueOf(String
 						.valueOf(objects[2])));
 				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-				log.info("color id = String.valueOf(objects[3])");
 				extCodeVO.setTypeName(String.valueOf(objects[4]));
 				extCodeVO.setBrandName(String.valueOf(objects[5]));
 				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
@@ -1092,6 +1091,12 @@ public class CodificationBackingBean extends
 					.get(0);
 
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+			log.info("color id = "+obj.getColorId());
+			log.info("obj.getBrandId() = "+obj.getBrandId());
+			log.info("obj.getMeasurementId() = "+obj.getMeasurementId());
+			log.info("obj.getTypeId() = "+obj.getTypeId());
+			log.info("this.getManagedBean().getSelectedUNSPSCObj().getUnspscId() = "+this.getManagedBean().getSelectedUNSPSCObj().getUnspscId());
+			
 			codeReqDTO.setBrandId(obj.getBrandId());
 			codeReqDTO.setMeasurementId(obj.getMeasurementId());
 			codeReqDTO.setTypeId(obj.getTypeId());
@@ -1178,7 +1183,7 @@ public class CodificationBackingBean extends
 
 				CmColor colorObj = this.searchColorObjByColorId(obj
 						.getColorId());
-
+				
 				CmItem newItem = new CmItem();
 
 				newItem.setCmUnspsc(codeResDTO.getCommodityObj());
@@ -1186,8 +1191,7 @@ public class CodificationBackingBean extends
 				newItem.setCmBrand(brandObj);
 				newItem.setCmMeasurement(meaObj);
 				newItem.setCmColor(colorObj);
-				newItem.setItemName(this.getManagedBean()
-						.getSelectedUNSPSCObj().getUnspscTitle()
+				newItem.setItemName(codeResDTO.getCommodityObj().getUnspscTitle()
 						+ ((typeObj.getTypeName().equals("N/A") || typeObj
 								.getTypeName().equals("NA")) ? "" : " "
 								+ typeObj.getTypeName())
@@ -1201,8 +1205,7 @@ public class CodificationBackingBean extends
 								.getColorName().equals("NA")) ? "" : " "
 								+ colorObj.getColorName()));
 
-				newItem.setExtensionCode(this.getManagedBean()
-						.getSelectedUNSPSCObj().getUnspscCode()
+				newItem.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode()
 						+ typeObj.getTypeCode()
 						+ brandObj.getBrandCode()
 						+ meaObj.getMeasurementCode() + colorObj.getColorCode());
@@ -1217,6 +1220,14 @@ public class CodificationBackingBean extends
 			}
 
 			this.getManagedBean().getSelectedRequestItem().setCmItem(item);
+			List<ScRequestItem> tempRequestItemList = new ArrayList<ScRequestItem>();
+			tempRequestItemList.add(this.getManagedBean().getSelectedRequestItem());
+			// update RequestItem
+			RequestItemReqDTO requestItemReqDTO = new RequestItemReqDTO();
+			requestItemReqDTO.setRequestItems(tempRequestItemList);
+
+			RequestItemResDTO requestItemResDTO = ReqItemSO
+					.saveRequestItems(requestItemReqDTO);
 
 			// check RequestItemList if all ItemCodes were assigned then
 			// update
@@ -1238,17 +1249,9 @@ public class CodificationBackingBean extends
 				}
 			}
 
-			RequestItemResDTO requestItemResDTO = null;
 			if (allCodeItemsAssigned) {
 				// update status of PendingCodifiedItem to Completed and
-				// update
-				// its RequestItemList
-				RequestItemReqDTO requestItemReqDTO = new RequestItemReqDTO();
-				requestItemReqDTO.setRequestItems(this.getManagedBean()
-						.getSelectedVPendingRequestItemList());
-
-				requestItemResDTO = ReqItemSO
-						.saveRequestItems(requestItemReqDTO);
+	
 
 				// update status of pendingCodifiedItem
 				PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();
