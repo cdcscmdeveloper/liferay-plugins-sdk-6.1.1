@@ -92,7 +92,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 	
 	private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
-	
+	FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -103,22 +103,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 	public String fulfillmentOrderAction(String action) {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
-		IFulfilmentOrderSO fulfilmentOrderSO = null;
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		IFulfilmentOrderSO fulfilmentOrderSO = null;		
 		try {
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
-			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
-				if("true".equalsIgnoreCase(getManagedBean().getFactoringCheck())){
-					if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId()){
-						throw new EpException(MessageConst.ERROR_745062);
-					}
-				}
-				
-			}
+			validateFulfillmentOrder(action);			
 			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -127,15 +114,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flOrder = getManagedBean().getFulfilmentOrder();
 			}
-				
-			
 			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 
 			if(getManagedBean().isContractRequest() == Boolean.TRUE){
 				reqDTO.setContractRequest(getManagedBean().isContractRequest());
-				checkValidity(flRequest);
 			}else{
 				reqDTO.setContractRequest(false);
 			}
@@ -226,6 +210,25 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 		} finally {
 			fulfilmentOrderSO = null;
+		}
+	}
+	
+	private void validateFulfillmentOrder(String action){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		}
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+			if("true".equalsIgnoreCase(getManagedBean().getFactoringCheck())){
+				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId()){
+					throw new EpException(MessageConst.ERROR_745062);
+				}
+			}			
+		}
+		if(getManagedBean().isContractRequest() == Boolean.TRUE){
+			checkValidity(getManagedBean().getFlRequest());
 		}
 	}
 
@@ -781,6 +784,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				sb.append(getManagedBean().getFulfilmentOrder().getSapOrderNo());
 				sb.append(outcome);
 				getManagedBean().setTextBeforeSign(sb.toString());
+				validateFulfillmentOrder(outcome);
 				// set action
 				getManagedBean().setButtonAction(outcome);
 				getManagedBean().setAutoUpdate(Boolean.FALSE);

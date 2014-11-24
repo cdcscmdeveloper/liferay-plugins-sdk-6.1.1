@@ -19,7 +19,6 @@
 		<ac:gpkiPopup 
 			textBeforeSign="#{receivedNoteBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{receivedNoteBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
-			enableAutoUpdate="#{receivedNoteBackingBean.enableAutoUpdate()}"
 		/>
 		<f:event listener="#{receivedNoteBackingBean.preRenderView}"
 			type="preRenderView" />
