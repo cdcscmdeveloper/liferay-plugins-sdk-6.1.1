@@ -187,6 +187,7 @@
 			<portlet id="SoftCertPayment"></portlet>
 			<portlet id="viewSupplierProfile"></portlet>
 			<portlet id="taskStatusSearch"></portlet>
+			<portlet id="smDeactivateAdmin"></portlet>
 		</category>
 
 		<category name="Template">

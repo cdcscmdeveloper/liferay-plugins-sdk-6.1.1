@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -30,77 +31,51 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 2739463536376846067L;
-	
 	private Long defaultCountryId;
-	
 	private String searchEPRole;
-	
 	private String searchCompanyRole;
-	
 	private String searchUsername;
-	
 	private List<SmPersonnel> personnelList;
-	
 	private SmPersonnel updateSmPersonnel;
-	
 	private SmPersonnelAddress updateSmPersonnelMailingAddress;
-	
 	private SmPersonnelAddress updateSmPersonnelPermanentAddress;
-
 	private List<SelectItem> countryList;
-	
 	private List<SelectItem> stateList;
-	
 	private List<SelectItem> districtList;
-	
 	private List<SelectItem> cityList;
-
 	private SmPersonnel basicSmPersonnel;
-	
 	private SmPersonnelAddress basicSmPersonnelMailingAddress;
-	
 	private SmPersonnelAddress basicSmPersonnelPermanentAddress;
-	
 	private List<SelectItem> mailAddCountryList;
-	
 	private List<SelectItem> mailAddStateList;
-	
 	private List<SelectItem> mailAddDistrictList;
-	
 	private List<SelectItem> mailAddCityList;
-
 	private List<SelectItem> permAddCountryList;
-	
 	private List<SelectItem> permAddStateList;
-	
 	private List<SelectItem> permAddDistrictList;
-	
 	private List<SelectItem> permAddCityList;
-
 	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
-	
 	private boolean disableRole = false;
-	  
 	private boolean editMode;
-
 	private SmAddress tempAddress;
-	
 	private List<SelectItem> roleList;
-	
 	private List<SelectItem> searchRoleList;
-
 	private boolean disableAddNewUser;
-	
 	private int accountStatus;
-	
 	private SelectItem[] idTypes;
-
+	private PmParameter adminVerifyIdType;
+	private String adminVerifyICNo;
+	private List<SelectItem> assignList;
+	private Long assignAdminPersonnelId;
+	private boolean fromMenu;
+	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
-	
-	private class SmPersonnelPagingDataModel extends PagingDataModel<SmPersonnel> {
+
+	private class SmPersonnelPagingDataModel extends
+			PagingDataModel<SmPersonnel> {
 		private static final long serialVersionUID = 1L;
 
 		public SmPersonnelPagingDataModel() {
@@ -108,40 +83,56 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<SmPersonnel> pageChangeListener(ISearchBean<SmPersonnel> searchBean) {
+		protected ISearchResultBean<SmPersonnel> pageChangeListener(
+				ISearchBean<SmPersonnel> searchBean) {
 			try {
-				
-				
-/*				SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
-				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-						.getInstance().getServiceObject("sm",
-								ISupplierSearchSO.class);
-				SupplierSearchResDTO smResDTO = supplierSearchSO
-						.retriveSupplierProfiles(supplierSearchReqDTO);
-				SmSupplier smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
-						.get(0);
-*/
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppl.smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId()));
-				
-				if(getSearchUsername() !=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getSearchUsername(),true));
+				/*
+				 * SupplierSearchReqDTO supplierSearchReqDTO = new
+				 * SupplierSearchReqDTO(); PmUser pmUser = new
+				 * FacesScopes().getUserSessionBean();
+				 * supplierSearchReqDTO.setUserId(pmUser.getUserId());
+				 * 
+				 * ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)
+				 * BusinessDelegate .getInstance().getServiceObject("sm",
+				 * ISupplierSearchSO.class); SupplierSearchResDTO smResDTO =
+				 * supplierSearchSO
+				 * .retriveSupplierProfiles(supplierSearchReqDTO); SmSupplier
+				 * smSupp = (SmSupplier)
+				 * smResDTO.getResultBean().getResultList() .get(0);
+				 */
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("smAppl.smSupplier.supplierId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getUpdateSmPersonnel().getSmAppl()
+										.getSmSupplier().getSupplierId()));
+
+				if (getSearchUsername() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("name",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getSearchUsername(), true));
 				}
 
-				if(getSearchEPRole() !=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("epRole",SearchOperator.OPERATOR_LIKE.value(),getSearchEPRole()));
+				if (getSearchEPRole() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("epRole",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getSearchEPRole()));
 				}
 
 				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				reqDTO.setSearchPersonnelBean(searchBean);
 
 				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-						.getInstance().getServiceObject("sm", IPersonnelSO.class);
-				PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelBySearchCriteria(reqDTO);
+						.getInstance().getServiceObject("sm",
+								IPersonnelSO.class);
+				PersonnelResDTO resDTO = smPersonnelSO
+						.retrievePersonnelBySearchCriteria(reqDTO);
 
-				if(resDTO.isSuccessful()) {
+				if (resDTO.isSuccessful()) {
+					setPersonnelList(resDTO.getSearchPersonnelResultBean()
+							.getResultList());
 					return resDTO.getSearchPersonnelResultBean();
 				}
 			} catch (Exception e) {
@@ -150,8 +141,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
-	public void searchSmPersonnel(){
+
+	public void searchSmPersonnel() {
 		smPersonnelDataModel2.reloadData();
 	}
 
@@ -188,7 +179,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	}
 
 	public List<SmPersonnel> getPersonnelList() {
-		if(personnelList == null)
+		if (personnelList == null)
 			personnelList = new ArrayList<SmPersonnel>();
 		return personnelList;
 	}
@@ -416,6 +407,52 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setIdTypes(SelectItem[] idTypes) {
 		this.idTypes = idTypes;
+	}
+
+	public PmParameter getAdminVerifyIdType() {
+		if(adminVerifyIdType == null)
+			adminVerifyIdType = new PmParameter();
+		return adminVerifyIdType;
+	}
+
+	public void setAdminVerifyIdType(PmParameter adminVerifyIdType) {
+		this.adminVerifyIdType = adminVerifyIdType;
+	}
+
+	public String getAdminVerifyICNo() {
+		if(adminVerifyICNo == null)
+			adminVerifyICNo = "";
+		return adminVerifyICNo;
+	}
+
+	public void setAdminVerifyICNo(String adminVerifyICNo) {
+		this.adminVerifyICNo = adminVerifyICNo;
+	}
+
+	public List<SelectItem> getAssignList() {
+		if(assignList == null)
+			assignList = new ArrayList<SelectItem>();
+		return assignList;
+	}
+
+	public void setAssignList(List<SelectItem> assignList) {
+		this.assignList = assignList;
+	}
+
+	public Long getAssignAdminPersonnelId() {
+		return assignAdminPersonnelId;
+	}
+
+	public void setAssignAdminPersonnelId(Long assignAdminPersonnelId) {
+		this.assignAdminPersonnelId = assignAdminPersonnelId;
+	}
+
+	public boolean isFromMenu() {
+		return fromMenu;
+	}
+
+	public void setFromMenu(boolean fromMenu) {
+		this.fromMenu = fromMenu;
 	}
 
 }

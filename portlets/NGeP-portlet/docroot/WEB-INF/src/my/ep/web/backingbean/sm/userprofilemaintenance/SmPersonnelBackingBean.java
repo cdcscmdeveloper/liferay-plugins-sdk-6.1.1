@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -39,6 +40,7 @@ import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -1288,6 +1290,96 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 		return itemList.toArray(new SelectItem[itemList.size()]);
 		
+	}
+
+	public String navigateToVerifyAdmin(){
+		System.out.println("********************SmPersonnelBackingBean navigateToVerifyAdmin***************");
+		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());	
+		getManagedBean().setFromMenu(false);
+		return "adminVerify.xhtml";
+	}
+	
+	public void navigateToDeactivateAdminPage(){  
+		System.out.println("********************SmPersonnelBackingBean navigateToDeactivateAdminPage***************");
+		
+		List<SmPersonnel> personnels = new ArrayList<SmPersonnel>();
+		if(getManagedBean().isFromMenu()){
+			
+			initUserPersonnelInfo();
+			if(getManagedBean().getUpdateSmPersonnel() != null){
+				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+						.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+				PersonnelResDTO resDTO = smPersonnelSO.retrieveAuthorizedPersonnels(reqDTO);
+				personnels = resDTO.getSmPersonnelList();
+			}
+		} else {
+			personnels = getManagedBean().getPersonnelList();
+		}
+		
+		for(SmPersonnel personnel : personnels){
+			SelectItem selectItem = new SelectItem();
+			selectItem.setValue(personnel.getPersonnelId());
+			selectItem.setLabel(personnel.getName());
+			getManagedBean().getAssignList().add(selectItem);
+		}
+		getManagedBean().setPersonnelList(personnels);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "adminReAssign.xhtml");
+	}
+
+	public void assignVerifyIdentType(AjaxBehaviorEvent e) {
+		System.out.println("***** The selected value of IC type is --- "
+				+ getManagedBean().getAdminVerifyIdType().getParameterId());
+		if (getManagedBean().getAdminVerifyIdType().getParameterId() != null) {
+			getManagedBean().setAdminVerifyIdType(
+							retrievePmParameterById(getManagedBean().getAdminVerifyIdType().getParameterId()));
+			if (getManagedBean().getAdminVerifyIdType() == null) {
+				getManagedBean().setAdminVerifyIdType(new PmParameter());
+			}
+		} else {
+			getManagedBean().setAdminVerifyIdType(new PmParameter());
+		}
+	}
+	
+	public void preRenderDeactivateSuppAdmin(){
+		System.out.println("********************SmPersonnelBackingBean preRenderDeactivateSuppAdmin***************");
+		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());	
+		getManagedBean().setFromMenu(true);
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "adminVerify.xhtml");
+		
+	}
+	
+	public void deactivateAdmin(){
+		if(getManagedBean().getAssignAdminPersonnelId() != null){
+			ISupplierUserActivationSO suppUserActivationSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
+			SupplierUserActivationReqDTO userPmReqDTO = new SupplierUserActivationReqDTO();
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+			userPmReqDTO.setLanguageCode(languageCode);
+			
+			try {
+				userPmReqDTO.setSmPersonnel(getManagedBean().getUpdateSmPersonnel());
+				suppUserActivationSO.deActivatePmProfileForPersonnel(userPmReqDTO);
+				userPmReqDTO = new SupplierUserActivationReqDTO();
+				for(SmPersonnel personnel : getManagedBean().getPersonnelList()){
+					if(getManagedBean().getAssignAdminPersonnelId() == personnel.getPersonnelId()){
+						userPmReqDTO.setSmPersonnel(personnel);
+					}
+				}
+				suppUserActivationSO.updatePmProfileForPersonnel(userPmReqDTO);
+			} catch(Exception ex) {
+				log.info("deactivateAdmin ex>>>>" + ex.getMessage());
+				log.info("personnel Id>>>>>" + userPmReqDTO.getSmPersonnel().getPersonnelId());
+				throw new EpException(ex.getMessage());
+			}
+		} else {
+			log.info("No option selected>>>>>");
+		}
 	}
 
 }
