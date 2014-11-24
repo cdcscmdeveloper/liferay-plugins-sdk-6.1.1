@@ -66,7 +66,8 @@
 									<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>
 							<td style="width: 60px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="16" disabled="true"/>
+							<td><p:inputText size="16" disabled="true"
+									value="#{createDOBackingBean.retrieveMofNo(createDOBackingBean.managedBean.fulfilmentRequest.smSupplier)}"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/>
 							</td>
 						</tr>
