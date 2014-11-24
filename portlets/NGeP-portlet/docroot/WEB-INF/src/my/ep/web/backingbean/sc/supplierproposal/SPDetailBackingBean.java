@@ -16,6 +16,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -202,9 +203,19 @@ public class SPDetailBackingBean extends
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
+				
+				Calendar cal = Calendar.getInstance();
+				Date closingDate = getManagedBean().getQt().getClosingDate();
+				
+				Date currentDayWithOutTime = DateUtils
+						.getCurrentDateWithoutTime();
+				
 				Date today = new Date();
 				long days = DateUtils.getDaysDifference(today, getManagedBean()
 						.getQt().getClosingDate());
+				if (days == 0) {
+
+				}
 				this.getManagedBean().setDays(days);
 			}
 
@@ -1562,27 +1573,28 @@ public class SPDetailBackingBean extends
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setSupplier(smSupplier);
-			
+
 			reqDTO.setSpecMaster(specMaster);
 			if (getManagedBean().getSelectedZone() != null) {
 				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 			}
 
-			//reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
+			// reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
 				specMaster = resDTO.getSpecMaster();
-				/*if (specMaster.getOrgProfile() == null) {
-				specMaster.setOrgProfile(new PmOrgProfile());
-			}*/
+				/*
+				 * if (specMaster.getOrgProfile() == null) {
+				 * specMaster.setOrgProfile(new PmOrgProfile()); }
+				 */
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setContentType(reqDTO.getContentType());
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
-				
+
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
 			}
 		} finally {
@@ -2267,8 +2279,8 @@ public class SPDetailBackingBean extends
 			}
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 
-				if (scQtPRPExperience.getQtPrpExperienceId() != null || scQtPRPExperience
-								.getQtPrpExperienceId() != 0) {
+				if (scQtPRPExperience.getQtPrpExperienceId() != null
+						|| scQtPRPExperience.getQtPrpExperienceId() != 0) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
 				// experienceList.remove(selectedExperienceList.get(i));
@@ -2333,9 +2345,10 @@ public class SPDetailBackingBean extends
 				|| selectedCreditFacilitiesList.size() == 0) {
 			throw new EpException("Please select a record to delete");
 		}
-		
-		if (selectedCreditFacilitiesList != null && creditFacilitiesList != null) {
-			
+
+		if (selectedCreditFacilitiesList != null
+				&& creditFacilitiesList != null) {
+
 			if (toDeleteCreditFacilitiesList == null) {
 
 				toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
@@ -2347,8 +2360,9 @@ public class SPDetailBackingBean extends
 						|| facility.getCreditFacilityId() != 0) {
 					toDeleteCreditFacilitiesList.add(facility);
 				}
-				
-				Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList.iterator();
+
+				Iterator<ScQtPRPCreditFacility> itr = creditFacilitiesList
+						.iterator();
 				while (itr.hasNext()) {
 					ScQtPRPCreditFacility localQtPRPCreditFacility = itr.next();
 					if (localQtPRPCreditFacility.equals(facility)) {
@@ -2401,15 +2415,16 @@ public class SPDetailBackingBean extends
 		}
 
 		if (selectedCashOnHandList != null && cashOnHandList != null) {
-			if(toDeleteCashOnHandList == null){
+			if (toDeleteCashOnHandList == null) {
 				toDeleteCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
 			}
 
 			for (ScQtPRPCashOnHand onHand : selectedCashOnHandList) {
-				if (onHand.getPrpCashOnHandId() != null || onHand.getPrpCashOnHandId() != 0){
+				if (onHand.getPrpCashOnHandId() != null
+						|| onHand.getPrpCashOnHandId() != 0) {
 					toDeleteCashOnHandList.add(onHand);
 				}
-				
+
 				Iterator<ScQtPRPCashOnHand> itr = cashOnHandList.iterator();
 				while (itr.hasNext()) {
 					ScQtPRPCashOnHand localQtPRPCashOnHand = itr.next();
@@ -2418,14 +2433,13 @@ public class SPDetailBackingBean extends
 						break;
 					}
 				}
-				
+
 				cashOnHandList.remove(onHand);
 			}
 			getManagedBean().setToBeDeletedCashOnHandList(
 					toDeleteCashOnHandList);
 		}
-		getManagedBean()
-		.setScQtPRPCashOnHand(cashOnHandList);
+		getManagedBean().setScQtPRPCashOnHand(cashOnHandList);
 		getManagedBean().setSelectedAll(false);
 		getManagedBean().setSelected(false);
 		getManagedBean().setSelectedPRPCashOnHand(null);
@@ -2801,7 +2815,7 @@ public class SPDetailBackingBean extends
 
 		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-			//List<ScQtPRPCreditFacility> creditFacilityList = ;
+		
 			List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean()
 					.getSelectedPRPCreditFacilities();
 			List<ScQtPRPCreditFacility> creditFacilityList = getManagedBean()
@@ -2809,13 +2823,13 @@ public class SPDetailBackingBean extends
 			if (selectedCreditFacilityList == null) {
 				selectedCreditFacilityList = new ArrayList<ScQtPRPCreditFacility>();
 			}
-			
-			for (int i=0; i< creditFacilityList.size(); i++ ){
-				selectedCreditFacilityList.add(getManagedBean()
-						.getScQtPRPCreditFacilities().get(i));
+
+			for (ScQtPRPCreditFacility creditFacility : creditFacilityList) {
+				selectedCreditFacilityList.add(creditFacility);
 			}
-			
-			getManagedBean().setSelectedPRPCreditFacilities(selectedCreditFacilityList);
+
+			getManagedBean().setSelectedPRPCreditFacilities(
+					selectedCreditFacilityList);
 		} else {
 			getManagedBean().setSelected(false);
 			getManagedBean().setSelectedPRPCreditFacilities(null);
@@ -2879,13 +2893,14 @@ public class SPDetailBackingBean extends
 			if (selectedQtPRPCashOnHandList == null) {
 				selectedQtPRPCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
 			}
-			
-			for(ScQtPRPCashOnHand qtPRPCashOnHand : getManagedBean()
-					.getScQtPRPCashOnHand()){
+
+			for (ScQtPRPCashOnHand qtPRPCashOnHand : getManagedBean()
+					.getScQtPRPCashOnHand()) {
 				selectedQtPRPCashOnHandList.add(qtPRPCashOnHand);
 			}
-			
-			getManagedBean().setSelectedPRPCashOnHand(selectedQtPRPCashOnHandList);
+
+			getManagedBean().setSelectedPRPCashOnHand(
+					selectedQtPRPCashOnHandList);
 		} else {
 			getManagedBean().setSelected(false);
 			getManagedBean().setSelectedPRPCashOnHand(null);
@@ -2928,19 +2943,32 @@ public class SPDetailBackingBean extends
 
 		}
 	}
-	
-	public void creditFacilityValidator(int index){
-		
-		ScQtPRPCreditFacility validateFacility =getManagedBean().getScQtPRPCreditFacilities().get(index);
-		
-		if(validateFacility.getAmtPaid().doubleValue() > validateFacility.getCreditAmt().doubleValue()){
-			
-			throw new EpException("Paid Amount can not be greater than Credit amount");
-			
+
+	public void creditFacilityValidator(int index) {
+
+		ScQtPRPCreditFacility validateFacility = getManagedBean()
+				.getScQtPRPCreditFacilities().get(index);
+
+		if (validateFacility.getAmtPaid().doubleValue() > validateFacility
+				.getCreditAmt().doubleValue()) {
+
+			throw new EpException(
+					"Paid Amount can not be greater than Credit amount");
+
 		}
-		
+
 		totalCreditFacilitiesSum();
-		
+
+	}
+
+	private String durationFormatter(long durationInMills) {
+
+		long diffMinutes = durationInMills / (60 * 1000) % 60;
+		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
+		DecimalFormat durationFormat = new DecimalFormat("#00");
+		String duration = durationFormat.format(diffHours) + " Hours :"
+				+ durationFormat.format(diffMinutes) +"Minutes";
+		return duration;
 	}
 
 }
