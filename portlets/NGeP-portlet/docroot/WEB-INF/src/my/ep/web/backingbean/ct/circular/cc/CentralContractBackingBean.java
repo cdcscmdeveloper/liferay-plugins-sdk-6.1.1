@@ -1118,4 +1118,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
 	}
+	
+	public String getStatusDesc(CtCircularVer circularVer) {
+		if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+			return getStatusDescById(ContractStatusConst.CR_APPROVED);
+		}
+		else {
+			return getStatusDescById(circularVer.getStatus().getStatusId());
+		}
+	}
 }
