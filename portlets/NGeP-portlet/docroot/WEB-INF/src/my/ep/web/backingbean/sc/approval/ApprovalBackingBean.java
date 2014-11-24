@@ -96,7 +96,7 @@ public class ApprovalBackingBean extends
 
 	private String textBeforeSign;
 	private PmDigiSign pmDigiSign;
-	
+
 	public ApprovalBackingBean() {
 
 	}
@@ -300,28 +300,24 @@ public class ApprovalBackingBean extends
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
 		}
 		this.getManagedBean().setQuotationTenderDataType(obj);
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderReqDTO qtReqDto = new QuationTenderReqDTO();
-		qtReqDto.setQtId(qtId);
-		qtReqDto.setDocType(QTConstants.DOCTYPE_QT);
-		QuationTenderResDTO tenderResDTO = detailSO.retriveQTDetails(qtReqDto);
+
 		ScQtApproval scQtApproval = null;
-		this.getManagedBean().setQt(tenderResDTO.getQtDetail());
+
 		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BUDGET_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
-					ParameterConst.APPROVAL_CATEGORY_BUDGET);
+					ParameterConst.APPROVAL_CATEGORY_BUDGET,
+					ParameterConst.DOCTYPE_BGT_APPROVAL);
+
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
-					ParameterConst.APPROVAL_CATEGORY_BPK);
+					ParameterConst.APPROVAL_CATEGORY_BPK,
+					ParameterConst.DOCTYPE_BPK_APPROVAL);
 			scQtApproval.setApproverSettings(null);
-			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval,
-					null, scQtApproval.getScQtApprovalRemarks(),
-					ScQtApprovalRemark.class));
+
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
 					.getScQtApprovalDtls()) {
 				if (approvalRequest.getDecessionType() == null) {
@@ -332,19 +328,20 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
-					ParameterConst.APPROVAL_CATEGORY_BPK);
+					ParameterConst.APPROVAL_CATEGORY_BPK,
+					ParameterConst.DOCTYPE_BPK_APPROVAL);
 			scQtApproval.setApproverSettings(null);
+
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
+
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.COMMITTEE_APPROVAL.dispalyName());
 
 			scQtApproval = getApproval(qtId,
-					ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
-			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval,
-					null, scQtApproval.getScQtApprovalRemarks(),
-					ScQtApprovalRemark.class));
+					ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT,
+					ParameterConst.DOCTYPE_COMMITTE_APROVAL);
 
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -394,12 +391,12 @@ public class ApprovalBackingBean extends
 			}
 		} else if (SCProcessNameConst.APPROVE_PUBLICATION
 				.equalsIgnoreCase(taskName)) {
+
 			this.getManagedBean().setApprovalType("Publication Approval");
 			scQtApproval = getApproval(qtId,
-					ParameterConst.APPROVAL_CATEGORY_PTJ);
-			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval,
-					null, scQtApproval.getScQtApprovalRemarks(),
-					ScQtApprovalRemark.class));
+					ParameterConst.APPROVAL_CATEGORY_PTJ,
+					ParameterConst.DOCTYPE_PCB_APPROVAL);
+
 			if (null != getManagedBean().getQt().getClosingDate()) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(getManagedBean().getQt().getClosingDate());
@@ -408,6 +405,12 @@ public class ApprovalBackingBean extends
 				getManagedBean().setProposalValidityUntil(cal.getTime());
 			}
 		}
+
+		scQtApproval
+				.setScQtApprovalRemarks(initializeRemarks(scQtApproval, this
+						.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+						scQtApproval.getScQtApprovalRemarks(),
+						ScQtApprovalRemark.class));
 		this.getManagedBean().setScQtApproval(scQtApproval);
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication()
@@ -439,7 +442,8 @@ public class ApprovalBackingBean extends
 					"reviceApprovalDlg.show()");
 		} else {
 			this.getManagedBean().setAction(action);
-			if ("Publication Approval".equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
+			if ("Publication Approval".equalsIgnoreCase(this.getManagedBean()
+					.getApprovalType())) {
 				if (null != this.getManagedBean().getQt().getPublishDate()) {
 					detailSO.validateScheduleDetails(reqDTO);
 				}
@@ -550,17 +554,19 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
 				committeReqDTO.setOutcome(outcome);
-				removeEmptyRemarks(qt);
+				finalizeRemarks(this.getManagedBean().getScQtApproval()
+						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
-				// TODO Need to changed the docType..
+
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign,
-							ParameterConst.DOCTYPE_QUOTATION, qt.getQtId(),
-							qt.getQtNo());
+							ParameterConst.DOCTYPE_COMMITTE_APROVAL,
+							qt.getQtId(), qt.getQtNo());
 				}
 				committeReqDTO.setDigiSignData(digiSign);
+				committeReqDTO.setSpecApprovalReq(true);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
@@ -572,6 +578,7 @@ public class ApprovalBackingBean extends
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
+				String approvalDocType = null;
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
 					approval.setApproverId(new FacesScopes()
@@ -580,6 +587,8 @@ public class ApprovalBackingBean extends
 					if (ParameterConst.APPROVAL_CATEGORY_BPK
 							.equalsIgnoreCase(approval.getApprovalCategory()
 									.getParameterCode())) {
+						approvalDocType = ParameterConst.DOCTYPE_BPK_APPROVAL;
+
 						List<ScQtApprovalRequest> approvalRequests = approval
 								.getScQtApprovalDtls();
 						String action = constuctOutCome(approvalRequests, qt);
@@ -603,8 +612,8 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setOutcome(outcome);
 				// TODO Need to changed the docType..
 				if (null != digiSign) {
-					updatePmDigiSignData(digiSign, "BPK", qt.getQtId(),
-							qt.getQtNo());
+					updatePmDigiSignData(digiSign, approvalDocType,
+							qt.getQtId(), qt.getQtNo());
 				}
 				qtReqDTO.setDigiSignData(digiSign);
 				tenderResDTO = (QuationTenderResDTO) detailSO
@@ -701,16 +710,19 @@ public class ApprovalBackingBean extends
 	 * ex.printStackTrace(); } return committee; }
 	 */
 
-	private ScQtApproval getApproval(Long qtId, String approvalType) {
+	private ScQtApproval getApproval(Long qtId, String approvalType,
+			String docType) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setApprovalType(approvalType);
 		tenderReqDTO.setQtId(qtId);
+		tenderReqDTO.setDocType(docType);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
 		QuationTenderResDTO resDTO = detailSO
 				.retriveQTApprovalDetails(tenderReqDTO);
 		ScQtApproval approval = resDTO.getQtApproval();
+		this.getManagedBean().setQt(resDTO.getQtDetail());
 		return approval;
 	}
 

@@ -1012,8 +1012,10 @@ public class QTBusinessOwnerBackingBean extends
 		scQt.setMinistrySpecSecrataryId(new PmUser());
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		QuationTenderResDTO dto = detailSO
-				.retriveQTDetails(new QuationTenderReqDTO());
+				.retriveQTDetails(quationTenderReqDTO);
 		ScQtCommittee qtCommitte = new ScQtCommittee();
 		qtCommitte.setScQt(scQt);
 		setUserDetails(qtCommitte);

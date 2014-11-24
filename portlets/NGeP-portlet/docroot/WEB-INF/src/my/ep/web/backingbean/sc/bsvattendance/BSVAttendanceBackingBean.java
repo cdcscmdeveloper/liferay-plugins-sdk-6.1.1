@@ -99,7 +99,7 @@ public class BSVAttendanceBackingBean extends
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
-									null, scQtBsv.getBsvRemarks(),
+									this.getManagedBean().getScQt().getCurrentWorkFlowStatus(), scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
