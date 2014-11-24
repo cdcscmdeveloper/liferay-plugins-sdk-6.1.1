@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -1572,6 +1573,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}else{
 			return updateOnlineAccount();
 		}
+	}
+	
+	public String getBusinessType(String businessType) {
+		String retVal = "";
+		SelectItem[] pmBusinessTypeItems = pmBusinessTypeDropDown();
+		List<SelectItem> businessTypeItems = new ArrayList<SelectItem>();
+		if (StringUtils.isNotBlank(businessType) && pmBusinessTypeItems!=null && pmBusinessTypeItems.length>0) {
+				businessTypeItems = Arrays.asList(pmBusinessTypeItems);
+				for (SelectItem item : businessTypeItems) {
+					if (businessType.equals(item.getValue())) {
+						retVal = item.getLabel();
+						break;
+					}
+				}
+		}
+		return retVal;
 	}
 }
 
