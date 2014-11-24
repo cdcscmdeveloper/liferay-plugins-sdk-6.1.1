@@ -1735,7 +1735,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public String getStatusDesc(CtCircularVer circularVer) {
-		if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+		if(circularVer.getCtCircular() != null && circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 			return getStatusDescById(ContractStatusConst.CR_APPROVED);
 		}
 		else {
