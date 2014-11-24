@@ -67,7 +67,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotType" 
 					required="#{!empty param['disableValidation'] and pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
-					disabled="#{!pPlanBackingBean.managedBean.modeEditable or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
+					disabled="#{(!pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure)
+						or (pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure)}"
 					label="#{lbl['lbl.pp.vot.amanah.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
 				>
