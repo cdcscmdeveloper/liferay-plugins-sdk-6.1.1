@@ -7,7 +7,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
 import my.ep.persistence.entity.sm.SmAnswer;
@@ -53,8 +56,6 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
 		QuestionnaireResDTO resDTO = reqSO.retrieveActiveQuestion();
 
-		// this.getManagedBean().setSmQuestionLs(resDTO.getSmQuestionList());
-
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		for (SmQuestion smQues : resDTO.getSmQuestionList()) {
 			SmSupplierAnswer smSuppAns = new SmSupplierAnswer();
@@ -68,8 +69,10 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 			}
 			// /smSuppAns.setSupplierAnswerId(supplierAnswerId)
 		}
-
 		this.getManagedBean().setSmSuppAnswerLs(smSuppAnswerLs);
+		
+		//retrieve MOF Info - to display MOF Account No
+		retrievMOFInfo();
 	}
 
 	public void submitQuestionnaire() {
@@ -100,6 +103,19 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 	
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
+	}
+	
+	public void retrievMOFInfo(){
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		
+		IMofAccountSO mofSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofAccountSO.class);
+		reqDTO.setSupplierId(this.getManagedBean().getSmSupp().getSupplierId());
+		reqDTO.setSupplierType(this.getManagedBean().getSmAppl().getSupplierType());
+		MofAccountResDTO resDTO = mofSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
+		
+		if(resDTO.getMofAccount() != null){
+			this.getManagedBean().setMofAccountNo(resDTO.getMofAccount().getMofNo());
+		}
 	}
 	
 }
