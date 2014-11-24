@@ -48,8 +48,15 @@
     </p:panel>
 		
 	<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
-			<p:dataTable value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}" var="requestItem" 
+			<p:dataTable value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}" var="requestItem" binding="#{table}"
 				 id="contractedTableId">
+				 	<p:column width="3%">
+					<f:facet name="header">
+							NO.
+						</f:facet>
+						#{table.rowIndex + 1}
+					</p:column>
+			
 				<p:column>
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.name']}
