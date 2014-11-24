@@ -9,10 +9,10 @@
 		<table style="width: 100%">
 			<tr>
 				<td>
-					<h:outputLabel value="#{lbl['lbl.ct.cancel.circular.request.id']}" />
+					<h:outputLabel value="#{lbl['lbl.ct.cancel.circular.request.no']}" />
 				</td>
 				<td class="header-info-text">
-					#{panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqId == null ? '-- System Generated --':panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqId}
+					#{panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqNo == null ? '-- System Generated --' : panelBackingBean.managedBean.cancelCircularReq.cancelCircularReqNo}
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.ct.status']}" />
