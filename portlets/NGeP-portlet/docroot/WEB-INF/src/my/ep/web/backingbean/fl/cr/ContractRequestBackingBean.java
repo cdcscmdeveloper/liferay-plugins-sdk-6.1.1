@@ -31,6 +31,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
@@ -66,6 +67,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractIntegrationReqDTO;
+import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -170,6 +173,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.CtActiveContractVO;
@@ -311,6 +315,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			validatePreparedOrgAndAgencies();
+			checkContractValidity(getManagedBean().getFlRequest());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
@@ -2018,6 +2023,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			validatePreparedOrgAndAgencies();
+			checkContractValidity(getManagedBean().getFlRequest());
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
 		} else if(selectedTabIndex==2){
@@ -3332,4 +3338,54 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		return condition;
 	}
+	
+	private void checkContractValidity(FlFulfilmentRequest flRequest) {
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		boolean haveFlRecord = false;
+		
+		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		
+		if(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+			reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+			reqDTO.setContractId(flRequest.getCtContract().getContractId());
+			if(flRequest.getFulfilmentReqId() == null){
+				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+			}
+			if(haveFlRecord){
+				throw new EpException(MessageConst.ERROR_740030);
+			}
+		}
+		
+		if(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+			ContractIntegrationReqDTO integrationReqDTO = new ContractIntegrationReqDTO();
+			integrationReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+			integrationReqDTO.setScheduleNo(flRequest.getScheduleNo());
+			IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
+			ContractIntegrationResDTO integrationResDTO = contractIntegrationSO.retrieveScheduleByContractVerIdAndNo(integrationReqDTO);
+			if(integrationResDTO.getCtSchedule() != null){
+				if(integrationResDTO.getCtSchedule().getScheduleType().getParameterCode().equalsIgnoreCase(ParameterConst.CT_SCHEDULE_PERIODIC)){
+					reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+					reqDTO.setScheduleNo(flRequest.getScheduleNo());
+					reqDTO.setContractId(flRequest.getCtContract().getContractId());
+					if(flRequest.getFulfilmentReqId() == null){
+						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+					}
+					if(haveFlRecord){
+						throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.schedule.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
+					}
+				}
+			}else{//progressive payment
+				reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+				reqDTO.setScheduleNo(flRequest.getScheduleNo());
+				reqDTO.setContractId(flRequest.getCtContract().getContractId());
+				if(flRequest.getFulfilmentReqId() == null){
+					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+				}
+				if(haveFlRecord == true){
+					throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.phase",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
+				}
+			}
+		}
+	}
+	
 }
