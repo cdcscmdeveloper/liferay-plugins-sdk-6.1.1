@@ -22,15 +22,15 @@
 			<table width="100%;" >
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}"/></td>
+					<td><p:inputText readonly="true" style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}" /></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.type']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}"></p:inputText></td>
+					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}"/></td>
 				</tr>
 				<tr>
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
-					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}"/></td>
+					<td colspan="3"><p:inputText readonly="true" style="white-space: normal!important;" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.ptj']}"></p:outputLabel></td>
@@ -42,7 +42,7 @@
 					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}"/></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
-					<td><h:outputText readonly="true" style="text-align :left" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
+					<td><h:outputText style="text-align :left" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
 				</tr>
 			</table>
     </p:panel>
@@ -61,13 +61,15 @@
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.name']}
 						</f:facet>
-						#{requestItem.itemName}
+						<h:outputText style="white-space: normal!important;" value="#{requestItem.itemName}"/>
+						
 					</p:column>
 				<p:column>
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.description']}
 						</f:facet>
-						#{requestItem.itemDesc==null?lbl['lbl.cm.no.specification']:requestItem.itemDesc}
+						<h:outputText value="#{requestItem.itemDesc==null?lbl['lbl.cm.no.specification']:requestItem.itemDesc}" style="white-space: normal!important;"/>
+						
 				</p:column>
 				<p:column>
 					<f:facet name="header">
@@ -79,7 +81,7 @@
 					<f:facet name="header">
 							#{lbl['lbl.cm.item.table.uom']}
 						</f:facet>
-						#{requestItem.uom.uomName}
+						<h:outputText style="white-space: normal!important;" value="#{requestItem.uom.uomName}" />
 				</p:column>
 				<p:column>
 					<f:facet name="header">
