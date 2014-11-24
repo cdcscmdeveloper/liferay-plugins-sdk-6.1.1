@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -33,6 +33,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -1056,6 +1057,44 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									.isSupplierUser()));
 		}
 
+	}
+
+	protected void createIfSerFileIfNotExist(SmAppl smAppl) {
+		// Check if approved serialized file exists for latest approved
+		// application, if exists - do nothing, else, generate
+		String filePathString = Calendar.getInstance().get(Calendar.YEAR)
+				+ "/SM/" + smAppl.getApplNo() + "/Revision/";
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += "/" + filePathString;
+		tempDir = tempDir + smAppl.getApplNo() + "_APP.ser";
+		File f = new File(filePathString);
+		if (f.exists() && !f.isDirectory()) {
+			/* do nothing */
+			log.info("Application No :" + smAppl.getApplNo());
+			log.info("SER File Exist...");
+		} else {
+			log.info("Application No :" + smAppl.getApplNo());
+			log.info("SER File Not Exist...");
+			ISmApplRevisionSO applRevisionSO = null;
+
+			try {
+				applRevisionSO = (ISmApplRevisionSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISmApplRevisionSO.class);
+
+				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+				reqDTO.setSmAppl(smAppl);
+				reqDTO.setType("approved");
+				applRevisionSO.applicationHist(reqDTO);
+			} catch (Exception ex) {
+				getManagedBean().setReviewApplicationExist(false);
+				log.info("Failed to create SER file  [" + ex.getMessage() + "]");
+			} finally {
+				applRevisionSO = null;
+			}
+		}
 	}
 
 	public StreamedContent getFile() {
