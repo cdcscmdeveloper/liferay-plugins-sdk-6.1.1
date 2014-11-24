@@ -13,14 +13,13 @@
 			value="#{viewSmApplBackingBean.managedBean.applWorkShopFacilities}"
 			rowKey="#{work}" rowIndexVar="index" id="workDt">
 			<ac:paginator for="workDt" />
-			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="#{lbl['lbl.sm.workshop.name']}">
 				<h:outputText value="#{work.facilityName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.workshop.address']}">
-				<h:outputText
+				<h:outputText rendered="#{not empty work.smAddress}"
 					value="#{work.smAddress.address1},#{work.smAddress.address2},#{work.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">

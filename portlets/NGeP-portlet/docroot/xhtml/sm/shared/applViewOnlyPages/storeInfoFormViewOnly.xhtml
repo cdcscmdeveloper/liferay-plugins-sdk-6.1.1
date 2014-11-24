@@ -16,7 +16,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.store.address']}">
-				<h:outputText
+				<h:outputText rendered="#{not empty stor.smAddress}"
 					value="#{stor.smAddress.address1},#{stor.smAddress.address2},#{stor.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
