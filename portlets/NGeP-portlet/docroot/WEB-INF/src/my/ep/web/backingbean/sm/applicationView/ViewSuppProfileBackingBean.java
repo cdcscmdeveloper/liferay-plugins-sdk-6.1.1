@@ -31,10 +31,12 @@ public class ViewSuppProfileBackingBean extends
 				.retriveLatestApplBySupplierId(supplierSearchReqDTO);
 
 		if (smResDTO.getSmAppl() != null) {
-
 			String applNo = smResDTO.getSmAppl().getApplNo();
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
 			getManagedBean().setViewSupplierProfile(true);
+			if(!isSerFileExist(applNo, "APP")){
+				createSerFile(smResDTO.getSmAppl(), "APP");
+			}
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
 			String redirectToAppl = SmApplicationUtil
