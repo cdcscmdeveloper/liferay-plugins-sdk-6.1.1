@@ -1,9 +1,11 @@
 package my.ep.web.util.sm.helper;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +15,7 @@ import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
@@ -33,6 +36,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.sm.ApplType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -852,6 +856,28 @@ public class SmCommonUtil {
 
 		}
 
+		return retVal;
+	}
+	
+	public static boolean isSerFileExist(String applNo, String serType) {
+		boolean retVal = true;
+		// Check if approved serialized file exists for latest approved
+		// application, if exists - do nothing, else, generate
+		String filePathString = Calendar.getInstance().get(Calendar.YEAR)
+				+ "/SM/" + applNo + "/Revision/";
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += "/" + filePathString;
+		tempDir = tempDir + applNo + "_" + serType + ".ser";
+		File f = new File(filePathString);
+		if (f.exists() && !f.isDirectory()) {
+			/* do nothing */
+			log.info("Application No :" + applNo);
+			log.info("SER File Type[" + serType + "] exist...");
+		} else {
+			log.info("Application No :" + applNo);
+			log.info("SER File Type[" + serType + "] not exist...");
+		}
 		return retVal;
 	}
 
