@@ -71,7 +71,12 @@
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
 					<p:inputText value="#{stageTwofunctional.title}" size="30"
 						maxlength="1000" required="true" id="finChecklistTitle"
-						label="#{lbl['lbl.sc.spec.stage.title']}"></p:inputText>
+						label="#{lbl['lbl.sc.spec.stage.title']}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="financialCheckListtitle"
+							listener="#{specificationBackingBean.financialTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+
+					</p:inputText>
 					<p:message id="finChecklistId" for="finChecklistTitle"
 						display="icon"></p:message>
 				</ui:fragment>
@@ -92,35 +97,48 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%;white-space: normal;">
+				<h:panelGroup id="financialCheckListtitle">
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title eq  null and stageTwofunctional.qtChecklistId eq null}">
+						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
+							style="width:100px;">
+							<f:selectItems
+								value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scoreFinanceView,uploadFinance"
+								listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+						</p:selectOneMenu>
+					</ui:fragment>
 
-				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title eq  null}">
-					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
-						style="width:100px;">
-						<f:selectItems
-							value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="scoreFinanceView,uploadFinance"
-							listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
-					</p:selectOneMenu>
-				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId eq null}">
-					<h:outputText
-						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist}">
-					<h:outputText
-						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
-				</ui:fragment>
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null and stageTwofunctional.qtChecklistId eq null}">
+						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
+							style="width:100px;">
+							<f:selectItems
+								value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scoreFinanceView,uploadFinance"
+								listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+						</p:selectOneMenu>
+					</ui:fragment>
+					<ui:fragment rendered="#{stageTwofunctional.qtChecklistId eq null}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"
+							rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+					</ui:fragment>
 
-				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId ne null}">
-					<h:outputText
-						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+					<ui:fragment rendered="#{stageTwofunctional.qtChecklistId ne null}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
 
 
-				</ui:fragment>
+					</ui:fragment>
+				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
 				style="width:10%;white-space: normal;text-align: center;">
