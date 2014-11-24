@@ -383,6 +383,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		if(getManagedBean().getFulfilmentNote().getReceivedDate().after(today)){
 			throw new EpException("ERR-740012");
 		}
+		
+		FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();	
+		if(fulfilmentNote.getFlRequest().getCtContract() != null && (fulfilmentNote.getReceivedDate().after(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) 
+				|| fulfilmentNote.getReceivedDate().before(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate()))){
+			throw new EpException(MessageConst.ERROR_700020);
+		}
 	}
 	
 	public Date getCurrentDate() {
@@ -426,17 +432,15 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	
 	public void gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			//SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
+			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			//sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
-			//sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
 			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());
+			getManagedBean().setTextBeforeSign(sb.toString());			
+			validateFulfilmentNote(outcome);
 			// set action
 			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);			
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}else{
 			submitAction(outcome);
@@ -451,9 +455,5 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		return submitAction(getManagedBean().getButtonAction());
 	}
-	
-	public void enableAutoUpdate(){
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		RequestContext.getCurrentInstance().update("@form");
-	}
+
 }
