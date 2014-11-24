@@ -7,7 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:spacer height="5"></p:spacer>
-
 	<p:panel header="#{lbl['lbl.sc.financial.proposal']}" toggleable="true">
 		<p:dataTable id="financeDeailsId" var="financeList"
 			value="#{supplierProposalDetailBackingBean.managedBean.financeCheckDetailsList}"
@@ -22,7 +21,7 @@
 					<p:column headerText="" />
 
 					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
-						style="width:68%; white-space: normal;" />
+						style="width:68%" />
 
 					<p:column headerText="#{lbl['lbl.sc.instruction']}"
 						style="width:15%" />
@@ -54,22 +53,19 @@
 					value="#{lbl['lbl.sc.view']}" />
 			</p:column>
 
-			<p:column>
-
+			<p:column style="white-space: normal;text-align: center;">
 				<ui:fragment
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF'}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
 						value="Prepare" />
 				</ui:fragment>
-
 				<ui:fragment
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
 						value="View" icon="ui-icon-agree" />
 				</ui:fragment>
-
 				<ui:fragment
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'UP'}">
 					<p:commandButton oncomplete="attachmentDlg.show();return false;"
@@ -83,8 +79,6 @@
 						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(financeList.scQtProposalChecklistAttachment)}"
 						rendered="#{!empty financeList.scQtProposalChecklistAttachment}" />
 				</ui:fragment>
-
-
 			</p:column>
 
 		</p:dataTable>

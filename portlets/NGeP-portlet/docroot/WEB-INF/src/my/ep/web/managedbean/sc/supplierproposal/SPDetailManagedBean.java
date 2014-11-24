@@ -61,6 +61,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private ScQtCheckList scQtCheckList;
 	private long days;
+	private String closingTime="";
 	private int activeIndex;
 	private int proposalIndex;
 
@@ -1083,6 +1084,28 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setSupplierFacilities(List<SmFacility> supplierFacilities) {
 		this.supplierFacilities = supplierFacilities;
 	}
+
+
+
+
+	/**
+	 * @return the closingTime
+	 */
+	public String getClosingTime() {
+		return closingTime;
+	}
+
+
+
+
+	/**
+	 * @param closingTime the closingTime to set
+	 */
+	public void setClosingTime(String closingTime) {
+		this.closingTime = closingTime;
+	}
+	
+	
 	
 	
 }

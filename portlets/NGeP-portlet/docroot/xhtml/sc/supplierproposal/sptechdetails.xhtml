@@ -21,7 +21,7 @@
 					<p:column headerText="" />
 
 					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
-						style="width:68%; white-space: normal;" />
+						style="width:68%" />
 
 					<p:column headerText="#{lbl['lbl.sc.instruction']}"
 						style="width:20%" />
@@ -59,7 +59,7 @@
 					value="#{lbl['lbl.sc.view']}" />
 			</p:column>
 
-			<p:column>
+			<p:column style="white-space: normal;text-align: center;">
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
@@ -84,7 +84,7 @@
 						<f:setPropertyActionListener value="#{techList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
 					</p:commandButton>
-					<h:commandLink
+					<h:commandLink 
 						value="#{techList.scQtProposalChecklistAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(techList.scQtProposalChecklistAttachment)}"
