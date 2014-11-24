@@ -15,7 +15,9 @@ import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
@@ -25,11 +27,13 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -860,7 +864,7 @@ public class SmCommonUtil {
 	}
 	
 	public static boolean isSerFileExist(String applNo, String serType) {
-		boolean retVal = true;
+		boolean exist = true;
 		// Check if approved serialized file exists for latest approved
 		// application, if exists - do nothing, else, generate
 		String filePathString = Calendar.getInstance().get(Calendar.YEAR)
@@ -877,8 +881,33 @@ public class SmCommonUtil {
 		} else {
 			log.info("Application No :" + applNo);
 			log.info("SER File Type[" + serType + "] not exist...");
+			exist = false;
 		}
-		return retVal;
+		return exist;
+	}
+	
+	public static void createSerFile(SmAppl smAppl, String serType) {
+		ISmApplRevisionSO applRevisionSO = null;
+		try {
+			log.info("start creating SER file for appNo:" + smAppl.getApplNo()
+					+ "  serType:" + serType);
+			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmApplRevisionSO.class);
+
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			reqDTO.setSmAppl(smAppl);
+			if(serType.equalsIgnoreCase("SUP")){
+				reqDTO.setType("supplier");
+			}else{
+				reqDTO.setType("approved");
+			}
+			applRevisionSO.applicationHist(reqDTO);
+		} catch (Exception ex) {
+			log.info("Failed to create SER file  [" + ex.getMessage() + "]");
+		} finally {
+			applRevisionSO = null;
+		}
 	}
 
 }
