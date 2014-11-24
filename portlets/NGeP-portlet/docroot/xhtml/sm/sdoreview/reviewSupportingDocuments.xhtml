@@ -272,10 +272,10 @@
 		        </p:column>
 				
 				<p:column style="width:15%;" rendered="#{not empty suppDoc.smApplDocFiles}">
-				<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
-		            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
-		           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
-		        </p:commandLink> 
+					<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
+			            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
+			           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
+			        </p:commandLink> 
 		       </p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
