@@ -865,16 +865,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				 
 			                double bondAmount = 0.0;
 		                    for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
-		        	               if(performanceBond.isRecordStatus()) {
 		        	            	   bondAmount = bondAmount + performanceBond.getBondAmount();
                                        if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
                                     	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
-                                       }
 					               } 
 		                       }
 				       
-		                    if(contractVer.getCtContract().getLoa().getBondAmt() != null
+		                    if(contractVer.getCtContract().getLoa().getBondAmt() != null 
 		                    	&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					              if( retval >0 ){
