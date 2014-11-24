@@ -502,6 +502,37 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							}
 						}
 					}
+					
+					//TODO 2
+					if(ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
+							|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())){
+						this.getManagedBean().getSelectedPlan().setRejected(true);
+						if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+							for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
+								if(epItem.isRejected()){
+									epItem.setEditable(true);
+									this.getManagedBean().getSelectedPlan().setRejected(false);
+								}
+							}
+							if(this.getManagedBean().getSelectedPlan().isRejected()){
+								for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
+									epItem.setEditable(true);
+								}
+							}
+						}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+							for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
+								if(ppItem.isRejected()){
+									ppItem.setEditable(true);
+									this.getManagedBean().getSelectedPlan().setRejected(false);
+								}
+							}
+							if(this.getManagedBean().getSelectedPlan().isRejected()){
+								for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
+									ppItem.setEditable(true);
+								}
+							}
+						}
+					}
 				}else{
 					throw new EpException("Unable to retrieve plan."); //TODO
 				}
@@ -900,6 +931,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		PpExpenditureItem epItem = new PpExpenditureItem();
 		epItem.setPmSo(new PmSo());
+		epItem.setEditable(true);
 		this.getManagedBean().getSelectedPlan().addPpExpenditureItems(epItem);
 
 	}
@@ -1002,6 +1034,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpProcurementItem ppItem = new PpProcurementItem();
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
+		ppItem.setEditable(true);
 		this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 		
 	}
