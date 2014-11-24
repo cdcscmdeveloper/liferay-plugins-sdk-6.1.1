@@ -162,17 +162,14 @@ import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.CtActiveContractVO;
@@ -812,6 +809,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FlFulfilmentItemAddr flItemAddr = null;
 		List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 		boolean itemExisted=false;
+		String messageId = null;
 		
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 		ContractItemResDTO resDTO = new ContractItemResDTO();
@@ -826,8 +824,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			for(FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
 				if(itemAddr.getScRequestItem().getRequestNoteItemId().equals(contractedItem.getScRequestItem().getRequestNoteItemId())) {
 					itemExisted = true;
+					if(getManagedBean().getSelectedDelAddr()!=null) {
+						messageId = MessageConst.INFO_745005;
+					} else {
+						messageId = MessageConst.INFO_745006;
+					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745005, new String[]{itemAddr.getScRequestItem().getItemName()}, 
+							MessageUtils.getMessage(messageId, new String[]{itemAddr.getScRequestItem().getItemName()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));					
 				}
 			}
