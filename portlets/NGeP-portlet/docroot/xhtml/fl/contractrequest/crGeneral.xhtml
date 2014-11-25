@@ -24,6 +24,7 @@
 						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}">
@@ -51,6 +52,7 @@
 						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" 
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						update=":form:chargeOrgProfileId" size="50"
 						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
 					</ac:lov></td>
