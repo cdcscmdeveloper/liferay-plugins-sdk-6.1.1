@@ -96,6 +96,7 @@ import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -2854,6 +2855,37 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	} else {
     		return false;
     	}
+    }
+    
+    public String getBankAccNoName() {
+    	
+    	IFinancialOrgSO financialOrgSO;
+    	FinancialOrgReqDTO reqDTO = null;
+      
+    	try {
+    		      financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+    	          reqDTO = new FinancialOrgReqDTO();
+    	       
+    	          if(getManagedBean().getCtContract().getCtFactoring().getPmFinancialBranch() != null) {
+    	        	  
+    	        		reqDTO.setFinancialBranchId(getManagedBean().getCtContract().getCtFactoring().getPmFinancialBranch().getFinancialBranchId());
+    	        		FinancialOrgResDTO resDTO  = financialOrgSO.retriveFinAccDtlByBranchId(reqDTO);
+    	        		PmFinancialAcc pmFinancialAcc = resDTO.getPmFinancialAcc();
+    	        		getManagedBean().setFinancialAccNo(pmFinancialAcc.getAccountNo());
+ 	          		    return pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
+
+    	          } else if(getManagedBean().getCtContract().getCtFactoring().getFinancialOrg() != null) {
+    	            	    reqDTO.setFinancialOrgId(getManagedBean().getCtContract().getCtFactoring().getFinancialOrg().getFinancialOrgId());
+    	                    FinancialOrgResDTO resDTO  = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+    	                    PmFinancialAcc pmFinancialAcc = resDTO.getPmFinancialAcc();
+    	                    getManagedBean().setFinancialAccNo(pmFinancialAcc.getAccountNo());
+    	          		    return pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
+    	          } 
+    	          
+        }catch(Exception ex){
+        	
+        }
+    	return null;
     }
     
 	public String preSubmitContract(my.ep.persistence.entity.pm.common.PmDigiSign pmDigiSign) throws Exception {
