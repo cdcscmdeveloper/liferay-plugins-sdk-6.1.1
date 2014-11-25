@@ -2732,7 +2732,9 @@ public class SmApplicationUtil {
 				managedBean.getSelectedShareHolder().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				throw new EpException(MessageConst.ERROR_722551, new String[] {
-						"Personnel", "personnel", perType });
+						SmCommonUtil.getMessage("lbl.sm.personnel", null),
+						SmCommonUtil.getMessage("lbl.sm.personnel", null),
+						perType });
 			}
 		} catch (NumberFormatException ne) {
 			// ne.printStackTrace();
