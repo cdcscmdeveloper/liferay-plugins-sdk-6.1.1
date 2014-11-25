@@ -6,7 +6,6 @@ package my.ep.web.backingbean.fl.cr;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -65,7 +64,6 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
@@ -2166,7 +2164,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				
 				if(childData.getPmPrgActivity()!=null) {
-					getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
+					getManagedBean().setPmPrgActivity(childData.getPmPrgActivity());
 				}
 				
 				if(childData.getPmSubSetia()!=null) {
@@ -2872,7 +2870,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 						
 						if(childData.getPmPrgActivity()!=null) {
-							getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
+							getManagedBean().setPmPrgActivity(childData.getPmPrgActivity());
 							getManagedBean().setProgramLov(true);
 						}
 						
