@@ -71,14 +71,20 @@ public class SmDeleteCategoryCodeBackingBean extends
 				smAppl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
 				getManagedBean().setSmAppl(smAppl);
 			}
+			
+			//check if allowed to proceed
+			boolean cannotProceedAlertMsg = false;
+			cannotProceedAlertMsg = SmApplicationUtil
+					.checkActiveSmApplForSupp(smApplSupplier);
+			if (cannotProceedAlertMsg) {
+				throw new EpException(MessageConst.ERROR_722542);
+			}
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 			assignActiveCategoryList();
 			return SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return SupplierManagementConst.DEFAULT_DELETE_CATCODES_APPLN;
-
+		}finally{
+			
 		}
 
 	}
