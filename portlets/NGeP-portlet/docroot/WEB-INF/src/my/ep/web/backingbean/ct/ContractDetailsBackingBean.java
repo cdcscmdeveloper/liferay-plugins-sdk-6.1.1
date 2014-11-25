@@ -524,11 +524,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     }
 	
     public boolean checkFactoringExpiryDate() {
-    	if(getManagedBean().getCtContract().getCtFactoring() != null) {
+    	if(getManagedBean().getCtContract().getCtFactoring() != null  &&
+    		getManagedBean().getCtContract().getCtFactoring().getStatus() != null &&
+    		getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
     	    int temp =  getManagedBean().getCtContract().getCtFactoring().getExpDate().compareTo(new Date());
-   		      if(temp > 0 || temp == 0)
-    		       return true;
-    	}
+   		    if(temp > 0 || temp == 0)
+    		   return true;
+    	 }
     	return false;
     }
     
@@ -851,7 +853,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  			}
  		}
 		
-		if(getManagedBean().isUpdateContract() && 
+		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getLatestContractVer().getStatus().getStatusId().longValue() != ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
 		    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750018); 
