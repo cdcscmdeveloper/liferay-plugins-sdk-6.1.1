@@ -641,11 +641,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Factoring Agreement" });
 		}
+	
 		if(getManagedBean().isRemoveFactoring()){
 		    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
 		    	RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			    throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Remove Factoring" });
 		  }
+		}
+		
+		if(getManagedBean().getCtContract().getCtFactoring() != null && getSupplierUserRole() &&
+			    getManagedBean().getCtContract().getCtFactoring().getStatus() != null &&
+				getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()){
+			    throw new EpException(MessageConst.WARN_755014,	new String[] {getManagedBean().getCtContract().getLoa().getLoaNo()});
 		}
 		
 		if(!getManagedBean().isAgreeFactoringClause()) {
@@ -770,21 +777,22 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    ContractResDTO resDTO = null;
 	    	try {
 			
-	    		    if (this.getManagedBean().getLoaId() != null) {
+	    		    if (getManagedBean().getLoaId() != null) {
 				           reqDTO = new ContractReqDTO();
 				           contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				           reqDTO.setLoaId(this.getManagedBean().getLoaId());
+				           reqDTO.setLoaId(getManagedBean().getLoaId());
 				         
 				           resDTO = contractSO.retrieveContractByLoaId(reqDTO);
 			          	   if(resDTO.isSuccessful()) {
 			          		      getManagedBean().setCtContract(resDTO.getContract());
-					               if(getManagedBean().getCtContract().getCtFactoring() != null) {
-						                    getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
-						                    getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-						                    getManagedBean().setRemoveFactoring(true);
-						                    PmStatus pmStatus = new PmStatus();
-						                    pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
-						                    getManagedBean().getFactoring().setStatus(pmStatus);
+					               if(getManagedBean().getCtContract().getCtFactoring() != null &&  getManagedBean().getCtContract().isFactored() &&
+					            		   getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue() ) {
+						                   getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
+						                   getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						                   getManagedBean().setRemoveFactoring(true);
+						                   PmStatus pmStatus = new PmStatus();
+						                   pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
+						                   getManagedBean().getFactoring().setStatus(pmStatus);
 					          	            reset();
 					              	        if(getManagedBean().getFactoring().getPmFinancialBranch() == null) 
 							                     getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
