@@ -19,6 +19,7 @@ import my.ep.constant.MessageConst;
 import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
 import my.ep.util.MessageUtils;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -89,6 +90,7 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 		
 		Locale userLocale = new FacesScopes().getUserLocale();
 		boolean isValidationException = false;
+		boolean navigateToErrorPage = false;
 		String msgCode = MessageConst.ERROR_000001;
 		int bpmcode = 0;
 		String componentId = null;
@@ -111,8 +113,18 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 			if (throwable instanceof ViewExpiredException) {
 				msgCode = MessageConst.ERROR_100054;
 				isValidationException = true;
+				navigateToErrorPage = true;
 				
 				break;
+				
+			} else if (throwable instanceof IllegalStateException) {
+				if (throwable.getMessage().contains("Session already invalidated")) {
+					msgCode = MessageConst.ERROR_100054;
+					isValidationException = true;
+					navigateToErrorPage = true;
+					
+					break;	
+				}
 				
 			} else if (throwable instanceof EpException) {
 				EpException epex = (EpException) throwable;
@@ -175,12 +187,19 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 							+ String.valueOf(bpmcode), params,
 					MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale) + " ("+MessageConst.ERROR_BPM_CODE + String.valueOf(bpmcode)+")";
 		}
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
 
-		FacesContext.getCurrentInstance().addMessage(
+		fc.addMessage(
 				componentId,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						msgCode));
 		// FacesScopes facesScopes = new FacesScopes();
 		// facesScopes.setRequestScope("errorBean", bean);
+		
+		if (navigateToErrorPage) {
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+		}
 	}
 }
