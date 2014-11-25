@@ -8006,7 +8006,7 @@ public class SpecificationBackingBean extends
 											null,
 											MessageUtils
 													.getMessage(
-															MessageConst.INFO_700026,
+															MessageConst.INFO_700005,
 															new String[] {
 																	getMessageCommon("lbl.sc.specification.for"),
 																	qt.getQtNo() },
@@ -8023,7 +8023,7 @@ public class SpecificationBackingBean extends
 											null,
 											MessageUtils
 													.getMessage(
-															MessageConst.INFO_700005,
+															MessageConst.INFO_700018,
 															new String[] {
 																	getMessageCommon("lbl.sc.specification.for"),
 																	qt.getQtNo() },
