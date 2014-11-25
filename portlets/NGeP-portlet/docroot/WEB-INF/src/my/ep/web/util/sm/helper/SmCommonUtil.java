@@ -862,28 +862,19 @@ public class SmCommonUtil {
 
 		return retVal;
 	}
-	
+
 	public static boolean isSerFileExist(String applNo, String serType) {
 		boolean exist = true;
 		// Check if approved serialized file exists for latest approved
 		// application, if exists - do nothing, else, generate
-		String filePathString = Calendar.getInstance().get(Calendar.YEAR)
-				+ "/SM/" + applNo + "/Revision/";
-		String tempDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tempDir += "/" + filePathString;
-		tempDir = tempDir + applNo + "_" + serType + ".ser";
-		File f = new File(filePathString);
-		if (f.exists() && !f.isDirectory()) {
-			/* do nothing */
-			log.info("Application No :" + applNo);
-			log.info("SER File Type[" + serType + "] exist...");
-		} else {
-			log.info("Application No :" + applNo);
-			log.info("SER File Type[" + serType + "] not exist...");
-			exist = false;
-		}
+		String fileName = applNo + "_" + serType + ".ser";
+		String baseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+File.separator+Calendar.getInstance().get(Calendar.YEAR)+File.separator;
+		String smRevisionDir = "SM"+File.separator+applNo+File.separator+"Revision"+File.separator;
+		exist = new File(baseDir+smRevisionDir, fileName).exists();
+		log.info("File Name:"+fileName);
+		log.info("Directory:"+baseDir+smRevisionDir);
+		log.info("Is File Exist:"+exist);
 		return exist;
 	}
-
 }
