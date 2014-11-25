@@ -1295,45 +1295,49 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToVerifyAdmin(){
 		System.out.println("********************SmPersonnelBackingBean navigateToVerifyAdmin***************");
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());	
-		getManagedBean().setFromMenu(false);
 		return "adminVerify.xhtml";
 	}
 	
 	public void navigateToDeactivateAdminPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToDeactivateAdminPage***************");
 		List<SmPersonnel> personnels = new ArrayList<SmPersonnel>();
-		if(getManagedBean().isFromMenu()){
-			initUserPersonnelInfo();
-			if(getManagedBean().getUpdateSmPersonnel() != null){
-				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-						.getInstance().getServiceObject("sm", IPersonnelSO.class);
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-				PersonnelResDTO resDTO = smPersonnelSO.retrieveAuthorizedPersonnels(reqDTO);
+		initUserPersonnelInfo();
+		if(getManagedBean().getUpdateSmPersonnel() != null){
+			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			PersonnelResDTO resDTO = smPersonnelSO.retrieveAuthorizedPersonnels(reqDTO);
+			if(getManagedBean().getUpdateSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
 				for(SmPersonnel personnel : resDTO.getSmPersonnelList()){
 					if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
 						personnels.add(personnel);
 					}
 				}
+			} else if(getManagedBean().getUpdateSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+				for(SmPersonnel personnel : resDTO.getSmPersonnelList()){
+					if(personnel.getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())){
+						personnels.add(personnel);
+					}
+				}
+			}
+			boolean icVerified = verifyIc();
+			if(icVerified){
+				for(SmPersonnel personnel : personnels){
+					SelectItem selectItem = new SelectItem();
+					selectItem.setValue(personnel.getPersonnelId());
+					selectItem.setLabel(personnel.getName());
+					getManagedBean().getAssignList().add(selectItem);
+				}
+				getManagedBean().setPersonnelList(personnels);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler()
+						.handleNavigation(fc, null, "adminReAssign.xhtml");
+			} else {
+				throw new EpException(MessageConst.ERROR_722579);
 			}
 		} else {
-			personnels = getManagedBean().getPersonnelList();
-		}
-		
-		boolean icVerified = verifyIc();
-		if(icVerified){
-			for(SmPersonnel personnel : personnels){
-				SelectItem selectItem = new SelectItem();
-				selectItem.setValue(personnel.getPersonnelId());
-				selectItem.setLabel(personnel.getName());
-				getManagedBean().getAssignList().add(selectItem);
-			}
-			getManagedBean().setPersonnelList(personnels);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "adminReAssign.xhtml");
-		} else {
-			throw new EpException(MessageConst.ERROR_722579);
+			throw new EpException(MessageConst.ERROR_721018);
 		}
 	}
 
@@ -1363,8 +1367,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public void preRenderDeactivateSuppAdmin(){
 		System.out.println("********************SmPersonnelBackingBean preRenderDeactivateSuppAdmin***************");
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());	
-		getManagedBean().setFromMenu(true);
-		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "adminVerify.xhtml");
