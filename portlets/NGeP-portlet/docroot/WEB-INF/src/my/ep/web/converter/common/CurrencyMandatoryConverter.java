@@ -61,7 +61,7 @@ public class CurrencyMandatoryConverter implements Converter {
 							"lbl.sm.inputcurrency.numericformat.errmsg", null)));
 		}
 
-		return currVal;
+		return currVal==null?currVal:currVal.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	@Override
