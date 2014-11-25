@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
-		modal="true" width="800" height="600" position="top">
+		modal="true" width="1000" height="500" position="top">
 		<p:panel id="clonesearchpnlid" header="Search" toggleable="true">
 			<table>
 				<tr>
@@ -43,6 +43,7 @@
 							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
 					<td><p:calendar id="fromDate"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							size="30" showOn="button" readonlyInput="true">
 							<p:ajax event="dateSelect" update="createdtTo" />
 						</p:calendar></td>
@@ -54,6 +55,7 @@
 							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
 					<td><p:calendar id="createdtTo" readonlyInput="true"
 							mindate="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 							size="30" showOn="button">
 							<f:attribute name="startDate"
@@ -102,27 +104,32 @@
 				<p:ajax event="rowSelect" update=":form:cloneCommittee"
 					listener="#{evaluationMeetingBackingBean.onRowCloneAction}" />
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+				<p:column style="width:20%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
 					<h:outputText value="#{scQt.qtNo}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.title']}">
+				<p:column style="width:30%;white-space: normal;"
+					headerText="#{lbl['lbl.so.title']}">
 					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.procmode']}">
+				<p:column style="width:18%;white-space: normal;"
+					headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
 						value="#{evaluationMeetingBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+				<p:column style="width:12%;white-space: normal;"
+					headerText="#{lbl['lbl.so.crtdt']}">
 					<h:outputText value="#{scQt.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.status']}">
+				<p:column style="width:20%;white-space: normal;"
+					headerText="#{lbl['lbl.so.bo.status']}">
 					<h:outputText
 						value="#{evaluationMeetingBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
@@ -142,30 +149,37 @@
 
 
 				<p:column selectionMode="multiple" style="width:2%"></p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+				<p:column style="width:20%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
 					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+				<p:column style="width:15%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
 					<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
+				<p:column style="width:20%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
 					<h:outputText value="#{committeeMember.designation}"></h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+				<p:column style="width:15%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
 					<h:outputText value="#{committeeMember.email}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+				<p:column style="width:8%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
 					<h:outputText value="#{committeeMember.grade}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+				<p:column style="width:10%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
 					<h:outputText
 						value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
+				<p:column style="width:10%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.eva.committee.role']}">
 					<h:outputText
 						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}"></h:outputText>
 
@@ -177,10 +191,9 @@
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					style="float:right;" icon="ui-icon-cancel"
 					onclick="screen2.hide();" />
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}" 
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this,committeedtlsid" partialSubmit="true"
 					actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
-					onclick="screen2.hide();"
 					oncomplete="prepareCommittee.paginator.endLink.click();"
 					icon="ui-icon-check" update="evaluationpreparecommittee" />
 
