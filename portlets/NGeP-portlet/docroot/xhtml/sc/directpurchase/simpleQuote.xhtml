@@ -15,9 +15,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
     <p:messages showDetail="true" autoUpdate="#{simpleQuoteBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info"  showSummary="false"/>
     
     <ui:param name="isPendingSubmissionStatus" value="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.sqPendingSubmission}" />
-    <ui:param name="isPendingRnCreationStatus" value="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.sqPendingRnCreation}" />
     
-      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteButtons.xhtml" />
+     <ui:include src="/xhtml/sc/directpurchase/simpleQuoteButtons.xhtml" />
      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteHeader.xhtml" />
     <p:panel id="sqMainId">
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">

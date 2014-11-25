@@ -13,7 +13,7 @@
 			<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
 				<p:selectBooleanCheckbox id="byLocId"
 					value="#{simpleQuoteBackingBean.managedBean.byLocality}"
-					disabled="#{isPendingRnCreationStatus}">
+					disabled="#{!isPendingSubmissionStatus}">
 					<p:ajax event="change" update="suppCriteria"
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byLocId" />
@@ -23,7 +23,7 @@
 
 				<p:selectBooleanCheckbox id="byBussNatureId"
 					value="#{simpleQuoteBackingBean.managedBean.byBusinessNature}"
-					disabled="#{isPendingRnCreationStatus}">
+					disabled="#{!isPendingSubmissionStatus}">
 					<p:ajax event="change" update="@([id$=suppCriteriasId])"
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byBussNatureId" />
@@ -48,7 +48,7 @@
 								<td><p:selectOneMenu id="locLevels"
 										value="#{simpleQuoteBackingBean.managedBean.supplierLocLevel}"
 										style="width: 140px;"
-										disabled="#{isPendingRnCreationStatus}">
+										disabled="#{!isPendingSubmissionStatus}">
 										<f:selectItems
 											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 								<p:ajax event="change" update="locPanel" partialSubmit="true"
