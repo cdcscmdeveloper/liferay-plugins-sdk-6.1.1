@@ -141,7 +141,9 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
-						size="35" /> <p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
+						size="35" >
+						</p:inputText>
+						<p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -187,7 +189,10 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
-						cols="36" /> <p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
+						cols="36" > 
+						<f:validateLength maximum="255" />
+						</p:inputTextarea>
+						<p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
