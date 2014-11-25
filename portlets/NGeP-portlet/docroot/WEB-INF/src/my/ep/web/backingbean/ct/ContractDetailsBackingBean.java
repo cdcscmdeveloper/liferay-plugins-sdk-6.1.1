@@ -75,7 +75,6 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -355,8 +354,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				                  getManagedBean().getCtItemServiceList().add(item);			           
  		            	   } else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			        	             Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-			        	             if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0)
+			        	             if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
 			        	        	       Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+			        	        	       for(CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
+			        	 		        	  checkAgencyStatus(ceilingQty.getCtAgency());		        	   
+			        	 		           }
+			        	             }
 	        	                     this.getManagedBean().getCtItemList().add(item);
 			               }		             
  		            } if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) 
