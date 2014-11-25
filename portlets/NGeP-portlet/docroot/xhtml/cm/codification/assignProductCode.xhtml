@@ -21,27 +21,27 @@
         <p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 			<table width="100%;" >
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}" /></td>
+					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.no']}:"></p:outputLabel></td>
+					<td><h:outputText style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}" /></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.type']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}"/></td>
+					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.type']}:"></p:outputLabel></td>
+					<td><h:outputText value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}"/></td>
 				</tr>
 				<tr>
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
-					<td colspan="3"><p:inputText readonly="true" style="white-space: normal!important;" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}"/></td>
+					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.title']}:"></p:outputLabel></td>
+					<td colspan="3"><h:outputText style="white-space: normal!important;" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.ptj']}"></p:outputLabel></td>
-					<td colspan="3"><p:inputText readonly="true" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}"/></td>
+					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.ptj']}:"></p:outputLabel></td>
+					<td colspan="3"><h:outputText style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}"/></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.createdDate']}"></p:outputLabel></td>
-					<td><p:inputText readonly="true" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}"/></td>
+					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.createdDate']}:"></p:outputLabel></td>
+					<td><h:outputText value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}"/></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
+					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
 					<td><h:outputText style="text-align :left" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
 				</tr>
 			</table>
