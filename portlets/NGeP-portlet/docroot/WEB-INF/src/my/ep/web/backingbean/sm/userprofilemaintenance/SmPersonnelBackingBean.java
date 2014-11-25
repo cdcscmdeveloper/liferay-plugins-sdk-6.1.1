@@ -1310,7 +1310,11 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 				PersonnelResDTO resDTO = smPersonnelSO.retrieveAuthorizedPersonnels(reqDTO);
-				personnels = resDTO.getSmPersonnelList();
+				for(SmPersonnel personnel : resDTO.getSmPersonnelList()){
+					if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+						personnels.add(personnel);
+					}
+				}
 			}
 		} else {
 			personnels = getManagedBean().getPersonnelList();
