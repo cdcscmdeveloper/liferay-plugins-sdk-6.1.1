@@ -247,6 +247,22 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String flContractOrder;
 	private String flContractRequest;
 	private String flPurchaseOrderNo;
+	private String flGroupOne;
+	private String flGroupTwo;
+	private String flGroupThree;
+	private String flGroupFour;
+	private String flGroupFive;
+	private String flGroupSix;
+	private String flGroupSeven;
+	private String flGroupEight;
+	private String flGroupNine;
+	private String flGroupTen;
+	private String flGroupEleven;
+	private String flGroupTwelve;
+	private String flGroupThirteen;
+	private String flGroupFourteen;
+	private String flGroupFifteen;
+	private String flGroupSixteen;
    //sm
 	private String smSupportingDocument;	
 	private String smDocStatus;
@@ -311,6 +327,103 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctContrMontrStatus;
 	private String ctComplete;
 	
+	
+	public String getFlGroupOne() {
+		return flGroupOne;
+	}
+	public void setFlGroupOne(String flGroupOne) {
+		this.flGroupOne = flGroupOne;
+	}
+	public String getFlGroupTwo() {
+		return flGroupTwo;
+	}
+	public void setFlGroupTwo(String flGroupTwo) {
+		this.flGroupTwo = flGroupTwo;
+	}
+	public String getFlGroupThree() {
+		return flGroupThree;
+	}
+	public void setFlGroupThree(String flGroupThree) {
+		this.flGroupThree = flGroupThree;
+	}
+	public String getFlGroupFour() {
+		return flGroupFour;
+	}
+	public void setFlGroupFour(String flGroupFour) {
+		this.flGroupFour = flGroupFour;
+	}
+	public String getFlGroupFive() {
+		return flGroupFive;
+	}
+	public void setFlGroupFive(String flGroupFive) {
+		this.flGroupFive = flGroupFive;
+	}
+	public String getFlGroupSix() {
+		return flGroupSix;
+	}
+	public void setFlGroupSix(String flGroupSix) {
+		this.flGroupSix = flGroupSix;
+	}
+	public String getFlGroupSeven() {
+		return flGroupSeven;
+	}
+	public void setFlGroupSeven(String flGroupSeven) {
+		this.flGroupSeven = flGroupSeven;
+	}
+	public String getFlGroupEight() {
+		return flGroupEight;
+	}
+	public void setFlGroupEight(String flGroupEight) {
+		this.flGroupEight = flGroupEight;
+	}
+	public String getFlGroupNine() {
+		return flGroupNine;
+	}
+	public void setFlGroupNine(String flGroupNine) {
+		this.flGroupNine = flGroupNine;
+	}
+	public String getFlGroupTen() {
+		return flGroupTen;
+	}
+	public void setFlGroupTen(String flGroupTen) {
+		this.flGroupTen = flGroupTen;
+	}
+	public String getFlGroupEleven() {
+		return flGroupEleven;
+	}
+	public void setFlGroupEleven(String flGroupEleven) {
+		this.flGroupEleven = flGroupEleven;
+	}
+	public String getFlGroupTwelve() {
+		return flGroupTwelve;
+	}
+	public void setFlGroupTwelve(String flGroupTwelve) {
+		this.flGroupTwelve = flGroupTwelve;
+	}
+	public String getFlGroupThirteen() {
+		return flGroupThirteen;
+	}
+	public void setFlGroupThirteen(String flGroupThirteen) {
+		this.flGroupThirteen = flGroupThirteen;
+	}
+	public String getFlGroupFourteen() {
+		return flGroupFourteen;
+	}
+	public void setFlGroupFourteen(String flGroupFourteen) {
+		this.flGroupFourteen = flGroupFourteen;
+	}
+	public String getFlGroupFifteen() {
+		return flGroupFifteen;
+	}
+	public void setFlGroupFifteen(String flGroupFifteen) {
+		this.flGroupFifteen = flGroupFifteen;
+	}
+	public String getFlGroupSixteen() {
+		return flGroupSixteen;
+	}
+	public void setFlGroupSixteen(String flGroupSixteen) {
+		this.flGroupSixteen = flGroupSixteen;
+	}
 	public String getCtComplete() {
 		return ctComplete;
 	}
@@ -1719,7 +1832,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
-	private void loadReportWithParams(List paramLst) {
+	public void loadReportWithParams(List paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
 		 for (int i = 1; i <= paramLst.size(); i++) {
@@ -1738,7 +1851,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			e.printStackTrace();		
 		}
 	}
-	private void loadReport(String gnrtdURL) {
+	public void loadReport(String gnrtdURL) {
 		try {			
 			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));			
@@ -1751,7 +1864,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			e.printStackTrace();		
 		}
 	}
-	private void loadReportWithParamsString(String paramConstrString) {
+	public void loadReportWithParamsString(String paramConstrString) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
 		gnrtdURL.append(paramConstrString); 
@@ -2172,7 +2285,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
   public void generateFLReport(){		
 		if(((this.getFlPtj()!=null)&&(this.getFlPtj()!=ReportConst.EMPTY_VAL))||((this.getFlContractNo()!=null)&&(this.getFlContractNo()!=ReportConst.EMPTY_VAL))||((this.getFlSst()!=null)&&(this.getFlSst()!=ReportConst.EMPTY_VAL))||((this.getFlJabatan()!=null)&&(this.getFlJabatan()!=ReportConst.EMPTY_VAL))||((this.getFlMinistry()!=null)&&(this.getFlMinistry()!=ReportConst.EMPTY_VAL))||((this.getFlSupplier()!=null)&&(this.getFlSupplier()!=ReportConst.EMPTY_VAL))||((this.getFlStatus()!=null)&&(this.getFlStatus()!=ReportConst.EMPTY_VAL))||((this.getFlDuration()!=null)&&(this.getFlDuration()!=ReportConst.EMPTY_VAL))||((this.getFlRecievingOfficer()!=null)&&(this.getFlRecievingOfficer()!=ReportConst.EMPTY_VAL))||((this.getFlDeliveryAddress()!=null)&&(this.getFlDeliveryAddress()!=ReportConst.EMPTY_VAL))
 			||((this.getFlRecNoteNo()!=null)&&(this.getFlRecNoteNo()!=ReportConst.EMPTY_VAL))||((this.getFlContractType()!=null)&&(this.getFlContractType()!=ReportConst.EMPTY_VAL))||((this.getFlRequisitioner()!=null)&&(this.getFlRequisitioner()!=ReportConst.EMPTY_VAL))||((this.getFlMtoContract()!=null)&&(this.getFlMtoContract()!=ReportConst.EMPTY_VAL))||((this.getFlInvoiceNo()!=null)&&(this.getFlInvoiceNo()!=ReportConst.EMPTY_VAL))||((this.getFlDeductionType()!=null)&&(this.getFlDeductionType()!=ReportConst.EMPTY_VAL))||((this.getFlCrNo()!=null)&&(this.getFlCrNo()!=ReportConst.EMPTY_VAL))||((this.getFlApproverName()!=null)&&(this.getFlApproverName()!=ReportConst.EMPTY_VAL))||((this.getFlDocumentType()!=null)&&(this.getFlDocumentType()!=ReportConst.EMPTY_VAL))||((this.getFlCriteria()!=null)&&(this.getFlCriteria()!=ReportConst.EMPTY_VAL))||((this.getFlScoring()!=null)&&(this.getFlScoring()!=ReportConst.EMPTY_VAL))||((this.getFlPkpNo()!=null)&&(this.getFlPkpNo()!=ReportConst.EMPTY_VAL))||((this.getFlDeliveryOrderNo()!=null)&&(this.getFlDeliveryOrderNo()!=ReportConst.EMPTY_VAL))||((this.getFlItemCode()!=null)&&(this.getFlItemCode()!=ReportConst.EMPTY_VAL))||((this.getFlPoAmount()!=null)&&(this.getFlPoAmount()!=ReportConst.EMPTY_VAL))||((this.getFlPrNo()!=null)&&(this.getFlPrNo()!=ReportConst.EMPTY_VAL))||((this.getFlPmo()!=null)&&(this.getFlPmo()!=ReportConst.EMPTY_VAL))
-			||((this.getFlItemName()!=null)&&(this.getFlItemName()!=ReportConst.EMPTY_VAL))||((this.getFlItmType()!=null)&&(this.getFlItmType()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getFlContractOrder()!=null)&&(this.getFlContractOrder()!=ReportConst.EMPTY_VAL))||((this.getFlContractRequest()!=null)&&(this.getFlContractRequest()!=ReportConst.EMPTY_VAL))||((this.getFlPurchaseOrderNo()!=null)&&(this.getFlPurchaseOrderNo()!=ReportConst.EMPTY_VAL))){			
+			||((this.getFlItemName()!=null)&&(this.getFlItemName()!=ReportConst.EMPTY_VAL))||((this.getFlItmType()!=null)&&(this.getFlItmType()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getFlContractOrder()!=null)&&(this.getFlContractOrder()!=ReportConst.EMPTY_VAL))||((this.getFlContractRequest()!=null)&&(this.getFlContractRequest()!=ReportConst.EMPTY_VAL))||((this.getFlPurchaseOrderNo()!=null)&&(this.getFlPurchaseOrderNo()!=ReportConst.EMPTY_VAL))
+			||((this.getFlGroupOne()!=null)&&(this.getFlGroupOne()!=ReportConst.EMPTY_VAL))||((this.getFlGroupTwo()!=null)&&(this.getFlGroupTwo()!=ReportConst.EMPTY_VAL))||((this.getFlGroupThree()!=null)&&(this.getFlGroupThree()!=ReportConst.EMPTY_VAL))||((this.getFlGroupFour()!=null)&&(this.getFlGroupFour()!=ReportConst.EMPTY_VAL))||((this.getFlGroupFive()!=null)&&(this.getFlGroupFive()!=ReportConst.EMPTY_VAL))||((this.getFlGroupSix()!=null)&&(this.getFlGroupSix()!=ReportConst.EMPTY_VAL))||((this.getFlGroupSeven()!=null)&&(this.getFlGroupSeven()!=ReportConst.EMPTY_VAL))||((this.getFlGroupEight()!=null)&&(this.getFlGroupEight()!=ReportConst.EMPTY_VAL))||((this.getFlGroupNine()!=null)&&(this.getFlGroupNine()!=ReportConst.EMPTY_VAL))||((this.getFlGroupTen()!=null)&&(this.getFlGroupTen()!=ReportConst.EMPTY_VAL))||((this.getFlGroupEleven()!=null)&&(this.getFlGroupEleven()!=ReportConst.EMPTY_VAL))||((this.getFlGroupTwelve()!=null)&&(this.getFlGroupTwelve()!=ReportConst.EMPTY_VAL))||((this.getFlGroupThirteen()!=null)&&(this.getFlGroupThirteen()!=ReportConst.EMPTY_VAL))||((this.getFlGroupFourteen()!=null)&&(this.getFlGroupFourteen()!=ReportConst.EMPTY_VAL))||((this.getFlGroupFifteen()!=null)&&(this.getFlGroupFifteen()!=ReportConst.EMPTY_VAL))||((this.getFlGroupSixteen()!=null)&&(this.getFlGroupSixteen()!=ReportConst.EMPTY_VAL))){			
 			if((this.getFlPtj()!=null)&&(this.getFlPtj()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ+this.getFlPtj());
 			}
@@ -2266,10 +2380,59 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			if((this.getFlPurchaseOrderNo()!=null)&&(this.getFlPurchaseOrderNo()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFlPurchaseOrderNoVar(ReportConst.FL_AMP_PURCHASE_ORDER_EQ+this.getFlPurchaseOrderNo());
-			}			
+			}	
+			if((this.getFlGroupOne()!=null)&&(this.getFlGroupOne()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupOneVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupOne());
+			}
+			if((this.getFlGroupTwo()!=null)&&(this.getFlGroupTwo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupTwo());
+			}
+			if((this.getFlGroupThree()!=null)&&(this.getFlGroupThree()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupThreeVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupThree());
+			}
+			if((this.getFlGroupFour()!=null)&&(this.getFlGroupFour()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupFourVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupFour());
+			}
+			if((this.getFlGroupFive()!=null)&&(this.getFlGroupFive()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupFiveVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupFive());
+			}
+			if((this.getFlGroupSix()!=null)&&(this.getFlGroupSix()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupSixVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupSix());
+			}
+			
+			if((this.getFlGroupSeven()!=null)&&(this.getFlGroupSeven()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupSevenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupSeven());
+			}
+			if((this.getFlGroupEight()!=null)&&(this.getFlGroupEight()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupEightVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupEight());
+			}
+			if((this.getFlGroupNine()!=null)&&(this.getFlGroupNine()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupNineVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupNine());
+			}
+			if((this.getFlGroupTen()!=null)&&(this.getFlGroupTen()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupTenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupTen());
+			}
+			if((this.getFlGroupEleven()!=null)&&(this.getFlGroupEleven()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupElevenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupEleven());
+			}
+			if((this.getFlGroupTwelve()!=null)&&(this.getFlGroupTwelve()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupTwelveVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupTwelve());
+			}
+			if((this.getFlGroupThirteen()!=null)&&(this.getFlGroupThirteen()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupThirteenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupThirteen());
+			}
+			if((this.getFlGroupFourteen()!=null)&&(this.getFlGroupFourteen()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupFourteenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupFourteen());
+			}
+			if((this.getFlGroupFifteen()!=null)&&(this.getFlGroupFifteen()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupFifteenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupFifteen());
+			}
+			if((this.getFlGroupSixteen()!=null)&&(this.getFlGroupSixteen()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlGroupSixteenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupSixteen());
+			}
 			rptGenBean.setUrlReportJSPName(reportFileNameJSP);			
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getFlContractOrderVar()+rptGenBean.getFlContractRequestVar()+rptGenBean.getFlPurchaseOrderNoVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getFlContractOrderVar()+rptGenBean.getFlContractRequestVar()+rptGenBean.getFlPurchaseOrderNoVar()+rptGenBean.getFlGroupOneVar()+rptGenBean.getFlGroupTwoVar()+rptGenBean.getFlGroupThreeVar()+rptGenBean.getFlGroupFourVar()+rptGenBean.getFlGroupFiveVar()+rptGenBean.getFlGroupSixVar()+rptGenBean.getFlGroupSevenVar()+rptGenBean.getFlGroupEightVar()+rptGenBean.getFlGroupNineVar()+rptGenBean.getFlGroupTenVar()+rptGenBean.getFlGroupElevenVar()+rptGenBean.getFlGroupTwelveVar()+rptGenBean.getFlGroupThirteenVar()+rptGenBean.getFlGroupFourteenVar()+rptGenBean.getFlGroupFifteenVar()+rptGenBean.getFlGroupSixteenVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}				
@@ -2468,6 +2631,22 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCtAgreement(null);	
 		this.setCtStatus(null);	
 		this.setCtComplete(null);
+		this.setFlGroupOne(null);
+		this.setFlGroupTwo(null);
+		this.setFlGroupThree(null);
+		this.setFlGroupFour(null);
+		this.setFlGroupFive(null);
+		this.setFlGroupSix(null);
+		this.setFlGroupSeven(null);
+		this.setFlGroupEight(null);
+		this.setFlGroupNine(null);
+		this.setFlGroupTen(null);
+		this.setFlGroupEleven(null);
+		this.setFlGroupTwelve(null);
+		this.setFlGroupThirteen(null);
+		this.setFlGroupFourteen(null);
+		this.setFlGroupFifteen(null);
+		this.setFlGroupSixteen(null);
 	}
 	protected void fileGenerateReport(String reportFile, String paramConstrString) throws IOException {	
 		StringBuilder gnrtdURL = new StringBuilder();
@@ -2476,6 +2655,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));		
 		HttpURLConnection urlConnection = null;
 		URL obj = new URL(gnrtdURL.toString());
+		log.info(gnrtdURL.toString());
 	    urlConnection = (HttpURLConnection) obj.openConnection();  
 	    
 	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
