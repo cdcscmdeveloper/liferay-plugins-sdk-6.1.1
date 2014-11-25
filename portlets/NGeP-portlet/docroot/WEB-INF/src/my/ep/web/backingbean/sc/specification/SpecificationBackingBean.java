@@ -11331,8 +11331,7 @@ public class SpecificationBackingBean extends
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				if (null != reqDTO.getCheckLists()) {
 					for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
-						if (SourcingConstants.TECHNICAL_DOCTYPE
-								.equalsIgnoreCase(checkList.getDocCategory())) {
+						if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
 							PmStatus status = new PmStatus();
 							status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 							checkList.setPmStatus(status);
@@ -11341,24 +11340,22 @@ public class SpecificationBackingBean extends
 					}
 				}
 			} else {
-				if (SourcingConstants.FINANCIAL_DOCTYPE
-						.equalsIgnoreCase(specType)) {
+				if (SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
 					if (null != reqDTO.getCheckLists()) {
 						for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
-							if (SourcingConstants.FINANCIAL_DOCTYPE
-									.equalsIgnoreCase(checkList
-											.getDocCategory())) {
+							if (SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
 								PmStatus status = new PmStatus();
 								status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 								checkList.setPmStatus(status);
-								this.getManagedBean().setScQtChecklist(
-										checkList);
+								this.getManagedBean().setScQtChecklist(checkList);
 							}
 						}
 					}
 				}
 			}
-			// throw new Exception(e.getMessage());
+			String msgCode = e.getMessage();
+			String msgParam []= e.getParameters();
+			throw new EpException(msgCode, msgParam);
 		}
 
 		// Need to redirect particualr page..
@@ -11405,7 +11402,6 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-
 		return null;
 	}
 
