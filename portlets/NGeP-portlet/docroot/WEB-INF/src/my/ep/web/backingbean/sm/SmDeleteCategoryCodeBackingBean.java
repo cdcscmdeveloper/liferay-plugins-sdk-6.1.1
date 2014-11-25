@@ -51,9 +51,11 @@ public class SmDeleteCategoryCodeBackingBean extends
 	// }
 
 	public String getRegCategoryCodes() {
+		SmSupplier smApplSupplier = null;
+		String retView = "";
 		try {
 			log.info("**** ENTER On Page Load Event  *************");
-			SmSupplier smApplSupplier = getCurrentSupplier();
+			smApplSupplier = getCurrentSupplier();
 			log.info("**** Supplier Id is ********** "
 					+ smApplSupplier.getSupplierId());
 			// if (SmApplicationUtil.checkActiveSmApplForSupp(smApplSupplier)) {
@@ -71,22 +73,19 @@ public class SmDeleteCategoryCodeBackingBean extends
 				smAppl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
 				getManagedBean().setSmAppl(smAppl);
 			}
-			
-			//check if allowed to proceed
-			boolean cannotProceedAlertMsg = false;
-			cannotProceedAlertMsg = SmApplicationUtil
-					.checkActiveSmApplForSupp(smApplSupplier);
-			if (cannotProceedAlertMsg) {
-				throw new EpException(MessageConst.ERROR_722542);
-			}
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 			assignActiveCategoryList();
-			return SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
-		}finally{
-			
-		}
+			retView =  SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
+		} catch (Exception e) {
+			e.printStackTrace();
+			retView =  SupplierManagementConst.DEFAULT_DELETE_CATCODES_APPLN;
 
+		}
+		
+		checkIsAllowedToProceed(smApplSupplier);
+		
+		return retView;
 	}
 
 	public void assignActiveCategoryList() {
@@ -289,5 +288,18 @@ public class SmDeleteCategoryCodeBackingBean extends
 			e.printStackTrace();
 		}
 		return smSupp;
+	}
+	
+	private void checkIsAllowedToProceed(SmSupplier smSupplier){
+		boolean cannotProceedAlertMsg = false;
+		//check if can proceed
+		if(smSupplier!=null){
+			cannotProceedAlertMsg = SmApplicationUtil
+					.checkActiveSmApplForSupp(smSupplier);
+		}
+		//throw exception if cannot proceed
+		if (cannotProceedAlertMsg) {
+			throw new EpException(MessageConst.ERROR_722542);
+		}
 	}
 }
