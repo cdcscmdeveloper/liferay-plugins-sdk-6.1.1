@@ -90,8 +90,8 @@
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
     				</f:facet>
 						<h:outputText value="#{doItems.orderedQty}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>
 					</p:column>
 					<p:column  style="white-space:normal;text-align:right;">
@@ -101,8 +101,8 @@
     				</f:facet>
 						<h:outputText id="remaingQtyTxt"
 							value="#{doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>
 					</p:column>
 					<p:column style="white-space:normal;text-align:right;">
@@ -115,13 +115,13 @@
 								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+									<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 							</p:inputText>
 							<h:outputText value="#{doItems.deliveredQty}" size="5"
 								rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+								<f:converter converterId="dynamicNumberConverter" />
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 							</h:outputText>
 						</h:panelGroup>
 					</p:column>
@@ -154,8 +154,8 @@
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
     				</f:facet>
 						<h:outputText value="#{doItems.chargeReceivedQty}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.do.received.amount']}"
@@ -311,8 +311,8 @@
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.rejected.qty']}"/>
     				</f:facet>
 				<h:outputText value="#{frnItem.rejectedQty}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, frnItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
+					<f:converter converterId="dynamicNumberConverter" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, frnItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />	
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.amount']}"  style="text-align:right;">
