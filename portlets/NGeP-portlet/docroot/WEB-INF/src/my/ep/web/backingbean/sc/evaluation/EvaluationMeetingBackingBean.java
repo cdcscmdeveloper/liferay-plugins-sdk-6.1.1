@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-		
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -529,20 +529,23 @@ public class EvaluationMeetingBackingBean extends
 					 * committeeMember.setPmOrgProfile(this.getManagedBean().getQt
 					 * () .getPmOrgProfile());
 					 */
-					if (committeeMember.isPNP() == true) {
-
-						ParameterReqDTO chairPerson = new ParameterReqDTO();
-						chairPerson
-								.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-						chairPerson
-								.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-						ParameterResDTO chairPersonresDTO = parameterSo
-								.retrieveParameterByTypeAndCode(chairPerson);
-
-						committeeMember.setMemberRole(chairPersonresDTO
-								.getPmParameter());
+					if (user.isPMP() == true) {
+						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+						ParameterResDTO resDTO = getParameterSO()
+								.retrieveParameterByTypeAndCode(reqDTO);
+						committeeMember.setMemberRole(resDTO.getPmParameter());
 					} else {
-						committeeMember.setMemberRole(user.getMemberRole());
+						if (null != user.getMemberRole().getParameterId()) {
+							ParameterReqDTO reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterId(user.getMemberRole()
+									.getParameterId());
+							ParameterResDTO resDTO = getParameterSO()
+									.retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO
+									.getPmParameter());
+						}
 					}
 
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
