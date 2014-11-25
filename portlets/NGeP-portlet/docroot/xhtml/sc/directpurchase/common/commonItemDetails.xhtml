@@ -111,7 +111,7 @@
 					</h:commandLink> 
 					</h:panelGroup>
 				</p:column>
-                <p:column style="width:20%; white-space: normal;">
+                <p:column style="width:20%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"/>
@@ -120,7 +120,7 @@
 				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;margin-right: -12px;">	
 					   <p:row>
 			            <p:column  styleClass="ppPanelGrid" style="border:none !important;width:10%;padding-left: 0px;">
-			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="9"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="#{requestNoteBackingBean.beforeSavePostListener(requestNoteDtl)}"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
@@ -129,7 +129,7 @@
 									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
-							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="9"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="#{requestNoteBackingBean.afterSavePostListener(requestNoteDtl)}"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
@@ -139,7 +139,7 @@
 			                         rendered="#{!requestNoteDtl.brandNew}">    
 								</ac:lov>
 			             </p:column>
-			                <p:column  styleClass="ppPanelGrid" style="vertical-align: top;padding-left: 0px;text-align: left; border:none !important;">
+			                <p:column  styleClass="ppPanelGrid" style="vertical-align: top;padding-left: 4px;text-align: left; border:none !important;">
 			                 <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
 								    onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
@@ -202,16 +202,16 @@
 						</h:panelGroup>
 					</h:panelGroup>
 				</p:column>
-				<p:column>
-					<f:facet name="header" style="width:8%; white-space: normal;">
+				<p:column  style="width:8%; white-space: normal;">
+					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" />
 					</f:facet>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
-					   disabled="true" size="6" style="margin-top: 8px;"  />
+					   disabled="true" size="8" style="margin-top: 8px;"  />
 				</p:column>
 				
-				<p:column style="width:12%; white-space: normal;white-space:normal;">
+				<p:column style="width:12%; white-space: normal;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
@@ -231,7 +231,7 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column style="width:11%;">
+			    <p:column style="width:11%; white-space: normal;">
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
