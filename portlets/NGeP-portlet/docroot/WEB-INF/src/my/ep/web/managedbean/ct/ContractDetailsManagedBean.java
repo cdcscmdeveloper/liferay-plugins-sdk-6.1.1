@@ -165,6 +165,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String buttonAction;
 	private int counter;
 	
+	private String financialAccNo;
+	
 	public String[] getAction() {
 		return action;
 	}
@@ -1010,5 +1012,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCounter(int counter) {
 		this.counter = counter;
+	}
+
+	public String getFinancialAccNo() {
+		return financialAccNo;
+	}
+
+	public void setFinancialAccNo(String financialAccNo) {
+		this.financialAccNo = financialAccNo;
 	}
 }

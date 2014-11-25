@@ -60,15 +60,15 @@
    			  <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"  />
               <h:panelGrid columns="3">
               	<p:inputText   disabled="true" style="width:200px;"
-                    value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.smSupplier.smAppl.smSupplierBanks[0].pmFinancialOrg.finOrgName}" />
+                    value="#{contractDetailsBackingBean.getBankAccNoName()}" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 			  </h:panelGrid>
               
               <p:outputLabel  value="#{lbl['lbl.ct.bank.account.no']}"  /> 
               <h:panelGrid columns="3">
-                 <p:inputText   disabled="true" style="width:200px;"
-                     value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.smSupplier.smAppl.smSupplierBanks[0].accountNo}" />
+                 <p:inputText  style="width:200px;"
+                    disabled="true" value="#{contractDetailsBackingBean.managedBean.financialAccNo}" />
                  <p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.account']}" />
 			  </h:panelGrid> 
@@ -77,7 +77,6 @@
                     <h:commandLink value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName}"  style="float:left;" styleClass="blue_font" 
 	                      action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.filePath, 
 	                      contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName)}" />			
-    
              </h:panelGrid>
         </p:panel>
 </ui:composition>
