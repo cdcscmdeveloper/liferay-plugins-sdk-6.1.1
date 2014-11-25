@@ -314,23 +314,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			validatePreparedOrgAndAgencies();
-			checkContractValidity(getManagedBean().getFlRequest());
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
-				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
-				}				
-				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750010);
-				}
-				validateOrderQuantity();
-				checkMinimumQtyItem(getManagedBean().getFlRequest());
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
-				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
-			}
-			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -353,9 +336,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
-			checkContractAmount(flRequest);
-			checkCeilingAmount(flRequest);
-			checkCeilingQty(flRequest);
+
 			if(isRequisitioner()){
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -367,6 +348,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
 				flRequest.setTitle(FulfilmentConst.CONTRACT_REQUEST);
 			}
+			
+			if(!getManagedBean().isValidated()){
+				validateContractRequest(action);
+			}
+			
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
 			reqDTO.setMto(getManagedBean().isMto());
@@ -3298,12 +3284,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
+			validateContractRequest(outcome);
+			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFlRequest().getCtContract().getContractNo());
-//			sb.append(df.format(getManagedBean().getFlRequest().getStartDate()));
-//			sb.append(df.format(getManagedBean().getFlRequest().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
@@ -3322,7 +3306,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		
+		getManagedBean().setValidated(Boolean.TRUE);
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
@@ -3385,6 +3369,77 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.phase",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
 				}
 			}
+		}
+	}
+	
+	private void validateContractRequest(String action){
+		IFulfilmentRequestSO fulfilmentRequestSO = null;
+		IUserSO userSO =null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		try {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			validatePreparedOrgAndAgencies();
+			checkContractValidity(getManagedBean().getFlRequest());
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
+				}				
+				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_750010);
+				}
+				validateOrderQuantity();
+				checkMinimumQtyItem(getManagedBean().getFlRequest());
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+			}
+			
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+			if(isRequisitioner()) {
+				reqDTO.setRequisitioner(Boolean.TRUE);
+			}
+			flRequest.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+			
+			// reset flTempItem
+			flRequest.setFlTempItems(new ArrayList<FlTempItem>());
+			if(getManagedBean().getItemAddrList()!=null && getManagedBean().getItemAddrList().size()>0) {
+				FlTempItem flTempItem = null;
+				for(FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
+					flTempItem = new FlTempItem();
+					flTempItem.setFlRequest(flRequest);
+					flTempItem.setScRequestItem(itemAddr.getScRequestItem());
+					flRequest.getFlTempItems().add(flTempItem);
+				}
+			}
+			
+			checkContractAmount(flRequest);
+			checkCeilingAmount(flRequest);
+			checkCeilingQty(flRequest);
+			if(isRequisitioner()){
+				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				flRequest.setCreatedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+			}
+			if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
+				flRequest.setTitle(FulfilmentConst.CONTRACT_REQUEST);
+			}
+			
+			reqDTO.setFlFulfilmentRequest(flRequest);
+			reqDTO.setContractRequest(Boolean.TRUE);
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setOutcome(action);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setApproverMap(getManagedBean().getApproverMap());
+			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);		
+		}finally{
+			fulfilmentRequestSO = null;
 		}
 	}
 	

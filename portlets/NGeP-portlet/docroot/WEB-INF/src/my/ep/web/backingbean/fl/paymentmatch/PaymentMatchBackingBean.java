@@ -156,6 +156,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		IPaymentMatchSO paymentSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			//trigger for other non-gpki signing actions
+			if(!getManagedBean().isValidated()){
+				validatePaymentMatch(action);
+			}			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlPaymentAdvice paymentAdvice = getManagedBean().getPaymentAdvice();
@@ -175,7 +179,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 			
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			validateDuplicateDeduction();
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700026;
@@ -833,35 +836,18 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	public void gpkiSignAction(String outcome){
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
-			IPaymentMatchSO paymentSO = null;
-			try {				
-				String token = getFacesScopes().getBPMAuthenticationCtxToken();
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-				FlPaymentAdvice paymentAdvice = getManagedBean().getPaymentAdvice();				  
-				paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
-				reqDTO.setPaymentAdvice(paymentAdvice);
-				reqDTO.setOutcome(outcome);
-				reqDTO.setTaskId(getManagedBean().getTaskId());
-				reqDTO.setToken(token);
-				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
-				reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-				getManagedBean().setAutoUpdate(Boolean.TRUE);
-				validateDuplicateDeduction();
-				paymentSO.validatePaymentMatch(reqDTO);
-				
-				// Temp setTextBeforeSign : DocNo+Type
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-				sb.append(outcome);
-				getManagedBean().setTextBeforeSign(sb.toString());
-				// set action
-				getManagedBean().setButtonAction(outcome);
-				getManagedBean().setAutoUpdate(Boolean.FALSE);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}finally {
-				paymentSO = null;
-			}
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {			
+			validatePaymentMatch(outcome);
+			// Temp setTextBeforeSign : DocNo+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
 		}else{
 			submitAction(outcome);
 		}
@@ -872,12 +858,33 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
+		getManagedBean().setValidated(Boolean.TRUE);
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	private void validatePaymentMatch(String outcome){
+		IPaymentMatchSO paymentSO = null;
+		try {	
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlPaymentAdvice paymentAdvice = getManagedBean().getPaymentAdvice();				  
+			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+			reqDTO.setPaymentAdvice(paymentAdvice);
+			reqDTO.setOutcome(outcome);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			validateDuplicateDeduction();
+			paymentSO.validatePaymentMatch(reqDTO);
+			
+		}finally {
+			paymentSO = null;
+		}
 	}
 	
 }

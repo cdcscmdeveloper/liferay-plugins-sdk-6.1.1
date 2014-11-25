@@ -104,9 +104,10 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	
 	//gpki signing
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
+	private boolean validated = false;
 
 	/**
 	 * @return the docType
@@ -862,5 +863,13 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setPopulateDeductionList(List<SelectItem> populateDeductionList) {
 		this.populateDeductionList = populateDeductionList;
+	}
+
+	public boolean isValidated() {
+		return validated;
+	}
+
+	public void setValidated(boolean validated) {
+		this.validated = validated;
 	}
 }

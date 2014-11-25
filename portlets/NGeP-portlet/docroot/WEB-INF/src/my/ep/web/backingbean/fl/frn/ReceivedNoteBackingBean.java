@@ -106,7 +106,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
-			validateFulfilmentNote(action);
+			if(!getManagedBean().isValidated()){
+				validateFulfilmentNote(action);
+			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
@@ -452,7 +454,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		getManagedBean().setValidated(Boolean.TRUE);
 		return submitAction(getManagedBean().getButtonAction());
 	}
 
