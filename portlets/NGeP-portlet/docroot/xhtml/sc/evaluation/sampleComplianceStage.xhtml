@@ -20,7 +20,6 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
 		</div>
@@ -73,7 +72,6 @@
 						<h:outputText value="#{lbl['lbl.sc.eva.comp.sub.status']}"></h:outputText>
 					</f:facet>
 					<p:selectOneMenu id="sampleSubmissionId"
-						disabled="#{evaluationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.eva.comp.sub.status']}" required="true"
 						value="#{sampleItem. submissionStatus.parameterId}">
 
@@ -87,7 +85,6 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100"
-						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.memberOnly}"
 						value="#{sampleItem.remark}"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>

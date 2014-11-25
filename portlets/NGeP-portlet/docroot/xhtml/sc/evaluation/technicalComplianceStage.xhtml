@@ -22,7 +22,6 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveTechnicalCompliance}" />
 		</div>
@@ -80,7 +79,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
 					<p:selectOneMenu
-						disabled="#{((complianceTechnicalSupplier.submitted eq 'false') or (evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.memberOnly))}"
+						disabled="#{complianceTechnicalSupplier.submitted eq 'false' }"
 						value="#{complianceTechnicalSupplier.compliance}">
 
 						<f:selectItems
@@ -94,12 +93,9 @@
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 						<p:inputTextarea rows="2" cols="40" maxlength="200"
-							rendered="#{!evaluationBackingBean.managedBean.readOnly}"
 							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
-						<h:outputText
-							rendered="#{evaluationBackingBean.managedBean.readOnly}"
-							value="#{complianceTechnicalSupplier.remark}">
-						</h:outputText>
+
+
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>
