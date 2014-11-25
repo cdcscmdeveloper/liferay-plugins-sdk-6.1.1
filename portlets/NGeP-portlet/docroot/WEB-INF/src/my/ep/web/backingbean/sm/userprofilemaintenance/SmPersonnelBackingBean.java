@@ -1321,20 +1321,24 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 					}
 				}
 			}
-			boolean icVerified = verifyIc();
-			if(icVerified){
-				for(SmPersonnel personnel : personnels){
-					SelectItem selectItem = new SelectItem();
-					selectItem.setValue(personnel.getPersonnelId());
-					selectItem.setLabel(personnel.getName());
-					getManagedBean().getAssignList().add(selectItem);
+			if(personnels != null && personnels.size() > 0){
+				boolean icVerified = verifyIc();
+				if(icVerified){
+					for(SmPersonnel personnel : personnels){
+						SelectItem selectItem = new SelectItem();
+						selectItem.setValue(personnel.getPersonnelId());
+						selectItem.setLabel(personnel.getName());
+						getManagedBean().getAssignList().add(selectItem);
+					}
+					getManagedBean().setPersonnelList(personnels);
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, "adminReAssign.xhtml");
+				} else {
+					throw new EpException(MessageConst.ERROR_722579);
 				}
-				getManagedBean().setPersonnelList(personnels);
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, "adminReAssign.xhtml");
 			} else {
-				throw new EpException(MessageConst.ERROR_722579);
+				throw new EpException(MessageConst.ERROR_722580);
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_721018);
