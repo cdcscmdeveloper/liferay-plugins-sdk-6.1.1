@@ -877,4 +877,28 @@ public class SmCommonUtil {
 		log.info("Is File Exist:"+exist);
 		return exist;
 	}
+	
+	public static void createSerFile(SmAppl smAppl, String serType) {
+		ISmApplRevisionSO applRevisionSO = null;
+		try {
+			log.info("start creating SER file for appNo:" + smAppl.getApplNo()
+					+ "  serType:" + serType);
+			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmApplRevisionSO.class);
+
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			reqDTO.setSmAppl(smAppl);
+			if(serType.equalsIgnoreCase("SUP")){
+				reqDTO.setType("supplier");
+			}else{
+				reqDTO.setType("approved");
+			}
+			applRevisionSO.applicationHist(reqDTO);
+		} catch (Exception ex) {
+			log.info("Failed to create SER file  [" + ex.getMessage() + "]");
+		} finally {
+			applRevisionSO = null;
+		}
+	}
 }

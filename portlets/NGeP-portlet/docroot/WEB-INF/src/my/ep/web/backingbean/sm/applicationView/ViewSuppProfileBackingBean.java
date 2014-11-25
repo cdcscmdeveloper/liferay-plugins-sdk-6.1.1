@@ -4,14 +4,18 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -21,18 +25,20 @@ public class ViewSuppProfileBackingBean extends
 	public void navigateToViewSuppProfile() {
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 
-		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-		supplierSearchReqDTO.setSupplierId(supplier.getSupplierId());
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierSearchSO.class);
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveLatestApplBySupplierId(supplierSearchReqDTO);
+						IMofRegistrationSO.class);
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
 
-		if (smResDTO.getSmAppl() != null) {
-
-			String applNo = smResDTO.getSmAppl().getApplNo();
+		if (resDTO.getSmAppl() != null) {
+			String applNo = resDTO.getSmAppl().getApplNo();
+			if (!SmCommonUtil.isSerFileExist(applNo, "APP")) {
+				SmCommonUtil.createSerFile(resDTO.getSmAppl(), "APP");
+			}
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
 			getManagedBean().setViewSupplierProfile(true);
 			initApplication();
