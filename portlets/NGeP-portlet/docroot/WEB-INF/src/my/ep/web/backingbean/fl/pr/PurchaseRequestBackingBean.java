@@ -280,17 +280,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
-				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
-				}				
-				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750010);
-				}
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
-				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
+			if(!getManagedBean().isValidated()){
+			   validateFulfilmentRequest(action);
 			}
 			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -2558,15 +2549,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-//			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
+				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+			validateFulfilmentRequest(outcome);
 			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-//			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
-//			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
 			sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
@@ -2585,13 +2574,47 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		
+		getManagedBean().setValidated(Boolean.TRUE);
 		return fulfillmentRequestAction(getManagedBean().getButtonAction());
 	}
 	
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	private void validateFulfilmentRequest(String outcome){		
+		IFulfilmentRequestSO fulfilmentRequestSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		try {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
+				}				
+				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_750010);
+				}
+			} else if(BpmOutcomeConst.BPM_REVISE.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+			}
+			
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+			reqDTO.setContractRequest(Boolean.FALSE);
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setApproverMap(getManagedBean().getApproverMap());
+			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
+			
+		}finally{
+			fulfilmentRequestSO = null;
+		}
 	}
 
 }

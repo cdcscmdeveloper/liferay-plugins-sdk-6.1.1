@@ -58,6 +58,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
+	private boolean validated = false;
 	
 	/**
 	 * @return the flRemark
@@ -345,6 +346,14 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+
+	public boolean isValidated() {
+		return validated;
+	}
+
+	public void setValidated(boolean validated) {
+		this.validated = validated;
 	}
 
 

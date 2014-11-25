@@ -204,6 +204,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
+	private boolean validated = false;
 	
 	public ContractRequestManagedBean(){
 
@@ -2372,6 +2373,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+
+	public boolean isValidated() {
+		return validated;
+	}
+
+	public void setValidated(boolean validated) {
+		this.validated = validated;
 	}
 
 }
