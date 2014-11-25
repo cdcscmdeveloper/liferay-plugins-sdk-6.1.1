@@ -54,7 +54,7 @@
 		</p:panel>
 		<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
 			<ac:lovPopup />
-			<p:dataTable id="complisttbl" var="scQtBriefReg"
+			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
 				value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
 				selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration}"
 				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
@@ -83,7 +83,8 @@
 									<td class="TableFieldLeft"><ac:lov id="supplier"
 											lovId="SM_SUPPLIER_MOFNO"
 											postUpdateListener="bsvAttendanceBackingBean.bsvRegistationListner(bsvAttendanceBackingBean.managedBean.mofAccounts)"
-											headerText="Supplier MOF No Lov" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
+											headerText="Supplier MOF No Lov"
+											buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 											buttonIcon="ui-icon-add" selectionMode="multiple"
 											saveObject="bsvAttendanceBackingBean.managedBean.mofAccounts"
 											update="@form" /></td>
