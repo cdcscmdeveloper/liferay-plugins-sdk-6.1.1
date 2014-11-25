@@ -12,7 +12,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -32,14 +31,10 @@ public class ViewSuppProfileBackingBean extends
 				.retriveLatestApplBySupplierId(supplierSearchReqDTO);
 
 		if (smResDTO.getSmAppl() != null) {
+
 			String applNo = smResDTO.getSmAppl().getApplNo();
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
 			getManagedBean().setViewSupplierProfile(true);
-			
-			//generate SER file if not exist which not suppose to happen
-			if(!SmCommonUtil.isSerFileExist(applNo, "APP")){
-				SmCommonUtil.createSerFile(smResDTO.getSmAppl(), "APP");
-			}
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
 			String redirectToAppl = SmApplicationUtil
