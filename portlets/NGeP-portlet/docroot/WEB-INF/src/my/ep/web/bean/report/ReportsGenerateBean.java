@@ -187,6 +187,22 @@ public class ReportsGenerateBean {
 		private boolean flContractOrderView = false;
 		private boolean flContractRequestView = false;
 		private boolean flPurchaseOrderNoView = false;
+		private boolean flGroupOneView = false;
+		private boolean flGroupTwoView = false;
+		private boolean flGroupThreeView = false;
+		private boolean flGroupFourView = false;
+		private boolean flGroupFiveView = false;
+		private boolean flGroupSixView = false;
+		private boolean flGroupSevenView = false;
+		private boolean flGroupEightView = false;
+		private boolean flGroupNineView = false;
+		private boolean flGroupTenView = false;
+		private boolean flGroupElevenView = false;
+		private boolean flGroupTwelveView = false;
+		private boolean flGroupThirteenView = false;
+		private boolean flGroupFourteenView = false;
+		private boolean flGroupFifteenView = false;
+		private boolean flGroupSixteenView = false;
 		//CT
 		private boolean ctContractNoView = false;
 		private boolean ctAgreementView = false;
@@ -324,7 +340,216 @@ public class ReportsGenerateBean {
 		private String ctContrMontrStatusVar=ReportConst.EMPTY_VAL;
 		private String ctHiddenParamGroupVar=ReportConst.EMPTY_VAL;
 		private String ctCompleteVar=ReportConst.EMPTY_VAL;
+		
+		private String flGroupOneVar=ReportConst.EMPTY_VAL;
+		private String flGroupTwoVar=ReportConst.EMPTY_VAL;
+		private String flGroupThreeVar=ReportConst.EMPTY_VAL;
+		private String flGroupFourVar=ReportConst.EMPTY_VAL;
+		private String flGroupFiveVar=ReportConst.EMPTY_VAL;
+		private String flGroupSixVar=ReportConst.EMPTY_VAL;
+		private String flGroupSevenVar=ReportConst.EMPTY_VAL;
+		private String flGroupEightVar=ReportConst.EMPTY_VAL;
+		private String flGroupNineVar=ReportConst.EMPTY_VAL;
+		private String flGroupTenVar=ReportConst.EMPTY_VAL;
+		private String flGroupElevenVar=ReportConst.EMPTY_VAL;
+		private String flGroupTwelveVar=ReportConst.EMPTY_VAL;
+		private String flGroupThirteenVar=ReportConst.EMPTY_VAL;
+		private String flGroupFourteenVar=ReportConst.EMPTY_VAL;
+		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
+		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 	
+		public boolean isFlGroupOneView() {
+			return flGroupOneView;
+		}
+		public void setFlGroupOneView(boolean flGroupOneView) {
+			this.flGroupOneView = flGroupOneView;
+		}
+		public boolean isFlGroupTwoView() {
+			return flGroupTwoView;
+		}
+		public void setFlGroupTwoView(boolean flGroupTwoView) {
+			this.flGroupTwoView = flGroupTwoView;
+		}
+		public boolean isFlGroupThreeView() {
+			return flGroupThreeView;
+		}
+		public void setFlGroupThreeView(boolean flGroupThreeView) {
+			this.flGroupThreeView = flGroupThreeView;
+		}
+		public boolean isFlGroupFourView() {
+			return flGroupFourView;
+		}
+		public void setFlGroupFourView(boolean flGroupFourView) {
+			this.flGroupFourView = flGroupFourView;
+		}
+		public boolean isFlGroupFiveView() {
+			return flGroupFiveView;
+		}
+		public void setFlGroupFiveView(boolean flGroupFiveView) {
+			this.flGroupFiveView = flGroupFiveView;
+		}
+		public boolean isFlGroupSixView() {
+			return flGroupSixView;
+		}
+		public void setFlGroupSixView(boolean flGroupSixView) {
+			this.flGroupSixView = flGroupSixView;
+		}
+		public boolean isFlGroupSevenView() {
+			return flGroupSevenView;
+		}
+		public void setFlGroupSevenView(boolean flGroupSevenView) {
+			this.flGroupSevenView = flGroupSevenView;
+		}
+		public boolean isFlGroupEightView() {
+			return flGroupEightView;
+		}
+		public void setFlGroupEightView(boolean flGroupEightView) {
+			this.flGroupEightView = flGroupEightView;
+		}
+		public boolean isFlGroupNineView() {
+			return flGroupNineView;
+		}
+		public void setFlGroupNineView(boolean flGroupNineView) {
+			this.flGroupNineView = flGroupNineView;
+		}
+		public boolean isFlGroupTenView() {
+			return flGroupTenView;
+		}
+		public void setFlGroupTenView(boolean flGroupTenView) {
+			this.flGroupTenView = flGroupTenView;
+		}
+		public boolean isFlGroupElevenView() {
+			return flGroupElevenView;
+		}
+		public void setFlGroupElevenView(boolean flGroupElevenView) {
+			this.flGroupElevenView = flGroupElevenView;
+		}
+		public boolean isFlGroupTwelveView() {
+			return flGroupTwelveView;
+		}
+		public void setFlGroupTwelveView(boolean flGroupTwelveView) {
+			this.flGroupTwelveView = flGroupTwelveView;
+		}
+		public boolean isFlGroupThirteenView() {
+			return flGroupThirteenView;
+		}
+		public void setFlGroupThirteenView(boolean flGroupThirteenView) {
+			this.flGroupThirteenView = flGroupThirteenView;
+		}
+		public boolean isFlGroupFourteenView() {
+			return flGroupFourteenView;
+		}
+		public void setFlGroupFourteenView(boolean flGroupFourteenView) {
+			this.flGroupFourteenView = flGroupFourteenView;
+		}
+		public boolean isFlGroupFifteenView() {
+			return flGroupFifteenView;
+		}
+		public void setFlGroupFifteenView(boolean flGroupFifteenView) {
+			this.flGroupFifteenView = flGroupFifteenView;
+		}
+		public boolean isFlGroupSixteenView() {
+			return flGroupSixteenView;
+		}
+		public void setFlGroupSixteenView(boolean flGroupSixteenView) {
+			this.flGroupSixteenView = flGroupSixteenView;
+		}
+		public String getFlGroupOneVar() {
+			return flGroupOneVar;
+		}
+		public void setFlGroupOneVar(String flGroupOneVar) {
+			this.flGroupOneVar = flGroupOneVar;
+		}
+		public String getFlGroupTwoVar() {
+			return flGroupTwoVar;
+		}
+		public void setFlGroupTwoVar(String flGroupTwoVar) {
+			this.flGroupTwoVar = flGroupTwoVar;
+		}
+		public String getFlGroupThreeVar() {
+			return flGroupThreeVar;
+		}
+		public void setFlGroupThreeVar(String flGroupThreeVar) {
+			this.flGroupThreeVar = flGroupThreeVar;
+		}
+		public String getFlGroupFourVar() {
+			return flGroupFourVar;
+		}
+		public void setFlGroupFourVar(String flGroupFourVar) {
+			this.flGroupFourVar = flGroupFourVar;
+		}
+		public String getFlGroupFiveVar() {
+			return flGroupFiveVar;
+		}
+		public void setFlGroupFiveVar(String flGroupFiveVar) {
+			this.flGroupFiveVar = flGroupFiveVar;
+		}
+		public String getFlGroupSixVar() {
+			return flGroupSixVar;
+		}
+		public void setFlGroupSixVar(String flGroupSixVar) {
+			this.flGroupSixVar = flGroupSixVar;
+		}
+		public String getFlGroupSevenVar() {
+			return flGroupSevenVar;
+		}
+		public void setFlGroupSevenVar(String flGroupSevenVar) {
+			this.flGroupSevenVar = flGroupSevenVar;
+		}
+		public String getFlGroupEightVar() {
+			return flGroupEightVar;
+		}
+		public void setFlGroupEightVar(String flGroupEightVar) {
+			this.flGroupEightVar = flGroupEightVar;
+		}
+		public String getFlGroupNineVar() {
+			return flGroupNineVar;
+		}
+		public void setFlGroupNineVar(String flGroupNineVar) {
+			this.flGroupNineVar = flGroupNineVar;
+		}
+		public String getFlGroupTenVar() {
+			return flGroupTenVar;
+		}
+		public void setFlGroupTenVar(String flGroupTenVar) {
+			this.flGroupTenVar = flGroupTenVar;
+		}
+		public String getFlGroupElevenVar() {
+			return flGroupElevenVar;
+		}
+		public void setFlGroupElevenVar(String flGroupElevenVar) {
+			this.flGroupElevenVar = flGroupElevenVar;
+		}
+		public String getFlGroupTwelveVar() {
+			return flGroupTwelveVar;
+		}
+		public void setFlGroupTwelveVar(String flGroupTwelveVar) {
+			this.flGroupTwelveVar = flGroupTwelveVar;
+		}
+		public String getFlGroupThirteenVar() {
+			return flGroupThirteenVar;
+		}
+		public void setFlGroupThirteenVar(String flGroupThirteenVar) {
+			this.flGroupThirteenVar = flGroupThirteenVar;
+		}
+		public String getFlGroupFourteenVar() {
+			return flGroupFourteenVar;
+		}
+		public void setFlGroupFourteenVar(String flGroupFourteenVar) {
+			this.flGroupFourteenVar = flGroupFourteenVar;
+		}
+		public String getFlGroupFifteenVar() {
+			return flGroupFifteenVar;
+		}
+		public void setFlGroupFifteenVar(String flGroupFifteenVar) {
+			this.flGroupFifteenVar = flGroupFifteenVar;
+		}
+		public String getFlGroupSixteenVar() {
+			return flGroupSixteenVar;
+		}
+		public void setFlGroupSixteenVar(String flGroupSixteenVar) {
+			this.flGroupSixteenVar = flGroupSixteenVar;
+		}
 		public boolean isCtCompleteView() {
 			return ctCompleteView;
 		}

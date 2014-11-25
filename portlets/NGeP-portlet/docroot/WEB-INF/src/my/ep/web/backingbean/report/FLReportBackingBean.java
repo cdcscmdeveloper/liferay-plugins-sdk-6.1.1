@@ -34,7 +34,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlSupplierView(true);
-			//rptGenBean.setFlJabatanView(true);
+			rptGenBean.setFlGroupOneView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_MIN_NAME));		
@@ -50,7 +50,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlSupplierView(true);
-			//rptGenBean.setFlJabatanView(true);			
+			rptGenBean.setFlGroupTwoView(true);			
 			rptGenBean.setFromDateView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_ORD_RPT_MIN_NAME));
 			 break;
@@ -62,7 +62,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlStatusView(true);
-			//rptGenBean.setFlJabatanView(true);
+			rptGenBean.setFlGroupThreeView(true);	
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);
@@ -76,7 +76,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlRecievingOfficerView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
-			//rptGenBean.setFlDeliveryAddressView(true);
+			rptGenBean.setFlGroupThreeView(true);
 			rptGenBean.setFlRecNoteNoView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlContractOrderView(true);
@@ -91,10 +91,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
-			//rptGenBean.setFlItemNameView(true);
-			//rptGenBean.setFlItemCodeView(true);
-			//rptGenBean.setFlItemTypeView(true);
-			//rptGenBean.setFlDurationView(true);
+			rptGenBean.setFlGroupFourView(true);
 			rptGenBean.setFromDateView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_MIN_NAME));
 			 break;
@@ -125,10 +122,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlContractTypeView(true);
-			//rptGenBean.setFlItemNameView(true);
-			//rptGenBean.setFlItemCodeView(true);
-			//rptGenBean.setFlItemTypeView(true); 
-			//rptGenBean.setFlDurationView(true);
+			rptGenBean.setFlGroupFiveView(true);
 			rptGenBean.setFromDateView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_MIN_NAME));		
 			 break;
@@ -149,6 +143,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSixView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_MIN_NAME));	
 			 break;
 		case ReportConst.PYMT_MATCH_RPT_MIN_VAL:
@@ -160,6 +155,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlContractOrderView(true);
 			rptGenBean.setFlStatusView(true);	
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSevenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_MIN_NAME));	
 			 break;
 		case ReportConst.DED_RPT_MIN_VAL:
@@ -168,16 +164,13 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlContractOrderView(true);
 			rptGenBean.setFlStatusView(true);
-			//rptGenBean.setFlDeductionTypeView(true);
-			//rptGenBean.setFlPmoView(true);
+			rptGenBean.setFlGroupSixView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFromDateView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DED_RPT_MIN_NAME));
 			 break;
 		case ReportConst.CON_REQ_CANC_RPT_MIN_VAL:
-			//rptGenBean.setFlCrNoView(true);
-			//rptGenBean.setFlApproverNameView(true);
-			//rptGenBean.setFlRequisitionerView(true);
+			rptGenBean.setFlGroupSixView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlContractNoView(true);	
@@ -188,7 +181,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlApproverNameView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
-			//rptGenBean.setFlJabatanView(true);
+			rptGenBean.setFlGroupSixView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);
@@ -197,9 +190,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		case ReportConst.DEL_ORD_CANC_RPT_MIN_VAL:
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
-			//rptGenBean.setFlRecievingOfficerView(true);
-			//rptGenBean.setFlJabatanView(true);
-			//rptGenBean.setFlMinistryView(true);
+			rptGenBean.setFlGroupOneView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFromDateView(true);
@@ -208,7 +199,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		case ReportConst.FL_REC_NOTE_CANC_RPT_MIN_VAL:
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
-			//rptGenBean.setFlJabatanView(true);
+			rptGenBean.setFlGroupOneView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
@@ -218,8 +209,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		case ReportConst.INV_CANC_RPT_MIN_VAL:
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
-			//rptGenBean.setFlJabatanView(true);
-			//rptGenBean.setFlMinistryView(true);
+			rptGenBean.setFlGroupOneView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFromDateView(true);
@@ -249,6 +239,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			//rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupEightView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_MIN_NAME));	
 			break;
 		case ReportConst.CON_REQ_RPT_CEN_PEN_VAL:	
@@ -260,14 +251,15 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlSupplierView(true);		
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupOneView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.CON_ORD_RPT_CEN_PEN_VAL:			
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlApproverNameView(true);
 			rptGenBean.setFlPtjView(true);
-			//rptGenBean.setFlRequisitionerView(true);
+			rptGenBean.setFlGroupTwoView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlPkpNoView(true);
@@ -282,7 +274,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlDurationView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlDeliveryOrderNoView(true);
-			//rptGenBean.setFlDeliveryAddressView(true);
+			rptGenBean.setFlGroupThreeView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
@@ -302,7 +294,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlContractRequestView(true);
 			rptGenBean.setFlRecNoteNoView(true);
 			rptGenBean.setFlStatusView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupThreeView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.LATE_DEL_RPT_CEN_PEN_VAL:
@@ -312,10 +305,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlSstView(true);
-			//rptGenBean.setFlItemNameView(true);
-			//rptGenBean.setFlItemCodeView(true);
-			//rptGenBean.setFlItemTypeView(true);
-			//rptGenBean.setFlDurationView(true);
+			rptGenBean.setFlGroupFourView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFromDateView(true);			
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_CEN_PEN_NAME));	
@@ -352,9 +342,9 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPtjView(true);
 			//rptGenBean.setFlItemNameView(true);
 			//rptGenBean.setFlItemCodeView(true);
-			rptGenBean.setFlItemTypeView(true);
+			//rptGenBean.setFlItemTypeView(true);
 			rptGenBean.setFlContractTypeView(true);
-			//rptGenBean.setFlDurationView(true);
+			rptGenBean.setFlGroupFiveView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFromDateView(true);			
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_NAME));		
@@ -378,6 +368,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSixView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_NAME));	
 			break;
 		case ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL:
@@ -390,6 +381,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSevenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_CEN_PEN_NAME));
 			break;
 		case ReportConst.DED_RPT_CEN_PEN_VAL:
@@ -401,6 +393,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPmoView(true);
 			rptGenBean.setFlPkpNoView(true);			
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSixView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DED_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL:
@@ -414,6 +407,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSixView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.CON_ORD_CANC_RPT_CEN_PEN_VAL:
@@ -425,6 +419,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupSixView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_ORD_CANC_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_VAL:
@@ -437,6 +432,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupOneView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_VAL:
@@ -448,6 +444,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupOneView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_NAME));		
 			break;
 		case ReportConst.INV_CANC_RPT_CEN_PEN_VAL:
@@ -457,6 +454,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlContractNoView(true);	
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupOneView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_CEN_PEN_NAME));	
 			break;
 		case ReportConst.YEP_RPT_CEN_PEN_VAL:
@@ -480,9 +478,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			break;
 		case ReportConst.SUP_PERF_RPT_CEN_PEN_VAL:
 			rptGenBean.setFlSupplierView(true);
-			/*rptGenBean.setFlCriteriaView(true);
-			rptGenBean.setFlScoringView(true);
-*/			rptGenBean.setFlPtjView(true);
+			rptGenBean.setFlGroupEightView(true);
+			rptGenBean.setFlPtjView(true);
 			/*rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);*/			
@@ -494,7 +491,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlRequisitionerView(true);
 			rptGenBean.setFlStatusView(true);			
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_RPT_PO_NAME));	
 			break;
 		case ReportConst.PUR_ORD_RPT_PO_VAL:
@@ -508,6 +506,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);			
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupElevenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_RPT_PO_NAME));
 			break;
 		case ReportConst.EMR_PROCUR_RPT_PO_VAL:
@@ -521,6 +520,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.EMR_PROCUR_RPT_PO_NAME));
 			break;
 		case ReportConst.PUR_ORD_REJ_RPT_PO_VAL:
@@ -533,6 +533,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlItemCodeView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_REJ_RPT_PO_NAME));	
 			break;
 		case ReportConst.DEL_ORD_RPT_PO_VAL:
@@ -542,6 +543,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupTwelveView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_PO_NAME));
 			break;
 		case ReportConst.FL_REC_NOTE_RPT_PO_VAL:
@@ -554,7 +556,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupTwelveView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_PO_NAME));
 			break;
 		case ReportConst.LATE_DEL_RPT_PO_VAL:
@@ -568,7 +571,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlItemCodeView(true);
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupThirteenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_PO_NAME));
 			break;
 		case ReportConst.DEL_ORD_REJ_RPT_PO_VAL:
@@ -582,7 +586,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlItemCodeView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlJabatanView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_PO_NAME));	
 			break;
 		case ReportConst.STP_INSTR_DEL_RPT_PO_VAL:
@@ -593,7 +598,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlItemCodeView(true);
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_PO_NAME));
 			break;
 		case ReportConst.INV_RPT_VIEW_SUPL_PO_VAL:
@@ -613,6 +619,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_PO_NAME));	
 			break;
 		case ReportConst.PYMT_MATCH_RPT_PO_VAL:
@@ -623,6 +630,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupFourteenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_PO_NAME));		
 			break;
 		case ReportConst.PUR_REQ_CANC_RPT_PO_VAL:
@@ -635,6 +643,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_CANC_RPT_PO_NAME));
 			break;
 		case ReportConst.PUR_ORD_CANC_RPT_PO_VAL:
@@ -644,7 +653,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupTenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_CANC_RPT_PO_NAME));
 			break;
 		case ReportConst.DEL_ORD_CANC_RPT_PO_VAL:
@@ -655,6 +665,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupFifteenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_PO_NAME));	
 			break;
 		case ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL:
@@ -666,7 +677,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
-			rptGenBean.setFromDateView(true);			
+			rptGenBean.setFromDateView(true);	
+			rptGenBean.setFlGroupFifteenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_PO_NAME));
 			break;
 		case ReportConst.INV_CANC_RPT_PO_VAL:
@@ -676,6 +688,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);			
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupFifteenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_PO_NAME));	
 			break;
 		case ReportConst.YEP_RPT_PO_VAL:
@@ -701,6 +714,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlCriteriaView(true);
 			//rptGenBean.setFlScoringView(true);
 			rptGenBean.setFlPtjView(true);
+			rptGenBean.setFlGroupSixteenView(true);
 			//rptGenBean.setFlMinistryView(true);
 			//rptGenBean.setFlJabatanView(true);
 			//rptGenBean.setFromDateView(true);
@@ -717,6 +731,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			//rptGenBean.setFlJabatanView(true);
 			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlGroupNineView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUMM_RPT_PAN_ITM_NAME));	
 			break;
 		default:
