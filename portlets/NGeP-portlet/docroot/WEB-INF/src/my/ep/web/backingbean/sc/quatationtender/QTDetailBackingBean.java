@@ -1543,7 +1543,7 @@ public class QTDetailBackingBean extends
 		} else {
 
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
-			retrieveFinalizationSecratryDtl(qtId);
+			//retrieveFinalizationSecratryDtl(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
 		}
 
