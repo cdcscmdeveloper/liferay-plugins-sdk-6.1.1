@@ -20,7 +20,7 @@
 			  </h:panelGrid>
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 			  <h:panelGrid columns="3">
-		 	  	<p:inputText for="physicalNo" maxlength="30" style="width:170px;" 
+		 	  	<p:inputText id="contractPhysicalNo" for="physicalNo" maxlength="30" style="width:170px;" 
 		 	  	   disabled="#{contractDetailsBackingBean.getConditionalValue()}"
 		 	    	value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
 		 	    <p:spacer width="1"/>
@@ -139,7 +139,7 @@
 		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}"
 			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract or contractDetailsBackingBean.managedBean.ctContract.agreement}">
-			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId, :form:contractPhysicalNo" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <h:panelGrid columns="2">
