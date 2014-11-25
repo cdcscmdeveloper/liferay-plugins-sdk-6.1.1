@@ -3065,7 +3065,7 @@ public class EvaluationBackingBean extends
 
 		} finally {
 			committeSO = null;
-			resDTO = null;
+			
 		}
 	}
 
@@ -3181,7 +3181,7 @@ public class EvaluationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Preperation Saved Successfully", ""));
+							"Evaluation Preperation Saved Successfully", "Evaluation Preperation Saved Successfully"));
 		} finally {
 
 		}
