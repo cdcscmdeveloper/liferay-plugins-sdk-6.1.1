@@ -1301,10 +1301,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public void navigateToDeactivateAdminPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToDeactivateAdminPage***************");
-		
 		List<SmPersonnel> personnels = new ArrayList<SmPersonnel>();
 		if(getManagedBean().isFromMenu()){
-			
 			initUserPersonnelInfo();
 			if(getManagedBean().getUpdateSmPersonnel() != null){
 				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
@@ -1318,16 +1316,30 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			personnels = getManagedBean().getPersonnelList();
 		}
 		
-		for(SmPersonnel personnel : personnels){
-			SelectItem selectItem = new SelectItem();
-			selectItem.setValue(personnel.getPersonnelId());
-			selectItem.setLabel(personnel.getName());
-			getManagedBean().getAssignList().add(selectItem);
+		boolean icVerified = verifyIc();
+		if(icVerified){
+			for(SmPersonnel personnel : personnels){
+				SelectItem selectItem = new SelectItem();
+				selectItem.setValue(personnel.getPersonnelId());
+				selectItem.setLabel(personnel.getName());
+				getManagedBean().getAssignList().add(selectItem);
+			}
+			getManagedBean().setPersonnelList(personnels);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "adminReAssign.xhtml");
+		} else {
+			throw new EpException(MessageConst.ERROR_722579);
 		}
-		getManagedBean().setPersonnelList(personnels);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "adminReAssign.xhtml");
+	}
+
+	private boolean verifyIc() {
+		
+		if(getManagedBean().getAdminVerifyICNo() != null && getManagedBean().getUpdateSmPersonnel().getIdentificationNo().equalsIgnoreCase(getManagedBean().getAdminVerifyICNo())){
+			return true;
+		} else {
+			return false;
+		}	
 	}
 
 	public void assignVerifyIdentType(AjaxBehaviorEvent e) {
@@ -1386,9 +1398,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 					PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelById(reqDTO);
 					if(resDTO.getSmPersonnel() != null && resDTO.getSmPersonnel().getPersonnelId() != null){
 						userPmReqDTO.setSmPersonnel(resDTO.getSmPersonnel());
+						suppUserActivationSO.updatePmProfileForPersonnel(userPmReqDTO);
 					}
 				}
-				suppUserActivationSO.updatePmProfileForPersonnel(userPmReqDTO);
 			} catch(Exception ex) {
 				log.info("deactivateAdmin ex>>>>" + ex.getMessage());
 				log.info("personnel Id>>>>>" + userPmReqDTO.getSmPersonnel().getPersonnelId());
