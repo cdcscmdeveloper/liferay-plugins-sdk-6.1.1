@@ -2407,6 +2407,7 @@ public class CodificationBackingBean extends
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+		this.getManagedBean().getRequestExtCodeList().clear();
 		this.getManagedBean().getRequestExtCodeList()
 				.addAll(bb.getManagedBean().getRequestExtCodeList());
 
@@ -2459,13 +2460,12 @@ public class CodificationBackingBean extends
 						.getMessage(MessageConst.INFO_710012,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		// Hide contractedItemPopUp if everything done.
-		RequestContext.getCurrentInstance().execute(
-				"contractedItemPopUp.hide()");
+
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
 	}
 
 	public String requestExtensionCodeII() {
+		log.info("................requestExtensionCodeII.................");
 		UnspscCodeBackingBean codeBB = new UnspscCodeBackingBean();
 		if (codeBB.getManagedBean().getRequestExtCodeList() != null) {
 			codeBB.getManagedBean().getRequestExtCodeList().clear();
