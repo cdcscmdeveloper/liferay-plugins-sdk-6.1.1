@@ -15,8 +15,7 @@
 			severity="alert" closable="false"
 			header="#{lbl['lbl.ss.simple.quote.submit.confirmation']}">
 
-			<p:blockUI block="conformDlgId" widgetVar="promptWidget"
-				id="conformDlg">
+			<p:blockUI block="conformDlgId" widgetVar="promptWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 
@@ -41,7 +40,35 @@
 				</p:panelGrid>
 			</p:panel>
 		</p:confirmDialog>
+		
+		<p:confirmDialog
+			message="#{lbl['lbl.sc.sq.cancel.conform.msg']}"
+			id="cancelPromptId" width="350px" height="50px" widgetVar="cancelConformDlg"
+			severity="alert" closable="false"
+			header="#{lbl['lbl.sc.sq.cancel.conform.dlg.header']}">
 
+			<p:blockUI block="cancelblockUI" widgetVar="cancelPromptWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+
+			<p:panel id="cancelblockUI">
+				<p:panelGrid styleClass="noBorders tr,noBorders td">
+					<p:row>
+						<p:column width="100%" style="text-align:right">
+							<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true" process="@this"
+								onstart="cancelPromptWidget.show()" oncomplete="cancelPromptWidget.hide();"
+								icon="ui-icon-accept" onsuccess="cancelConformDlg.hide();"
+								actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
+								
+						  <p:commandButton value="#{lbl['lbl.btn.no']}" 
+								partialSubmit="true" process="@this" icon="ui-icon-reject"
+								onclick="cancelConformDlg.hide();" type="button" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+		</p:confirmDialog>
+		
 		<div class="ppRightBtn">
 			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton immediate="true"
@@ -58,7 +85,7 @@
 				<p:commandButton immediate="true"
 					value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 					partialSubmit="true" process="@this" style="float:left;"
-					rendered="#{isPendingRnCreationStatus}"
+					rendered="#{!isPendingSubmissionStatus}"
 					action="#{simpleQuoteBackingBean.backToPervious}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
@@ -79,11 +106,16 @@
 						value="#{action}" />
 				</p:commandButton>
 
-				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-					icon="ui-icon-cancel" process="@this" partialSubmit="true"
-					rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
+				
+				 <p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+				    rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+					process="@this" partialSubmit="true" onsuccess="cancelConformDlg.show()"
+					icon="ui-icon-cancel" >
+				   <ui:param name="action" value="Cancel SQ"></ui:param>
+					<f:setPropertyActionListener value="#{action}"
+						target="#{simpleQuoteBackingBean.managedBean.selectedAction}"/>
+				</p:commandButton>
+				
 			</c:if>
 		</div>
 
@@ -129,13 +161,15 @@
 									</h:panelGroup>
 									<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
 										<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-											update="@form"
 											rendered="#{isPendingSubmissionStatus}"
 											styleClass="ui-button"
 											icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 											onstart="blockWidget.show();"
-											oncomplete="blockWidget.hide();"
-											actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
+											onsuccess="cancelConformDlg.show()"
+											oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
+												value="#{bpmAction}" />
+											</p:commandButton>
 									</h:panelGroup>
 								</ui:repeat>
 
