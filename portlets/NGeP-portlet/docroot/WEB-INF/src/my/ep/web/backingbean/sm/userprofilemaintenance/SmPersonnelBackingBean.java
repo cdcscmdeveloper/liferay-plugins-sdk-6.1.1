@@ -1366,9 +1366,26 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				userPmReqDTO.setSmPersonnel(getManagedBean().getUpdateSmPersonnel());
 				suppUserActivationSO.deActivatePmProfileForPersonnel(userPmReqDTO);
 				userPmReqDTO = new SupplierUserActivationReqDTO();
+				SmPersonnel smPersonnel = new SmPersonnel();
 				for(SmPersonnel personnel : getManagedBean().getPersonnelList()){
-					if(getManagedBean().getAssignAdminPersonnelId() == personnel.getPersonnelId()){
-						userPmReqDTO.setSmPersonnel(personnel);
+					if(getManagedBean().getAssignAdminPersonnelId().compareTo(personnel.getPersonnelId()) == 0){
+						if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+							personnel.setEpRole(RoleCode.MOF_SUPPLIER_ADMIN.value());
+						} else if(personnel.getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())){
+							personnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+						}
+						smPersonnel = personnel;
+					}
+				}
+				
+				if(smPersonnel.getPersonnelId() != null){
+					IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+							.getInstance().getServiceObject("sm", IPersonnelSO.class);
+					PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+					reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
+					PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelById(reqDTO);
+					if(resDTO.getSmPersonnel() != null && resDTO.getSmPersonnel().getPersonnelId() != null){
+						userPmReqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 					}
 				}
 				suppUserActivationSO.updatePmProfileForPersonnel(userPmReqDTO);
