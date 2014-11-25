@@ -133,11 +133,14 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText maxlength="10"
+							<td><p:inputText maxlength="5"
 									id="equiPersPermAddrPostCode" required="true"
 									label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
-									size="35" /> <p:message id="equiPersPermAddrPostCodeMsg"
+									size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
+									<f:validator validatorId="postcodeValidator"/>
+									</p:inputText>
+									 <p:message id="equiPersPermAddrPostCodeMsg"
 									for="equiPersPermAddrPostCode" showSummary="true"
 									showDetail="false" display="icon" /></td>
 						</tr>
@@ -299,14 +302,17 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="10"
+									<td><p:inputText maxlength="5"
 											id="equiPersMailAddrPostCode"
 											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.postcode']}"
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
-											size="35" /> <p:message id="equiPersMailAddrPostCodeMsg"
+											size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
+											<f:validator validatorId="postcodeValidator"/>
+											</p:inputText>
+											<p:message id="equiPersMailAddrPostCodeMsg"
 											for="equiPersMailAddrPostCode" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -476,14 +482,17 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="10"
+									<td><p:inputText maxlength="5"
 											id="equiPersResdAddrPostCode"
 											label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.postcode']}"
 											required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"
-											size="35" /> <p:message id="equiPersResdAddrPostCodeMsg"
+											size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
+											<f:validator validatorId="postcodeValidator"/>
+											</p:inputText>
+											<p:message id="equiPersResdAddrPostCodeMsg"
 											for="equiPersResdAddrPostCode" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -646,14 +655,17 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="10"
+									<td><p:inputText maxlength="5"
 											id="equiPersOffcAddrPostCode"
 											label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.postcode']}"
 											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"
-											size="35" /> <p:message id="equiPersOffcAddrPostCodeMsg"
+											size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
+											<f:validator validatorId="postcodeValidator"/>
+											</p:inputText> 
+											<p:message id="equiPersOffcAddrPostCodeMsg"
 											for="equiPersOffcAddrPostCode" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>

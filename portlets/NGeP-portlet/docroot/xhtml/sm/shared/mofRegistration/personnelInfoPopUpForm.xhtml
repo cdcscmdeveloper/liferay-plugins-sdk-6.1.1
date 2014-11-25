@@ -147,7 +147,7 @@
 	<p:panel header="#{lbl['lbl.sm.job.function.details']}" toggleable="true">
 		<p:dataTable id="perStfJfdt"
 			value="#{backingBean.managedBean.selectedPersonnel.smStaffExperiences}"
-			var="jf"
+			var="jf" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedShrHldrJobFunctions}"
 			rowIndexVar="rowIndex" rowKey="#{jf}">
 			<ac:paginator for="perStfJfdt" />
@@ -283,7 +283,7 @@
 
 		<p:dataTable id="perStfAqdt"
 			value="#{backingBean.managedBean.selectedPersonnel.smStaffAcademics}"
-			var="aq"
+			var="aq" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedShrHldrAcademics}"
 			rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="perStfAqdt" />

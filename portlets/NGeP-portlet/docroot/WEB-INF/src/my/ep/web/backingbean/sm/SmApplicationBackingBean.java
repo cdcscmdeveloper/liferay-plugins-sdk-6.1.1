@@ -3143,10 +3143,13 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false);
-			getManagedBean().setPersonnelInfoHeader("Equity Owner Information");
+			getManagedBean().setPersonnelInfoHeader(
+					SmCommonUtil.getMessage("lbl.sm.equity.owner.information",
+							null));
 		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
-			getManagedBean().setPersonnelInfoHeader("Personnel Information");
+			getManagedBean().setPersonnelInfoHeader(
+					SmCommonUtil.getMessage("lbl.sm.person.panHdr", null));
 		}
 
 		if (shareHolderBean.getPmUser() != null
@@ -3377,11 +3380,13 @@ public class SmApplicationBackingBean extends
 
 			}
 			shr.setEquityOwner(true);
-			getManagedBean().setPersonnelInfoHeader("Equity Owner Information");
+			getManagedBean().setPersonnelInfoHeader(SmCommonUtil.getMessage("lbl.sm.equity.owner.information",
+					null));
 		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			manageEquityLimit(shr);
-			getManagedBean().setPersonnelInfoHeader("Personnel Information");
+			getManagedBean().setPersonnelInfoHeader(SmCommonUtil.getMessage("lbl.sm.person.panHdr",
+					null));
 		}
 		// getManagedBean().setSelectedPersonnel(null);
 
@@ -6231,11 +6236,12 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolders().iterator();
 			while (iterator.hasNext()) {
 				SmPersonnel personnel = iterator.next();
-				if ((personnel.getEpRole() != null
-						&& (personnel.getEpRole().equalsIgnoreCase(
-								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
-								.getEpRole().equalsIgnoreCase(
-										RoleCode.BASIC_SUPPLIER_ADMIN.value()))) || (personnel.isEquityOwner() && getManagedBean().isDisAllowOwnerEdit())) {
+				if ((personnel.getEpRole() != null && (personnel.getEpRole()
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
+						.getEpRole().equalsIgnoreCase(
+								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
+						|| (personnel.isEquityOwner() && getManagedBean()
+								.isDisAllowOwnerEdit())) {
 					iterator.remove();
 				}
 			}
