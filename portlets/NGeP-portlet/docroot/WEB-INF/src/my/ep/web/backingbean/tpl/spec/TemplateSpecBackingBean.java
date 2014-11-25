@@ -646,46 +646,46 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public void calcTotalAmount(TemplateSpecBean templateSpecBean, TplSpecAnswer specAnswer, boolean isItemTypeService) {
 		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
-		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
-		BigDecimal quantity = specQuestion.getClQuantity();
-		BigDecimal ratePerUom = specAnswer.getRatePerUom();
-		BigDecimal totalPrice = quantity;
 		boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
 				specQuestion.getClPriceTypeCode().getParameterCode());
 		
 		if (!isPriceTypeTier) {
-			if (ratePerUom != null) {
-				totalPrice = totalPrice.multiply(ratePerUom);	
-			}
+			TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+			BigDecimal ratePerUom = specAnswer.getRatePerUom();
+			BigDecimal totalPrice = null;
 			
-			if (isItemTypeService) {
-				BigDecimal uomFrequency = specQuestion.getClUomFrequency();
-				BigDecimal uomPerDay = specQuestion.getClUomPerDay();
-				BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
-				BigDecimal durationMonth = specMaster.getDurationMonth();
-				BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
+			if (ratePerUom != null) {
+				totalPrice = ratePerUom.multiply(specQuestion.getClQuantity());
 				
-				if (uomFrequency != null) {
-					totalPrice = totalPrice.multiply(uomFrequency);
-				}
-				
-				if (uomPerDay != null) {
-					totalPrice = totalPrice.multiply(uomPerDay);
-				}
-				
-				if (uomPerMonth != null) {
-					totalPrice = totalPrice.multiply(uomPerMonth);
-				}
-				
-				specAnswer.setAmountPerYear(totalPrice.multiply(BigDecimal.valueOf(12)));
-				
-				if (durationMonth != null) {
-					totalPrice = totalPrice.multiply(durationMonth);
-				}
-				
-				if (itemDurationMonth != null) {
-					totalPrice = totalPrice.multiply(itemDurationMonth);
-				}
+				if (isItemTypeService) {
+					BigDecimal uomFrequency = specQuestion.getClUomFrequency();
+					BigDecimal uomPerDay = specQuestion.getClUomPerDay();
+					BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
+					BigDecimal durationMonth = specMaster.getDurationMonth();
+					BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
+					
+					if (uomFrequency != null) {
+						totalPrice = totalPrice.multiply(uomFrequency);
+					}
+					
+					if (uomPerDay != null) {
+						totalPrice = totalPrice.multiply(uomPerDay);
+					}
+					
+					if (uomPerMonth != null) {
+						totalPrice = totalPrice.multiply(uomPerMonth);
+					}
+					
+					specAnswer.setAmountPerYear(totalPrice.multiply(BigDecimal.valueOf(12)));
+					
+					if (durationMonth != null) {
+						totalPrice = totalPrice.multiply(durationMonth);
+					}
+					
+					if (itemDurationMonth != null) {
+						totalPrice = totalPrice.multiply(itemDurationMonth);
+					}
+				}	
 			}
 			specAnswer.setAnswerNumeric(totalPrice);	
 		}
