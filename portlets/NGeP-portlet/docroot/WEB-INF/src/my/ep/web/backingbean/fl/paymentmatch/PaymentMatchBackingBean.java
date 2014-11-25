@@ -728,14 +728,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	public boolean checkCtDeduction(String button){
 		String addbutton = button;
 		boolean haveDeductionList = false;
-		if(addbutton.equalsIgnoreCase("ADD")){
-			int deductionList = getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size();
-			int contractDeductions= getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().size();
-			if(deductionList > contractDeductions){
-				haveDeductionList = false;
-				return haveDeductionList;
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
+			if(addbutton.equalsIgnoreCase("ADD")){
+				int deductionList = getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size();
+				int contractDeductions= getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().size();
+				if(deductionList > contractDeductions){
+					haveDeductionList = false;
+					return haveDeductionList;
+				}
 			}
 		}
+		
 		
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 			if(!getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().isEmpty()){
