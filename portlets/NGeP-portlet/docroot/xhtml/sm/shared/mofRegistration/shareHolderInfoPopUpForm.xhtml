@@ -337,7 +337,7 @@
 		id="equiShrHldrJbFnc">
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffExperiences}"
-			var="jf"
+			var="jf" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedShrHldrJobFunctions}"
 			rowIndexVar="rowIndex" rowKey="#{jf}">
 			<ac:paginator for="shrJfdt" />
@@ -717,7 +717,7 @@
 
 		<p:dataTable id="shrAqdt"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffAcademics}"
-			var="aq" widgetVar="suppPrsnAcadDtWidVar"
+			var="aq" widgetVar="suppPrsnAcadDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedShrHldrAcademics}"
 			rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="shrAqdt" />
