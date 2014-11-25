@@ -6231,11 +6231,11 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolders().iterator();
 			while (iterator.hasNext()) {
 				SmPersonnel personnel = iterator.next();
-				if (personnel.getEpRole() != null
+				if ((personnel.getEpRole() != null
 						&& (personnel.getEpRole().equalsIgnoreCase(
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
 								.getEpRole().equalsIgnoreCase(
-										RoleCode.BASIC_SUPPLIER_ADMIN.value()) || (personnel.isEquityOwner() && getManagedBean().isDisAllowOwnerEdit()))) {
+										RoleCode.BASIC_SUPPLIER_ADMIN.value()))) || (personnel.isEquityOwner() && getManagedBean().isDisAllowOwnerEdit())) {
 					iterator.remove();
 				}
 			}
