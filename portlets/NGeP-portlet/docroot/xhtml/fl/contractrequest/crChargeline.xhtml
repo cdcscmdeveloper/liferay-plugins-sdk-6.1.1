@@ -73,7 +73,7 @@
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />	
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"  style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"  style="white-space:normal;text-align:right">
 				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
 					rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber
