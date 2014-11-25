@@ -19,20 +19,20 @@
 
 				<table style="width: 100%; margin-bottom: 4px;">
 					<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
-					<td><p:inputText disabled="true" size="20" value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}"/></td>
-					<td></td>
-					<td></td>
+					<td width="30%"><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.item.table.type']}:"></p:outputLabel></td>
+					<td width="20%"><h:outputText style="text-align: left;" value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}"/></td>
+					<td width="10%"></td>
+					<td width="40%"></td>
 				</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-						<td><p:inputText
+						<td width="30%"><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.item.name']}:"></p:outputLabel></td>
+						<td width="20%"><h:outputText style="white-space: normal!important;text-align: left;"
 								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemName}"
-								disabled="true" size="40"></p:inputText></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
-						<td><p:inputText
+								/></td>
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;text-align: left;" value="#{lbl['lbl.cm.item.details']}:"></p:outputLabel></td>
+						<td width="40%"><h:outputText style="text-align: left;white-space: normal!important;"
 								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemDesc}"
-								disabled="true" size="40"></p:inputText></td>
+								/></td>
 					</tr>
 				</table>
 
@@ -115,7 +115,8 @@
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
 				</f:facet>
-				#{unspscObj.unspscTitle}
+		
+				<h:outputText style="white-space: normal!important;" value="#{unspscObj.unspscTitle}" />
 			</p:column>
 
 				</p:dataTable>
