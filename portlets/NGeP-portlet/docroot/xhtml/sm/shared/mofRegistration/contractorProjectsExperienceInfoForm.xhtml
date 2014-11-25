@@ -43,7 +43,7 @@
 			<p:blockUI block=":form:tt:contrInfPan" widgetVar="buiPoContr"
 				id="poContrBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
-			<p:dataTable var="contrBean" widgetVar="suppContrExpDtWidVar"
+			<p:dataTable var="contrBean" widgetVar="suppContrExpDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
 				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
 				rowKey="#{contrBean}" rowIndexVar="index" id="contDt">

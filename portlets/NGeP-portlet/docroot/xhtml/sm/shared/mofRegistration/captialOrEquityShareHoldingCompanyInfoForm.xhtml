@@ -43,7 +43,7 @@
 			<p:blockUI block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
 				id="poBasEqui"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.equityCompVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.equityCompVerifed : false)}" />
-			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar"
+			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
