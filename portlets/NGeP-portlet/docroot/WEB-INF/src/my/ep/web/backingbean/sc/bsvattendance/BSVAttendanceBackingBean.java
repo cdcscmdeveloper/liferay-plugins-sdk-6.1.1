@@ -99,7 +99,9 @@ public class BSVAttendanceBackingBean extends
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
-									this.getManagedBean().getScQt().getCurrentWorkFlowStatus(), scQtBsv.getBsvRemarks(),
+									this.getManagedBean().getScQt()
+											.getCurrentWorkFlowStatus(),
+									scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
@@ -137,7 +139,7 @@ public class BSVAttendanceBackingBean extends
 				// }
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -261,17 +263,10 @@ public class BSVAttendanceBackingBean extends
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			List<ScQtBsvDtl> briefingDetails = new ArrayList<ScQtBsvDtl>();
 			ScQtBsvDtl scQtBrief = getManagedBean().getScQtBriefing();
-			List<Long> supplierIds = new ArrayList<Long>();
+
 			for (ScQtBsvRegistration registration : this.getManagedBean()
 					.getBriefingRegistrationList()) {
-				Long supplierId = registration.getSupplier().getSupplierId();
-				if (supplierIds.contains(supplierId)) {
-					throw new EpException(
-							"Duplicate Suppliers for the registration");
-				} else {
-					supplierIds.add(supplierId);
 
-				}
 				List<ScQtBsvAttendance> bsvAttandance = registration
 						.getBsvAttendance();
 				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
@@ -315,10 +310,8 @@ public class BSVAttendanceBackingBean extends
 												.getMessage(
 														MessageConst.INFO_700004,
 														new String[] {
-
 																"Registered Attandance For Briefing/SiteVisit",
-																bsv.getQtBsvDtlId()
-																		.toString() },
+																null },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
@@ -352,7 +345,6 @@ public class BSVAttendanceBackingBean extends
 		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class);
 		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
 
-		// populateParentOrgProfile(tenderResDTO.getQtDetail());
 		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -528,21 +520,24 @@ public class BSVAttendanceBackingBean extends
 
 	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
 		log.debug("businessNatureListener");
-		List<ScQtBsvRegistration> bsvRegistrations = new ArrayList<ScQtBsvRegistration>();
+		if (getManagedBean().getBriefingRegistrationList() == null
+				|| getManagedBean().getBriefingRegistrationList().isEmpty()) {
+			getManagedBean().setBriefingRegistrationList(
+					new ArrayList<ScQtBsvRegistration>());
+		}
+
 		if (mofAccounts != null) {
 			for (SmMofAccount mofAccount : mofAccounts) {
 				ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
 				bsvRegistration.setSupplier(mofAccount.getSmSupplier());
 				bsvRegistration.setBsvDtl(this.getManagedBean()
 						.getScQtBriefing());
-				bsvRegistrations.add(bsvRegistration);
-			}
-			if (getManagedBean().getBriefingRegistrationList() == null
-					|| getManagedBean().getBriefingRegistrationList().isEmpty()) {
-				getManagedBean().setBriefingRegistrationList(bsvRegistrations);
-			} else {
-				getManagedBean().getBriefingRegistrationList().addAll(
-						bsvRegistrations);
+				if (getManagedBean().getBriefingRegistrationList().contains(
+						bsvRegistration)) {
+					throw new EpException(MessageConst.ERROR_760186);
+				}
+				getManagedBean().getBriefingRegistrationList().add(
+						bsvRegistration);
 			}
 
 		}
