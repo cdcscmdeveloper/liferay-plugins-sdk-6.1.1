@@ -578,7 +578,7 @@ public class ApprovalBackingBean extends
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
-				String approvalDocType = null;
+				String approvalDocType = ParameterConst.DOCTYPE_QUOTATION;
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
 					approval.setApproverId(new FacesScopes()
