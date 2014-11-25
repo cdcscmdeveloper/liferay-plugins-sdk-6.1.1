@@ -21,7 +21,7 @@
 					<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 					<f:selectItems var="ctDeduction"
 						value="#{paymentMatchBackingBean.getDropdownValuesByCtDetails()}"/>
-						 <p:ajax event="change" process="@this" update=":form:deductionDataTable:fixedDeduction,:form:deductionDataTable:deductionAmtPnl" 
+						 <p:ajax event="change" process="@this" update=":form:deductionDataTable:deductionList,:form:deductionDataTable:deductionAmtPnl" 
 						 listener="#{paymentMatchBackingBean.checkDeductionList(deduction)}"/>
 				</p:selectOneMenu>
 			</p:column>
