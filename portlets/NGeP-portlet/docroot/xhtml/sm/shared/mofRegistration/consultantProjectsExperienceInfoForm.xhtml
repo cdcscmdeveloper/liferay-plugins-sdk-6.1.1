@@ -203,7 +203,9 @@
 									value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
 							<td><p:inputTextarea maxlength="500"
 									value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
-									cols="36" style="margin-bottom:5px;" /></td>
+									cols="36" style="margin-bottom:5px;" >
+									<f:validateLength maximum="500" />
+									</p:inputTextarea></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
