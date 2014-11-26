@@ -2839,16 +2839,16 @@ public class SmApplicationUtil {
 
 	public static void checkAllowedToApprove(
 			SmApplicationManagedBean managedBean) {
-		boolean validForApproval = true;
-		if (managedBean.getSmAppl().getApplCategoryType()
+		boolean validForApproval = false;
+		if (managedBean.getSmAppl().getApplType()
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| managedBean
 						.getSmAppl()
-						.getApplCategoryType()
+						.getApplType()
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
 				|| managedBean
 						.getSmAppl()
-						.getApplCategoryType()
+						.getApplType()
 						.equalsIgnoreCase(
 								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
@@ -2866,18 +2866,20 @@ public class SmApplicationUtil {
 											SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)) {
 						validForApproval = true;
 						break;
-					} else {
-						validForApproval = false;
 					}
 				}
 			}
+		} else {
+			validForApproval = true;
 		}
 		log.info("*** Valid For Approval After category checking Decision **** "
 				+ validForApproval);
 		if (validForApproval) {
 			for (SmApplSupportDoc doc : managedBean.getSmAppl()
 					.getSmApplSupportDocs()) {
-				if (doc.getVerifiedFlg().compareTo(0) == 0) {
+				if (doc.getVerifiedFlg() == null
+						|| (doc.getVerifiedFlg() != null && doc
+								.getVerifiedFlg().compareTo(0) == 0)) {
 					validForApproval = false;
 					break;
 				} else {
