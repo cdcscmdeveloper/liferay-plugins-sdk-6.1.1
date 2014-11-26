@@ -38,13 +38,13 @@
 						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
 						<b>#{lbl['lbl.sm.basic.account.mof']}</b>
 						<br />
-						<p><p:outputLabel escape="false" value="#{lbl['lbl.sm.basic.account.mofdesc']}" /></p>
+						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mofdesc']}" /></p>
 					</c:when>
 
 					<c:otherwise>
 						<b>#{lbl['lbl.sm.basic.account.basic']}</b>
 						<br />
-						<p><p:outputLabel escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" /></p>
+						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" /></p>
 					</c:otherwise>
 				</c:choose>
 			</p:scrollPanel>
