@@ -226,10 +226,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					}
 				}
 				
+				FacesScopes facesScopes = new FacesScopes();
 				// validate  quantity
 		    	if(scPurchaseInDefault.getQuantity() != null && scPurchaseInDefault.getQuantity().intValue() < 0){
 					throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "0"});
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), "0"});
 		    	}
 				
 				if(scPurchaseInDefault.getContractedItem() != null) {
@@ -243,13 +244,27 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 							reqDTO.setContractType(SourcingConstants.PID_TYPE_CENTRAL);
 						}
 					}
+					
+					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
+						if(scPurchaseInDefault.getContractedItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
+							throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+						}
+					}
 				}
 				else if(scPurchaseInDefault.getPanelItem() != null) {
 					reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
+					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
+						if(scPurchaseInDefault.getPanelItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
+							throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+						}
+					}
 				}
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 				//Hoa: add token authenticate to support BPM
-				FacesScopes facesScopes = new FacesScopes();
 				String token = facesScopes.getBPMAuthenticationCtxToken();
 				reqDTO.setToken(token);
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
