@@ -282,6 +282,12 @@ public class SmApplicationBackingBean extends
 			String newApplNum = SmApplicationUtil.generateApplicationNum(
 					getManagedBean().getSmAppl().getApplType(),
 					getManagedBean().getSmAppl().getSupplierType());
+			if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null
+					&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
+							.isEmpty()) {
+				getManagedBean().getSmAppl().getSmApplSectionReviews().clear();
+				
+			}
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
 			}
@@ -928,6 +934,8 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser() && !valid) {
 						saveOrUpdateAppl();
 					}
+					calcPersonnelListCount();
+					displayBumiRecommendNote();
 				} else if (getManagedBean()
 						.getCurrentPageType()
 						.equalsIgnoreCase(
@@ -973,11 +981,7 @@ public class SmApplicationBackingBean extends
 						|| getManagedBean()
 								.getCurrentPageType()
 								.equalsIgnoreCase(
-										SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)
-						|| getManagedBean()
-								.getCurrentPageType()
-								.equalsIgnoreCase(
-										SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
+										SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
 					if (getManagedBean().isPoUser()
 							|| getManagedBean().isApproverUser()) {
 						SmApplicationUtil
@@ -1286,6 +1290,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			log.info("*** Empty Supporting doc list **** ");
 		}
+		log.info(" ** For Suporting Docs END ** ");
 	}
 
 	public void setTabValue(int currentTab, int outputTab) {
