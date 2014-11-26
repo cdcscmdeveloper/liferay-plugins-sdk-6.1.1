@@ -314,9 +314,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				            items = new SelectItem[list.size() + 1];
 				            items[0] = new SelectItem(null, "- Select One -");
 				            for (CtContract obj : list) {
-				            	  if(obj.getLatestContractVer() != null)
-				        		     items[i++] = new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo());
-				        	   } 
+				          	     items[i++] = new SelectItem(obj.getCurrentContractVer().getContractVerId(), obj.getContractNo());
+				        	} 
                            }getManagedBean().setPopulateContractList(items);
 		             } finally {
 		         	supplierSO = null;
@@ -911,8 +910,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			                      items[0] = new SelectItem(null, "- Select One -");
 			                      int i = 1;
 			                       for (CtContract contractLoa : list) {
-			                    	   if(contractLoa.getLatestContractVer() != null)
-			        	                  items[i++] = new SelectItem(contractLoa.getLoa().getLoaId(), contractLoa.getLoa().getLoaNo());
+			                    	       items[i++] = new SelectItem(contractLoa.getLoa().getLoaId(), contractLoa.getLoa().getLoaNo());
 			                       } 
                                 }
 		                      getManagedBean().setContractSupplierLoa(items);

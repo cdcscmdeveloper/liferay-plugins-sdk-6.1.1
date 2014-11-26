@@ -304,15 +304,6 @@
 						value="#{lbl['lbl.ct.tooltip.factoring.account.no']}" />
 				</h:panelGrid>
 
-				<p:outputLabel value="#{lbl['lbl.ct.status']}"
-					rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
-				<p:selectOneMenu style="width:210px;"
-					rendered="#{supplierBackingBean.managedBean.removeFactoring}"
-					disabled="true"
-					value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
-					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-					<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				</p:selectOneMenu>
 
 				<f:verbatim
 					rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
