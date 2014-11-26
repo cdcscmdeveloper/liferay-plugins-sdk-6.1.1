@@ -16,7 +16,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:blockUI>		
 	
-			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{pPlanBackingBean.managedBean.taskId==null}" 
+			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+				rendered="#{pPlanBackingBean.managedBean.backAllow}" 
 		    	action="#{pPlanBackingBean.redirectToSearchPlan}"/>
 
 	    	<div class="rowBtnRight">
