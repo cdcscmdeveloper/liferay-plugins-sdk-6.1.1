@@ -311,7 +311,7 @@ public class BSVAttendanceBackingBean extends
 														MessageConst.INFO_700004,
 														new String[] {
 																"Registered Attandance For Briefing/SiteVisit",
-																null },
+																"" },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
@@ -330,8 +330,8 @@ public class BSVAttendanceBackingBean extends
 	 */
 	private boolean isOneAuthorizedPersonal(
 			List<ScQtBsvAttendance> bsvAttandance) {
-		if (null != bsvAttandance) {
-			for (ScQtBsvAttendance attendance : bsvAttandance) {
+		for (ScQtBsvAttendance attendance : bsvAttandance) {
+			if (null != bsvAttandance) {
 				if (attendance.isAuthorized() && attendance.isAttended()) {
 					return true;
 				}
