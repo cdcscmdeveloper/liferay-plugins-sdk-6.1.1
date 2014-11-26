@@ -874,6 +874,7 @@ public class SmCommonUtil {
 		String smRevisionDir = "SM"+File.separator+applNo+File.separator+"Revision"+File.separator;
 		exist = new File(baseDir+smRevisionDir, fileName).exists();
 		log.info("File Name:"+fileName);
+		log.info("SER type:"+serType);
 		log.info("Directory:"+baseDir+smRevisionDir);
 		log.info("Is File Exist:"+exist);
 		return exist;
