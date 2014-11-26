@@ -203,13 +203,13 @@ public class SPDetailBackingBean extends
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
-				
+
 				Calendar cal = Calendar.getInstance();
 				Date closingDate = getManagedBean().getQt().getClosingDate();
-				
+
 				Date currentDayWithOutTime = DateUtils
 						.getCurrentDateWithoutTime();
-				
+
 				Date today = new Date();
 				long days = DateUtils.getDaysDifference(today, getManagedBean()
 						.getQt().getClosingDate());
@@ -1402,7 +1402,10 @@ public class SPDetailBackingBean extends
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
 					.getQtProposalChecklistId());
-			reqDTO.setYear(getManagedBean().getYear().intValue());
+
+			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList()
+					.getScQtCheckListValue().getYear().intValue());
+			// reqDTO.setYear(getManagedBean().getYear().intValue());
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
@@ -1578,8 +1581,10 @@ public class SPDetailBackingBean extends
 			if (getManagedBean().getSelectedZone() != null) {
 				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 			}
+			if (getManagedBean().getQt().getMaxProposal() > 1) {
+				reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
+			}
 
-			// reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -2815,7 +2820,7 @@ public class SPDetailBackingBean extends
 
 		if (getManagedBean().isSelectedAll()) {
 			getManagedBean().setSelected(true);
-		
+
 			List<ScQtPRPCreditFacility> selectedCreditFacilityList = getManagedBean()
 					.getSelectedPRPCreditFacilities();
 			List<ScQtPRPCreditFacility> creditFacilityList = getManagedBean()
@@ -2967,7 +2972,7 @@ public class SPDetailBackingBean extends
 		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
 		DecimalFormat durationFormat = new DecimalFormat("#00");
 		String duration = durationFormat.format(diffHours) + " Hours :"
-				+ durationFormat.format(diffMinutes) +"Minutes";
+				+ durationFormat.format(diffMinutes) + "Minutes";
 		return duration;
 	}
 
