@@ -744,6 +744,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateSyaratSyaratAmPdfFromVelocity(ScAttachment attachment, ScQtDocReport scQtDocReport) throws Exception {
+		debugLogger("generateSyaratSyaratAmPdfFromVelocity");
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_SYARAT_AM);
 		
 		String html = generateSyaratSyaratAmFromVelocity(scQtDocReport, getManagedBean().getQt());
@@ -753,6 +754,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private String generateSyaratSyaratAmFromVelocity(ScQtDocReport scQtDocReport, ScQt scQt) throws Exception {
+		debugLogger("generateSyaratSyaratAmFromVelocity");
+		
 		TemplateDocBackingBean backingBean = new TemplateDocBackingBean();
 		TplDocMaster tplDocMaster = scQtDocReport.getTplDocMaster();
 		backingBean.goToMaint(tplDocMaster);
