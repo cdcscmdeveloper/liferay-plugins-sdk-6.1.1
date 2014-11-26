@@ -1626,11 +1626,11 @@ public class SmApplicationUtil {
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 				if (managedBean.isPoUser() && cat.getPoDecFlg() == null) {
 					throw new EpException(MessageConst.ERROR_722558,
-							new String[] { "Processing Officer Action" });
+							new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.poAct", null) });
 				} else if (managedBean.isApproverUser()
 						&& cat.getApprvrDecFlg() == null) {
 					throw new EpException(MessageConst.ERROR_722558,
-							new String[] { "Approver Action" });
+							new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.appAct", null) });
 				}
 
 			}
