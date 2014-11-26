@@ -934,7 +934,7 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser() && !valid) {
 						saveOrUpdateAppl();
 					}
-					calcPersonnelListCount();
+					//calcPersonnelListCount();
 					displayBumiRecommendNote();
 				} else if (getManagedBean()
 						.getCurrentPageType()
@@ -987,7 +987,7 @@ public class SmApplicationBackingBean extends
 						SmApplicationUtil
 								.checkAllowedToApprove(getManagedBean());
 					}
-					calcPersonnelListCount();
+					//calcPersonnelListCount();
 					displayBumiRecommendNote();
 				} else if (getManagedBean()
 						.getCurrentPageType()
