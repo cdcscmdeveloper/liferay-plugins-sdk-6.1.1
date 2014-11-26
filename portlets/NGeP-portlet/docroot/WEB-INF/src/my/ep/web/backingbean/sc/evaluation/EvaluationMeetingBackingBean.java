@@ -598,10 +598,19 @@ public class EvaluationMeetingBackingBean extends
 				"newspecificationcommittee.hide()");
 	}
 
+	private void checkCommitteeFormation(MeetingReqDTO metReqDtO) {
+		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTMeetingSO.class);
+		metReqDtO.setUser(new FacesScopes().getUserSessionBean());
+		meetingso.validateCommitteDtls(metReqDtO);
+	}
+
 	public void saveCommitteeAction() {
 
 		try {
 			MeetingReqDTO metReqDtO = prepareMeetingDtls();
+			checkCommitteeFormation(metReqDtO);
 			IQTMeetingSO meetingso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTMeetingSO.class);
@@ -1163,7 +1172,7 @@ public class EvaluationMeetingBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = prepareMeetingDtls();
-
+			checkCommitteeFormation(reqDTO);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(ctxToken);
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
