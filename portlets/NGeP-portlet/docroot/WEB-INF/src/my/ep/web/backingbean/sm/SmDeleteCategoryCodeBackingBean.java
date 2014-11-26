@@ -61,6 +61,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 			// if (SmApplicationUtil.checkActiveSmApplForSupp(smApplSupplier)) {
 			// throw new EpException(MessageConst.ERROR_722542);
 			// }
+			checkIsAllowedToProceed(smApplSupplier);
 			SmAppl smAppl = smApplSupplier.getSmAppl();
 			if (smAppl != null) {
 				log.info("******** The application id is *******"
@@ -76,15 +77,18 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 			assignActiveCategoryList();
-			retView =  SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
-		} catch (Exception e) {
-			e.printStackTrace();
-			retView =  SupplierManagementConst.DEFAULT_DELETE_CATCODES_APPLN;
+			retView = SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
+		} finally {
 
 		}
+		// catch (Exception e) {
+		// e.printStackTrace();
+		// retView = SupplierManagementConst.DEFAULT_DELETE_CATCODES_APPLN;
+		//
+		// }
+
 		
-		checkIsAllowedToProceed(smApplSupplier);
-		
+
 		return retView;
 	}
 
@@ -289,15 +293,15 @@ public class SmDeleteCategoryCodeBackingBean extends
 		}
 		return smSupp;
 	}
-	
-	private void checkIsAllowedToProceed(SmSupplier smSupplier){
+
+	private void checkIsAllowedToProceed(SmSupplier smSupplier) {
 		boolean cannotProceedAlertMsg = false;
-		//check if can proceed
-		if(smSupplier!=null){
+		// check if can proceed
+		if (smSupplier != null) {
 			cannotProceedAlertMsg = SmApplicationUtil
 					.checkActiveSmApplForSupp(smSupplier);
 		}
-		//throw exception if cannot proceed
+		// throw exception if cannot proceed
 		if (cannotProceedAlertMsg) {
 			throw new EpException(MessageConst.ERROR_722542);
 		}
