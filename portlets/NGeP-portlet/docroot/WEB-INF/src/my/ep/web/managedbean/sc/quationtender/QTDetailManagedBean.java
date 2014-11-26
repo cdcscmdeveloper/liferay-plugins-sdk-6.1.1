@@ -74,7 +74,6 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.backingbean.sc.quatationtender.CloneAllDataModel;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -200,7 +199,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> approvalTypelist = new ArrayList<String>();
 	private int activeIndex = 0;
 	private int subTabIndex = 0;
-	private CloneAllDataModel cloneAll;
 
 	private List<PmUser> veryfiers;
 	private List<PmUser> approvers;
@@ -274,7 +272,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmDistrict> districtList;
 
 	private int totalSuppliers;
-	
+
 	private List<String> supplierStateCode;
 	private List<String> supplierDistrictCode;
 	private List<String> supplierDivisionCode;
@@ -283,19 +281,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private CtPanelItem ctPanelItem;
 	private CtCircularVer ctCircularVer;
 	private String panelItemCategory;
-	
+
 	private String circularNo;
 	private String circularName;
 	private String itemName;
 	private String circularCoverage;
 	private Date circularExpDate;
 	private String circularType;
-	
+
 	private List<CtPanelZone> ctPanelZones;
-	
+
 	private boolean readOnly;
 	private CtPanelSupplier ctpanelSupplier;
-	
+
 	// Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
 	private ScCommitteeMember selectScCommitteMember;
@@ -358,7 +356,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtSupplier scQtSupplier;
 	private CtContract ctContract = new CtContract();
 	private List<CtPanelItem> selectpanelItem;
-	
+
 	// Committee Appointment
 	private String tabTitle;
 	private ScCommittee scCommittee;
@@ -405,8 +403,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean required = false;
 	private List<ScQtBsvAttendance> briefingAttendanceList;
 	private ScQtBsvAttendance scQtBriefingAttendance;
-	
-	private Date  today = new Date();
+
+	private Date today = new Date();
 
 	// Schedule & Contact Information
 	private List<ScQtContactPerson> pmuserContactpersonList;
@@ -478,6 +476,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isSaveFlow;
 	private boolean cloneNeeded;
 	private List<QTActivityBean> qtActivityBeans;
+
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -1299,14 +1298,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQtCheckList(ScQtCheckList qtCheckList) {
 		this.qtCheckList = qtCheckList;
-	}
-
-	public CloneAllDataModel getCloneAll() {
-		return cloneAll;
-	}
-
-	public void setCloneAll(CloneAllDataModel cloneAll) {
-		this.cloneAll = cloneAll;
 	}
 
 	public ScQtContactPerson getQtContactPerson() {
@@ -2197,8 +2188,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtBsvAttendanceList = scQtBsvAttendanceList;
 	}
 
-	
-
 	public String getSupplierBranch() {
 		return supplierBranch;
 	}
@@ -2734,7 +2723,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSaveFlow(boolean isSaveFlow) {
 		this.isSaveFlow = isSaveFlow;
 	}
-	
+
 	public Date getToday() {
 		return today;
 	}
@@ -2758,7 +2747,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCloneNeeded(boolean cloneNeeded) {
 		this.cloneNeeded = cloneNeeded;
 	}
-	
+
 	/**
 	 * @return the qtActivityBeans
 	 */
@@ -2767,7 +2756,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtActivityBeans the qtActivityBeans to set
+	 * @param qtActivityBeans
+	 *            the qtActivityBeans to set
 	 */
 	public void setQtActivityBeans(List<QTActivityBean> qtActivityBeans) {
 		this.qtActivityBeans = qtActivityBeans;

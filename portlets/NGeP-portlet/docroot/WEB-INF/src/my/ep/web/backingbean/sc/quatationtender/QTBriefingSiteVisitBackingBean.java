@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -101,37 +100,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		retrievePmDivisions();
 	}
-
-	/*
-	 * public void retrieveDivisionList(AjaxBehaviorEvent e) { Long stateId =
-	 * (Long) e.getComponent().getAttributes().get("value");
-	 * this.getManagedBean().setDistricts(null); if (stateId != null) { PmState
-	 * pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
-	 * this.getManagedBean().setStateCode( (pmState != null &&
-	 * ParameterConst.SARAK_SK_CODE .equals(pmState.getStateCode())) ? true :
-	 * false); } List<PmDivision> divisions = PmCommonUtil
-	 * .retrievePmDivisionList(stateId);
-	 * getManagedBean().setDivisionList(divisions); if (divisions.size() == 0) {
-	 * List<PmDistrict> districts = PmCommonUtil
-	 * .retrievePmDistrictList(stateId);
-	 * getManagedBean().setDistricts(districts); } }
-	 */
-	/*
-	 * public void retrievePmDistrictList(AjaxBehaviorEvent e) { if (null !=
-	 * this.getManagedBean().getQtBriefing()) { Long divisionId = (Long)
-	 * e.getComponent().getAttributes() .get("value"); DistrictReqDTO reqDTO =
-	 * new DistrictReqDTO(); reqDTO.setDivisionId(divisionId); IDistrictSO reqSO
-	 * = (IDistrictSO) BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-	 * DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
-	 * getManagedBean().setDistrictList(resDTO.getDistrictList()); } }
-	 * 
-	 * public void retrievePmCityList(AjaxBehaviorEvent e) { if (null !=
-	 * this.getManagedBean().getQtBriefing()) { Long districtId = (Long)
-	 * e.getComponent().getAttributes() .get("value"); List<PmCity> citList =
-	 * PmCommonUtil.retrievePmCityList(districtId);
-	 * this.getManagedBean().setCitys(citList); } }
-	 */
+	
 
 	public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
@@ -278,7 +247,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 			bsvDetail.setScQtBsv(briefingBean.getScQtBsv());
 		}
-		if (null != bsvDetail) {
+		/*if (null != bsvDetail) {
 			Date bsvDate = bsvDetail.getBsvDate();
 			if (null != bsvDate) {
 				Date publishDate = this.getManagedBean().getQt().getPublishDate();
@@ -288,7 +257,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					}
 				}
 			}
-		}
+		}*/
 		if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
 			if (null == briefingDetails) {

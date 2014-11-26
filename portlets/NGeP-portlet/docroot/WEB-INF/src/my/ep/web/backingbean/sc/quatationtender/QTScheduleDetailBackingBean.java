@@ -2,11 +2,8 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -38,8 +35,6 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
@@ -199,30 +194,34 @@ public class QTScheduleDetailBackingBean extends
 	public void addDeskOfficerAdminAssistant() {
 		debugLogger("addDeskOfficerAdminAssistant");
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
-		
-		List<ScQtContactPerson> doaaList = this.getManagedBean().getPmuserContactpersonList();
+
+		List<ScQtContactPerson> doaaList = this.getManagedBean()
+				.getPmuserContactpersonList();
 		if (null == doaaList) {
 			doaaList = new ArrayList<ScQtContactPerson>();
-		}else{
-			//do validation before add a new one.
+		} else {
+			// do validation before add a new one.
 			validationDeskOfficerAdminAssistant(doaaList);
 		}
 		contactPerson.setUser(new PmUser());
-		contactPerson.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE_DOAA);
+		contactPerson
+				.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE_DOAA);
 		contactPerson.setScQt(getManagedBean().getQt());
 		doaaList.add(contactPerson);
 		this.getManagedBean().setPmuserContactpersonList(doaaList);
 	}
-	
-	private void validationDeskOfficerAdminAssistant(List<ScQtContactPerson> doaaList){
+
+	private void validationDeskOfficerAdminAssistant(
+			List<ScQtContactPerson> doaaList) {
 		IQTDetailSO detailSO = null;
-		try{
-			detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
-			
+		try {
+			detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setDoaaList(doaaList);
 			detailSO.validateDeskOfficerAdminAssistant(reqDTO);
-		}finally{
+		} finally {
 			detailSO = null;
 		}
 	}
@@ -245,26 +244,30 @@ public class QTScheduleDetailBackingBean extends
 	public void retrievePmuserName(ScQtContactPerson contactPerson) {
 		debugLogger("retrievePmuserName");
 		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
-		List<ScQtContactPerson> doaaList = this.getManagedBean().getPmuserContactpersonList();
+		List<ScQtContactPerson> doaaList = this.getManagedBean()
+				.getPmuserContactpersonList();
 		List<Long> doaaIdList = new ArrayList<Long>();
-		
-		if(doaaList != null && doaaList.size() > 0){
-			for(ScQtContactPerson doa : doaaList){
+
+		if (doaaList != null && doaaList.size() > 0) {
+			for (ScQtContactPerson doa : doaaList) {
 				String officeType = SourcingConstants.CONTACT_PERSON_TYPE_DOAA;
-				if(doa.getName() != null && contactPerson.getOfficerType().equals(officeType)){
+				if (doa.getName() != null
+						&& contactPerson.getOfficerType().equals(officeType)) {
 					doaaIdList.add(doa.getUser().getUserId());
 				}
 			}
 		}
-		
+
 		if (list != null) {
 			for (PmUser user : list) {
-				if (user.getUserId().equals(contactPerson.getUser().getUserId())) {
-					
-					if(doaaList != null && doaaList.size() > 0){
-						if(doaaIdList.contains(contactPerson.getUser().getUserId())){
+				if (user.getUserId()
+						.equals(contactPerson.getUser().getUserId())) {
+
+					if (doaaList != null && doaaList.size() > 0) {
+						if (doaaIdList.contains(contactPerson.getUser()
+								.getUserId())) {
 							throw new EpException(MessageConst.ERROR_760125);
-						}else{
+						} else {
 							contactPerson.setName(user.getUserName());
 							contactPerson.setEmail(user.getEmail());
 							contactPerson.setPhoneNo(user.getPhoneNo());
@@ -277,7 +280,7 @@ public class QTScheduleDetailBackingBean extends
 			}
 		}
 	}
-	
+
 	/**
 	 * Will be call when we click apply button for address.
 	 */
@@ -330,35 +333,20 @@ public class QTScheduleDetailBackingBean extends
 	/**
 	 * To update closing date and proposal validity days..
 	 */
-	public void handleClosingNProposalDate() {
+	public void handlePublishClosingDate() {
 		ScQt scQt = this.getManagedBean().getQt();
 		Date clsDate = null;
-		if (scQt.isBsvRequired()) {
-			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
-			Date briefingDate=null;
-			if(null == bsvDetails){ 
-				//TODO Need to write api to get higest date. 
-				briefingDate= new Date();
-			} else {
-				for (ScQtBsv bsvs : bsvDetails) {
-					List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
-					for (ScQtBsvDtl bsvDtl : dtls) {
-						briefingDate = bsvDtl.getBsvDate();
-					}
-					/*for(int i=0;i<dtls.size();i++){
-					}*/
-				}
-			}
-			clsDate = DateUtils.addDays(briefingDate,
+		if (!scQt.isBsvRequired()) {
+			clsDate = DateUtils.addDays(scQt.getPublishDate(),
 					scQt.getPublishPeriod());
 		} else {
-			clsDate = DateUtils.addDays(scQt.getPublishDate(),
+			clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
 					scQt.getPublishPeriod());
 		}
 		scQt.setClosingDate(clsDate);
-
 		getManagedBean().setProposalValidityUntil(
 				DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
+
 	}
 
 	/**
@@ -391,34 +379,23 @@ public class QTScheduleDetailBackingBean extends
 		this.getManagedBean().setScQtSampleSubmission(null);
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
 	}
-	
+
 	public Date handleMaximumDate() {
 		debugLogger("handleMaximumDate");
 		ScQt scQt = this.getManagedBean().getQt();
-		Date publishDate = new Date();
-		if (scQt.isBsvRequired()) {
-			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
-			if (null != bsvDetails && !bsvDetails.isEmpty()) {
-				Set<Date> dates = new HashSet<>();
-				//Date briefingDate=null;
-				for (ScQtBsv bsvs : bsvDetails) {
-					List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
-					for (ScQtBsvDtl bsvDtl : dtls) {
-						//briefingDate = bsvDtl.getBsvDate();
-						dates.add(bsvDtl.getBsvDate());
-					}
-					Date briefingDate = Collections.max(dates);
-					//if (null != briefingDate) {
-						return	DateUtils.minusDays(briefingDate, 1);
-					//}
-				}
-			}
+
+		if (scQt.isBsvRequired() && null != scQt.getLatestBsvDate()) {
+
+			Date briefingDate = scQt.getLatestBsvDate();
+
+			return DateUtils.minusDays(briefingDate, 1);
+
 		} else {
 			Calendar c1 = Calendar.getInstance();
 			c1.add(Calendar.YEAR, 50);
-			publishDate = c1.getTime();
+			return c1.getTime();
 		}
-		return publishDate;
+
 	}
 
 }

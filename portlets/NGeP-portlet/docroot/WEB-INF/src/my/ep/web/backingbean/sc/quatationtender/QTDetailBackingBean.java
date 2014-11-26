@@ -108,7 +108,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -845,7 +844,8 @@ public class QTDetailBackingBean extends
 				if (bsvs.size() > 0) {
 					scQt.setBsvRequired(isRequired);
 				}
-
+				scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
+						.getScQtBsvDtls()));
 			} else {
 				// code for if bsv details if any and non zonal
 				BriefingZoneBean bsvDtlBean = this.getManagedBean()
@@ -860,9 +860,12 @@ public class QTDetailBackingBean extends
 					bsvs.add(scQtBsv);
 					scQt.setBsvRequired(scQtBsv.getScQtBsvDtls().size() > 0 ? true
 							: false);
+					scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
+							.getScQtBsvDtls()));
 				}
 
 			}
+
 			scQt.setScQtBriefings(bsvs);
 			// Setting Sample Submission to qtDetails.
 			List<ScQtSampleSubmission> sampleSubmissionList = null;
@@ -889,7 +892,7 @@ public class QTDetailBackingBean extends
 			}
 			scQt.setScQtSampleSubmission(sampleSubmissionList);
 			// Setting the contact person to qtdetails.
-			// TODO Need to add for duplications..
+
 			List<ScQtContactPerson> list = new ArrayList<ScQtContactPerson>();
 			List<ScQtContactPerson> contactPersonsList = this.getManagedBean()
 					.getScQtContactPersons();
@@ -1236,7 +1239,9 @@ public class QTDetailBackingBean extends
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
-									this.getManagedBean().getQt().getCurrentWorkFlowStatus(), scQtBsv.getBsvRemarks(),
+									this.getManagedBean().getQt()
+											.getCurrentWorkFlowStatus(),
+									scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
@@ -1250,8 +1255,10 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
-					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-							qtBsv.getBsvRemarks(), ScQtBSVRemark.class));
+					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, this
+							.getManagedBean().getQt()
+							.getCurrentWorkFlowStatus(), qtBsv.getBsvRemarks(),
+							ScQtBSVRemark.class));
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							null, resDTO.getBriefingList(),
 							resDTO.getSiteVisitList(), qtBsv);
@@ -1267,7 +1274,7 @@ public class QTDetailBackingBean extends
 	}
 
 	public void processChecked(AjaxBehaviorEvent e) {
-		Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
+		// Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
 
 	}
 
@@ -1304,7 +1311,8 @@ public class QTDetailBackingBean extends
 			}
 			copyBoMembersToSpecCommitte(specCommitte, boCommitte);
 			boolean isEnable = false;
-			if (QTStatusConst.CM_REVISION.equals(specCommitte.getScCommittee().getCommitteStatus().getStatusId())) {
+			if (QTStatusConst.CM_REVISION.equals(specCommitte.getScCommittee()
+					.getCommitteStatus().getStatusId())) {
 				isEnable = false;
 			} else if (currentStatus >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
 				isEnable = true;
@@ -1451,11 +1459,11 @@ public class QTDetailBackingBean extends
 					throw new EpException(
 							"Error while copying the members into spec");
 				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new EpException(
+							"Error while copying the members into spec");
 				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new EpException(
+							"Error while copying the members into spec");
 				}
 			}
 		}
@@ -1513,7 +1521,7 @@ public class QTDetailBackingBean extends
 		log.info("taskId : " + taskId);
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		// TODO
+
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		// String ctx = bpmSO.authenticate("roslan", "welcome1");
@@ -1543,7 +1551,7 @@ public class QTDetailBackingBean extends
 		} else {
 
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
-			//retrieveFinalizationSecratryDtl(qtId);
+			// retrieveFinalizationSecratryDtl(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
 		}
 
@@ -1574,7 +1582,6 @@ public class QTDetailBackingBean extends
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		String taskName = res.getTaskName();
 
-		// TODO Need to get it from front end and set it
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
 		try {
@@ -1586,10 +1593,11 @@ public class QTDetailBackingBean extends
 				qt.setModified(true);
 				// check if its Pending Schedule and Documents , only execute
 				// this part
-				
+
 				if (null == this.getManagedBean().getScQtDocReportList()) {
 					retrieveDocumentTabDtl();
-					qt.setScQtDocReports(this.getManagedBean().getScQtDocReportList());
+					qt.setScQtDocReports(this.getManagedBean()
+							.getScQtDocReportList());
 				}
 				if (null != qt.getScQtDocReports()
 						&& !qt.getScQtDocReports().isEmpty()) {
@@ -1732,7 +1740,8 @@ public class QTDetailBackingBean extends
 										.getApprovalCategory()
 										.getParameterCode()));
 						qtApproval.setScQtApprovalRemarks(initializeRemarks(
-								qtApproval, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+								qtApproval, this.getManagedBean().getQt()
+										.getCurrentWorkFlowStatus(),
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
 						// qtApproval.setScQtApprovalAttachment(null);
@@ -1862,25 +1871,6 @@ public class QTDetailBackingBean extends
 		} finally {
 			detailSO = null;
 		}
-	}
-
-	/**
-	 * @param requiredApproval
-	 * @return
-	 */
-	private List<ScQtApproval> getToBeRemoveApprovals(
-			List<ScQtApproval> requiredApproval) {
-		List<ScQtApproval> toBeRemoveList = null;
-		if (null != requiredApproval) {
-			toBeRemoveList = new ArrayList<ScQtApproval>();
-			for (int i = 0; i < requiredApproval.size(); i++) {
-				if (requiredApproval.get(i).isDeleted()) {
-					toBeRemoveList.add(requiredApproval.get(i));
-					requiredApproval.remove(i);
-				}
-			}
-		}
-		return toBeRemoveList;
 	}
 
 	public void retrieveSuppQualificationTabDtl() {
@@ -2391,7 +2381,9 @@ public class QTDetailBackingBean extends
 					publicationApproval = new ScQtApproval();
 					publicationApproval
 							.setScQtApprovalRemarks(initializeRemarks(
-									publicationApproval, this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+									publicationApproval,
+									this.getManagedBean().getQt()
+											.getCurrentWorkFlowStatus(),
 									publicationApproval
 											.getScQtApprovalRemarks(),
 									ScQtApprovalRemark.class));
@@ -2538,68 +2530,6 @@ public class QTDetailBackingBean extends
 		return results;
 	}
 
-	private List<TplSpecZoneDtl> getZoneBusinessOwnerLocations(
-			List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
-		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
-		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
-		for (TreeNode treeNode : treeNodes) {
-			List<TreeNode> zoneNodes = treeNode.getChildren();
-			zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
-			for (TreeNode treeNode1 : zoneNodes) {
-				List<TreeNode> stateNodes = treeNode1.getChildren();
-				for (TreeNode treeNode2 : stateNodes) {
-					List<TreeNode> district = treeNode2.getChildren();
-					if (null != district && !district.isEmpty()) {
-						for (TreeNode devision : district) {
-							if (devision.getChildCount() > 0) {
-								for (TreeNode districtNode : devision
-										.getChildren()) {
-									TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
-											.getData();
-									criteria.setPmDistrict(((TplSpecZoneLoc) districtNode
-											.getData()).getPmDistrict());
-									criteria.setPmDivision(((TplSpecZoneLoc) districtNode
-											.getParent().getData())
-											.getPmDivision());
-									criteria.setPmState(((TplSpecZoneLoc) treeNode2
-											.getData()).getPmState());
-									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-											.getData()));
-									setUserDetails(criteria);
-									results.add(criteria);
-								}
-							} else {
-								TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
-										.getData();
-								criteria.setPmDistrict(((TplSpecZoneLoc) devision
-										.getData()).getPmDistrict());
-								criteria.setPmState(((TplSpecZoneLoc) treeNode2
-										.getData()).getPmState());
-								criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-										.getData()));
-								setUserDetails(criteria);
-								results.add(criteria);
-							}
-						}
-					} else {
-						TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
-								.getData();
-						criteria.setPmState(((TplSpecZoneLoc) treeNode2
-								.getData()).getPmState());
-						criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-								.getData()));
-						setUserDetails(criteria);
-						results.add(criteria);
-					}
-				}
-			}
-			zoneDtl.setTplSpecZoneLocs(results);
-			setUserDetails(zoneDtl);
-			zoneList.add(zoneDtl);
-		}
-		return zoneList;
-	}
-
 	private void updateQtDtls() {
 		List<TabBean> commiteTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
@@ -2676,7 +2606,7 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					/*if (getManagedBean().getQt().getEstimatedAmount() != null) {
+					if (getManagedBean().getQt().getEstimatedAmount() != null) {
 						if (getManagedBean().getQt().getEstimatedAmount()
 								.intValue() >= SourcingConstants.ESTMT_TWANTY_THOUSAND
 								&& getManagedBean().getQt()
@@ -2685,12 +2615,12 @@ public class QTDetailBackingBean extends
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.SIXTY_DAYS);
 							}
-							
+							/*
 							 * if (getManagedBean().getQt().getPublishPeriod()
 							 * == null) {
 							 * getManagedBean().getQt().setPublishPeriod(
 							 * SourcingConstants.PUBLISH_THREE_DAYS); }
-							 
+							 */
 						} else if (getManagedBean().getQt()
 								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND
 								&& getManagedBean().getQt()
@@ -2699,26 +2629,26 @@ public class QTDetailBackingBean extends
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.NINTY_DAYS);
 							}
-							
+							/*
 							 * if (getManagedBean().getQt().getPublishPeriod()
 							 * == null) {
 							 * getManagedBean().getQt().setPublishPeriod(
 							 * SourcingConstants.PUBLISH_SEVEN_DAYS); }
-							 
+							 */
 						} else if (getManagedBean().getQt()
 								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.NINTY_DAYS);
 							}
-							
+							/*
 							 * if (getManagedBean().getQt().getPublishPeriod()
 							 * == null) { getManagedBean() .getQt()
 							 * .setPublishPeriod(
 							 * SourcingConstants.PUBLISH_TWENTYONE_DAYS); }
-							 
+							 */
 						}
-					}*/
+					}
 				}
 				if (this.getManagedBean().getGosodos() == null) {
 					this.getManagedBean().setGosodos(
@@ -3571,5 +3501,19 @@ public class QTDetailBackingBean extends
 			}
 		}
 		return "";
+	}
+
+	private Date getLatestBsvDate(List<ScQtBsvDtl> bsvDetails) {
+		Date latestBsvDate = null;
+		for (ScQtBsvDtl bsvDtl : bsvDetails) {
+			if (null == latestBsvDate) {
+				latestBsvDate = bsvDtl.getBsvDate();
+			}
+			if (DateUtils.isDateGreaterOrEqual(latestBsvDate,
+					bsvDtl.getBsvDate())) {
+				latestBsvDate = bsvDtl.getBsvDate();
+			}
+		}
+		return latestBsvDate;
 	}
 }

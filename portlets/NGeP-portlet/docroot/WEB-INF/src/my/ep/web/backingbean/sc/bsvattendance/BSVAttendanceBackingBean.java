@@ -480,6 +480,9 @@ public class BSVAttendanceBackingBean extends
 	public void deleteSupplierDetails() {
 		List<ScQtBsvRegistration> registrations = this.getManagedBean()
 				.getBriefingRegistrationList();
+		if (null == registrations || registrations.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
 		for (ScQtBsvRegistration registration : registrations) {
 			if (registration
 					.getSupplier()
@@ -551,6 +554,9 @@ public class BSVAttendanceBackingBean extends
 				.getSelectedbriefRegistration().getBsvAttendance();
 		ScQtBsvAttendance selectedBsvAttandance = this.getManagedBean()
 				.getScQtBriefingAttendance();
+		if (null == selectedBsvAttandance) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
 		if (null != attandances && !selectedBsvAttandance.isAuthorized()) {
 			for (int i = 0; i < attandances.size(); i++) {
 
@@ -637,12 +643,6 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	public void updateAttandanceToSelectedBsvReg(AjaxBehaviorEvent event) {
-
-		event.getComponent().getParent().getParent().getAttributes()
-				.get("rowIndexVar");
-
-		boolean selectedValue = (boolean) event.getComponent().getAttributes()
-				.get("value");
 
 		List<ScQtBsvAttendance> attandances = this.getManagedBean()
 				.getBriefingAttendanceList();

@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.sc.quationtender;
 
-import javax.faces.component.UICommand;
 
 /**
  * @author admin

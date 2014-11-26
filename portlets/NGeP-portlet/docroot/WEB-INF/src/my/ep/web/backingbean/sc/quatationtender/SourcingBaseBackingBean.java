@@ -84,7 +84,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.format.AttachmentDateFormat;
@@ -484,7 +483,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// populateParentOrgProfile(tenderResDTO.getQtDetail());
 			// detailBackingBean.onChangeAction();
 			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
-			ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+			//ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
 
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
 
@@ -951,5 +950,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return isDate;
 	}
+	
 
 }
