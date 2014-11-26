@@ -44,7 +44,7 @@
     <tr>
 		<td>#if ( $oc == "true")
 			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
-			<p>Mesyuarat Jawatankuasa Penilaian Harga telah diadakan seperti berikut:</p>
+			<p>Mesyuarat Jawatankuasa Pembuka telah diadakan seperti berikut:</p>
             #end
         </td>
     </tr>
