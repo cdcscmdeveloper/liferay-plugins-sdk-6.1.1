@@ -376,7 +376,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     getManagedBean().getContractVer().getCtAmendment().setDescription(getManagedBean().getCtContract().getContractName());
 				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
 				     getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
-			  
+				     getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
+				     getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
+				     getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			    }
 		  	    
 		  	    if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {         
@@ -2216,7 +2218,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			c.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			c.add(Calendar.DATE, 1);
 			getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
-			c.add(Calendar.MONTH, 3);
+			
+			c.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			c.add(Calendar.MONTH, 1);
 			getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 		}
@@ -2227,6 +2231,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		c.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		c.add(Calendar.DATE, 1);
 		getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+		
+		c.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		c.add(Calendar.MONTH, getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
 		getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 		getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
