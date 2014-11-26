@@ -246,7 +246,7 @@
 											partialSubmit="true" process="@this"
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
 									</p:selectOneMenu> <p:commandLink style="text-align:left">
-									<p:spacer width="2px"></p:spacer>
+									<p:spacer width="3px"></p:spacer>
 										<p:graphicImage library="ep/images/design" name="evaluate.png"
 											style="vertical-align:middle" />
 									</p:commandLink></td>
@@ -261,14 +261,14 @@
 	  <p:panel id="orderQty" rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
 		 <table style="width: 90%">
 			 <tr>
-			  <td style="width: 250px;">
+			  <td style="width:246px;">
 			  <p:outputLabel
 				  value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 			 <td><p:inputText id="ordqty"  maxlength="14" required="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}"
 			       validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 			       label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" 
 			       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" 
-			       styleClass="ppRightBtn" size="42"  
+			       styleClass="ppRightBtn" size="32"  
 			       disabled="#{!isPendingSubmissionStatus}">
 				 </p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 			</tr>
@@ -278,7 +278,7 @@
 	 <h:panelGroup id="rmkId">   
 		   <table style="width: 90%">
 			 <tr>
-			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
+			    <td  width="25.5%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
@@ -313,7 +313,7 @@
 	 <h:panelGroup id="attachmentId">
 	   <table style="width: 90%">
 		<tr>
-			<td width="24%" style="vertical-align: center;padding-right: 0px;text-align: right;">
+			<td width="25%" style="vertical-align: center;padding-right: 0px;text-align: right;">
 			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
