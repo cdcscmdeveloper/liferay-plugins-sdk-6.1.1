@@ -156,7 +156,8 @@
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{flItem.orderedQty}" size="5" id="orderedQty"
 						styleClass="colFloatRight" maxlength="14"
-						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}">
+						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+						onkeypress="if (event.keyCode == 13) { return false; }" >
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange),unitPrice,orderedQty,itemDataTable"
@@ -266,7 +267,8 @@
 							maxlength="255"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
-							size="35" /></td>
+							size="35" 
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td><p:message for="address1" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="manDivison"
@@ -287,7 +289,8 @@
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
-							size="35" /></td>
+							size="35" 
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -314,7 +317,8 @@
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
-							size="35" /></td>
+							size="35" 
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.city']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -334,7 +338,8 @@
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
-							size="35" /></td>
+							size="35"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -342,7 +347,8 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Post Code" maxlength="10"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
-							 validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
+							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"
 							size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
@@ -354,7 +360,8 @@
 							label="Email" maxlength="80"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
-							size="35" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
+							size="35"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
        					</p:inputText>	
        					
@@ -383,7 +390,8 @@
 							label="Tel No" maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
-							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							size="35"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
 							<p:message for="telNo" display="icon" /></td>
@@ -393,7 +401,8 @@
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
 							 validatorMessage="#{lbl['lbl.fl.fax.no.msg']}"
-							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							size="35" 
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fax.no']}"/></td>
 				</tr>
@@ -401,8 +410,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
-							 validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
-							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
+							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mobile.no']}"/></td>
 				</tr>
@@ -413,7 +423,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
 				process="@this addManualDelAddrDialog"
 				action="#{purchaseRequestBackingBean.updateManualDeliveryAddrDt}"
-				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)">
+				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)"
+				widgetVar="addManualDelAddrBtn">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" process="@this"
 				action="#{purchaseRequestBackingBean.closeListener}"
