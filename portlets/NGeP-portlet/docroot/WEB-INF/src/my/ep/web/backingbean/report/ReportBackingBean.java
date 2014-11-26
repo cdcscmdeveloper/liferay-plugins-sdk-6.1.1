@@ -125,6 +125,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private List<SelectItem> regTypeList;
 	List<String> authoriztionList=new ArrayList<String>();
 	List<String> orgProfileList=new ArrayList<String>();
+	List<SelectItem> orgProfileIdNameList=new ArrayList<SelectItem>();
 	List<SelectItem> userListbyprofileRole=new ArrayList<SelectItem>();
 	private ScQt scqt;
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
@@ -141,6 +142,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private List<String> scYearList = new ArrayList<String>();	
 	
 	
+	public List<SelectItem> getOrgProfileIdNameList() {
+		return orgProfileIdNameList;
+	}
+	public void setOrgProfileIdNameList(List<SelectItem> orgProfileIdNameList) {
+		this.orgProfileIdNameList = orgProfileIdNameList;
+	}
 	public List<SelectItem> getScMonthList() {
 		return scMonthList;
 	}
@@ -1493,7 +1500,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			for (PmUserOrg pmuserOrg : userOrg) {
 				if(pmuserOrg.getPmOrgProfile().getOrgProfileId()!=null){
 					if(!orgProfileList.contains((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString())){
-						orgProfileList.add((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());						
+						orgProfileList.add((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());	
+						SelectItem selectItem= new SelectItem();
+						selectItem.setLabel(pmuserOrg.getPmOrgProfile().getOrgName());
+						selectItem.setValue((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());
+						orgProfileIdNameList.add(selectItem);
 					}
 				}
 			}
