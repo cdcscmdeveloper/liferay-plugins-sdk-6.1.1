@@ -2676,7 +2676,7 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-					if (getManagedBean().getQt().getEstimatedAmount() != null) {
+					/*if (getManagedBean().getQt().getEstimatedAmount() != null) {
 						if (getManagedBean().getQt().getEstimatedAmount()
 								.intValue() >= SourcingConstants.ESTMT_TWANTY_THOUSAND
 								&& getManagedBean().getQt()
@@ -2685,12 +2685,12 @@ public class QTDetailBackingBean extends
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.SIXTY_DAYS);
 							}
-							/*
+							
 							 * if (getManagedBean().getQt().getPublishPeriod()
 							 * == null) {
 							 * getManagedBean().getQt().setPublishPeriod(
 							 * SourcingConstants.PUBLISH_THREE_DAYS); }
-							 */
+							 
 						} else if (getManagedBean().getQt()
 								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND
 								&& getManagedBean().getQt()
@@ -2699,26 +2699,26 @@ public class QTDetailBackingBean extends
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.NINTY_DAYS);
 							}
-							/*
+							
 							 * if (getManagedBean().getQt().getPublishPeriod()
 							 * == null) {
 							 * getManagedBean().getQt().setPublishPeriod(
 							 * SourcingConstants.PUBLISH_SEVEN_DAYS); }
-							 */
+							 
 						} else if (getManagedBean().getQt()
 								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.NINTY_DAYS);
 							}
-							/*
+							
 							 * if (getManagedBean().getQt().getPublishPeriod()
 							 * == null) { getManagedBean() .getQt()
 							 * .setPublishPeriod(
 							 * SourcingConstants.PUBLISH_TWENTYONE_DAYS); }
-							 */
+							 
 						}
-					}
+					}*/
 				}
 				if (this.getManagedBean().getGosodos() == null) {
 					this.getManagedBean().setGosodos(
