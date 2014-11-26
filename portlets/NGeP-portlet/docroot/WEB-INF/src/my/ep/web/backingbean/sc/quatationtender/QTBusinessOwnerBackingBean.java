@@ -655,10 +655,6 @@ public class QTBusinessOwnerBackingBean extends
 				.getScCommittee();
 		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CM_COMPLETE));
 
-		// Setting the pm status for New User
-		PmStatus status = setPmStatus(60730L);
-		// scQt.setQtStatus(status);
-
 		ParameterReqDTO parameterReqDTO1 = new ParameterReqDTO();
 		parameterReqDTO1.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 		parameterReqDTO1.setParameterCode(ParameterConst.COMMITTEE_ROLE_MEMBER);
@@ -752,12 +748,9 @@ public class QTBusinessOwnerBackingBean extends
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = new UserResDTO();
-			try {
-				resDTO = getUserSO().saveUser(userReqDTO);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+			resDTO = getUserSO().saveUser(userReqDTO);
+
 			member.setPmUser(resDTO.getPmUser());
 			member.setScCommittee(scCommittee);
 
@@ -817,7 +810,7 @@ public class QTBusinessOwnerBackingBean extends
 		int count = 0;
 		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
 				.getScCommitteeMemberList();
-		List<ScCommitteeMember> selectedMemebers= new ArrayList<ScCommitteeMember>();
+		List<ScCommitteeMember> selectedMemebers = new ArrayList<ScCommitteeMember>();
 		for (int i = 0; i < committeeMemberList.size(); i++) {
 			if (committeeMemberList.get(i).isSelected()) {
 				count++;
@@ -895,7 +888,7 @@ public class QTBusinessOwnerBackingBean extends
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.saveQTDtl(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
-				// TODO Need to think to move to finally block...
+
 				ScQt qt = quationTenderResDTO.getQtDetail();
 
 				// To renew the session..
