@@ -67,7 +67,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String adminVerifyICNo;
 	private List<SelectItem> assignList;
 	private Long assignAdminPersonnelId;
-	private boolean fromMenu;
+	private boolean fromUserMaintain;
 	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -447,12 +447,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.assignAdminPersonnelId = assignAdminPersonnelId;
 	}
 
-	public boolean isFromMenu() {
-		return fromMenu;
+	public boolean isFromUserMaintain() {
+		return fromUserMaintain;
 	}
 
-	public void setFromMenu(boolean fromMenu) {
-		this.fromMenu = fromMenu;
+	public void setFromUserMaintain(boolean fromUserMaintain) {
+		this.fromUserMaintain = fromUserMaintain;
 	}
 
 }

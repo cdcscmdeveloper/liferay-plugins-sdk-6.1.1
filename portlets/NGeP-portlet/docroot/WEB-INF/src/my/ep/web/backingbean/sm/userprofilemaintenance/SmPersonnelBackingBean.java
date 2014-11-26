@@ -41,6 +41,7 @@ import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
+import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -1381,6 +1382,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		if(getManagedBean().getAssignAdminPersonnelId() != null){
 			ISupplierUserActivationSO suppUserActivationSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
 			SupplierUserActivationReqDTO userPmReqDTO = new SupplierUserActivationReqDTO();
+			SupplierUserActivationResDTO userPmResDTO = new SupplierUserActivationResDTO();
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
 			userPmReqDTO.setLanguageCode(languageCode);
 			
@@ -1391,11 +1393,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				SmPersonnel smPersonnel = new SmPersonnel();
 				for(SmPersonnel personnel : getManagedBean().getPersonnelList()){
 					if(getManagedBean().getAssignAdminPersonnelId().compareTo(personnel.getPersonnelId()) == 0){
-						if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
-							personnel.setEpRole(RoleCode.MOF_SUPPLIER_ADMIN.value());
-						} else if(personnel.getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())){
-							personnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-						}
 						smPersonnel = personnel;
 					}
 				}
@@ -1407,9 +1404,24 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 					reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
 					PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelById(reqDTO);
 					if(resDTO.getSmPersonnel() != null && resDTO.getSmPersonnel().getPersonnelId() != null){
-						userPmReqDTO.setSmPersonnel(resDTO.getSmPersonnel());
-						suppUserActivationSO.updatePmProfileForPersonnel(userPmReqDTO);
+						SmPersonnel retrievedPersonnel = resDTO.getSmPersonnel();
+						if(retrievedPersonnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+							retrievedPersonnel.setEpRole(RoleCode.MOF_SUPPLIER_ADMIN.value());
+						} else if(retrievedPersonnel.getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())){
+							retrievedPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+						}
+						userPmReqDTO.setSmPersonnel(retrievedPersonnel);
+						userPmResDTO = suppUserActivationSO.updatePmProfileForPersonnel(userPmReqDTO);
 					}
+				}
+				if(userPmResDTO.isSuccessful()){
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils.getMessage(MessageConst.INFO_721027, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					fc.getApplication().getNavigationHandler()
+							.handleNavigation(fc, null, "/xhtml/sm/userProfileMaintenance/outputMsg");
 				}
 			} catch(Exception ex) {
 				log.info("deactivateAdmin ex>>>>" + ex.getMessage());
