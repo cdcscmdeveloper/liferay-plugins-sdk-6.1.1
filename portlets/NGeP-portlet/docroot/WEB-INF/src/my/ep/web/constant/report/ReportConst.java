@@ -471,8 +471,8 @@ public class ReportConst {
 	public static final String FL_AMP_COTRACT_REQUEST_EQ = "&PCRNO=";
 	public static final String FL_AMP_PURCHASE_ORDER_EQ = "&PPONO=";
 	public static final String FL_AMP_COTRACT_TYPE_EQ = "&PCONTYPE=";
-	public static final String FL_AMP_DELI_ADDR_EQ = "&PDONO=";
-	public static final String FL_AMP_DELI_ORD_NO_EQ = "&PDOADD=";
+	public static final String FL_AMP_DELI_ADDR_EQ = "&PDOADD=";
+	public static final String FL_AMP_DELI_ORD_NO_EQ = "&PDONO=";
 	public static final String FL_AMP_PKP_NO_EQ = "&PPKPNO=";
 	public static final String FL_AMP_FL_REC_NOTE_EQ = "&PFRNNO=";
 	public static final String FL_AMP_FL_REC_OFF_EQ = "&PRECOFF=";
