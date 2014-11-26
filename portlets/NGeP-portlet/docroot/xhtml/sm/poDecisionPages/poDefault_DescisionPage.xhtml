@@ -34,7 +34,7 @@
 					<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 						update=":form:tt:approveDialog" partialSubmit="true"
 						process="@this"
-						disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
+						disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 						action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:rejectDialog" partialSubmit="true"
@@ -45,7 +45,7 @@
 						<p:commandButton
 							value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 							partialSubmit="true" process="@this"
-							disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
+							disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 							action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">

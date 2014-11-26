@@ -33,7 +33,7 @@
 					<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 						partialSubmit="true" process="@this"
 						update=":form:tt:approverAppDialog"
-						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}"
+						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
@@ -86,16 +86,19 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputTextarea cols="70" disabled="true" value="#{backingBean.managedBean.poSecReview.remarkToApprover}" /></td>
+							<td><p:inputTextarea cols="70" disabled="true"
+									value="#{backingBean.managedBean.poSecReview.remarkToApprover}" /></td>
 
 						</tr>
 					</table>
-					
-					<c:if test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
+
+					<c:if
+						test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
 						<table style="width: 100%">
 							<tr>
-								<td><p:outputLabel value="#{backingBean.managedBean.bumiRecommendationNote}" 
-										style="color: green;font-weight: bold;float:left;"/></td>
+								<td><p:outputLabel
+										value="#{backingBean.managedBean.bumiRecommendationNote}"
+										style="color: green;font-weight: bold;float:left;" /></td>
 							</tr>
 						</table>
 					</c:if>
@@ -117,9 +120,9 @@
 		</tr>
 	</table>
 
-	<p:dialog width="750px" header="#{lbl['lbl.sm.approve.application']}" closable="false"
-		id="approverAppDialog" widgetVar="approverAppDialog" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true">
+	<p:dialog width="750px" header="#{lbl['lbl.sm.approve.application']}"
+		closable="false" id="approverAppDialog" widgetVar="approverAppDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
@@ -132,15 +135,15 @@
 				partialSubmit="true" process="@this" />
 		</div>
 	</p:dialog>
-	<p:dialog width="850px" header="#{lbl['lbl.sm.reject.application']}" closable="false"
-		id="approverRejDialog" widgetVar="approverRejDialog" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true">
+	<p:dialog width="850px" header="#{lbl['lbl.sm.reject.application']}"
+		closable="false" id="approverRejDialog" widgetVar="approverRejDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
-				process="approverRejDialog"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				partialSubmit="true" process="approverRejDialog"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"
