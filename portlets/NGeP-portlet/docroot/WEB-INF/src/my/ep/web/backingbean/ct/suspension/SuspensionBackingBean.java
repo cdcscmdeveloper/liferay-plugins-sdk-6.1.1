@@ -293,6 +293,11 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			 }
 	      }
 		 
+		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract suspend"});
+		}
+		 
 		 
 		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
