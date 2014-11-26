@@ -89,7 +89,7 @@
 					<td>Jawatan</td>
 					<td>Gred</td>
 					<td>Kad Pengenalan No.</td>
-					<td>Jabatan </td>
+					<td>PTJ</td>
 					<td>Peranan</td>
 				</tr>
 				#foreach( $committeeMember in $committeeActivities )
@@ -98,7 +98,7 @@
 					<td>$committeeMember.scCommitteeMember.designation</td>
 					<td>$committeeMember.scCommitteeMember.grade</td>
 					<td>$committeeMember.scCommitteeMember.icPassport</td>
-					<td></td>
+					<td>$committeeMember.scCommitteeMember.pmOrgProfile.orgName</td>
 					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
 				</tr>
 				#end
