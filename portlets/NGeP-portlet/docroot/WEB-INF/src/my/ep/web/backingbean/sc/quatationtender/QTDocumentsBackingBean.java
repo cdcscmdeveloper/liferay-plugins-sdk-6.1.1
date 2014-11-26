@@ -794,6 +794,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		String officerName = facesScopes.getUserSessionBean().getUserName();
 		
     	html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",pmOrgProfile.getOrgName());
+    	html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",pmOrgProfile.getOrgName());
     	html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",pmOrgProfile.getOrgName());
     	html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;",agencyAddress);
     	html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;",officerName);
