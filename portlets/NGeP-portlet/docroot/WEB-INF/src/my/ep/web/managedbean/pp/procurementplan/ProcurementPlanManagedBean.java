@@ -37,6 +37,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean modeReviewEditable;
 	private boolean modeEditable;
 	private boolean isSearch;
+	private boolean backAllow;
 	
 	private PpPlan selectedPlan;
 	private List<PpExpenditureItem> deleteEpItems;
@@ -46,15 +47,60 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<PpRejectReason> selectedRejectReasons;
 	private boolean confirm;
 	private String selectedReasonDesc;
+	private String selectedRemarkDesc;
 	private List<PpRemark> selectedRemarks;
+//	private List<PpJustificaton> selectedJustification;
+	private List<PpRemark> selectedItemRemarks;
 	private BigDecimal epTotalBudget;
 	private BigDecimal epTotalPlan;
 	private BigDecimal epTotalNonEpAlloc;
 	private BigDecimal ppTotalEst;
-	private String temp;
 	
 	
 	
+	
+
+	/**
+	 * @return the backAllow
+	 */
+	public boolean isBackAllow() {
+		return backAllow;
+	}
+
+	/**
+	 * @param backAllow the backAllow to set
+	 */
+	public void setBackAllow(boolean backAllow) {
+		this.backAllow = backAllow;
+	}
+
+	/**
+	 * @return the selectedRemarkDesc
+	 */
+	public String getSelectedRemarkDesc() {
+		return selectedRemarkDesc;
+	}
+
+	/**
+	 * @param selectedRemarkDesc the selectedRemarkDesc to set
+	 */
+	public void setSelectedRemarkDesc(String selectedRemarkDesc) {
+		this.selectedRemarkDesc = selectedRemarkDesc;
+	}
+
+	/**
+	 * @return the selectedItemRemarks
+	 */
+	public List<PpRemark> getSelectedItemRemarks() {
+		return selectedItemRemarks;
+	}
+
+	/**
+	 * @param selectedItemRemarks the selectedItemRemarks to set
+	 */
+	public void setSelectedItemRemarks(List<PpRemark> selectedItemRemarks) {
+		this.selectedItemRemarks = selectedItemRemarks;
+	}
 
 	/**
 	 * @return the confirm
@@ -82,21 +128,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setSearch(boolean isSearch) {
 		this.isSearch = isSearch;
-	}
-
-
-	/**
-	 * @return the temp
-	 */
-	public String getTemp() {
-		return temp;
-	}
-
-	/**
-	 * @param temp the temp to set
-	 */
-	public void setTemp(String temp) {
-		this.temp = temp;
 	}
 
 	/**
