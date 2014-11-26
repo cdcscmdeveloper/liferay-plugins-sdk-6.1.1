@@ -50,7 +50,7 @@
 			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal">
@@ -60,7 +60,7 @@
 			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal">
@@ -70,7 +70,7 @@
 			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.recalledQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />		
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />		
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;">
