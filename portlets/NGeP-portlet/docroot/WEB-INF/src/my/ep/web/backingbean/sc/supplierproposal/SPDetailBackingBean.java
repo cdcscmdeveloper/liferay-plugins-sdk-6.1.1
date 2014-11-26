@@ -1104,13 +1104,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(
-						scQtProposalChecklist.getScQtCheckList()
-								.getScQtCheckListValue().getYear());
-				Calendar mindate = Calendar.getInstance();
-				mindate.set(getManagedBean().getYear().intValue(), 0, 1);
-				getManagedBean().setNonFedEffMinDate(mindate.getTime());
-				getManagedBean().setNonFedMinDate(mindate.getTime());
+				
 				pageUrl = retrieveTecNonGovCompanyExpDtls(scQtProposalChecklist);
 			}
 
@@ -1133,9 +1127,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(
-						scQtProposalChecklist.getScQtCheckList()
-								.getScQtCheckListValue().getYear());
+				
 				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
 
 			} // to check proposalchecklist is technicalspecification -
@@ -1175,6 +1167,15 @@ public class SPDetailBackingBean extends
 
 	public String retrieveTecNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		
+		getManagedBean().setYear(
+				scQtProposalChecklist.getScQtCheckList()
+						.getScQtCheckListValue().getYear());
+		Calendar mindate = Calendar.getInstance();
+		mindate.set(getManagedBean().getYear().intValue(), 0, 1);
+		getManagedBean().setNonFedEffMinDate(mindate.getTime());
+		getManagedBean().setNonFedMinDate(mindate.getTime());
+		
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1392,6 +1393,14 @@ public class SPDetailBackingBean extends
 
 	public String retrieveTecCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		
+		System.out.println("scQtProposalChecklist id is "+ scQtProposalChecklist.getQtProposalChecklistId());
+		System.out.println("scQtChecklist id is "+ scQtProposalChecklist.getScQtCheckList().getQtChecklistId());
+		
+		getManagedBean().setYear(
+				scQtProposalChecklist.getScQtCheckList()
+						.getScQtCheckListValue().getYear());
+		
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1405,7 +1414,7 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList()
 					.getScQtCheckListValue().getYear().intValue());
-			// reqDTO.setYear(getManagedBean().getYear().intValue());
+			
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
@@ -1463,11 +1472,7 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				/*
-				 * getManagedBean().setYear(
-				 * scQtProposalChecklist.getScQtCheckList()
-				 * .getScQtCheckListValue().getYear());
-				 */
+
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
@@ -1627,6 +1632,11 @@ public class SPDetailBackingBean extends
 
 	public String retrieveFinNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+
+		getManagedBean().setYear(
+				scQtProposalChecklist.getScQtCheckList()
+						.getScQtCheckListValue().getYear());
+		
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
