@@ -856,7 +856,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getLatestContractVer().getStatus().getStatusId().longValue() != ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
 		    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750018); 
+			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
 		}
 		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
@@ -1999,22 +1999,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			trBB = new TerminationBackingBean();
-			
-			if(resDTO.getCtContractVer().getCtTermination()==null) {
-				resDTO.getCtContractVer().setCtTermination(new CtTermination());
-			    if(resDTO.getCtContractVer().getCtTermination().getDecisionType() == null)
-				    resDTO.getCtContractVer().getCtTermination().setDecisionType(new PmParameter());
-			}
-	    	
-			trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-			trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	
-			
-		    trBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		    trBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			trBB.getManagedBean().setViewContract(false);
-			trBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			trBB.getManagedBean().getContractVer().getDocType(), trBB.getManagedBean().getCtContract().getContractNo()));	
-			trBB.flush();
+			trBB.setTerminationContractVer(resDTO);
 		}catch(Exception e) {
 				e.printStackTrace();
 		} finally{

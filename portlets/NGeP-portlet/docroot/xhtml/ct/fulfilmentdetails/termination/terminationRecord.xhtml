@@ -58,7 +58,7 @@
 				      <p:outputLabel value="*" styleClass="mandatory" />
 		    	      <p:outputLabel value="#{lbl['lbl.ct.notice.date']}" />
 		  	      </h:panelGrid>
-                  <h:panelGrid columns="2">
+                  <h:panelGrid columns="5">
              	        <p:calendar id="nDate"   readonlyInput="true" required="true" label="#{lbl['lbl.ct.notice.date']}" navigator="true"
              	            value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}"  size="24" 
           		            showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -73,7 +73,7 @@
 				       <p:outputLabel value="*" styleClass="mandatory" />
 		    	       <p:outputLabel value="#{lbl['lbl.ct.received.date']}" />
 		  	       </h:panelGrid>
-          	       <h:panelGrid columns="2">
+          	       <h:panelGrid columns="5">
              	      <p:calendar id="rDate"  readonlyInput="true" required="true" label="#{lbl['lbl.ct.received.date']}"
              	        value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
           		        mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"  size="24" 

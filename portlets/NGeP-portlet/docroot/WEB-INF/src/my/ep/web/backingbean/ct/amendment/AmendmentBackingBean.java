@@ -659,20 +659,23 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 			}
 		   }
 		   
+		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+				 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
+			}
+		   
 		   if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && !getManagedBean().getContractVer().getCtAmendment().isValueChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
 			   RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-			        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Type"});
-		 
+			        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Type"});		 
 		   }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
 			   RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-				        throw new EpException(MessageConst.INFO_100022, new String[]{"File Reference No."});
-			 
+				        throw new EpException(MessageConst.INFO_100022, new String[]{"File Reference No."});			 
 			   }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {

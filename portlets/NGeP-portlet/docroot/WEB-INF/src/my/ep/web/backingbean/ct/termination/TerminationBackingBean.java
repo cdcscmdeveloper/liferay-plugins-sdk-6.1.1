@@ -307,13 +307,18 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
  			}
  		}
 		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract termination"});
+		}
+		
 		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
-		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
+		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_750014);
 		}
 		
-		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().size()==0) {
+		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
 		}
