@@ -818,9 +818,9 @@ public class EvaluationBackingBean extends
 			List<String> evalstage = new ArrayList<String>();
 			evalstage.add(QTConstants.COMPLIANCE_CHECK);
 			reqDTO.setResultStages(evalstage);
-			if (!this.getManagedBean().isReadOnly()) {
-				evaluationSO.prepareComplianceSummaryResults(reqDTO);
-			}
+
+			evaluationSO.prepareComplianceSummaryResults(reqDTO);
+
 			EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 			summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			List<String> qualifiedstage = new ArrayList<String>();
@@ -1003,9 +1003,9 @@ public class EvaluationBackingBean extends
 				List<String> resultStg = new ArrayList<String>();
 				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 				evalReqDTO.setResultStages(resultStg);
-				if (!this.getManagedBean().isReadOnly()) {
-					evaluationSo.prepareEvaluationResultsByStage(evalReqDTO);
-				}
+
+				evaluationSo.prepareEvaluationResultsByStage(evalReqDTO);
+
 				EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 				summaryReqDTO
 						.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -1061,10 +1061,9 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (!this.getManagedBean().isReadOnly()) {
-					evaluationSo
-							.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
-				}
+
+				evaluationSo
+						.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
 
 			}
 
@@ -1078,10 +1077,9 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (!this.getManagedBean().isReadOnly()) {
-					evaluationSo
-							.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
-				}
+
+				evaluationSo
+						.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
 
 			}
 			// }
@@ -2875,13 +2873,40 @@ public class EvaluationBackingBean extends
 	public void setTabValue(int currentTab, int outputTab) {
 		try {
 
-			this.currentTab = currentTab;
-			this.outputTab = outputTab;
+			// this.currentTab = currentTab;
+			// this.outputTab = outputTab;
 			if (outputTab == 1) {
 				retriveComplianceTechnical();
 				// retrives1Details();
 			}
 			if (outputTab == 2) {
+				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						|| ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					if (currentTab == 1) {
+						if (!this.getManagedBean().getScQt().isSampleReq()) {
+							if (this.getManagedBean()
+									.getComplianceActiveIndex() < 2) {
+								retriveComplianceSummary();
+								// this.getManagedBean().setComplianceActiveIndex(2);
+								outputTab = 1;
+							}
+
+						} else {
+							if (this.getManagedBean()
+									.getComplianceActiveIndex() < 3) {
+								// this.getManagedBean().setComplianceActiveIndex(3);
+								retriveComplianceSummary();
+								outputTab = 1;
+							}
+						}
+
+					}
+				}
+
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -3079,7 +3104,7 @@ public class EvaluationBackingBean extends
 	public void updateSmAppl() throws Exception {
 		try {
 			// retrives2Details();
-			getManagedBean().setTabActiveIndex(outputTab);
+			// getManagedBean().setTabActiveIndex(outputTab);
 
 		} finally {
 
