@@ -30,7 +30,8 @@
 				<h:outputText
 					value="#{committeActivity.scCommitteeMember.designation}"></h:outputText>
 			</p:column>
-			<p:column style="width:15%;white-space: normal;" headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+			<p:column style="width:15%;white-space: normal;"
+				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
 				<h:outputText value="#{committeActivity.scCommitteeMember.email}"></h:outputText>
 			</p:column>
 
@@ -43,11 +44,9 @@
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
-			<p:column style="width:10%;white-space: normal;">
-				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory"></h:outputText>
-					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
-				</f:facet>
+			<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}"
+				style="width:10%;white-space: normal;">
+
 
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(committeActivity.scCommitteeMember.memberRole)}" />
