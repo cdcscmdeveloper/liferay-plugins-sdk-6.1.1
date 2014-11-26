@@ -853,7 +853,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  			}
  		}
 		
-		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getLatestContractVer().getStatus().getStatusId().longValue() != ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
+		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() != ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
 		    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
