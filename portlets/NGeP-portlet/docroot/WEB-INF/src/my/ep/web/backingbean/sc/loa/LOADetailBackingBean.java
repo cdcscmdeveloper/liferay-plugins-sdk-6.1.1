@@ -1204,7 +1204,8 @@ public class LOADetailBackingBean extends
 		}
 
 		context.put("procurementMode", procurementMode); 
-		context.put("title", scLoiLoa.getTitle());
+		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
+		
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
 
