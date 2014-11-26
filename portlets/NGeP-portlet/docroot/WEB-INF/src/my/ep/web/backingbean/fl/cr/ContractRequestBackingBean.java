@@ -1316,7 +1316,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
 
 			if(checkCeilingAmt.intValue() >  ctResDTO.getAgencyCeilingAmount().intValue()){
-				throw new EpException(MessageConst.ERROR_750007);
+				throw new EpException(MessageConst.ERROR_740032);
 			}
 		}
 	}
@@ -1347,7 +1347,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				checkCeilingQty = prevSumQty.add(sumOrderedQty);
 
 				if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
-					throw new EpException(MessageConst.ERROR_750009,new String[]{itemAddr.getCmItem().getItemName()});
+					throw new EpException(MessageConst.ERROR_740033,new String[]{itemAddr.getCmItem().getItemName()});
 				}
 			}
 		}
