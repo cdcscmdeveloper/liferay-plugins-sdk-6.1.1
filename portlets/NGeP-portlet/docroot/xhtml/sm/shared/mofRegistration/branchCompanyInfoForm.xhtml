@@ -95,8 +95,12 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{backingBean.managedBean.poSecReview.branchRemark}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200" id="poBranchRemarkId"
+								value="#{backingBean.managedBean.poSecReview.branchRemark}" >
+							 <f:validateLength maximum="200" />
+						</p:inputTextarea>
+						<p:message id="poBranchRemarkMsg" for="poBranchRemarkId"
+						showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -105,11 +109,19 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
-								value="#{backingBean.managedBean.poSecReview.branchRemark}" /></td>
+								disabled="true" cols="41" maxlength="200" id="poBranchRemark2Id"
+								value="#{backingBean.managedBean.poSecReview.branchRemark}" >
+								<f:validateLength maximum="200" />
+						</p:inputTextarea>
+						<p:message id="poBranchRemark2Msg" for="poBranchRemark2Id"
+						showSummary="true" showDetail="false" display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{backingBean.managedBean.apprvrSecReview.branchRemark}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200" id="apprBranchRemarkId"
+								value="#{backingBean.managedBean.apprvrSecReview.branchRemark}" >
+								<f:validateLength maximum="200" />
+						</p:inputTextarea>
+						<p:message id="apprBranchRemarkMsg" for="apprBranchRemarkId"
+						showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>
