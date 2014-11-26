@@ -55,7 +55,10 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.spec.company.exp.since.year']} "></p:outputLabel>
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+						<ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</ui:fragment></td>
 					<td><p:inputText required="true" id="techCompanyprivate"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
@@ -130,8 +133,10 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
-							value="*" styleClass="mandatory"></p:outputLabel></td>
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</ui:fragment></td>
 					<td><p:selectOneMenu required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							id="techPrivateNoOfAutoscore"
@@ -186,8 +191,10 @@
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-							</td>
+								<ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+								</ui:fragment></td>
 							<td><p:inputText id="techprivateContScore" required="true"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
@@ -215,10 +222,10 @@
 							id="techPrivateNoOfYearsAutoScore"
 							value="#{specificationBackingBean.managedBean.companyScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="companyprivateYears,techcompanyExpPrivateNumbersOfYears"
+							<p:ajax event="change"
+								update="companyprivateYears,techcompanyExpPrivateNumbersOfYears"
 								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
-						</p:selectOneMenu> <p:message
-							id="techPrivateNoOfYearsAutoScoreMsg"
+						</p:selectOneMenu> <p:message id="techPrivateNoOfYearsAutoScoreMsg"
 							for="techPrivateNoOfYearsAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>
@@ -263,8 +270,10 @@
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-							</td>
+								<ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+								</ui:fragment></td>
 							<td><p:inputText id="techPrivaeYrs"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}" required="true"

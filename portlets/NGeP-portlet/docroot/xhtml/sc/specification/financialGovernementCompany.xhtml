@@ -51,7 +51,10 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.spec.company.exp.since.year']} "></p:outputLabel>
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+						<ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</ui:fragment></td>
 					<td><p:inputText id="finSpecGovCompany"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
@@ -113,20 +116,24 @@
 
 		<p:spacer height="75"></p:spacer>
 
-		<p:panel id="financialGovernmentContracts" header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
+		<p:panel id="financialGovernmentContracts"
+			header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
 			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
-							value="*" styleClass="mandatory"></p:outputLabel></td>
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</ui:fragment></td>
 					<td><p:selectOneMenu required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							id="financialGovAutoScore"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change" update="financialGovernment,financialGovernmentContracts"
+							<p:ajax event="change"
+								update="financialGovernment,financialGovernmentContracts"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="financialGovAutoScoreMsg"
 							for="financialGovAutoScore" display="icon"></p:message></td>
@@ -174,8 +181,10 @@
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-							</td>
+								<ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+								</ui:fragment></td>
 							<td><p:inputText id="finMaxScore" required="true"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									maxlength="18" label="#{lbl['lbl.sc.spec.max.score']}"

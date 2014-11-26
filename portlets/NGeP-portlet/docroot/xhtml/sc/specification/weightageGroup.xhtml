@@ -15,7 +15,10 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tech.weightage']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</ui:fragment></td>
 				<td><p:selectOneRadio required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						label="#{lbl['lbl.sc.spec.tech.weightage']}" id="techWeightage"
@@ -42,7 +45,10 @@
 
 			<p:column style="width:20%;">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
 				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"

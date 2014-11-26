@@ -88,8 +88,10 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
-							value="*" styleClass="mandatory"></p:outputLabel></td>
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</ui:fragment></td>
 					<td><p:selectOneMenu required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
@@ -143,8 +145,10 @@
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-							</td>
+								<ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+								</ui:fragment></td>
 							<td><p:inputText maxlength="18" required="true"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}"
