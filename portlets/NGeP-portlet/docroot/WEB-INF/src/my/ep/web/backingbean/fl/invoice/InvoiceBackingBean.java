@@ -469,6 +469,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		BigDecimal orderTotalAmount = new BigDecimal(0);
 		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
 		reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+			reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+		}
 		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
 		
 		for (TreeNode childNode : root.getChildren()) {
@@ -480,6 +483,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				} 
 				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
 				reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+				if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+					reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+				}
 				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
 			}
 			if(!resDTO.isFeeExemption()){
