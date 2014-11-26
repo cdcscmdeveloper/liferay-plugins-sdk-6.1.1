@@ -840,8 +840,7 @@ public class SmApplicationBackingBean extends
 						.isEmpty()) {
 			log.info("*** Clear the rejection list ******* ");
 			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
-		}
-		if (currentPageType
+		} else if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
 				&& getManagedBean().isSupplierUser()
 				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
@@ -918,9 +917,10 @@ public class SmApplicationBackingBean extends
 						SmApplicationUtil
 								.assignNonPersonnelProfBodyList(getManagedBean());
 					}
-				}
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
+				} else if (getManagedBean()
+						.getCurrentPageType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 					if (getManagedBean().isSupplierUser()) {
 						assignApplicationSupportingDocs();
 					}
@@ -928,14 +928,15 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser() && !valid) {
 						saveOrUpdateAppl();
 					}
-				}
-
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+				} else if (getManagedBean()
+						.getCurrentPageType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 					calcPersonnelListCount();
-				}
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				} else if (getManagedBean()
+						.getCurrentPageType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 					SmApplicationUtil
 							.assignActiveCategoryList(getManagedBean());
 					if (getManagedBean().getSmAppl().getApplCategoryType()
@@ -958,16 +959,17 @@ public class SmApplicationBackingBean extends
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
 							.checkOverLappingCategories(getManagedBean());
-				}
-
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+				} else if (getManagedBean()
+						.getCurrentPageType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 						&& valid) {
 					log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
 					calculateCapital();
-				}
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
+				} else if (getManagedBean()
+						.getCurrentPageType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
 						|| getManagedBean()
 								.getCurrentPageType()
 								.equalsIgnoreCase(
@@ -976,11 +978,17 @@ public class SmApplicationBackingBean extends
 								.getCurrentPageType()
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
+					if (getManagedBean().isPoUser()
+							|| getManagedBean().isApproverUser()) {
+						SmApplicationUtil
+								.checkAllowedToApprove(getManagedBean());
+					}
 					calcPersonnelListCount();
 					displayBumiRecommendNote();
-				}
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)) {
+				} else if (getManagedBean()
+						.getCurrentPageType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)) {
 					log.info("******* This is site visit review page ********");
 					assignViewSiteVisitReport();
 				}
@@ -3380,13 +3388,14 @@ public class SmApplicationBackingBean extends
 
 			}
 			shr.setEquityOwner(true);
-			getManagedBean().setPersonnelInfoHeader(SmCommonUtil.getMessage("lbl.sm.equity.owner.information",
-					null));
+			getManagedBean().setPersonnelInfoHeader(
+					SmCommonUtil.getMessage("lbl.sm.equity.owner.information",
+							null));
 		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			manageEquityLimit(shr);
-			getManagedBean().setPersonnelInfoHeader(SmCommonUtil.getMessage("lbl.sm.person.panHdr",
-					null));
+			getManagedBean().setPersonnelInfoHeader(
+					SmCommonUtil.getMessage("lbl.sm.person.panHdr", null));
 		}
 		// getManagedBean().setSelectedPersonnel(null);
 
@@ -4196,6 +4205,7 @@ public class SmApplicationBackingBean extends
 
 			}
 
+			@SuppressWarnings("unused")
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -4472,7 +4482,6 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	@SuppressWarnings("finally")
 	private boolean intializeSaveDraftBpm(String currentPageType) {
 		log.info("*********  intializeSaveDraftBpm ************* ");
 		IMofRegistrationSO regSo = null;
@@ -4531,7 +4540,6 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	@SuppressWarnings("finally")
 	private boolean deleteDraftApplciationTask() {
 		log.info("*********  Delete draft applicaiton task ************* ");
 		IMofRegistrationSO regSo = null;
@@ -6000,6 +6008,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void calcPersonnelListCount() {
+		log.info("*** Start calcPersonnelListCount**** ");
 		SmPersonnleCalcVO calcVO = SmCommonUtil.calcPersonnelListCount(
 				getManagedBean().getSmAppl().getSmPersonnels(),
 				getManagedBean().getSmAppl().getSmStaffTotals(),
@@ -6017,6 +6026,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			getManagedBean().setValidSmUserLimit(true);
 		}
+		log.info("*** END calcPersonnelListCount**** ");
 	}
 
 	private void calculateBumiPercentageTotals() {
@@ -6320,6 +6330,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void displayBumiRecommendNote() {
+		log.info("*** Start displayBumiRecommendNote *******");
 		getManagedBean().setBumiRecommendationNote("");
 		if (getManagedBean().getSmAppl() != null) {
 			String applType = getManagedBean().getSmAppl().getApplType() == null ? ""
@@ -6352,7 +6363,7 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getBumiEquityPercentage(),
 							getManagedBean().isSupplierUser()));
 		}
-
+		log.info("*** End displayBumiRecommendNote ********");
 	}
 
 	private void initBusinessPremise() {

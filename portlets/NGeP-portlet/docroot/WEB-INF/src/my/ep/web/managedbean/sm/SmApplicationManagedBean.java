@@ -309,6 +309,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Integer currYear;
 	private String typeOfBusiness;
 	private SmSupplierBasicInfoVO basicInfo;
+	private boolean allowedToApprove;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2344,6 +2345,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBasicInfo(SmSupplierBasicInfoVO basicInfo) {
 		this.basicInfo = basicInfo;
+	}
+
+	public boolean isAllowedToApprove() {
+		return allowedToApprove;
+	}
+
+	public void setAllowedToApprove(boolean allowedToApprove) {
+		this.allowedToApprove = allowedToApprove;
 	}
 
 }

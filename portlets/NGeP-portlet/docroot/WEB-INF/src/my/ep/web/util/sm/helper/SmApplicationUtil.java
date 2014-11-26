@@ -154,6 +154,7 @@ public class SmApplicationUtil {
 
 	public static int validatePersonLimit(Long supplierId, String applType,
 			Long applId) {
+		log.info("******* Validate Personnel Count Start ******");
 		int validPerCount = 0;
 		int count = 5;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -177,6 +178,7 @@ public class SmApplicationUtil {
 		} else {
 			validPerCount = 0;
 		}
+		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
 	}
 
@@ -1626,11 +1628,13 @@ public class SmApplicationUtil {
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 				if (managedBean.isPoUser() && cat.getPoDecFlg() == null) {
 					throw new EpException(MessageConst.ERROR_722558,
-							new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.poAct", null) });
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.catCodes.poAct", null) });
 				} else if (managedBean.isApproverUser()
 						&& cat.getApprvrDecFlg() == null) {
 					throw new EpException(MessageConst.ERROR_722558,
-							new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.appAct", null) });
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.catCodes.appAct", null) });
 				}
 
 			}
@@ -2831,6 +2835,59 @@ public class SmApplicationUtil {
 			}
 		}
 		return smPersonnelRetVal;
+	}
+
+	public static void checkAllowedToApprove(
+			SmApplicationManagedBean managedBean) {
+		boolean validForApproval = true;
+		if (managedBean.getSmAppl().getApplCategoryType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| managedBean
+						.getSmAppl()
+						.getApplCategoryType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| managedBean
+						.getSmAppl()
+						.getApplCategoryType()
+						.equalsIgnoreCase(
+								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+			for (SmSupplierCategory cat : managedBean.getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					if ((managedBean.isPoUser() && cat.getPoDecFlg() != null && cat
+							.getPoDecFlg()
+							.compareTo(
+									SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
+							|| (managedBean.isApproverUser()
+									&& cat.getApprvrDecFlg() != null && cat
+									.getApprvrDecFlg()
+									.compareTo(
+											SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)) {
+						validForApproval = true;
+						break;
+					} else {
+						validForApproval = false;
+					}
+				}
+			}
+		}
+		log.info("*** Valid For Approval After category checking Decision **** "
+				+ validForApproval);
+		if (validForApproval) {
+			for (SmApplSupportDoc doc : managedBean.getSmAppl()
+					.getSmApplSupportDocs()) {
+				if (doc.getVerifiedFlg().compareTo(0) == 0) {
+					validForApproval = false;
+					break;
+				} else {
+					validForApproval = true;
+				}
+			}
+		}
+		log.info("*** Valid For Approval Final Decision **** "
+				+ validForApproval);
+		managedBean.setAllowedToApprove(validForApproval);
 	}
 
 	public static boolean validateSiteVisitSelections(

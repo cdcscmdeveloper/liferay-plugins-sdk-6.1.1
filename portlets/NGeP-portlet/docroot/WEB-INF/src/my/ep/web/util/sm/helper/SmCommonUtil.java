@@ -208,6 +208,7 @@ public class SmCommonUtil {
 			personVO = calcSumUpByPersonnel(per, personVO, supplierType, locale);
 		}
 		calcuteStaffSubTotalSummary(personVO);
+		log.info("********* END calcPersonnelListCount ********* ");
 		return personVO;
 	}
 
