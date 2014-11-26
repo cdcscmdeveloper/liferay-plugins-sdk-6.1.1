@@ -111,7 +111,7 @@
 				value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
 				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
 				selection="#{bsvAttendanceBackingBean.managedBean.scQtBriefingAttendance}"
-				selectionMode="single">
+				selectionMode="single" style="width:100%">
 
 				<p:columnGroup type="header">
 					<p:row>
@@ -142,7 +142,7 @@
 						</p:column>
 					</p:row>
 				</p:columnGroup>
-				<p:column>
+				<p:column  style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtBriefAttendace.name}"
 						rendered="#{scQtBriefAttendace.authorized}" />
 					<p:inputText value="#{scQtBriefAttendace.name}"
@@ -151,12 +151,12 @@
 							update="@this"></p:ajax>
 					</p:inputText>
 				</p:column>
-				<p:column>
+				<p:column  style="width:6%;white-space: normal;">
 					<h:outputLabel
 						value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
 
 				</p:column>
-				<p:column>
+				<p:column  style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtBriefAttendace.icPassPort}"
 						rendered="#{scQtBriefAttendace.authorized}" />
 					<p:inputText value="#{scQtBriefAttendace.icPassPort}"
@@ -166,7 +166,7 @@
 					</p:inputText>
 
 				</p:column>
-				<p:column>
+				<p:column  style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtBriefAttendace.contactNo}"
 						rendered="#{scQtBriefAttendace.authorized}" />
 					<p:inputText value="#{scQtBriefAttendace.contactNo}"
@@ -175,7 +175,7 @@
 							update="@this"></p:ajax>
 					</p:inputText>
 				</p:column>
-				<p:column>
+				<p:column  style="width:22%;white-space: normal;">
 					<h:outputText value="#{scQtBriefAttendace.email}"
 						rendered="#{scQtBriefAttendace.authorized}" />
 					<p:inputText value="#{scQtBriefAttendace.email}"
@@ -184,7 +184,7 @@
 							update="@this"></p:ajax>
 					</p:inputText>
 				</p:column>
-				<p:column>
+				<p:column  style="width:6%;white-space: normal;">
 					<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
 						disabled="#{!scQtBriefAttendace.authorized}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
