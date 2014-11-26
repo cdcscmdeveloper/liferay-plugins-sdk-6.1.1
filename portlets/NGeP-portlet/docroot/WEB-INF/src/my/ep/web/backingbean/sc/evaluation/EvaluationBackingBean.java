@@ -741,11 +741,10 @@ public class EvaluationBackingBean extends
 			else {
 
 				Date d1 = new Date();
-				DateUtils dateUtil = new DateUtils();
 
 				for (ScQtSampleLable label : resDTO.getLableResultBean()
 						.getResultList()) {
-					long days = dateUtil.getDaysDifference(d1, this
+					long days = DateUtils.getDaysDifference(d1, this
 							.getManagedBean().getScQt().getSampleClosingDate());
 
 					/*
@@ -3065,7 +3064,7 @@ public class EvaluationBackingBean extends
 
 		} finally {
 			committeSO = null;
-			
+
 		}
 	}
 
@@ -3181,7 +3180,8 @@ public class EvaluationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Preperation Saved Successfully", "Evaluation Preperation Saved Successfully"));
+							"Evaluation Preperation Saved Successfully",
+							"Evaluation Preperation Saved Successfully"));
 		} finally {
 
 		}
@@ -3502,13 +3502,13 @@ public class EvaluationBackingBean extends
 
 	public void secretarySubmitTask() {
 		ICommitteSO committeSO = null;
-		CommitteResDTO resDTO = null;
+
 		try {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setCommitteeType(QTConstants.DOCTYPE_SPEC_COMMITTE);
+			reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 			reqDTO.setSubject(this.getManagedBean().getSubject());
 			reqDTO.setBodyText(this.getManagedBean().getMessage());
 			committeSO.sendCommitteEndorseNotification(reqDTO);
@@ -3739,14 +3739,13 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setReadOnly(false);
 			this.getManagedBean().setMemberOnly(false);
 
-		}
-		else if (member.getMemberRole().getParameterCode()
+		} else if (member.getMemberRole().getParameterCode()
 				.contains(SourcingConstants.MEMBER_ROLE_MEMBER)) {
 			this.getManagedBean().setReadOnly(true);
 			this.getManagedBean().setMemberOnly(false);
 
-		} else  if (member.getMemberRole().getParameterCode()
-				.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) { 
+		} else if (member.getMemberRole().getParameterCode()
+				.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setReadOnly(true);
 			this.getManagedBean().setMemberOnly(true);
 		}
@@ -4424,32 +4423,34 @@ public class EvaluationBackingBean extends
 		tplDocMaster.setDocMasterId(null);
 		tplDocMaster.setOrgProfile(null);
 		tplDocMaster.setTplDocSections(null);
-		//tplDocMaster.setTplDocSectionCollection(null);
+		// tplDocMaster.setTplDocSectionCollection(null);
 		tplDocMaster.setDocTitle(scQtEvaluationReport.getTitle());
 		tplDocMaster.setDocName(scQtEvaluationReport.getTitle());
 
 		setUserDetails(tplDocMaster);
 
 		// clone tplDocSection Details
-		/*tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
-		List<TplDocSection> docSections = tplDocMaster.getTplDocSections();
-		for (TplDocSection tplDocSection : docSections) {
-			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
-			section.setDocSectionId(null);
-			section.setTplDocMaster(tplDocMaster);
+		/*
+		 * tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
+		 * List<TplDocSection> docSections = tplDocMaster.getTplDocSections();
+		 * for (TplDocSection tplDocSection : docSections) { TplDocSection
+		 * section = (TplDocSection) tplDocSection.cloneEntity();
+		 * section.setDocSectionId(null); section.setTplDocMaster(tplDocMaster);
+		 * 
+		 * setUserDetails(section);
+		 * tplDocMaster.getTplDocSections().add(section); }
+		 */
 
-			setUserDetails(section);
-			tplDocMaster.getTplDocSections().add(section);
-		}*/
-		
 		tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
-		List<TplDocSection> docSectionCOllection = templateDocMaster.getTplDocSectionCollection();
+		List<TplDocSection> docSectionCOllection = templateDocMaster
+				.getTplDocSectionCollection();
 		for (TplDocSection tplDocSection : docSectionCOllection) {
 			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
 			section.setDocSectionId(null);
-			section.setParent(null); // Temporarily am setting null, need to confirm once
+			section.setParent(null); // Temporarily am setting null, need to
+										// confirm once
 			section.setTplDocMaster(tplDocMaster);
-			
+
 			setUserDetails(section);
 			tplDocMaster.getTplDocSectionCollection().add(section);
 		}
@@ -4473,22 +4474,38 @@ public class EvaluationBackingBean extends
 
 		// Item Type - Service & Product
 		PmParameter itemType = null;
-		if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_MTO)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
-			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_SERVICE);
-		} else if (procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_ICT)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
-				|| procurementCategory.getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
-			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE, ParameterConst.ITEM_TYPE_PRODUCT);
+		if (procurementCategory.getParameterCode().equals(
+				ParameterConst.PROCUREMENT_CATEGORY_BAHAN_MENTAH)
+				|| procurementCategory
+						.getParameterCode()
+						.equals(ParameterConst.PROCUREMENT_CATEGORY_KAWALAN_KESELAMATAN)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_MTO)
+				|| procurementCategory
+						.getParameterCode()
+						.equals(ParameterConst.PROCUREMENT_CATEGORY_PERKHIDMATAN_PEMINDAHAN_BARANG)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_HIRE_PURCHASE)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
+					ParameterConst.ITEM_TYPE_SERVICE);
+		} else if (procurementCategory.getParameterCode().equals(
+				ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
+				|| procurementCategory
+						.getParameterCode()
+						.equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_ICT)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_OTHERS)
+				|| procurementCategory.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)) {
+			itemType = getPmParameter(ParameterTypeConst.SC_ITEM_TYPE,
+					ParameterConst.ITEM_TYPE_PRODUCT);
 		}
 		tplDocMaster.setItemTypeId(itemType);
-		
+
 		// Status
 		PmStatus status = new PmStatus();
 		status.setStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT);
