@@ -1152,6 +1152,7 @@ public class SpecificationBackingBean extends
 
 	public void checkFinancialSpecStatus(ScQt scqt) {
 		retriveFinancialCheckList();
+		//retriveFinancialScoring();
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
@@ -2272,7 +2273,11 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
 		try {
-			this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
+				this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+			}
 			if (null == this.getManagedBean()
 					.getScQtCheckSt2financeProposalList()
 					|| this.getManagedBean()
@@ -2501,8 +2506,11 @@ public class SpecificationBackingBean extends
 			} else {
 				for (ScQtScoreSetting scoreSttting : resDTO
 						.getScoreSettingResultBean().getResultList()) {
-					this.getManagedBean()
-							.setFinancialScoreSetting(scoreSttting);
+					if (null == this.getManagedBean()
+							.getFinancialScoreSetting()) {
+						this.getManagedBean().setFinancialScoreSetting(
+								scoreSttting);
+					}
 				}
 
 			}
@@ -2650,15 +2658,19 @@ public class SpecificationBackingBean extends
 							if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 									.equalsIgnoreCase(scoreOfferPrice
 											.getOfferPriceType())) {
-
-								this.getManagedBean().setOfferPricePackage(
-										scoreOfferPrice);
+								if (null == this.getManagedBean()
+										.getOfferPricePackage()) {
+									this.getManagedBean().setOfferPricePackage(
+											scoreOfferPrice);
+								}
 							} else if (ParameterConst.RECOMMEND_TYPE_ITEM
 									.equalsIgnoreCase(scoreOfferPrice
 											.getOfferPriceType())) {
-
-								this.getManagedBean().setOfferPriceItem(
-										scoreOfferPrice);
+								if (null == this.getManagedBean()
+										.getOfferPriceItem()) {
+									this.getManagedBean().setOfferPriceItem(
+											scoreOfferPrice);
+								}
 							}
 						}
 
@@ -4878,6 +4890,13 @@ public class SpecificationBackingBean extends
 				list.setAction(paramDesc.getPmParameter());
 				break;
 			}
+		}
+		if (null != list.getPmDocument()
+				&& QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
+						.equalsIgnoreCase(list.getPmDocument()
+								.getDocDefinitionKey()) && list.isScoringReq()) {
+			throw new EpException(MessageConst.ERROR_760189);
+
 		}
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
@@ -7508,6 +7527,10 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760169);
 					}
 				}
+			}
+			if (null == contractScoreType
+					|| "".equalsIgnoreCase(contractScoreType)) {
+				throw new EpException(MessageConst.ERROR_760190);
 			}
 
 			if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
@@ -11331,7 +11354,8 @@ public class SpecificationBackingBean extends
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				if (null != reqDTO.getCheckLists()) {
 					for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
-						if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
+						if (SourcingConstants.TECHNICAL_DOCTYPE
+								.equalsIgnoreCase(checkList.getDocCategory())) {
 							PmStatus status = new PmStatus();
 							status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 							checkList.setPmStatus(status);
@@ -11340,21 +11364,25 @@ public class SpecificationBackingBean extends
 					}
 				}
 			} else {
-				if (SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				if (SourcingConstants.FINANCIAL_DOCTYPE
+						.equalsIgnoreCase(specType)) {
 					if (null != reqDTO.getCheckLists()) {
 						for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
-							if (SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
+							if (SourcingConstants.FINANCIAL_DOCTYPE
+									.equalsIgnoreCase(checkList
+											.getDocCategory())) {
 								PmStatus status = new PmStatus();
 								status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 								checkList.setPmStatus(status);
-								this.getManagedBean().setScQtChecklist(checkList);
+								this.getManagedBean().setScQtChecklist(
+										checkList);
 							}
 						}
 					}
 				}
 			}
 			String msgCode = e.getMessage();
-			String msgParam []= e.getParameters();
+			String msgParam[] = e.getParameters();
 			throw new EpException(msgCode, msgParam);
 		}
 
