@@ -20,10 +20,10 @@
 				    <p:ajax event="toggleSelect" update="@this" process="@this" />
 					<p:ajax event="rowSelectCheckbox" update="@this" />
 					<p:column selectionMode="multiple" disabledSelection="#{!role.brandNew}" style="width:2%" />
-				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" >
+				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}"  width="20%">
 			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.pmRole.roleCode)}
 			        </p:column>
-			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
+			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"  width="15%"> 
 			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
 			          		required="#{!empty param['disableValidation']} and role.pmRole.limitRequired}"  label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
 			          		disabled="#{!role.pmRole.limitRequired}" maxlength="18">
@@ -32,7 +32,7 @@
 		          		</p:inputText>
 		          		<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 			        </p:column>
-			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
+			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"  width="15%"> 
 				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}">  
 			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 			            	<p:ajax event="change" listener="#{profileManagementBackingBean.userRoleStatusChange(role)}" />
