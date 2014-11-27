@@ -11,12 +11,13 @@
 	<ui:define name="resourceSection">
 		<style>
 			.divmsginfo {
-			height: 13px;
+			height: 30px;
 			padding: 7px 10px 10px 10px;
 			background-color: #F1FBD1;
 			border-color: #F1FBD1;
 			font-family: Arial,sans-serif;
 			font-size: 1.1em;
+			display: block;
 			}
 			
 			.spaninfo {
@@ -27,10 +28,8 @@
 
 
 	<ui:define name="contentSection">
-		<div id="content" style="width: 100%;">
-			<div class="divmsginfo">
-				<span class="spaninfo">#{lbl['lbl.sm.reviewappl.suppnotready.msg']}</span>
-			</div>
+		<div class="divmsginfo">
+			<span class="spaninfo">#{lbl['lbl.sm.reviewappl.suppnotready.msg']}</span>
 		</div>
 	</ui:define>
 
