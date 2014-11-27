@@ -13,7 +13,7 @@ import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -48,6 +48,8 @@ public class ViewSuppProfileBackingBean extends
 						.getReviewApplicationSupplierProfileBasePage(applType);
 
 			}
+		}else{
+			SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
 		}
 
 		fc.getApplication().getNavigationHandler()
