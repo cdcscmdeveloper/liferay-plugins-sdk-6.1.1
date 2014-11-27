@@ -558,6 +558,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setStopRequestId(Long.valueOf(flDocId));
+			flReqDTO.setStatusDesc(statusDesc);
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveStopInstruction(flReqDTO);
 			StopInstrBackingBean siBB = new StopInstrBackingBean();
 			siBB.getManagedBean().setSelectedTabIndex(0);
