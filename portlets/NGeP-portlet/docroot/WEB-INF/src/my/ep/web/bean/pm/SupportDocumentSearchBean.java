@@ -15,9 +15,11 @@ import my.ep.persistence.entity.pm.common.PmZone;
  */
 public class SupportDocumentSearchBean {
 	private Long docCategoryParam;
+	private String docCategoryParamCode;
 	private Long suppTypeParam;
 	private Long comTypeParam;
 	private Long appTypeParam;
+	private Long procureCatParam;
 	private Long pmZone;
 	private String docName;
 	private String businessCategory;
@@ -104,6 +106,30 @@ public class SupportDocumentSearchBean {
 	 */
 	public void setBusinessCategory(String businessCategory) {
 		this.businessCategory = businessCategory;
+	}
+	/**
+	 * @return the procureCatParam
+	 */
+	public Long getProcureCatParam() {
+		return procureCatParam;
+	}
+	/**
+	 * @param procureCatParam the procureCatParam to set
+	 */
+	public void setProcureCatParam(Long procureCatParam) {
+		this.procureCatParam = procureCatParam;
+	}
+	/**
+	 * @return the docCategoryParamCode
+	 */
+	public String getDocCategoryParamCode() {
+		return docCategoryParamCode;
+	}
+	/**
+	 * @param docCategoryParamCode the docCategoryParamCode to set
+	 */
+	public void setDocCategoryParamCode(String docCategoryParamCode) {
+		this.docCategoryParamCode = docCategoryParamCode;
 	}
 	
 	

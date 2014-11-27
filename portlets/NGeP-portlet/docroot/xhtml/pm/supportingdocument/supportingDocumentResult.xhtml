@@ -12,21 +12,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:dataTable id="dtSupportDocResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" rows="10"
 			 rowIndexVar="rowIndex" value="#{supportDocBackingBean.pmDocumentDataModel}" var="document"  lazy="true">
 			<ac:paginator for="dtSupportDocResult" />
+			<p:column headerText="#{lbl['lbl.pm.document.name']}"  style="width:50%; white-space:normal;">
+	            #{document.docName}
+	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pm.supplier.zone']}">  
 		    	#{document.pmZone.zoneName}
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.document.name']}"  style="width:20%">  
-	            #{document.docName}
+	        <p:column headerText="#{lbl['lbl.pm.restriction']}">  
+	            #{(document.byCompType or document.byAppType or document.byCategory or document.byProcureCat) ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no'] }
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.company.restriction']}">  
-	            #{document.byCompType ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no'] }
-	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.application.restriction']}">  
-	            #{document.byAppType ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no'] }
-	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.category.restriction']}">  
-	            #{document.byCategory ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no'] }
-	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
 	            #{(document.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	        </p:column>  
