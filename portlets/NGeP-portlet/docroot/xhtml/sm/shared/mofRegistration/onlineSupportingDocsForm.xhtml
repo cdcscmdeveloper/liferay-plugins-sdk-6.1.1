@@ -63,6 +63,17 @@
 				<p:outputLabel rendered="#{table.pmDocument.hardCopyReq}"
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
 					style="float: left;white-space: normal;" />
+					
+				<p:commandLink
+					rendered="#{table.pmDocument.download}"
+					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
+					update=":form" ajax="false">
+					<p:fileDownload value="#{backingBean.file}" />
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/download.png"
+						style="margin-right:2px;" />					
+				</p:commandLink>
+					
 				<p:commandLink oncomplete="attachDlg1.show();return false;"
 					rendered="#{!table.pmDocument.hardCopyReq}" update="@([id$=attachDlg1])"
 					action="#{backingBean.assignSelectedSupportDoc(table)}">
