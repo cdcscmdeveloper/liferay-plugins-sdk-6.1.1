@@ -191,6 +191,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 							if(selectedPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)){
 								// panel item general 
+								scQuote.setTitle(selectedPanelItem.getScRequestItem().getItemName());
 								getManagedBean().setPanelItemFlag(Boolean.TRUE);
 							} else if(selectedPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
 								// panel item specific 
@@ -531,7 +532,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				} else{
 					// panel item  - product by default when the cmItem is null
 					itemCode = 2;
-					ItemName= ctPanelItem.getItemName();
+					if(ctPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
+						ItemName= ctPanelItem.getItemName();
+					}
 				}
 				uom = ctPanelItem.getPmUom();
 			}
@@ -602,11 +605,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					
 						templateSpecBackingBean.addQuestion(prodTpl ,productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
 						TplSpecQuestion prodQuestion = productQuestions.get(productQuestions.size()-1);
-
 						prodQuestion.setClUom(uom);
 						prodQuestion.setCmItem(cmItem);
 						prodQuestion.setClItem(ItemName);
-						
 					}
 				}
 				prodTpl.setTplSpecQuestions(productQuestions);
