@@ -21,14 +21,15 @@
 				</f:facet>
 				<ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20"
 					 readonly="true"
-					value="#{resprofile.pmOrgProfiles.pmOrgValidity.orgCode}"					
+					value="#{resprofile.pmOrgProfiles.pmOrgValidity.orgCode}"
+					postUpdateListener="profileManagementBackingBean.updatePtjCode
+					(organisationBackingBean.managedBean.ptjGroupList.pmOrgProfiles)"					
 					saveObject="organisationBackingBean.managedBean.selectedPtj.pmOrgProfiles">
 				</ac:lov>
-
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.org.ptjName']}">
-				<p:inputText value="#{resprofile.groupName}" size="15" />
-			</p:column>
+			</p:column>			
+			 <p:column headerText="#{lbl['lbl.pm.org.ptjName']}" > 
+       			#{resprofile.groupName}
+	        </p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{resprofile.recordStatusFlg}"
 					required="true" style="margin-bottom: 5px;">

@@ -13,10 +13,10 @@
 					<td><p:selectOneMenu id="orgtypeId"
 							disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
 							label="#{lbl['lbl.pm.organisation.orgType']}"
-							value="#{organisationBackingBean.managedBean.orgType}"
+							value="#{organisationBackingBean.managedBean.orgTypeId}"
 							style="width: 275px;margin-bottom: 5px;" required="true">
 							<f:selectItems
-								value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
+								value="#{organisationBackingBean.getOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
 							<p:ajax event="change" update="@form"
 								listener="#{organisationBackingBean.resetOrgProfile}" />
 						</p:selectOneMenu></td>
@@ -191,10 +191,10 @@
 			</p:tab>
 
 
-			<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+		<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
-			</p:tab> -->
+			</p:tab>  -->
 		</p:tabView>
 	</p:panel>
 
