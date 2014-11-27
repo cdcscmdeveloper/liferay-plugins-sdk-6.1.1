@@ -69,16 +69,16 @@
 					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
 					update=":form" ajax="false">
 					<p:fileDownload value="#{backingBean.file}" />
-					<p:graphicImage library="ep/images/design" name="upload.png"
-						value="/resources/ep/images/design/download.png"
+					<p:graphicImage 
+						value="/css/images/design/download.png"
 						style="margin-right:2px;" />					
 				</p:commandLink>
 					
 				<p:commandLink oncomplete="attachDlg1.show();return false;"
 					rendered="#{!table.pmDocument.hardCopyReq}" update="@([id$=attachDlg1])"
 					action="#{backingBean.assignSelectedSupportDoc(table)}">
-					<p:graphicImage library="ep/images/design" name="upload.png"
-						value="/resources/ep/images/design/upload.png"
+					<p:graphicImage 
+						value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
 
