@@ -126,7 +126,7 @@
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</ui:fragment></td>
-					<td><p:selectOneMenu required="true"
+					<td><p:selectOneMenu
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							id="financialGovAutoScore"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"

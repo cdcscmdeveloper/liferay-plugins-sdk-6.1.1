@@ -136,7 +136,7 @@
 						</ui:fragment></td>
 					<td><p:selectOneMenu id="techGovNoOfContractsAutoScore"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-							required="true" label="#{lbl['lbl.sc.spec.asset.score.type']}"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change"
