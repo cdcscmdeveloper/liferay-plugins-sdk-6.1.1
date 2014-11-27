@@ -5,68 +5,62 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	<table style="width: 100%" >
-			<tr>
-				<td style="width: 15%;">
-					<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td style="width: 200px">
-					<p:inputText id="circularNoTxt" style="width:170px;" required="true" label="#{lbl['lbl.ct.circular.no']}"
-						disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" maxlength="60" />
-				</td>
-				<td>
+	
+	<h:panelGrid columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
+				
+					<h:panelGrid columns="2" style="float:right;">
+					    <p:outputLabel value="*" styleClass="mandatory" />
+					    <h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
+				   </h:panelGrid>
+				   <h:panelGrid columns="2">
+				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4"
+					 	required="true" maxlength="60"  disabled="#{panelBackingBean.managedBean.viewContract}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.circular.no']}"  autoResize="false"/>
 					<p:message for="circularNoTxt" display="icon" />
-				</td>
-				<td rowspan="2" valign="top" style="width: 15%;">
-					<p:outputLabel  value="#{lbl['lbl.ct.circular.name']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px; margin-bottom:5px;" label="#{lbl['lbl.ct.circular.name']}"
-						disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" maxlength="200" />
-				</td>
-				<td>
-					<p:message for="circularNameTxt" display="icon" />	
-				</td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" /></td>
-				<td><p:inputText  style="width:170px;"
-						disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" maxlength="60" /></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.ct.start.date']}" /></td>
-				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal"
-				   style="width:170px;" disabled="true">
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
-				<td></td>
-				<td><h:outputLabel value="#{lbl['lbl.ct.end.date']}" /></td>
-			    <td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
-			    style="width:170px;" disabled="true">
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
-				<td></td>
-			</tr>
-			<tr>
-			<td>
-				<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td><h:panelGroup id="uploadCircularPg">
-				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
-					update="uploadCircularPg, uploadCircularDlg" value="#{lbl['lbl.bpm.choose.file']}"
-					disabled="#{centralContractBackingBean.managedBean.viewContract}"
-					rendered="#{centralContractBackingBean.isCentralContractAdmin()}" />	
-				<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
-					action="#{centralContractBackingBean.downloadFile(1)}" />					
-			</h:panelGroup></td>
-			<td></td>
-			<td></td>
-		  </tr>
-	</table>
+				    </h:panelGrid>
+						
+					<h:panelGrid columns="2" style="float:right;">
+				        <p:outputLabel value="*" styleClass="mandatory" />
+				        <h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
+				   </h:panelGrid>
+				    <h:panelGrid columns="2">
+				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:230px;" maxlength="200" required="true" 
+						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
+						   label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+				         	<p:message for="circularNameTxt" display="icon" />
+				    </h:panelGrid>
+				    
+				      <h:outputLabel value="#{lbl['lbl.ct.start.date']}" />
+					   <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.startDate}" 
+					        id="popupButtonCal" style="width:170px;" disabled="true">
+				            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				       </p:inputText>
+				       
+				       <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+			          <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
+			              id="popupButtonCal1"  style="width:170px;" disabled="true">
+			     	      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+			     	  </p:inputText>
+			     	  
+			     	      <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+				    <p:inputText  style="width:170px;" maxlength="60" disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />
+				    <f:verbatim/><f:verbatim/>
+				       
+				       <h:panelGrid columns="2" style="float:right;">
+				          <p:outputLabel value="*" styleClass="mandatory" />
+				          <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				      </h:panelGrid>
+		             
+		             <h:panelGroup id="uploadCircularPg">
+			         	<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
+				          	update="uploadCircularPg, uploadCircularDlg" value="#{lbl['lbl.bpm.choose.file']}"
+					        disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
+				            <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
+					            action="#{centralContractBackingBean.downloadFile(1)}" />					
+			         </h:panelGroup>
+				    
+			</h:panelGrid>
 	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="false" 
 	    resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
