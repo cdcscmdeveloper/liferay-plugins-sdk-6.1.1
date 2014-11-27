@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +17,6 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -62,7 +60,6 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
@@ -135,8 +132,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} finally {
 			applRevisionSO = null;
 		}
-
-		constructMessage();
+		
+		//show message if supp profile not ready
+		if(!getManagedBean().isReviewApplicationExist()){
+			SmApplicationUtil.showSuppProfileNotReadyMsg(FacesContext
+					.getCurrentInstance());
+		}
+		
 	}
 
 	public boolean reloadApplication() {
@@ -1031,17 +1033,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setActiveCategoryList(catList);
 	}
 
-	public void constructMessage() {
-		if (!getManagedBean().isReviewApplicationExist()) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721212,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		}
-	}
-
 	private void initBumiRecommendNote() {
 		getManagedBean().setBumiRecommendationNote("");
 		if (getManagedBean().getSmAppl() != null) {
@@ -1106,7 +1097,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 				}
 			}
-		}else{
+		} else {
 			getManagedBean().setReviewApplicationExist(false);
 		}
 	}

@@ -1,13 +1,10 @@
 package my.ep.web.backingbean.sm.applicationView;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.constant.MessageConst;
-import my.ep.util.MessageUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 
@@ -37,6 +34,8 @@ public class ViewPreRenderSmApplBackingBean {
 					applNo.length()).equals("APP") ? SmApplicationUtil
 					.getReviewApplicationBasePage(applType) : SmApplicationUtil
 					.getReviewApplicationSupplierBasePage(applType);
+		}else{
+			SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
 		}
 
 		fc.getApplication().getNavigationHandler()
