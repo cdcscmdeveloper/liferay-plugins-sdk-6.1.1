@@ -435,6 +435,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
+			log.info("getDropdownCodeValuesBySearchBean >>>>>>> " + face.getUserLocale());
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
 				items[i++] = new SelectItem(parameterDesc.getPmParameter()
