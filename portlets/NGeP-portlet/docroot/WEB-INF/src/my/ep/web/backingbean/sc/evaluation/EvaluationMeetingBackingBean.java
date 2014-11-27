@@ -69,7 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
-import my.ep.type.aut.SearchOperator;
+import my.ep.type.aut.SearchOperator;		
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -82,6 +82,7 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -1048,6 +1049,38 @@ public class EvaluationMeetingBackingBean extends
 
 			return null;
 		}
+	}
+
+	// Set member Role DropDown Values Set to List
+	public void chnageMemberRole(int index,
+			List<ScQtCommitteeActivity> committeeActivity) {
+		ScQtCommitteeActivity activity = committeeActivity.get(index);
+
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.COMMITTEE_ROLE);
+
+		for (PmParameterDesc paramDesc : localParamDesc) {
+			if (null != activity.getScCommitteeMember().getMemberRole()
+					.getParameterId()) {
+				if (paramDesc
+						.getPmParameter()
+						.getParameterId()
+						.equals(Long.valueOf(activity.getScCommitteeMember()
+								.getMemberRole().getParameterId()))) {
+
+					activity.getScCommitteeMember().setMemberRole(
+							paramDesc.getPmParameter());
+					break;
+				}
+			}
+		}
+
+		this.getManagedBean().getCommitteeMemberActivity().set(index, activity);
+
+	}
+
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
 	}
 
 	private class existingUserPagingDataModel extends PagingDataModel<PmUser> {
