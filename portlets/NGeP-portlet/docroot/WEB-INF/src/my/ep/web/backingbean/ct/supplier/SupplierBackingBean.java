@@ -781,7 +781,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				           contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				           reqDTO.setLoaId(getManagedBean().getLoaId());
 				         
-				           resDTO = contractSO.retrieveContractByLoaId(reqDTO);
+				           resDTO = contractSO.retrieveFactoringDetailsByLoaId(reqDTO);
 			          	   if(resDTO.isSuccessful()) {
 			          		      getManagedBean().setCtContract(resDTO.getContract());
 					               if(getManagedBean().getCtContract().getCtFactoring() != null &&  getManagedBean().getCtContract().isFactored() &&
