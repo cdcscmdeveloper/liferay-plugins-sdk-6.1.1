@@ -119,7 +119,8 @@
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:selectOneMenu id="ministry" value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" style="width:300px">
+                 <p:selectOneMenu id="ministry" style="width:300px"
+                      value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
                  </p:selectOneMenu>
                  <p:selectOneMenu for="ptjcodename" 
@@ -143,7 +144,11 @@
               <p:dataTable id="tableAgency" var="pmVar" value="#{contractDetailsBackingBean.agencyDataModel}" 
                  rowIndexVar="rowIndex" selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                   <ac:paginator for="tableAgency"/>
-                    <p:column selectionMode="multiple" style="width:18px;"/>        
+                    <p:column selectionMode="multiple" style="width:18px;"> 
+                         <f:facet name="header">
+                             <ac:iconTooltip value="#{lbl['lbl.ct.agency.popup.chkBox']}"/>
+		               </f:facet>
+                    </p:column>       
                     <p:column headerText="#{lbl['lbl.ct.ptj.code']}">
                        <p:outputLabel value="#{pmVar.orgCode}" style="float:left;"/>
 					</p:column>
