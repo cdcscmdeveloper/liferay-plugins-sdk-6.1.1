@@ -115,10 +115,7 @@
 						value=""
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" />
 					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"/>
-					<p:spacer width="5" /> <h:outputText 
-						value="#{lbl['lbl.fl.zonal.price']}" /> <p:selectBooleanCheckbox style="vertical-align:-4px"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" /></td>
+				</td>
 
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
@@ -161,6 +158,14 @@
 				<td><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
+				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" /></td>
 			</tr>
 		</table>
 	</p:panel>
