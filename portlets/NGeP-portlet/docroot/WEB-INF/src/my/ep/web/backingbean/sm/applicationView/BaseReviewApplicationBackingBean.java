@@ -114,10 +114,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			// checking if SER file not exist then recreate
 			createSerFileIfNotExist(smAppl);
-			
-			if(getManagedBean().isReviewApplicationExist()){
-				applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+
+			if (getManagedBean().isReviewApplicationExist()) {
+				applRevisionSO = (ISmApplRevisionSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT,
 								ISmApplRevisionSO.class);
 
 				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
@@ -128,7 +129,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.readApplicationHist(reqDTO);
 				setApplication(resDTO);
 			}
-			
+
 		} catch (NullPointerException ne) {
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
@@ -1064,41 +1065,49 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private void createSerFileIfNotExist(SmAppl smApplFromSuppProfile) {
 		log.info("inside createSerFileIfNotExist....");
 		getManagedBean().setReviewApplicationExist(true);
-		String applNo = getManagedBean().getApplicationNoParam().substring(0,
-				getManagedBean().getApplicationNoParam().length() - 4);
-		String serType = getManagedBean()
-				.getApplicationNoParam()
-				.substring(
-						getManagedBean().getApplicationNoParam().length() - 3,
-						getManagedBean().getApplicationNoParam().length())
-				.equals("APP") ? "APP" : "SUP";
 
-		if (!SmCommonUtil.isSerFileExist(applNo, serType)) {
-			if (getManagedBean().isViewSupplierProfile()) {
-				if (smApplFromSuppProfile != null) {
-					SmCommonUtil.createSerFile(smApplFromSuppProfile, serType);
-				} else {
-					log.info("smApplFromSuppProfile is null when attempting to create SER file....");
-					getManagedBean().setReviewApplicationExist(false);
-				}
-			} else {
-				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-				reqDTO.setApplNo(applNo);
-				IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								IMofRegistrationSO.class);
-				MofRegistrationResDTO resDTO = mofRegistrationSO
-						.retrieveSmApplWithChildByApplNo(reqDTO);
-				log.info("after retrieveSmApplWithChildByApplNo....");
+		if (getManagedBean().getApplicationNoParam() != null
+				&& StringUtils.isNotBlank(getManagedBean()
+						.getApplicationNoParam())) {
+			String applNo = getManagedBean().getApplicationNoParam().substring(
+					0, getManagedBean().getApplicationNoParam().length() - 4);
+			String serType = getManagedBean()
+					.getApplicationNoParam()
+					.substring(
+							getManagedBean().getApplicationNoParam().length() - 3,
+							getManagedBean().getApplicationNoParam().length())
+					.equals("APP") ? "APP" : "SUP";
 
-				if (resDTO.getSmAppl() != null) {
-					SmCommonUtil.createSerFile(resDTO.getSmAppl(), serType);
+			if (!SmCommonUtil.isSerFileExist(applNo, serType)) {
+				if (getManagedBean().isViewSupplierProfile()) {
+					if (smApplFromSuppProfile != null) {
+						SmCommonUtil.createSerFile(smApplFromSuppProfile,
+								serType);
+					} else {
+						log.info("smApplFromSuppProfile is null when attempting to create SER file....");
+						getManagedBean().setReviewApplicationExist(false);
+					}
 				} else {
-					log.info("smAppl is null when attempting to create SER file....");
-					getManagedBean().setReviewApplicationExist(false);
+					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setApplNo(applNo);
+					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_MANAGEMENT,
+									IMofRegistrationSO.class);
+					MofRegistrationResDTO resDTO = mofRegistrationSO
+							.retrieveSmApplWithChildByApplNo(reqDTO);
+					log.info("after retrieveSmApplWithChildByApplNo....");
+
+					if (resDTO.getSmAppl() != null) {
+						SmCommonUtil.createSerFile(resDTO.getSmAppl(), serType);
+					} else {
+						log.info("smAppl is null when attempting to create SER file....");
+						getManagedBean().setReviewApplicationExist(false);
+					}
 				}
 			}
+		}else{
+			getManagedBean().setReviewApplicationExist(false);
 		}
 	}
 
