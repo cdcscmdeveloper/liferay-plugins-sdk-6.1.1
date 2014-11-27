@@ -217,10 +217,11 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			reqDTO.setApplId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getApplId());
+			reqDTO.setMof(false);
 
 			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IPersonnelSO.class);
-			PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCountForSuppUserMaint(reqDTO);
+			PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCount(reqDTO);
 
 			if(resDTO.getSmPersonnelList() != null && resDTO.getSmPersonnelList().size() < 3){
 				validPerCount = false;

@@ -157,27 +157,33 @@ public class SmApplicationUtil {
 		log.info("******* Validate Personnel Count Start ******");
 		int validPerCount = 0;
 		int count = 5;
+		int resultCount = 0;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setApplId(applId);
+		reqDTO.setMof(true);
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelResDTO resDTO = smPersonnelSO
-				.retrievePersonnelCountForSuppUserMaint(reqDTO);
+				.retrievePersonnelCount(reqDTO);
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 			count = 10;
 		}
-
-		if (resDTO.getSmPersonnelList() != null
-				&& resDTO.getSmPersonnelList().size() < count) {
-			if (count == 5
-					|| ((count == 10) && (resDTO.getSmPersonnelList().size() < 5)))
-				validPerCount = 1;
-			else
-				validPerCount = 2;
+		if (resDTO.getCount() != null){
+			resultCount = resDTO.getCount().intValue();
+			if(resultCount < count){
+				if (count == 5
+						|| ((count == 10) && (resDTO.getSmPersonnelList().size() < 5)))
+					validPerCount = 1;
+				else
+					validPerCount = 2;
+			} else {
+				validPerCount = 0;
+			}
 		} else {
 			validPerCount = 0;
 		}
+		
 		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
 	}
