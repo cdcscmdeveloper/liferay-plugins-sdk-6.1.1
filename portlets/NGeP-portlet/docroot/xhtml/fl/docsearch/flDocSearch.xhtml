@@ -20,12 +20,17 @@
 				.column-align-center {
 				text-align: center !important;
 				}
+				
+				.highlight-mark:before {
+ 					color: red;
+ 					content: "*";
+				}
 		</style>
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 			<h:panelGroup id="orderTypeSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" />
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">			
+					<p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.doc.maintain.order.type']}" />					
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
 						style="width: 314px;">
@@ -34,7 +39,7 @@
 						<p:ajax event="change" update="searchPanel"
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" style="padding-left : 300px;"/>
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" style="padding-left : 274px;"/>
 					<p:inputText size="28" maxlength="17" 
 						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText>
 				</h:panelGrid>
