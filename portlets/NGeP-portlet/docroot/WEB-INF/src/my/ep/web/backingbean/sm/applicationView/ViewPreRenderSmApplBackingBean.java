@@ -18,7 +18,7 @@ import com.liferay.compat.portal.util.PortalUtil;
 @ManagedBean(name = "viewPreRenderSmApplBackingBean")
 @RequestScoped
 public class ViewPreRenderSmApplBackingBean {
-	
+
 	public void navigateToRevAppl() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -28,24 +28,20 @@ public class ViewPreRenderSmApplBackingBean {
 		String applType = originalServletRequest
 				.getParameter("applicationType");
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String redirectToAppl = SmApplicationUtil
+				.getReviewApplicationErrorPage();
+
 		if (StringUtils.isNotBlank(applNo) && StringUtils.isNotBlank(applType)) {
-			String redirectToAppl = applNo.substring(applNo.length() - 3,
+			redirectToAppl = applNo.substring(applNo.length() - 3,
 					applNo.length()).equals("APP") ? SmApplicationUtil
 					.getReviewApplicationBasePage(applType) : SmApplicationUtil
 					.getReviewApplicationSupplierBasePage(applType);
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, redirectToAppl);
-		}else{
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721212,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
 		}
 
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, redirectToAppl);
+
 	}
-	
+
 }
