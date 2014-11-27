@@ -30,7 +30,8 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}"/></td>
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" 
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}"/></td>
 			</tr>
 		</table>
 	</p:panel>
