@@ -15,12 +15,15 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -32,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -99,33 +103,39 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	public void initMain() {
 		if (reloadApplication()) {
-			initApplication();
+			initApplication(null);
 		}
 		setTabParam();
 	}
 
-	public void initApplication() {
+	public void initApplication(SmAppl smAppl) {
 		ISmApplRevisionSO applRevisionSO = null;
 
 		try {
-			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISmApplRevisionSO.class);
+			// checking if SER file not exist then recreate
+			createSerFileIfNotExist(smAppl);
+			
+			if(getManagedBean().isReviewApplicationExist()){
+				applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISmApplRevisionSO.class);
 
-			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+				SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 
-			reqDTO.setDeSerFileName(getDeSerFileNameAndPath(getManagedBean()
-					.getApplicationNoParam()));
-			SmApplRevisionResDTO resDTO = applRevisionSO
-					.readApplicationHist(reqDTO);
-
-			setApplication(resDTO);
+				reqDTO.setDeSerFileName(getDeSerFileNameAndPath(getManagedBean()
+						.getApplicationNoParam()));
+				SmApplRevisionResDTO resDTO = applRevisionSO
+						.readApplicationHist(reqDTO);
+				setApplication(resDTO);
+			}
+			
 		} catch (NullPointerException ne) {
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
-			constructMessage();
 			applRevisionSO = null;
 		}
+
+		constructMessage();
 	}
 
 	public boolean reloadApplication() {
@@ -148,10 +158,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					getManagedBean().setApplicationNoParam(applicationNo);
 				}
 			}
-			getManagedBean().setHasPreviousApplication(
-					applicationNo.substring(applicationNo.length() - 3,
-							applicationNo.length()).equals("APP") ? true
-							: false);
 		}
 		return reload;
 	}
@@ -1024,14 +1030,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setActiveCategoryList(catList);
 	}
 
-	private void constructMessage() {
+	public void constructMessage() {
 		if (!getManagedBean().isReviewApplicationExist()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721211,
-									new String[] { getManagedBean()
-											.getApplicationNoParam() },
+							MessageUtils.getMessage(MessageConst.INFO_721212,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		}
@@ -1055,6 +1059,47 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									.isSupplierUser()));
 		}
 
+	}
+
+	private void createSerFileIfNotExist(SmAppl smApplFromSuppProfile) {
+		log.info("inside createSerFileIfNotExist....");
+		getManagedBean().setReviewApplicationExist(true);
+		String applNo = getManagedBean().getApplicationNoParam().substring(0,
+				getManagedBean().getApplicationNoParam().length() - 4);
+		String serType = getManagedBean()
+				.getApplicationNoParam()
+				.substring(
+						getManagedBean().getApplicationNoParam().length() - 3,
+						getManagedBean().getApplicationNoParam().length())
+				.equals("APP") ? "APP" : "SUP";
+
+		if (!SmCommonUtil.isSerFileExist(applNo, serType)) {
+			if (getManagedBean().isViewSupplierProfile()) {
+				if (smApplFromSuppProfile != null) {
+					SmCommonUtil.createSerFile(smApplFromSuppProfile, serType);
+				} else {
+					log.info("smApplFromSuppProfile is null when attempting to create SER file....");
+					getManagedBean().setReviewApplicationExist(false);
+				}
+			} else {
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setApplNo(applNo);
+				IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IMofRegistrationSO.class);
+				MofRegistrationResDTO resDTO = mofRegistrationSO
+						.retrieveSmApplWithChildByApplNo(reqDTO);
+				log.info("after retrieveSmApplWithChildByApplNo....");
+
+				if (resDTO.getSmAppl() != null) {
+					SmCommonUtil.createSerFile(resDTO.getSmAppl(), serType);
+				} else {
+					log.info("smAppl is null when attempting to create SER file....");
+					getManagedBean().setReviewApplicationExist(false);
+				}
+			}
+		}
 	}
 
 	public StreamedContent getFile() {
