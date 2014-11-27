@@ -1104,7 +1104,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				
+
 				pageUrl = retrieveTecNonGovCompanyExpDtls(scQtProposalChecklist);
 			}
 
@@ -1127,7 +1127,7 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				
+
 				pageUrl = retrieveTecCompanyExpDtls(scQtProposalChecklist);
 
 			} // to check proposalchecklist is technicalspecification -
@@ -1167,7 +1167,7 @@ public class SPDetailBackingBean extends
 
 	public String retrieveTecNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
-		
+
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
 						.getScQtCheckListValue().getYear());
@@ -1175,7 +1175,7 @@ public class SPDetailBackingBean extends
 		mindate.set(getManagedBean().getYear().intValue(), 0, 1);
 		getManagedBean().setNonFedEffMinDate(mindate.getTime());
 		getManagedBean().setNonFedMinDate(mindate.getTime());
-		
+
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1393,14 +1393,11 @@ public class SPDetailBackingBean extends
 
 	public String retrieveTecCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
-		
-		System.out.println("scQtProposalChecklist id is "+ scQtProposalChecklist.getQtProposalChecklistId());
-		System.out.println("scQtChecklist id is "+ scQtProposalChecklist.getScQtCheckList().getQtChecklistId());
-		
+
 		getManagedBean().setYear(
 				scQtProposalChecklist.getScQtCheckList()
 						.getScQtCheckListValue().getYear());
-		
+
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1414,7 +1411,7 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList()
 					.getScQtCheckListValue().getYear().intValue());
-			
+
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
@@ -1632,11 +1629,12 @@ public class SPDetailBackingBean extends
 
 	public String retrieveFinNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+/*
+			getManagedBean().setYear(
+					scQtProposalChecklist.getScQtCheckList()
+							.getScQtCheckListValue().getYear());
+		*/
 
-		getManagedBean().setYear(
-				scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListValue().getYear());
-		
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1659,6 +1657,7 @@ public class SPDetailBackingBean extends
 
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
+
 			this.getManagedBean().setScQtPRPExperienceNCheckLists(
 					prpExperienceNCheckLists);
 
@@ -2295,7 +2294,7 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
 
 				if (scQtPRPExperience.getQtPrpExperienceId() != null
-						|| scQtPRPExperience.getQtPrpExperienceId() != 0) {
+						&& scQtPRPExperience.getQtPrpExperienceId() != 0) {
 					tobeDeletedExperiences.add(scQtPRPExperience);
 				}
 				// experienceList.remove(selectedExperienceList.get(i));
@@ -2372,7 +2371,7 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPCreditFacility facility : selectedCreditFacilitiesList) {
 
 				if (facility.getCreditFacilityId() != null
-						|| facility.getCreditFacilityId() != 0) {
+						&& facility.getCreditFacilityId() != 0) {
 					toDeleteCreditFacilitiesList.add(facility);
 				}
 
@@ -2436,7 +2435,7 @@ public class SPDetailBackingBean extends
 
 			for (ScQtPRPCashOnHand onHand : selectedCashOnHandList) {
 				if (onHand.getPrpCashOnHandId() != null
-						|| onHand.getPrpCashOnHandId() != 0) {
+						&& onHand.getPrpCashOnHandId() != 0) {
 					toDeleteCashOnHandList.add(onHand);
 				}
 
