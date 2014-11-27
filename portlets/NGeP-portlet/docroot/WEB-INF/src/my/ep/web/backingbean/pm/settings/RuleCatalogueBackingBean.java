@@ -79,60 +79,71 @@ public class RuleCatalogueBackingBean extends
 	public RuleCatalogueBackingBean() {
 		System.out
 				.println("........in constructor of RuleCatalogueBackingBean........");
-		IRuleSO ruleSO = null;
-		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					"pm", IRuleSO.class);
-			RuleReqDTO reqDTO = new RuleReqDTO();
-			reqDTO.setRuleType(RuleTypeConst.BOND);
-			reqDTO.setCompareValue("4000000");
-			RuleResDTO resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out.println("...>.200000...true............compareResult="
-					+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
-			reqDTO.setCompareValue("40000");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out
-					.println("...<=...20000.....false.............compareResult="
-							+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
-			reqDTO.setCompareValue("50000");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out
-					.println("...<=..20000 & 78888..true..............compareResult="
-							+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.GST);
-			reqDTO.setCompareValue("7");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out
-					.println("..==..6.......false..............compareResult="
-							+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.RESTRICTED_CATEGORY_FOR_QUTATION_TENDER);
-			reqDTO.setCompareValue("031021");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out
-					.println("..==....category......false..............compareResult="
-							+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.MULTIPLE_PROPOSAL_CATEGORY);
-			reqDTO.setCompareValue("061022");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out
-					.println("..==....category......true..............compareResult="
-							+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.QUTAION_THRESHOLD);
-			reqDTO.setCompareValue("1000000");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out
-					.println("..<=.500000......false..............compareResult="
-							+ resDTO.isCompareValueResult());
-			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_FEE);
-			reqDTO.setCompareValue("0.8");
-			resDTO = ruleSO.compareAValueWithRuleTypeValues(reqDTO);
-			System.out.println("..==.0.8......true..............compareResult="
-					+ resDTO.isCompareValueResult());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		IRuleSO ruleSO = null;
+//		try {
+//			boolean result = false;
+////			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+////					"pm", IRuleSO.class);
+//			RuleReqDTO reqDTO = new RuleReqDTO();
+//			reqDTO.setRuleType(RuleTypeConst.BOND);
+//			reqDTO.setCompareValue("200000");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out.println("...==..200000...true............compareResult="
+//					+ result);
+//			reqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+//			reqDTO.setCompareValue("1000");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out
+//					.println("...<=...20000.....false....(there is no value).........compareResult="
+//							+ result);
+//			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+//			reqDTO.setCompareValue("12000");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out
+//					.println("...<=..20000..true..............compareResult="
+//							+ result);
+//			reqDTO.setRuleType(RuleTypeConst.GST);
+//			reqDTO.setCompareValue("6.0");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out
+//					.println("..==..6.......true..............compareResult="
+//							+result);
+//			reqDTO.setRuleType(RuleTypeConst.RESTRICTED_CATEGORY_FOR_QUTATION_TENDER);
+//			reqDTO.setCompareValue("031021");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out
+//					.println("..==.no value...category......false..............compareResult="
+//							+ result);
+//			reqDTO.setRuleType(RuleTypeConst.MULTIPLE_PROPOSAL_CATEGORY);
+//			reqDTO.setCompareValue("990102");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out
+//					.println("..==....category......true..............compareResult="
+//							+ result);
+//			reqDTO.setRuleType(RuleTypeConst.QUTAION_THRESHOLD);
+//			reqDTO.setCompareValue("5000");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out
+//					.println("..<=.500000......true..............compareResult="
+//							+ result);
+//			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_FEE);
+//			reqDTO.setCompareValue("0.8");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out.println("..==.0.8......false(there is no fee ruletype..............compareResult="
+//					+ result);
+//			reqDTO.setRuleType(RuleTypeConst.SSM);
+//			reqDTO.setCompareValue("X");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out.println("..==.X......false..............compareResult="
+//					+ result);
+//			reqDTO.setRuleType(RuleTypeConst.SSM);
+//			reqDTO.setCompareValue("F");
+//			result = RuleConfigHelper.getInstance().compareAValueWithRuleTypeValues(reqDTO.getRuleType(), reqDTO.getCompareValue());
+//			System.out.println("..==.F......true..............compareResult="
+//					+ result);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public boolean isValidDateRange(Date effDate, Date ExpDate) {
@@ -777,7 +788,37 @@ public class RuleCatalogueBackingBean extends
 
 						}
 
-					} else {// if it's amount or percentage shouldn't be
+					}else if(ruleType.getRuleDataTypeId().getParameterCode()
+							.equals("M")){
+					
+							log.info(".........................baseValueToCompare.getRuleValue()="
+									+ baseValueToCompare.getRuleValue());
+							log.info(".........................value.getRuleValue()="
+									+ value.getRuleValue());
+							if (value.getRuleValue() == baseValueToCompare.getRuleValue()) {
+								log.info("..............is overlapped= "
+										+ isDateOverlaped(
+												baseValueToCompare.getEffDate(),
+												baseValueToCompare.getExpDate(),
+												value.getEffDate(),
+												value.getExpDate()));
+								if (isDateOverlaped(
+										baseValueToCompare.getEffDate(),
+										baseValueToCompare.getExpDate(),
+										value.getEffDate(), value.getExpDate())) {
+									log.info("................befor throw exeption for Parameter code rule type...................");
+									log.info("............ value.getRuleValue()="
+											+ value.getRuleValue());
+									// hit error and return
+									throw new EpException(
+											MessageConst.ERROR_770110,
+											new String[] { ruleType
+													.getRuleTypeDesc() });
+								}
+
+							}
+					}else {// if it's amount or percentage shouldn't be
+					
 							// overlapped
 							// log.info("..............is overlapped= "+isDateOverlaped(
 						// baseValueToCompare.getEffDate(),
