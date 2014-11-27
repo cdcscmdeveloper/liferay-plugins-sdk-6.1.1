@@ -41,6 +41,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private OrganisationSearchBean organisationSearchBean;
 
 	private String orgType;
+	private Long orgTypeId;
 	// Org Details
 	private PmOrgProfile orgProfile;
 	private PmOrgValidity orgValidity = new PmOrgValidity();
@@ -61,6 +62,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmDistrict> districtList;
 
 	// Delivery Address
+	private List<PmAddress> deliveryAddresList;
 	private PmAddress deliveryAddress;
 	private PmContact deliveryContactPerson;
 	private List<PmAddressType> deliveryAddressTypeList;
@@ -82,7 +84,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 	private List<PmPtjGroup> ptjGroupList;
 	private List<PmPtjGroup> selectedPtjGroup;
-	private PmPtjGroup selectedPtj;
+	private PmPtjGroup selectedPtj= new PmPtjGroup();
 
 	private DualListModel<PmUser> supplierUsers;
 	private List<PmUser> sourceUsers;
@@ -91,6 +93,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
+		deliveryAddress= new PmAddress();
 		officeContactPerson = new PmContact();
 		deliveryContactPerson = new PmContact();
 		orgProfile = new PmOrgProfile();
@@ -726,5 +729,36 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setOrganisationSearchBean(OrganisationSearchBean organisationSearchBean) {
 		this.organisationSearchBean = organisationSearchBean;
 	}
+
+	/**
+	 * @return the deliveryAddresList
+	 */
+	public List<PmAddress> getDeliveryAddresList() {
+		return deliveryAddresList;
+	}
+
+	/**
+	 * @param deliveryAddresList the deliveryAddresList to set
+	 */
+	public void setDeliveryAddresList(List<PmAddress> deliveryAddresList) {
+		this.deliveryAddresList = deliveryAddresList;
+	}
+
+	/**
+	 * @return the orgTypeId
+	 */
+	public Long getOrgTypeId() {
+		return orgTypeId;
+	}
+
+	/**
+	 * @param orgTypeId the orgTypeId to set
+	 */
+	public void setOrgTypeId(Long orgTypeId) {
+		this.orgTypeId = orgTypeId;
+	}
+
+
+	
 
 }

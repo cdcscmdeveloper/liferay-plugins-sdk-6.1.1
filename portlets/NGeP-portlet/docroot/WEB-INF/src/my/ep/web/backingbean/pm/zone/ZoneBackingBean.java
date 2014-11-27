@@ -49,6 +49,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
 
+	public ZoneBackingBean() {
+		resetZoneSearchBean();
+	}
+
 	public void preLoading() {
 		log.info("preLoading");
 		this.resetZoneSearchBean();
@@ -63,10 +67,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	public void resetZoneSearchBean() {
 		log.info("ZoneSearchBean");
 		this.getManagedBean().setZoneSearchBean(new ZoneSearchBean());
-	}
-
-	public ZoneBackingBean() {
-
 	}
 
 	public void searchZone() {
@@ -104,7 +104,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
 
 			for (PmZoneState zoneSta : stateZones) {
-				
+
 				zoneSta.setPmZone(zone);
 
 			}

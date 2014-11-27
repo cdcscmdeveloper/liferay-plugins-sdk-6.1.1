@@ -7,7 +7,7 @@
 	<p:panel styleClass="sampleDetails">
 
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.orgProfile.pmAddressTypes}"
+			value="#{organisationBackingBean.managedBean.deliveryAddresList}"
 			var="address" rowIndexVar="index" rowKey="#{address}"
 			selection="#{organisationBackingBean.managedBean.selectedDelAddressTypes}">
 
@@ -17,15 +17,15 @@
 			<ac:paginator for="deliveryAddressId" />
 
 			<p:column headerText="#{lbl['lbl.pm.address.address']}">
-				<h:outputText value="#{address.pmAddress.address1}" />
+				<h:outputText value="#{address.address1}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.district']}"
 				style="width : 15%">
-				<h:outputText value="#{address.pmAddress.pmDistrict.districtName}" />
+				<h:outputText value="#{address.pmDistrict.districtName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.state']}"
 				style="width : 15%">
-				<h:outputText value="#{address.pmAddress.pmState.stateName}" />
+				<h:outputText value="#{address.pmState.stateName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.organisation.status']}"
 				style="width : 5%">
@@ -34,16 +34,12 @@
 			<p:column >
 				<p:commandLink oncomplete="addressPopup.show();"
 					action="#{organisationBackingBean.editDeliveryAddress(address)}"
-					update="deliveryAddressId" style="padding-right:5px">
+					style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
 
 			</p:column>
-
-
-
-
 		</p:dataTable>
 		<div align="right">
 
