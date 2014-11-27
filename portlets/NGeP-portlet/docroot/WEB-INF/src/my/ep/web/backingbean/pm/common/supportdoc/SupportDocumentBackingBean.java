@@ -631,11 +631,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	}
 	
 	/**
-	 * retrieve document category
+	 * retrieve document category (parameterId)
 	 * 
 	 * @return SelectItem[]
 	 */
-	public SelectItem[] documentCategoryOptions() {
+	public SelectItem[] documentCategoryOptions(boolean byId) {
 		log.info("documentCategoryOptions");
 		SelectItem[] items = null;
 		try {
@@ -644,11 +644,20 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
-		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterId(), 
-		    			parameterDesc.getCodeName());
+		    if(byId){
+		    	 for(PmParameterDesc parameterDesc : parameterDescs) {
+				    	items[i++] = new SelectItem(
+				    			parameterDesc.getPmParameter().getParameterId(), 
+				    			parameterDesc.getCodeName());
+				    }
+		    }else{
+		    	 for(PmParameterDesc parameterDesc : parameterDescs) {
+				    	items[i++] = new SelectItem(
+				    			parameterDesc.getPmParameter().getParameterCode(), 
+				    			parameterDesc.getCodeName());
+				    }
 		    }
+		   
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -661,6 +670,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		
 	    return items;
 	}
+	
+
 	
 	/**
 	 * retrieve categoryL3 details
@@ -870,7 +881,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	private void addDocRestrToDocument(PmDocument pmDocument, List <PmDocumentRestr> pmDocumentRestrs){
 		log.info("addDocRestrToDocument");
 		if(pmDocumentRestrs!=null && pmDocumentRestrs.size()>0){
+			int activeRecord = 0;
 			for(PmDocumentRestr documentRestr:pmDocumentRestrs){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == documentRestr.getRecordStatusFlg()){
+					activeRecord++;
+				}
 				if(documentRestr.isBrandNew()){
 					if(!documentRestr.isSelected()){
 						if(pmDocument.getPmDocumentRestrs()==null){
@@ -890,6 +905,15 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 						documentRestr.setSelected(true);
 					}
 				}
+			}
+			if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
+				if(activeRecord>0){
+					pmDocument.setByProcureCat(true);
+				}
+			}
+		}else{
+			if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
+				pmDocument.setByProcureCat(false);
 			}
 		}
 	}
@@ -1159,42 +1183,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		SupportDocumentSearchBean sdSearchBean = this.getManagedBean().getSupportDocSearchBean();
 			
 		// Doc Category
-		if(sdSearchBean.getDocCategoryParam()!=null && sdSearchBean.getDocCategoryParam()>0L){
-			log.info("+ docCategoryParam "  +sdSearchBean.getDocCategoryParam());
+		if(sdSearchBean.getDocCategoryParamCode()!=null && !"".equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())){
+			log.info("+ docCategoryParamCode "  +sdSearchBean.getDocCategoryParamCode());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("docCategoryCode.parameterId");
-			bean.setSearchValue(sdSearchBean.getDocCategoryParam());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		// App Type
-		if(sdSearchBean.getAppTypeParam()!=null && sdSearchBean.getAppTypeParam()>0L){
-			log.info("+ appTypeParam "  +sdSearchBean.getAppTypeParam());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmDocumentRestrs.appTypeCode.parameterId");
-			bean.setSearchValue(sdSearchBean.getAppTypeParam());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		// Comp Type
-		if(sdSearchBean.getComTypeParam()!=null && sdSearchBean.getComTypeParam()>0L){
-			log.info("+ comTypeParam "  +sdSearchBean.getComTypeParam());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmDocumentRestrs.companyTypeCode.parameterId");
-			bean.setSearchValue(sdSearchBean.getComTypeParam());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		// Supp Type
-		if(sdSearchBean.getSuppTypeParam()!=null && sdSearchBean.getSuppTypeParam()>0L){
-			log.info("+ suppTypeParam "  +sdSearchBean.getSuppTypeParam());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmDocumentRestrs.supplierTypeCode.parameterId");
-			bean.setSearchValue(sdSearchBean.getSuppTypeParam());
+			bean.setSearchField("docCategoryCode.parameterCode");
+			bean.setSearchValue(sdSearchBean.getDocCategoryParamCode());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
@@ -1208,16 +1202,61 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
-		//Business Category
-		if (sdSearchBean.getBusinessCategory() != null && !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
-			log.info("+ businessCategory "  +sdSearchBean.getBusinessCategory());
-			SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-			bean.setCaseInsensitive(true);
-			bean.setSearchField("pmDocumentRestrs.pmCategoryL3.categoryName");
-			bean.setSearchValue(sdSearchBean.getBusinessCategory());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
+		if(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())){
+			// App Type
+			if(sdSearchBean.getAppTypeParam()!=null && sdSearchBean.getAppTypeParam()>0L){
+				log.info("+ appTypeParam "  +sdSearchBean.getAppTypeParam());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmDocumentRestrs.appTypeCode.parameterId");
+				bean.setSearchValue(sdSearchBean.getAppTypeParam());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+			// Comp Type
+			if(sdSearchBean.getComTypeParam()!=null && sdSearchBean.getComTypeParam()>0L){
+				log.info("+ comTypeParam "  +sdSearchBean.getComTypeParam());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmDocumentRestrs.companyTypeCode.parameterId");
+				bean.setSearchValue(sdSearchBean.getComTypeParam());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+			// Supp Type
+			if(sdSearchBean.getSuppTypeParam()!=null && sdSearchBean.getSuppTypeParam()>0L){
+				log.info("+ suppTypeParam "  +sdSearchBean.getSuppTypeParam());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmDocumentRestrs.supplierTypeCode.parameterId");
+				bean.setSearchValue(sdSearchBean.getSuppTypeParam());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+			
+			//Business Category
+			if (sdSearchBean.getBusinessCategory() != null && !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
+				log.info("+ businessCategory "  +sdSearchBean.getBusinessCategory());
+				SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+				bean.setCaseInsensitive(true);
+				bean.setSearchField("pmDocumentRestrs.pmCategoryL3.categoryName");
+				bean.setSearchValue(sdSearchBean.getBusinessCategory());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+		}else{
+			// Procurement Category
+			if(sdSearchBean.getProcureCatParam()!=null && sdSearchBean.getProcureCatParam()>0L){
+				log.info("+ procureCatParam "  +sdSearchBean.getProcureCatParam());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmDocumentRestrs.procurementCatCode.parameterId");
+				bean.setSearchValue(sdSearchBean.getProcureCatParam());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
 		}
+		
 
 		//base on the flag, default list is either select all or empty
 		if(isEmpty && !isSearchable){
