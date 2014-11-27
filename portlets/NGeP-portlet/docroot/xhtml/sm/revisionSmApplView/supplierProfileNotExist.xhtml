@@ -9,18 +9,27 @@
 
 
 	<ui:define name="resourceSection">
+		<style>
+			.divmsginfo {
+			height: 13px;
+			padding: 7px 10px 10px 10px;
+			background-color: #F1FBD1;
+			border-color: #F1FBD1;
+			font-family: Arial,sans-serif;
+			font-size: 1.1em;
+			}
+			
+			.spaninfo {
+			color: #3a87ad;
+			}
+		</style>
 	</ui:define>
 
 
 	<ui:define name="contentSection">
 		<div id="content" style="width: 100%;">
-			<div id="errMsg" class="ui-messages ui-widget" aria-live="polite">
-				<div class="ui-messages-info ui-corner-all">
-					<span class="ui-messages-info-icon"></span>
-					<ul>
-						<li><span class="ui-messages-info-detail">#{lbl['lbl.sm.reviewappl.suppnotready.msg']}</span></li>
-					</ul>
-				</div>
+			<div class="divmsginfo">
+				<span class="spaninfo">#{lbl['lbl.sm.reviewappl.suppnotready.msg']}</span>
 			</div>
 		</div>
 	</ui:define>
