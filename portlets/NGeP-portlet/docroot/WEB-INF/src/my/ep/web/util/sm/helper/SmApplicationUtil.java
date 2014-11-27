@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -133,6 +134,7 @@ import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -164,16 +166,16 @@ public class SmApplicationUtil {
 		reqDTO.setMof(true);
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
-		PersonnelResDTO resDTO = smPersonnelSO
-				.retrievePersonnelCount(reqDTO);
+		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCount(reqDTO);
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 			count = 10;
 		}
-		if (resDTO.getCount() != null){
+		if (resDTO.getCount() != null) {
 			resultCount = resDTO.getCount().intValue();
-			if(resultCount < count){
+			if (resultCount < count) {
 				if (count == 5
-						|| ((count == 10) && (resDTO.getSmPersonnelList().size() < 5)))
+						|| ((count == 10) && (resDTO.getSmPersonnelList()
+								.size() < 5)))
 					validPerCount = 1;
 				else
 					validPerCount = 2;
@@ -183,7 +185,7 @@ public class SmApplicationUtil {
 		} else {
 			validPerCount = 0;
 		}
-		
+
 		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
 	}
@@ -389,8 +391,8 @@ public class SmApplicationUtil {
 		}
 		return basePage;
 	}
-	
-	public static String getReviewApplicationErrorPage(){
+
+	public static String getReviewApplicationErrorPage() {
 		return "/xhtml/sm/revisionSmApplView/supplierProfileNotExist.xhtml";
 	}
 
@@ -3032,6 +3034,15 @@ public class SmApplicationUtil {
 			siteSO = null;
 		}
 		return updateSuccess;
+	}
+
+	public static void showSuppProfileNotReadyMsg(FacesContext fc) {
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_721212,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 	}
 
 }
