@@ -117,7 +117,7 @@
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
-			widgetVar="prepareCommittee" rows="10"
+			widgetVar="prepareCommittee" rows="10" rowIndexVar="index"
 			value="#{evaluationMeetingBackingBean.managedBean.committeeMemberActivity}"
 			selection="#{evaluationMeetingBackingBean.managedBean.committeeActivitySelect}"
 			rowKey="#{committeeMember}">
@@ -186,6 +186,8 @@
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+						<p:ajax event="change" 	process="@this" partialSubmit="true" 
+							listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
 					</p:selectOneMenu>
 					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 				</ui:fragment>
