@@ -389,6 +389,10 @@ public class SmApplicationUtil {
 		}
 		return basePage;
 	}
+	
+	public static String getReviewApplicationErrorPage(){
+		return "/xhtml/sm/revisionSmApplView/supplierProfileNotExist.xhtml";
+	}
 
 	public static StatusResDTO setApplPmStatus(String statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
