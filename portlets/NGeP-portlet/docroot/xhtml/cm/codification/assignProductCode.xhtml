@@ -9,107 +9,129 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="true"></p:messages>
 		<h:panelGroup id="contractedItemID">
-            
-            <div style="text-align: left;">
+
+			<div style="text-align: left;">
 				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-prev"
 					action="#{codificationBackingBean.backToContractedItem}" />
 
 			</div>
-				
-        <p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
-			<table width="100%;" >
-				<tr>
-					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.no']}:"></p:outputLabel></td>
-					<td><h:outputText style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}" /></td>
 
-					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.type']}:"></p:outputLabel></td>
-					<td><h:outputText value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}"/></td>
-				</tr>
-				<tr>
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
+				<table width="100%;">
+					<tr>
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;"
+								value="#{lbl['lbl.cm.doc.no']}:"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docNo}" /></td>
 
-					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.title']}:"></p:outputLabel></td>
-					<td colspan="3"><h:outputText style="white-space: normal!important;" styleClass="ppDisplayTextL" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.ptj']}:"></p:outputLabel></td>
-					<td colspan="3"><h:outputText style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}"/></td>
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;"
+								value="#{lbl['lbl.cm.doc.type']}:"></p:outputLabel></td>
+						<td><h:outputText
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.docType}" /></td>
+					</tr>
+					<tr>
 
-				</tr>
-				<tr>
-					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.createdDate']}:"></p:outputLabel></td>
-					<td><h:outputText value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}"/></td>
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;"
+								value="#{lbl['lbl.cm.doc.title']}:"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								styleClass="ppDisplayTextL"
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.title}" /></td>
+						<td />
+						<td />
+					</tr>
+					<tr>
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;"
+								value="#{lbl['lbl.cm.doc.ptj']}:"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.pmOrgProfile.parentOrgProfile.orgName}" /></td>
+						<td />
+						<td />
+					</tr>
+					<tr>
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;"
+								value="#{lbl['lbl.cm.doc.createdDate']}:"></p:outputLabel></td>
+						<td><h:outputText
+								value="#{codificationBackingBean.managedBean.selectedVPendingCodifiedItem.createdDate}" /></td>
 
-					<td><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
-					<td><h:outputText style="text-align :left" value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}"/></td>
-				</tr>
-			</table>
-    </p:panel>
-		
-	<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
-			<p:dataTable value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}" var="requestItem" binding="#{table}"
-				 id="contractedTableId">
-				 	<p:column width="3%">
-					<f:facet name="header">
+						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;"
+								value="#{lbl['lbl.cm.doc.status']}:"></p:outputLabel></td>
+						<td><h:outputText style="text-align :left"
+								value="#{codificationBackingBean.getStatusDescById(codificationBackingBean.managedBean.selectedVPendingCodifiedItem.statusId)}" /></td>
+					</tr>
+				</table>
+			</p:panel>
+
+			<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
+				<p:dataTable
+					value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}"
+					var="requestItem" binding="#{table}" id="contractedTableId">
+					<p:column width="3%">
+						<f:facet name="header">
 							NO.
 						</f:facet>
 						#{table.rowIndex + 1}
 					</p:column>
-			
-				<p:column>
-					<f:facet name="header">
+
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.name']}
 						</f:facet>
-						<h:outputText style="white-space: normal!important;" value="#{requestItem.itemName}"/>
-						
+						<h:outputText style="white-space: normal!important;"
+							value="#{requestItem.itemName}" />
+
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.description']}
 						</f:facet>
-						<h:outputText value="#{requestItem.itemDesc==null?lbl['lbl.cm.no.specification']:requestItem.itemDesc}" style="white-space: normal!important;"/>
-						
-				</p:column>
-				<p:column>
-					<f:facet name="header">
+						<h:outputText
+							value="#{requestItem.itemDesc==null?lbl['lbl.cm.no.specification']:requestItem.itemDesc}"
+							style="white-space: normal!important;" />
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.type']}
 						</f:facet>
 						#{codificationBackingBean.getParameterDesc(requestItem.itemType)}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.uom']}
 						</f:facet>
-						<h:outputText style="white-space: normal!important;" value="#{requestItem.uom.uomName}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
+						<h:outputText style="white-space: normal!important;"
+							value="#{requestItem.uom.uomName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.temporary.code']}
 						</f:facet>
 						#{requestItem.tempUnspscCode}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.code']}
 						</f:facet>
 						#{requestItem.cmItem.extensionCode}
 						
 				</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
-					<p:commandButton value="#{lbl['lbl.cm.assign']}" disabled="#{!(requestItem.cmItem == null)}"
-						action="#{codificationBackingBean.assignProductCode(requestItem)}"
-						></p:commandButton>
-				</p:column>
-			</p:dataTable>
+						<p:commandButton value="#{lbl['lbl.cm.assign']}"
+							disabled="#{!(requestItem.cmItem == null)}"
+							action="#{codificationBackingBean.assignProductCode(requestItem)}"></p:commandButton>
+					</p:column>
+				</p:dataTable>
 
 
-</p:panel>
+			</p:panel>
 		</h:panelGroup>
 
-<ac:lovPopup />
+		<ac:lovPopup />
 	</ui:define>
 </ui:composition>
