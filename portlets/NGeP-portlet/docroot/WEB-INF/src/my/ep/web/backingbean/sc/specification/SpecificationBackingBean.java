@@ -1152,7 +1152,7 @@ public class SpecificationBackingBean extends
 
 	public void checkFinancialSpecStatus(ScQt scqt) {
 		retriveFinancialCheckList();
-		//retriveFinancialScoring();
+		// retriveFinancialScoring();
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
@@ -1883,25 +1883,20 @@ public class SpecificationBackingBean extends
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
 
-					if (null != tenderResDTO.getZoneDetails()
-							&& !tenderResDTO.getZoneDetails().isEmpty()) {
-						this.getManagedBean().setZoneGeneralTrees(
-								new ArrayList<TreeNode>());
-						for (TplSpecZoneDtl zoneDtl : tenderResDTO
-								.getZoneDetails()) {
-							getManagedBean()
-									.getZoneGeneralTrees()
-									.add(LocationSingleton
-											.getInstance()
-											.constuctTreeNode(
-													zoneDtl,
-													zoneDtl.getTplSpecZoneLocs()));
-							this.getManagedBean().setCtzones(true);
-						}
-
-					} else {
-						retriveZonesByCircularNo();
-					}
+					/*
+					 * if (null != tenderResDTO.getZoneDetails() &&
+					 * !tenderResDTO.getZoneDetails().isEmpty()) {
+					 * this.getManagedBean().setZoneGeneralTrees( new
+					 * ArrayList<TreeNode>()); for (TplSpecZoneDtl zoneDtl :
+					 * tenderResDTO .getZoneDetails()) { getManagedBean()
+					 * .getZoneGeneralTrees() .add(LocationSingleton
+					 * .getInstance() .constuctTreeNode( zoneDtl,
+					 * zoneDtl.getTplSpecZoneLocs()));
+					 * this.getManagedBean().setCtzones(true); }
+					 * 
+					 * }
+					 */
+					retriveZonesByCircularNo();
 
 				}
 
@@ -4556,9 +4551,8 @@ public class SpecificationBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			if ((null == this.getManagedBean().getScQt())
 					|| (this.getManagedBean().getScQt().isZonal()
-							&& !this.getManagedBean().getScQt().isPanel()
-							&& null != this.getManagedBean()
-									.getZoneGeneralTrees() && this
+
+					&& null != this.getManagedBean().getZoneGeneralTrees() && this
 							.getManagedBean().getZoneGeneralTrees().isEmpty())) {
 
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4583,7 +4577,7 @@ public class SpecificationBackingBean extends
 				}
 				this.getManagedBean().setPanelChange(scQt.isPanel());
 				if (scQt.isZonal()
-						&& !scQt.isPanel()
+
 						&& null != this.getManagedBean().getZoneGeneralTrees()
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
@@ -4620,13 +4614,17 @@ public class SpecificationBackingBean extends
 			 * QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 			 * tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			 */
+			this.getManagedBean().setCtzones(false);
 			if (isNotNullOREmpty(zonedtls)) {
-				for (TplSpecZoneDtl zone : zonedtls) {
 
-					ZonesBean zonesBean = new ZonesBean();
-					zonesBean.setTplSpecZoneDtl(zone);
-					zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
-					beans.add(zonesBean);
+				for (TplSpecZoneDtl zone : zonedtls) {
+					this.getManagedBean().setCtzones(true);
+					if (!this.getManagedBean().getScQt().isPanel()) {
+						ZonesBean zonesBean = new ZonesBean();
+						zonesBean.setTplSpecZoneDtl(zone);
+						zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
+						beans.add(zonesBean);
+					}
 					/*
 					 * if (null == this.getManagedBean()
 					 * .getTotalSuppliersSpecLoc()) {
