@@ -57,7 +57,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
 					<p:commandLink ajax="false"
-						actionListener="#{evaluationBackingBean.downloadDocuments(cashHand)}"
+						actionListener="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}"
 						process="@this" partialSubmit="true">
 						<p:graphicImage library="ep/images/design"
 							value="/resources/ep/images/design/icon_txt.png" />

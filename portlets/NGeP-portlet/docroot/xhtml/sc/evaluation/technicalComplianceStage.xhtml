@@ -60,7 +60,7 @@
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 						<p:commandLink ajax="false"
-							actionListener="#{evaluationBackingBean.downloadDocuments(complianceTechnicalSupplier)}"
+							actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
 							process="@this" partialSubmit="true">
 							<p:graphicImage library="ep/images/design"
 								value="/resources/ep/images/design/icon_txt.png" />

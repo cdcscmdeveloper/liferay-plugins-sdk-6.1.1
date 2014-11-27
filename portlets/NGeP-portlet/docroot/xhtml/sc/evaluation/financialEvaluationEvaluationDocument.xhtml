@@ -54,7 +54,7 @@
 					style="width:10%">
 					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
 						<p:commandLink ajax="false"
-							actionListener="#{evaluationBackingBean.downloadDocuments(evaFinSupplier)}"
+								actionListener="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}"
 							process="@this" partialSubmit="true">
 							<p:graphicImage library="ep/images/design"
 								value="/resources/ep/images/design/icon_txt.png" />
