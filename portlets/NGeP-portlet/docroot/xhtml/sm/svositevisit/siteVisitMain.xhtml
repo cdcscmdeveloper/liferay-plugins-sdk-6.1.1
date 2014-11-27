@@ -9,13 +9,17 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
-		<ui:include src="/xhtml/sm/svositevisit/siteVisitHeader.xhtml" />
+		<ui:param name="supplierName" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}" />
+		<ui:param name="applNo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applNo}" />
+		<ui:param name="applType" value="#{svoSiteVisitBackingBean.getsupplierApplTypeDesc(svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applType)}" />
+<!-- 		<ui:include src="/xhtml/sm/svositevisit/siteVisitHeader.xhtml" /> -->
+		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		<!-- 		<ui:include src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /> -->
 		<ui:param name="viewFlag" value="false" />
 		
 		<table class="customTbl">
 			<tr valign="top">
-				<td style="width:20%"><ui:include
+				<td class="sidemenutd" style="width:20%"><ui:include
 						src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /></td>
 
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
