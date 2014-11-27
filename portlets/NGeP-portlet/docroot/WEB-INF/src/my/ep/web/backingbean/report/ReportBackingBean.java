@@ -1771,7 +1771,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate all modules reports 
 	 */
 	public void generateReport(){
-		
+		rptGenBean = new ReportsGenerateBean();	
 		if((getManagedBean().getModuleValue()!=null)&&(getManagedBean().getReportValue()!=null)){
 			if(!(getManagedBean().getReportValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
 				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getSmApplicationFromDate()==null)&&(this.getSmApplicationToDate()!=null))||((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationToDate()==null)))||(((this.getSmReceiveFromDate()==null)&&(this.getSmReceiveToDate()!=null))||((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()==null)))||(((this.getSmPrintedFromDate()==null)&&(this.getSmPrintedToDate()!=null))||((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedToDate()==null)))||(((this.getSmExpiryFromDate()==null)&&(this.getSmExpiryToDate()!=null))||((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryToDate()==null))||((this.getScCreatedToMonth()==null)&&(this.getScCreatedFromMonth()!=null)||(this.getScCreatedToMonth()!=null)&&(this.getScCreatedFromMonth()==null)))){
@@ -1900,13 +1900,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void generateCTReport(){	
 		if(((this.getCtContractNo()!=null)&&(this.getCtContractNo()!=ReportConst.EMPTY_VAL))||((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL))||((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL))||((this.getCtComplete()!=null)&&(this.getCtComplete()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))){			
 			if((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPaymentTypeTotVar(ReportConst.CT_AMP_STATUS_EQ+this.getCtStatus());
+				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ+this.getCtStatus());
 			}
 			if((this.getCtContractNo()!=null)&&(this.getCtContractNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPaymentTypeTotVar(ReportConst.CT_AMP_CONTRACT_NO_EQ+this.getCtContractNo());
+				rptGenBean.setCtContractNoVar(ReportConst.CT_AMP_CONTRACT_NO_EQ+this.getCtContractNo());
 			}
 			if((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPaymentTypeTotVar(ReportConst.CT_AMP_AGREEMENT_EQ+this.getCtAgreement());
+				rptGenBean.setCtAgreementVar(ReportConst.CT_AMP_AGREEMENT_EQ+this.getCtAgreement());
 			}
 			if((this.getCtComplete()!=null)&&(this.getCtComplete()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCtCompleteVar(ReportConst.CT_AMP_COMPLETE_EQ+this.getCtComplete());
