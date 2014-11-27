@@ -393,7 +393,7 @@ public class SmApplicationUtil {
 	}
 
 	public static String getReviewApplicationErrorPage() {
-		return "/xhtml/sm/revisionSmApplView/supplierProfileNotExist.xhtml";
+		return "/xhtml/sm/userProfileMaintenance/outputMsg";
 	}
 
 	public static StatusResDTO setApplPmStatus(String statusId) {

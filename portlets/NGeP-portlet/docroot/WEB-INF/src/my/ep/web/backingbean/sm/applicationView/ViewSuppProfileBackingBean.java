@@ -33,7 +33,7 @@ public class ViewSuppProfileBackingBean extends
 				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		String redirectToAppl = "/xhtml/sm/userProfileMaintenance/outputMsg";
+		String redirectToAppl = SmApplicationUtil.getReviewApplicationErrorPage();
 		;
 
 		if (resDTO.getSmAppl() != null) {
