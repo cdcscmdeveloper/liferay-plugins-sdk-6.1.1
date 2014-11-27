@@ -605,7 +605,7 @@
 		</p:panel>
 		
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-			<p:dataTable id="itemListResultDt"
+			<p:dataTable id="itemListResultDt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{contractRequestBackingBean.contractItemPagingDataModel}" lazy="true"
 				var="item" rowIndexVar="rowIndex" rowKey="#{item}"
 				width="100%" 
