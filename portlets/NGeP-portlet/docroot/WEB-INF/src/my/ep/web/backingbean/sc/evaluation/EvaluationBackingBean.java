@@ -12,6 +12,10 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +28,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -107,6 +115,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -4684,5 +4693,101 @@ public class EvaluationBackingBean extends
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+
+	public <ATTACHMENT extends ScAttachment> File downloadEncryptedFile(
+			ATTACHMENT scAttachment) throws IOException {
+		if (scAttachment != null
+				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
+
+			return downloadEncryptedFile(getActualFilePath(scAttachment),
+					scAttachment.getFileName());
+		} else {
+			throw new EpException("Attachment not found.");
+		}
+	}
+
+	public File downloadEncryptedFile(String filePath, String fileName)
+			throws IOException {
+
+		log.info("Inside downloadFile(...)");
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="
+				+ fileName);
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
+
+		OutputStream out = response.getOutputStream();
+
+		if (filePath != null) {
+			InputStream input = null;
+			try {
+				log.info("Inside filePath(...)");
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
+
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				log.info("Inside filePaths(...)");
+				input = new FileInputStream(filePath);
+			}
+			// byte[] buffer = new byte[4096];
+			// int bytesRead;
+			// while ((bytesRead = input.read(buffer)) != -1) {
+			// out.write(buffer, 0, bytesRead);
+			// buffer = new byte[4096];
+
+			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+			try {
+				bc.InitCiphers();
+			} catch (InvalidKeyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchProviderException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidAlgorithmParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// decryption
+			try {
+				bc.CBCDecrypt(input, out);
+			} catch (ShortBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			input.close();
+		}
+
+		out.flush();
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
+
+		// use to upload back to database
+		File file = new File(filePath);
+		return file;
 	}
 }
