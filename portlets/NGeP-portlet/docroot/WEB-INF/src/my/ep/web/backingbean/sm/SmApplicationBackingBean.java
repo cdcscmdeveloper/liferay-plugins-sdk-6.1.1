@@ -6194,6 +6194,16 @@ public class SmApplicationBackingBean extends
 		finalFilePath = null;
 	}
 
+	public void downloadSignatureSuppDoc(String fileName, String filePath) {
+		String finalFilePath = filePath;
+		try {
+			commonDownload(finalFilePath, fileName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finalFilePath = null;
+	}
+	
 	public StreamedContent getFile() {
 		return file;
 	}
