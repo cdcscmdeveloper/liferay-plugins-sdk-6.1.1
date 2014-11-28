@@ -38,7 +38,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
 						    </f:facet>
-				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
@@ -81,7 +81,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
 						    </f:facet>    
-				            <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+				            <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>
@@ -122,7 +122,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
 						    </f:facet>  
-					        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+					        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"
 									listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.supplierTypes)}"/>
 							</p:selectOneMenu>
