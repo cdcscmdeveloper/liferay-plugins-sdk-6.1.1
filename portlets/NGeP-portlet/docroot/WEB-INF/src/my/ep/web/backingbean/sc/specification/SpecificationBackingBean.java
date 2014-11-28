@@ -11269,7 +11269,7 @@ public class SpecificationBackingBean extends
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 					.getTplSpecMaster().getSpecName());
 			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_COMPLETE);
+			status.setStatusId(QTStatusConst.TS_COMPLETED);
 			scQtCheckList.setPmStatus(status);
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
@@ -11360,7 +11360,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setTobeRemoveList(toBeRemoveList);
 		} else {
 			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_COMPLETE);
+			status.setStatusId(QTStatusConst.TS_COMPLETED);
 			scQtCheckList.setPmStatus(status);
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
