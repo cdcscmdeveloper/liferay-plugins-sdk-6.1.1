@@ -558,7 +558,7 @@ public class QTBusinessOwnerBackingBean extends
 		debugLogger("addCloneCommitteeMembersAction");
 		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
 				.getScCommittee();
-		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CM_COMPLETE));
+		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CMT_COMPLETED));
 
 		List<ScCommitteeMember> memberList = getManagedBean()
 				.getScCommitteeMemberList();
@@ -653,7 +653,7 @@ public class QTBusinessOwnerBackingBean extends
 		UserReqDTO userReqDTO = new UserReqDTO();
 		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
 				.getScCommittee();
-		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CM_COMPLETE));
+		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CMT_COMPLETED));
 
 		ParameterReqDTO parameterReqDTO1 = new ParameterReqDTO();
 		parameterReqDTO1.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
@@ -1017,7 +1017,7 @@ public class QTBusinessOwnerBackingBean extends
 		qtCommitte.setScQtMeetings(null);
 		ScCommittee committee = new ScCommittee();
 		PmStatus committeStatus = new PmStatus();
-		committeStatus.setStatusId(QTStatusConst.CM_PENDING_SUBMISSION);
+		committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
 		committee.setCommitteStatus(committeStatus);
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();

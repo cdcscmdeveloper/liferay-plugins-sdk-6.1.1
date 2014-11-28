@@ -665,13 +665,13 @@ public class QTDetailBackingBean extends
 							.getParameterCode())) {
 						if (!tabBean.getScQtCommittee().getScCommittee()
 								.getScCommitteeMembers().isEmpty()) {
-							if (!QTStatusConst.CM_COMPLETE.equals(tabBean
+							if (!QTStatusConst.CMT_COMPLETED.equals(tabBean
 									.getScQtCommittee().getScCommittee()
 									.getCommitteStatus().getStatusId())
 									&& !this.getManagedBean().isSaveFlow()) {
 								PmStatus committeStatus = new PmStatus();
 								committeStatus
-										.setStatusId(QTStatusConst.CM_PENDING_APPROVAL);
+										.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
 								tabBean.getScQtCommittee().getScCommittee()
 										.setCommitteStatus(committeStatus);
 							}
@@ -1305,13 +1305,13 @@ public class QTDetailBackingBean extends
 
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(
 					CommitteType.getValue("SpecificationCommittee"), qtId);
-			if (QTStatusConst.CM_COMPLETE.equals(specCommitte.getScCommittee()
+			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte.getScCommittee()
 					.getCommitteStatus().getStatusId())) {
 				this.getManagedBean().setCloneNeeded(true);
 			}
 			copyBoMembersToSpecCommitte(specCommitte, boCommitte);
 			boolean isEnable = false;
-			if (QTStatusConst.CM_REVISION.equals(specCommitte.getScCommittee()
+			if (QTStatusConst.CMT_PENDING_REVISION.equals(specCommitte.getScCommittee()
 					.getCommitteStatus().getStatusId())) {
 				isEnable = false;
 			} else if (currentStatus >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
@@ -1405,7 +1405,7 @@ public class QTDetailBackingBean extends
 						.equalsIgnoreCase(tabBean.getTitleName())) {
 					if (tabBean.getScQtCommittee().getScCommittee()
 							.getCommitteStatus().getStatusId()
-							.equals(QTStatusConst.CM_COMPLETE)) {
+							.equals(QTStatusConst.CMT_COMPLETED)) {
 						committeItem.setIcon("ui-icon-endorse");
 					}
 				}
@@ -1434,7 +1434,7 @@ public class QTDetailBackingBean extends
 				.getScCommitteeMembers();
 		List<ScCommitteeMember> boMembers = boCommitte.getScCommittee()
 				.getScCommitteeMembers();
-		if (QTStatusConst.CM_PENDING_SUBMISSION.equals(specCommitte
+		if (QTStatusConst.CMT_PENDING_SUBMISSION.equals(specCommitte
 				.getScCommittee().getCommitteStatus().getStatusId())
 				&& spceMembers.isEmpty()) {
 
@@ -2742,7 +2742,7 @@ public class QTDetailBackingBean extends
 				qtCommitte.setScQtMeetings(null);
 				ScCommittee committee = new ScCommittee();
 				PmStatus status = new PmStatus();
-				status.setStatusId(QTStatusConst.CM_PENDING_SUBMISSION);
+				status.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
 				committee.setCommitteStatus(status);
 				committee.setCommitteeType(parameterResDTO.getPmParameter());
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
@@ -3310,7 +3310,7 @@ public class QTDetailBackingBean extends
 			ScCommittee committe) {
 
 		if (null != committe
-				&& QTStatusConst.CM_PENDING_APPROVAL.equals(committe
+				&& QTStatusConst.CMT_PENDING_APPROVAL.equals(committe
 						.getCommitteStatus().getStatusId())) {
 			return true;
 		}

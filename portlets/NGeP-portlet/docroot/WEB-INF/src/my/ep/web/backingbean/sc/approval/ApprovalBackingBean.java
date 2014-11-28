@@ -331,7 +331,7 @@ public class ApprovalBackingBean extends
 			commSearchBean.getDataFilterBeans().add(
 					new SearchFilterBean("scCommittee.committeStatus.statusId",
 							SearchOperator.OPERATOR_NOT_EQUALS.value(),
-							QTStatusConst.CM_COMPLETE));
+							QTStatusConst.CMT_COMPLETED));
 
 			committeReqDTO.setCommSearchBean(commSearchBean);
 			CommitteResDTO resDTO = committeSO
@@ -513,10 +513,10 @@ public class ApprovalBackingBean extends
 						if (BpmOutcomeConst.BPM_REVISE
 								.equalsIgnoreCase(outcome)) {
 							committeStatus
-									.setStatusId(QTStatusConst.CM_REVISION);
+									.setStatusId(QTStatusConst.CMT_PENDING_REVISION);
 						} else {
 							committeStatus
-									.setStatusId(QTStatusConst.CM_COMPLETE);
+									.setStatusId(QTStatusConst.CMT_COMPLETED);
 						}
 						qtCommittee.getScCommittee().setCommitteStatus(
 								committeStatus);
