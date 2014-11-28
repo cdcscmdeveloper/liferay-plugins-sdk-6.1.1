@@ -9796,6 +9796,8 @@ public class SpecificationBackingBean extends
 				ScQt finChecklist = constructSpecCommitteDtls().getScQt();
 
 				specReqDTO.setScQt(finChecklist);
+				specReqDTO.setTobeRemoveList(getToBeRemoveList());
+				
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
