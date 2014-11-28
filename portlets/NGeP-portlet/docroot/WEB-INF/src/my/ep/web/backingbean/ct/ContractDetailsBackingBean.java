@@ -91,7 +91,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -261,6 +260,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        	String taskId = originalServletRequest.getParameter("taskId");
 		 	        if(taskId == null) {
 				         ConstructSideTabMenu();
+				 	    if(getManagedBean().getWarningPercentage()!=null) {
+					    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
+				    			MessageUtils.getMessage(MessageConst.INFO_745008, new String[]{getManagedBean().getCtContract().getContractNo(), getManagedBean().getWarningPercentage()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					    	getManagedBean().setWarningPercentage(null);
+					    }
 				      return;
 			       }
 
@@ -527,8 +532,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	if(getManagedBean().getCtContract().getCtFactoring() != null  &&
     		getManagedBean().getCtContract().getCtFactoring().getStatus() != null &&
     		getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
-    	    int temp =  getManagedBean().getCtContract().getCtFactoring().getExpDate().compareTo(new Date());
-   		    if(temp > 0 || temp == 0)
     		   return true;
     	 }
     	return false;
@@ -2088,6 +2091,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    getManagedBean().setViewContract(true);
 	    setValidateContractField(resDTO); 
 	    getManagedBean().setSelectedTabIndex(0);
+	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
+	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_PAGE;
 	}
 	
