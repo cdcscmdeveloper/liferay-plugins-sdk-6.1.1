@@ -3421,6 +3421,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				validateOrderQuantity();
 				checkMinimumQtyItem(getManagedBean().getFlRequest());
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
+					int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
+					Calendar today = Calendar.getInstance();
+					today.setTime(new Date());
+					today.add(Calendar.DATE, days);
+					if(today.getTime().after(expDate)) {
+						throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+					}
+				}
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
