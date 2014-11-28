@@ -30,8 +30,9 @@
 						<p:ajax event="dateSelect" process="@this"
 							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}"
 							update="proposalvalidityid, publishClosingDate" />
-					</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
-						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
+					</p:calendar> <h:inputText value="12:00 PM" disabled="true" size="4"
+						style="width: 50px" /> <p:message id="noticePublishMsg"
+						for="noticePublish" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
@@ -47,7 +48,8 @@
 						readonly="true" disabled="true" style="margin-top:5px;" size="30">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160; <h:inputText value="12:00PM" disabled="true" size="06" /></td>
+					</p:inputText>&#160;&#160; <h:inputText value="12:00 PM" disabled="true" size="4"
+						style="width: 50px" /></td>
 			</tr>
 			<c:if
 				test="#{approvalBackingBean.managedBean.qt.sampleReq eq 'true'}">
@@ -58,8 +60,9 @@
 							value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}"
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
-						<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
-							id="proposalPreparationMsg" for="proposalPreparation"
+						<h:inputText value="12:00 PM" disabled="true" size="4"
+							style="width: 50px" />
+						<p:message id="proposalPreparationMsg" for="proposalPreparation"
 							display="icon" /></td>
 				</tr>
 			</c:if>
