@@ -31,7 +31,7 @@
 			             mindate="#{suspensionBackingBean.currentDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			              readonlyInput="true" navigator="true"
 			             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-			             <p:ajax event="dateSelect" update="agencyDateExp" />
+			             <p:ajax event="dateSelect" process="@this" update="agencyDateExp" />
 			       </p:calendar>
 		       </p:column> 	
 	    
@@ -58,7 +58,7 @@
 			         <p:selectOneMenu value="#{data.recordStatusFlg}" style="width:85px;" disabled="#{suspensionBackingBean.managedBean.viewOnly}">
 			              <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				          <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				          <p:ajax event="change" process="@this" update=":form:agencyDetailsId"
+				          <p:ajax event="change" process="@this" update="agencyDateActive, agencyDateExp"
 					          listener="#{suspensionBackingBean.setSuspensionAgencyStatusValue(data)}" />
 			         </p:selectOneMenu>	
 	           </p:column> 		

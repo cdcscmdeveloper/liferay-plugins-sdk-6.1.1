@@ -154,10 +154,31 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		    getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		
-			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 )
-				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());	
-		    if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 ) 
-			 	 Collections.sort(getManagedBean().getContractVer().getCtAgencies(), new CtAgency());
+			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
+				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
+				 
+			 	 for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
+			 		//Get latest contract item and map with the sc request item
+			 		 for (CtContractItem latestContractItem : getManagedBean().getCtContract().getLatestContractVer().getCtContractItems()) {
+			 			 if (contractItem.getScRequestItem().getRequestNoteItemId().equals(latestContractItem.getScRequestItem().getRequestNoteItemId())) {
+			 				 getManagedBean().getItemMap().put(contractItem.getScRequestItem().getRequestNoteItemId(), latestContractItem);
+			 				 break;
+			 			 }
+			 		 }
+		 		 }
+			}			
+		    if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {
+			 	 Collections.sort(getManagedBean().getContractVer().getCtAgencies(), new CtAgency());			 	
+			 	 for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+			 		 //Get latest agency and map with the org profile
+			 		 for (CtAgency latestAgency : getManagedBean().getCtContract().getLatestContractVer().getCtAgencies()) {
+			 			 if (ctAgency.getOrgProfile().getOrgProfileId().equals(latestAgency.getOrgProfile().getOrgProfileId())) {
+			 				 getManagedBean().getAgencyMap().put(ctAgency.getOrgProfile().getOrgProfileId(), latestAgency);
+			 				 break;
+			 			 }
+			 		 }			 		
+			 	 }
+		    }    
 			 
 		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
@@ -185,24 +206,42 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 public void setSuspensionStatusValue(CtContractItem item) {		 
 		 for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
 			 if(ctItem.equals(item)) {		
-				 if(ctItem.getRecordStatusFlg().intValue() == 1){
-				      ctItem.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				      ctItem.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-				 } else {
-					 ctItem.setEffDate(getCurrentDate());
-				 }
+				 CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
+				 Date effDate = null;
+				 Date expDate = null;
+				 
+				 if(item.getRecordStatusFlg().intValue() == 1) {					 
+					 effDate = (latestVerItem.getRecordStatusFlg() == 0) ? getCurrentDate() : latestVerItem.getEffDate();
+					 expDate = (latestVerItem.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : latestVerItem.getExpDate();
+					 item.setEffDate(effDate);
+					 item.setExpDate(expDate);					
+			     } else {
+					 effDate = (latestVerItem.getRecordStatusFlg() == 0) ? latestVerItem.getEffDate() : getCurrentDate();
+					 expDate = (latestVerItem.getRecordStatusFlg() == 0) ?  latestVerItem.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
+					 item.setEffDate(effDate);
+					 item.setExpDate(expDate);		
+			     }
 			 }
 		 }
 	 }
 	 
-	 public void setSuspensionAgencyStatusValue(CtAgency agency){		 
-		 for(CtAgency ctAgency :this.getManagedBean().getContractVer().getCtAgencies()) {
+	 public void setSuspensionAgencyStatusValue(CtAgency agency){	
+		 for(CtAgency ctAgency  : getManagedBean().getContractVer().getCtAgencies()) {
 			 if(ctAgency.equals(agency)) {
-				 if(ctAgency.getRecordStatusFlg().intValue() == 1){
-				      ctAgency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				      ctAgency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				 CtAgency latestAgency = getManagedBean().getAgencyMap().get(agency.getOrgProfile().getOrgProfileId());
+				 Date effDate = null;
+				 Date expDate = null;
+				 
+				 if(ctAgency.getRecordStatusFlg().intValue() == 1) {
+					 effDate = (latestAgency.getRecordStatusFlg() == 0) ? getCurrentDate() : latestAgency.getEffDate();
+					 expDate = (latestAgency.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : latestAgency.getExpDate();
+					 ctAgency.setEffDate(effDate);
+					 ctAgency.setExpDate(expDate);					
 			     } else {
-				      ctAgency.setEffDate(getCurrentDate());
+			    	 effDate = (latestAgency.getRecordStatusFlg() == 0) ? latestAgency.getEffDate() : getCurrentDate();
+					 expDate = (latestAgency.getRecordStatusFlg() == 0) ? latestAgency.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
+					 ctAgency.setEffDate(effDate);
+					 ctAgency.setExpDate(expDate);		
 			     }
 			 }
 		 }  
@@ -379,5 +418,9 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
+	}
+	
+	public boolean isApprover() {
+		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
 }
