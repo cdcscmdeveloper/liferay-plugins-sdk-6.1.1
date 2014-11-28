@@ -47,6 +47,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -86,6 +87,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
+	
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
 	
 	public void preLoading(){
 		log.info("preLoading");
@@ -702,10 +713,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * @return SelectItem[] 
 	 */
 	public SelectItem[] getStatusOptions() {
-		SelectItem[] items =  new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-	    return items;
+
+	    return PmCommonUtil.getStatusOptionsDefault();
 	}
 	
 	/**
