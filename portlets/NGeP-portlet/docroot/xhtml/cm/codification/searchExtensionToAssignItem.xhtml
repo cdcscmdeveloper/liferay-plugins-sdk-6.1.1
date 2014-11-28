@@ -54,7 +54,7 @@
 
 			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 
-				<table style="width: 100%; margin-bottom: 4px; margin-top: 2px;">
+				<table style="width: 100%; margin-bottom: 4px;" >
 					<tr>
 						<td width="10%"><p:outputLabel
 								value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
@@ -103,8 +103,9 @@
 								style="white-space: normal!important;"
 								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
 					</tr>
+					<tr />
 					<tr>
-						<td><h:outputText style="font-weight: bold;"
+						<td colspan="2"><h:outputText style="font-weight: bold; text-align: left;"
 								value="#{lbl['lbl.cm.extension.attr']}"></h:outputText></td>
 
 
@@ -150,7 +151,6 @@
 					</tr>
 				</table>
 			</p:panel>
-
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					icon="ui-icon-search"
