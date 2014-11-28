@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ct.suspension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -13,6 +14,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -48,6 +50,8 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String textBeforeSign;
 	private String buttonAction;
 	private boolean viewOnly = false;
+	private HashMap<Long, CtAgency> agencyMap;
+	private HashMap<Long, CtContractItem> itemMap;
 	
 	public String getEditorValue() {
 		return editorValue;
@@ -171,5 +175,27 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
+	}
+
+	public HashMap<Long, CtAgency> getAgencyMap() {
+		if(agencyMap == null) {
+			setAgencyMap(new HashMap<Long, CtAgency>());
+		}
+		return agencyMap;
+	}
+
+	public void setAgencyMap(HashMap<Long, CtAgency> agencyMap) {
+		this.agencyMap = agencyMap;
+	}
+	
+	public HashMap<Long, CtContractItem> getItemMap() {
+		if(itemMap == null) {
+			setItemMap(new HashMap<Long, CtContractItem>());
+		}
+		return itemMap;
+	}
+
+	public void setItemMap(HashMap<Long, CtContractItem> itemMap) {
+		this.itemMap = itemMap;
 	}
 }
