@@ -22,7 +22,7 @@
 									showOn="button"
 									maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
 									<p:ajax event="dateSelect" process="@this"
-										listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
+										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
 										update="proposalvalidityid, closingDate" />
 								</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /></td>
 							<td><p:message id="noticePublishMsg" for="noticePublish"
