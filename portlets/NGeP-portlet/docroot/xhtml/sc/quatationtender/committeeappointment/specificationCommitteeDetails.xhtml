@@ -70,7 +70,7 @@
 				<ui:fragment rendered="#{specificationcommittee.PNP}">
 					<h:outputText value="Chairperson"
 						rendered="#{specificationcommittee.memberRole.parameterCode eq 'C'}"
-						disabled="#{QTStatusConst.CM_COMPLETE == committe.committeStatus.statusId}" />
+						disabled="#{QTStatusConst.CMT_COMPLETED == committe.committeStatus.statusId}" />
 						
 						<p:selectOneMenu  label="#{lbl['lbl.so.role']}" rendered="#{specificationcommittee.memberRole.parameterCode ne 'C'}"
 						value="#{specificationcommittee.memberRole.parameterId}"
