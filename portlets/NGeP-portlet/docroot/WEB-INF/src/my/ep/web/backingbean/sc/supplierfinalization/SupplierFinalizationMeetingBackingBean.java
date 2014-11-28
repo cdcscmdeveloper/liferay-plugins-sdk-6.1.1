@@ -1010,7 +1010,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			newScCommittee.setCommitteeId(null);
 			newScCommittee.setCommitteeType(oldScCommittee.getCommitteeType());
 			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.CM_COMPLETE);
+			status.setStatusId(QTStatusConst.CMT_COMPLETED);
 			newScCommittee.setCommitteStatus(status);
 			setUserDetails(newScCommittee);
 			
