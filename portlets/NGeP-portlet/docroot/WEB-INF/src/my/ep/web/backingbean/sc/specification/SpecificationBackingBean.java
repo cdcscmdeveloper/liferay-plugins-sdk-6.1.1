@@ -4576,6 +4576,7 @@ public class SpecificationBackingBean extends
 					scQt.setPmProcurementCategory(new PmParameter());
 				}
 				this.getManagedBean().setPanelChange(scQt.isPanel());
+				this.getManagedBean().setScQt(scQt);
 				if (scQt.isZonal()
 
 						&& null != this.getManagedBean().getZoneGeneralTrees()
@@ -4588,7 +4589,7 @@ public class SpecificationBackingBean extends
 					retriveNonpanelZoneDtls(tenderResDTO.getZoneDetails());
 
 				}
-				this.getManagedBean().setScQt(scQt);
+
 				if (null != scQt.getEstimatedAmount()) {
 					// setProcurementMode(scQt);
 					setEvaluationType(scQt);
@@ -4619,7 +4620,8 @@ public class SpecificationBackingBean extends
 
 				for (TplSpecZoneDtl zone : zonedtls) {
 					this.getManagedBean().setCtzones(true);
-					if (!this.getManagedBean().getScQt().isPanel()) {
+					if (null != this.getManagedBean().getScQt()
+							&& !this.getManagedBean().getScQt().isPanel()) {
 						ZonesBean zonesBean = new ZonesBean();
 						zonesBean.setTplSpecZoneDtl(zone);
 						zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
