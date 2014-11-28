@@ -2653,6 +2653,39 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	}
 	
+	private void populateContractList() {
+		Map<Long, CtActiveContractVO> contractTree = new HashMap<Long, CtActiveContractVO>();
+		getManagedBean().setContractListTable(new ArrayList<CtActiveContractVO>());
+		CtActiveContractVO activeContract = null;
+		CtActiveContractVO subActiveContract = null;
+		for(VCtActiveContract vCtActiveContract : getManagedBean().getActiveContractList()){
+			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
+				activeContract = contractTree.get(vCtActiveContract.getContract().getContractId());
+				if(activeContract.getActiveContractSubList() == null){
+					activeContract.setActiveContractSubList(new ArrayList<CtActiveContractVO>());
+				}
+				subActiveContract = new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
+				activeContract.getActiveContractSubList().add(subActiveContract);
+			}else{
+				activeContract = 
+					new CtActiveContractVO(vCtActiveContract.getContractNo(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId());
+				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+					if(activeContract.getActiveContractSubList() == null){
+						activeContract.setActiveContractSubList(new ArrayList<CtActiveContractVO>());
+					}
+					subActiveContract = new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
+					activeContract.getActiveContractSubList().add(subActiveContract);				
+				}
+				getManagedBean().getContractListTable().add(activeContract);
+				
+				contractTree.put(vCtActiveContract.getContract().getContractId(),activeContract);
+			}
+		}
+	}
+		
+		
+	
+	
 	public void updateDeliveryDate() {
 		Date startDate = getManagedBean().getFlRequest().getStartDate();
 		int deliveryTerm = 0;
@@ -3205,6 +3238,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
 		getManagedBean().setActiveContractList(resDTO.getActiveContractList());
 		getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
+		populateContractList();
 		populateContractListTree();
 		
 		FacesContext fc=FacesContext.getCurrentInstance();

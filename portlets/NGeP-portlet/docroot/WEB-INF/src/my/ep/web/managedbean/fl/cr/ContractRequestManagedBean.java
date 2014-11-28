@@ -44,6 +44,7 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.CtActiveContractVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
@@ -109,6 +110,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
 	private TreeNode contractListTree;
+	private List<CtActiveContractVO> contractListTable;
 
 	//getSI
 	private FlShippingInstr shippingInstr;
@@ -2381,6 +2383,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setValidated(boolean validated) {
 		this.validated = validated;
+	}
+
+	public List<CtActiveContractVO> getContractListTable() {
+		return contractListTable;
+	}
+
+	public void setContractListTable(List<CtActiveContractVO> contractListTable) {
+		this.contractListTable = contractListTable;
 	}
 
 }

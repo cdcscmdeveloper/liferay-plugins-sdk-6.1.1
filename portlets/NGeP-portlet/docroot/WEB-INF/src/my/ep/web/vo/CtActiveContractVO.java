@@ -4,6 +4,7 @@
 package my.ep.web.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmParameter;
 
@@ -41,6 +42,8 @@ public class CtActiveContractVO  {
     private Long contractId;
     
     private String phaseNo;
+    
+    private List<CtActiveContractVO> activeContractSubList;
     
     public CtActiveContractVO(String contractNo, String scheduleNo, String phaseNo, String circularNo,Date startEffective,Date endEffective,PmParameter fulfilmentType,PmParameter contractType,String BusinessRegNo,String mofNo, String supplierName,Long contractId) {
         this.contractNo = contractNo;
@@ -223,6 +226,14 @@ public class CtActiveContractVO  {
 	 */
 	public void setPhaseNo(String phaseNo) {
 		this.phaseNo = phaseNo;
+	}
+
+	public List<CtActiveContractVO> getActiveContractSubList() {
+		return activeContractSubList;
+	}
+
+	public void setActiveContractSubList(List<CtActiveContractVO> activeContractSubList) {
+		this.activeContractSubList = activeContractSubList;
 	}
     
 
