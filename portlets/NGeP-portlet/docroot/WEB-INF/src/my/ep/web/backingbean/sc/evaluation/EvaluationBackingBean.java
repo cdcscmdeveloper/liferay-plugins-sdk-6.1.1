@@ -40,6 +40,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -57,6 +58,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -74,7 +77,10 @@ import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -103,6 +109,7 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.AddressType;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -3958,8 +3965,79 @@ public class EvaluationBackingBean extends
 			}
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
+		} else {
+			String docDefinitionKey = scQtEvaluationReport.getPmDocument().getDocDefinitionKey();
+			scQtEvaluationReportAttachment = new ScQtEvaluationReportAttachment();
+			scQtEvaluationReportAttachment.setScQtEvaluationReport(scQtEvaluationReport);
+			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport.getScQt().getQtNo());
+			if (SourcingConstants.DOC_DEF_KEY_QT_INFO.equals(docDefinitionKey)) {
+				generateMaklumatTenderPdfFromVelocity((ScAttachment)scQtEvaluationReportAttachment, scQtEvaluationReport);
+			}
+			scQtEvaluationReport
+					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
 		}
 		return scQtEvaluationReportAttachment;
+	}
+
+	private void generateMaklumatTenderPdfFromVelocity(ScAttachment attachment, ScQtEvaluationReport scQtEvaluationReport) throws Exception {
+		debugLogger("generateMaklumatTenderPdfFromVelocity");
+		attachment.setFileName(SourcingConstants.DOCNAME_EV_QT_INFO);
+		
+		String html = generateMaklumatTenderFromVelocity(scQtEvaluationReport, getManagedBean().getScQt());
+		populateAttachmentDetails(attachment);
+		
+		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(getActualFilePath(attachment)), html);
+	}
+
+	private String generateMaklumatTenderFromVelocity(ScQtEvaluationReport scQtEvaluationReport, ScQt scQt) throws Exception {
+		debugLogger("generateMaklumatTenderFromVelocity");
+		
+		TemplateDocBackingBean backingBean = new TemplateDocBackingBean();
+		TplDocMaster tplDocMaster = scQtEvaluationReport.getTplDocMaster();
+		backingBean.goToMaint(tplDocMaster);
+		backingBean.previewAction();
+		String html = backingBean.getManagedBean().getPreviewValue();
+		
+		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+    	
+    	IAddressSO addressSO = null;
+    	PmAddressType pmAddressType = null;
+		try {
+			addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if (resDTO.getAddressTypeList().size() > 0) {
+				pmAddressType = resDTO.getAddressTypeList().get(0);	
+			}
+		} finally {
+			addressSO = null;
+		}
+     	
+		String agencyAddress = "";
+    	String agencyPhoneNo = "";
+    	String agencyFaxNo = "";
+    	if (pmAddressType != null) {
+    		PmAddress pmAddress = pmAddressType.getPmAddress();
+    		agencyAddress = getFullAddress(pmAddress);
+    		agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+    		agencyPhoneNo = pmAddress.getPhoneNo();
+    		agencyFaxNo = pmAddress.getFaxNo();
+    	}
+
+    	FacesScopes facesScopes = new FacesScopes();
+		String officerName = facesScopes.getUserSessionBean().getUserName();
+		
+    	html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",pmOrgProfile.getOrgName());
+    	html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",pmOrgProfile.getOrgName());
+    	html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",pmOrgProfile.getOrgName());
+    	html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;",agencyAddress);
+    	html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;",officerName);
+    	html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;",agencyPhoneNo);
+    	html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;",agencyFaxNo);
+    	html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",Integer.toString(scQt.getQtValidityPeriod()));
+    	return html;
 	}
 
 	private void generateAnalisisKeputusanPenilaianTeknikalPdf(
@@ -4665,7 +4743,7 @@ public class EvaluationBackingBean extends
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
-			reqDTO.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_EVALUATION_REPORT);
+			reqDTO.setDocCategory(scQtEvaluationReport.getDocCategory());
 			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_QT_INFO);
 			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
 
