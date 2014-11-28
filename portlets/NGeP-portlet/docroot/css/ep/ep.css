@@ -3435,3 +3435,19 @@ table.rptTbl {
 .lastUpdated {
 	color: red;
 }
+
+
+
+/*--------------------------      Panel Grid - Start      ------------------------------ */
+.panelGridBorders tr,.panelGridBorders td {
+	border: 1px solid #DDD;
+}
+
+.panelGridHeaders {
+	font-family: Arial;
+	font-size: 12px;
+	color: #333333 !important;
+	text-decoration: none;
+	background: #F0EFEF;
+}
+/*--------------------------       Panel Grid - End      ------------------------------ */
