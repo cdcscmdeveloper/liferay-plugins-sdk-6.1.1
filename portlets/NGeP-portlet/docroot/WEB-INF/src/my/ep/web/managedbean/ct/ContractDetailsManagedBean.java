@@ -78,6 +78,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
 	private String frequencySchedule;
+	private String warningPercentage;
 	
 	private int selectedIndex;
 	private int ctContractStatus;
@@ -1020,5 +1021,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setFinancialAccNo(String financialAccNo) {
 		this.financialAccNo = financialAccNo;
+	}
+
+	public String getWarningPercentage() {
+		return warningPercentage;
+	}
+
+	public void setWarningPercentage(String warningPercentage) {
+		this.warningPercentage = warningPercentage;
 	}
 }
