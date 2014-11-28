@@ -47,7 +47,7 @@
 						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
 					</tr>
 					<tr>
-						<td><p:inputText size="50" id="resInquirySubId" disabled="true"
+						<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
 					</tr>
 					<tr>
@@ -95,13 +95,13 @@
 					<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
 				</tr>
 				<tr>
-					<td><p:inputText size="50" id="inquirySubId" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquirySubject}"/></td>
+					<td><p:inputText size="50" id="inquirySubId" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquirySubject}" maxlength="50" /></td>
 				</tr>
 				<tr>
 					<td>#{lbl['lbl.sm.supportingdoc.inquiry']}</td>
 				</tr>
 				<tr>
-					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="150" autoResize="false" maxlength="100"
+					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="150" autoResize="false" maxlength="2500"
 					value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
 				</tr>
 			</table>
