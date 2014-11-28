@@ -908,38 +908,39 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					isEmpty = false;
 				}
 			}
+			
+			if(rSearchBean.getReasonCode()!=null && rSearchBean.getReasonCode().trim().length()>0){
+				log.info("+ reasonCode "  +rSearchBean.getReasonCode());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("pmReason.reasonCode");
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(rSearchBean.getReasonCode());
+				bean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+			if(rSearchBean.getReasonDesc()!=null && rSearchBean.getReasonDesc().trim().length()>0){
+				log.info("+ reasonDesc "  +rSearchBean.getReasonDesc());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("reasonDesc");
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(rSearchBean.getReasonDesc());
+				bean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+			
+			if(rSearchBean.getStatus()!=null){
+				log.info("+ status "  +rSearchBean.getStatus());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("pmReason.recordStatusFlg");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(rSearchBean.getStatus());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
 		}
-		
-		if(rSearchBean.getReasonCode()!=null && rSearchBean.getReasonCode().trim().length()>0){
-			log.info("+ reasonCode "  +rSearchBean.getReasonCode());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("pmReason.reasonCode");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(rSearchBean.getReasonCode());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		if(rSearchBean.getReasonDesc()!=null && rSearchBean.getReasonDesc().trim().length()>0){
-			log.info("+ reasonDesc "  +rSearchBean.getReasonDesc());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("reasonDesc");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(rSearchBean.getReasonDesc());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		
-		if(rSearchBean.getStatus()!=null){
-			log.info("+ status "  +rSearchBean.getStatus());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("pmReason.recordStatusFlg");
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchValue(rSearchBean.getStatus());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		
-		
+
 		//base on the flag, default list is either select all or empty
 		if(isEmpty && !isSearchable){
 			log.info("+ status "  + null);
