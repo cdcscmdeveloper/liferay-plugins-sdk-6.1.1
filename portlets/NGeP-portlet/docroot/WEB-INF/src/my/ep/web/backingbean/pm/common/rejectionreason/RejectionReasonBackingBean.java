@@ -79,6 +79,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		//load critical mappers
 		this.loadReasonCategoryMapper();
 		this.resetReasonSearchBean();
+		this.reasonCategoryChange(true, null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -228,12 +229,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			List <PmSupplierReason> comTypeRestrictions = new ArrayList<PmSupplierReason>();
 			List <PmSupplierReason> suppTypeRestrictions = new ArrayList<PmSupplierReason>();
 			for(PmSupplierReason pmSuppReason:pmReason.getPmSupplierReasons()){
-				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
-					appTypeRestrictions.add(pmSuppReason);
-				}else if(ParameterTypeConst.COMPANY_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
-					comTypeRestrictions.add(pmSuppReason);
-				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
-					suppTypeRestrictions.add(pmSuppReason);
+				if(pmSuppReason.getRestrType()!=null){
+					if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+						appTypeRestrictions.add(pmSuppReason);
+					}else if(ParameterTypeConst.COMPANY_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+						comTypeRestrictions.add(pmSuppReason);
+					}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+						suppTypeRestrictions.add(pmSuppReason);
+					}
 				}
 			}
 			this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
@@ -489,6 +492,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_770006, new String[]{rejectReason.getReasonCode()},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				
 
 			}
 		}catch (Exception e){
@@ -634,10 +638,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @return SelectItem[] 
 	 */
 	public SelectItem[] getStatusOptions() {
-		SelectItem[] items =  new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-	    return items;
+	    return PmCommonUtil.getStatusOptionsDefault();
 	}
 	
 
