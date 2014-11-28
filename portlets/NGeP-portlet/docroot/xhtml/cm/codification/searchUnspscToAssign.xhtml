@@ -10,8 +10,8 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages id="searchMsgId" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="searchMsgId" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
 
 		<h:panelGroup id="cmUNSPSCsearchID">
 
@@ -19,20 +19,27 @@
 
 				<table style="width: 100%; margin-bottom: 4px;">
 					<tr>
-					<td width="30%"><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.item.table.type']}:"></p:outputLabel></td>
-					<td width="20%"><h:outputText style="text-align: left;" value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}"/></td>
-					<td width="10%"></td>
-					<td width="40%"></td>
-				</tr>
+						<td width="10%"><p:outputLabel
+								style="font-weight: bold;text-align: left;"
+								value="#{lbl['lbl.cm.item.table.type']}:"></p:outputLabel></td>
+						<td width="20%"><h:outputText style="text-align: left;"
+								value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}" /></td>
+						<td width="10%"><p:outputLabel
+								style="font-weight: bold;text-align: left;"
+								value="#{lbl['lbl.cm.item.details']}:"></p:outputLabel></td>
+						<td width="40%"><h:outputText
+								style="text-align: left;white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemDesc}" /></td>
+					</tr>
 					<tr>
-						<td width="30%"><p:outputLabel style="font-size: 12px;font-weight: bold;" value="#{lbl['lbl.cm.item.name']}:"></p:outputLabel></td>
-						<td width="20%"><h:outputText style="white-space: normal!important;text-align: left;"
-								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemName}"
-								/></td>
-						<td width="10%"><p:outputLabel style="font-size: 12px;font-weight: bold;text-align: left;" value="#{lbl['lbl.cm.item.details']}:"></p:outputLabel></td>
-						<td width="40%"><h:outputText style="text-align: left;white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemDesc}"
-								/></td>
+						<td width="10%"><p:outputLabel
+								style="font-weight: bold;"
+								value="#{lbl['lbl.cm.item.name']}:"></p:outputLabel></td>
+						<td width="20%"><h:outputText
+								style="white-space: normal!important;text-align: left;"
+								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemName}" /></td>
+						<td width="10%"></td>
+						<td width="40%"></td>
 					</tr>
 				</table>
 
@@ -57,7 +64,8 @@
 
 
 			<div style="text-align: right;">
-				<p:commandButton icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
+				<p:commandButton icon="ui-icon-search"
+					value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="cmUNSPSCsearchID">
 					<f:param name="itemType"
@@ -65,7 +73,7 @@
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToPendingCodified}">
-					
+
 				</p:commandButton>
 
 			</div>
@@ -74,8 +82,8 @@
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 				<p:dataTable id="unspscTableID" lazy="true"
-				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
-				width="100%" rows="10">
+					value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
+					width="100%" rows="10">
 
 
 
@@ -115,20 +123,22 @@
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
 				</f:facet>
-		
-				<h:outputText style="white-space: normal!important;" value="#{unspscObj.unspscTitle}" />
-			</p:column>
+
+						<h:outputText style="white-space: normal!important;"
+							value="#{unspscObj.unspscTitle}" />
+					</p:column>
 
 				</p:dataTable>
 				<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.request.unspsc']}"
-					action="#{codificationBackingBean.redirectToRequestUnspscCodeII}"/>
-			</div>
+					<p:commandButton value="#{lbl['lbl.cm.request.unspsc']}"
+						action="#{codificationBackingBean.redirectToRequestUnspscCodeII}" />
+				</div>
 
 			</p:panel>
 
 			<p:dialog id="unspscPopUp" widgetVar="unspscPopUp" modal="true"
-				header="#{lbl['lbl.cm.codification.search']}" width="800" height="500">
+				header="#{lbl['lbl.cm.codification.search']}" width="800"
+				height="500">
 
 				<ui:include src="recommendSearchPopUp.xhtml"></ui:include>
 
