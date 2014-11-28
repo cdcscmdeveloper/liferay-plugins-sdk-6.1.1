@@ -432,6 +432,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void resetReasonSearchBean(){
 		log.info("resetReasonSearchBean");
 		this.getManagedBean().setReasonSearchBean(new ReasonSearchBean());
+		this.getManagedBean().setSearchSuppReason(false);
 		pmReasonDescDataModel = new PmReasonPagingDataModel();
 	}
 	
