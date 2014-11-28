@@ -2863,10 +2863,12 @@ public class SmApplicationUtil {
 						.getApplType()
 						.equalsIgnoreCase(
 								ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+			boolean pendingExits = false;
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					pendingExits = true;
 					if ((managedBean.isPoUser() && cat.getPoDecFlg() != null && cat
 							.getPoDecFlg()
 							.compareTo(
@@ -2880,6 +2882,9 @@ public class SmApplicationUtil {
 						break;
 					}
 				}
+			}
+			if (!pendingExits) {
+				validForApproval = true;
 			}
 		} else {
 			validForApproval = true;
