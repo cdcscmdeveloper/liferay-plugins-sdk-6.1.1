@@ -24,7 +24,7 @@
 		<f:event listener="#{invoiceBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="#{invoiceBackingBean.managedBean.autoUpdate}"
-			showSummary="false" closable="true" severity="error, info" />
+			showSummary="false" closable="true" severity="error, info, warn" />
 		<ac:gpkiPopup 
 			textBeforeSign="#{invoiceBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{invoiceBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
