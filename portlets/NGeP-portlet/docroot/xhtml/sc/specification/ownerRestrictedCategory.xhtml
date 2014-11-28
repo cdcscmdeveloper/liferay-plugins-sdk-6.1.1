@@ -25,14 +25,14 @@
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
 					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					style="margin-right: 3px !important;width:20px;">
+					style="margin-right: 3px !important;" size="1">
 					<p:ajax event="blur"
 						update=":form:restrictedtabView:restrictedPnlId"
 						partialSubmit="true" process="@this"
 						listener="#{specificationBackingBean.updatedQtCategoryL1Code(cateGory)}"></p:ajax>
 				</p:inputText>
 				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
-					maxlength="2" style="width:20px;"
+					maxlength="2" size="1"
 					disabled="#{specificationBackingBean.managedBean.readOnly}">
 					<p:ajax event="blur"
 						update=":form:restrictedtabView:restrictedPnlId"
