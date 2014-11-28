@@ -10,16 +10,15 @@
 	
 		<p:panel header="#{lbl['lbl.sc.spec.staff.info']}" toggleable="true" >
 
-			<p:panelGrid style="margin-top:20px;width:100%;">
+			<p:panelGrid style="margin-top:20px;width:100%;" styleClass="panelGridBorders panelGridBorders td">
 				<f:facet name="header">
-
 					<p:row>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.status']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.board.director']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.higher.management']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.management']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.total']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.staff.entered']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.staff.status']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.board.director']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.higher.management']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.management']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.staff.total']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.staff.entered']}</p:column>
 					</p:row>
 				</f:facet>
 				<p:row>
