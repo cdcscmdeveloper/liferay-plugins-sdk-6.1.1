@@ -70,6 +70,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	private static Map<Long, Object> reasonCategoryMapper;
 	//List for Paging
 	private IPagingDataModel<PmReasonDesc> pmReasonDescDataModel = new PmReasonPagingDataModel();
+	
+	//Default value
+	public static final boolean SEARCH_DEFAULT = false;
 
 	public void preLoading(){
 		log.info("preLoading");
@@ -426,6 +429,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void resetReasonSearchBean(){
 		log.info("resetReasonSearchBean");
 		this.getManagedBean().setReasonSearchBean(new ReasonSearchBean());
+		pmReasonDescDataModel = new PmReasonPagingDataModel();
 	}
 	
 	/**
@@ -602,7 +606,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public SelectItem[] companyTypeOptions() {
 		log.info("companyTypeOptions");
-		return getDropdownValues(ParameterTypeConst.COMPANY_TYPES);
+		return getDropdownValues(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
 	}
 	
 	/**
@@ -849,7 +853,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	private ISearchBean<PmReasonDesc> getSearchBeanData(ISearchBean<PmReasonDesc> searchBean){
 		log.info("getSearchBeanData - Start");
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
 		ReasonSearchBean rSearchBean = this.getManagedBean().getReasonSearchBean();
+		
 		if(rSearchBean.getReasonCategoryParam()!=null && rSearchBean.getReasonCategoryParam().getParameterId()!=null 
 				&& rSearchBean.getReasonCategoryParam().getParameterId()>0L ){
 			log.info("+ reasonCategory "  +rSearchBean.getReasonCategoryParam().getParameterId());
@@ -858,6 +865,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			cateBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			cateBean.setSearchValue(rSearchBean.getReasonCategoryParam().getParameterId());
 			searchBean.getDataFilterBeans().add(cateBean);
+			isEmpty = false;
 			
 			//for supplier reason category
 			PmParameter paramObj = (PmParameter) reasonCategoryMapper.get(rSearchBean.getReasonCategoryParam().getParameterId());
@@ -869,32 +877,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				
 				if(rSearchBean.getApplicationType()!=null && rSearchBean.getApplicationType()>0L){
 					log.info("+ applicationType "  +rSearchBean.getApplicationType());
-//					SearchFilterBean bean = new SearchFilterBean();
-//					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-//					bean.setSearchField("pmReason.isByAppType");
-//					bean.setSearchValue(true);
-//					searchBean.getDataFilterBeans().add(bean);
-//					rSearchBean.setRestrType(rSearchBean.getApplicationType());
 					restrTypes.add(rSearchBean.getApplicationType());
 				}
 				if(rSearchBean.getCompanyType()!=null && rSearchBean.getCompanyType()>0L){
 					log.info("+ companyType "  +rSearchBean.getCompanyType());
-//					SearchFilterBean bean = new SearchFilterBean();
-//					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-//					bean.setSearchField("pmReason.isByRegType");
-//					bean.setSearchValue(true);
-//					searchBean.getDataFilterBeans().add(bean);
-//					rSearchBean.setRestrType(rSearchBean.getCompanyType());
 					restrTypes.add(rSearchBean.getCompanyType());
 				}
 				if(rSearchBean.getSupplierType()!=null && rSearchBean.getSupplierType()>0L){
 					log.info("+ supplierType "  +rSearchBean.getSupplierType());
-//					SearchFilterBean bean = new SearchFilterBean();
-//					bean.setSearchField("pmReason.pmSupplierReasons.supplierType.parameterId");
-//					bean.setSearchField("pmReason.isBySupplierType");
-//					bean.setSearchValue(true);
-//					searchBean.getDataFilterBeans().add(bean);
-//					rSearchBean.setRestrType(rSearchBean.getSupplierType());
 					restrTypes.add(rSearchBean.getSupplierType());
 				}
 				
@@ -902,10 +892,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					log.info("+ getRestrType "  + rSearchBean.getRestrType());
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField("pmReason.pmSupplierReasons.restrType.parameterId");
-//					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 					bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 					bean.setSearchValue(restrTypes);
 					searchBean.getDataFilterBeans().add(bean);
+					isEmpty = false;
 				}
 			}
 		}
@@ -917,6 +907,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 			bean.setSearchValue(rSearchBean.getReasonCode());
 			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
 		}
 		if(rSearchBean.getReasonDesc()!=null && rSearchBean.getReasonDesc().trim().length()>0){
 			log.info("+ reasonDesc "  +rSearchBean.getReasonDesc());
@@ -925,14 +916,27 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 			bean.setSearchValue(rSearchBean.getReasonDesc());
 			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
 		}
-
+		
 		if(rSearchBean.getStatus()!=null){
 			log.info("+ status "  +rSearchBean.getStatus());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchField("pmReason.recordStatusFlg");
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchValue(rSearchBean.getStatus());
+			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
+		}
+		
+		
+		//base on the flag, default list is either select all or empty
+		if(isEmpty && !isSearchable){
+			log.info("+ status "  + null);
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField("recordStatusFlg");
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchValue(null);
 			searchBean.getDataFilterBeans().add(bean);
 		}
 		
