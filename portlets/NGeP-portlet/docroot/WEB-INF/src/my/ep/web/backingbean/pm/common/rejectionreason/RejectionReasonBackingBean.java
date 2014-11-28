@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.pm.common.rejectionreason;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,13 +25,11 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -46,6 +45,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ReasonSearchBean;
 import my.ep.web.managedbean.pm.common.rejectionreason.RejectionReasonManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -616,7 +616,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public SelectItem[] supplierTypeOptions() {
 		log.info("supplierTypeOptions");
-		return getDropdownValues(ParameterTypeConst.SUPPLIER_TYPES);
+		List<PmParameterDesc> paramDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.SUPPLIER_TYPES, Arrays.asList(ProfileManagementConst.SUPP_TYPE_EXCLUDE), null);
+		SelectItem[] items =  new SelectItem[paramDescs.size()+1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				getFacesScopes().getUserLocale()));
+		int i = 1;
+		for(PmParameterDesc paramDesc:paramDescs){
+			items[i++] = new SelectItem(paramDesc.getPmParameter()
+					.getParameterId(), paramDesc.getCodeName());
+		}
+		return items;
 	}
 	
 	/**
