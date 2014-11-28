@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -42,6 +43,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -57,6 +59,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
@@ -367,9 +370,58 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo());
 				}	
 			}
+			validateAdvancedPayment();
 		}
 	}
 	
+	private void validateAdvancedPayment() {
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		boolean haveAdvancedPmyt = false;
+		BigDecimal deductionAmt = new BigDecimal(0);
+		BigDecimal balanceAmt = new BigDecimal(0);
+		BigDecimal perc = new BigDecimal(100);
+		Double newTotalAmt = new Double(0);
+		BigDecimal percAmt = new BigDecimal(0);
+		BigDecimal contractValue = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getContractAmount();
+		
+		for(CtDeduction deduction : getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
+			if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
+				haveAdvancedPmyt = true;
+				deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
+				break;
+			}
+		}
+		
+		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+			if(haveAdvancedPmyt){
+				ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+				ctRes.getPaidAdvancePaymentAmt();
+				balanceAmt = deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt());
+				
+				if(balanceAmt.doubleValue() > 0){
+					newTotalAmt = ctRes.getPaidInvoiceAmt().doubleValue() / (contractValue.doubleValue());
+					percAmt =	new BigDecimal(newTotalAmt).multiply(perc);	
+					if(contractValue.doubleValue() <= FulfilmentConst.CONTRACT_VALUE_500K){
+						if(percAmt.doubleValue() >= FulfilmentConst.PERC_50){
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.INFO_745008,
+											new String[]{getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo(),FulfilmentConst.PERC_50.toString()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						}
+					}else if(contractValue.doubleValue() >= FulfilmentConst.CONTRACT_VALUE_500K){
+						if(perc.doubleValue() >= FulfilmentConst.PERC_90){
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.INFO_745008,
+											new String[]{getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo(),FulfilmentConst.PERC_90.toString()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
 	public void factoringChecked(AjaxBehaviorEvent e) {
 		System.out.println("====enter process checked====");
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
