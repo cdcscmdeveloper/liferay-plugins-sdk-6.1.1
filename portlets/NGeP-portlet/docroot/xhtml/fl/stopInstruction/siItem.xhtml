@@ -40,7 +40,7 @@
     				</f:facet>
 				<h:outputText value="#{chargeLineNode.flFulfilmentItem.sumOrderedQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal;text-align:right;">
@@ -50,7 +50,7 @@
     				</f:facet>
 				<h:outputText value="#{chargeLineNode.flFulfilmentItem.sumReceivedQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column  style="white-space:normal;text-align:right;">
@@ -60,7 +60,7 @@
     			</f:facet>
 				<h:outputText value="#{chargeLineNode.flFulfilmentItem.sumRecalledQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			
