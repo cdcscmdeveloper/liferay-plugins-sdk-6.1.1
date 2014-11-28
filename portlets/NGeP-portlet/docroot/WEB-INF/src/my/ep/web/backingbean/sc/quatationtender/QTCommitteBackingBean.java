@@ -926,6 +926,8 @@ public class QTCommitteBackingBean extends
 									.retrieveParameterById(reqDTO);
 							committeeMember.setMemberRole(resDTO
 									.getPmParameter());
+						}else{
+							committeeMember.setMemberRole(new PmParameter());
 						}
 						/*
 						 * List<PmParameterDesc> roles = getManagedBean()

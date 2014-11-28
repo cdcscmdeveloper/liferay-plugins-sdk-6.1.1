@@ -3133,56 +3133,58 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
-		switch (priviousIndex) {
-		case 0:
-			detailSO.validateateQTDetails(prepareQTInfo());
-			// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
-			break;
-		case 1:
-			// retrieveCommitteeAppointmentTabDtl();
-			break;
+		if (priviousIndex != activeIndex) {
+			switch (priviousIndex) {
+			case 0:
+				detailSO.validateateQTDetails(prepareQTInfo());
+				// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
+				break;
+			case 1:
+				// retrieveCommitteeAppointmentTabDtl();
+				break;
 
-		case 2:
-			detailSO.validateSupplierQualificationDtls(prepareQTInfo());
-			// retrieveSuppQualificationTabDtl();
-			break;
-		case 3:
-			QuationTenderReqDTO reqDTO = prepareQTInfo();
-			reqDTO.getQtdetail().setModified(false);
-			detailSO.validateApprovalDetails(reqDTO);
-			// retrieveApprovalTabDtl();
-			break;
+			case 2:
+				detailSO.validateSupplierQualificationDtls(prepareQTInfo());
+				// retrieveSuppQualificationTabDtl();
+				break;
+			case 3:
+				QuationTenderReqDTO reqDTO = prepareQTInfo();
+				reqDTO.getQtdetail().setModified(false);
+				detailSO.validateApprovalDetails(reqDTO);
+				// retrieveApprovalTabDtl();
+				break;
 
-		case 4:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-				detailSO.validateBsvDetails(prepareQTInfo());
+			case 4:
+				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+					detailSO.validateBsvDetails(prepareQTInfo());
+				}
+				break;
+
+			case 5:
+				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+					detailSO.validateScheduleDetails(prepareQTInfo());
+				}
+				break;
+
+			case 6:
+				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+					// detailSO.validateDeductionDtls(prepareQTInfo());
+				}
+				break;
+
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+					QuationTenderReqDTO qtReqDTO = prepareQTInfo();
+					qtReqDTO.getQtdetail().setModified(true);
+					detailSO.validateApprovalDetails(qtReqDTO);
+				}
+				break;
 			}
-			break;
-
-		case 5:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-				detailSO.validateScheduleDetails(prepareQTInfo());
-			}
-			break;
-
-		case 6:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-				// detailSO.validateDeductionDtls(prepareQTInfo());
-			}
-			break;
-
-		case 7:
-			break;
-		case 8:
-			break;
-		case 9:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-				QuationTenderReqDTO qtReqDTO = prepareQTInfo();
-				qtReqDTO.getQtdetail().setModified(true);
-				detailSO.validateApprovalDetails(qtReqDTO);
-			}
-			break;
-		}
+		
 		switch (activeIndex) {
 		case 0:
 			// detailSO.validateateQTDetails(prepareQTInfo());
@@ -3239,6 +3241,7 @@ public class QTDetailBackingBean extends
 			break;
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
+		}
 	}
 
 	private ScQtApproval checkIsApprovalExists(ScQtApproval qtApproval,

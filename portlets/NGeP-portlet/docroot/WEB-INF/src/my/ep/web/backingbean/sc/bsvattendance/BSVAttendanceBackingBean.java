@@ -281,7 +281,7 @@ public class BSVAttendanceBackingBean extends
 					.getBriefingRegistrationList());
 			if ("complete".equalsIgnoreCase(status)) {
 				PmStatus bsvStatus = new PmStatus();
-				bsvStatus.setStatusId(QTStatusConst.BSV_COMPLETE);
+				bsvStatus.setStatusId(QTStatusConst.BSV_COMPLETED);
 				scQtBrief.setBsvStatus(bsvStatus);
 			}
 			briefingDetails.add(scQtBrief);
@@ -550,8 +550,11 @@ public class BSVAttendanceBackingBean extends
 	 * Method to delete the registrations
 	 */
 	public void deleteBsvAttandances() {
-		List<ScQtBsvAttendance> attandances = this.getManagedBean()
-				.getSelectedbriefRegistration().getBsvAttendance();
+		List<ScQtBsvAttendance> attandances = null;
+		if (null != this.getManagedBean().getSelectedbriefRegistration()) {
+			attandances = this.getManagedBean().getSelectedbriefRegistration()
+					.getBsvAttendance();
+		}
 		ScQtBsvAttendance selectedBsvAttandance = this.getManagedBean()
 				.getScQtBriefingAttendance();
 		if (null == selectedBsvAttandance) {
@@ -598,7 +601,7 @@ public class BSVAttendanceBackingBean extends
 
 	private boolean isBsvStatusComplete(List<ScQtBsvDtl> bsvDetails) {
 		for (ScQtBsvDtl bsvDtl : bsvDetails) {
-			if (!QTStatusConst.BSV_COMPLETE.equals(bsvDtl.getBsvStatus()
+			if (!QTStatusConst.BSV_COMPLETED.equals(bsvDtl.getBsvStatus()
 					.getStatusId())) {
 				return false;
 			}
