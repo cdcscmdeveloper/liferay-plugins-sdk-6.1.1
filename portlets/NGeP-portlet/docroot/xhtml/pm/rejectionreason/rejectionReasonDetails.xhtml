@@ -41,7 +41,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}" 
 							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pp.uppercase']}"
 							label="#{lbl['lbl.pm.reason.code']}">
-							<f:validateRegex pattern="^([A-Z]{1,10})?$" />
+							<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" />
 						</p:inputText>
 						<p:message id="itReasonCodeMsg" for="itReasonCode" display="icon" />							
 					</td>
