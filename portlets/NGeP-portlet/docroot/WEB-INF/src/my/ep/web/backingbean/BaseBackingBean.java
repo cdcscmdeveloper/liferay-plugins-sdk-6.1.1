@@ -333,6 +333,36 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			list.removeAll(toBeRemovedList);
 		}
 	}
+	
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("markDeleteSelectedRowsAction");
+		}
+		try {
+			if (list != null) {
+				if(markDeletedList == null){
+					markDeletedList = new ArrayList<ENTITY_CLASS>();
+				}
+
+				for (ENTITY_CLASS entity : list) {
+					if (entity.isSelected()) {
+						entity.setDeleted(true);
+						markDeletedList.add(entity);
+					}
+				}
+				if (markDeletedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteRowsAction(list, markDeletedList);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+		} finally {
+
+		}
+	}
+	
 
 	/**
 	 * Create search bean.
