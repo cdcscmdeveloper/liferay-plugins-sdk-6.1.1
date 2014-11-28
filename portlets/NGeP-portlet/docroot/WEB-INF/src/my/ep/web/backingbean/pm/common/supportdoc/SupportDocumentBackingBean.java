@@ -101,6 +101,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void resetSupportDocSearchBean(){
 		log.info("resetSupportDocSearchBean");
 		this.getManagedBean().setSupportDocSearchBean(new SupportDocumentSearchBean());
+		pmDocumentDataModel = new PmDocumentDataModel();
 	}
 	
 	
