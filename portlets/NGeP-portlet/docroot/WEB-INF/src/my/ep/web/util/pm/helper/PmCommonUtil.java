@@ -13,7 +13,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -30,11 +29,7 @@ import my.ep.biz.service.pm.common.userattachment.IUserAttachmentSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -62,13 +57,10 @@ import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
-import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -86,6 +78,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -96,6 +90,21 @@ import org.primefaces.model.UploadedFile;
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
 	private static final String FILE_DATETIME_FORMAT = "ddMMyyyyHHmmss";
+	
+	/**
+	 * get record status options 
+	 * @return SelectItem[] 
+	 */
+	public static SelectItem[] getStatusOptionsDefault() {
+		SelectItem[] items =  new SelectItem[2];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+	    return items;
+	}
 	
 	/**
 	 * Get Role description by role code.
@@ -242,9 +251,15 @@ public class PmCommonUtil {
 	 */
 	public static SelectItem[] getStatusOptions() {
 		SelectItem[] items =  new SelectItem[3];
-		items[0] = new SelectItem(null, "- Select One -");
-		items[1] = new SelectItem(1, "Active");
-		items[2] = new SelectItem(0, "Inactive");
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
 	    return items;
 	}
 	
