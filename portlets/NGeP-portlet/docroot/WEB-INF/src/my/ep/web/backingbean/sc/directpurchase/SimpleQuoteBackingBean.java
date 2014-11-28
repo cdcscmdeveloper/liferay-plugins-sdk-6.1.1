@@ -3012,11 +3012,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		TplSpecMaster  productMaster = null;		
 		HttpServletRequest servletRequest = new FacesScopes().getOriginalServletRequest();
 		String quoteIdStr = servletRequest.getParameter(SourcingConstants.SUPPLIER_QUOTE_PARAM_QUOTE_ID);
-		String hashSupplierIdStr = servletRequest.getParameter(SourcingConstants.SUPPLIER_QUOTE_PARAM_SUPPLIER_ID);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 
-		if (StringUtils.isNotBlank(quoteIdStr) && StringUtils.isNotBlank(hashSupplierIdStr)) {
+		if (StringUtils.isNotBlank(quoteIdStr)) {
 
 			try {
 				FacesScopes facesScopes = new FacesScopes();
@@ -3024,7 +3023,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				Long quoteId = Long.valueOf(quoteIdStr);
 				quoteReqDTO.setQuoteId(quoteId);
 				quoteReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-				quoteReqDTO.setHashSupplierId(hashSupplierIdStr);
 				quoteReqDTO.setFetchSubEntity(true);
 				QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
