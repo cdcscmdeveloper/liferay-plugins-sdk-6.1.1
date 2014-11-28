@@ -547,7 +547,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public List<PmParameterDesc> getOrgTypeList() {
 		logger.info("getOrgTypeList");
-		return PmCommonUtil.retrieveFilteredOrgTypes(ParameterTypeConst.ORGANISATION_TYPES
+		return PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
 				, new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
 				, null);
 	}
