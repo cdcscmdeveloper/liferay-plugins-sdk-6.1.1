@@ -41,14 +41,14 @@
 								<td width="65%"><p:inputText size="50"
 										value="#{cdTrackingDiaryBackingBean.extensionCodeFilterBean.searchValue}"></p:inputText></td>
 							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Status" /></td>
-								<td width="35%"><p:selectOneMenu value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode}">
-										<f:selectItems value="#{cdTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
+<!-- 							<tr> -->
+<!-- 								<td width="35%"><p:outputLabel -->
+<!-- 										value="Status" /></td> -->
+<!-- 								<td width="35%"><p:selectOneMenu value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode}"> -->
+<!-- 										<f:selectItems value="#{cdTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" /> -->
+<!-- 									</p:selectOneMenu> -->
+<!-- 								</td>						 -->
+<!-- 							</tr> -->
 						</table>
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{cdTrackingDiaryBackingBean.unspscSearch}" update="cmUNSPSCsearchID" >
@@ -74,14 +74,14 @@
 					<f:facet name="header">
 					Creation Date
 					</f:facet>
-				#{smSupplier.regNo}
+				#{unspscObj.createdDate}
 				</p:column>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
-							#{unspscObj.unspscCode}
+				#{unspscObj.unspscCode}
 				</p:column>
 				<p:column>
 					<f:facet name="header">

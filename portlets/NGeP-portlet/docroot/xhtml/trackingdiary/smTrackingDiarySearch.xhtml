@@ -26,15 +26,15 @@
 								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.businessRegNoFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="25%"><p:outputLabel value="MOF No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.MOFFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:outputLabel value="MOF Account No." /></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.MOFAccountFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
-								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="35%"><p:outputLabel value="Company Name" /></td>
+								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.companyNameFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel value="Company Type" /></td>
+								<td width="35%"><p:outputLabel value="Business Type" /></td>
 							
 								<td width="35%">					
 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
@@ -44,11 +44,17 @@
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel value="Registration Status" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('PT')}" />
-									</p:selectOneMenu>
-								</td>						
+<!-- 								<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}" -->
+<!-- 									value="#{backingBean.managedBean.smAppl.pmStatus.statusId}" -->
+<!-- 									style="width: 107px;margin-bottom: 5px;"> -->
+<!-- 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" /> -->
+<!-- 									<f:selectItems -->
+<!-- 										value="#{backingBean.managedBean.regStatusDescList}" var="reg" -->
+<!-- 										itemLabel="#{reg.statusName}" -->
+<!-- 										itemValue="#{reg.pmStatus.statusId}" /> -->
+			
+<!-- 								</p:selectOneMenu> </td> -->
+												
 							</tr>
 							
 						</table>
@@ -58,7 +64,7 @@
 
 						<div style="text-align: right;">
 							<p:commandButton icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
-								action="#{smTrackingDiaryBackingBean.search}"
+								action="#{smTrackingDiaryBackingBean.smSupplierSearch}"
 								update="smSearchID">
 							</p:commandButton>		
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
@@ -73,15 +79,15 @@
 			
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="supplierItemID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
+			<p:dataTable id="smSupplierTableID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
 
-				<ac:paginator for="supplierItemID"></ac:paginator>
+				<ac:paginator for="smSupplierTableID"></ac:paginator>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					Creation Date
 					</f:facet>
-				#{smSupplier.regNo}
+				#{smSupplier.createdDate}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
@@ -91,20 +97,13 @@
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					MOF No.
+					Company Name
 					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-
-				<p:column width="15%">
-					<f:facet name="header">
-					Supplier Name
-					</f:facet>
-				#{smSupplier.regNo}
+				#{smSupplier.companyName}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Reg. Status
+					Registration Status
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
@@ -113,9 +112,9 @@
 						Action
 					</f:facet>
 						<p:commandLink
-							action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
-								<p:graphicImage library="ep/images/design" name="reset.png"
-									value="/resources/ep/images/design/reset.png" />
+							action="#{SMTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
+							<p:graphicImage library="ep/images/design" name="document.png"
+								value="/resources/ep/images/design/document.png" />
 						</p:commandLink>
 				</p:column>
 			</p:dataTable>
