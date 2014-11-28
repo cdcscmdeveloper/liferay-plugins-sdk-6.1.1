@@ -9,9 +9,11 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -40,9 +42,8 @@ public class SmTrackingDiaryBackingBean extends
 	private IPagingDataModel<SmSupplier> searchDataModel = new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	public SmTrackingDiaryBackingBean() {
-	    String smSupplierCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("smSupplierCode");
-	    System.out.println("smSupplierCode====================================: "+smSupplierCode);
-		SmSupplier smSupplier = new SmSupplier();
+//	    String smSupplierCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("smSupplierCode");
+//		SmSupplier smSupplier = new SmSupplier();
 	}
 	
 	public void smSupplierSearch() {
@@ -51,18 +52,10 @@ public class SmTrackingDiaryBackingBean extends
 		log.info(".........................businessRegNoFilterBean="+ businessRegNoFilterBean.getSearchValue());
 //		log.info(".......................smSupplierCode="+ smSupplierCode);
 		log.info("................................smSupplierTitle="+ smSupplierTitle);
-
-//		if ((smSupplierCode == null && (smSupplierTitle == null || smSupplierTitle
-//				.isEmpty()))
-//				|| ((smSupplierCode != null && smSupplierCode.isEmpty()) && (smSupplierTitle != null && smSupplierTitle
-//						.isEmpty()))) {
+//		if ((extensionCode != null && extensionCode.isEmpty()) && ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
 //			throw new EpException(MessageConst.ERROR_716006);
 //		}
 
-//		if (smSupplierCode != null && !smSupplierCode.isEmpty()
-//				&& smSupplierCode.length() != 8) {
-//			throw new EpException(MessageConst.ERROR_715026);
-//		}
 
 		searchDataModel.reloadData();	}
 
@@ -85,47 +78,23 @@ public class SmTrackingDiaryBackingBean extends
 			if (StringUtils.isBlank((String) businessRegNoFilterBean.getSearchValue())
 					&& StringUtils.isBlank((String) businessRegNoFilterBean
 							.getSearchValue())) {
-				System.out.println("ssssssssssssss");
-		return new SearchResultBean();
+				System.out.println("isBlank");
+				return new SearchResultBean();
 			}
 
 			ISupplierSearchSO smSupplierSO = null;
 			try {
-				System.out.println("ssssddssssssssss");
+				System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
 				smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-						.getServiceObject("cm", ISupplierSearchSO.class);
+						.getServiceObject("sm", ISupplierSearchSO.class);
 
 
 				if (StringUtils.isNotBlank((String) businessRegNoFilterBean
 						.getSearchValue())) {
 					System.out.println("*********businessRegNoFilterBean***********");
-					businessRegNoFilterBean.setSearchField("smSupplierTitle");
-					businessRegNoFilterBean.setCaseInsensitive(true);
+					businessRegNoFilterBean.setSearchField("regNo");
 					searchBean.getDataFilterBeans().add(businessRegNoFilterBean);
 				}
-				FacesScopes fs = new FacesScopes();
-				String itemType = fs.getParameter("itemType");
-
-				log.info("............itemType=" + itemType);
-				if (itemType != null) {
-					if (itemType.equals("S") || itemType.equals("2")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("smSupplierCode",
-										SearchOperator.OPERATOR_GREATER_EQUAL
-												.value(), "70000000"));
-					} else if (itemType.equals("P") || itemType.equals("1")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("smSupplierCode",
-										SearchOperator.OPERATOR_LESS.value(),
-										"70000000"));
-					}
-				}
-
-				/*
-				 * levelFilterBean.setSearchField("smSupplierLevel");
-				 * levelFilterBean.setSearchValue(3);
-				 * searchBean.getDataFilterBeans().add(levelFilterBean);
-				 */
 
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSearchBean(searchBean);
@@ -186,7 +155,6 @@ public class SmTrackingDiaryBackingBean extends
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_SMSUPPLIER_DETAIL_SEARCH + "?faces-redirect=true";
 	}
-
 
 	public String reset() {
 		return null;
