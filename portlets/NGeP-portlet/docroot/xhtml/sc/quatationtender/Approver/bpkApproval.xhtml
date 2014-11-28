@@ -19,7 +19,16 @@
 				<h:outputText value="#{requestdetails.originalValue}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
-				<h:outputText value="#{requestdetails.changedValue}" />
+				<h:panelGroup
+					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
+					<h:outputText
+						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{requestdetails.changedValue ne 'B' and requestdetails.changedValue ne 'A'}">
+
+					<h:outputText value="#{requestdetails.changedValue}" />
+				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.decision']}">
 				<f:facet name="header">
