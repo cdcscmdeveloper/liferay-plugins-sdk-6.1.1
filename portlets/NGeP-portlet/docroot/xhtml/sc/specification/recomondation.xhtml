@@ -76,14 +76,13 @@
 							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
-				<p:panelGrid style="margin-top:5px;width:100%;">
+				<p:panelGrid style="margin-top:5px;width:100%;" styleClass="panelGridBorders panelGridBorders td">
 					<f:facet name="header">
-
 						<p:row>
-							<p:column colspan="1"></p:column>
-							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
-							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
-							<p:column>#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1"></p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
+							<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
 						</p:row>
 					</f:facet>
 					<p:row>
