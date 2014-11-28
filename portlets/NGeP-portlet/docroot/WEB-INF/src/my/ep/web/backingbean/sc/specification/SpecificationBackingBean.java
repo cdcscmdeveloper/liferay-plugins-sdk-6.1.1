@@ -2214,6 +2214,10 @@ public class SpecificationBackingBean extends
 	public void retriveTechnicalCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
+		
+		if(getManagedBean().getMarkDeletedTechChecklist() == null){
+			getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+		}
 
 		try {
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
@@ -2267,6 +2271,11 @@ public class SpecificationBackingBean extends
 	public void retriveFinancialCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
+		
+		if(getManagedBean().getMarkDeletedFinChecklist() == null){
+			getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+		}
+		
 		try {
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
@@ -9666,6 +9675,22 @@ public class SpecificationBackingBean extends
 		reqDTO.setCommitteActivities(committeActivities);
 		return reqDTO;
 	}
+	
+	private List<ScQtCheckList> getToBeRemoveList(){
+		List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
+		
+		List<ScQtCheckList> techList = getManagedBean().getMarkDeletedTechChecklist();
+		if(techList != null && techList.size() > 0){
+			toBeRemoveList.addAll(techList);
+		}
+		
+		List<ScQtCheckList> finList = getManagedBean().getMarkDeletedFinChecklist();
+		if(finList != null && finList.size() > 0){
+			toBeRemoveList.addAll(finList);
+		}
+
+		return toBeRemoveList;
+	}
 
 	// Prepare Qt Checklist Save related method
 	public void validatePrepareQtChecklist() {
@@ -9738,7 +9763,9 @@ public class SpecificationBackingBean extends
 						&& !scQtTechChecklist.isTechEvaluationReq()) {
 
 					specReqDTO.setScQt(scQtTechChecklist);
+					specReqDTO.setTobeRemoveList(getToBeRemoveList());
 					resDTO = specSO.saveQTDtl(specReqDTO);
+					
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
@@ -9754,8 +9781,10 @@ public class SpecificationBackingBean extends
 								.isTechEvaluationReq())) {
 
 					specReqDTO.setScQt(scQtTechChecklist);
+					specReqDTO.setTobeRemoveList(getToBeRemoveList());
 					// specSO.validateCheckList(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
+					
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());

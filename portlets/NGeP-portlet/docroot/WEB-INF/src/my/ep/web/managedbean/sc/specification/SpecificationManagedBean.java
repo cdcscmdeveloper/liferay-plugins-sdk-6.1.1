@@ -69,8 +69,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private ScQtCheckList scQtChecklist;
 
 	private List<ScQtCheckList> scQtCheckSt2techProposal;
+	private List<ScQtCheckList> markDeletedTechChecklist;
 
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
+	private List<ScQtCheckList> markDeletedFinChecklist;
 
 	private ScRemark scRemark;
 
@@ -3205,6 +3207,36 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+
+	/**
+	 * @return the markDeletedTechChecklist
+	 */
+	public List<ScQtCheckList> getMarkDeletedTechChecklist() {
+		return markDeletedTechChecklist;
+	}
+
+	/**
+	 * @param markDeletedTechChecklist the markDeletedTechChecklist to set
+	 */
+	public void setMarkDeletedTechChecklist(
+			List<ScQtCheckList> markDeletedTechChecklist) {
+		this.markDeletedTechChecklist = markDeletedTechChecklist;
+	}
+
+	/**
+	 * @return the markDeletedFinChecklist
+	 */
+	public List<ScQtCheckList> getMarkDeletedFinChecklist() {
+		return markDeletedFinChecklist;
+	}
+
+	/**
+	 * @param markDeletedFinChecklist the markDeletedFinChecklist to set
+	 */
+	public void setMarkDeletedFinChecklist(
+			List<ScQtCheckList> markDeletedFinChecklist) {
+		this.markDeletedFinChecklist = markDeletedFinChecklist;
 	}
 
 }
