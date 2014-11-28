@@ -959,6 +959,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void searchReason(){
 		log.info("searchReason - Start");
+		if(this.getManagedBean().getReasonSearchBean().getReasonCategoryParam()==null 
+				|| this.getManagedBean().getReasonSearchBean().getReasonCategoryParam().getParameterId()==null){
+			throw new EpException("Reason Category is mandatory."); //TODO
+		}
+		
 		pmReasonDescDataModel.reloadData();
 		log.info("searchReason - End");
 		
