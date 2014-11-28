@@ -886,7 +886,8 @@ public class NoticeBoardBackingBean extends
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
 					statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
-					statusIds.add(QTStatusConst.QT_LOI_LOA);
+					statusIds.add(QTStatusConst.QT_PENDING_LOI);
+					statusIds.add(QTStatusConst.QT_PENDING_LOA);
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
