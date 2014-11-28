@@ -310,6 +310,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String typeOfBusiness;
 	private SmSupplierBasicInfoVO basicInfo;
 	private boolean allowedToApprove;
+	private String regCatCodeConfirmHeader;
+	private String regCatCodeConfirmMsg;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2353,6 +2355,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAllowedToApprove(boolean allowedToApprove) {
 		this.allowedToApprove = allowedToApprove;
+	}
+
+	public String getRegCatCodeConfirmHeader() {
+		return regCatCodeConfirmHeader;
+	}
+
+	public void setRegCatCodeConfirmHeader(String regCatCodeConfirmHeader) {
+		this.regCatCodeConfirmHeader = regCatCodeConfirmHeader;
+	}
+
+	public String getRegCatCodeConfirmMsg() {
+		return regCatCodeConfirmMsg;
+	}
+
+	public void setRegCatCodeConfirmMsg(String regCatCodeConfirmMsg) {
+		this.regCatCodeConfirmMsg = regCatCodeConfirmMsg;
 	}
 
 }

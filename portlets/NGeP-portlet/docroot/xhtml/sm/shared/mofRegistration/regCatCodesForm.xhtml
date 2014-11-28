@@ -30,10 +30,10 @@
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-										itemValue="S"
+										itemValue="S" 
 										itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
 									<p:ajax event="change" oncomplete="typeConfirmation.show()"
-										listener="#{backingBean.applicationCategorySelected}" />
+										listener="#{backingBean.applicationCategorySelected}" update="@([id$=typeConfirmationId])"/>
 								</p:selectOneRadio></td>
 						</tr>
 					</table>
@@ -481,10 +481,10 @@
 		<br />
 
 	</p:dialog>
-
+	
 	<p:confirmDialog id="typeConfirmationId"
-		message="#{lbl['lbl.sm.catCodes.cnfrmMsg']}"
-		header="#{lbl['lbl.sm.catCodes.cmfrmHdr']}"
+		message="#{backingBean.managedBean.regCatCodeConfirmMsg}"
+		header="#{backingBean.managedBean.regCatCodeConfirmHeader}"
 		widgetVar="typeConfirmation">
 
 		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"

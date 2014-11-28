@@ -286,7 +286,7 @@ public class SmApplicationBackingBean extends
 					&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
 							.isEmpty()) {
 				getManagedBean().getSmAppl().getSmApplSectionReviews().clear();
-				
+
 			}
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
@@ -934,7 +934,7 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser() && !valid) {
 						saveOrUpdateAppl();
 					}
-					//calcPersonnelListCount();
+					// calcPersonnelListCount();
 					displayBumiRecommendNote();
 				} else if (getManagedBean()
 						.getCurrentPageType()
@@ -987,7 +987,7 @@ public class SmApplicationBackingBean extends
 						SmApplicationUtil
 								.checkAllowedToApprove(getManagedBean());
 					}
-					//calcPersonnelListCount();
+					// calcPersonnelListCount();
 					displayBumiRecommendNote();
 				} else if (getManagedBean()
 						.getCurrentPageType()
@@ -1461,6 +1461,34 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl().getApplCategoryType(),
 					getManagedBean().getSmAppl().getSupplierType(),
 					getManagedBean().getBusinessTypeVal());
+		}
+		
+		//added to custom confirm dialog title and msg
+		//based on category type Special or Normal
+		setRegCatCodeConfirmDialog();
+	}
+
+	private void setRegCatCodeConfirmDialog() {
+		getManagedBean().setRegCatCodeConfirmHeader(
+				SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.header.normal",
+						null));
+		getManagedBean().setRegCatCodeConfirmMsg(
+				SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.msg.normal", null));
+		if (getManagedBean().getSmAppl() != null) {
+			if (StringUtils.isNotBlank(getManagedBean().getSmAppl()
+					.getApplCategoryType())
+					&& getManagedBean().getSmAppl().getApplCategoryType()
+							.equals("S")) {
+				getManagedBean().setRegCatCodeConfirmHeader(
+						SmCommonUtil.getMessage(
+								"lbl.sm.regCatCode.confirm.header.special",
+								null));
+				getManagedBean().setRegCatCodeConfirmMsg(
+						SmCommonUtil.getMessage(
+								"lbl.sm.regCatCode.confirm.msg.special", null));
+			}
 		}
 	}
 
@@ -6203,7 +6231,7 @@ public class SmApplicationBackingBean extends
 		}
 		finalFilePath = null;
 	}
-	
+
 	public StreamedContent getFile() {
 		return file;
 	}
