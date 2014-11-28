@@ -81,6 +81,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private String serviceCharge;
 
 	private BigDecimal deductionAmt;
+	private boolean haveAdvancedPymt;
+	private BigDecimal paidAmt;
+	private BigDecimal balanceAmt;
+	private BigDecimal paidPerc;
+	private int numberOfCO;
 
 	private String buttonVal;
 	private PmUser pmUser;
@@ -871,5 +876,75 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 
 	public void setValidated(boolean validated) {
 		this.validated = validated;
+	}
+
+	/**
+	 * @return the haveAdvancedPymt
+	 */
+	public boolean isHaveAdvancedPymt() {
+		return haveAdvancedPymt;
+	}
+
+	/**
+	 * @param haveAdvancedPymt the haveAdvancedPymt to set
+	 */
+	public void setHaveAdvancedPymt(boolean haveAdvancedPymt) {
+		this.haveAdvancedPymt = haveAdvancedPymt;
+	}
+
+	/**
+	 * @return the paidAmt
+	 */
+	public BigDecimal getPaidAmt() {
+		return paidAmt;
+	}
+
+	/**
+	 * @param paidAmt the paidAmt to set
+	 */
+	public void setPaidAmt(BigDecimal paidAmt) {
+		this.paidAmt = paidAmt;
+	}
+
+	/**
+	 * @return the balanceAmt
+	 */
+	public BigDecimal getBalanceAmt() {
+		return balanceAmt;
+	}
+
+	/**
+	 * @param balanceAmt the balanceAmt to set
+	 */
+	public void setBalanceAmt(BigDecimal balanceAmt) {
+		this.balanceAmt = balanceAmt;
+	}
+
+	/**
+	 * @return the paidPerc
+	 */
+	public BigDecimal getPaidPerc() {
+		return paidPerc;
+	}
+
+	/**
+	 * @param paidPerc the paidPerc to set
+	 */
+	public void setPaidPerc(BigDecimal paidPerc) {
+		this.paidPerc = paidPerc;
+	}
+
+	/**
+	 * @return the numberOfCO
+	 */
+	public int getNumberOfCO() {
+		return numberOfCO;
+	}
+
+	/**
+	 * @param numberOfCO the numberOfCO to set
+	 */
+	public void setNumberOfCO(int numberOfCO) {
+		this.numberOfCO = numberOfCO;
 	}
 }

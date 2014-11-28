@@ -23,7 +23,7 @@
 		<f:event listener="#{paymentMatchBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="#{paymentMatchBackingBean.managedBean.autoUpdate}" showSummary="false"
-			closable="true" severity="error, info" />
+			closable="true" severity="error, info, warn" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
@@ -69,6 +69,13 @@
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.fl.advanced.payment.summary']}" update="@form" 
+						rendered="#{paymentMatchBackingBean.managedBean.haveAdvancedPymt}"
+							actionListener="#{paymentMatchBackingBean.onTabChange(4)}">
+							<f:setPropertyActionListener
+								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
+								value="4" />
+						</p:menuitem>
 					</p:tabMenu></td>
 				<td width="80%"><p:outputPanel
 						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 0}">
@@ -82,6 +89,10 @@
 					</p:outputPanel> <p:outputPanel
 						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 3}">
 						<ui:include src="pmSummary.xhtml" />
+					</p:outputPanel>
+					 <p:outputPanel
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 4}">
+						<ui:include src="pmAdvancedPaymentSumm.xhtml" />
 					</p:outputPanel></td>
 			</tr>
 		</table>
