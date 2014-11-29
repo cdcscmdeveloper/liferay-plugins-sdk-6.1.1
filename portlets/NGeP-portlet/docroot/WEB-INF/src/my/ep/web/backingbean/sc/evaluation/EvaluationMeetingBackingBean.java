@@ -70,7 +70,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.OrganizationType;	
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -157,7 +157,19 @@ public class EvaluationMeetingBackingBean extends
 		IQTMeetingSO meetingSO;
 		IQTDetailSO qtDetailSo;
 		try {
+			List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
+					.getMeetingRemoveList();
+			List<ScQtCommitteeActivity> committeeRemoveList = this
+					.getManagedBean().getRemoveCommitteeList();
+			if (null == meetingRemoveList) {
+				this.getManagedBean().setMeetingRemoveList(
+						new ArrayList<ScQtMeeting>());
+			}
 
+			if (null == committeeRemoveList) {
+				this.getManagedBean().setRemoveCommitteeList(
+						new ArrayList<ScQtCommitteeActivity>());
+			}
 			this.getManagedBean().setCommitteeType(commType);
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			MeetingResDTO resDTO = new MeetingResDTO();
@@ -640,6 +652,30 @@ public class EvaluationMeetingBackingBean extends
 		}
 	}
 
+	private List<ScQtMeeting> getMeetingToBeRemoveList() {
+		List<ScQtMeeting> toBeRemoveList = new ArrayList<ScQtMeeting>();
+
+		List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
+				.getMeetingRemoveList();
+		if (null != meetingRemoveList && meetingRemoveList.size() > 0) {
+			toBeRemoveList.addAll(meetingRemoveList);
+		}
+
+		return toBeRemoveList;
+	}
+
+	private List<ScQtCommitteeActivity> getCommitteeToBeRemoveList() {
+		List<ScQtCommitteeActivity> toBeRemoveList = new ArrayList<ScQtCommitteeActivity>();
+
+		List<ScQtCommitteeActivity> committeeRemoveList = this.getManagedBean()
+				.getRemoveCommitteeList();
+		if (null != committeeRemoveList && committeeRemoveList.size() > 0) {
+			toBeRemoveList.addAll(committeeRemoveList);
+		}
+
+		return toBeRemoveList;
+	}
+
 	public MeetingReqDTO prepareMeetingDtls() {
 		MeetingReqDTO metReqDtO = new MeetingReqDTO();
 		try {
@@ -677,29 +713,10 @@ public class EvaluationMeetingBackingBean extends
 
 			}
 
-			List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
-					.getMeetingRemoveList();
-			if (null != meetingRemoveList && !meetingRemoveList.isEmpty()) {
-				for (int i = 0; i < meetingRemoveList.size(); i++) {
-					if (null == meetingRemoveList.get(i).getQtMeetingId()) {
-						meetingRemoveList.remove(i);
-					}
-				}
+			metReqDtO.setDeletedMeetingList(getMeetingToBeRemoveList());
 
-			}
-			metReqDtO.setDeletedMeetingList(meetingRemoveList);
-			List<ScQtCommitteeActivity> committeeRemoveList = this
-					.getManagedBean().getRemoveCommitteeList();
-			if (null != committeeRemoveList && !committeeRemoveList.isEmpty()) {
-				for (int i = 0; i < committeeRemoveList.size(); i++) {
-					if (null == committeeRemoveList.get(i)
-							.getQtCommitteeActivityId()) {
-						committeeRemoveList.remove(i);
-					}
-				}
-
-			}
-			metReqDtO.setDeletedCommitteeActivityList(committeeRemoveList);
+			metReqDtO
+					.setDeletedCommitteeActivityList(getCommitteeToBeRemoveList());
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
 
