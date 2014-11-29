@@ -78,7 +78,7 @@
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				process="@this" partialSubmit="true" icon="ui-icon-delete"
 				update="turuthadir"
-				actionListener="#{evaluationBackingBean.deleteSelectedRowsAction(evaluationBackingBean.managedBean.meetingAttendanceList)}">
+				action="#{evaluationBackingBean.markDeleteSelectedRowsAction(evaluationBackingBean.managedBean.meetingAttendanceList,evaluationBackingBean.managedBean.meetingAttendanceRemoveList)}">
 				<f:setPropertyActionListener
 					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
