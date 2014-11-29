@@ -47,10 +47,11 @@
 					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.date']}" />
 				</f:facet>
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
+					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="evaluationMeetingId"
 					label="#{lbl['lbl.sc.eva.prepare.meeting.date']}" required="true"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"></p:calendar>
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
 				<p:message id="meetingEvaluationid" for="evaluationMeetingId"
 					display="icon"></p:message>
 
@@ -83,6 +84,8 @@
 					value="#{meeting.meetingStatus.statusId}">
 					<f:selectItems
 						value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}" />
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{evaluationBackingBean.setStatusChange(index,evaluationBackingBean.managedBean.scQtMeetings)}"></p:ajax>
 				</p:selectOneMenu>
 
 			</p:column>
@@ -118,8 +121,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
-				action="#{evaluationBackingBean.deleteSelectedRowsAction(evaluationBackingBean.managedBean.scQtMeetings)}"
-				update="evaluationmeetingDetails">
+				update="evaluationmeetingDetails"
+				action="#{evaluationBackingBean.markDeleteSelectedRowsAction(evaluationBackingBean.managedBean.scQtMeetings,evaluationBackingBean.managedBean.meetingRemoveList)}">
 				<f:setPropertyActionListener
 					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
