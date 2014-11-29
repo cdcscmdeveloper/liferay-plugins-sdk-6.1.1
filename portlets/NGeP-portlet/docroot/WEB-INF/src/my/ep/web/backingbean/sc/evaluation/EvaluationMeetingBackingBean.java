@@ -69,7 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
-import my.ep.type.aut.SearchOperator;		
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -572,7 +572,7 @@ public class EvaluationMeetingBackingBean extends
 						}
 						if (itemIds.size() > 0) {
 							if (itemIds.contains(user.getIdentificationNo())) {
-
+								throw new EpException(MessageConst.ERROR_760194);
 							} else {
 								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 								setUserDetails(activity);
@@ -809,6 +809,7 @@ public class EvaluationMeetingBackingBean extends
 			for (ScCommitteeMember committees : cloneCommitteeList) {
 				if (itemIds.size() > 0) {
 					if (itemIds.contains(committees.getIcPassport())) {
+						throw new EpException(MessageConst.ERROR_760194);
 
 					} else {
 						committees.setScCommittee(this.getManagedBean()
