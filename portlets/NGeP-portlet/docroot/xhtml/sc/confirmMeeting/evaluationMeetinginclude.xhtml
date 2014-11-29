@@ -100,7 +100,7 @@
 				update="evaluationmeetingDetails" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
-				action="#{evaluationMeetingBackingBean.deleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings)}"
+				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings,evaluationMeetingBackingBean.managedBean.meetingRemoveList)}"
 				update="evaluationmeetingDetails">
 				<f:setPropertyActionListener
 					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
@@ -214,7 +214,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
-				action="#{evaluationMeetingBackingBean.deleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"
+				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.committeeMemberActivity,evaluationMeetingBackingBean.managedBean.removeCommitteeList)}"
 				update="evaluationpreparecommittee">
 				<f:setPropertyActionListener
 					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
