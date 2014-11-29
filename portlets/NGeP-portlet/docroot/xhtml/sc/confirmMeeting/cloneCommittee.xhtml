@@ -8,14 +8,16 @@
 
 	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
 		modal="true" width="1000" height="500" position="top">
+		<p:messages id="cloneallCommitteeid" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true"></p:messages>
 		<p:panel id="clonesearchpnlid" header="Search" toggleable="true">
 			<table>
 				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-					<td colspan="3"><p:inputText maxlength="100"
+					<td colspan="3"><p:inputTextarea maxlength="100" style="margin-bottom:3px;"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-							size="92" /></td>
+							rows="2" cols="50" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -104,23 +106,23 @@
 				<p:ajax event="rowSelect" update=":form:cloneCommittee"
 					listener="#{evaluationMeetingBackingBean.onRowCloneAction}" />
 
-				<p:column style="width:20%;white-space: normal;"
+				<p:column style="width:17%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
 					<h:outputText value="#{scQt.qtNo}" />
 				</p:column>
 
-				<p:column style="width:30%;white-space: normal;"
+				<p:column style="width:43%;white-space: normal;"
 					headerText="#{lbl['lbl.so.title']}">
 					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
 
-				<p:column style="width:18%;white-space: normal;"
+				<p:column style="width:10%;white-space: normal;"
 					headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
 						value="#{evaluationMeetingBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
-				<p:column style="width:12%;white-space: normal;"
+				<p:column style="width:10%;white-space: normal;"
 					headerText="#{lbl['lbl.so.crtdt']}">
 					<h:outputText value="#{scQt.createdDate}">
 						<f:convertDateTime
@@ -149,12 +151,12 @@
 
 
 				<p:column selectionMode="multiple" style="width:2%"></p:column>
-				<p:column style="width:20%;white-space: normal;"
+				<p:column style="width:25%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
 					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 				</p:column>
 
-				<p:column style="width:15%;white-space: normal;"
+				<p:column style="width:13%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
 					<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
 				</p:column>
@@ -163,17 +165,17 @@
 					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
 					<h:outputText value="#{committeeMember.designation}"></h:outputText>
 				</p:column>
-				<p:column style="width:15%;white-space: normal;"
+				<p:column style="width:20%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
 					<h:outputText value="#{committeeMember.email}"></h:outputText>
 				</p:column>
 
-				<p:column style="width:8%;white-space: normal;"
+				<p:column style="width:5%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
 					<h:outputText value="#{committeeMember.grade}"></h:outputText>
 				</p:column>
 
-				<p:column style="width:10%;white-space: normal;"
+				<p:column style="width:5%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
 					<h:outputText
 						value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
