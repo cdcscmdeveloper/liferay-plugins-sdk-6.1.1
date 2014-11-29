@@ -85,6 +85,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -128,6 +129,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
@@ -459,6 +461,12 @@ public class EvaluationBackingBean extends
 		IQTDetailSO qtDetailSo = null;
 
 		try {
+			List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
+					.getMeetingRemoveList();
+			if (null == meetingRemoveList) {
+				meetingRemoveList = new ArrayList<ScQtMeeting>();
+			}
+
 			this.getManagedBean().setCommitteeType(commType);
 			this.getManagedBean().setPrepareActiveIndex(index);
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
@@ -553,6 +561,11 @@ public class EvaluationBackingBean extends
 
 		try {
 			this.getManagedBean().setPrepareActiveIndex(index);
+			List<ScQtMeetingAttendance> meetingAttendanceRemoveList = this
+					.getManagedBean().getMeetingAttendanceRemoveList();
+			if (null == meetingAttendanceRemoveList) {
+				meetingAttendanceRemoveList = new ArrayList<ScQtMeetingAttendance>();
+			}
 
 		} finally {
 
@@ -2945,6 +2958,29 @@ public class EvaluationBackingBean extends
 
 			}
 			if (outputTab == 4) {
+				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					if (currentTab == 1) {
+						if (!this.getManagedBean().getScQt().isSampleReq()) {
+							if (this.getManagedBean()
+									.getComplianceActiveIndex() < 2) {
+								retriveComplianceSummary();
+								// this.getManagedBean().setComplianceActiveIndex(2);
+								outputTab = 1;
+							}
+
+						} else {
+							if (this.getManagedBean()
+									.getComplianceActiveIndex() < 3) {
+								// this.getManagedBean().setComplianceActiveIndex(3);
+								retriveComplianceSummary();
+								outputTab = 1;
+							}
+						}
+
+					}
+				}
 
 				retrieveReportTabDtl();
 			}
@@ -3218,6 +3254,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setReadOnly(readoonly);
 			retriveMeetingDtls(qtId, committeeType, index);
+			getStatusDropdownValues("SC", "MS");
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -3227,6 +3264,31 @@ public class EvaluationBackingBean extends
 
 		}
 
+	}
+
+	private List<ScQtMeeting> getMeetingToBeRemoveList() {
+		List<ScQtMeeting> toBeRemoveList = new ArrayList<ScQtMeeting>();
+
+		List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
+				.getMeetingRemoveList();
+		if (null != meetingRemoveList && meetingRemoveList.size() > 0) {
+			toBeRemoveList.addAll(meetingRemoveList);
+		}
+
+		return toBeRemoveList;
+	}
+
+	private List<ScQtMeetingAttendance> getAttendanceToBeRemoveList() {
+		List<ScQtMeetingAttendance> toBeRemoveList = new ArrayList<ScQtMeetingAttendance>();
+
+		List<ScQtMeetingAttendance> meetingAttendanceRemoveList = this
+				.getManagedBean().getMeetingAttendanceRemoveList();
+		if (null != meetingAttendanceRemoveList
+				&& meetingAttendanceRemoveList.size() > 0) {
+			toBeRemoveList.addAll(meetingAttendanceRemoveList);
+		}
+
+		return toBeRemoveList;
 	}
 
 	public EvaluationReqDTO evaluationPreparation() {
@@ -3252,30 +3314,9 @@ public class EvaluationBackingBean extends
 						.getMeetingAttendanceList());
 			}
 
-			List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
-					.getMeetingRemoveList();
-			if (null != meetingRemoveList && !meetingRemoveList.isEmpty()) {
-				for (int i = 0; i < meetingRemoveList.size(); i++) {
-					if (null == meetingRemoveList.get(i).getQtMeetingId()) {
-						meetingRemoveList.remove(i);
-					}
-				}
+			reqDtO.setRemovedmeetingList(getMeetingToBeRemoveList());
 
-			}
-			reqDtO.setRemovedmeetingList(meetingRemoveList);
-			List<ScQtMeetingAttendance> meetingAttendanceRemoveList = this
-					.getManagedBean().getMeetingAttendanceRemoveList();
-			if (null != meetingAttendanceRemoveList
-					&& !meetingAttendanceRemoveList.isEmpty()) {
-				for (int i = 0; i < meetingAttendanceRemoveList.size(); i++) {
-					if (null == meetingAttendanceRemoveList.get(i)
-							.getQtMeetingAttendanceId()) {
-						meetingAttendanceRemoveList.remove(i);
-					}
-				}
-
-			}
-			reqDtO.setRemovedmeetingAttendanceList(meetingAttendanceRemoveList);
+			reqDtO.setRemovedmeetingAttendanceList(getAttendanceToBeRemoveList());
 			List<ScQtEvaluationReport> evaluationReport = this.getManagedBean()
 					.getScQtEvaluationReportList();
 			if (null != evaluationReport && !evaluationReport.isEmpty()) {
@@ -3966,12 +4007,17 @@ public class EvaluationBackingBean extends
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
 		} else {
-			String docDefinitionKey = scQtEvaluationReport.getPmDocument().getDocDefinitionKey();
+			String docDefinitionKey = scQtEvaluationReport.getPmDocument()
+					.getDocDefinitionKey();
 			scQtEvaluationReportAttachment = new ScQtEvaluationReportAttachment();
-			scQtEvaluationReportAttachment.setScQtEvaluationReport(scQtEvaluationReport);
-			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport.getScQt().getQtNo());
+			scQtEvaluationReportAttachment
+					.setScQtEvaluationReport(scQtEvaluationReport);
+			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport
+					.getScQt().getQtNo());
 			if (SourcingConstants.DOC_DEF_KEY_QT_INFO.equals(docDefinitionKey)) {
-				generateMaklumatTenderPdfFromVelocity((ScAttachment)scQtEvaluationReportAttachment, scQtEvaluationReport);
+				generateMaklumatTenderPdfFromVelocity(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						scQtEvaluationReport);
 			}
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
@@ -3979,65 +4025,75 @@ public class EvaluationBackingBean extends
 		return scQtEvaluationReportAttachment;
 	}
 
-	private void generateMaklumatTenderPdfFromVelocity(ScAttachment attachment, ScQtEvaluationReport scQtEvaluationReport) throws Exception {
+	private void generateMaklumatTenderPdfFromVelocity(ScAttachment attachment,
+			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
 		debugLogger("generateMaklumatTenderPdfFromVelocity");
 		attachment.setFileName(SourcingConstants.DOCNAME_EV_QT_INFO);
-		
-		String html = generateMaklumatTenderFromVelocity(scQtEvaluationReport, getManagedBean().getScQt());
+
+		String html = generateMaklumatTenderFromVelocity(scQtEvaluationReport,
+				getManagedBean().getScQt());
 		populateAttachmentDetails(attachment);
-		
-		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(getActualFilePath(attachment)), html);
+
+		DocumentGenerator.getInstance().generatePdf(
+				new FileOutputStream(getActualFilePath(attachment)), html);
 	}
 
-	private String generateMaklumatTenderFromVelocity(ScQtEvaluationReport scQtEvaluationReport, ScQt scQt) throws Exception {
+	private String generateMaklumatTenderFromVelocity(
+			ScQtEvaluationReport scQtEvaluationReport, ScQt scQt)
+			throws Exception {
 		debugLogger("generateMaklumatTenderFromVelocity");
-		
+
 		TemplateDocBackingBean backingBean = new TemplateDocBackingBean();
 		TplDocMaster tplDocMaster = scQtEvaluationReport.getTplDocMaster();
 		backingBean.goToMaint(tplDocMaster);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
-		
+
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
-    	
-    	IAddressSO addressSO = null;
-    	PmAddressType pmAddressType = null;
+
+		IAddressSO addressSO = null;
+		PmAddressType pmAddressType = null;
 		try {
-			addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if (resDTO.getAddressTypeList().size() > 0) {
-				pmAddressType = resDTO.getAddressTypeList().get(0);	
+				pmAddressType = resDTO.getAddressTypeList().get(0);
 			}
 		} finally {
 			addressSO = null;
 		}
-     	
-		String agencyAddress = "";
-    	String agencyPhoneNo = "";
-    	String agencyFaxNo = "";
-    	if (pmAddressType != null) {
-    		PmAddress pmAddress = pmAddressType.getPmAddress();
-    		agencyAddress = getFullAddress(pmAddress);
-    		agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
-    		agencyPhoneNo = pmAddress.getPhoneNo();
-    		agencyFaxNo = pmAddress.getFaxNo();
-    	}
 
-    	FacesScopes facesScopes = new FacesScopes();
+		String agencyAddress = "";
+		String agencyPhoneNo = "";
+		String agencyFaxNo = "";
+		if (pmAddressType != null) {
+			PmAddress pmAddress = pmAddressType.getPmAddress();
+			agencyAddress = getFullAddress(pmAddress);
+			agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+			agencyPhoneNo = pmAddress.getPhoneNo();
+			agencyFaxNo = pmAddress.getFaxNo();
+		}
+
+		FacesScopes facesScopes = new FacesScopes();
 		String officerName = facesScopes.getUserSessionBean().getUserName();
-		
-    	html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",pmOrgProfile.getOrgName());
-    	html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",pmOrgProfile.getOrgName());
-    	html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",pmOrgProfile.getOrgName());
-    	html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;",agencyAddress);
-    	html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;",officerName);
-    	html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;",agencyPhoneNo);
-    	html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;",agencyFaxNo);
-    	html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",Integer.toString(scQt.getQtValidityPeriod()));
-    	return html;
+
+		html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",
+				pmOrgProfile.getOrgName());
+		html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",
+				pmOrgProfile.getOrgName());
+		html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",
+				pmOrgProfile.getOrgName());
+		html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;", agencyAddress);
+		html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;", officerName);
+		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
+		html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;", agencyFaxNo);
+		html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
+				Integer.toString(scQt.getQtValidityPeriod()));
+		return html;
 	}
 
 	private void generateAnalisisKeputusanPenilaianTeknikalPdf(
@@ -4867,5 +4923,33 @@ public class EvaluationBackingBean extends
 		// use to upload back to database
 		File file = new File(filePath);
 		return file;
+	}
+
+	private List<PmStatusDesc> retriveStatus(String moduleCode, String docType) {
+		return StatusHelper.getInstance()
+				.getStatusDescList(moduleCode, docType);
+	}
+
+	public void setStatusChange(int index, List<ScQtMeeting> meeting) {
+		ScQtMeeting list = meeting.get(index);
+
+		List<PmStatusDesc> localParamDesc = retriveStatus("SC", "MS");
+		if (null != list.getMeetingStatus().getStatusId()) {
+			for (PmStatusDesc statusDesc : localParamDesc) {
+
+				if (statusDesc
+						.getPmStatus()
+						.getStatusId()
+						.equals(Long.valueOf(list.getMeetingStatus()
+								.getStatusId()))) {
+
+					list.setMeetingStatus(statusDesc.getPmStatus());
+					break;
+				}
+			}
+		}
+
+		this.getManagedBean().getScQtMeetings().set(index, list);
+
 	}
 }
