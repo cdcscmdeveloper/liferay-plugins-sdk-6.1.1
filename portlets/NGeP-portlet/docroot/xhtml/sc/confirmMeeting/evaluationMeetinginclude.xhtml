@@ -76,8 +76,9 @@
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
-					maxlength="255" label="#{lbl['lbl.sc.eva.prepare.meeting.loc']}"
-					id="locationId" required="true" cols="140"></p:inputTextarea>
+					style="width:75%;" maxlength="255"
+					label="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" id="locationId"
+					required="true" cols="140"></p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
 
@@ -172,7 +173,8 @@
 			</p:column>
 			<p:column style="width:10%;">
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory"></h:outputText><p:spacer width="5"></p:spacer>
+					<h:outputText value="*" styleClass="mandatory"></h:outputText>
+					<p:spacer width="5"></p:spacer>
 					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
 				</f:facet>
 				<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
@@ -186,7 +188,7 @@
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
-						<p:ajax event="change" 	process="@this" partialSubmit="true" 
+						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
 					</p:selectOneMenu>
 					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
@@ -247,7 +249,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea rows="2" cols="100"
+								<td><p:inputTextarea rows="2" cols="100" style="width:75%;"
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId eq null}" maxlength="1000" />
 									<h:outputText value="#{remarkVar.remark}"
