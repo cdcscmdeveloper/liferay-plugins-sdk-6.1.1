@@ -1,7 +1,7 @@
 package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -9,12 +9,10 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
-import my.ep.persistence.entity.sc.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
@@ -33,7 +31,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
-import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -191,7 +188,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean readOnly;
 	private boolean memberOnly;
     private List<ScQtCommitteRemarks> evaluationSignOffRemarks;
+    private Date today=new Date();
 	
+
+	/**
+	 * @return the today
+	 */
+	public Date getToday() {
+		return today;
+	}
+
+	/**
+	 * @param today the today to set
+	 */
+	public void setToday(Date today) {
+		this.today = today;
+	}
 
 	/**
 	 * @return the evaluationSignOffRemarks
