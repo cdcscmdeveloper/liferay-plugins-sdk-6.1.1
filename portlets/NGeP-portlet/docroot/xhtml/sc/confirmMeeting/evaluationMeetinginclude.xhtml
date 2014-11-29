@@ -170,9 +170,9 @@
 				<h:outputText
 					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
-			<p:column style="width:10%;white-space: normal;">
+			<p:column style="width:10%;">
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory"></h:outputText>
+					<h:outputText value="*" styleClass="mandatory"></h:outputText><p:spacer width="5"></p:spacer>
 					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
 				</f:facet>
 				<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
