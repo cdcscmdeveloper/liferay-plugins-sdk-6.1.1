@@ -19,7 +19,7 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 		</div>
-<p:spacer height="75"></p:spacer>
+		<p:spacer height="150"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -33,11 +33,13 @@
 
 
 		<p:panel>
-		
-		<ui:param name="finSpecsupplierList" value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
-		<ui:param name="finSpecofferPrice" value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
-		<ui:param name="finSpecSupplierId" value="finSpecSupplierWithOutzone"></ui:param>
-            
+
+			<ui:param name="finSpecsupplierList"
+				value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
+			<ui:param name="finSpecofferPrice"
+				value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
+			<ui:param name="finSpecSupplierId" value="finSpecSupplierWithOutzone"></ui:param>
+
 			<ui:include
 				src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
 
