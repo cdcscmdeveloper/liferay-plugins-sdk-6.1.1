@@ -12,6 +12,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td>
+				<h:panelGroup id="publishId">
 					<table>
 						<tr>
 							<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
@@ -23,13 +24,14 @@
 									maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
 									<p:ajax event="dateSelect" process="@this"
 										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
-										update="proposalvalidityid, closingDate" />
+										update="proposalvalidityid, closingDate, publishId" />
 								</p:calendar> <h:inputText value="12:00 PM" disabled="true" size="4"
 									style="width: 50px" /></td>
 							<td><p:message id="noticePublishMsg" for="noticePublish"
 									display="icon" /></td>
 						</tr>
 					</table>
+					</h:panelGroup>
 				</td>
 			</tr>
 			<tr>
