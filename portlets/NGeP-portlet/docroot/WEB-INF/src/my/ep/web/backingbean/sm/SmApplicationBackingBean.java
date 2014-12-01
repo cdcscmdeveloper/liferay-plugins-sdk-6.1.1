@@ -418,7 +418,7 @@ public class SmApplicationBackingBean extends
 					}
 					smAppl = resDto.getSmAppl();
 					smAppl.setResubmit(false);
-					smAppl.setSupportingDocMode("O");
+					smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 					if (smAppl.getApplType().equalsIgnoreCase(
 							ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 						// smAppl.setSmSupplierBanks(new
@@ -851,7 +851,7 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().isSupplierUser()
 				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
-						.equals("O")) {
+						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateSupportingDocs();
 		}
 		testUpdateSmAppl(applType, currentPageType, outputPageType, false);
@@ -1304,7 +1304,7 @@ public class SmApplicationBackingBean extends
 		int currentPage = getManagedBean().getTabActiveIndex();
 		try {
 			this.currentTab = currentPage;
-			// getManagedBean().getSmAppl().setSupportingDocMode("O");
+			// getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 			if (navType.equalsIgnoreCase("next")) {
 				this.outputTab = currentPage + 1;
 			} else if (navType.equalsIgnoreCase("prev")) {
@@ -1564,7 +1564,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
-			getManagedBean().getSmAppl().setSupportingDocMode("O");
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		saveOrUpdateAppl();
 	}
@@ -1582,7 +1582,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
-			getManagedBean().getSmAppl().setSupportingDocMode("O");
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		RequestContext.getCurrentInstance().execute("typeConfirmation.hide()");
 	}
@@ -4182,7 +4182,7 @@ public class SmApplicationBackingBean extends
 					+ bpmAppl.getSupportingDocMode());
 
 			if (bpmAppl.getSupportingDocMode() == null) {
-				bpmAppl.setSupportingDocMode("O");
+				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 			}
 			if (!bpmAppl.isActiveAppl()) {
 				bpmAppl.setActiveAppl(true);
@@ -4257,7 +4257,7 @@ public class SmApplicationBackingBean extends
 		log.info("*** Resubmit for send inquiry **** ");
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
-						.equals("O")) {
+						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateSupportingDocs();
 		}
 		getManagedBean().getSmAppl().setResubmit(true);
@@ -4269,7 +4269,7 @@ public class SmApplicationBackingBean extends
 		// try {
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
-						.equals("O")) {
+						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateSupportingDocs();
 		} else {
 			log.info("*** Remove unnecessary files for the sm supporting docs **** ");
@@ -4388,7 +4388,7 @@ public class SmApplicationBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase("O")) {
+					.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);
@@ -4523,7 +4523,7 @@ public class SmApplicationBackingBean extends
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 
 			if (bpmAppl.getSupportingDocMode() == null) {
-				bpmAppl.setSupportingDocMode("O");
+				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 			}
 			String outcome = "";
 			if (!getManagedBean().isDraftedAppl()) {
@@ -4640,7 +4640,7 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (this.getManagedBean().getSmAppl().getSupportingDocMode()
-				.equalsIgnoreCase("O")) {
+				.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			reqDTO.setOnlineDoc(true);
 		} else {
 			reqDTO.setOnlineDoc(false);
@@ -4861,7 +4861,7 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase("O")) {
+					.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);

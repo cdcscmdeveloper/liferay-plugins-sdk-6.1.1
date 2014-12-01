@@ -38,26 +38,27 @@
 					<h:inputHidden
 						value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
 					<ui:fragment
-						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
+						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
 
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'O'}">
+						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
 
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'O' or backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
+						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE or backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
 						<c:choose>
 							<c:when
 								test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 
 								<table>
 									<tr>
-										<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+										<td><p:commandButton
+												value="#{lbl['lbl.sm.prev.section']}"
 												actionListener="#{backingBean.setTabValue('7','6')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 												update=":form" icon="ui-icon-prev" /></td>
@@ -68,7 +69,8 @@
 							<c:otherwise>
 								<table>
 									<tr>
-										<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+										<td><p:commandButton
+												value="#{lbl['lbl.sm.prev.section']}"
 												actionListener="#{backingBean.setTabValue('5','4')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 												update=":form" icon="ui-icon-prev" /></td>

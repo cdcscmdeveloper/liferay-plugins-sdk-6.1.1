@@ -9,7 +9,7 @@
 
 	<p:outputPanel id="supDocPan">
 		<h:panelGroup
-			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
+			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
 
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
@@ -50,7 +50,7 @@
 			</c:choose>
 		</h:panelGroup>
 		<h:panelGroup id="onSupGroup"
-			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'O'}">
+			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
 			<c:choose>

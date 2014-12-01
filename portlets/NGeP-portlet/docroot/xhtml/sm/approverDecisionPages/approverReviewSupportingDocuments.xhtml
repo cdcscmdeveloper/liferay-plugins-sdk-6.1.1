@@ -39,11 +39,11 @@
 					</tr>
 					<tr>
 						<td><c:if
-								test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
+								test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
 								<ui:include
 									src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
 							</c:if> <c:if
-								test="#{backingBean.managedBean.smAppl.supportingDocMode == 'O'}">
+								test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 								<ui:include
 									src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
 							</c:if> <c:choose>

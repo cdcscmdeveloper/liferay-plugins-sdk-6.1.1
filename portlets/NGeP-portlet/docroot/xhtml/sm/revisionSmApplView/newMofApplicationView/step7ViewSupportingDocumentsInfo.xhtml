@@ -12,15 +12,15 @@
 			<tr>
 				<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 						src="smViewMofApplnSideMenuItem.xhtml" /></td>
-				<td>
-					<p:dialog />
-					<h:panelGroup rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
-						<ui:include src="/xhtml/sm/shared/applViewOnlyPages/offlineSupportingDocsFormViewOnly.xhtml" />
-					</h:panelGroup>
-					<h:panelGroup id="onSupGroup" rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq 'O'}">
-						<ui:include src="/xhtml/sm/shared/applViewOnlyPages/onlineSupportingDocsFormViewOnly.xhtml" />
-					</h:panelGroup>
-				</td>
+				<td><p:dialog /> <h:panelGroup
+						rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+						<ui:include
+							src="/xhtml/sm/shared/applViewOnlyPages/offlineSupportingDocsFormViewOnly.xhtml" />
+					</h:panelGroup> <h:panelGroup id="onSupGroup"
+						rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+						<ui:include
+							src="/xhtml/sm/shared/applViewOnlyPages/onlineSupportingDocsFormViewOnly.xhtml" />
+					</h:panelGroup></td>
 			</tr>
 		</table>
 	</p:outputPanel>
