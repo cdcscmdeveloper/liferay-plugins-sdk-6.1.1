@@ -321,10 +321,23 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long divisionId;
 	private String divisionCode;
 	private CtPanelItem selectCtPanelItem;
+	private boolean specComplete;
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
-	
 
-	
+	/**
+	 * @return the specComplete
+	 */
+	public boolean isSpecComplete() {
+		return specComplete;
+	}
+
+	/**
+	 * @param specComplete
+	 *            the specComplete to set
+	 */
+	public void setSpecComplete(boolean specComplete) {
+		this.specComplete = specComplete;
+	}
 
 	public List<ZonesBean> getBeans() {
 		return beans;
@@ -349,8 +362,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setDivisionId(Long divisionId) {
 		this.divisionId = divisionId;
 	}
-
-	
 
 	public String getDivisionCode() {
 		return divisionCode;
