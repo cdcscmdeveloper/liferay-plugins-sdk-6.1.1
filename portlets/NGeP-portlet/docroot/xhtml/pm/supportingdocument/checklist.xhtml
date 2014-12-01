@@ -80,7 +80,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="true"
-						label="#{lbl['lbl.pm.status']}"
+						label="#{lbl['lbl.pm.status']}"  disabled="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 						<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 					</p:selectOneMenu>
@@ -135,7 +135,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pm.status']}" />
 					    </f:facet>
-			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}"
+			         		 disabled="#{restrict.brandNew}">
 							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 						</p:selectOneMenu>
 			        </p:column>  
