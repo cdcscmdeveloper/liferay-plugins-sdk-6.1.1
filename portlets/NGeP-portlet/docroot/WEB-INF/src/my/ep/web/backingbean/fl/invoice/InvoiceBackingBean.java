@@ -385,9 +385,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		BigDecimal contractValue = new BigDecimal(0);
 		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
 			contractValue = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getContractAmount();
-		}
-				
-		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+
 			for(CtDeduction deduction : getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
 					haveAdvancedPmyt = true;
@@ -395,15 +393,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					break;
 				}
 			}
-		}
-		
-		
-		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+
+
 			if(haveAdvancedPmyt){
 				ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
 				ctRes.getPaidAdvancePaymentAmt();
 				balanceAmt = deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt());
-				
+
 				if(balanceAmt.doubleValue() > 0){
 					newTotalAmt = ctRes.getPaidInvoiceAmt().doubleValue() / (contractValue.doubleValue());
 					percAmt =	new BigDecimal(newTotalAmt).multiply(perc);	
@@ -425,7 +421,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 			}
 		}
-		
 	}
 
 	public void factoringChecked(AjaxBehaviorEvent e) {
