@@ -30,7 +30,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     	<h:outputText value="* " styleClass="mandatory" />
 		     	<h:outputText value="#{lbl['lbl.pm.status']}" />
 		    </f:facet>
-      	   <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+      	   <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
 				<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 			</p:selectOneMenu>
         </p:column>  

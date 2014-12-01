@@ -84,7 +84,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</th>
 					<td>
 						<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="true"
-							label="#{lbl['lbl.pm.status']}"
+							label="#{lbl['lbl.pm.status']}" disabled="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 						</p:selectOneMenu>
