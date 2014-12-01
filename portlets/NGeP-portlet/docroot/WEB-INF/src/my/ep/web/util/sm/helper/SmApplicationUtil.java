@@ -2775,9 +2775,13 @@ public class SmApplicationUtil {
 	public static SmSupplierBasicInfoVO getSmSupplierBasicInfoVO(
 			SmApplicationManagedBean bean) {
 		SmSupplierBasicInfoVO smSupplierBasicInfoVO = bean.getBasicInfo();
+		String addressLine = "";
+		String postCodeCityCountry = "";
 		if (smSupplierBasicInfoVO == null) {
 			smSupplierBasicInfoVO = new SmSupplierBasicInfoVO();
 		}
+
+		// mof account
 		if (bean.getSmSupplier() != null
 				&& bean.getSmSupplier().getSmMofAccounts() != null) {
 			SmMofAccount smMofAccount = getActiveMofAccount(bean
@@ -2797,18 +2801,84 @@ public class SmApplicationUtil {
 				.getSmSupplier().getEpNo());
 		smSupplierBasicInfoVO.setRegNo(bean.getSmSupplier() == null ? "" : bean
 				.getSmSupplier().getRegNo());
+
+		// address & company
 		if (bean.getSmAppl().getSmCompanyBasic() != null
 				&& bean.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
 				&& !bean.getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().isEmpty()) {
+			smSupplierBasicInfoVO.setCompanyName(bean.getSmAppl()
+					.getSmCompanyBasic() != null ? bean.getSmAppl()
+					.getSmCompanyBasic().getCompanyName() : "");
 			smSupplierBasicInfoVO.setAddress(bean.getSmAppl()
 					.getSmCompanyBasic().getSmCompanyAddresses().get(0));
+			if (smSupplierBasicInfoVO.getAddress().getSmAddress() != null) {
+				addressLine = smSupplierBasicInfoVO.getAddress().getSmAddress()
+						.getAddress1();
+				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
+						.getSmAddress().getAddress2())) {
+					addressLine = addressLine
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getAddress2();
+				}
+				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
+						.getSmAddress().getAddress3())) {
+					addressLine = addressLine
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getAddress3();
+				}
+				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
+						.getSmAddress().getAddress4())) {
+					addressLine = addressLine
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getAddress4();
+				}
+				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
+						.getSmAddress().getPostcode())) {
+					postCodeCityCountry = smSupplierBasicInfoVO.getAddress()
+							.getSmAddress().getPostcode();
+				}
+				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
+						.getPmCity() != null) {
+					postCodeCityCountry = postCodeCityCountry
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getPmCity().getCityName();
+				}
+				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
+						.getPmDistrict() != null) {
+					postCodeCityCountry = postCodeCityCountry
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getPmDistrict().getDistrictName();
+				}
+				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
+						.getPmState() != null) {
+					postCodeCityCountry = postCodeCityCountry
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getPmState().getStateName();
+				}
+				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
+						.getPmCountry() != null) {
+					postCodeCityCountry = postCodeCityCountry
+							+ ","
+							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getPmCountry().getCountryName();
+				}
+				smSupplierBasicInfoVO.setAddressLine(addressLine);
+				smSupplierBasicInfoVO.setPostCodeStateCityCountry(postCodeCityCountry);
+			}
+
 		}
 		SmPersonnel smPersonnel = getAdminPersonnel(bean.getSmAppl()
 				.getSmPersonnels());
 		if (smPersonnel != null) {
 			smSupplierBasicInfoVO.setAdminEmail(smPersonnel.getEmail());
-			smSupplierBasicInfoVO.setAdminPhoneNo(smPersonnel.getPhoneNo());
+			smSupplierBasicInfoVO.setAdminPhoneNo(smPersonnel.getMobileNo());
 			smSupplierBasicInfoVO.setAdminName(smPersonnel.getName());
 		}
 
