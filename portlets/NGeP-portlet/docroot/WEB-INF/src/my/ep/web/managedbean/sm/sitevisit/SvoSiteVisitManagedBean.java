@@ -60,9 +60,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> mgmtLs;
 	
 	private int totalEquityOwner;
-	private int equityOwnerBumi;
-	private int equityOwnerNonBumi;
-	private int equityOwnerNonMalaysian;
 	private List<SmPersonnel> equityOwnerLs;
 	
 	private int totalCheqSign;
@@ -507,30 +504,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setTotalEquityOwner(int totalEquityOwner) {
 		this.totalEquityOwner = totalEquityOwner;
-	}
-
-	public int getEquityOwnerBumi() {
-		return equityOwnerBumi;
-	}
-
-	public void setEquityOwnerBumi(int equityOwnerBumi) {
-		this.equityOwnerBumi = equityOwnerBumi;
-	}
-
-	public int getEquityOwnerNonBumi() {
-		return equityOwnerNonBumi;
-	}
-
-	public void setEquityOwnerNonBumi(int equityOwnerNonBumi) {
-		this.equityOwnerNonBumi = equityOwnerNonBumi;
-	}
-
-	public int getEquityOwnerNonMalaysian() {
-		return equityOwnerNonMalaysian;
-	}
-
-	public void setEquityOwnerNonMalaysian(int equityOwnerNonMalaysian) {
-		this.equityOwnerNonMalaysian = equityOwnerNonMalaysian;
 	}
 
 	public List<SmPersonnel> getEquityOwnerLs() {
