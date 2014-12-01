@@ -243,22 +243,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 		log.info("loadSupportDoc - End");
 	}
-//	/**
-//	 * set default tab
-//	 * @param pmDocument
-//	 */
-//	public void defaultTab(PmDocument pmDocument){
-//		log.info("defaultTab");
-//		if(pmDocument.isByAppType()){
-//			this.getManagedBean().setSelectedTabIndex(RESTR_APP);
-//		}else if(pmDocument.isByCompType()){
-//			this.getManagedBean().setSelectedTabIndex(RESTR_COMP);
-//		}else if(pmDocument.isBySupplierType()){
-//			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP);
-//		}else if(pmDocument.isByCategory()){
-//			this.getManagedBean().setSelectedTabIndex(RESTR_CATEGORY);
-//		}
-//	}
+	/**
+	 * set default tab
+	 * @param pmDocument
+	 */
+	public void defaultTab(PmDocument pmDocument){
+		log.info("defaultTab");
+		if(pmDocument.isByAppType()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_APP-1);
+		}else if(pmDocument.isByCompType()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_COMP-1);
+		}else if(pmDocument.isBySupplierType()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP-1);
+		}else if(pmDocument.isByCategory()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_CATEGORY-1);
+		}
+	}
 	/**
 	 * load the pm document to tab view by restriction type
 	 * @param pmDocument
@@ -296,7 +296,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
 				this.getManagedBean().setCategoryRestrictions(categoryRestrictions);
 				
-//				defaultTab(pmDocument);
+				defaultTab(pmDocument);
 			}else if(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())
 					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 				if(pmDocument.getDocDefinitionTypeCode()==null){
