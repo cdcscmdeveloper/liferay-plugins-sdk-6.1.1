@@ -18,6 +18,8 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
@@ -69,6 +71,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
@@ -84,6 +87,9 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.managedbean.sc.quationtender.Node;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -95,6 +101,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -116,6 +123,61 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (getManagedBean().getSupplierCriteria() == null) {
 			this.getManagedBean().setSupplierCriteria(
 					new ScQtSupplierCriteria());
+		}
+	}
+	
+	private class SupplierPagingDataModel extends PagingDataModel<SmSupplier> {
+		private static final long serialVersionUID = 1L;
+
+		private SupplierSearchBean supplierSearchBean;
+
+		public SupplierPagingDataModel(String componentId, SupplierSearchBean supplierSearchBean) {
+			super(componentId);
+			this.supplierSearchBean = supplierSearchBean;
+		}
+		
+		@Override
+		protected ISearchResultBean<SmSupplier> pageChangeListener(
+				ISearchBean<SmSupplier> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			
+			IQTDetailSO QtDetailsSO;
+			try {
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				populateSupplierSearchCriteria(supplierSearchBean, searchBean);
+				tenderReqDTO.setSupplierSearchBean(searchBean);
+				QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveSupplierProfiles(tenderReqDTO);
+				/*if (null != tenderResDTO.getSmSupplierResultBean().getResultList()) {
+					for(SmSupplier supplier : tenderResDTO.getSmSupplierResultBean().getResultList()){
+						log.info("supplier Id  = " + supplier.getSupplierId());
+					}
+				}*/
+				return tenderResDTO.getSmSupplierResultBean();
+			} finally {
+				QtDetailsSO = null;
+			}
+		}
+	}
+
+	private void populateSupplierSearchCriteria(SupplierSearchBean supplierSearchBean, ISearchBean<SmSupplier> searchBean) {
+		if (supplierSearchBean != null) {
+			String supplierName = supplierSearchBean.getSupplierName();
+			
+			List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
+			if(scQtCategoryList != null && scQtCategoryList.size() > 0){
+				SearchFilterBean categoryCodeIdFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+				categoryCodeIdFilterBean.setSearchField("smAppl.smSupplierCategories.pmCategoryL3.categoryL3Id");
+				categoryCodeIdFilterBean.setSearchValue(constructL3Ids(scQtCategoryList));
+				searchBean.getDataFilterBeans().add(categoryCodeIdFilterBean);
+			}
+			
+			if (!StringUtils.isBlank(supplierName)) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName", SearchOperator.OPERATOR_LIKE.value(), supplierName, true));
+			}
 		}
 	}
 
@@ -278,11 +340,24 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void searchRestrictedSupplierPopupAction() {
 		debugLogger("searchRestrictedSupplierPopupAction");
-		getManagedBean().setSupplierName(null);
+		//getManagedBean().getSearchSupplierDataModel().reloadData();
+		
+		//call the 
+		IPagingDataModel<SmSupplier> searchSupplierDataModel = getManagedBean().getSearchSupplierDataModel();
+		if (searchSupplierDataModel == null) {
+			getManagedBean().setSearchSupplierDataModel(new SupplierPagingDataModel("ressupplier", getManagedBean().getSupplierSearchBean()));
+		}
+		
+		getManagedBean().getSupplierSearchBean().setSupplierName(null);
+		/*getManagedBean().setSupplierName(null);
 		getManagedBean().setMofAccountNo(null);
 		getManagedBean().setMinPaidUpCapital(null);
 		getManagedBean().setSearchSupplierList(null);
-		getManagedBean().setSelectedSupplierList(null);
+		getManagedBean().setSelectedSupplierList(null);*/
+	}
+	
+	public void searchRestrictedSupplierAction1() {
+		getManagedBean().getSearchSupplierDataModel().reloadData();
 	}
 
 	/**

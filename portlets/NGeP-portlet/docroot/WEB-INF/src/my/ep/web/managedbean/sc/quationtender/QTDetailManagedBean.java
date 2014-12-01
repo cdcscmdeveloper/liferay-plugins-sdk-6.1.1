@@ -77,6 +77,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -236,6 +237,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String supplierContact;
 	private String supplierEmail;
 	private SmAddress supplierAddress;
+	
+	private IPagingDataModel<SmSupplier> searchSupplierDataModel;
+	private SupplierSearchBean supplierSearchBean;
 
 	// supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
@@ -493,6 +497,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		userBusineeOwnerSearchBean = new UserCommitteeSearchBean();
 
 		cloneDocumentSearchBean = new QtnTenderSearchBean();
+		
+		supplierSearchBean = new SupplierSearchBean();
 
 		/*
 		 * root2 = new DefaultTreeNode("Root", null); TreeNode node0 = new
@@ -2841,6 +2847,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSupplierDivisionCode(List<String> supplierDivisionCode) {
 		this.supplierDivisionCode = supplierDivisionCode;
+	}
+
+	public IPagingDataModel<SmSupplier> getSearchSupplierDataModel() {
+		return searchSupplierDataModel;
+	}
+
+	public void setSearchSupplierDataModel(
+			IPagingDataModel<SmSupplier> searchSupplierDataModel) {
+		this.searchSupplierDataModel = searchSupplierDataModel;
+	}
+
+	public SupplierSearchBean getSupplierSearchBean() {
+		return supplierSearchBean;
+	}
+
+	public void setSupplierSearchBean(SupplierSearchBean supplierSearchBean) {
+		this.supplierSearchBean = supplierSearchBean;
 	}
 
 }
