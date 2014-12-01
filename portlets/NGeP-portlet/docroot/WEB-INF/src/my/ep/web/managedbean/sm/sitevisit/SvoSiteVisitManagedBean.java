@@ -59,6 +59,12 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> bodLs;
 	private List<SmPersonnel> mgmtLs;
 	
+	private int totalEquityOwner;
+	private int equityOwnerBumi;
+	private int equityOwnerNonBumi;
+	private int equityOwnerNonMalaysian;
+	private List<SmPersonnel> equityOwnerLs;
+	
 	private int totalCheqSign;
 	private int cheqBumi;
 	private int cheqNonBumi;
@@ -84,6 +90,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> categoryApplicable;
 	private Map<Integer,String> indexPageMap;
 	private SmPersonnel contactPerson;
+	
+	private List<SmSupplierCategory> svTaskCategories;
 	
 	private int lastIndex;
 
@@ -483,6 +491,54 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setLastIndex(int lastIndex) {
 		this.lastIndex = lastIndex;
+	}
+
+	public List<SmSupplierCategory> getSvTaskCategories() {
+		return svTaskCategories;
+	}
+
+	public void setSvTaskCategories(List<SmSupplierCategory> svTaskCategories) {
+		this.svTaskCategories = svTaskCategories;
+	}
+
+	public int getTotalEquityOwner() {
+		return totalEquityOwner;
+	}
+
+	public void setTotalEquityOwner(int totalEquityOwner) {
+		this.totalEquityOwner = totalEquityOwner;
+	}
+
+	public int getEquityOwnerBumi() {
+		return equityOwnerBumi;
+	}
+
+	public void setEquityOwnerBumi(int equityOwnerBumi) {
+		this.equityOwnerBumi = equityOwnerBumi;
+	}
+
+	public int getEquityOwnerNonBumi() {
+		return equityOwnerNonBumi;
+	}
+
+	public void setEquityOwnerNonBumi(int equityOwnerNonBumi) {
+		this.equityOwnerNonBumi = equityOwnerNonBumi;
+	}
+
+	public int getEquityOwnerNonMalaysian() {
+		return equityOwnerNonMalaysian;
+	}
+
+	public void setEquityOwnerNonMalaysian(int equityOwnerNonMalaysian) {
+		this.equityOwnerNonMalaysian = equityOwnerNonMalaysian;
+	}
+
+	public List<SmPersonnel> getEquityOwnerLs() {
+		return equityOwnerLs;
+	}
+
+	public void setEquityOwnerLs(List<SmPersonnel> equityOwnerLs) {
+		this.equityOwnerLs = equityOwnerLs;
 	}
 
 
