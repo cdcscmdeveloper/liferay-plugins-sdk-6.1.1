@@ -84,7 +84,7 @@ public class CdTrackingDiaryBackingBean extends
 					&& StringUtils.isBlank((String) titleFilterBean
 							.getSearchValue())) {
 				System.out.println("isBlank");
-		return new SearchResultBean();
+				return new SearchResultBean();
 			}
 
 			ICodificationSO unspscSO = null;

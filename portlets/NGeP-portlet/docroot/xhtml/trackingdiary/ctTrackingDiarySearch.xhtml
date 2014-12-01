@@ -61,23 +61,22 @@
 							<tr>
 								<td width="35%"><p:outputLabel
 										value="Date Range" /></td>
-							<td width="35%">
-
-				<p:column>
-					<p:calendar showOn="button" readonlyInput="true" id="pubFromDt"
-						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10">
-						<p:ajax event="dateSelect" update="pubToDt" />
-					</p:calendar>
-
-					<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10"
-						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}"
-						mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
-					</p:calendar>
-				</p:column>	</td>						
+								<td width="35%">
+								<p:column>
+									<p:calendar showOn="button" readonlyInput="true" id="pubFromDt"
+										value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										size="10">
+										<p:ajax event="dateSelect" update="pubToDt" />
+									</p:calendar>
+				
+									<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										size="10"
+										value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}"
+										mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
+									</p:calendar>
+								</p:column>	</td>						
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
