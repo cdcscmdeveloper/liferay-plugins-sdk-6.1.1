@@ -77,7 +77,7 @@
 					</c:if>
 					<c:if test="#{!backingBean.managedBean.poSecReview.verifiedAll}">
 						<div>
-							<p:outputLabel value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
+							<h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
 								escape="false" />
 						</div>
 					</c:if>
@@ -127,7 +127,7 @@
 						test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
 						<table style="width: 100%">
 							<tr>
-								<td><p:outputLabel
+								<td><h:outputText
 										value="#{backingBean.managedBean.bumiRecommendationNote}"
 										style="color: green;font-weight: bold;float:left;" /></td>
 							</tr>
@@ -136,7 +136,7 @@
 
 					<p:separator />
 					<div>
-						<p:outputLabel value="#{lbl['lbl.sm.po.splNotes']}"
+						<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
 							style="float :left;" escape="false" />
 					</div>
 					<!-- <div align="center">
