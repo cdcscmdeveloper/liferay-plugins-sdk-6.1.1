@@ -111,6 +111,13 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
+	        case ReportConst.CT_LST_OF_SUPPLAGREEMENT_RPT_VAL:
+	        	rptGenBean.setCtContractNoView(true);
+	        	rptGenBean.setCtStatusView(true);
+	        	rptGenBean.setCtCompleteView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);			
+	            break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	           
 		}		
