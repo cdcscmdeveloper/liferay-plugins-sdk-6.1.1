@@ -55,7 +55,10 @@ public class SupplierDetailBackingBean extends SourcingBaseBackingBean<SupplierD
 				QTSupplierResDTO resDTO = qtSupplierSO.retrieveSupplierDtlById(reqDTO);
 				
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
-				getManagedBean().setMofNo(resDTO.getMofNo());
+				if (resDTO.getSmMofAccount() != null) {
+					getManagedBean().setMofNo(resDTO.getSmMofAccount().getMofNo());
+				}
+				
 			} finally {
 				qtSupplierSO = null;
 			}	
