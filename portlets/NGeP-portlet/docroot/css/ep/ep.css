@@ -3440,7 +3440,7 @@ table.rptTbl {
 
 /*--------------------------      Panel Grid - Start      ------------------------------ */
 .panelGridBorders tr,.panelGridBorders td {
-	border: 1px #DDD;
+	border: 1px solid #DDD;
 }
 
 .panelGridHeaders {
