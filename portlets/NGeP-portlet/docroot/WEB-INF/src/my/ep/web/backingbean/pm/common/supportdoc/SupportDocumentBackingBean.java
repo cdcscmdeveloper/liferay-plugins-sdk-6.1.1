@@ -1008,7 +1008,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				
 				//docName
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("docName");
 				bean.setCaseInsensitive(true);
 				bean.setSearchValue(pmDocument.getDocName());
@@ -1083,7 +1083,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			
 			//docName
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("docName");
 			bean.setCaseInsensitive(true);
 			bean.setSearchValue(pmDocument.getDocName());
@@ -1114,6 +1114,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
 								pmDocument.getDocumentId()));
 			}
+			System.out.println("search doc" + pmDocument.getDocumentId());
 			if(searchDocument(searchBean)){
 				throw new EpException(MessageConst.ERROR_770089);
 			}
@@ -1129,6 +1130,9 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
 		DocumentResDTO resDTO = reqSO.retrieveDocumentBySearchBean(reqDTO);
 		if (resDTO.isSuccessful()) {
+			for(PmDocument temp: resDTO.getDocumentResultBean().getResultList()){
+				System.out.println("found" + temp.getDocumentId());
+			}
 			return (resDTO.getDocumentResultBean()!=null 
 					&& resDTO.getDocumentResultBean().getResultList()!=null 
 					&& !resDTO.getDocumentResultBean().getResultList().isEmpty());
