@@ -11,56 +11,92 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+		<style>
+			div[id$="ctSubListTree"] thead {
+    			display:none;
+			}
+			
+			.ui-datatable.ctlisttree thead th,
+			.ui-datatable.ctlisttree tbody,
+			.ui-datatable.ctlisttree tbody tr,
+			.ui-datatable.ctlisttree tbody td {
+				padding:4px;
+			}
+			
+			tr.ui-expanded-row-content.ui-widget-content td[colspan="10"]:first-child{
+    			padding: 0px;
+    			border-top: none !important;
+    			border-right: none !important;    			
+			}
+				
+			.ui-datatable.borderless thead th,
+			.ui-datatable.borderless tbody,
+			.ui-datatable.borderless tbody tr,
+			.ui-datatable.borderless tbody td {
+    			border-style: none;
+    			background-color:white;
+    			padding:4px;
+			}
+			.ui-datatable.borderless table{
+				border:none !important;
+				border-collapse:collapse !important;
+			}
+			
+			.borderless.ui-datatable .ui-datatable-tablewrapper {
+			    overflow:hidden !important;
+			    padding:0px; !important;
+			}
+			
+			.ui-datatable.borderless.ui-datatable-resizable{
+				padding:0px;
+			}
+		</style>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/>
-		<p:treeTable id="ctListTree" var="contractTreeNode"
-			value="#{contractRequestBackingBean.managedBean.contractListTree}">
-			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
-			<p:column headerText="Contract No" style="width:18%">
+		<p:dataTable id="ctListTree" var="contractTreeNode" rows="10"  resizableColumns="true" styleClass="ctlisttree"
+			value="#{contractRequestBackingBean.managedBean.contractListTable}">
+			<ac:paginator for="ctListTree" />
+			 <p:column style="width:37px">
+            	<p:rowToggler rendered="#{not empty contractTreeNode.activeContractSubList}" />
+        	</p:column>
+			<p:column headerText="Contract No" style="width:142px">
 				<h:outputText
 					value="#{contractTreeNode.contractNo}" />
 			</p:column>
-			<p:column headerText="Schedule/ Phase No" style="width:2%">
+			<p:column headerText="Schedule/ Phase No" style="width:70px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}" />
 			</p:column>
-			<p:column headerText="Circular" style="width:13%">
+			<p:column headerText="Circular" style="width:250px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.circularNo}" />
 			</p:column>
-			<p:column headerText="Period (Start)" style="width:2%">
+			<p:column headerText="Period (Start)" style="width:97px">
 				<h:outputText value="#{contractTreeNode.startEffective}" >
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Period (End)" style="width:2%">
+			<p:column headerText="Period (End)" style="width:91px">
 				<h:outputText value="#{contractTreeNode.endEffective}" >
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Fulfilment Type" style="width:2%">
+			<p:column headerText="Fulfilment Type" style="width:108px;white-space:normal">
 				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.fulfilmentType)}" >
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Contract type" style="width:2%">
+			<p:column headerText="Contract type" style="width:99px">
 				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.contractType)}" >
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Business Reg. No." style="width:2%">
-				<h:outputText value="#{contractTreeNode.businessRegNo}" >
-				</h:outputText>
-			</p:column>
-			<p:column headerText="MOF No." style="width:2%">
-				<h:outputText value="#{contractTreeNode.mofNo}" >
-				</h:outputText>
-			</p:column>
-			<p:column headerText="Supplier Name">
+			<p:column headerText="Supplier Name" style="width:98px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.supplierName}" >
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Action" style="width:2%">
+			
+			<p:column headerText="Action" style="width:58px;text-align:center">
 				<p:commandLink id="crBasepageLink" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
 					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}'}])">
 					<p:graphicImage library="ep/images/design" name="revise.png"
@@ -68,7 +104,49 @@
 						title="Contract Request" />
 				</p:commandLink>
 			</p:column>
-		</p:treeTable>
+			
+			<p:rowExpansion>
+			
+				<p:dataTable id="ctSubListTree" var="contractExpansion" styleClass="borderless"
+					value="#{contractTreeNode.activeContractSubList}"  resizableColumns="true">
+					<p:column style="width:37px">
+					</p:column>
+					<p:column style="width:142px">
+					</p:column>
+					<p:column style="width:70px;text-align:center">
+						<h:outputText value="#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}" />
+					</p:column>
+					<p:column style="width:250px">
+					</p:column>
+					<p:column style="width:97px;">
+						<h:outputText value="#{contractExpansion.startEffective}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:91px;">
+						<h:outputText value="#{contractExpansion.endEffective}" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="width:108px">
+					</p:column>
+					<p:column style="width:99px">
+					</p:column>
+				
+					<p:column style="width:98px">
+					</p:column>
+					<p:column style="width:58px;text-align:center">
+						<p:commandLink id="crBasepageLink" 
+							onclick="procure([{name:'contractId',value:'#{contractExpansion.contractId}'},{name:'scheduleNo',value:'#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}'}])">
+							<p:graphicImage library="ep/images/design" name="revise.png"
+								value="/resources/ep/images/design/revise.png"
+								title="Contract Request" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:rowExpansion>
+
+		</p:dataTable>
 		
 		<p:remoteCommand name="procure" action="#{contractRequestBackingBean.procureContract}" />
 	</ui:define>
