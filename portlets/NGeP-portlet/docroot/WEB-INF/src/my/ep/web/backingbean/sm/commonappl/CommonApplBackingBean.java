@@ -228,7 +228,9 @@ public class CommonApplBackingBean extends
 				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")
 				|| resDTO.getTaskName().equalsIgnoreCase(
 						"Review Application (Special Category)")
-				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
+				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")
+				|| resDTO.getTaskName().equalsIgnoreCase(
+						"Review Site Visit After Approve")) {
 			log.info(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName()
@@ -251,7 +253,9 @@ public class CommonApplBackingBean extends
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								"Review Application (Special Category)")
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Verify Application")) {
+								"Verify Application")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Review Site Visit After Approve")) {
 					smApplBB.getManagedBean().setPoUser(true);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
@@ -263,7 +267,9 @@ public class CommonApplBackingBean extends
 				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
+				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Review Site Visit After Approve")) {
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else {
@@ -474,10 +480,10 @@ public class CommonApplBackingBean extends
 					&& !remResDTO.getRemarksList().isEmpty()) {
 
 				sb.append(remResDTO.getRemarksList().get(0).getRemark());
-				
-//				for (SmRemark rem : remResDTO.getRemarksList()) {
-//					sb.append(rem.getRemark()).append("\n");
-//				}
+
+				// for (SmRemark rem : remResDTO.getRemarksList()) {
+				// sb.append(rem.getRemark()).append("\n");
+				// }
 			}
 			smApplBB.getManagedBean().setSupplierRemarks(sb.toString());
 			smApplBB.getManagedBean().setSmAppl(appl);
@@ -681,8 +687,12 @@ public class CommonApplBackingBean extends
 					+ smApplBB.getManagedBean().getSmAppl()
 							.getSupportingDocMode());
 			String out = "";
-			if (smApplBB.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			if (smApplBB
+					.getManagedBean()
+					.getSmAppl()
+					.getSupportingDocMode()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				out = "/xhtml/sm/shared/respondToPoInquiry/onlineResendSupportingDocsForm.xhtml";
 			} else {
 				out = "/xhtml/sm/shared/respondToPoInquiry/offlineResendSupportingDocsForm.xhtml";
