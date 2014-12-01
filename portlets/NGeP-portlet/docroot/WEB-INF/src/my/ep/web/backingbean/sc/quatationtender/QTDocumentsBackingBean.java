@@ -702,8 +702,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					generateSampleSuratSetujuTerimaPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE.equals(docDefinitionKey)) {
 					// TODO put attachment in repository folder
-					filename.append(".pdf");
-					scQtDocReportAttachment.setFileName(filename.toString());
 					generateSamplesamplesalinankontrakPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_DECLARION_SAMPLE.equals(docDefinitionKey)) {
 					filename.append(".pdf");
@@ -1138,6 +1136,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Sampel_Kontrak_Umum.docx");
 		
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
