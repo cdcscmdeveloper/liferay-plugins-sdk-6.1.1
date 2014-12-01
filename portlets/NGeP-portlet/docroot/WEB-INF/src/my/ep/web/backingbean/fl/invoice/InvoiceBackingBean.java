@@ -383,14 +383,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		Double newTotalAmt = new Double(0);
 		BigDecimal percAmt = new BigDecimal(0);
 		BigDecimal contractValue = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getContractAmount();
-		
-		for(CtDeduction deduction : getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
-			if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
-				haveAdvancedPmyt = true;
-				deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
-				break;
+		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+			for(CtDeduction deduction : getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
+				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
+					haveAdvancedPmyt = true;
+					deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
+					break;
+				}
 			}
 		}
+		
 		
 		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
 			if(haveAdvancedPmyt){
