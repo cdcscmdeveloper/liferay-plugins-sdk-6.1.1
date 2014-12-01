@@ -243,22 +243,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 		log.info("loadSupportDoc - End");
 	}
-	/**
-	 * set default tab
-	 * @param pmDocument
-	 */
-	public void defaultTab(PmDocument pmDocument){
-		log.info("defaultTab");
-		if(pmDocument.isByAppType()){
-			this.getManagedBean().setSelectedTabIndex(RESTR_APP);
-		}else if(pmDocument.isByCompType()){
-			this.getManagedBean().setSelectedTabIndex(RESTR_COMP);
-		}else if(pmDocument.isBySupplierType()){
-			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP);
-		}else if(pmDocument.isByCategory()){
-			this.getManagedBean().setSelectedTabIndex(RESTR_CATEGORY);
-		}
-	}
+//	/**
+//	 * set default tab
+//	 * @param pmDocument
+//	 */
+//	public void defaultTab(PmDocument pmDocument){
+//		log.info("defaultTab");
+//		if(pmDocument.isByAppType()){
+//			this.getManagedBean().setSelectedTabIndex(RESTR_APP);
+//		}else if(pmDocument.isByCompType()){
+//			this.getManagedBean().setSelectedTabIndex(RESTR_COMP);
+//		}else if(pmDocument.isBySupplierType()){
+//			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP);
+//		}else if(pmDocument.isByCategory()){
+//			this.getManagedBean().setSelectedTabIndex(RESTR_CATEGORY);
+//		}
+//	}
 	/**
 	 * load the pm document to tab view by restriction type
 	 * @param pmDocument
@@ -296,7 +296,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
 				this.getManagedBean().setCategoryRestrictions(categoryRestrictions);
 				
-				defaultTab(pmDocument);
+//				defaultTab(pmDocument);
 			}else if(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())
 					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 				if(pmDocument.getDocDefinitionTypeCode()==null){
@@ -569,7 +569,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public SelectItem[] supplierTypeOptions() {
 		log.info("supplierTypeOptions");
-		return getDropdownValues(ParameterTypeConst.SUPPLIER_TYPES);
+		List<PmParameterDesc> paramDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.SUPPLIER_TYPES, Arrays.asList(ProfileManagementConst.SUPP_TYPE_EXCLUDE), null);
+		SelectItem[] items =  new SelectItem[paramDescs.size()+1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				getFacesScopes().getUserLocale()));
+		int i = 1;
+		for(PmParameterDesc paramDesc:paramDescs){
+			items[i++] = new SelectItem(paramDesc.getPmParameter()
+					.getParameterId(), paramDesc.getCodeName());
+		}
+		return items;
 	}
 	
 	/**
@@ -1175,6 +1185,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public void searchDocument(){
 		log.info("searchDocument - Start");
+		if(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode()==null 
+				|| StringUtils.isBlank(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
+			throw new EpException(MessageConst.ERROR_770083);
+		}
+		
 		pmDocumentDataModel.reloadData();
 		log.info("searchDocument - End");
 		
@@ -1341,40 +1356,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	
 	
-	/**
-	 * @return the restrApp
-	 */
-	public int getRestrApp() {
-		return RESTR_APP;
-	}
-
-	/**
-	 * @return the restrComp
-	 */
-	public int getRestrComp() {
-		return RESTR_COMP;
-	}
-
-	/**
-	 * @return the restrSupp
-	 */
-	public int getRestrSupp() {
-		return RESTR_SUPP;
-	}
-
-	/**
-	 * @return the restrCategory
-	 */
-	public int getRestrCategory() {
-		return RESTR_CATEGORY;
-	}
-
-	/**
-	 * @return the checklist
-	 */
-	public int getChecklist() {
-		return CHECKLIST;
-	}
 	
 
 }
