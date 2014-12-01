@@ -214,7 +214,7 @@ public class SPDetailBackingBean extends
 				long days = DateUtils.getDaysDifference(today, getManagedBean()
 						.getQt().getClosingDate());
 				if (days == 0) {
-
+					getManagedBean().setClosed(true);
 				}
 				this.getManagedBean().setDays(days);
 			}
@@ -679,7 +679,6 @@ public class SPDetailBackingBean extends
 
 				updateQtFinProposalCheckList(finProposalChecklist,
 						resDTO.getTobeUpdateProposalChecklist());
-
 				return navigatePrepareTecProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -1104,7 +1103,10 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setCheckListDefintionKey(docDefinitionKey);
 			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-
+				System.out
+						.println("***** technical qtProposalCheckListId is ***"
+								+ scQtProposalChecklist
+										.getQtProposalChecklistId());
 				pageUrl = retrieveTecNonGovCompanyExpDtls(scQtProposalChecklist);
 			}
 
@@ -1469,6 +1471,10 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
+				System.out
+						.println("***** financial qtProposalCheckListId is ***"
+								+ scQtProposalChecklist
+										.getQtProposalChecklistId());
 
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
@@ -1629,11 +1635,10 @@ public class SPDetailBackingBean extends
 
 	public String retrieveFinNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
-/*
-			getManagedBean().setYear(
-					scQtProposalChecklist.getScQtCheckList()
-							.getScQtCheckListValue().getYear());
-		*/
+
+		getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+		// getManagedBean().setYear( scQtProposalChecklist.getScQtCheckList()
+		// .getScQtCheckListValue().getYear());
 
 		IQTProposalSO proposalSO = null;
 		try {

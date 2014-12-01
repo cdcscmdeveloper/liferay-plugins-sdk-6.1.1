@@ -52,6 +52,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 			.getLogger(SPDetailManagedBean.class);
 
 	private ScQt qt;
+	private boolean closed;
 	private ScQtProposal qtProposal;
 	private ScQtProposalChecklist qtProposalChecklist;
 	private List<ScQtProposalChecklist> tecCheckDetailsList;
@@ -1103,6 +1104,26 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setClosingTime(String closingTime) {
 		this.closingTime = closingTime;
+	}
+
+
+
+
+	/**
+	 * @return the closed
+	 */
+	public boolean isClosed() {
+		return closed;
+	}
+
+
+
+
+	/**
+	 * @param closed the closed to set
+	 */
+	public void setClosed(boolean closed) {
+		this.closed = closed;
 	}
 	
 	
