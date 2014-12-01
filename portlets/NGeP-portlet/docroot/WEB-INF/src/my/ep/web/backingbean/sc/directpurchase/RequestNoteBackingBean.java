@@ -392,13 +392,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	}
 
 			requestNote.setWorkFlowStatuses(null);
-			
-			if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
-				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
-			} else {
-				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
-			}
-			
+		
 			if(!(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
 				finalizeRemarks(requestNote.getRemarks());
 			}
@@ -578,10 +572,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
 
 		if (requestNote.getQuote() != null) {
-			getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
+			//getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
 
 		} else {
-			getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
+			//getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 			getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		}
 		
@@ -1247,22 +1241,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		CmSupplierItem selectedSupplierItem = scSupplierItemPrice.getPricing().getCmSupplierItem();
 		ScRequestNote  requestNote = getManagedBean().getRequestNote();
 		
-		if(getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)){
-			// Simple Quote
-			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
-			
-		} else if(getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_PRI)){
+		if(requestNote.getSourceMethod() == null || requestNote.getSourceMethod().isEmpty()){
+			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
+		}
+		
+		 if(getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_PRI)){
 			// purchase inquiry
 			if(getManagedBean().getRequestNoteDtls() != null){
 				requestSupplierItem.setScPrInquiy(getManagedBean().getRequestNoteDtls().get(0).getScRequestSupplierItem().getScPrInquiy());		
 			}
-			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 
 		} else {
 			//IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 	    	//CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 			// purchase in default & add to cart
-		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		    
 		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
 		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
