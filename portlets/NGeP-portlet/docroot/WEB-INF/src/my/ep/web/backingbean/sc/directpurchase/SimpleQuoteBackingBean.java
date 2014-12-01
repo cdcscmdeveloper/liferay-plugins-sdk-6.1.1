@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -53,6 +54,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -626,13 +628,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				pmOrgProfile.isGovtSeller()){
 			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 			scQuote.setProcurementType(pmParameter);
-			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
 
 		} else {
 			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 			scQuote.setProcurementType(pmParameter);
-			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
 		} 
+		
+		getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
+		
 		return scQuote;
 	}
 
@@ -975,11 +978,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 
 		if(scQuote.getProcurementType() != null){
-			if(scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
-				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
-			} else {
-				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
-			} 
+			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
 		}
 
 		if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size() >0){
@@ -2604,9 +2603,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			govtSuppliers = new ArrayList<ScQuoteSupplier>();
 		}
 		if (orgProfiles != null){
+			IQTSupplierSO qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
+			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+		
 		   for (PmOrgProfile orgProfile : orgProfiles) {
+			   reqDTO.setSupplierId(orgProfile.getOrgProfileId());
+			   
 			   ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
-			   scQuoteSupplier.setSmSupplier(orgProfile.getSmSupplier());
+			   scQuoteSupplier.setSmSupplier(qtSupplierSO
+					   .retrieveGovSellerById(reqDTO)
+					   .getSmSupplier());
 			   scQuoteSupplier.setQuote(getManagedBean().getScQuote());
 			   govtSuppliers.add(scQuoteSupplier);
 			}
@@ -2896,11 +2902,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 
 			if(scQuote.getProcurementType() != null){
-				if(scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
-					getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
-				} else {
-					getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
-				} 
+				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
 			}
 			
 			if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){

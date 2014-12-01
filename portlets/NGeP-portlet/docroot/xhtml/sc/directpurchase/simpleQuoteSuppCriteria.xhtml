@@ -246,7 +246,7 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.org.type']}"
 							style="width:10%">
-							<h:outputText value="#{data.smSupplier.pmOrgProfile.orgTypeCode.parameterCode}" />
+							<h:outputText value="#{simpleQuoteBackingBean.getParameterDesc(data.smSupplier.pmOrgProfile.orgTypeCode)}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}"
@@ -270,7 +270,7 @@
 										buttonIcon="ui-icon-add" 
 										selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
-										conditionField="recordStatus^1" update="@form" />
+										conditionField="recordStatus^1|govtSeller^1" update="@form" />
 								   </td>
 									<td>
 									  <p:commandButton
