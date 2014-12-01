@@ -559,7 +559,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public SelectItem[] companyTypeOptions() {
 		log.info("companyTypeOptions");
-		return getDropdownValues(ParameterTypeConst.COMPANY_TYPES);
+		return getDropdownValues(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
 	}
 	
 	/**
