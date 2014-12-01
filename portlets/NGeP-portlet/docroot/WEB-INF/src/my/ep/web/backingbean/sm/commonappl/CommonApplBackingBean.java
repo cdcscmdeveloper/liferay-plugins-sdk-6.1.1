@@ -36,6 +36,7 @@ import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -681,7 +682,7 @@ public class CommonApplBackingBean extends
 							.getSupportingDocMode());
 			String out = "";
 			if (smApplBB.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase("O")) {
+					.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				out = "/xhtml/sm/shared/respondToPoInquiry/onlineResendSupportingDocsForm.xhtml";
 			} else {
 				out = "/xhtml/sm/shared/respondToPoInquiry/offlineResendSupportingDocsForm.xhtml";
