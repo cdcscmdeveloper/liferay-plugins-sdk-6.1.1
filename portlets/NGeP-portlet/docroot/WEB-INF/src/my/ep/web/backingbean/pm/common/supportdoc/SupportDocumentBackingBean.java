@@ -664,7 +664,9 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
 			
 		    items = new SelectItem[parameterDescs.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
 		    int i = 1;
 		    if(byId){
 		    	 for(PmParameterDesc parameterDesc : parameterDescs) {
