@@ -712,5 +712,9 @@ public class SupplierManagementConst {
 	public String getSUPPORTING_DOC_ONLINE() {
 		return SUPPORTING_DOC_ONLINE;
 	}
+	
+	public String getSUPPORTING_DOC_OFFLINE() {
+		return SUPPORTING_DOC_OFFLINE;
+	}
 
 }
