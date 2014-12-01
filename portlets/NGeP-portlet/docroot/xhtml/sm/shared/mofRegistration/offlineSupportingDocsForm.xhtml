@@ -5,24 +5,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<script>
 		function printDiv() {
-			newWin= window.open();
-			
+			newWin = window.open();
+
 			var divToPrint = document.getElementById('printArea');
 			newWin.document.write(divToPrint.innerHTML);
-			
+
 			var style = newWin.document.createElement('style');
-			style.type = 'text/css';	
+			style.type = 'text/css';
 			style.innerHTML = '.ui-panel-title{font-family: Arial;margin: 0 0 0 5px !important;border: 0px !important;border-radius: 0px !important;background: none !important;color: #5BA218;font-size: 14px !important;font-weight: bold;}.ui-panel-titlebar{padding: 2px 0 3px 5px !important;background: none !important;height: 19px !important;border-radius: 0px;text-transform: uppercase;}.ui-outputlabel{display: inline-block;text-align: left !important;font-size: 12px;vertical-align: middle;padding: 0 10px 0 0;font-family: Arial;}table {border-collapse: collapse;border-spacing: 0;font-family: Tahoma;font-size: 11px;overflow: hidden;}.ui-datatable{font-family: Arial;color: #333333 !important;text-decoration: none;}.ui-datatable-tablewrapper{overflow: auto;}.ui-widget .ui-widget{font-size: 12px;}.ui-datatable th.ui-state-default{font-family: Arial;font-weight: bold !important;text-decoration: none;background: #F0EFEF;}thead>tr>th.ui-state-default{color: #555555 !important;font-size: 12px !important;text-align: left;}.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td{border: 1px solid #DDDDDD !important;}.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td{padding: 4px 10px;overflow: hidden;white-space: nowrap;border-width: 1px;border-style: solid;}.ui-state-default{text-shadow: none !important;box-shadow: none !important;}';
 			newWin.document.getElementsByTagName('head')[0].appendChild(style);
-			
+
 			newWin.print();
 			newWin.close();
 		}
 	</script>
-	
+
 	<table style="width: 30%">
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
@@ -37,109 +37,114 @@
 		</tr>
 
 	</table>
-	
+
 	<div id="printArea">
-	<p:panel
-		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
-		toggleable="true" id="offSupDocPanelHdr">
-		
-		<c:if test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
-			<br />
-			<table style="width: 100%">
+		<p:panel
+			header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
+			toggleable="true" id="offSupDocPanelHdr">
+
+			<c:if
+				test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
+				<br />
+				<table style="width: 100%">
+					<tr>
+						<td><h:outputText
+								value="#{backingBean.managedBean.bumiRecommendationNote}"
+								style="color: green;font-weight: bold;float:left;" /></td>
+					</tr>
+				</table>
+				<br />
+			</c:if>
+
+			<table style="width: 100%;">
+
 				<tr>
-					<td><p:outputLabel value="#{backingBean.managedBean.bumiRecommendationNote}" 
-							style="color: green;font-weight: bold;float:left;"/></td>
+					<td><h:outputText style="float:left"
+							value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> <h:outputText
+							style="float:left" value="#{lbl['lbl.sm.suppDoc.offline.note2']}" />
+						<br /> <h:outputText style="float:left"
+							value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br /></td>
+
+				</tr>
+
+			</table>
+			<p:spacer height="10px" />
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 33%">
+						<table>
+							<tr>
+								<td><h:outputText style="float:left"
+										value="#{lbl['lbl.sm.suppDoc.offline.peninAddr1']}"
+										escape="false" /></td>
+							</tr>
+							<tr>
+								<td style="padding-top: 10px;"><h:outputText
+										style="float:left"
+										value="#{lbl['lbl.sm.suppDoc.offline.peninAddr2']}"
+										escape="false" /></td>
+							</tr>
+						</table>
+					</td>
+
+					<td style="width: 33%"><table>
+							<tr>
+								<td><h:outputText style="float:left"
+										value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr1']}"
+										escape="false" /></td>
+							</tr>
+							<tr>
+								<td style="padding-top: 10px;"><h:outputText
+										style="float:left"
+										value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr2']}"
+										escape="false" /></td>
+							</tr>
+						</table></td>
+					<td style="width: 33%"><table>
+							<tr>
+								<td><h:outputText style="float:left"
+										value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr1']}"
+										escape="false" /></td>
+							</tr>
+							<tr>
+								<td style="padding-top: 10px;"><h:outputText
+										style="float:left"
+										value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr2']}"
+										escape="false" /></td>
+							</tr>
+						</table></td>
 				</tr>
 			</table>
+			<p:spacer height="10px" />
+
+
+			<p:dataTable var="table" id="offSdList"
+				value="#{backingBean.managedBean.smAppl.smApplSupportDocs}"
+				rowIndexVar="index">
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+					style="width : 5%;">
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+					style="width : 95%;">
+					<h:outputText value="#{table.pmDocument.docName}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+
+
+			</p:dataTable>
+
 			<br />
-		</c:if>
-		
-		<table style="width: 100%;">
-
-			<tr>
-				<td><p:outputLabel style="float:left"
-						value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> <p:outputLabel
-						style="float:left" value="#{lbl['lbl.sm.suppDoc.offline.note2']}" />
-					<br /> <p:outputLabel style="float:left"
-						value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br /></td>
-
-			</tr>
-
-		</table>
-		<p:spacer height="10px" />
-		<table style="width: 100%;">
-			<tr>
-				<td style="width: 33%">
-					<table>
-						<tr>
-							<td><p:outputLabel style="float:left"
-									value="#{lbl['lbl.sm.suppDoc.offline.peninAddr1']}"
-									escape="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding-top: 10px;"><p:outputLabel
-									style="float:left"
-									value="#{lbl['lbl.sm.suppDoc.offline.peninAddr2']}"
-									escape="false" /></td>
-						</tr>
-					</table>
-				</td>
-
-				<td style="width: 33%"><table>
-						<tr>
-							<td><p:outputLabel style="float:left"
-									value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr1']}"
-									escape="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding-top: 10px;"><p:outputLabel
-									style="float:left"
-									value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr2']}"
-									escape="false" /></td>
-						</tr>
-					</table></td>
-				<td style="width: 33%"><table>
-						<tr>
-							<td><p:outputLabel style="float:left"
-									value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr1']}"
-									escape="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding-top: 10px;"><p:outputLabel
-									style="float:left"
-									value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr2']}"
-									escape="false" /></td>
-						</tr>
-					</table></td>
-			</tr>
-		</table>
-		<p:spacer height="10px" />
-
-
-		<p:dataTable var="table" id="offSdList"
-			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}" rowIndexVar="index">
-			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;">
-				<p:outputLabel value="#{index + 1}"
-					style="float: left;white-space: normal;" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 95%;">
-				<p:outputLabel value="#{table.pmDocument.docName}"
-					style="float: left;white-space: normal;" />
-			</p:column>
-
-
-		</p:dataTable>
-
-		<br />
-		<p:spacer height="2px;" />
-	</p:panel>
+			<p:spacer height="2px;" />
+		</p:panel>
 	</div>
 	<p:outputPanel>
 		<div align="right">
-			<h:commandButton value="#{lbl['lbl.sm.printList']}" onclick="printDiv();" type="button"
-				styleClass="ui-button">
+			<h:commandButton value="#{lbl['lbl.sm.printList']}"
+				onclick="printDiv();" type="button" styleClass="ui-button">
 			</h:commandButton>
 		</div>
 	</p:outputPanel>

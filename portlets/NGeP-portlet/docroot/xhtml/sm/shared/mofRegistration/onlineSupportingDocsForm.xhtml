@@ -22,13 +22,15 @@
 	<p:panel
 		header="#{lbl['lbl.sm.suppDoc.online.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
 		toggleable="true" id="onSupTblPan">
-		
-		<c:if test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
+
+		<c:if
+			test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
 			<br />
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{backingBean.managedBean.bumiRecommendationNote}" 
-							style="color: green;font-weight: bold;float:left;"/></td>
+					<td><h:outputText
+							value="#{backingBean.managedBean.bumiRecommendationNote}"
+							style="color: green;font-weight: bold;float:left;" /></td>
 				</tr>
 			</table>
 			<br />
@@ -37,7 +39,7 @@
 		<table style="width: 100%">
 
 			<tr>
-				<td><p:outputLabel style="float:left"
+				<td><h:outputText style="float:left"
 						value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
 
 			</tr>
@@ -45,16 +47,18 @@
 		</table>
 		<p:spacer height="10px" />
 		<p:dataTable var="table" id="onSdList"
-			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}" rowIndexVar="index">
-			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;">
+			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}"
+			rowIndexVar="index">
+
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+				style="width : 5%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 				style="width : 65%;">
-				<p:outputLabel value="#{table.pmDocument.docName}"
+				<h:outputText value="#{table.pmDocument.docName}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 
@@ -63,22 +67,20 @@
 				<p:outputLabel rendered="#{table.pmDocument.hardCopyReq}"
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
 					style="float: left;white-space: normal;" />
-					
-				<p:commandLink
-					rendered="#{table.pmDocument.download}"
+
+				<p:commandLink rendered="#{table.pmDocument.download}"
 					action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
 					update=":form" ajax="false">
 					<p:fileDownload value="#{backingBean.file}" />
-					<p:graphicImage 
-						value="/css/images/design/download.png"
-						style="margin-right:2px;" />					
+					<p:graphicImage value="/css/images/design/download.png"
+						style="margin-right:2px;" />
 				</p:commandLink>
-					
+
 				<p:commandLink oncomplete="attachDlg1.show();return false;"
-					rendered="#{!table.pmDocument.hardCopyReq}" update="@([id$=attachDlg1])"
+					rendered="#{!table.pmDocument.hardCopyReq}"
+					update="@([id$=attachDlg1])"
 					action="#{backingBean.assignSelectedSupportDoc(table)}">
-					<p:graphicImage 
-						value="/css/images/design/upload.png"
+					<p:graphicImage value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
 
