@@ -50,48 +50,35 @@
 			</p:dataTable>
 		</h:panelGrid>
 
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20,columnWidth50">
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.suppliername']}" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierName}" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.mofno']}" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.mofAccountNo}" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.paidup']}" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.minPaidUpCapital}" />
-			</h:column>
-		</h:panelGrid>
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.supplierName}"
+						size="64" /></td>
+			</tr>
+		</table>
+
 	</p:panel>
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
 			styleClass="apply_button" id="restrictSupplier" icon="ui-icon-search"
-			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
-			update="restrictedsupplierPnl" />
+			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction1}"
+			update="restrictedsupplierPnl" process="@this, searchrestrictedsupp" />
 		<p:commandButton value="#{lbl['lbl.btn.reset']}"
 			action="#{qTSupplierQulCriteriaBackingBean.reset}"
 			update="searchrestrictedsupp" icon="ui-icon-reset" resetValues="true"
 			partialSubmit="true" process="@this" />
 	</div>
+
 	<p:spacer height="5" />
 	<p:panel id="restrictedsupplierPnl"
 		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+		
 		<p:dataTable var="smSupplier" id="ressupplier"
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierList}"
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierDataModel}"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
-			rowKey="#{smSupplier.supplierId}" rows="10">
+			rowKey="#{smSupplier.supplierId}" lazy="true" style="width : 100%;" rows="10">
 
 			<ac:paginator for="ressupplier" />
 
