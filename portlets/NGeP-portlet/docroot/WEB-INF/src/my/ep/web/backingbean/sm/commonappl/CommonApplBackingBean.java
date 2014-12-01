@@ -306,7 +306,9 @@ public class CommonApplBackingBean extends
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								"Review Application (Special Category)")
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Verify Application")) {
+								"Verify Application")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Review Site Visit After Approve")) {
 					smApplBB.getManagedBean().setPoUser(true);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
@@ -318,7 +320,9 @@ public class CommonApplBackingBean extends
 				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
+				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Review Site Visit After Approve")) {
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else {
