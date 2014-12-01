@@ -857,32 +857,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return "flDocSearch";
 	}
 	
-	public boolean checkCtDeduction(String button){
-		String addbutton = button;
-		boolean haveDeductionList = false;
-		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
-			if(addbutton.equalsIgnoreCase("ADD")){
-				if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
-					int deductionList = getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size();
-					int contractDeductions= getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().size();
-					if(deductionList > contractDeductions){
-						haveDeductionList = false;
-						return haveDeductionList;
-					}
-				}
-			}
-		}
-		
-		
-		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
-			if(!getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().isEmpty()){
-				haveDeductionList = true;
-			}
-		}
-		
-		return haveDeductionList;
-	}
-	
 	public void removeAddRow(){
 		try {
 			if(this.getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null){
@@ -944,14 +918,28 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	public void validateDuplicateDeduction(){
-		List<FlPaymentDeduction> paymentDeductionList = getManagedBean().getPaymentAdvice().getFlPaymentDeduction();
-		HashMap<Long,String> deductionMap = new HashMap<Long,String>();
-		for(FlPaymentDeduction paymentDeduction : paymentDeductionList){
-			Long key = paymentDeduction.getDeductionType().getParameterId();
-			if(deductionMap.get(key) != null){
-				throw new EpException("Cannot have duplicate deduction type.");
-			}else{
-				deductionMap.put(key, paymentDeduction.getDeductionType().getParameterType());
+		List<String> deductionList = new ArrayList<>();
+		deductionList.clear();
+
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
+			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
+				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
+					if(deduction.getDeductionType().getParameterId() == null){
+						throw new EpException("Please select the deduction type.");
+					}
+					if(deduction.getPmVotFund().getVotFundCode() == null){
+						throw new EpException("DANA is required.");
+					}
+					if(deduction.getPmGlAccount().getGlAccCode() == null){
+						throw new EpException("GOSODO is required.");
+					}
+					String unique = deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode();
+					if(deductionList.contains(unique)){
+						throw new EpException("Cannot have duplicate deduction type + DANA + GOSODO.");
+					}else{
+						deductionList.add(deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
+					}
+				}
 			}
 		}
 	}
@@ -1033,6 +1021,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				deductionTable.add(deduction);
 			}
 		}
+		
 		return deductionTable;
 	}
 	
