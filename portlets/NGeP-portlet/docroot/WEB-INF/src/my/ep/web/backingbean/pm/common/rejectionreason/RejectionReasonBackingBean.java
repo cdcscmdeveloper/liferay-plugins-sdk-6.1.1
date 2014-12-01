@@ -208,7 +208,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setDeleteComTypeRestrictions(null);
 			this.getManagedBean().setDeleteSuppTypeRestrictions(null);
 //			this.getManagedBean().setAppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, id));
-//			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.COMPANY_TYPES, id));
+//			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE, id));
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
 		}catch (Exception e){
 			e.printStackTrace();
@@ -232,7 +232,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				if(pmSuppReason.getRestrType()!=null){
 					if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
 						appTypeRestrictions.add(pmSuppReason);
-					}else if(ParameterTypeConst.COMPANY_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+					}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
 						comTypeRestrictions.add(pmSuppReason);
 					}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
 						suppTypeRestrictions.add(pmSuppReason);
@@ -260,7 +260,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
 			pmSupplierReasons = this.getManagedBean().getAppTypeRestrictions();
 			errorMesg = MessageConst.ERROR_770011;
-		}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
+		}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(restrictType)){
 			pmSupplierReasons = this.getManagedBean().getComTypeRestrictions();
 			errorMesg =MessageConst.ERROR_770012;
 		}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
@@ -293,12 +293,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("validateRestrictions");
 		//validate required field
 		validateRestriction(this.getManagedBean().getAppTypeRestrictions(), ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
-		validateRestriction(this.getManagedBean().getComTypeRestrictions(), ParameterTypeConst.COMPANY_TYPES);
+		validateRestriction(this.getManagedBean().getComTypeRestrictions(), ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
 		validateRestriction(this.getManagedBean().getSuppTypeRestrictions(), ParameterTypeConst.SUPPLIER_TYPES);
 		
 		//validate unique field
 		validateUniqueRestrType(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
-		validateUniqueRestrType(ParameterTypeConst.COMPANY_TYPES);
+		validateUniqueRestrType(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
 		validateUniqueRestrType(ParameterTypeConst.SUPPLIER_TYPES);
 	}
 	/**
@@ -661,7 +661,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
 				}
 				this.getManagedBean().getAppTypeRestrictions().add(restriction);
-			}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictionType)){
+			}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(restrictionType)){
 				if(this.getManagedBean().getComTypeRestrictions()==null){
 					this.getManagedBean().setComTypeRestrictions(new ArrayList<PmSupplierReason>());
 				}
@@ -704,7 +704,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
-		}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictionType)){
+		}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(restrictionType)){
 			if(this.getManagedBean().getDeleteComTypeRestrictions()!=null && !this.getManagedBean().getDeleteComTypeRestrictions().isEmpty()){
 				if(this.getManagedBean().getComTypeRestrictions()==null){
 					this.getManagedBean().setComTypeRestrictions(new ArrayList<PmSupplierReason>());
@@ -777,7 +777,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(!isSelected){
 				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
 					throw new EpException(MessageConst.ERROR_770008);
-				}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
+				}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(restrictType)){
 					throw new EpException(MessageConst.ERROR_770009);
 				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
 					throw new EpException(MessageConst.ERROR_770010);
@@ -786,7 +786,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //			else if(!isNotEmpty){
 //				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
 //					throw new EpException(MessageConst.ERROR_770062);
-//				}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
+//				}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(restrictType)){
 //					throw new EpException(MessageConst.ERROR_770063);
 //				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
 //					throw new EpException(MessageConst.ERROR_770064);
