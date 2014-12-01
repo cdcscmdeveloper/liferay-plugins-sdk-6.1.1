@@ -19,7 +19,9 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 		</div>
-<p:spacer height="150"></p:spacer>
+		<p:spacer height="25" />
+		<br />
+		<br />
 		<p:panel>
 			<table>
 				<tr>
@@ -34,7 +36,8 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="othersFinList" id="othersFinListId" editable="true" rows="10"
+			<p:dataTable var="othersFinList" id="othersFinListId" editable="true"
+				rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
 				<ac:paginator for="othersFinListId" />
@@ -58,7 +61,8 @@
 					style="width:15%">
 
 
-					<h:outputText value="#{evaluationBackingBean.getStatusDescById(othersFinList.evaluationStatus.statusId)}"></h:outputText>
+					<h:outputText
+						value="#{evaluationBackingBean.getStatusDescById(othersFinList.evaluationStatus.statusId)}"></h:outputText>
 
 				</p:column>
 
@@ -66,7 +70,8 @@
 					style="width:20%">
 
 					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
-						process="@this" partialSubmit="true" action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList)}"/>
+						process="@this" partialSubmit="true"
+						action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
