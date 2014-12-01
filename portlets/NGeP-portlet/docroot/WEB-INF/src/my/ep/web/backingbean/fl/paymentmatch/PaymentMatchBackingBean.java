@@ -629,7 +629,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		}
 
-		BigDecimal serviceFee = new BigDecimal(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getServiceFee());
+		BigDecimal serviceFee = new BigDecimal(0);
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
+			serviceFee = new BigDecimal(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getServiceFee());
+		}else{
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);;
+		}
 		BigDecimal nonExemptedItemAmt = new BigDecimal(0);
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
