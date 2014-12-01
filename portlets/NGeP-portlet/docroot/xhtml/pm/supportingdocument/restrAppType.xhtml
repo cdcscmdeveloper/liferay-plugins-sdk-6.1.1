@@ -45,14 +45,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	   	</p:dataTable>
 	   	<br/>
 	  		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType"
-				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"
-				immediate="true"/>
-			&#160;
-			<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
-				action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
-				immediate="true" 
-				/> 
-		</div>
+				<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType"
+					action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"
+					immediate="true"/>
+				&#160;
+				<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
+					action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
+					immediate="true" 
+					/> 
+			</div>
 	</p:outputPanel>
 </ui:composition>
