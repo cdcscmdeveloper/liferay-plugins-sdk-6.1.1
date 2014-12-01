@@ -755,8 +755,24 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		debugLogger("generateSyaratSyaratAmFromVelocity");
 		
 		TemplateDocBackingBean backingBean = new TemplateDocBackingBean();
-		TplDocMaster tplDocMaster = scQtDocReport.getTplDocMaster();
-		backingBean.goToMaint(tplDocMaster);
+		ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
+		if(qtDocReport != null) {
+			scQtDocReport = qtDocReport;	
+		} else {
+			//save list of documents if its not yet save
+			scQtDocReport = saveScQtReportList(scQtDocReport);
+		}
+		
+		TplDocMaster docMaster = scQtDocReport.getTplDocMaster();
+		if (docMaster == null) {
+			//clone standard tplDocMaster
+			TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtDocReport);
+			scQtDocReport.setTplDocMaster(tplDocMaster);
+			
+			//save clone to db
+			docMaster = saveClonedTplDocMaster(scQtDocReport);
+		}
+		backingBean.goToMaint(docMaster);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
 		
