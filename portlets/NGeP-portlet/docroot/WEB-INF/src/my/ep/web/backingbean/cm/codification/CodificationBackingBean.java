@@ -2596,7 +2596,8 @@ public class CodificationBackingBean extends
 				|| fs.hasRoleUser("MOF_SUPPLIER_ADMIN")
 				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
 				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
-				|| fs.hasRoleUser("CM_USER");
+				|| fs.hasRoleUser("CM_USER")
+				|| fs.hasRoleUser("GOVT_SELLER");
 	}
 
 	public String redirectToRequestUnspscCodeII() {
