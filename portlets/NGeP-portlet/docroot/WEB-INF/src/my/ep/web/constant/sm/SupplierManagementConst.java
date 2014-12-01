@@ -144,8 +144,9 @@ public class SupplierManagementConst {
 	public static final String BPM_SUBMIT = "SUBMIT";
 	public static final String BPM_VERIFY = "VERIFY";
 	
-	// SDO Review
+	// Supporting Doc Type
 	public static String SUPPORTING_DOC_ONLINE = "S";
+	public static String SUPPORTING_DOC_OFFLINE = "H";
 
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
