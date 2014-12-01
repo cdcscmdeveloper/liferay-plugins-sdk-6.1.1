@@ -1356,6 +1356,40 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	
 	
+	/**
+	 * @return the restrApp
+	 */
+	public int getRestrApp() {
+		return RESTR_APP;
+	}
+
+	/**
+	 * @return the restrComp
+	 */
+	public int getRestrComp() {
+		return RESTR_COMP;
+	}
+
+	/**
+	 * @return the restrSupp
+	 */
+	public int getRestrSupp() {
+		return RESTR_SUPP;
+	}
+
+	/**
+	 * @return the restrCategory
+	 */
+	public int getRestrCategory() {
+		return RESTR_CATEGORY;
+	}
+
+	/**
+	 * @return the checklist
+	 */
+	public int getChecklist() {
+		return CHECKLIST;
+	}
 	
 
 }
