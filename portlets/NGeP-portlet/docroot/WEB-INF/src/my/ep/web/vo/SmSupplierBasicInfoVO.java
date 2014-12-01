@@ -12,6 +12,9 @@ public class SmSupplierBasicInfoVO {
 	private String adminName;
 	private String adminPhoneNo;
 	private String adminEmail;
+	private String companyName;
+	private String addressLine;
+	private String postCodeStateCityCountry;
 	
 	public String getMofNo() {
 		return mofNo;
@@ -66,5 +69,23 @@ public class SmSupplierBasicInfoVO {
 	}
 	public void setAdminEmail(String adminEmail) {
 		this.adminEmail = adminEmail;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getAddressLine() {
+		return addressLine;
+	}
+	public void setAddressLine(String addressLine) {
+		this.addressLine = addressLine;
+	}
+	public String getPostCodeStateCityCountry() {
+		return postCodeStateCityCountry;
+	}
+	public void setPostCodeStateCityCountry(String postCodeStateCityCountry) {
+		this.postCodeStateCityCountry = postCodeStateCityCountry;
 	}
 }
