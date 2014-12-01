@@ -339,7 +339,8 @@ public class ReportConst {
 	public static final String CT_LST_OF_TERMINATION_RPT_VAL = "CT_012";
 	public static final String CT_LST_OF_SUPPLIER_RPT_VAL = "CT_013";
 	public static final String CT_LST_OF_AGREEMENT_RPT_VAL = "CT_015";
-	//sm
+	public static final String CT_LST_OF_SUPPLAGREEMENT_RPT_VAL = "CT_018";
+	///sm
 	public static final String AMP_SM_TO_DATE_EQ = "&createddateto=";
 	public static final String AMP_SM_FROM_DATE_EQ = "&createddatefrom=";
 	public static final String AMP_SM_REG_TYPE_EQ = "&appltype=";
