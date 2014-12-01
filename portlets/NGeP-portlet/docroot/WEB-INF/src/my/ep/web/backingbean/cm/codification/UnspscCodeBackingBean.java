@@ -138,7 +138,8 @@ public class UnspscCodeBackingBean extends
 				|| fs.hasRoleUser("MOF_SUPPLIER_USER")
 				|| fs.hasRoleUser("MOF_SUPPLIER_ADMIN")
 				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
-				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN");
+				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("GOVT_SELLER");
 	}
 
 	public String submitForRequest(String action) throws Exception {
