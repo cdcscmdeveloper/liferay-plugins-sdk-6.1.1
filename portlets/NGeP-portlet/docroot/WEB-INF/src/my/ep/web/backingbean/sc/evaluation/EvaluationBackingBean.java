@@ -4044,8 +4044,25 @@ public class EvaluationBackingBean extends
 		debugLogger("generateMaklumatTenderFromVelocity");
 
 		TemplateDocBackingBean backingBean = new TemplateDocBackingBean();
-		TplDocMaster tplDocMaster = scQtEvaluationReport.getTplDocMaster();
-		backingBean.goToMaint(tplDocMaster);
+		
+		ScQtEvaluationReport qtEvaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
+		if (qtEvaluationReport != null) {
+			scQtEvaluationReport = qtEvaluationReport;
+		} else {
+			scQtEvaluationReport = saveScQtReportList(scQtEvaluationReport);
+		}
+
+		TplDocMaster docMaster = scQtEvaluationReport.getTplDocMaster();
+		if (docMaster == null) {
+			// clone standard tplDocMaster
+			TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtEvaluationReport);
+			scQtEvaluationReport.setTplDocMaster(tplDocMaster);
+
+			// save clone to db
+			docMaster = saveClonedTplDocMaster(scQtEvaluationReport);
+		}
+		
+		backingBean.goToMaint(docMaster);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
 
