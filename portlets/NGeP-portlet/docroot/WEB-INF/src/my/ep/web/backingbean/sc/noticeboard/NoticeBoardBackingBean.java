@@ -759,29 +759,33 @@ public class NoticeBoardBackingBean extends
 			setVisible(false);
 			throw new EpException("Mof No should not be Null or Empty");
 		}
-		this.getManagedBean().setQualified(true);
-		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTNoticeBoardSO.class);
-		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		reqDTO.setMofNo(mofNo);
-		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		NoticeBoardResDTO resDTO = boardSO
-				.checkSupplierQualificationStatus(reqDTO);
-		this.getManagedBean().setQualificationBean(
-				resDTO.getQualificationBean());
-		if (null != resDTO.getQualificationBean()) {
 
-			for (SupplierQualificationBean qualificationBean : resDTO
-					.getQualificationBean()) {
-				if (!qualificationBean.isSupplierStatus()) {
-					this.getManagedBean().setQualified(false);
-					break;
+		try {
+			IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTNoticeBoardSO.class);
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+			reqDTO.setMofNo(mofNo);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			NoticeBoardResDTO resDTO = boardSO
+					.checkSupplierQualificationStatus(reqDTO);
+			this.getManagedBean().setQualificationBean(
+					resDTO.getQualificationBean());
+			if (null != resDTO.getQualificationBean()) {
+
+				for (SupplierQualificationBean qualificationBean : resDTO
+						.getQualificationBean()) {
+					if (!qualificationBean.isSupplierStatus()) {
+						this.getManagedBean().setQualified(false);
+						break;
+					}
 				}
+				this.getManagedBean().setQualified(true);
+				setVisible(true);
 			}
-
+		} finally {
+			
 		}
-		setVisible(true);
 
 	}
 
