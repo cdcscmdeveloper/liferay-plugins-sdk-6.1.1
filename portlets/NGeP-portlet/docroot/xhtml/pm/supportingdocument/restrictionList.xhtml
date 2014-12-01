@@ -11,52 +11,28 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	<p:outputPanel id="opRestriction">
 		<p:panel id="pDocRestriction" header="#{lbl['lbl.pm.document.restriction']}" toggleable="true" 
 		>
-		
-			<p:tabMenu id="tvDocRestriction" rendered="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId>0}"
-					activeIndex="#{supportDocBackingBean.managedBean.selectedTabIndex}"
-					>
-					
-				<p:menuitem value="#{lbl['lbl.pm.application.type']}" update="@form" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byAppType}">
-                   	<f:param name="disableValidation" value="" />     
-					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.selectedTabIndex}" 
-						value="#{supportDocBackingBean.restrApp}" />
-				</p:menuitem>
-				<p:menuitem value="#{lbl['lbl.pm.company.type']}" update="@form" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCompType}">
-                   	<f:param name="disableValidation" value="" />     
-					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.selectedTabIndex}" 
-						value="#{supportDocBackingBean.restrComp}" />
-				</p:menuitem>
-				<p:menuitem value="#{lbl['lbl.pm.supplier.type']}" update="@form" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
-                   	<f:param name="disableValidation" value="" />     
-					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.selectedTabIndex}" 
-						value="#{supportDocBackingBean.restrSupp}" />
-				</p:menuitem>
-				<p:menuitem value="#{lbl['lbl.pm.category']}" update="@form" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCategory}">
-                   	<f:param name="disableValidation" value="" />     
-					<f:setPropertyActionListener target="#{supportDocBackingBean.managedBean.selectedTabIndex}" 
-						value="#{supportDocBackingBean.restrCategory}" />
-				</p:menuitem>
-			</p:tabMenu>
-			<!-- Application Type -->
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrApp
-				and supportDocBackingBean.managedBean.selectedDocument.byAppType}">
-				<ui:include src="/xhtml/pm/supportingdocument/restrAppType.xhtml" /> 
-			</p:outputPanel>
-			<!-- Company Type -->
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrComp
-				and supportDocBackingBean.managedBean.selectedDocument.byCompType}">
-				<ui:include src="/xhtml/pm/supportingdocument/restrCompType.xhtml" /> 
-			</p:outputPanel>
-			<!-- Supplier Type -->
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrSupp
-				and supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
-				<ui:include src="/xhtml/pm/supportingdocument/restrSuppType.xhtml" /> 
-			</p:outputPanel>
-			<!-- Category -->	
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrCategory
-				and supportDocBackingBean.managedBean.selectedDocument.byCategory}">
-				<ui:include src="/xhtml/pm/supportingdocument/restrCategory.xhtml" /> 
-			</p:outputPanel>
+			<p:tabView widgetVar="tvDocRestriction" id="tvDocRestriction" dynamic="false" cache="false" orientation="top"
+					rendered="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId>0}">
+				<!-- Application Type -->
+				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byAppType}">  
+					<ui:include src="/xhtml/pm/supportingdocument/restrAppType.xhtml" /> 
+				</p:tab>
+	
+				<!-- Company Type -->
+				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCompType}">  
+					<ui:include src="/xhtml/pm/supportingdocument/restrCompType.xhtml" /> 
+				</p:tab>
+				
+				<!-- Supplier Type -->
+				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">  
+					<ui:include src="/xhtml/pm/supportingdocument/restrSuppType.xhtml" /> 
+				</p:tab>
+				
+				<!-- Category -->	
+				<p:tab id="tCatType" title="#{lbl['lbl.pm.category']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCategory}">
+					<ui:include src="/xhtml/pm/supportingdocument/restrCategory.xhtml" /> 
+				</p:tab>
+			</p:tabView>
 	
 		</p:panel>
 	</p:outputPanel>
