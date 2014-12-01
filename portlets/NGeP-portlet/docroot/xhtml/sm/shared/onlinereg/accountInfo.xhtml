@@ -26,10 +26,8 @@
 
 	<p:panel header="#{lbl['lbl.sm.account.info']}" toggleable="true">
 		<table class="customTbl">
-			<tr>
-				<c:if
-					test="#{registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">
-
+			<c:if test="#{registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">
+				<tr>
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.mofsuppliertype']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -46,8 +44,11 @@
 							<p:ajax event="change" update="busTypeId,outPnlRegForm" process="@form" />
 						</p:selectOneMenu>
 						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" /></td>
-				</c:if>
-
+					<td class="tdTitle"></td>
+					<td class="tdContent"></td>
+				</tr>
+			</c:if>
+			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -61,12 +62,22 @@
 					<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.getBusinessType(registrationBackingBean.managedBean.smSupp.businessType)}" 
 						rendered="#{!registrationBackingBean.managedBean.smAppl.brandNew}" />
 				</td>
-				<c:if
-					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">
-					<td class="tdTitle"></td>
-					<td class="tdContent"></td>
-				</c:if>
-			</tr>
+				<c:choose>
+					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
+						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.basic.account.created.date']}" /></td>
+						<td class="tdContent"><p:calendar id="createdDateId"
+						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.basic.account.created.date']}"
+						value="#{registrationBackingBean.managedBean.smSupp.createdDate}" rendered="#{not empty registrationBackingBean.managedBean.smSupp.createdDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="true"
+						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
+						</td>
+					</c:when>
+					<c:otherwise>
+						<td class="tdTitle"></td>
+						<td class="tdContent"></td>
+					</c:otherwise>
+				</c:choose>
+			 </tr>
 
 			<c:if test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
 				<tr>
@@ -75,18 +86,9 @@
 							<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
 						</p:selectOneRadio></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
+					<td style="text-align:left;width:30%;"><p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.managedBean.smSupp.epNo}" /></td>
 				</tr>
-				<c:if test="#{not empty registrationBackingBean.managedBean.smSupp.createdDate}">
-					<tr>
-						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.basic.account.created.date']}" /></td>
-						<td class="tdContent"><p:calendar id="createdDateId"
-						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.basic.account.created.date']}"
-						value="#{registrationBackingBean.managedBean.smSupp.createdDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="true"
-						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
-						</td>
-					</tr>
-				</c:if>
 			</c:if>
 		</table>
 	</p:panel>
