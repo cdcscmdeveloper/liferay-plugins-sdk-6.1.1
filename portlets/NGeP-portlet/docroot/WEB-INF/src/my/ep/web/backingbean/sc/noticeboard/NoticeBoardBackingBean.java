@@ -1371,6 +1371,32 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
 	}
 
+	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
+		IQTDetailSO detailSO;
+		ScQt scQt = scQtDocReport.getScQt();
+
+		QuationTenderResDTO resDTO = null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			resDTO = detailSO.retriveQTDocDetails(reqDTO);
+		} finally {
+			detailSO = null;
+		}
+		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+		qtDocumentsBackingBean.getManagedBean().setQt(null);
+		qtDocumentsBackingBean.getManagedBean().setQt(resDTO.getQtDetail());
+		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = qtDocumentsBackingBean.generateDocumentAttachment(scQtDocReport);
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		}
+		downloadFile(scQtDocReportAttachment);
+	}
+
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
 		IQTDetailSO detailSO;
 		this.getManagedBean().setScQtDocReports(null);
