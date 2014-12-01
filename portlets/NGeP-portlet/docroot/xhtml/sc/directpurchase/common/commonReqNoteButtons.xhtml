@@ -11,7 +11,7 @@
 	           	   id="backButton"
 	               icon="ui-icon-back" partialSubmit="true" process="@this"
 				   immediate="true" action="#{requestNoteBackingBean.backToPervious}"  
-				   rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"
+				   rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"
 				   title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 				</p:commandButton>
 						
@@ -40,7 +40,7 @@
 					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" process="@this" icon="ui-icon-back" partialSubmit="true" 
 						           style="float:left;"  immediate="true" 
 						           action="#{requestNoteBackingBean.backToPervious}"   
-						           rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"/>
+						           rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"/>
 						  </c:if>
 						
 						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval 

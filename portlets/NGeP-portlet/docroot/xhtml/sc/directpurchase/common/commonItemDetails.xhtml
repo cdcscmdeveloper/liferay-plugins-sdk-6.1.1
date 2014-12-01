@@ -279,14 +279,14 @@
 					</p:selectOneMenu>
 					
 					<p:spacer width="10px;"/>
-					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"  rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}"></h:outputText>
 					<p:spacer width="6px;"/>
 					<p:inputText id="periodId" style="width:20px;text-align:right;margin-top: 7px;" required="false"
-					    rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"
+					    rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}"
 						value="#{requestNoteBackingBean.managedBean.periodValue}" />
 					<p:spacer width="4px;"/>
 					<p:selectOneMenu id="periodMode" 
-					    rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"
+					    rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}"
 						value="#{requestNoteBackingBean.managedBean.periodType}"
 						style="width:120px;">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
