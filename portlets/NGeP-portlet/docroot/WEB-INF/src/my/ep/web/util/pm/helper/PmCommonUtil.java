@@ -97,10 +97,10 @@ public class PmCommonUtil {
 	 */
 	public static SelectItem[] getStatusOptionsDefault() {
 		SelectItem[] items =  new SelectItem[2];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+		items[0] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
 				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
-		items[1] = new SelectItem(null, ResourceBundleUtils.getMessage(
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_DELETED, ResourceBundleUtils.getMessage(
 				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 	    return items;
