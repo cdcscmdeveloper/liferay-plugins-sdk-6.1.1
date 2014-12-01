@@ -105,11 +105,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-//		this.getManagedBean().setAppId(1256427);
+		//this.getManagedBean().setAppId(1256825);
 //		this.getManagedBean().setAppId(1009);
+//		this.getManagedBean().setAppId(1256752);
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		//reqDTO.setAppId(1009);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
@@ -202,7 +202,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			//getAllApprovedCategoryCode();
 			List<SmSupplierCategory> suppCatLs = retrieveActiveCategoryCode(smSvTask.getSmAppl().getSmSupplier().getSmAppl().getApplId());
 			this.getManagedBean().setCategoryApplicable(suppCatLs);
-
+			
+			List<SmSupplierCategory> catLs = retrieveActiveCategoryCode(smSvTask.getSmAppl().getApplId());
+			this.getManagedBean().setSvTaskCategories(catLs);
 			log.info("*********categories**" +this.getManagedBean().getSmSvTask().getSmSvCategories().size());
 		}
 	}
@@ -210,6 +212,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void rptPreview(String catType){
 		log.info("-------rpt--------" + catType);
 		this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
+		
+		log.info("---svTemplate selected ADD----------" + this.getManagedBean().getSelectedSvTemplate().getSmSvTemplateAddresses().size());
 	}
 
 	/*public String submitSiteVisitReport(){
