@@ -28,38 +28,37 @@
 		</style>
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
-			<h:panelGroup id="orderTypeSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">			
-					<p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.doc.maintain.order.type']}" />					
-					<p:selectOneMenu
+			<table>
+			<tr>
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
 						style="width: 314px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
 						<p:ajax event="change" update="searchPanel"
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
-					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" style="padding-left : 274px;"/>
-					<p:inputText size="28" maxlength="17" 
-						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText>
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGroup id="docTYpeSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/>
-					<p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
+					</p:selectOneMenu></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+				<td><p:inputText size="28" maxlength="17" 
+						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+			</tr>
+			<tr>
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
 						<p:ajax event="change"
 							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
-					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" style="padding-left : 274px;"/>
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	
-				</h:panelGrid>
-			</h:panelGroup>
+					</p:selectOneMenu></td>
+			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
+						</tr>
+			</table>
 			<h:panelGroup id="docStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
