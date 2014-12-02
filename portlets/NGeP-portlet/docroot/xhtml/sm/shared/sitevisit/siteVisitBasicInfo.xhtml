@@ -7,33 +7,33 @@
 	xmlns:c="http://java.sun.com/jsp/js">
 	
 	<ui:param name="applInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl}" />
-	<p:panel header="#{lbl['lbl.sm.companyinfo']}">
+	<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']}" /></td>
-				<td><p:inputText value="#{applInfo.smSupplier.companyName}" disabled="true" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.equiComp.compName']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{applInfo.smSupplier.companyName}" /></td>
 <!-- 				<td>MOF Registration No</td> -->
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.application.ref.no']}" /></td>
-				<td><p:inputText value="#{applInfo.applNo}" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
-				<td><p:inputText value="#{lbl[svoSiteVisitBackingBean.getsupplierApplTypeDesc(applInfo.applType)]}" disabled="true" size="50" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.application.ref.no']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{applInfo.applNo}" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.applicationtype']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{lbl[svoSiteVisitBackingBean.getsupplierApplTypeDesc(applInfo.applType)]}" /></td>
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
-				<td><p:inputText value="#{applInfo.smSupplier.regNo}" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.telno']}" /></td>
-				<td><p:inputText value="#{applInfo.smCompanyBasic.phoneNo}" disabled="true" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{applInfo.smSupplier.regNo}" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.telno']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{applInfo.smCompanyBasic.phoneNo}" /></td>
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.contact.person.name']}" /></td>
-				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.name}" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.contact.person.designation']}" /></td>
-				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.designation}" disabled="true" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.contact.person.name']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.name}" /></td>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.contact.person.designation']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.designation}" /></td>
 			</tr>
 		</table>
 	</p:panel>
