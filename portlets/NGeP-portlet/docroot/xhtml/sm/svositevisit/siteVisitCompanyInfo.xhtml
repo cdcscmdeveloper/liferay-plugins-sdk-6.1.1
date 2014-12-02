@@ -33,14 +33,14 @@
 		<table class="customTbl">
 			<tr>
 				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.sitevist.total.owner']}" /></td>
-				<td><p:inputText readonly="true" id="ttlOwnerId" value="#{fn:length(svTask.smAppl.smSupplier.smSupplierOwners)}"/> #{lbl['lbl.sm.persons']}</td>
+				<td><p:inputText readonly="true" id="ttlOwnerId" value="#{svoSiteVisitBackingBean.managedBean.totalEquityOwner}" /> #{lbl['lbl.sm.persons']}</td>
 			</tr>
 			
-			<ui:repeat varStatus="equityStat" var="owner" value="#{svTask.smAppl.smSupplier.smSupplierOwners}">
+			<ui:repeat varStatus="equityStat" var="equityOwner" value="#{svoSiteVisitBackingBean.managedBean.equityOwnerLs}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
 					<p:outputLabel value="&#160;" rendered="#{equityStat.index != 0}" /></td>
-					<td><p:inputText readonly="true" value="#{owner.ownerName}" /></td>
+					<td><p:inputText readonly="true" value="#{equityOwner.name}" /></td>
 					<td>&#160;</td>
 				</tr>
 			</ui:repeat>
