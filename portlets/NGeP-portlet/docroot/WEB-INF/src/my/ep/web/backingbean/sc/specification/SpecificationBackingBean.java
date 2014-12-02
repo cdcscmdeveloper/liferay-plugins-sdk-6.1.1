@@ -5252,15 +5252,16 @@ public class SpecificationBackingBean extends
 			toBeRemoveList = new ArrayList<ScQtCheckListScore>();
 		}
 		if (null != scoreType && "".equalsIgnoreCase(scoreType)) {
-		if (scoreType.equalsIgnoreCase("2")) {
+			if (scoreType.equalsIgnoreCase("2")) {
 
-			this.getManagedBean().setScQtCheckListScore(
-					new ScQtCheckListScore());
-			// toBeRemoveList.add(this.getManagedBean().getCheckListScore());
-		} else {
-			toBeRemoveList.add(this.getManagedBean().getScQtCheckListScore());
-		}
-		this.getManagedBean().setChecklistScoreType(scoreType);
+				this.getManagedBean().setScQtCheckListScore(
+						new ScQtCheckListScore());
+				// toBeRemoveList.add(this.getManagedBean().getCheckListScore());
+			} else {
+				toBeRemoveList.add(this.getManagedBean()
+						.getScQtCheckListScore());
+			}
+			this.getManagedBean().setChecklistScoreType(scoreType);
 		}
 	}
 
@@ -5775,11 +5776,12 @@ public class SpecificationBackingBean extends
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+
 				/*
 				 * if (this.getManagedBean().getScQt().isZonal()) {
-				 * ScQtSupplierCriteria supplierCriteria =
-				 * this.getManagedBean().getScQt() .getScQtSupplierCriteria();
-				 * if (null != supplierCriteria && null !=
+				 * ScQtSupplierCriteria supplierCriteria = this
+				 * .getManagedBean().getScQt() .getScQtSupplierCriteria(); if
+				 * (null != supplierCriteria && null !=
 				 * supplierCriteria.getQtZoneCriterias()) {
 				 * supplierCriteria.getQtZoneCriterias().setModified(true);
 				 * templateSpecBean.getSpecMaster().setTplSpecZone(
@@ -5787,6 +5789,36 @@ public class SpecificationBackingBean extends
 				 * 
 				 * } }
 				 */
+				if (this.getManagedBean().getScQt().isZonal()
+						&& this.getManagedBean().getScQt().getQtType()
+								.equals(QTConstants.OPEN_TYPE)) {
+					ScQtSupplierCriteria supplierCriteria = this
+							.getManagedBean().getScQt()
+							.getScQtSupplierCriteria();
+					List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+							this.getManagedBean().getZoneGeneralTrees(), null);
+
+					if (businessOwnerZone != null
+							&& !businessOwnerZone.isEmpty()) {
+						// TODO Code needs to be remove
+						// setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
+
+						for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+							supplierCriteria.getQtZoneCriterias().setModified(
+									true);
+							tplSpecZoneDtl.setTplSpecZone(supplierCriteria
+									.getQtZoneCriterias());
+							
+
+						}
+						templateSpecBean.getSpecMaster().setTplSpecZone(
+								supplierCriteria.getQtZoneCriterias());
+						templateSpecBean.getSpecMaster().getTplSpecZone()
+								.setTplSpecZoneDtls(businessOwnerZone);
+					}
+
+				}
+
 				return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
