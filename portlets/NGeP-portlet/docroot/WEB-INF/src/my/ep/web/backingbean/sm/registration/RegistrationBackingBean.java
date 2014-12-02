@@ -29,6 +29,7 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -1340,6 +1341,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //		} else {
 //			this.getManagedBean().setPersonnelIdMask("");
 //		}
+	}
+	
+	public void trimPassportValue(){
+		String newPassportVal = "";
+		if(StringUtils.isNotBlank(this.getManagedBean().getSmSuppOwner().getIdentificationNo())){
+			newPassportVal = this.getManagedBean().getSmSuppOwner().getIdentificationNo().replaceAll("\\s", "");
+			this.getManagedBean().getSmSuppOwner().setIdentificationNo(newPassportVal);
+		}
 	}
 	
 	/**
