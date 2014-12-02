@@ -330,8 +330,7 @@ public class LOIDetailBackingBean extends
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-			reqDTO.setDocId(qtId);
+			reqDTO.setQtId(qtId);
 //			reqDTO.setOrgProfileId(32950L); // TODO - change in SO to remove
 //											// this.
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
@@ -340,16 +339,16 @@ public class LOIDetailBackingBean extends
 					.retrievePendingLoiList(reqDTO);
 
 			// loi loa list
-			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
+			//if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				// getManagedBean().setLoiLoaBeans(prepareLoiLoaList(resDTO.getLoiLoas()));
-				reqDTO.setScLoi(resDTO.getLoiLoas().get(0).getScLois().get(0));
-			}
+				//reqDTO.setScLoi(resDTO.getLoiLoas().get(0).getScLois().get(0));
+			//}
 
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
 			// rec supplier in loi list
-			getManagedBean().setRecSupplierList(resDTO.getPendingLoiLoas());
+			getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
 
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
