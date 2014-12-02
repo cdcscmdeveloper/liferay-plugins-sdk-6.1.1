@@ -9,6 +9,7 @@
 		<ui:include
 			src="/xhtml/sc/quatationtender/restrictedSupplierDtlPopUp.xhtml" />
 		<p:tabView id="restrictedtendertabView" dynamic="true">
+			<p:ajax event="tabChange" listener="#{qTSupplierQulCriteriaBackingBean.onTabChangeAction}" immediate="true" />
 
 			<p:tab id="tab1"
 				title="#{lbl['lbl.qt.supplierqulificationcriteria']}"

@@ -355,7 +355,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					
 					QuationTenderResDTO resDTO = qtDetailsSO.retrieveScQtSupplierByQtId(reqDTO);
 					List<ScQtSupplier> dbList = resDTO.getSupplierResultBean().getResultList();
-					getManagedBean().getSelectedQtSupplierList().addAll(dbList);
+					getManagedBean().getQtSupplierList().addAll(dbList);
 					
 				} finally {
 					qtDetailsSO = null;
