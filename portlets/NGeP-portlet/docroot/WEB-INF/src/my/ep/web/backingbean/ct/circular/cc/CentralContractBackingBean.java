@@ -70,6 +70,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -205,16 +206,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
 			setContractCircularVar(resDTO);
-			getManagedBean().setSelectedTabIndex(0);
-			
-			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			}
-	        getManagedBean().setRemarkList(resDTO.getRemarkList());
-			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-						
+			getManagedBean().setSelectedTabIndex(0);						
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -227,6 +219,19 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		    getManagedBean().setCircularVer(resDTO.getCircularVer());
+		   
+		   if (getManagedBean().isUpdateAction()) {
+			   IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			   ContractReqDTO contractReqDTO = null;
+			   
+			   for (CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
+				   //Get latest contract version
+				   contractReqDTO = new ContractReqDTO();
+				   contractReqDTO.setContractId(circularContract.getCtContract().getContractId());
+				   CtContractVer ctContractVer = contractSO.getLatestContractVer(contractReqDTO).getCtContractVer();
+				   circularContract.setCtContractVer(ctContractVer);
+			   }
+		   }
 		  
 		    if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
 		    	Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
@@ -385,8 +390,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
-	public void addSelectedContract(){
-		log.info("CentralContractBackingBean.addSelectedContract()");
+	public void addSelectedContract() {
 		IContractSO contractSO = null;
         try {
         	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
@@ -594,12 +598,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}else{
 					reqDTO = new CircularReqDTO();
 					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
-					setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
 					getManagedBean().setUpdateAction(false);
 					getManagedBean().setViewContract(false);
-					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-					ctBB.initializeRemarkAndAttachement(getManagedBean().getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+					setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
 				}
 				
 			  }else {
@@ -741,16 +742,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				getManagedBean().setViewContract(true);
-				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(false);
 				getManagedBean().setOutComes(new String[]{});
+				setContractCircularVar(resDTO);				
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(true);
 				getManagedBean().setViewContract(false);
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				setContractCircularVar(resDTO);
 			}
 			
 			return "circularBase.xhtml?faces-redirect=true";

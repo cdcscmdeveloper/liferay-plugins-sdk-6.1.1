@@ -22,7 +22,7 @@
 			rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
-			<p:column headerText="#{lbl['lbl.ct.circular.no']}" >
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" >
 				<p:commandLink value="#{data.circularVer.circularNo}"
 					onclick="gotoCancelPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVer.circularVerId}'}])">
 				</p:commandLink>	
@@ -44,7 +44,7 @@
 					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />
 					<p:column selectionMode="multiple" style="width:3%" />
-					<p:column headerText="#{lbl['lbl.ct.circular.no']}">
+					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.circular.name']}">
