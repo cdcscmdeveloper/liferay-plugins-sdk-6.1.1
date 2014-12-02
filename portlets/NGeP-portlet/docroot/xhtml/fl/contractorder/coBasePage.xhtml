@@ -46,6 +46,7 @@
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq "Cancel"}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.cancel']}" update="@form"
+						icon="ui-icon-cancel"
 						action="#{flOrderBB.gpkiSignAction('CANCEL')}">
 						<f:param name="actionName" value="CANCEL" />
 					</p:commandButton></td>
