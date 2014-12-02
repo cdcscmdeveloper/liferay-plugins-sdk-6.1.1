@@ -23,10 +23,11 @@
 				padding:4px;
 			}
 			
+			
 			tr.ui-expanded-row-content.ui-widget-content td[colspan="10"]:first-child{
     			padding: 0px;
-    			border-top: none !important;
-    			border-right: none !important;    			
+    			border-top: 0 !important;
+    			border-right: 0 !important;    			
 			}
 				
 			.ui-datatable.borderless thead th,
@@ -34,21 +35,51 @@
 			.ui-datatable.borderless tbody tr,
 			.ui-datatable.borderless tbody td {
     			border-style: none;
-    			background-color:white;
     			padding:4px;
 			}
 			.ui-datatable.borderless table{
-				border:none !important;
+				border:0 !important;
 				border-collapse:collapse !important;
 			}
 			
 			.borderless.ui-datatable .ui-datatable-tablewrapper {
 			    overflow:hidden !important;
-			    padding:0px; !important;
+			    padding:0px !important;
 			}
 			
 			.ui-datatable.borderless.ui-datatable-resizable{
 				padding:0px;
+			}
+			
+			.ui-row-toggler{
+				margin-left:auto !important;
+				margin-right:auto !important;
+			}
+			
+			tr.ui-widget-content.ui-datatable-odd.ui-expanded-row ~ tr.ui-expanded-row-content.ui-widget-content td{
+				background-color:#F9F9F9 !important;
+			}
+			
+			tr.ui-widget-content.ui-datatable-even.ui-expanded-row ~ tr.ui-expanded-row-content.ui-widget-content td{
+				background-color:white !important;
+			}
+			
+			@-moz-document url-prefix() {
+				tr.ui-expanded-row-content.ui-widget-content td[colspan="10"]:first-child{
+	    			padding: 0px;
+	    			border-top: 0 !important;
+	    			border-right: 0 !important;  
+	    			border-bottom : 0 !important;
+    			}
+			}
+			
+			@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
+    			.ui-datatable.borderless tbody td:last-child {
+	    			border-right: 0 !important;
+				}
+				.ui-datatable.borderless tbody tr:last-child td {
+	    			border-bottom: 0 !important;
+				}
 			}
 		</style>
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -58,7 +89,7 @@
 		<p:dataTable id="ctListTree" var="contractTreeNode" rows="10"  resizableColumns="true" styleClass="ctlisttree"
 			value="#{contractRequestBackingBean.managedBean.contractListTable}">
 			<ac:paginator for="ctListTree" />
-			 <p:column style="width:37px">
+			 <p:column style="width:25px">
             	<p:rowToggler rendered="#{not empty contractTreeNode.activeContractSubList}" />
         	</p:column>
 			<p:column headerText="Contract No" style="width:142px">
@@ -109,7 +140,7 @@
 			
 				<p:dataTable id="ctSubListTree" var="contractExpansion" styleClass="borderless"
 					value="#{contractTreeNode.activeContractSubList}"  resizableColumns="true">
-					<p:column style="width:37px">
+					<p:column style="width:25px">
 					</p:column>
 					<p:column style="width:142px">
 					</p:column>
