@@ -5251,6 +5251,7 @@ public class SpecificationBackingBean extends
 		if (null == toBeRemoveList) {
 			toBeRemoveList = new ArrayList<ScQtCheckListScore>();
 		}
+		if (null != scoreType && "".equalsIgnoreCase(scoreType)) {
 		if (scoreType.equalsIgnoreCase("2")) {
 
 			this.getManagedBean().setScQtCheckListScore(
@@ -5260,6 +5261,7 @@ public class SpecificationBackingBean extends
 			toBeRemoveList.add(this.getManagedBean().getScQtCheckListScore());
 		}
 		this.getManagedBean().setChecklistScoreType(scoreType);
+		}
 	}
 
 	// User And Auto Score Select Methods in spec committee
@@ -5271,16 +5273,19 @@ public class SpecificationBackingBean extends
 		if (null == toBeRemoveList) {
 			toBeRemoveList = new ArrayList<ScQtCheckListScore>();
 		}
+		if (null != scoreType && "".equalsIgnoreCase(scoreType)) {
 
-		if (scoreType.equalsIgnoreCase("2")) {
+			if (scoreType.equalsIgnoreCase("2")) {
 
-			this.getManagedBean()
-					.setScQtContractScore(new ScQtCheckListScore());
+				this.getManagedBean().setScQtContractScore(
+						new ScQtCheckListScore());
 
-		} else {
-			toBeRemoveList.add(this.getManagedBean().getScQtCheckListScore());
+			} else {
+				toBeRemoveList.add(this.getManagedBean()
+						.getScQtCheckListScore());
+			}
+			this.getManagedBean().setCompanyScoreType(scoreType);
 		}
-		this.getManagedBean().setCompanyScoreType(scoreType);
 	}
 
 	public void fromChange(AjaxBehaviorEvent event) {
@@ -9810,7 +9815,7 @@ public class SpecificationBackingBean extends
 
 				specReqDTO.setScQt(finChecklist);
 				specReqDTO.setTobeRemoveList(getToBeRemoveList());
-				
+
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
