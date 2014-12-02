@@ -405,7 +405,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setAdjustmentDocNo(adjustmentDocNo);
 	}
 	
-	private void setStopInstrNo(FlFulfilmentOrder flFulfilmentOrder) {
+	public void setStopInstrNo(FlFulfilmentOrder flFulfilmentOrder) {
 		IFulfilmentOrderSO fulfilmentOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
