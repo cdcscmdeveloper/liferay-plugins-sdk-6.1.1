@@ -342,9 +342,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		String tabTitle = event.getTab().getTitle();
 		if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.qt.supplier.list"))) {
 			
-			List<ScQtSupplier> sessionList = getManagedBean().getSelectedQtSupplierList();
+			List<ScQtSupplier> sessionList = getManagedBean().getQtSupplierList();
 			if(sessionList == null){
-				getManagedBean().setSelectedQtSupplierList(new ArrayList<ScQtSupplier>());
+				getManagedBean().setQtSupplierList(new ArrayList<ScQtSupplier>());
 				IQTDetailSO qtDetailsSO = null;
 				try {
 					qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
