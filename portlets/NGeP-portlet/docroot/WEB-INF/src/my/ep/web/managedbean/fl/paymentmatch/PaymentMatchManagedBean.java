@@ -86,6 +86,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private BigDecimal balanceAmt;
 	private BigDecimal paidPerc;
 	private int numberOfCO;
+	private boolean showDeductionTab;
 
 	private String buttonVal;
 	private PmUser pmUser;
@@ -946,5 +947,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setNumberOfCO(int numberOfCO) {
 		this.numberOfCO = numberOfCO;
+	}
+
+	/**
+	 * @return the showDeductionTab
+	 */
+	public boolean isShowDeductionTab() {
+		return showDeductionTab;
+	}
+
+	/**
+	 * @param showDeductionTab the showDeductionTab to set
+	 */
+	public void setShowDeductionTab(boolean showDeductionTab) {
+		this.showDeductionTab = showDeductionTab;
 	}
 }

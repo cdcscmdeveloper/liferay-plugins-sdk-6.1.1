@@ -1037,6 +1037,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			BigDecimal deductionAmt = new BigDecimal(0);
 			for(CtDeduction deduction : paymentAdvice.getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
+				if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+					getManagedBean().setShowDeductionTab(true);
+				}
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
 					getManagedBean().setHaveAdvancedPymt(true);
 					deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
