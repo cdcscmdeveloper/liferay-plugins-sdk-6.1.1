@@ -58,7 +58,7 @@
 								value="1" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.fl.payment.match.deduction']}" update="@form" 
-						actionListener="#{paymentMatchBackingBean.onTabChange(2)}">
+						actionListener="#{paymentMatchBackingBean.onTabChange(2)}" rendered="#{paymentMatchBackingBean.managedBean.showDeductionTab}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
