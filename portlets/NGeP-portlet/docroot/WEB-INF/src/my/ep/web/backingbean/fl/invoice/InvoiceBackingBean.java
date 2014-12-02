@@ -282,6 +282,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
 			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+			return RoleCode.GOVT_SELLER.value();		
 		else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
 			return RoleCode.FL_APPROVER.value();		
 		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
@@ -1047,6 +1049,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
