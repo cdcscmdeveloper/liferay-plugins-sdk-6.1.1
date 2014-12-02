@@ -170,7 +170,7 @@ public class SmApplicationUtil {
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 			count = 10;
 		}
-		if (resDTO.getCount() != null) {
+		if (resDTO != null && resDTO.getCount() != null) {
 			resultCount = resDTO.getCount().intValue();
 			if (resultCount < count) {
 				if (count == 5
