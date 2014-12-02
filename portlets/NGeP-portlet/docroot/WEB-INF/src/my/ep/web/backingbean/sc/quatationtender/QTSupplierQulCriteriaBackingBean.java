@@ -29,6 +29,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -50,6 +51,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -71,7 +74,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
-import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
@@ -533,7 +535,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		// update qt supplier list.
 		getManagedBean().setTotalSupplier(qtSupplierList.size());
-		getManagedBean().setQtSupplierList(qtSupplierList);
+		getManagedBean().getQtSupplierList().addAll(qtSupplierList);
+		//getManagedBean().setQtSupplierList(qtSupplierList);
 
 		// For save the criteria details when search button if clicked.
 		// scQt.setScQtCriterias(scQtCriteria);
@@ -1079,9 +1082,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void reset() {
 		debugLogger("reset");
-		getManagedBean().setSupplierName(null);
-		getManagedBean().setMofAccountNo(null);
-		getManagedBean().setMinPaidUpCapital(null);
+		getManagedBean().getSupplierSearchBean().setSupplierName(null);
+		getManagedBean().getSupplierSearchBean().setMofAccountNo(null);
+		getManagedBean().getSupplierSearchBean().setMinPaidUpCapital(null);
 	}
 
 	/**
@@ -1248,33 +1251,38 @@ public class QTSupplierQulCriteriaBackingBean extends
 		// return getDropdownCodeValues(committeeRole);
 	}
 
-	public void showSupplierDetails() {
+	public void showSupplierDetails(ScQtSupplier qtSupplier) {
 		debugLogger("showSupplierDetails");
-		ScQtSupplier qtSupplier = this.getManagedBean().getScQtSupplier();
-		List<SmPersonnel> personnelsList = qtSupplier.getSmSupplier()
-				.getSmAppl().getSmPersonnels();
-		for (SmPersonnel smPersonnel : personnelsList) {
-			getManagedBean().setPersonnel(smPersonnel);
-		}
-		// SmPersonnel supplierHQPersonnel =
-		// this.getManagedBean().getPersonnel();
-		SmCompanyBasic smCompanyBasic = qtSupplier.getSmSupplier().getSmAppl()
-				.getSmCompanyBasic();
-
-		for (SmCompanyAddress smCompanyAddress : smCompanyBasic
-				.getSmCompanyAddresses()) {
-			if (AddressType.CONTACT_ADDRESS.value().equals(
-					smCompanyAddress.getAddressType())) {
-				log.info("found hq address");
-				getManagedBean().setSupplierBranch("HQ");
-				getManagedBean().setSupplierAddress(
-						smCompanyAddress.getSmAddress());
-				getManagedBean().setSupplierContact(
-						getManagedBean().getPersonnel().getName());
-				getManagedBean().setSupplierEmail(
-						getManagedBean().getPersonnel().getEmail());
-				break;
+		IQTSupplierSO qtSupplierSO = null;
+		try {
+			qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
+			
+			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+			reqDTO.setSupplierId(qtSupplier.getSmSupplier().getSupplierId());
+			
+			QTSupplierResDTO resDTO = qtSupplierSO.retrieveSupplierDtlById(reqDTO);
+			
+			this.getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+			this.getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			List<SmPersonnel> personnelsList = qtSupplier.getSmSupplier()
+					.getSmAppl().getSmPersonnels();
+			for (SmPersonnel smPersonnel : personnelsList) {
+				getManagedBean().setPersonnel(smPersonnel);
 			}
+			SmCompanyBasic smCompanyBasic = resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic();
+			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+					log.info("found hq address");
+					getManagedBean().setSupplierBranch("HQ");
+					getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+					getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
+					getManagedBean().setSupplierEmail(getManagedBean().getPersonnel().getEmail());
+					break;
+				}
+			}
+		} finally {
+			qtSupplierSO = null;
 		}
 	}
 
