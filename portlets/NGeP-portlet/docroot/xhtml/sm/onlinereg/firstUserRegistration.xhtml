@@ -163,6 +163,7 @@
 								label="#{lbl['lbl.sm.identificationno']}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="15">
+								<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{registrationBackingBean.trimPersonnelPassportValue}"/>
 							</p:inputText>
 						</c:otherwise>
 					</c:choose>
