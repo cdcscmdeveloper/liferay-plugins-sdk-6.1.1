@@ -70,7 +70,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;	
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -754,6 +754,7 @@ public class EvaluationMeetingBackingBean extends
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 
 		reqDTO.setQtId(scQt.getQtId());
+		reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 		CommitteResDTO resDTO = null;
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
