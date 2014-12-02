@@ -68,59 +68,43 @@ public class gpkiBackingBean {
         String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
 	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
 	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
-		
+	    String subjectDN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("subjectDN");
+
 	    Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-//		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
-//
-//		UserReqDTO reqDTO = new UserReqDTO();
-//
-//		reqDTO.setUserId(userId);
-//		userSO.retrieveUserByUserId(reqDTO);
-//		UserResDTO resDTO = new UserResDTO();
-//		resDTO = userSO.retrieveUserByUserId(reqDTO);
-//		debugLogger("userId====================================: "+userId);
-//		debugLogger("resDTO=====================================: "+resDTO.getPmUser().getIdentificationCode());	
+
+		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		userSO.retrieveUserByUserId(reqDTO);
+		UserResDTO resDTO = new UserResDTO();
+		resDTO = userSO.retrieveUserByUserId(reqDTO);
+		debugLogger("serialNo====================================: "+serialNo);
+		debugLogger("subjectDN====================================: "+subjectDN);
+		debugLogger("userId====================================: "+subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")));
+		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
 		debugLogger("reflectAction=====================================: "+obj);		
-		
+		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+			
+			debugLogger("=================================Same IC No");
+		}else{
+			debugLogger("=================================Not Same IC No ");
+		}
 		
 		pmDigiSign.setCreatedBy(userId);
         pmDigiSign.setCreatedDate(date);
         pmDigiSign.setOrginalData(textBeforeSign);
         pmDigiSign.setSignedData(signedText);
-		debugLogger("=================================obj.invoke===: ");
-       
         return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
 	}
-	
-
 		
 	public void showError() {
 	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
 	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
 	    FacesContext facesContext = FacesContext.getCurrentInstance(); ;
 	    debugLogger("OriginalText====================================: "+statusCode);
-//	    facesContext.addMessage(
-//				"somekey",
-//				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-//						MessageUtils.getMessage(
-//								MessageConst.ERROR_776001,
-//								MessageUtils.BUNDLE_COMMON_MESSAGES,
-//								new FacesScopes().getUserLocale())));  
-//								throw new EpException(MessageConst.ERROR_715026);
+
 	FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
 	}
-//	public void signAction() {
-////	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-//
-//	    String value = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
-//	    String value2 = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
-//	    String value3 = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
-//
-//	    debugLogger("OriginalText====================================: "+value);
-//	    debugLogger("SignedText====================================: "+value2);
-//	    debugLogger("ser====================================: "+value3);
-//
-//	}
 
 }
