@@ -12,6 +12,12 @@ public class ScSchedulerConstants {
 	// EP Job Key Id
 	public static final String EP_CONTINOUS_JOB = "CONTINUOUS STATUS CHECK";
 	public static final String EP_DAILY_JOB = "BIDS FETCH ";
-
+	
+	// 
+	public static final String JOB_RESUME = "RESUME";
+	public static final String JOB_PAUSE = "PAUSE";
+	public static final String JOB_WAIT = "WAIT";
+	public static final String JOB_RUN = "RUN";
+	
 
 }
