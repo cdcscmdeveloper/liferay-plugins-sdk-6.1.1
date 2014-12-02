@@ -694,12 +694,20 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 	}
 	
-	public void printVirtualCertificate(String certNo) throws IOException{
-		//String paymentId = this.getManagedBean().getPaymentId().toString();
+	public void printMofCertificate(String certNo) throws IOException{
+
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("PCERTSERIALNO", certNo);
 		
-		generateReport("SM_VIRTUAL_VERIFICATION.jsp", paramMap);
+		generateReport(ReportConst.SM_VIRTUAL_VERIFICATION_jsp, paramMap);
+	}
+	
+	public void printBumiCertificate(String certNo) throws IOException{
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("PCERTSERIALNO", certNo);
+		
+		generateReport(ReportConst.SM_VIRTUAL_VERIFICATION_BUMI_jsp, paramMap);
 	}
 }
 

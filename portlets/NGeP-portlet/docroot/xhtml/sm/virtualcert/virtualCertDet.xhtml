@@ -33,17 +33,24 @@
 					<ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.download']}"
 						action="#{virtualCertBackingBean.generatePdf(mofCert.smMofAccount)}" ajax="false" rendered="#{!mofCert.bumiCert}" />
-					</ui:remove>
-					
 					<p:commandButton value="#{lbl['lbl.btn.download']}"
 						action="#{virtualCertBackingBean.generateBumiPdf(mofCert.smMofAccount)}" ajax="false" rendered="#{mofCert.bumiCert}" />
-					
+					</ui:remove>
+										
 					<p:commandButton
 						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
 						icon="ui-icon-search"
 						ajax="false"
 						rendered="#{!mofCert.bumiCert}">
-						<p:fileDownload value="#{virtualCertBackingBean.printVirtualCertificate(mofCert.certSerialNo)}" />
+						<p:fileDownload value="#{virtualCertBackingBean.printMofCertificate(mofCert.certSerialNo)}" />
+					</p:commandButton>
+					
+					<p:commandButton
+						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
+						icon="ui-icon-search"
+						ajax="false"
+						rendered="#{mofCert.bumiCert}">
+						<p:fileDownload value="#{virtualCertBackingBean.printBumiCertificate(mofCert.certSerialNo)}" />
 					</p:commandButton>
 					
 				</p:column>
