@@ -49,6 +49,7 @@
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
+		<p:spacer height="5" />
 
 		<table>
 			<tr>
@@ -63,7 +64,7 @@
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
 			styleClass="apply_button" id="restrictSupplier" icon="ui-icon-search"
-			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction1}"
+			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
 			update="restrictedsupplierPnl" process="@this, searchrestrictedsupp" />
 		<p:commandButton value="#{lbl['lbl.btn.reset']}"
 			action="#{qTSupplierQulCriteriaBackingBean.reset}"
@@ -89,19 +90,17 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.mofno']}">
-				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).mofNo}" />
+				<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).mofNo}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.mofexp']}">
-				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.status']}">
+				<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).recordStatusFlg}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
