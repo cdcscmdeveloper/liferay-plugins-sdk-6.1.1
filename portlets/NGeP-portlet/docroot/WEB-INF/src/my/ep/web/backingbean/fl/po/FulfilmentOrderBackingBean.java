@@ -690,6 +690,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			return RoleCode.BASIC_SUPPLIER_USER.value();
 		else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();			
+		else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+			return RoleCode.GOVT_SELLER.value();			
 		else
 			return null;
 	}
