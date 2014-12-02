@@ -105,8 +105,9 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										maxlength="1000" rendered="#{remarkVar.remarkId eq null}" />
-									<h:outputText value="#{remarkVar.remark}"
+										style="width:75%;" maxlength="1000"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
