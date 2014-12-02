@@ -285,6 +285,8 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			return RoleCode.BASIC_SUPPLIER_USER.value();
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return RoleCode.MOF_SUPPLIER_USER.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return RoleCode.GOVT_SELLER.value();		
 		}
 		return null;
 	}
@@ -362,6 +364,8 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;

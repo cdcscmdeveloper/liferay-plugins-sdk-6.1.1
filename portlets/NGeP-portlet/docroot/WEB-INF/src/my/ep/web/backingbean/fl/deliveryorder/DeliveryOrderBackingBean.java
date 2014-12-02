@@ -113,6 +113,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
 			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+			return RoleCode.GOVT_SELLER.value();		
 		else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
 			return RoleCode.FL_APPROVER.value();		
 		else 
@@ -540,7 +542,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
+		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	
 	public void onTabChange(int selectedTabIndex){
@@ -678,6 +680,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
