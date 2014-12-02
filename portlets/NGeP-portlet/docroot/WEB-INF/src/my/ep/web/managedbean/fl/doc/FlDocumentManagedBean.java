@@ -426,7 +426,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
+		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	public boolean isFlFulfilmentRecevingOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
