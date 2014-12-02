@@ -154,6 +154,8 @@ public class BSVAttendanceBackingBean extends
 	 * To add the attandance user click add button
 	 */
 	public void addAttendanceForBSV() {
+		if(null != this.getManagedBean()
+				.getSelectedbriefRegistration()){
 		List<ScQtBsvAttendance> attandances = this.getManagedBean()
 				.getSelectedbriefRegistration().getBsvAttendance();
 		ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
@@ -170,6 +172,9 @@ public class BSVAttendanceBackingBean extends
 		// this.getManagedBean().setBriefingAttendanceList(attandances);
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(attandances);
+		}else{
+			throw new EpException(MessageConst.ERROR_760185);
+		}
 
 	}
 
