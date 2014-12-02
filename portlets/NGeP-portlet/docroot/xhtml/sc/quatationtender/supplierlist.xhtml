@@ -38,7 +38,7 @@
 		<c:if
 			test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal 
 					and qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != PmCodeConst.quotationTenderTypePanel}">
-			<p:dataTable id="suppliersTbl" var="qtSupplier"
+			<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}"
 				selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}">
@@ -49,26 +49,28 @@
 
 				<p:column headerText="#{lbl['lbl.so.suppliername']}">
 					<p:commandLink update=":form:popupSuppDtl"
-						action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails}"
+						action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails(qtSupplier)}"
 						oncomplete="suppDetails.show();">
-						<f:setPropertyActionListener value="#{qtSupplier}"
-							target="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier}" />
 						<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
 					</p:commandLink>
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
-					<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}"/>
+					<h:outputText
+						value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}" />
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.so.mofexp']}">
-					<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					<h:outputText
+						value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.so.status']}">
-					<h:outputText value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg}" />
+					<h:outputText
+						value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg}" />
 				</p:column>
 			</p:dataTable>
 		</c:if>

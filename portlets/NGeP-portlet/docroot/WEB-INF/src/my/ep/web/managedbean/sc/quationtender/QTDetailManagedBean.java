@@ -240,7 +240,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private IPagingDataModel<SmSupplier> searchSupplierDataModel;
 	private SupplierSearchBean supplierSearchBean;
-
+	private SmSupplier smSupplier;
+	
 	// supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
 	private List<ScQtCategory> selectedRestrictedCategoryList;
@@ -2864,6 +2865,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSupplierSearchBean(SupplierSearchBean supplierSearchBean) {
 		this.supplierSearchBean = supplierSearchBean;
+	}
+
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
 	}
 
 }
