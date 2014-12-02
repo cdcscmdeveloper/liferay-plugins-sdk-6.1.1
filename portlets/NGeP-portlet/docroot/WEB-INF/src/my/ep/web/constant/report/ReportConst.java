@@ -324,6 +324,11 @@ public class ReportConst {
 	public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP = "List_offline_Supportg_Doc_Pendg_Submission.jsp";
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";
 	//SM Module report end
+	
+	// SM - virtual certificate
+	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
+	public static final String SM_VIRTUAL_VERIFICATION_BUMI_jsp = "SM_VIRTUAL_VERIFICATION_BUMI.jsp";
+	
 	//CM Module reports start	
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
 	public static final String CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL = "CT_002";	
