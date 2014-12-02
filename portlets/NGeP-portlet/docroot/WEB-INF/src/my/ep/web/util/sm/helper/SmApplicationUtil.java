@@ -174,8 +174,8 @@ public class SmApplicationUtil {
 			resultCount = resDTO.getCount().intValue();
 			if (resultCount < count) {
 				if (count == 5
-						|| ((count == 10) && (resDTO.getSmPersonnelList()
-								.size() < 5)))
+						|| ((count == 10) && (resDTO.getSmPersonnelList() != null && resDTO
+								.getSmPersonnelList().size() < 5)))
 					validPerCount = 1;
 				else
 					validPerCount = 2;
@@ -2870,7 +2870,8 @@ public class SmApplicationUtil {
 									.getPmCountry().getCountryName();
 				}
 				smSupplierBasicInfoVO.setAddressLine(addressLine);
-				smSupplierBasicInfoVO.setPostCodeStateCityCountry(postCodeCityCountry);
+				smSupplierBasicInfoVO
+						.setPostCodeStateCityCountry(postCodeCityCountry);
 			}
 
 		}
