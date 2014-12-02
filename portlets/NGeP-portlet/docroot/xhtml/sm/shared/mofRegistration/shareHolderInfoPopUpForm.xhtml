@@ -131,6 +131,7 @@
 						showDetail="false" display="icon" /></td>
 
 			</tr>
+
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -144,18 +145,26 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> <p:message id="equiEmailMsg" for="equiEmail" showSummary="true"
 						showDetail="false" display="icon" /></td>
-						
-				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /><p:outputLabel id="equiPerMobMandatory"
-						value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"/></td>
+				
+				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" />
+					<p:outputPanel id="mobileOutputPanel">
+						<p:outputLabel id="equiPerMobMandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+						value="*" styleClass="mandatory" />
+					</p:outputPanel>
+				</td>
 				<td><p:inputText size="35" maxlength="12" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
 						value="#{backingBean.managedBean.selectedShareHolder.mobileNo}"
 						validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
 						label="#{lbl['lbl.sm.mobileNo']}" id="equiPerMob">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> <p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
-						showDetail="false" display="icon" /></td>
+					</p:inputText> 
+						<p:outputPanel id="equiPerMobMsgOutputPanel">
+						<p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
+						showDetail="false" display="icon" />
+						</p:outputPanel></td>
 
 			</tr>
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
@@ -208,7 +217,6 @@
 							itemLabel="select.label" itemValue="select.value" />
 					</p:selectOneMenu> <p:message id="equiPerRaceMsg" for="equiPerRace"
 						showSummary="true" showDetail="false" display="icon" /></td>
-
 			</tr>
 
 		</table>
@@ -228,8 +236,8 @@
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						<p:ajax event="change"
-							update=":form:tt:equiPerDtlPan,shrPrivPanel, @([id$=shareHolderAddrDialog])"
+						<p:ajax event="change" 
+							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMob,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel])"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
 			</tr>
