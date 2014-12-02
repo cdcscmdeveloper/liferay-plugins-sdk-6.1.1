@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -171,16 +173,13 @@ public class SPDetailBackingBean extends
 		debugLogger("retrieveProposalChecklistDtls");
 
 		getManagedBean().setPrepareActiveIndex(0);
-		IQTProposalSO proposalSO = null;
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
 			reqDTO.setHashSupplierId(supplierID);
 
-			ProposalResDTO resDTO = proposalSO
+			ProposalResDTO resDTO = getProposalSO()
 					.retrieveProposalDtlBySupplierId(reqDTO);
 			getManagedBean().setQt(resDTO.getScQt());
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
@@ -203,24 +202,24 @@ public class SPDetailBackingBean extends
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
-
-				Calendar cal = Calendar.getInstance();
+				// hide the save/submit,add and delete buttons in supplier view
+				// when QT is closed
 				Date closingDate = getManagedBean().getQt().getClosingDate();
-
-				Date currentDayWithOutTime = DateUtils
-						.getCurrentDateWithoutTime();
+				if (new Date(System.currentTimeMillis()).after(closingDate)) {
+					getManagedBean().setClosed(true);
+				}
 
 				Date today = new Date();
 				long days = DateUtils.getDaysDifference(today, getManagedBean()
 						.getQt().getClosingDate());
-				if (days == 0) {
-					getManagedBean().setClosed(true);
-				}
+
 				this.getManagedBean().setDays(days);
 			}
+			// checking for proposal validity
+			reqDTO.setScQt(resDTO.getScQt());
+			getProposalSO().validateSupplierProposal(reqDTO);
 
 		} finally {
-			proposalSO = null;
 		}
 	}
 
@@ -2549,9 +2548,22 @@ public class SPDetailBackingBean extends
 					((PmUser) (new FacesScopes().getUserSessionBean()))
 							.getUserId());
 
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
+		} catch (EpException e) {
+			String message = e.getMessage();
+
+			if (MessageConst.ERROR_760195.equals(message)) {
+
+				Locale userLocale = new FacesScopes().getUserLocale();
+				message = MessageUtils.getMessage(e.getMessage(),
+						e.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+						userLocale);
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								message));
+
+			} 
 
 		} catch (Exception e) {
 			handleException(e);
@@ -2561,7 +2573,13 @@ public class SPDetailBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+		} finally {
+			
 		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
 
 	public void creditTypeChange(ScQtPRPCreditFacility creditFacility) {

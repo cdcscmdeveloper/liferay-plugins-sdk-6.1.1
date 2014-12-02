@@ -125,12 +125,12 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				rendered="#{!statusHide}" process="@all" partialSubmit="true"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}" process="@all" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
 				update="@([id$=cashOnHandPanel])" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				rendered="#{!statusHide}" icon="ui-icon-delete" partialSubmit="true"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}" icon="ui-icon-delete" partialSubmit="true"
 				process="@this" update="@([id$=cashOnHandPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
 

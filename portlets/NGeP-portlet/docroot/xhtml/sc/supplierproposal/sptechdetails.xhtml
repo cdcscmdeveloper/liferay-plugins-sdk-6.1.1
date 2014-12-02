@@ -59,7 +59,7 @@
 					value="#{lbl['lbl.sc.view']}" />
 			</p:column>
 
-			<p:column style="white-space: normal;text-align: center;">
+			<p:column style="white-space: normal;">
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
@@ -79,7 +79,7 @@
 
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP'}">
-					<p:commandButton oncomplete="attachmentDlg.show();return false;"
+					<p:commandButton oncomplete="attachmentDlg.show();return false;" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 						value="Attachment" icon="iconAttachment">
 						<f:setPropertyActionListener value="#{techList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
