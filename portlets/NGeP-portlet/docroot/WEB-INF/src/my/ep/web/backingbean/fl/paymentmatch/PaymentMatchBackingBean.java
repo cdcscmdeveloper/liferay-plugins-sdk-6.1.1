@@ -20,6 +20,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -73,12 +76,14 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -182,10 +187,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 			
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			validateDuplicateDeduction();
-			if(action.equalsIgnoreCase(FulfilmentConst.MATCH)){
-				calPmSummary();
-			}
+			
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700026;
@@ -918,24 +920,58 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	public void validateDuplicateDeduction(){
+		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		List<String> deductionList = new ArrayList<>();
 		deductionList.clear();
 
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
+				ParameterReqDTO reqType = new ParameterReqDTO();
+				ParameterResDTO resType = new ParameterResDTO();
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();;
+				reqType.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
+				reqType.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+				
 				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
 					if(deduction.getDeductionType().getParameterId() == null){
-						throw new EpException("Please select the deduction type.");
+						throw new EpException(MessageConst.ERROR_740035);
+					}
+					if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
+						if(deduction.getDeductionDesc().trim().equalsIgnoreCase("") || deduction.getDeductionDesc() == null){
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									"pmParameter.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									deduction.getDeductionType().getParameterCode()));
+							reqType.setParameterDescSearchBean(searchBean);
+							
+							resType = parameterSO.retrieveParameterDescListByType(reqType);
+							throw new EpException(MessageConst.ERROR_745058,new String[]{resType.getParameterDescList().get(0).getCodeName()});
+						}
+						
 					}
 					if(deduction.getPmVotFund().getVotFundCode() == null){
-						throw new EpException("DANA is required.");
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								"pmParameter.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								deduction.getDeductionType().getParameterCode()));
+						reqType.setParameterDescSearchBean(searchBean);
+						
+						resType = parameterSO.retrieveParameterDescListByType(reqType);
+						throw new EpException(MessageConst.ERROR_745059,new String[]{resType.getParameterDescList().get(0).getCodeName()});
 					}
 					if(deduction.getPmGlAccount().getGlAccCode() == null){
-						throw new EpException("GOSODO is required.");
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								"pmParameter.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								deduction.getDeductionType().getParameterCode()));
+						reqType.setParameterDescSearchBean(searchBean);
+						
+						resType = parameterSO.retrieveParameterDescListByType(reqType);
+						throw new EpException(MessageConst.ERROR_745060,new String[]{resType.getParameterDescList().get(0).getCodeName()});
 					}
 					String unique = deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode();
 					if(deductionList.contains(unique)){
-						throw new EpException("Cannot have duplicate deduction type + DANA + GOSODO.");
+						throw new EpException(MessageConst.ERROR_740036);
 					}else{
 						deductionList.add(deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
 					}
@@ -988,6 +1024,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			validateDuplicateDeduction();
+			calPmSummary();
 			paymentSO.validatePaymentMatch(reqDTO);
 			
 		}finally {
