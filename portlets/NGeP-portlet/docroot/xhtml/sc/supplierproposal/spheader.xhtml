@@ -9,23 +9,28 @@
 		<div align="left" class="header-info">
 			<table>
 				<tr>
-					<td ><h:outputLabel
+					<td><h:outputLabel
 							value="#{lbl['lbl.sc.quotation.tender.no']}" /></td>
-					<td class="header-info-text"> #{supplierProposalDetailBackingBean.managedBean.qt.qtNo}</td>
-					<td ><h:outputLabel
-							value="#{lbl['lbl.sc.proposal.no']}" /></td>
+					<td class="header-info-text">
+						#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}</td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.proposal.no']}" /></td>
 					<td class="header-info-text">#{supplierProposalDetailBackingBean.managedBean.qtProposal.proposalNo}
 					</td>
-					<td ><h:outputLabel
-							value="#{lbl['lbl.sc.closing.date']}" /></td>
-					<td class="header-info-text"><h:outputText style="float : left;"
+					<td><h:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
+					<td class="header-info-text"><h:outputText
+							style="float : left;"
 							value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText></td>
-					<td ><h:outputLabel
-							value="#{lbl['lbl.sc.remaining.day']}" /></td>
-					<td class="header-info-text; lastUpdated">#{supplierProposalDetailBackingBean.managedBean.days}</td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.remaining.day']}" /></td>
+					<td class="header-info-text; lastUpdated"><h:outputText
+							rendered="#{(supplierProposalDetailBackingBean.managedBean.days != 0)}"
+							value="#{supplierProposalDetailBackingBean.managedBean.days}" />
+						<h:outputText
+							rendered="#{(supplierProposalDetailBackingBean.managedBean.days == 0)}"
+							value="#{supplierProposalDetailBackingBean.managedBean.closingTime}" />
+					</td>
 				</tr>
 			</table>
 		</div>
