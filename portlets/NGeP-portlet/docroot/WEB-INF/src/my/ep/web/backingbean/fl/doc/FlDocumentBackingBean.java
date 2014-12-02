@@ -5,10 +5,10 @@ package my.ep.web.backingbean.fl.doc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,7 +20,6 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
-import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
@@ -33,7 +32,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -51,7 +49,6 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
@@ -215,6 +212,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		System.out.println("flDocNo::: "+flDocNo);
 		System.out.println("flDocId::: "+flDocId);
 		System.out.println("buttonVal::: "+buttonVal);
+		System.out.println("statusId::: "+statusId);
 		System.out.println("statusDesc>>::: "+statusDesc);
 		
 		if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
@@ -695,160 +693,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		renewSesionObject();
 	}
 	
-	public void filterSearchResults(List<VFlDocument> searchResultList){
-		IFulfilmentDocumentSO flDocumentSO  = null;
-			for(VFlDocument docsearchResult:searchResultList){
-				docsearchResult.setUpdateAction(false);
-				docsearchResult.setViewAction(false);
-				docsearchResult.setCancelAction(false);
-				if(null == docsearchResult.getStatus() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
-					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatus().getStatusId())){
-					docsearchResult.setUpdateAction(true);
-					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())){
-					docsearchResult.setViewAction(true);
-				}else{
-					docsearchResult.setViewAction(true);
-					boolean isUpdate=false;
-					boolean isCancel=false;
-					boolean isStopFulfilment=false;
-					boolean isRemoveFactoring=false;
-					FLOrderInfo orderInfo=null;
-					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-						if(null != orderInfo){
-							flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
-							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
-							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
-								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
-							}	
-							if(isUpdate){
-								docsearchResult.setUpdateAction(true);
-								docsearchResult.setViewAction(true);
-								//System.out.println("final action update ### :: "+docsearchResult.isUpdateAction());
-							}
-							if(isCancel){
-								docsearchResult.setCancelAction(true);
-								docsearchResult.setViewAction(true);
-								//System.out.println("final action  cancel @@@@@@@:: "+docsearchResult.isCancelAction());
-							}
-							if(isStopFulfilment){
-								docsearchResult.setStopFulfilmentAction(true);
-								docsearchResult.setViewAction(true);
-								//System.out.println("final action  StopFulfilmen %%%%%%:: "+docsearchResult.isStopFulfilmentAction());
-							}
-							if(isRemoveFactoring){
-								docsearchResult.setRemoveFactoringAction(true);
-								docsearchResult.setViewAction(true);
-								//System.out.println("final action  RemoveFactoring @@@@@@@:: "+docsearchResult.isRemoveFactoringAction());
-							}
-					  }
-			     }
-		 }		
-	}
-	
-	private FLOrderInfo getStatusInfo(Long docId,String docType){
-		IReceivedNoteSO receivedNoteSO  = null;
-		IFulfilmentOrderSO fulfilmentOrderSO = null;
-		IDeliveryOrderSO deliveryOrderSO = null;
-		IInvoiceSO invoiceSO = null;
-		FLOrderInfo orderInfo = new FLOrderInfo();
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		
-		if(null != docId && null != docType){
-			if(ParameterConst.DOCTYPE_FULFILMENT_NOTE.equalsIgnoreCase(docType)){
-				reqDTO.setFulfilmentNoteId(Long.valueOf(docId));
-				receivedNoteSO  = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
-				resDTO = receivedNoteSO.getReceivedNoteById(reqDTO);
-				if(null != resDTO.getFulfilmentNote()){
-					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
-						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
-						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
-							if(null != resDTO.getFlOrder()){
-								if(null != resDTO.getFlOrder().getStatus()){
-									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentRecevingOfficer()) {
-											orderInfo.setRole( RoleCode.RECEIVING_OFFICER.value());
-										}
-									}
-								}
-							}
-					}
-				}
-			}else if(ParameterConst.DOCTYPE_DELIVERY_ORDER.equalsIgnoreCase(docType)){
-				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
-				reqDTO.setDeliveryOrderId(Long.valueOf(docId));
-				resDTO = deliveryOrderSO.getDeliveryOrderById(reqDTO);
-				if(null != resDTO.getFlDeliveryOrder()){
-					if(null != resDTO.getFlDeliveryOrder().getFlFulfilmentOrder()){
-						reqDTO.setFlOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
-						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
-							if(null != resDTO.getFlOrder()){
-								if(null != resDTO.getFlOrder().getStatus()){
-									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentSupplier()) {
-											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-										}
-									}
-								}
-							}
-					}
-				}
-				
-			}else if(ParameterConst.DOCTYPE_INVOICE.equalsIgnoreCase(docType)){
-				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
-				reqDTO.setInvoiceId(Long.valueOf(docId));
-				resDTO = invoiceSO.getInvoiceById(reqDTO);
-				if(null != resDTO.getInvoice()){
-					if(null != resDTO.getInvoice().getFlFulfilmentOrder()){
-						reqDTO.setFlOrderId(resDTO.getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
-						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
-							if(null != resDTO.getFlOrder()){
-								if(null != resDTO.getFlOrder().getStatus()){
-									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentSupplier()) {
-											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-										}
-									}
-								}
-							}
-					}
-				}
-			}else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)){
-				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-				reqDTO.setFlOrderId(Long.valueOf(docId));
-		        resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);			
-				if(null != resDTO.getFlOrder()){
-					if(null != resDTO.getFlOrder()){
-						if(null != resDTO.getFlOrder().getStatus()){
-							if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-								//System.out.println("2222222222222222   po/co staus id is :::: "+resDTO.getFlOrder().getStatus().getStatusId());
-								orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-								if(isFlFulfilmentApprover()){
-									orderInfo.setRole(RoleCode.FL_APPROVER.value());
-								}else if(isFlFulfilmentSupplier()){
-									orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
-								}
-								if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
-									orderInfo.setFactored(resDTO.getFlOrder().isFactored());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return orderInfo;
-	}
 	public void getProcurementTypeList(){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -868,7 +712,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
+		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	public boolean isFlFulfilmentRecevingOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -889,55 +733,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				fulfilmentItem.setSumOrderedQty(sumOrderedQty);
 			}
 		}
-	}
-	
-	private class FLOrderInfo {
-		private Long orderStatusId;
-		private String role;
-		private boolean factored = false;
-
-		/**
-		 * @return the role
-		 */
-		public String getRole() {
-			return role;
-		}
-
-		/**
-		 * @return the factored
-		 */
-		public boolean isFactored() {
-			return factored;
-		}
-
-		/**
-		 * @param role the role to set
-		 */
-		public void setRole(String role) {
-			this.role = role;
-		}
-
-		/**
-		 * @param factored the factored to set
-		 */
-		public void setFactored(boolean factored) {
-			this.factored = factored;
-		}
-
-		/**
-		 * @return the orderStatusId
-		 */
-		public Long getOrderStatusId() {
-			return orderStatusId;
-		}
-
-		/**
-		 * @param orderStatusId the orderStatusId to set
-		 */
-		public void setOrderStatusId(Long orderStatusId) {
-			this.orderStatusId = orderStatusId;
-		}
-		
 	}
 	
 	private List<String> getDocTypeListByRole() {
