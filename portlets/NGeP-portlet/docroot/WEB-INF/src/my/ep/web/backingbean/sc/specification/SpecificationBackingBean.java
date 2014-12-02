@@ -5251,7 +5251,7 @@ public class SpecificationBackingBean extends
 		if (null == toBeRemoveList) {
 			toBeRemoveList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (null != scoreType && "".equalsIgnoreCase(scoreType)) {
+		if (null != scoreType && !"".equalsIgnoreCase(scoreType)) {
 			if (scoreType.equalsIgnoreCase("2")) {
 
 				this.getManagedBean().setScQtCheckListScore(
@@ -5274,7 +5274,7 @@ public class SpecificationBackingBean extends
 		if (null == toBeRemoveList) {
 			toBeRemoveList = new ArrayList<ScQtCheckListScore>();
 		}
-		if (null != scoreType && "".equalsIgnoreCase(scoreType)) {
+		if (null != scoreType && !"".equalsIgnoreCase(scoreType)) {
 
 			if (scoreType.equalsIgnoreCase("2")) {
 
