@@ -282,7 +282,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						if(null != orderInfo){
 							flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
+							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId());
 							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
 							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
 								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
@@ -328,6 +328,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(null != resDTO.getFulfilmentNote()){
 					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+						orderInfo.setOrderId(reqDTO.getFlOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
 							if(null != resDTO.getFlOrder()){
@@ -349,6 +350,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(null != resDTO.getFlDeliveryOrder()){
 					if(null != resDTO.getFlDeliveryOrder().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
+						orderInfo.setOrderId(reqDTO.getFlOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
 							if(null != resDTO.getFlOrder()){
@@ -371,6 +373,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(null != resDTO.getInvoice()){
 					if(null != resDTO.getInvoice().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
+						orderInfo.setOrderId(reqDTO.getFlOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
 							if(null != resDTO.getFlOrder()){
@@ -388,6 +391,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			}else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)){
 				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				reqDTO.setFlOrderId(Long.valueOf(docId));
+				orderInfo.setOrderId(reqDTO.getFlOrderId());
 		        resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);			
 				if(null != resDTO.getFlOrder()){
 					if(null != resDTO.getFlOrder()){
@@ -489,6 +493,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		return flDocTypes;
 	}
 	private class FLOrderInfo {
+		private Long orderId;
 		private Long orderStatusId;
 		private String role;
 		private boolean factored = false;
@@ -533,6 +538,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		 */
 		public void setOrderStatusId(Long orderStatusId) {
 			this.orderStatusId = orderStatusId;
+		}
+
+		public Long getOrderId() {
+			return orderId;
+		}
+
+		public void setOrderId(Long orderId) {
+			this.orderId = orderId;
 		}
 		
 	}
