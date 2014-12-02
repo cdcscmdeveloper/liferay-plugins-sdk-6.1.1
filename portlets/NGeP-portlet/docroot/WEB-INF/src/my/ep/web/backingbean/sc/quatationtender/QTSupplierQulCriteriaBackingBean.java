@@ -137,25 +137,25 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 		@Override
-		protected ISearchResultBean<SmSupplier> pageChangeListener(
-				ISearchBean<SmSupplier> searchBean) {
+		protected ISearchResultBean<SmSupplier> pageChangeListener(ISearchBean<SmSupplier> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			
 			IQTDetailSO QtDetailsSO;
 			try {
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				
+				tenderReqDTO.setCategoryList(supplierSearchBean.getScQtCategoryList());
+				tenderReqDTO.setSupplierName(supplierSearchBean.getSupplierName());
+				tenderReqDTO.setMofAccountNo(supplierSearchBean.getMofAccountNo());
+				tenderReqDTO.setMinPaidUpCapital(supplierSearchBean.getMinPaidUpCapital());
+				
 				populateSupplierSearchCriteria(supplierSearchBean, searchBean);
 				tenderReqDTO.setSupplierSearchBean(searchBean);
+				
 				QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveSupplierProfiles(tenderReqDTO);
-				/*if (null != tenderResDTO.getSmSupplierResultBean().getResultList()) {
-					for(SmSupplier supplier : tenderResDTO.getSmSupplierResultBean().getResultList()){
-						log.info("supplier Id  = " + supplier.getSupplierId());
-					}
-				}*/
 				return tenderResDTO.getSmSupplierResultBean();
 			} finally {
 				QtDetailsSO = null;
@@ -337,58 +337,53 @@ public class QTSupplierQulCriteriaBackingBean extends
 			// supplierList.get(0).getSmAppl().getSmCompanyBasic().getCompanyName());
 
 	}
+	
+	public void onTabChangeAction(TabChangeEvent event) {
+		String tabTitle = event.getTab().getTitle();
+		if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.qt.supplier.list"))) {
+			
+			List<ScQtSupplier> sessionList = getManagedBean().getSelectedQtSupplierList();
+			if(sessionList == null){
+				getManagedBean().setSelectedQtSupplierList(new ArrayList<ScQtSupplier>());
+				IQTDetailSO qtDetailsSO = null;
+				try {
+					qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+					QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+					
+					ScQt scQt = getManagedBean().getQt();
+					reqDTO.setQtId(scQt.getQtId());
+					
+					QuationTenderResDTO resDTO = qtDetailsSO.retrieveScQtSupplierByQtId(reqDTO);
+					List<ScQtSupplier> dbList = resDTO.getSupplierResultBean().getResultList();
+					getManagedBean().getSelectedQtSupplierList().addAll(dbList);
+					
+				} finally {
+					qtDetailsSO = null;
+				}
+			}
+		}
+	}
 
 	public void searchRestrictedSupplierPopupAction() {
 		debugLogger("searchRestrictedSupplierPopupAction");
-		//getManagedBean().getSearchSupplierDataModel().reloadData();
 		
-		//call the 
+		List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
+		getManagedBean().getSupplierSearchBean().setScQtCategoryList(scQtCategoryList);
+		getManagedBean().getSupplierSearchBean().setSupplierName(null);
+		getManagedBean().getSupplierSearchBean().setMofAccountNo(null);
+		getManagedBean().getSupplierSearchBean().setMinPaidUpCapital(null);
+		
 		IPagingDataModel<SmSupplier> searchSupplierDataModel = getManagedBean().getSearchSupplierDataModel();
 		if (searchSupplierDataModel == null) {
 			getManagedBean().setSearchSupplierDataModel(new SupplierPagingDataModel("ressupplier", getManagedBean().getSupplierSearchBean()));
 		}
-		
-		getManagedBean().getSupplierSearchBean().setSupplierName(null);
-		/*getManagedBean().setSupplierName(null);
-		getManagedBean().setMofAccountNo(null);
-		getManagedBean().setMinPaidUpCapital(null);
-		getManagedBean().setSearchSupplierList(null);
-		getManagedBean().setSelectedSupplierList(null);*/
 	}
 	
-	public void searchRestrictedSupplierAction1() {
+	public void searchRestrictedSupplierAction() {
 		getManagedBean().getSearchSupplierDataModel().reloadData();
 	}
 
-	/**
-	 * Method to search the supplier for restricted tender
-	 */
-	public void searchRestrictedSupplierAction() {
-		debugLogger("searchRestrictedSupplierAction");
-		IQTDetailSO QtDetailsSO;
-		try {
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setCategoryList(getManagedBean()
-					.getSuppCriteriarestrictedList());
-			tenderReqDTO.setSupplierName(getManagedBean().getSupplierName());
-			tenderReqDTO.setMofAccountNo(getManagedBean().getMofAccountNo());
-			tenderReqDTO.setMinPaidUpCapital(getManagedBean()
-					.getMinPaidUpCapital());
-			QuationTenderResDTO tenderResDTO = QtDetailsSO
-					.retriveSupplierProfiles(tenderReqDTO);
-			List<SmSupplier> list = tenderResDTO.getSupplierList();
-			getManagedBean().setSearchSupplierList(list);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			QtDetailsSO = null;
-		}
-	}
-
-	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier,
-			SmSupplier smSupplier) {
+	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier, SmSupplier smSupplier) {
 		debugLogger("retrieveSmMofAccount");
 
 		Long supplierId = null;
@@ -396,34 +391,36 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (scQtSupplier != null) {
 			supplierId = scQtSupplier.getSmSupplier().getSupplierId();
 			smMofAccount = scQtSupplier.getSmMofAccount();
+			
+			if(smMofAccount != null){
+				return smMofAccount;
+			}
 		} else {
 			supplierId = smSupplier.getSupplierId();
+			smMofAccount = smSupplier.getSmMofAccount();
+			
+			if(smMofAccount != null){
+				return smMofAccount;
+			}
 		}
 
-		if (smMofAccount == null) {
-			IMofAccountSO mofAccountSO;
-			try {
-				mofAccountSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMofAccountSO.class);
-
-				MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
-				accountReqDTO.setSupplierId(supplierId);
-				MofAccountResDTO mofAccountResDTO = mofAccountSO
-						.retrieveMofNoBySupplierId(accountReqDTO);
-
-				if (mofAccountResDTO.getMofAccount() != null) {
-					smMofAccount = mofAccountResDTO.getMofAccount();
-
-					if (scQtSupplier != null) {
-						scQtSupplier.setSmMofAccount(smMofAccount);
-					} else {
-						supplierId = smSupplier.getSupplierId();
-					}
+		IMofAccountSO mofAccountSO;
+		try {
+			mofAccountSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+			accountReqDTO.setSupplierId(supplierId);
+			
+			MofAccountResDTO mofAccountResDTO = mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
+			if (mofAccountResDTO.getMofAccount() != null) {
+				smMofAccount = mofAccountResDTO.getMofAccount();
+				if (scQtSupplier != null) {
+					scQtSupplier.setSmMofAccount(smMofAccount);
+				} else {
+					smSupplier.setSmMofAccount(smMofAccount);
 				}
-			} finally {
-				mofAccountSO = null;
 			}
+		} finally {
+			mofAccountSO = null;
 		}
 		return smMofAccount;
 	}
