@@ -71,7 +71,7 @@
 			<ac:paginator for="cancelCircularDt" />		
 			<p:column selectionMode="multiple" style="width:3%" 
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.circular.no']}">
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
 				<h:outputText value="#{data.circularVer.circularNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
@@ -96,7 +96,7 @@
 				selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />
-				<p:column headerText="#{lbl['lbl.ct.circular.no']}">
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
 					<h:outputText value="#{data.circularVer.circularNo}" style="width:200px;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}">

@@ -26,7 +26,7 @@
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" maxlength="17" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}" maxlength="1000" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" maxlength="50" style="width:170px;" />
            <p:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" maxlength="200" style="width:170px;"/>
@@ -73,7 +73,7 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.title']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{data.contractName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:10%;">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}"  style="width:15%; white-space:normal;">

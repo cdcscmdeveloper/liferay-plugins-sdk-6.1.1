@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
-		<h:panelGroup rendered="#{!centralContractBackingBean.managedBean.updateAction and (centralContractBackingBean.managedBean.circularVer.extendStartDate  == null)}">
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.extendStartDate  != null)}">
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer != null}">
 			<ui:include src="updateCircularDetail.xhtml" />
 		</h:panelGroup>		
 	</p:panel>
@@ -128,7 +128,7 @@
 			<ac:paginator for="cancelCircularDt" />
 			<p:column selectionMode="multiple" style="width:3%"
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.circular.no']}">
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
 				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
@@ -153,7 +153,7 @@
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />
-				<p:column headerText="#{lbl['lbl.ct.circular.no']}">
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
 					<h:outputText value="#{cancelledCircularDlgVar.circularVer.circularNo}" style="width:200px;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}">

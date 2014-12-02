@@ -10,12 +10,12 @@
 				
 					<h:panelGrid columns="2" style="float:right;">
 					    <p:outputLabel value="*" styleClass="mandatory" />
-					    <h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
+					    <h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
 				   </h:panelGrid>
 				   <h:panelGrid columns="2">
 				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="5"
 					 	required="true" maxlength="60"  disabled="#{panelBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.circular.no']}"  autoResize="false"/>
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
 					<p:message for="circularNoTxt" display="icon" />
 				    </h:panelGrid>
 						
