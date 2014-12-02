@@ -176,6 +176,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtDeductionClause[] selectedDeductionClauses;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
+	private boolean isContractSharing;
 	
 	public ContractDetailsBackingBean() {
 	   
@@ -311,6 +312,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		         ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		         setValidateContractField(resDTO);
 		         ConstructSideTabMenu();
+		         checkContractSharing();
 		    
 		         FacesContext fc = FacesContext.getCurrentInstance();
 			     fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -1618,8 +1620,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  		}
 			}
 		}
-		if (selectedPmOrgProfile.length>0)
+		
+		if (selectedPmOrgProfile.length>0){
 			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
+		}
+		checkContractSharing();
 		selectedPmOrgProfile = null;
 	}
 	 
@@ -1639,6 +1644,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			     }	
 		   }
 	  }selectedListOfAgency = null;	
+	  checkContractSharing();
 	}
 	
 	public void selectedZoneValue(){
@@ -2922,5 +2928,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	       		else 
 	       			ctAgency.setChkStatus(true);		        		   
  	   }
+	}
+
+	public boolean getIsContractSharing() {
+		return isContractSharing;
+	}
+
+	public void setContractSharing(boolean isContractSharing) {
+		this.isContractSharing = isContractSharing;
+	}
+	
+	private void checkContractSharing(){
+		setContractSharing(Boolean.FALSE);
+		for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()){
+			if(ctAgency.isAp178()){
+			   setContractSharing(Boolean.TRUE);
+			   break;
+			}
+		}
 	}
 }
