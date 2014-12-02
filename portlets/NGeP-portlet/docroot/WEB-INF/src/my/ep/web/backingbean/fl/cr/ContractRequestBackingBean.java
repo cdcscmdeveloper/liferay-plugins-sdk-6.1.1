@@ -2027,6 +2027,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
+			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) { 
+				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			}
 		} else if(selectedTabIndex==4){
 			validatePreparedOrgAndAgencies();
 			initializeApproverGroup();
