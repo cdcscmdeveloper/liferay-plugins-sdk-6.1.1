@@ -89,7 +89,7 @@
 		<td class="sColTwentyPerc">
 		#if($ownerList.size() > 0)
 			#foreach($owner in $ownerList)
-		    	$velocityCount. $owner.ownerName <br />
+		    	$velocityCount. $owner.name <br />
 		  	#end
   		#end
 		</td>

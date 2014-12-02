@@ -106,8 +106,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public void retrieveSiteVisitInfo(String viewMode){
 		//this.getManagedBean().setAppId(1256825);
-//		this.getManagedBean().setAppId(1009);
-//		this.getManagedBean().setAppId(1256752);
+		//this.getManagedBean().setAppId(1256752);
+		//this.getManagedBean().setAppId(1256816);
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setAppId(this.getManagedBean().getAppId());
@@ -197,7 +197,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				this.getManagedBean().setLastIndex(i);
 			}
 			
-			getTotalBODMgmtWorker();
+			getTotalBODMgmtWorkerEquityOwner();
 			chequeSignatoryInfo();
 			//getAllApprovedCategoryCode();
 			List<SmSupplierCategory> suppCatLs = retrieveActiveCategoryCode(smSvTask.getSmAppl().getSmSupplier().getSmAppl().getApplId());
@@ -688,11 +688,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
-	public void getTotalBODMgmtWorker(){
-		int ttlBOD = 0, ttlMgmt = 0, ttlWorker = 0;
+	public void getTotalBODMgmtWorkerEquityOwner(){
+		int ttlBOD = 0, ttlMgmt = 0, ttlWorker = 0, ttlEquityOwner = 0;
 		int dirBumi = 0, dirNonBumi = 0, dirNonMalaysian = 0;
 		int mgmtBumi = 0, mgmtNonBumi = 0, mgmtNonMalaysian = 0;
 		int wrkBumi = 0, wrkNonBumi = 0, wrkNonMalaysian = 0;
+		
+		this.getManagedBean().setBodLs(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setMgmtLs(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setEquityOwnerLs(new ArrayList<SmPersonnel>());
 
 		for(SmPersonnel personnel : this.getManagedBean().getSmSvTask().getSmAppl().getSmPersonnels()){
 			if(personnel.isDirector()){
@@ -707,14 +711,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					}
 				}			
 
-				//if(this.getManagedBean().getBodLs() == null){
-				this.getManagedBean().setBodLs(new ArrayList<SmPersonnel>());
-				//}
-
 				this.getManagedBean().getBodLs().add(personnel);
 			}
 
-			if(personnel.isHigherManagement()){
+			if(personnel.isHigherManagement() || personnel.isManagement()){
 				ttlMgmt++;
 				if(personnel.isBumi()){
 					mgmtBumi++;
@@ -725,9 +725,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 						mgmtNonMalaysian++;
 					}
 				}
-				//if(this.getManagedBean().getMgmtLs()== null){
-				this.getManagedBean().setMgmtLs(new ArrayList<SmPersonnel>());
-				//}
+
 
 				this.getManagedBean().getMgmtLs().add(personnel);
 
@@ -746,6 +744,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					}
 				}
 			}
+			
+			if(personnel.isEquityOwner()){
+				ttlEquityOwner ++;
+				
+				this.getManagedBean().getEquityOwnerLs().add(personnel);
+			}
 		}
 
 		//total BOD,Mgmt and Worker
@@ -762,6 +766,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setWrkBumi(wrkBumi);
 		this.getManagedBean().setWrkNonBumi(wrkNonBumi);
 		this.getManagedBean().setWrkNonMalaysian(wrkNonMalaysian);
+		
+		this.getManagedBean().setTotalEquityOwner(ttlEquityOwner);
+		
 	}
 
 	public BigDecimal calculateDirectorPercentage(int dirNo){
@@ -1360,7 +1367,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		context.put("authorizedCapital", svTask.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());
 		context.put("paidUpCapital", svTask.getSmAppl().getSmCompanyBasic().getPaidUpCapital());
-		context.put("countOwner", svTask.getSmAppl().getSmSupplier().getSmSupplierOwners().size());
+		context.put("countOwner", this.getManagedBean().getTotalEquityOwner());
 		context.put("bumiEquity", svTask.getSmAppl().getSmCompanyBasic().getBumiEquity());
 		context.put("nonBumiEquity", svTask.getSmAppl().getSmCompanyBasic().getNonBumiEquity());
 		context.put("nonMalaysianEquity", svTask.getSmAppl().getSmCompanyBasic().getForeignerEquity());
@@ -1377,7 +1384,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("localCompanyEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().toString()));
 		context.put("foreignCompanyEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().toString()));
 		
-		context.put("ownerList", svTask.getSmAppl().getSmSupplier().getSmSupplierOwners());
+		context.put("ownerList", this.getManagedBean().getEquityOwnerLs());
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("totalBOD", this.getManagedBean().getTotalBOD());
 		context.put("dirBumi", this.getManagedBean().getDirBumi());
