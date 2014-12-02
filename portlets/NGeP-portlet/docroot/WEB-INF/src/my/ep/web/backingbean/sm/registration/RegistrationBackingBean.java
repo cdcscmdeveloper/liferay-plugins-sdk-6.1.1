@@ -1343,11 +1343,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //		}
 	}
 	
-	public void trimPassportValue(){
+	public void trimOwnerPassportValue(){
 		String newPassportVal = "";
 		if(StringUtils.isNotBlank(this.getManagedBean().getSmSuppOwner().getIdentificationNo())){
 			newPassportVal = this.getManagedBean().getSmSuppOwner().getIdentificationNo().replaceAll("\\s", "");
 			this.getManagedBean().getSmSuppOwner().setIdentificationNo(newPassportVal);
+		}
+	}
+	
+	public void trimPersonnelPassportValue(){
+		String newPassportVal = "";
+		if(StringUtils.isNotBlank(this.getManagedBean().getSmPersonnel().getIdentificationNo())){
+			newPassportVal = this.getManagedBean().getSmPersonnel().getIdentificationNo().replaceAll("\\s", "");
+			this.getManagedBean().getSmPersonnel().setIdentificationNo(newPassportVal);
 		}
 	}
 	
