@@ -351,11 +351,15 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="10"
+					<td><p:inputText maxlength="5"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCode"
-							value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
-							size="35" /> <p:message id="suppBankPostCodeMsg"
+							value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
+							validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+							size="35" > 
+							<f:validator validatorId="postcodeValidator"/>
+							</p:inputText>
+							<p:message id="suppBankPostCodeMsg"
 							for="suppBankPostCode" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
