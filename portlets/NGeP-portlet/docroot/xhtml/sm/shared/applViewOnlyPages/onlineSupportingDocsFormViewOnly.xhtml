@@ -20,7 +20,7 @@
 		<c:if test="#{not empty viewSmApplBackingBean.managedBean.bumiRecommendationNote}">
 			<table style="width: 100%;">
 				<tr>
-					<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
+					<td><h:outputText value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
 							style="color: green;font-weight: bold;float:left;"/></td>
 				</tr>
 			</table>
@@ -30,7 +30,7 @@
 		<table style="width: 100%">
 
 			<tr>
-				<td><p:outputLabel style="float:left"
+				<td><h:outputText style="float:left"
 						value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
 
 			</tr>

@@ -34,7 +34,7 @@
 		<c:if test="#{not empty viewSmApplBackingBean.managedBean.bumiRecommendationNote}">
 			<table style="width: 50%;table-layout: fixed;">
 				<tr>
-					<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
+					<td><h:outputText value="#{viewSmApplBackingBean.managedBean.bumiRecommendationNote}" 
 							style="color: green;font-weight: bold;float:left;"/></td>
 				</tr>
 			</table>
@@ -43,7 +43,7 @@
 		
 		<p:separator />
 		<div>
-			<p:outputLabel value="#{lbl['lbl.sm.po.splNotes']}" style="float :left;" escape="false" />
+			<h:outputText value="#{lbl['lbl.sm.po.splNotes']}" style="float :left;" escape="false" />
 		</div>
 
 	</p:panel>
