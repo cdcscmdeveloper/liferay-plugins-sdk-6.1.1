@@ -62,7 +62,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 
 	private ScQtCheckList scQtCheckList;
-	private long days;
 	private String closingTime="";
 	private int activeIndex;
 	private int proposalIndex;
@@ -777,14 +776,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.scQtDoc = scQtDoc;
 	}
 
-	public long getDays() {
-		return days;
-	}
-
-	public void setDays(long days) {
-		this.days = days;
-	}
-
+	
 	public List<TplSpecZoneDtl> getZones() {
 		return zones;
 	}

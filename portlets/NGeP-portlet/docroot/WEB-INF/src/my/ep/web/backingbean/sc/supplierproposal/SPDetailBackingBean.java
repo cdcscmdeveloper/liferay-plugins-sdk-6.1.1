@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -211,19 +210,24 @@ public class SPDetailBackingBean extends
 				Date closingDate = getManagedBean().getQt().getClosingDate();
 				if (new Date(System.currentTimeMillis()).after(closingDate)) {
 					getManagedBean().setClosed(true);
-					this.getManagedBean().setDays(0);
+					getManagedBean().setClosingTime("o");
 				}
 
 				Date today = new Date();
 				long days = DateUtils.getDaysDifference(today, getManagedBean()
 						.getQt().getClosingDate());
-				this.getManagedBean().setDays(days);
+				DecimalFormat df = new DecimalFormat("#00");
+				getManagedBean().setClosingTime(df.format(days) + " Days");
 				if (days == 0) {
 					Long durationInMills = DateUtils.getDateDiffInMillis(
 							DateUtils.getCurrentDate(), getManagedBean()
 									.getQt().getClosingDate());
-					getManagedBean().setClosingTime(
-							durationFormatter(durationInMills));
+					if(durationInMills > 0){
+						getManagedBean().setClosingTime(
+								durationFormatter(durationInMills));
+					}else{
+						getManagedBean().setClosingTime("o");
+					}
 				}
 			}
 			// checking for proposal validity
@@ -3025,12 +3029,12 @@ public class SPDetailBackingBean extends
 		DecimalFormat durationFormat = new DecimalFormat("#00");
 		String duration = "";
 		if (diffHours <= 24 && diffHours >= 2) {
-			duration = durationFormat.format(diffHours) + " Hours : "
+			duration = durationFormat.format(diffHours) + " Hours  "
 					+ durationFormat.format(diffMinutes) + " Minutes";
 		}
 
 		if (diffHours < 2 && diffHours >= 1) {
-			duration = durationFormat.format(diffHours) + " Hour : "
+			duration = durationFormat.format(diffHours) + " Hour  "
 					+ durationFormat.format(diffMinutes) + " Minutes";
 		}
 		if (diffHours < 1) {
