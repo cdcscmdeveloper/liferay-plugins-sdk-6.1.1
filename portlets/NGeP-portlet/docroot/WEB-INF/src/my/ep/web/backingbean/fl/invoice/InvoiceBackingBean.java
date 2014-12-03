@@ -829,9 +829,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		this.getManagedBean().setLoaNo(null);
 	}
 	public String getPortletTitle() {
-		String portletTitle = "Invoice";
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.fl.invoice.supp.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		if(getManagedBean().isModificationCancel()) {
-			portletTitle = "Fulfilment Document Maintenance";
+			portletTitle = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
 	}
