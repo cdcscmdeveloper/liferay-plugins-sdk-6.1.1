@@ -55,6 +55,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private boolean closed;
 	private ScQtProposal qtProposal;
 	private ScQtProposalChecklist qtProposalChecklist;
+	private String message;
 	private List<ScQtProposalChecklist> tecCheckDetailsList;
 	private List<ScQtProposalChecklist> financeCheckDetailsList;
 	private List<ScQtProposalChecklist> selectedCheckDetails;
@@ -1060,13 +1061,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 
-
-
 	public void setCheckListDefintionKey(String checkListDefintionKey) {
 		this.checkListDefintionKey = checkListDefintionKey;
 	}
-
-
 
 
 	/**
@@ -1077,16 +1074,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 
-
-
 	/**
 	 * @param supplierFacilities the supplierFacilities to set
 	 */
 	public void setSupplierFacilities(List<SmFacility> supplierFacilities) {
 		this.supplierFacilities = supplierFacilities;
 	}
-
-
 
 
 	/**
@@ -1097,16 +1090,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 
-
-
 	/**
 	 * @param closingTime the closingTime to set
 	 */
 	public void setClosingTime(String closingTime) {
 		this.closingTime = closingTime;
 	}
-
-
 
 
 	/**
@@ -1117,16 +1106,28 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 
-
-
 	/**
 	 * @param closed the closed to set
 	 */
 	public void setClosed(boolean closed) {
 		this.closed = closed;
 	}
-	
-	
+
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	
 	
 }
