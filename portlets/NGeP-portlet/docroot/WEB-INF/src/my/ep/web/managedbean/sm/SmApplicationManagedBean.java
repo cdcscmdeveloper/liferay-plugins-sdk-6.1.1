@@ -310,6 +310,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String typeOfBusiness;
 	private SmSupplierBasicInfoVO basicInfo;
 	private boolean allowedToApprove;
+	private boolean disabledJustification;
 	private String regCatCodeConfirmHeader;
 	private String regCatCodeConfirmMsg;
 	
@@ -2371,6 +2372,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRegCatCodeConfirmMsg(String regCatCodeConfirmMsg) {
 		this.regCatCodeConfirmMsg = regCatCodeConfirmMsg;
+	}
+
+	public boolean isDisabledJustification() {
+		return disabledJustification;
+	}
+
+	public void setDisabledJustification(boolean disabledJustification) {
+		this.disabledJustification = disabledJustification;
 	}
 
 }

@@ -1462,20 +1462,19 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl().getSupplierType(),
 					getManagedBean().getBusinessTypeVal());
 		}
-		
-		//added to custom confirm dialog title and msg
-		//based on category type Special or Normal
+
+		// added to custom confirm dialog title and msg
+		// based on category type Special or Normal
 		setRegCatCodeConfirmDialog();
 	}
 
 	private void setRegCatCodeConfirmDialog() {
 		getManagedBean().setRegCatCodeConfirmHeader(
 				SmCommonUtil.getMessage(
-						"lbl.sm.regCatCode.confirm.header.normal",
-						null));
+						"lbl.sm.regCatCode.confirm.header.normal", null));
 		getManagedBean().setRegCatCodeConfirmMsg(
-				SmCommonUtil.getMessage(
-						"lbl.sm.regCatCode.confirm.msg.normal", null));
+				SmCommonUtil.getMessage("lbl.sm.regCatCode.confirm.msg.normal",
+						null));
 		if (getManagedBean().getSmAppl() != null) {
 			if (StringUtils.isNotBlank(getManagedBean().getSmAppl()
 					.getApplCategoryType())
@@ -1564,7 +1563,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
-			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+			getManagedBean().getSmAppl().setSupportingDocMode(
+					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		saveOrUpdateAppl();
 	}
@@ -1582,7 +1582,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
-			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+			getManagedBean().getSmAppl().setSupportingDocMode(
+					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		RequestContext.getCurrentInstance().execute("typeConfirmation.hide()");
 	}
@@ -3267,7 +3268,8 @@ public class SmApplicationBackingBean extends
 						.getSelectedShareHolder().getEpRole()
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
 			SelectItem role = new SelectItem();
-			role.setLabel("Supplier Admin");
+			role.setLabel(SmCommonUtil.getMessage(
+					"lbl.sm.person.composition.suppAdmin", null));
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			getManagedBean().getePRoleList().add(role);
 		}
@@ -3281,6 +3283,20 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
 			getManagedBean().getSelectedShareHolder().setEpRole(
 					RoleCode.MOF_SUPPLIER_USER.value());
+		}
+
+		// disabled justification
+		//disableJustification(shareHolderBean);
+	}
+
+	private void disableJustification(SmPersonnel shareHolderBean) {
+		getManagedBean().setDisabledJustification(false);
+		if (getManagedBean().getSmAppl() != null && shareHolderBean != null
+				&& shareHolderBean.getSmAppl() != null) {
+			if (getManagedBean().getSmAppl().getApplId()
+					.compareTo(shareHolderBean.getSmAppl().getApplId()) == 0) {
+				getManagedBean().setDisabledJustification(true);
+			}
 		}
 	}
 
@@ -3454,6 +3470,9 @@ public class SmApplicationBackingBean extends
 				.setPmCountry(
 						SmCommonUtil
 								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+
+		// enabled justification if disabled
+		//disableJustification(null);
 
 	}
 
@@ -4387,8 +4406,11 @@ public class SmApplicationBackingBean extends
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			if (this.getManagedBean()
+					.getSmAppl()
+					.getSupportingDocMode()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);
@@ -4639,7 +4661,9 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722568);
 		}
 
-		if (this.getManagedBean().getSmAppl().getSupportingDocMode()
+		if (this.getManagedBean()
+				.getSmAppl()
+				.getSupportingDocMode()
 				.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			reqDTO.setOnlineDoc(true);
 		} else {
@@ -4860,8 +4884,11 @@ public class SmApplicationBackingBean extends
 				reqDTO.setUserList(new ArrayList<String>());
 			}
 
-			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
-					.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			if (this.getManagedBean()
+					.getSmAppl()
+					.getSupportingDocMode()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);
@@ -6509,6 +6536,17 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return retVal;
+	}
+
+	public void trimPersonnelPassportValue() {
+		String newPassportVal = "";
+		if (StringUtils.isNotBlank(this.getManagedBean()
+				.getSelectedShareHolder().getIdentificationNo())) {
+			newPassportVal = this.getManagedBean().getSelectedShareHolder()
+					.getIdentificationNo().replaceAll("\\s", "");
+			this.getManagedBean().getSelectedShareHolder()
+					.setIdentificationNo(newPassportVal);
+		}
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
