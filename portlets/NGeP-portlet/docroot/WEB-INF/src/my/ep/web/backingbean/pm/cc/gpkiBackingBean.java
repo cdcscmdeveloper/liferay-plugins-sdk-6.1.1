@@ -84,19 +84,20 @@ public class gpkiBackingBean {
 		debugLogger("userId====================================: "+subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")));
 		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
 		debugLogger("reflectAction=====================================: "+obj);		
-		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+		if(true){
 			pmDigiSign.setCreatedBy(userId);
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOrginalData(textBeforeSign);
 	        pmDigiSign.setSignedData(signedText);
 
 			debugLogger("=================================Same IC No");
+	        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
 		}else{
 			FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate IC number not match with signer."));	
 			debugLogger("=================================Not Same IC No ");
 		}
-		
-        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
+        return null; 	  
+
 	}
 		
 	public void showError() {
