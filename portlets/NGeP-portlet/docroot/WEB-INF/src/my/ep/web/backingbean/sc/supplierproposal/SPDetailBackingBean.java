@@ -156,6 +156,13 @@ public class SPDetailBackingBean extends
 
 	public SPDetailBackingBean() {
 		log.info("inside constructor");
+
+		if (null != getManagedBean().getMessage()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							getManagedBean().getMessage()));
+		}
 	}
 
 	private void debugLogger(Object message) {
@@ -168,8 +175,7 @@ public class SPDetailBackingBean extends
 	/**
 	 * retrieving Technical & Financial Proposal CheckList
 	 */
-	public void retrieveProposalChecklistDtls(Long qtID, String supplierID,
-			Long userId) {
+	public void retrieveProposalChecklistDtls(Long qtID, Long userId) {
 		debugLogger("retrieveProposalChecklistDtls");
 
 		getManagedBean().setPrepareActiveIndex(0);
@@ -177,7 +183,6 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
-			reqDTO.setHashSupplierId(supplierID);
 
 			ProposalResDTO resDTO = getProposalSO()
 					.retrieveProposalDtlBySupplierId(reqDTO);
@@ -202,18 +207,24 @@ public class SPDetailBackingBean extends
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
-				// hide the save/submit,add and delete buttons in supplier view
-				// when QT is closed
+				// hide the save/submit,add and delete buttons when QT is closed
 				Date closingDate = getManagedBean().getQt().getClosingDate();
 				if (new Date(System.currentTimeMillis()).after(closingDate)) {
 					getManagedBean().setClosed(true);
+					this.getManagedBean().setDays(0);
 				}
 
 				Date today = new Date();
 				long days = DateUtils.getDaysDifference(today, getManagedBean()
 						.getQt().getClosingDate());
-
 				this.getManagedBean().setDays(days);
+				if (days == 0) {
+					Long durationInMills = DateUtils.getDateDiffInMillis(
+							DateUtils.getCurrentDate(), getManagedBean()
+									.getQt().getClosingDate());
+					getManagedBean().setClosingTime(
+							durationFormatter(durationInMills));
+				}
 			}
 			// checking for proposal validity
 			reqDTO.setScQt(resDTO.getScQt());
@@ -1470,10 +1481,10 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				System.out
-						.println("***** financial qtProposalCheckListId is ***"
-								+ scQtProposalChecklist
-										.getQtProposalChecklistId());
+
+				getManagedBean().setYear(
+						scQtProposalChecklist.getScQtCheckList()
+								.getScQtCheckListValue().getYear());
 
 				pageUrl = retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
@@ -1636,8 +1647,10 @@ public class SPDetailBackingBean extends
 			ScQtProposalChecklist scQtProposalChecklist) {
 
 		getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
-		// getManagedBean().setYear( scQtProposalChecklist.getScQtCheckList()
-		// .getScQtCheckListValue().getYear());
+
+		getManagedBean().setYear(
+				scQtProposalChecklist.getScQtCheckList()
+						.getScQtCheckListValue().getYear());
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -2538,13 +2551,9 @@ public class SPDetailBackingBean extends
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
 			String qtId = originalServletRequest.getParameter("qtId");
-			String encodedSupplierId = originalServletRequest
-					.getParameter("supplierId");
-
 			super.renewSesionObject();
 
 			retrieveProposalChecklistDtls(Long.parseLong(qtId),
-					encodedSupplierId,
 					((PmUser) (new FacesScopes().getUserSessionBean()))
 							.getUserId());
 
@@ -2557,13 +2566,16 @@ public class SPDetailBackingBean extends
 				message = MessageUtils.getMessage(e.getMessage(),
 						e.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
 						userLocale);
+				getManagedBean().setMessage(message);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								message));
 
-			} 
+			} else {
+				handleException(e);
+			}
 
 		} catch (Exception e) {
 			handleException(e);
@@ -2574,7 +2586,7 @@ public class SPDetailBackingBean extends
 					.handleNavigation(fc, null,
 							CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		} finally {
-			
+
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -2626,11 +2638,19 @@ public class SPDetailBackingBean extends
 		VelocityContext context = new VelocityContext();
 
 		context.put("title", scQt.getQtTitle());
-		context.put("userName", pmUser.getUserName());
-		context.put("icNo", pmUser.getIdentificationNo());
-		context.put("supplierName", smSupplier.getCompanyName());
+		if (pmUser.getUserName() != null) {
+			context.put("userName", pmUser.getUserName());
+		}
+		if (pmUser.getIdentificationNo() != null) {
+			context.put("icNo", pmUser.getIdentificationNo());
+		}
+		if (smSupplier.getCompanyName() != null) {
+			context.put("supplierName", smSupplier.getCompanyName());
+		}
+		if (pmOrgProfile.getOrgName() != null) {
+			context.put("agency", pmOrgProfile.getOrgName());
+		}
 		context.put("mofNo", ""); // TODO
-		context.put("agency", pmOrgProfile.getOrgName());
 
 		String integrityPact = DocumentGenerator
 				.getInstance()
@@ -3003,8 +3023,20 @@ public class SPDetailBackingBean extends
 		long diffMinutes = durationInMills / (60 * 1000) % 60;
 		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
 		DecimalFormat durationFormat = new DecimalFormat("#00");
-		String duration = durationFormat.format(diffHours) + " Hours :"
-				+ durationFormat.format(diffMinutes) + "Minutes";
+		String duration = "";
+		if (diffHours <= 24 && diffHours >= 2) {
+			duration = durationFormat.format(diffHours) + " Hours : "
+					+ durationFormat.format(diffMinutes) + " Minutes";
+		}
+
+		if (diffHours < 2 && diffHours >= 1) {
+			duration = durationFormat.format(diffHours) + " Hour : "
+					+ durationFormat.format(diffMinutes) + " Minutes";
+		}
+		if (diffHours < 1) {
+			duration = durationFormat.format(diffMinutes) + " Minutes";
+		}
+
 		return duration;
 	}
 
