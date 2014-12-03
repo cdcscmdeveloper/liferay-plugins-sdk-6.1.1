@@ -15,13 +15,13 @@
 		<p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
 				<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="50" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="17" />
 				<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="200" />
 				<h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchSupplierName}" style="width:170px;" maxlength="100" />
-				<h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchFileRefNo}" style="width:170px;" maxlength="50" />
+				<h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchPhysicalCircularNo}" style="width:170px;" maxlength="60" />
 				<h:outputLabel value="#{lbl['lbl.ct.circular.start.date']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
@@ -45,14 +45,14 @@
 			<p:dataTable id="circularVerDt" value="#{panelBackingBean.circularVerPagingDataModel}"
 				var="data" lazy="true" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
+				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:15%;white-space:normal;">
+					<h:outputText value="#{data.ctCircular.circularNo}" />
+				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:15%;white-space:normal;">
 					<h:outputText value="#{data.circularNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:25%;white-space:normal;">
 					<h:outputText value="#{data.name}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.file.ref.no']}"   style="width:15%;white-space:normal;">
-					<h:outputText value="#{data.circularFileRefNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.start.date']}"  style="width:10%;white-space:normal;">
 					<h:outputText value="#{data.startDate}" >

@@ -362,7 +362,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    this.getManagedBean().setSearchCircularNo(null);
 		    this.getManagedBean().setSearchCircularName(null);
 		    this.getManagedBean().setSearchSupplierName(null);
-		    this.getManagedBean().setSearchFileRefNo(null);
+		    this.getManagedBean().setSearchPhysicalCircularNo(null);
 	 	    this.getManagedBean().setSearchItemName(null);
 		    this.getManagedBean().setSearchStartDate(null);
 		    this.getManagedBean().setSearchEndDate(null);
@@ -373,8 +373,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) && 
 				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().length() == 0) &&
-				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().length() == 0) &&
-				(getManagedBean().getSearchFileRefNo() == null || getManagedBean().getSearchFileRefNo().length() == 0) &&
+				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().length() == 0) && 
+				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().length() == 0) &&
 				(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().length() == 0) &&
 				getManagedBean().getSearchStartDate() == null &&
 				getManagedBean().getSearchEndDate() == null &&
@@ -428,7 +428,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			try {				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_PANEL));
 				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircular.circularNo",
 													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);	
@@ -445,9 +445,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}			
-				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularFileRefNo",
-													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo());
+				if(getManagedBean().getSearchPhysicalCircularNo()!=null && getManagedBean().getSearchPhysicalCircularNo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchPhysicalCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}	

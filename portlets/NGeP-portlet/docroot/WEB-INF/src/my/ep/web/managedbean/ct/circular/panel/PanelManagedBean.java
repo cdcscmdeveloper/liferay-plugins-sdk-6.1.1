@@ -51,7 +51,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String action;
 	private String searchCircularNo;
 	private String searchCircularName;
-	private String searchFileRefNo;
+	private String searchPhysicalCircularNo;
 	private String searchSupplierName;
 	private String searchItemName;
 	private String zoneName;
@@ -183,13 +183,13 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSearchCircularName(String searchCircularName) {
 		this.searchCircularName = searchCircularName;
 	}
-
-	public String getSearchFileRefNo() {
-		return searchFileRefNo;
+	
+	public String getSearchPhysicalCircularNo() {
+		return searchPhysicalCircularNo;
 	}
-
-	public void setSearchFileRefNo(String searchFileRefNo) {
-		this.searchFileRefNo = searchFileRefNo;
+	
+	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
+		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
 	}
 
 	public String getSearchSupplierName() {
