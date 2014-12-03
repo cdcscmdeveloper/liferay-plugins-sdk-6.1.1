@@ -2939,11 +2939,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	private void checkContractSharing(){
-		setContractSharing(Boolean.FALSE);
+		setContractSharing(Boolean.FALSE);				
 		for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()){
-			if(ctAgency.isAp178()){
-			   setContractSharing(Boolean.TRUE);
-			   break;
+			if(!getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName()
+					.equals(ctAgency.getOrgProfile().getParentOrgProfile().getOrgName())){
+				 setContractSharing(Boolean.TRUE);
+				 break;
 			}
 		}
 	}
