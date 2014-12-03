@@ -2083,6 +2083,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
+			amendBB.getManagedBean().setShowItem(null);
+			amendBB.getManagedBean().setSelectedItem(null);
+			amendBB.getManagedBean().setSelectedServiceItem(null);
 			amendBB.setAmendmentContractVer(resDTO);
 		}finally {
 			contractSO = null;

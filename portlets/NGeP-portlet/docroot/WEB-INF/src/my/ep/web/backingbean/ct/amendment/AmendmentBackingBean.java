@@ -399,10 +399,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  	    	}
 		  	    }
 		  	    
+		  	    this.getManagedBean().getCtItemList().clear();
+		  	    this.getManagedBean().getCtServiceItemList().clear();
+		  	    getManagedBean().setItemProductExist(false);
+		  	    getManagedBean().setItemServiceExist(false);
 		  	    if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0) {
-			           this.getManagedBean().getCtItemList().clear();
-			           this.getManagedBean().getCtServiceItemList().clear();
-			           
+			                      
 			           for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 			        	   // If effective date is after current date, status is still display old status
 			        	   if (item.getRecordStatusFlg() == 0) {				       		
@@ -2257,8 +2259,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public SelectItem[] getItemDisplayTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		
-		if(getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
-			&& !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+		if((getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+			&& !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) ||
+			(getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL) 
+					&& getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_EQUALS.value(), 
