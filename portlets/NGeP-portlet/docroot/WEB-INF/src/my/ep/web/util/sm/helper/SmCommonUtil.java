@@ -29,10 +29,14 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -870,16 +874,20 @@ public class SmCommonUtil {
 		// application, if exists - do nothing, else, generate
 		String fileName = applNo + "_" + serType + ".ser";
 		String baseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+File.separator+Calendar.getInstance().get(Calendar.YEAR)+File.separator;
-		String smRevisionDir = "SM"+File.separator+applNo+File.separator+"Revision"+File.separator;
-		exist = new File(baseDir+smRevisionDir, fileName).exists();
-		log.info("File Name:"+fileName);
-		log.info("SER type:"+serType);
-		log.info("Directory:"+baseDir+smRevisionDir);
-		log.info("Is File Exist:"+exist);
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
+				+ File.separator
+				+ Calendar.getInstance().get(Calendar.YEAR)
+				+ File.separator;
+		String smRevisionDir = "SM" + File.separator + applNo + File.separator
+				+ "Revision" + File.separator;
+		exist = new File(baseDir + smRevisionDir, fileName).exists();
+		log.info("File Name:" + fileName);
+		log.info("SER type:" + serType);
+		log.info("Directory:" + baseDir + smRevisionDir);
+		log.info("Is File Exist:" + exist);
 		return exist;
 	}
-	
+
 	public static void createSerFile(SmAppl smAppl, String serType) {
 		ISmApplRevisionSO applRevisionSO = null;
 		try {
@@ -891,9 +899,9 @@ public class SmCommonUtil {
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setSmAppl(smAppl);
-			if(serType.equalsIgnoreCase("SUP")){
+			if (serType.equalsIgnoreCase("SUP")) {
 				reqDTO.setType("supplier");
-			}else{
+			} else {
 				reqDTO.setType("approved");
 			}
 			applRevisionSO.applicationHist(reqDTO);
@@ -902,5 +910,18 @@ public class SmCommonUtil {
 		} finally {
 			applRevisionSO = null;
 		}
+	}
+
+	public static SmAddress getDefaultAddress(SmAddress defaultAddr) {
+		defaultAddr = new SmAddress();
+		defaultAddr.setPmCity(new PmCity());
+		defaultAddr.setPmDistrict(new PmDistrict());
+		// defaultAddr.setPmCountry(new PmCountry());
+		defaultAddr
+				.setPmCountry(SmCommonUtil
+						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+		// defaultAddr.getPmCountry().setCountryId(1l);
+		defaultAddr.setPmState(new PmState());
+		return defaultAddr;
 	}
 }
