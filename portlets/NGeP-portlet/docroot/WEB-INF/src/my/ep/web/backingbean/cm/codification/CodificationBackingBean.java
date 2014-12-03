@@ -1271,7 +1271,8 @@ public class CodificationBackingBean extends
 																// Completed
 
 				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
-				codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
+				codifiedItemResDTO = codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
+				this.getManagedBean().getSelectedVPendingCodifiedItem().setStatusId(codifiedItemResDTO.getPendingCodifiedItem().getStatusId());
 
 				facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
