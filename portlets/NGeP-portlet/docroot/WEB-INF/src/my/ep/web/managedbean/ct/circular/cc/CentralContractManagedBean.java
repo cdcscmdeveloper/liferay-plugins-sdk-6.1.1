@@ -49,7 +49,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String action;
 	private String searchCircularNo;
 	private String searchCircularName;
-	private String searchFileRefNo;
+	private String searchPhysicalCircularNo;
 	private String searchContractNo;
 	private String searchContractName;
 	
@@ -122,11 +122,11 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setSearchCircularName(String searchCircularName) {
 		this.searchCircularName = searchCircularName;
 	}
-	public String getSearchFileRefNo() {
-		return searchFileRefNo;
+	public String getSearchPhysicalCircularNo() {
+		return searchPhysicalCircularNo;
 	}
-	public void setSearchFileRefNo(String searchFileRefNo) {
-		this.searchFileRefNo = searchFileRefNo;
+	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
+		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
 	}
 	public Date getSearchStartDate() {
 		return searchStartDate;

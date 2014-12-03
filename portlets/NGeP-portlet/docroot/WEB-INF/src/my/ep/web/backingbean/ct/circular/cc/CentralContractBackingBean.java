@@ -439,7 +439,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			try {				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
 				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircular.circularNo",
 													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
@@ -450,9 +450,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularFileRefNo",
-													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo());
+				if(getManagedBean().getSearchPhysicalCircularNo()!=null && getManagedBean().getSearchPhysicalCircularNo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchPhysicalCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
@@ -980,7 +980,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
    public void searchReset(){
 		this.getManagedBean().setSearchCircularNo(null);
 		this.getManagedBean().setSearchCircularName(null);
-		this.getManagedBean().setSearchFileRefNo(null);
+		this.getManagedBean().setSearchPhysicalCircularNo(null);
 		this.getManagedBean().setSearchStartDate(null);
 		this.getManagedBean().setSearchEndDate(null);
 		this.getManagedBean().setSearchStatusId(null);
@@ -988,9 +988,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
    
    public void searchCircularVer() throws Exception {
 		try {
-			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) && 
-				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().length() == 0) &&
-				(getManagedBean().getSearchFileRefNo() == null || getManagedBean().getSearchFileRefNo().length() == 0) &&
+			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) &&
+				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().length() == 0) && 
+				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().length() == 0) && 
 				getManagedBean().getSearchStartDate() == null &&
 				getManagedBean().getSearchEndDate() == null &&
 				getManagedBean().getSearchStatusId() == null) {
