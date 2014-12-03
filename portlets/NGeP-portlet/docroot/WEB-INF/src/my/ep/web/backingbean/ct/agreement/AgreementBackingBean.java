@@ -18,7 +18,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -556,9 +558,20 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			     List<PmUser> list = resDTO.getUserList();
 			     items = new SelectItem[list.size() + 1];
 			     items[0] = new SelectItem(null, "- Select One -");
+			 	 Map<Long, PmUser> agencyUserMap =  new HashMap<Long, PmUser>();
 			     for (PmUser pmUser : list) {
 				     items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
+				     agencyUserMap.put(pmUser.getUserId(),pmUser);
 			     }
+			     
+			     //Reset the agency signer ic no and designation if record didn't exist in the drop down
+			     for(CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
+			    	 PmUser user = agencyUserMap.get(agencySigner.getOfficer().getUserId());
+	            	 if(user == null) {
+	            		 agencySigner.setOfficerIc(null);
+	            		 agencySigner.setOfficerPosition(null);
+	            	 }
+	             }
 		} finally {
 			userSO = null;
 			reqDTO = null;
@@ -585,9 +598,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			             items = new SelectItem[resDTO.getPersonnels().size() + 1];
 			             items[0] = new SelectItem(null, "- Select One -");
 			             for(SmPersonnel personnel : resDTO.getPersonnels()) {
-				              items[i++] = new SelectItem(personnel.getPersonnelId(),personnel.getName());
+				              items[i++] = new SelectItem(personnel.getName(),personnel.getName());
 				              getManagedBean().getSupplierUserMap().put(personnel.getName(),personnel);
-			             } getManagedBean().setSupplierSignerDropdown(items);
+			             } 			             
+			             getManagedBean().setSupplierSignerDropdown(items);
+			             
+			             //Reset the supplier  signer ic no and designation if record didn't exist in the drop down						    
+			             for(CtAgreementParty supplierSigner: getManagedBean().getCtSupplierSigner()) {
+			            	 SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(supplierSigner.getOfficerName());
+			            	 if(personnel == null) {
+			            		 supplierSigner.setOfficerIc(null);
+			            		 supplierSigner.setOfficerPosition(null);
+			            	 }
+			             }
 		        } finally {
 			         supplierSearchSO = null;
 		        }
@@ -1232,7 +1255,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		getManagedBean().setValidateWitness(false);
 		for (CtAgreementParty party : getManagedBean().getCtAgencySigner()) {
 	
-			   if(ctParty.getOfficer() == null && ctParty.getOfficer().getUserId() == null){
+			   if(ctParty.getOfficer() == null || ctParty.getOfficer().getUserId() == null){
 				   ctParty.setOfficerIc(null);
 				   ctParty.setOfficerPosition(null);
 			  
@@ -1371,6 +1394,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				 ctParty.setOfficerIc(personnel.getIdentificationNo());
 				 ctParty.setOfficerPosition(personnel.getDesignation());
 			 }
+			else {
+				ctParty.setOfficerIc(null);
+				ctParty.setOfficerPosition(null);
+			}
 			
 			int counter = 0;
 			for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
