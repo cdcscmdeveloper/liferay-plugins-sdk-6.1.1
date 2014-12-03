@@ -210,8 +210,8 @@
 			            icon="ui-icon-add" update="progPaymentTableId" action="#{contractDetailsBackingBean.addFrequencyDetails()}">
 			       </p:commandButton>
 		           <p:spacer width="2"/>
-		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" process="@this" icon="ui-icon-delete"
-			             rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"  onclick="progDlgObj.show()">
+		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" icon="ui-icon-delete"
+			             rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" process="@this"  onclick="progDlgObj.show()">
 			       </p:commandButton>
 		        </div>
 		       
@@ -223,8 +223,8 @@
                         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                     </h:panelGrid>
                     <div class="ppRightBtn">
-		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form"  
-		                   update="progPaymentTableId" action="#{contractDetailsBackingBean.deleteFrequencyDetails}" onclick="progDlgObj.hide();">
+		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form"  onclick="progDlgObj.hide();"
+		                   update=":form:progPaymentTableId,:form:proAddButtionId" action="#{contractDetailsBackingBean.deleteFrequencyDetails}" >
 		               </p:commandButton>
 			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="progDlgObj.hide();" type="button" />
 		            </div>

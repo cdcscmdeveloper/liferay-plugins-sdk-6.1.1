@@ -1565,6 +1565,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 
 	public void deleteFrequencyDetails() {
+		getManagedBean().setProgSchedButtonDeactive(false);
 		for (int i = 0; i < selectedProgressive.length; i++) {
 			CtProgressivePayment ctProgressivePayment = selectedProgressive[i];
 			this.getManagedBean().getContractVer().getCtProgressivePayments().remove(ctProgressivePayment);
