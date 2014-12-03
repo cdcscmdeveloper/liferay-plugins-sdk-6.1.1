@@ -28,12 +28,6 @@
 					<p:column headerText="#{lbl['lbl.ct.effective.date']}" />
 					<p:column headerText="#{lbl['lbl.ct.expiry.date']}" />
 					<p:column headerText="#{lbl['lbl.txt.attachment']}" />
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.ct.status']}"/>
-							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.status']}"/>
-						</f:facet>
-					</p:column>
 				</p:row>
 			 </p:columnGroup>
 			<p:column selectionMode="multiple" style="width:2%;"
@@ -80,7 +74,7 @@
 			    </p:calendar>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" style="width:22%;">
+			<p:column styleClass="column-align-center" style="width:32%;">
 				<h:panelGroup id="uploadBondPg">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
 					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
@@ -91,14 +85,6 @@
 						style="float:right;" styleClass="blue_font"
 						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>
-			</p:column>
-			<p:column style="width:10%;">
-				<p:selectOneMenu id="rStatus" value="#{varBond.recordStatusFlg}"
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;">
-					 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				         <p:ajax event="change" process="@form" update="tableBond"></p:ajax>
-				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
