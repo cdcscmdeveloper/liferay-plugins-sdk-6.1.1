@@ -1,6 +1,3 @@
-/**
- * 
- */
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.IOException;
@@ -101,6 +98,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -116,8 +114,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 	private static final Logger log = EpLogger
 			.getLogger(QTSupplierQulCriteriaBackingBean.class);
-	private Boolean renderZone;
-	private Boolean checked;
 
 	public QTSupplierQulCriteriaBackingBean() {
 		debugLogger("QTSupplierQulCriteriaBackingBean");
@@ -167,8 +163,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	private void populateSupplierSearchCriteria(SupplierSearchBean supplierSearchBean, ISearchBean<SmSupplier> searchBean) {
 		if (supplierSearchBean != null) {
-			String supplierName = supplierSearchBean.getSupplierName();
-			
 			List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
 			if(scQtCategoryList != null && scQtCategoryList.size() > 0){
 				SearchFilterBean categoryCodeIdFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
@@ -177,8 +171,19 @@ public class QTSupplierQulCriteriaBackingBean extends
 				searchBean.getDataFilterBeans().add(categoryCodeIdFilterBean);
 			}
 			
+			String supplierName = supplierSearchBean.getSupplierName();
 			if (!StringUtils.isBlank(supplierName)) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName", SearchOperator.OPERATOR_LIKE.value(), supplierName, true));
+			}
+			
+			String mofAccountNo = supplierSearchBean.getMofAccountNo();
+			if (!StringUtils.isBlank(mofAccountNo)) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("smMofAccounts.mofNo", SearchOperator.OPERATOR_LIKE.value(), mofAccountNo, true));
+			}
+			
+			BigDecimal paidUpCapital = supplierSearchBean.getMinPaidUpCapital();
+			if (paidUpCapital!= null && paidUpCapital.longValue() > 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppls.smCompanyBasic.paidUpCapital", SearchOperator.OPERATOR_LIKE.value(), paidUpCapital.toString(), true));
 			}
 		}
 	}
@@ -301,7 +306,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	/**
 	 * Method to search th*e supplier for panel and restricted tender.
 	 */
-	public void searchPanelSupplierAction() {
+	/*public void searchPanelSupplierAction() {
 		debugLogger("searchPanelSupplierAction");
 
 		int totalSearchSupplier = 0;
@@ -314,31 +319,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().setTotalSearchSupplier(totalSearchSupplier);
 		this.getManagedBean().setSearchPanelSuppliersNode(
 				searchPanelSuppliersNode);
-	}
+	}*/
 
 	/**
 	 * Method to search the supplier for normal tender
 	 */
-	public void searchNormalSupplierAction() {
+	/*public void searchNormalSupplierAction() {
 		debugLogger("searchNormalSupplierAction");
-
-		/*
-		 * ScQtCriteria scQtCriteria = getManagedBean().getQtCriteria();
-		 * 
-		 * if (!scQtCriteria.isMultiLocality() ||
-		 * scQtCriteria.isMultiLocality()) { // TODO Temporary get from panel
-		 * supplier. List<CtPanelSupplier> panelSupplierList =
-		 * retriverSuppliersForPanelQT(); List<SmSupplier> supplierList = new
-		 * ArrayList<SmSupplier>();
-		 * 
-		 * for (CtPanelSupplier panelSupplier : panelSupplierList) {
-		 * supplierList.add(panelSupplier.getSupplier()); }
-		 * 
-		 * populateQtSupplierList(supplierList);
-		 */// System.out.println("Supplier Name : " +
-			// supplierList.get(0).getSmAppl().getSmCompanyBasic().getCompanyName());
-
-	}
+	}*/
 	
 	public void onTabChangeAction(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
@@ -374,6 +362,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		getManagedBean().getSupplierSearchBean().setSupplierName(null);
 		getManagedBean().getSupplierSearchBean().setMofAccountNo(null);
 		getManagedBean().getSupplierSearchBean().setMinPaidUpCapital(null);
+		getManagedBean().setSelectedSupplierList(null);
 		
 		IPagingDataModel<SmSupplier> searchSupplierDataModel = getManagedBean().getSearchSupplierDataModel();
 		if (searchSupplierDataModel == null) {
@@ -429,11 +418,50 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void addRestrictedToSupplierListAction() {
 		debugLogger("addRestrictedToSupplierListAction");
-
-		List<SmSupplier> selectedSupplierList = getManagedBean()
-				.getSelectedSupplierList();
-
-		populateQtSupplierList(selectedSupplierList);
+		
+		List <ScQtSupplier> qtSupplierList = this.getManagedBean().getQtSupplierList();
+		if (null == qtSupplierList ) {
+			qtSupplierList = new ArrayList<ScQtSupplier>();
+		}
+		ScQt scQt = getManagedBean().getQt();
+		List<ScQtCategory> qtCategoryList = getManagedBean().getQtCategoryList();
+		List<SmSupplier> selectedSupplierList = getManagedBean().getSelectedSupplierList();
+		List<String> itemIds = new ArrayList<String>();
+		if (!selectedSupplierList.isEmpty()) {
+			for (SmSupplier smSupplier : selectedSupplierList) {
+				ScQtSupplier scQtSupplier = new ScQtSupplier();
+				scQtSupplier.setSmSupplier(smSupplier);
+				scQtSupplier.setScQt(scQt);
+				scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
+				
+				if (this.getManagedBean().getQtSupplierList().isEmpty()) {
+					this.getManagedBean().getQtSupplierList().add(scQtSupplier);
+					getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+				} else {
+					for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
+						itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
+					}
+					if (itemIds.size() > 0) {
+						if (itemIds.contains(smSupplier.getSupplierId().toString())) {
+							throw new EpException(MessageConst.ERROR_760197);
+						} else {
+							qtSupplierList.add(scQtSupplier);
+							this.getManagedBean().setQtSupplierList(qtSupplierList);	
+							getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+						}
+					}
+				}
+			}
+			//populateQtSupplierList(selectedSupplierList);
+		} else {
+			throw new EpException(MessageConst.ERROR_760121);
+		}
+		
+		// For save the criteria details when search button if clicked.
+		scQt.setScQtCategorys(qtCategoryList);
+		
+		// Supplier Search Validation
+		RequestContext.getCurrentInstance().execute("suppdlg.hide()");
 	}
 
 	private List<CtPanelSupplier> retriverSuppliersForPanelQT() {
@@ -519,7 +547,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return ctPanelSuppliers;
 	}
 
-	private void populateQtSupplierList(List<SmSupplier> suppliers) {
+	/*private void populateQtSupplierList(List<SmSupplier> suppliers) {
 		ScQtSupplier scQtSupplier;
 		ScQt scQt = getManagedBean().getQt();
 		List<ScQtCategory> qtCategoryList = getManagedBean()
@@ -536,12 +564,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 		// update qt supplier list.
 		getManagedBean().setTotalSupplier(qtSupplierList.size());
 		getManagedBean().getQtSupplierList().addAll(qtSupplierList);
-		//getManagedBean().setQtSupplierList(qtSupplierList);
 
 		// For save the criteria details when search button if clicked.
-		// scQt.setScQtCriterias(scQtCriteria);
 		scQt.setScQtCategorys(qtCategoryList);
-	}
+	}*/
 
 	public TreeNode getSeletedTreeNode(TreeNode treeNode, Node selectedNode) {
 		TreeNode selecetedTreeNode = null;
@@ -566,47 +592,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 		Boolean multipleLoc = (Boolean) event.getComponent().getAttributes()
 				.get("value");
 		log.info("MultipleLoc Value : " + multipleLoc);
-		/*
-		 * if(multipleLoc == false) { List<TreeNode> zoneTrees = new
-		 * ArrayList<TreeNode>(); getManagedBean().setZoneTrees(zoneTrees); }
-		 */
-
-		// System.out.println("ADSFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		/*
-		 * System.out.println("PPPPPPPPPPPPPPPPPP" +event.getNewValue());
-		 * Boolean multipleLoc = (Boolean) event.getNewValue();
-		 * 
-		 * TreeNode root3 = new DefaultTreeNode("Root", null); if (multipleLoc)
-		 * { List<PmZone> pmZoneList = QTDetailManagedBean.pmZoneList; if (null
-		 * != pmZoneList) { for (PmZone zone : pmZoneList) { TreeNode documents
-		 * = new DefaultTreeNode(new Node( zone.getZoneId(), zone.getZoneName(),
-		 * "Zone"), root3); documents.setSelectable(true); } }
-		 * 
-		 * } else { List<PmState> pmStateList = QTDetailManagedBean.pmStateList;
-		 * if (null != pmStateList) { for (PmState state : pmStateList) {
-		 * TreeNode documents = new DefaultTreeNode(new Node(
-		 * state.getStateId(), state.getStateName(), "State"), root3);
-		 * documents.setSelectable(true); } }
-		 * 
-		 * } this.getManagedBean().setRoot3(root3);
-		 */
-
-	}
-
-	public Boolean getRenderZone() {
-		return renderZone;
-	}
-
-	public void setRenderZone(Boolean renderZone) {
-		this.renderZone = renderZone;
-	}
-
-	public Boolean getChecked() {
-		return checked;
-	}
-
-	public void setChecked(Boolean checked) {
-		this.checked = checked;
 	}
 
 	public void stateChange(AjaxBehaviorEvent event) {
@@ -1090,12 +1075,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	/**
 	 * To delete the selected TreeNode from list..
 	 */
-	/*
-	 * public void deleteSupplierQualificationTreeNode() {
-	 * debugLogger("deleteSupplierQualificationTreeNode"); List<TreeNode>
-	 * rootTrees = getManagedBean().getZoneTrees(); deleteTreeNodes(rootTrees);
-	 * this.getManagedBean().setIndex(-1); }
-	 */public void deleteSupplierQualificationTreeNode() {
+	public void deleteSupplierQualificationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
 		deleteTreeNodes(rootTrees);
 		this.getManagedBean().setTotalSuppliersSpecLoc(
@@ -1265,19 +1245,21 @@ public class QTSupplierQulCriteriaBackingBean extends
 			
 			this.getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 			this.getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
-			List<SmPersonnel> personnelsList = qtSupplier.getSmSupplier()
+			/*List<SmPersonnel> personnelsList = resDTO.getSmSupplier()
 					.getSmAppl().getSmPersonnels();
-			for (SmPersonnel smPersonnel : personnelsList) {
-				getManagedBean().setPersonnel(smPersonnel);
-			}
+			if (null != personnelsList) {
+				for (SmPersonnel smPersonnel : personnelsList) {
+					getManagedBean().setPersonnel(smPersonnel);
+				}
+			}*/
 			SmCompanyBasic smCompanyBasic = resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic();
 			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
 				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
 					log.info("found hq address");
 					getManagedBean().setSupplierBranch("HQ");
 					getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
-					getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
-					getManagedBean().setSupplierEmail(getManagedBean().getPersonnel().getEmail());
+					//getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
+					//getManagedBean().setSupplierEmail(getManagedBean().getPersonnel().getEmail());
 					break;
 				}
 			}
