@@ -549,44 +549,44 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        String token = getFacesScopes().getBPMAuthenticationCtxToken();	
 			        reqDTO.setToken(token);
 	                reqDTO.setOutcome(action);
-	                reqDTO.setTaskId(this.getManagedBean().getTaskId());
+	                reqDTO.setTaskId(getManagedBean().getTaskId());
 	        
 			        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			       
-			        if (this.getManagedBean().getContractVer().getCtContractItems().size() > 0) 
-					       this.getManagedBean().getContractVer().getCtContractItems().clear();
-	                this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
-	                this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtServiceItemList());
+			        if (getManagedBean().getContractVer().getCtContractItems().size() > 0) 
+					       getManagedBean().getContractVer().getCtContractItems().clear();
+	                       getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemList());
+	                       getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtServiceItemList());
 	      
 	                chkComplyAP201Rule();	
 	                getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	              
-	                if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-	                		&& this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null){
-	        	          this.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(this.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+	                if(getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+	                		&& getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null){
+	        	                 getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 	                
-	                } if(this.getManagedBean().isPrepareLOA()) {
+	                } if(getManagedBean().isPrepareLOA()) {
 	        
-	        	            if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null) 
-	                              this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
-	                        this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(this.getManagedBean().getScLoaWitness());
-	        	            int contractDuration = getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + 	getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
-	        	            this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
+	        	            if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null) 
+	                              getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
+	                              getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
+	        	                  int contractDuration = getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + 	getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
+	        	                  getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
 	               }
 	       
 	               reqDTO.setUserRole(getUserRole());
-	               reqDTO.setTaskName(this.getManagedBean().getTaskName());
-	               reqDTO.setCtContract(this.getManagedBean().getCtContract());
-	               reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
+	               reqDTO.setTaskName(getManagedBean().getTaskName());
+	               reqDTO.setCtContract(getManagedBean().getCtContract());
+	               reqDTO.setCtContractVer(getManagedBean().getContractVer());
 	               
 	               //this.getManagedBean().getRemarkList().get(0)
 	        
-	               reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-		           reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+	               reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+		           reqDTO.setAttachments(getManagedBean().getAttachmentList());
 		           
-				   if(this.getManagedBean().getPmDigiSign() !=null){
-						reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+				   if(getManagedBean().getPmDigiSign() !=null){
+						reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				   }	
 				   
 		           ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
