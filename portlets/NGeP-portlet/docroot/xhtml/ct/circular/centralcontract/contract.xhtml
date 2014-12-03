@@ -227,6 +227,7 @@
 
 		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}"
 			widgetVar="contractDlg" modal="true" width="800" height="450">
+			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" cosable="true" severity="error, info" />
 			<p:panel id="listOfContract">
 				<h:panelGrid columns="6">
 					<h:outputText value="#{lbl['lbl.ct.contract.no']}" />
@@ -262,10 +263,10 @@
 				</p:dataTable>
 				<p:spacer height="2" />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.select']}"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						process="contractDlg" icon="ui-icon-accept"
 						action="#{centralContractBackingBean.addSelectedContract}"
-						update="centralContractDt" onclick="contractDlg.hide();" />
+						update="centralContractDt"/>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						icon="ui-icon-cancel" type="button" ajax="false"
 						onclick="contractDlg.hide();" />
