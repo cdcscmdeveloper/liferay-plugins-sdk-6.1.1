@@ -762,7 +762,11 @@ public class EvaluationMeetingBackingBean extends
 							ICommitteSO.class);
 			resDTO = committeSO
 					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
-			if (resDTO != null) {
+			if (null != resDTO
+					&& null != resDTO.getCommMemberResultBean()
+					&& null != resDTO.getCommMemberResultBean().getResultList()
+					&& !resDTO.getCommMemberResultBean().getResultList()
+							.isEmpty()) {
 
 				this.getManagedBean().setCloneCommitteMemebers(
 						resDTO.getCommMemberResultBean().getResultList());
