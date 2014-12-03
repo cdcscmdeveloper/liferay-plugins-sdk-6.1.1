@@ -160,9 +160,9 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
-					<p:inputText value="#{item.orderedQty}" size="5" id="orderedQty"
+					<p:inputText value="#{item.orderedQty}" size="13" id="orderedQty"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}"
-						maxlength="14" styleClass="colFloatRight" 
+						maxlength="13" styleClass="colFloatRight" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />							
