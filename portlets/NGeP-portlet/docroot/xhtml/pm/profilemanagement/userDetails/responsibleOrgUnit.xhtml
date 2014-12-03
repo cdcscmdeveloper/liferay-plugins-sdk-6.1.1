@@ -43,7 +43,7 @@
 			    </f:facet>
 			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="12" 
 			    	required="#{!empty param['disableValidation']}" 
-	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
+	            	update="@form" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
 					postUpdateListener="profileManagementBackingBean.updateOrgCode
