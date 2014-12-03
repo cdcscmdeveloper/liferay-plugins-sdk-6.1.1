@@ -24,7 +24,7 @@
 		
 		<br />
 		<p:dataTable var="cat" value="#{svoSiteVisitBackingBean.managedBean.svTaskCategories}">
-			<p:column headerText="Category Type">
+			<p:column headerText="Category Description">
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
 				#{cat.pmCategoryL3.categoryName}
