@@ -8,10 +8,6 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
-		</f:facet>
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
@@ -23,6 +19,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:20%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
+				</f:facet>
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
 					maxlength="2" size="1" style="margin-right: 3px !important;">
 					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
