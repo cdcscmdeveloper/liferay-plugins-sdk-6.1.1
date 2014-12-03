@@ -6350,6 +6350,7 @@ public class SpecificationBackingBean extends
 			String startMonth = "";
 			String endMonth = "";
 			String endToMonth = "";
+			if(null!=checkListValue.getFromDate() && null!=checkListValue.getToDate()){
 			String fromdate = dateFormat.format(checkListValue.getFromDate());
 			String todate = dateFormat.format(checkListValue.getToDate());
 			String startdate = fromdate.substring(3, 5);
@@ -6449,6 +6450,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setStartYear(startYear);
 			this.getManagedBean().setEndYear(endYear);
 			this.getManagedBean().setToMonth(endToMonth);
+			}
 		}
 	}
 
