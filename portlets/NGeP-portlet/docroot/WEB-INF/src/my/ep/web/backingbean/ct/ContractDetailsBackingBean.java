@@ -907,9 +907,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
 					               } 
 		                       }
-				       
-		                    if(contractVer.getCtContract().getLoa().getBondAmt() != null 
-		                    	&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				        
+		                  if(contractVer.getCtContract().getLoa().getBondAmt() == null 
+		                       && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+		                	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+		                       throw new EpException(MessageConst.ERROR_750021);
+		                 
+		                  } else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
+				                       && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
 					              if( retval >0 ){
 					            	  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
