@@ -373,7 +373,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @return SelectItem[] 
 	 */
 	public static SelectItem[] getStatusOptions() {
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 	
 	/**
