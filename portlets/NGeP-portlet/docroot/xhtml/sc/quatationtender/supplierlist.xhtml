@@ -8,72 +8,41 @@
 
 	<p:panel id="supplierlist" header="#{lbl['lbl.sc.supplier.list']}"
 		toggleable="true">
-		<c:if
-			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal 
-					or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
-			<p:treeTable id="suppliersTbl" var="supplierNode"
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppliersNode}">
+		<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
+			rowIndexVar="index" editable="true" rowKey="#{qtSupplier}"
+			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}">
 
-				<p:column headerText="#{lbl['lbl.so.suppliername']}">
-					<h:outputText value="#{supplierNode.object}"
-						rendered="#{supplierNode.type == 'zone'}" />
-					<h:outputText value="#{supplierNode.object.supplierName}"
-						rendered="#{supplierNode.type == 'supplier'}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.so.mofno']}">
-					<h:outputText value="#{supplierNode.object.smMofAccounts[0].mofNo}"
-						rendered="#{supplierNode.type == 'supplier' and false}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.so.mofexp']}">
-					<h:outputText
-						value="#{supplierNode.object.smMofAccounts[0].expDate}"
-						rendered="#{supplierNode.type == 'supplier' and false}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.so.status']}">
-					<h:outputText value="Active"
-						rendered="#{supplierNode.type == 'supplier'}" />
-				</p:column>
-			</p:treeTable>
-		</c:if>
-		<c:if
-			test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal 
-					and qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType != PmCodeConst.quotationTenderTypePanel}">
-			<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
-				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}"
-				selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}">
+			<ac:paginator for="suppliersTbl" />
 
-				<ac:paginator for="suppliersTbl" />
+			<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="#{lbl['lbl.so.suppliername']}">
+				<p:commandLink update=":form:popupSuppDtl"
+					action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails(qtSupplier)}"
+					oncomplete="suppDetails.show();">
+					<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
+				</p:commandLink>
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.suppliername']}">
-					<p:commandLink update=":form:popupSuppDtl"
-						action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails(qtSupplier)}"
-						oncomplete="suppDetails.show();">
-						<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
-					</p:commandLink>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.so.mofno']}" style="width : 10%;">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.mofno']}">
-					<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}" />
-				</p:column>
+			<p:column headerText="#{lbl['lbl.so.mofexp']}" style="width : 10%;">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.mofexp']}">
-					<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.status']}">
-					<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg}" />
-				</p:column>
-			</p:dataTable>
-		</c:if>
+			<p:column headerText="#{lbl['lbl.so.status']}" style="width : 10%;">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg}" />
+			</p:column>
+		</p:dataTable>
 		<br />
 		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
 		<p:spacer width="5" />
