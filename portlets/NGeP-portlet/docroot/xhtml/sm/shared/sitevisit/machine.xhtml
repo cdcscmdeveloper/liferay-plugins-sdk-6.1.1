@@ -7,6 +7,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smMachineDtls}" var="machineDtl"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedSmMachine}"
 		rowKey="#{machineDtl}">
 			<p:column>
