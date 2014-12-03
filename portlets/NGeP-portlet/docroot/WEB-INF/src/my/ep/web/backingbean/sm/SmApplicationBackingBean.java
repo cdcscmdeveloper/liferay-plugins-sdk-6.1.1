@@ -605,8 +605,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setSupplierParentCatList(
 							SmApplicationUtil
-									.retrieveParentCategoryListForExperiencePage(getManagedBean()
-											.getSmAppl().getSupplierType()));
+									.retrieveParentCategoryListForExperiencePage(getManagedBean()));
 			if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
 				SmApplicationUtil
 						.assignNonPersonnelProfBodyList(getManagedBean());
@@ -1988,8 +1987,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean()
 				.setSupplierParentCatList(
 						SmApplicationUtil
-								.retrieveParentCategoryListForExperiencePage(getManagedBean()
-										.getSmAppl().getSupplierType()));
+								.retrieveParentCategoryListForExperiencePage(getManagedBean()));
 		if (consultantBean.getSmCompanyExperienceCats() != null
 				&& !consultantBean.getSmCompanyExperienceCats().isEmpty()) {
 			for (SmCompanyExperienceCat cat : consultantBean
@@ -2101,8 +2099,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean()
 				.setSupplierParentCatList(
 						SmApplicationUtil
-								.retrieveParentCategoryListForExperiencePage(getManagedBean()
-										.getSmAppl().getSupplierType()));
+								.retrieveParentCategoryListForExperiencePage(getManagedBean()));
 		resetChildCatList();
 		assignValReqdToTrue();
 		if (getManagedBean().getSmAppl().getSupplierType()

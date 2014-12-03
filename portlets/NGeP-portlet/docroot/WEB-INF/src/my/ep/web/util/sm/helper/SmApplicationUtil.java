@@ -1984,9 +1984,11 @@ public class SmApplicationUtil {
 	}
 
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage(
-			String supplierType) {
+			SmApplicationManagedBean managedBean) {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setSupplierTypeCode(supplierType);
+		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
+				.getBusinessType());
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1List();
@@ -2073,6 +2075,8 @@ public class SmApplicationUtil {
 				bumiPerc = 99;
 			}
 		}
+		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
+				.getBusinessType());
 		log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
