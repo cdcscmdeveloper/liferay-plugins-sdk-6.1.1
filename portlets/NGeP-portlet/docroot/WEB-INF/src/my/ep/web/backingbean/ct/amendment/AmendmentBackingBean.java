@@ -328,8 +328,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				      this.getManagedBean().setBpkSaSkApprover(true);
 	          } 
 	        
-		    if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null) {
-		    	  
+		    if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
+		    		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() != null) {		    	  
 		    	for(ScLoaWitness scLoaWitness : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()) {
 		    		   if((res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
 		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_AGENCY)) {
