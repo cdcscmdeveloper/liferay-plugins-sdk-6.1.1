@@ -18,6 +18,9 @@
 				selection="#{profileManagementBackingBean.managedBean.selectedRoles}">
 				<p:ajax event="toggleSelect" update="@this" process="@this" />
 				<p:ajax event="rowSelectCheckbox" update="@this" />
+				<p:ajax event="rowUnselectCheckbox" update="@this" process="@this"/>
+				<p:ajax event="rowUnselect" update="@this" process="@this"/>
+				<p:ajax event="rowSelect" update="@this" process="@this"/>
 				<ac:paginator for="dtRoleOptions"/>
 				<p:column selectionMode="multiple" width="2%" disabledSelection="#{roleDesc.selected}" />
 			    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role.name']}"> 
