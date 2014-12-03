@@ -208,7 +208,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	private boolean validatePersonLimit() {
 		boolean validPerCount = true;
 		
-		//check for role supplier admin and disable add button
+		//disabled add button if business type is individual (A)
 		if(this.getManagedBean().getUpdateSmPersonnel()!=null && this.getManagedBean().getUpdateSmPersonnel().getSmAppl()!=null 
 				&& this.getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier()!=null && 
 				this.getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getBusinessType().equalsIgnoreCase("A")){
