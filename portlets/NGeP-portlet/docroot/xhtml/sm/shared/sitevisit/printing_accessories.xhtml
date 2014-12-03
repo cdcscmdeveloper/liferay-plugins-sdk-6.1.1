@@ -9,7 +9,7 @@
 	<c:forEach items="#{svoSiteVisitBackingBean.managedBean.printingCatLs}" var="item">
 	<ui:param name="lblVar" value="lbl.sm.sitevisit.printing.#{item}" />
 		<p:panel header="#{lbl[lblVar]}" toggleable="true">
-			<p:dataTable  toggleable = "true"
+			<p:dataTable  toggleable = "true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{svoSiteVisitBackingBean.managedBean.printingCatMap[item].smSvPrintmachines}" var="acc"
 				rowKey="#{acc}" rowIndexVar="rowId">
 
