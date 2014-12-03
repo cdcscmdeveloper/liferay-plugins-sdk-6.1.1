@@ -11,6 +11,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -158,10 +159,17 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 					getManagedBean().getTaskId(), outcome);
 
 			if (isSuccessful) {
+				if(BpmOutcomeConst.BPM_RERECOMMEND.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700059, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE,
+							requestNoteNo);
+				}
+				if(BpmOutcomeConst.BPM_REQUOTE.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700058, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
+							getManagedBean().getScRequestNote().getQuote().getQuoteNo());
+				}
 				renewSesionObject();
-				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_REQUEST_NOTE,
-						requestNoteNo);
 			}
 		} finally {
 			qtAwardSO = null;
