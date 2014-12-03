@@ -254,10 +254,10 @@ public class PmCommonUtil {
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
-		items[1] = new SelectItem(null, ResourceBundleUtils.getMessage(
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
 				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
-		items[2] = new SelectItem(null, ResourceBundleUtils.getMessage(
+		items[2] = new SelectItem(DbValueConst.RECORD_STATUS_DELETED, ResourceBundleUtils.getMessage(
 				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 	    return items;
