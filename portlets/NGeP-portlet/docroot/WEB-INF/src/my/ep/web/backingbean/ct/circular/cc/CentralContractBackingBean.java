@@ -393,7 +393,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void addSelectedContract() {
 		IContractSO contractSO = null;
         try {
-        	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+        	
+        	if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
+        		getManagedBean().setAutoUpdate(false);
+        		RequestContext.getCurrentInstance().addCallbackParam("epException", true);	
+        		throw new EpException(MessageConst.ERROR_100022, new String[]{"Selection of contract"});
+        	}
+        	
+        	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
         	ContractReqDTO reqDTO = new ContractReqDTO();
         	
         	CtCircularContract circularContract = null;
@@ -418,6 +425,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					ctCircularContract.getCtCircularItems().add(item);
 				}
         	}
+        	RequestContext.getCurrentInstance().execute("contractDlg.hide()");
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -623,7 +631,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+				    throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 			}
 			
 			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
