@@ -24,13 +24,15 @@
 
 	<p:dialog id="suppPopup" header="Search Supplier" widgetVar="suppdlg"
 		modal="true" width="800" height="600" position="top">
+		<p:messages id="supplierSearchMessages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
 		<ui:include src="restrictedSupplierSearch.xhtml" />
 
 		<br />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
 				action="#{qTSupplierQulCriteriaBackingBean.addRestrictedToSupplierListAction}"
-				update="supplierlist" oncomplete="suppdlg.hide()" />
+				update="supplierlist" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				icon="ui-icon-cancel" oncomplete="suppdlg.hide()" />
