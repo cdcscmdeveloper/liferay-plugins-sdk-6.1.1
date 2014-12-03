@@ -154,25 +154,24 @@ public class BSVAttendanceBackingBean extends
 	 * To add the attandance user click add button
 	 */
 	public void addAttendanceForBSV() {
-		if(null != this.getManagedBean()
-				.getSelectedbriefRegistration()){
-		List<ScQtBsvAttendance> attandances = this.getManagedBean()
-				.getSelectedbriefRegistration().getBsvAttendance();
-		ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
-		briefingAttendance.setBsvRegistration(this.getManagedBean()
-				.getSelectedbriefRegistration());
-		briefingAttendance.setAttended(true);
-		briefingAttendance.setBrandNew(false);
-		if (null == attandances || attandances.isEmpty()) {
-			attandances = new ArrayList<ScQtBsvAttendance>();
-			attandances.add(briefingAttendance);
+		if (null != this.getManagedBean().getSelectedbriefRegistration()) {
+			List<ScQtBsvAttendance> attandances = this.getManagedBean()
+					.getSelectedbriefRegistration().getBsvAttendance();
+			ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
+			briefingAttendance.setBsvRegistration(this.getManagedBean()
+					.getSelectedbriefRegistration());
+			briefingAttendance.setAttended(true);
+			briefingAttendance.setBrandNew(false);
+			if (null == attandances || attandances.isEmpty()) {
+				attandances = new ArrayList<ScQtBsvAttendance>();
+				attandances.add(briefingAttendance);
+			} else {
+				attandances.add(briefingAttendance);
+			}
+			// this.getManagedBean().setBriefingAttendanceList(attandances);
+			this.getManagedBean().getSelectedbriefRegistration()
+					.setBsvAttendance(attandances);
 		} else {
-			attandances.add(briefingAttendance);
-		}
-		// this.getManagedBean().setBriefingAttendanceList(attandances);
-		this.getManagedBean().getSelectedbriefRegistration()
-				.setBsvAttendance(attandances);
-		}else{
 			throw new EpException(MessageConst.ERROR_760185);
 		}
 
@@ -335,6 +334,9 @@ public class BSVAttendanceBackingBean extends
 	 */
 	private boolean isOneAuthorizedPersonal(
 			List<ScQtBsvAttendance> bsvAttandance) {
+		if(null == bsvAttandance || bsvAttandance.isEmpty()){
+			return false;
+		}
 		for (ScQtBsvAttendance attendance : bsvAttandance) {
 			if (null != bsvAttandance) {
 				if (attendance.isAuthorized() && attendance.isAttended()) {
@@ -488,15 +490,22 @@ public class BSVAttendanceBackingBean extends
 		if (null == registrations || registrations.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
-		for (ScQtBsvRegistration registration : registrations) {
-			if (registration
+		ScQtBsvRegistration selectedReqistration = this.getManagedBean()
+				.getSelectedbriefRegistration();
+		if (null == selectedReqistration) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
+		for (int i = 0; i < registrations.size(); i++) {
+			if (registrations
+					.get(i)
 					.getSupplier()
 					.getCompanyName()
 					.equalsIgnoreCase(
 							this.getManagedBean()
 									.getSelectedbriefRegistration()
 									.getSupplier().getCompanyName())) {
-				registrations.remove(registration);
+
+				registrations.remove(i);
 				break;
 			}
 		}

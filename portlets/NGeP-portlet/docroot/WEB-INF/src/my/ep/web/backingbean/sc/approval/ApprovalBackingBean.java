@@ -109,8 +109,6 @@ public class ApprovalBackingBean extends
 
 	}
 
-	
-
 	public List<String> getAppCatList() {
 		List<String> appCatList = new ArrayList<String>();
 		if (null != this.getManagedBean().getTabList()) {
@@ -405,6 +403,7 @@ public class ApprovalBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(this.getManagedBean().getQt());
+		this.getManagedBean().setAction(action);
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			List<ScQtApprovalRemark> remarks = this.getManagedBean()
 					.getScQtApproval().getScQtApprovalRemarks();
@@ -417,12 +416,9 @@ public class ApprovalBackingBean extends
 					}
 				}
 			}
-			this.getManagedBean().setAction(action);
-			RequestContext.getCurrentInstance().execute(
-					"reviceApprovalDlg.show()");
-		} else {
-			this.getManagedBean().setAction(action);
-			if ("Publication Approval".equalsIgnoreCase(this.getManagedBean()
+			
+			
+		} else 	if ("Publication Approval".equalsIgnoreCase(this.getManagedBean()
 					.getApprovalType())) {
 
 				detailSO.validateScheduleDetails(reqDTO);
@@ -432,9 +428,10 @@ public class ApprovalBackingBean extends
 				 * reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 				 * detailSO.validatePublicationBsvDetails(reqDTO); }
 				 */
-			}
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			
 		}
+		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 	}
 
 	public String gpkiSignAction(PmDigiSign digiSign) {
@@ -553,6 +550,7 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setQtDetail(qt);
 			} else {
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
