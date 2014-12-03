@@ -428,9 +428,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 	    	getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 		    renderUpdateCheckbox(getManagedBean().getContractVer());
-		    this.getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+		    getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		    
-	        this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+	        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -502,7 +502,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	                } 
 		            getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);
 	                
-		  } if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+		  } if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
 		               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
 		               if(getManagedBean().getCtContract().isZonalPricing()) {
 			 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
@@ -511,10 +511,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	                   if(getManagedBean().getCtContract().isFactored()){
 	            	       getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
 		                }
-        	          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
+        	          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
 		      }
 		      
-	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
+	 	    for( String str : getManagedBean().getFinalListOfSideMenu()){
 	 	    	MenuItem zoneItem = new MenuItem();
 				zoneItem.setValue(str);
 				zoneItem.setId("zoneMenuID"+zoneTabIndex);
@@ -527,7 +527,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				fulfilmentMenuModel.addMenuItem(zoneItem);
 
 				zoneTabIndex++;
-	 	    } this.getManagedBean().setFulfilmentMenuModel(fulfilmentMenuModel);
+	 	    } getManagedBean().setFulfilmentMenuModel(fulfilmentMenuModel);
     }
 	
     public boolean checkFactoringExpiryDate() {
@@ -885,6 +885,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			
 		 if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
+			 
+			 if(getManagedBean().getCtContract().getLatestContractVer() != null 
+					 && contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
+					 && getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
+					 && getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds().size() > 0
+					 && (contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty())) {
+			
+				     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
+			 }
+			 
 			 
 			   if(contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
 				 
