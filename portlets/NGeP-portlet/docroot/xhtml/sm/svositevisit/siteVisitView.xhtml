@@ -7,7 +7,8 @@
 
 
 	<p:panel header="#{lbl['lbl.sm.category']}" toggleable="true">
-		<p:dataTable var="cType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
+		<p:dataTable var="cType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" 
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="Category Type">
 				<ui:param name="lblCategoryDesc" value="lbl.sm.sitevisit.category.categorycode_#{cType.pmParameter.parameterCode}" />
 				#{lbl[lblCategoryDesc]}
@@ -23,7 +24,8 @@
 		</p:dataTable>
 		
 		<br />
-		<p:dataTable var="cat" value="#{svoSiteVisitBackingBean.managedBean.svTaskCategories}">
+		<p:dataTable var="cat" value="#{svoSiteVisitBackingBean.managedBean.svTaskCategories}" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="Category Description">
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
@@ -36,11 +38,9 @@
 		</p:dataTable>
 	</p:panel>
 	
-
-	
-	
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" toggleable="true">
-		<p:dataTable var="addr" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}">
+		<p:dataTable var="addr" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}" 
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.address']}">
 					#{addr.smAddress.address1}<br />
 					#{addr.smAddress.address2}<br />
