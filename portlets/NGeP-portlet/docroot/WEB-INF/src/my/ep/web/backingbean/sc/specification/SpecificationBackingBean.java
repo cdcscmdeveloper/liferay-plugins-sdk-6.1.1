@@ -4915,7 +4915,7 @@ public class SpecificationBackingBean extends
 				&& QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
 						.equalsIgnoreCase(list.getPmDocument()
 								.getDocDefinitionKey()) && list.isScoringReq()) {
-			throw new EpException(MessageConst.ERROR_760189);
+			throw new EpException(MessageConst.ERROR_760196);
 
 		}
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
