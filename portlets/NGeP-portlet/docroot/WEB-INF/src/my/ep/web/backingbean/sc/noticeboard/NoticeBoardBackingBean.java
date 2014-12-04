@@ -21,7 +21,6 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
@@ -41,8 +40,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -1308,7 +1305,23 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
-		IQTDetailSO detailSO;
+		log.info("** Qtn / TenderDetsils **");
+		IQTNoticeBoardSO qtNoticeBoardSO = null;
+		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+		//QuationTenderResDTO resDTO = null;
+		ScQt scQt = null;
+		try {
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			reqDTO.setQtId(qtId);
+			NoticeBoardResDTO resDTO = qtNoticeBoardSO
+					.retrieveQtNoticeDtl(reqDTO);
+			scQt = resDTO.getScQt();
+		} finally {
+			qtNoticeBoardSO = null;
+		}
+		
+/*		IQTDetailSO detailSO;
 		this.getManagedBean().setScQtDocReports(null);
 
 		QuationTenderResDTO resDTO = null;
@@ -1325,10 +1338,10 @@ public class NoticeBoardBackingBean extends
 
 		} finally {
 			detailSO = null;
-		}
+		}*/
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
-		qtDocumentsBackingBean.getManagedBean().setQt(resDTO.getQtDetail());
+		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
 
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReports();
@@ -1385,11 +1398,26 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
-		IQTDetailSO detailSO;
+		log.info("** Qtn / TenderDetsils **");
+		ScQt scQt = this.getManagedBean().getScQt();
+		
+		/*IQTNoticeBoardSO qtNoticeBoardSO = null;
+		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		ScQt scQt = scQtDocReport.getScQt();
-
-		QuationTenderResDTO resDTO = null;
+		//QuationTenderResDTO resDTO = null;
 		try {
+			
+			
+			
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			reqDTO.setQtId(scQt.getQtId());
+			NoticeBoardResDTO resDTO = qtNoticeBoardSO
+					.retrieveQtNoticeDtl(reqDTO);
+			ScQt scQt = resDTO.getScQt();
+
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -1397,11 +1425,11 @@ public class NoticeBoardBackingBean extends
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			resDTO = detailSO.retriveQTDocDetails(reqDTO);
 		} finally {
-			detailSO = null;
-		}
+			qtNoticeBoardSO = null;
+		}*/
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
-		qtDocumentsBackingBean.getManagedBean().setQt(resDTO.getQtDetail());
+		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
 		if (scQtDocReportAttachment == null) {
