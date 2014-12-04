@@ -936,6 +936,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
 			validateMeetingDtlsInfo(reqDTO);
 			
+			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(ctxToken);
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
