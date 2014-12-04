@@ -7,7 +7,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<div class="ppRightBtn">
-		<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" rendered="#{isPendingSubmissionStatus}"
+		<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" rendered="#{isPendingSubmissionStatus or !isEditableStatus}"
 			icon="ui-icon-back" style="float:left;"
 			action="#{lOIDetailBackingBean.backToPervious}" />
 
