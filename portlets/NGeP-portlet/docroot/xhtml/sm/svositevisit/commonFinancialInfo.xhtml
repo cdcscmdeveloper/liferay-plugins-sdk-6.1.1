@@ -39,7 +39,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
-		<p:dataTable var="bankInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" style="width:80%">
+		<p:dataTable var="bankInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}">
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.bankDtls.bankName']}</f:facet>
 				#{bankInfo.smSupplierBank.pmFinancialOrg.finOrgName}
