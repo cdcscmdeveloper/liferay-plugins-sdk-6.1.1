@@ -723,10 +723,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					scQtDocReportAttachment.setFileName(filename.toString());
 					generateProgressivePaymentPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_DELIVERY_SERVICE_ADDRESS.equals(docDefinitionKey)) {
-					filename.append(".pdf");
-					scQtDocReportAttachment.setFileName(filename.toString());
 					generateDeliveryAddressPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
-				} 
+				}
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		} else {
 			String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
@@ -991,6 +989,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateDeliveryAddressPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -1152,6 +1151,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		debugLogger("generateSamplesamplesalinankontrakPdfFromVelocity");
 		attachment.setFileName("Sampel_Kontrak_Umum.docx");
 		
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -1162,6 +1162,27 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
 
+		/*StringBuilder filePath = new StringBuilder();
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocNo());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocType());
+		attachment.setFilePath(filePath.toString());
+
+		File theDir = new File(getActualFilePath(attachment));
+		theDir.mkdirs();
+		
+		AttachmentFormat scFormat =getAttachFormat(attachment);
+		String formatedFileName = scFormat.format(attachment.getFileName(),
+				attachment.getPrefixFileName());
+
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		attachment.setFilePath(filePath.toString());*/
+		
 		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
 		
