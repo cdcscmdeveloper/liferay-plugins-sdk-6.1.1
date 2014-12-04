@@ -113,7 +113,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					suppLoaLoi = new SuppLoiLoaBean();
 					suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
 					suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
-					suppLoaLoi.setStatus(scLoi.getPmStatus());
+					suppLoaLoi.setStatus(scLoi.getScWorkFlowStatus().getPmStatus());
 					suppLoaLoi.setScLoi(scLoi);
 					suppLoiLoaList.add(suppLoaLoi);
 				}

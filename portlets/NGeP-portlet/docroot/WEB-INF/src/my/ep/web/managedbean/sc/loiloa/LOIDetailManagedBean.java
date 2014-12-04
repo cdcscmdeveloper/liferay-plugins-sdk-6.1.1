@@ -93,7 +93,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScLoi> lois = new ArrayList<ScLoi>();
 	
 	private Long orgProfileId;
-	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
 	private PmOrgProfile selectedPtj = new PmOrgProfile();
 	private List<PmOrgProfile> ptjList;
 	
@@ -621,20 +620,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setRecommend(ScQtRecommend recommend) {
 		this.recommend = recommend;
-	}
-
-	/**
-	 * @return the pmOrgProfile
-	 */
-	public PmOrgProfile getPmOrgProfile() {
-		return pmOrgProfile;
-	}
-
-	/**
-	 * @param pmOrgProfile the pmOrgProfile to set
-	 */
-	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
-		this.pmOrgProfile = pmOrgProfile;
 	}
 
 	/**
