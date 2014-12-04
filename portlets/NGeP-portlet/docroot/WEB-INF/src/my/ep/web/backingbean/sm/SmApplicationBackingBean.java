@@ -3026,6 +3026,18 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& getManagedBean().getSelectedShareHolder().isEquityOwner()
+				&& (getManagedBean().getSelectedShareHolder()
+						.getSmStaffAcademics() == null || getManagedBean()
+						.getSelectedShareHolder().getSmStaffAcademics()
+						.isEmpty())) {
+
+			validShrHldr = false;
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.academicqualification.required.atleast.one", null));
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& (getManagedBean().getSelectedShareHolder().isProf()
 						|| getManagedBean().getSelectedShareHolder()
 								.isSemiProf() || getManagedBean()
@@ -3283,7 +3295,7 @@ public class SmApplicationBackingBean extends
 		}
 
 		// disabled justification
-		//disableJustification(shareHolderBean);
+		// disableJustification(shareHolderBean);
 	}
 
 	private void disableJustification(SmPersonnel shareHolderBean) {
@@ -3469,7 +3481,7 @@ public class SmApplicationBackingBean extends
 								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 
 		// enabled justification if disabled
-		//disableJustification(null);
+		// disableJustification(null);
 
 	}
 
