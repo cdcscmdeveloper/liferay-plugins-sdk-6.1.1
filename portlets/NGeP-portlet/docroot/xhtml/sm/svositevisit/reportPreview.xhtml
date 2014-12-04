@@ -26,8 +26,10 @@
 <!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
+			<ui:param name="lblCategoryType" value="lbl.sm.sitevisit.category.categorycode_#{template.pmParameter.parameterCode}" />
+
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
-					#{template.pmParameter.pmParameterDescs[0].codeDesc}
+				#{lbl[lblCategoryType]}
 			</p:column>
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
@@ -61,11 +63,11 @@
 			<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
 		</c:if>
 		
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == 'bumiputera'}">
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
 			<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
 		</c:if>
 		
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == 'studyMaterial'}">
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA}">
 			<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" />
 		</c:if>
 		
