@@ -3786,7 +3786,7 @@ public class EvaluationBackingBean extends
 											.getMessage(
 													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
 													new String[] {
-															"Prepare Evaluation Submitted Successfully",
+															"Prepare Evaluation",
 															qt.getScQt()
 																	.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
