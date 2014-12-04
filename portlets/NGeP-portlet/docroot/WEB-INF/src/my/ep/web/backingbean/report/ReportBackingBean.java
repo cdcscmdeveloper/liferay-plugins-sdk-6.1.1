@@ -1829,7 +1829,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				try {
 					fileGenerateReport(reportFileNameJSP, constructedParamString);
 				} catch (IOException e) {
-					e.printStackTrace();
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.URL_NOT_CONNECTED));
 				}
 				//loadReportWithParamsString(constructedParamString);
 				//loadReport(generatedURL);	

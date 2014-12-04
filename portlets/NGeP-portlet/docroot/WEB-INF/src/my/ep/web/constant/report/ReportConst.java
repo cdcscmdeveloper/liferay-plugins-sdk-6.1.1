@@ -608,4 +608,5 @@ public class ReportConst {
 	
 	//SM - Report Parameter Key
 	public static final String PARAM_PAYMENT_ID = "pmntid";
+	public static final String URL_NOT_CONNECTED = "lbl.rpt.search.URL_NOT_CONNECTED";
 }
