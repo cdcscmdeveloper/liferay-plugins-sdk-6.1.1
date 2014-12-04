@@ -49,6 +49,10 @@ public class AddressUtils {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
+			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(smAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getPmState().getStateName());

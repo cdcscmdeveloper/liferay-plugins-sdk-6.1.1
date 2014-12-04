@@ -164,6 +164,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
 	private String[] bpmActions;
+	private String bpmTaskName;
 	private String selectedBpmAction;
 	private String taskId;
 	private String headerMsg;
@@ -2380,6 +2381,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisabledJustification(boolean disabledJustification) {
 		this.disabledJustification = disabledJustification;
+	}
+
+	public String getBpmTaskName() {
+		return bpmTaskName;
+	}
+
+	public void setBpmTaskName(String bpmTaskName) {
+		this.bpmTaskName = bpmTaskName;
 	}
 
 }

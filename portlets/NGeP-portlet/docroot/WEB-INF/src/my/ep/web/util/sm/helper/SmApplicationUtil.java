@@ -34,6 +34,7 @@ import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
+import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
@@ -74,6 +75,8 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
@@ -2382,6 +2385,31 @@ public class SmApplicationUtil {
 		} finally {
 			mofRegistrationSO = null;
 		}
+
+	}
+
+	public static SmAppl getLastApprovedApplictionForSupplier(
+			SmApplicationManagedBean managedBean) {
+		ISmApplRevisionSO revisionSO = null;
+		SmAppl appl = null;
+		try {
+			revisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISmApplRevisionSO.class);
+			SmApplRevisionReqDTO reqDto = new SmApplRevisionReqDTO();
+			if (managedBean.getSmAppl() != null
+					&& managedBean.getSmAppl().getApprovedSerFile() != null) {
+				reqDto.setDeSerFileName(managedBean.getSmAppl()
+						.getApprovedSerFile());
+				SmApplRevisionResDTO resDTO = revisionSO
+						.readApplicationHist(reqDto);
+				if (resDTO != null) {
+					appl = resDTO.getSmAppl();
+				}
+			}
+		} finally {
+			revisionSO = null;
+		}
+		return appl;
 
 	}
 

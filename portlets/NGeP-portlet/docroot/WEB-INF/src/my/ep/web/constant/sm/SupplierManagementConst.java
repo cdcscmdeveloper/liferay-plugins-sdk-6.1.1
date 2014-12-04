@@ -96,8 +96,8 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
-	
-	//Application Category Type
+
+	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
 	public static final String SM_APPL_CATEGORY_TYPE_SPECIAL = "S";
 
@@ -143,7 +143,7 @@ public class SupplierManagementConst {
 	public static final String BPM_INQUIRY = "INQUIRY";
 	public static final String BPM_SUBMIT = "SUBMIT";
 	public static final String BPM_VERIFY = "VERIFY";
-	
+
 	// Supporting Doc Type
 	public static String SUPPORTING_DOC_ONLINE = "S";
 	public static String SUPPORTING_DOC_OFFLINE = "H";
@@ -355,6 +355,13 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_EDU_DIPLOMA = "4";
 	public static final String SUPPLIER_EDU_CERTIFIED = "5";
 	public static final String SUPPLIER_EDU_NOTDEFINED = "6";
+
+	// PO BPM Task names
+	public static final String BPM_TASK_REVIEW_APPL_ESCALATED = "Review Application (Escalated)";
+	public static final String BPM_TASK_REVIEW_APPL = "Review Application";
+	public static final String BPM_TASK_REVIEW_APPL_SPLCAT = "Review Application (Special Category)";
+	public static final String BPM_TASK_VERIFY_APPL = "Verify Application";
+	public static final String BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE = "Review Site Visit After Approve";
 
 	// PM Cert body
 	public static final String PM_CERT_BODY_OTHERS = "LL";
@@ -712,9 +719,29 @@ public class SupplierManagementConst {
 	public String getSUPPORTING_DOC_ONLINE() {
 		return SUPPORTING_DOC_ONLINE;
 	}
-	
+
 	public String getSUPPORTING_DOC_OFFLINE() {
 		return SUPPORTING_DOC_OFFLINE;
+	}
+
+	public String getBPM_TASK_REVIEW_APPL_ESCALATED() {
+		return BPM_TASK_REVIEW_APPL_ESCALATED;
+	}
+
+	public String getBPM_TASK_REVIEW_APPL() {
+		return BPM_TASK_REVIEW_APPL;
+	}
+
+	public String getBPM_TASK_REVIEW_APPL_SPLCAT() {
+		return BPM_TASK_REVIEW_APPL_SPLCAT;
+	}
+
+	public String getBPM_TASK_VERIFY_APPL() {
+		return BPM_TASK_VERIFY_APPL;
+	}
+
+	public String getBPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE() {
+		return BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE;
 	}
 
 }
