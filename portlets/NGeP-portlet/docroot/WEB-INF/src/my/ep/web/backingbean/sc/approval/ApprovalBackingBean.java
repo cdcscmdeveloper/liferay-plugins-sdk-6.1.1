@@ -368,20 +368,23 @@ public class ApprovalBackingBean extends
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_PCB_APPROVAL);
+			Date clsDate = null;
 			if (null != this.getManagedBean().getQt().getLatestBsvDate()) {
-				getManagedBean().getQt().setClosingDate(
-						DateUtils.addDays(this.getManagedBean().getQt()
-								.getLatestBsvDate(), this.getManagedBean()
-								.getQt().getPublishPeriod()));
-			}
 
-			if (null != getManagedBean().getQt().getClosingDate()) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(getManagedBean().getQt().getClosingDate());
-				cal.add(Calendar.DATE, getManagedBean().getQt()
-						.getQtValidityPeriod());
-				getManagedBean().setProposalValidityUntil(cal.getTime());
+				clsDate = DateUtils.addDays(this.getManagedBean().getQt()
+						.getLatestBsvDate(), this.getManagedBean().getQt()
+						.getPublishPeriod());
+
+			} else {
+				clsDate = DateUtils.addDays(this.getManagedBean().getQt()
+						.getPublishDate(), this.getManagedBean().getQt()
+						.getPublishPeriod());
 			}
+			this.getManagedBean().getQt().setClosingDate(clsDate);
+			getManagedBean().setProposalValidityUntil(
+					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
+							.getQtValidityPeriod()));
+
 		}
 
 		scQtApproval
@@ -416,20 +419,18 @@ public class ApprovalBackingBean extends
 					}
 				}
 			}
-			
-			
-		} else 	if ("Publication Approval".equalsIgnoreCase(this.getManagedBean()
-					.getApprovalType())) {
 
-				detailSO.validateScheduleDetails(reqDTO);
+		} else if ("Publication Approval".equalsIgnoreCase(this
+				.getManagedBean().getApprovalType())) {
 
-				/*
-				 * if (this.getManagedBean().getQt().isBsvRequired()) {
-				 * reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				 * detailSO.validatePublicationBsvDetails(reqDTO); }
-				 */
-			
-			
+			detailSO.validateScheduleDetails(reqDTO);
+
+			/*
+			 * if (this.getManagedBean().getQt().isBsvRequired()) {
+			 * reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			 * detailSO.validatePublicationBsvDetails(reqDTO); }
+			 */
+
 		}
 		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 	}
@@ -550,7 +551,7 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setQtDetail(qt);
 			} else {
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-
+				qtReqDTO.setApprovalFlow(true);
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
