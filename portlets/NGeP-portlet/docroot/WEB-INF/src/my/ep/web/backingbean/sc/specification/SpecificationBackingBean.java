@@ -6350,106 +6350,108 @@ public class SpecificationBackingBean extends
 			String startMonth = "";
 			String endMonth = "";
 			String endToMonth = "";
-			if(null!=checkListValue.getFromDate() && null!=checkListValue.getToDate()){
-			String fromdate = dateFormat.format(checkListValue.getFromDate());
-			String todate = dateFormat.format(checkListValue.getToDate());
-			String startdate = fromdate.substring(3, 5);
-			String startYear = fromdate.substring(6, fromdate.length());
-			String enddate = todate.substring(3, 5);
-			String endYear = todate.substring(6, todate.length());
+			if (null != checkListValue.getFromDate()
+					&& null != checkListValue.getToDate()) {
+				String fromdate = dateFormat.format(checkListValue
+						.getFromDate());
+				String todate = dateFormat.format(checkListValue.getToDate());
+				String startdate = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
 
-			if (startdate.equalsIgnoreCase("01")) {
-				startMonth = "0";
-			}
-			if (startdate.equalsIgnoreCase("02")) {
-				startMonth = "1";
-			}
-			if (startdate.equalsIgnoreCase("03")) {
-				startMonth = "2";
-			}
-			if (startdate.equalsIgnoreCase("04")) {
-				startMonth = "3";
-			}
-			if (startdate.equalsIgnoreCase("05")) {
-				startMonth = "4";
-			}
-			if (startdate.equalsIgnoreCase("06")) {
-				startMonth = "5";
-			}
+				if (startdate.equalsIgnoreCase("01")) {
+					startMonth = "0";
+				}
+				if (startdate.equalsIgnoreCase("02")) {
+					startMonth = "1";
+				}
+				if (startdate.equalsIgnoreCase("03")) {
+					startMonth = "2";
+				}
+				if (startdate.equalsIgnoreCase("04")) {
+					startMonth = "3";
+				}
+				if (startdate.equalsIgnoreCase("05")) {
+					startMonth = "4";
+				}
+				if (startdate.equalsIgnoreCase("06")) {
+					startMonth = "5";
+				}
 
-			if (startdate.equalsIgnoreCase("07")) {
-				startMonth = "6";
-			}
-			if (startdate.equalsIgnoreCase("08")) {
-				startMonth = "7";
-			}
-			if (startdate.equalsIgnoreCase("09")) {
-				startMonth = "8";
-			}
-			if (startdate.equalsIgnoreCase("10")) {
-				startMonth = "9";
-			}
-			if (startdate.equalsIgnoreCase("11")) {
-				startMonth = "10";
-			}
-			if (startdate.equalsIgnoreCase("12")) {
-				startMonth = "11";
-			}
+				if (startdate.equalsIgnoreCase("07")) {
+					startMonth = "6";
+				}
+				if (startdate.equalsIgnoreCase("08")) {
+					startMonth = "7";
+				}
+				if (startdate.equalsIgnoreCase("09")) {
+					startMonth = "8";
+				}
+				if (startdate.equalsIgnoreCase("10")) {
+					startMonth = "9";
+				}
+				if (startdate.equalsIgnoreCase("11")) {
+					startMonth = "10";
+				}
+				if (startdate.equalsIgnoreCase("12")) {
+					startMonth = "11";
+				}
 
-			if (enddate.equalsIgnoreCase("01")) {
-				endToMonth = "0";
-				endMonth = "January";
-			}
-			if (enddate.equalsIgnoreCase("02")) {
-				endToMonth = "1";
-				endMonth = "February";
-			}
-			if (enddate.equalsIgnoreCase("03")) {
-				endToMonth = "2";
-				endMonth = "March";
-			}
-			if (enddate.equalsIgnoreCase("04")) {
-				endToMonth = "3";
-				endMonth = "April";
-			}
-			if (enddate.equalsIgnoreCase("05")) {
-				endToMonth = "4";
-				endMonth = "May";
-			}
-			if (enddate.equalsIgnoreCase("06")) {
-				endToMonth = "5";
-				endMonth = "June";
-			}
+				if (enddate.equalsIgnoreCase("01")) {
+					endToMonth = "0";
+					endMonth = "January";
+				}
+				if (enddate.equalsIgnoreCase("02")) {
+					endToMonth = "1";
+					endMonth = "February";
+				}
+				if (enddate.equalsIgnoreCase("03")) {
+					endToMonth = "2";
+					endMonth = "March";
+				}
+				if (enddate.equalsIgnoreCase("04")) {
+					endToMonth = "3";
+					endMonth = "April";
+				}
+				if (enddate.equalsIgnoreCase("05")) {
+					endToMonth = "4";
+					endMonth = "May";
+				}
+				if (enddate.equalsIgnoreCase("06")) {
+					endToMonth = "5";
+					endMonth = "June";
+				}
 
-			if (enddate.equalsIgnoreCase("07")) {
-				endToMonth = "6";
-				endMonth = "July";
-			}
-			if (enddate.equalsIgnoreCase("08")) {
-				endToMonth = "7";
-				endMonth = "August";
-			}
-			if (enddate.equalsIgnoreCase("09")) {
-				endToMonth = "8";
-				endMonth = "September";
-			}
-			if (enddate.equalsIgnoreCase("10")) {
-				endToMonth = "9";
-				endMonth = "October";
-			}
-			if (enddate.equalsIgnoreCase("11")) {
-				endToMonth = "10";
-				endMonth = "November";
-			}
-			if (enddate.equalsIgnoreCase("12")) {
-				endToMonth = "11";
-				endMonth = "December";
-			}
-			this.getManagedBean().setFromMonth(startMonth);
-			this.getManagedBean().setBankstmntTomonth(endMonth);
-			this.getManagedBean().setStartYear(startYear);
-			this.getManagedBean().setEndYear(endYear);
-			this.getManagedBean().setToMonth(endToMonth);
+				if (enddate.equalsIgnoreCase("07")) {
+					endToMonth = "6";
+					endMonth = "July";
+				}
+				if (enddate.equalsIgnoreCase("08")) {
+					endToMonth = "7";
+					endMonth = "August";
+				}
+				if (enddate.equalsIgnoreCase("09")) {
+					endToMonth = "8";
+					endMonth = "September";
+				}
+				if (enddate.equalsIgnoreCase("10")) {
+					endToMonth = "9";
+					endMonth = "October";
+				}
+				if (enddate.equalsIgnoreCase("11")) {
+					endToMonth = "10";
+					endMonth = "November";
+				}
+				if (enddate.equalsIgnoreCase("12")) {
+					endToMonth = "11";
+					endMonth = "December";
+				}
+				this.getManagedBean().setFromMonth(startMonth);
+				this.getManagedBean().setBankstmntTomonth(endMonth);
+				this.getManagedBean().setStartYear(startYear);
+				this.getManagedBean().setEndYear(endYear);
+				this.getManagedBean().setToMonth(endToMonth);
 			}
 		}
 	}
@@ -11472,6 +11474,10 @@ public class SpecificationBackingBean extends
 			qtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
+			TemplateSpecHelper.getInstance().updateItemWeightageReq(
+					qtCheckList.getScQtDoc().getTplSpecMaster(),
+					qtCheckList.getScQtDoc().getTplSpecMaster()
+							.getTplSpecQuestions());
 			qtCheckList.getScQtDoc().getTplSpecMaster().setScoringReq(true);
 
 			updatedCheckLists.add(scQtCheckList);
