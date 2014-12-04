@@ -272,7 +272,7 @@
 		        </p:column>
 			
 				<p:column style="width:15%;"  headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
-					rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+					rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 					<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
 			            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
 			           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />

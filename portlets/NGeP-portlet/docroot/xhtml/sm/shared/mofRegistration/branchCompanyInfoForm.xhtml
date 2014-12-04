@@ -49,7 +49,8 @@
 			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
-				rowKey="#{branchBean}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				rowKey="#{branchBean}" rowIndexVar="index"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="dt" />
 
 				<p:column selectionMode="multiple" width="5%" />
@@ -60,7 +61,7 @@
 
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
 					style="width :50%;white-space : normal">
-					<p:outputLabel
+					<h:outputText
 						value="#{backingBean.getFullAddress(branchBean.smAddress)}"
 						style="float : left" />
 				</p:column>
@@ -95,12 +96,12 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200" id="poBranchRemarkId"
-								value="#{backingBean.managedBean.poSecReview.branchRemark}" >
-							 <f:validateLength maximum="200" />
-						</p:inputTextarea>
-						<p:message id="poBranchRemarkMsg" for="poBranchRemarkId"
-						showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200" id="poBranchRemarkId"
+								value="#{backingBean.managedBean.poSecReview.branchRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="poBranchRemarkMsg" for="poBranchRemarkId"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -110,18 +111,17 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41" maxlength="200" id="poBranchRemark2Id"
-								value="#{backingBean.managedBean.poSecReview.branchRemark}" >
+								value="#{backingBean.managedBean.poSecReview.branchRemark}">
 								<f:validateLength maximum="200" />
-						</p:inputTextarea>
-						<p:message id="poBranchRemark2Msg" for="poBranchRemark2Id"
-						showSummary="true" showDetail="false" display="icon" /></td>
+							</p:inputTextarea> <p:message id="poBranchRemark2Msg" for="poBranchRemark2Id"
+								showSummary="true" showDetail="false" display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200" id="apprBranchRemarkId"
-								value="#{backingBean.managedBean.apprvrSecReview.branchRemark}" >
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200" id="apprBranchRemarkId"
+								value="#{backingBean.managedBean.apprvrSecReview.branchRemark}">
 								<f:validateLength maximum="200" />
-						</p:inputTextarea>
-						<p:message id="apprBranchRemarkMsg" for="apprBranchRemarkId"
-						showSummary="true" showDetail="false" display="icon" /></td>
+							</p:inputTextarea> <p:message id="apprBranchRemarkMsg" for="apprBranchRemarkId"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>

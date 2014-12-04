@@ -1713,6 +1713,7 @@ public class SmApplicationBackingBean extends
 					"assocDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
 	}
 
@@ -2535,6 +2536,7 @@ public class SmApplicationBackingBean extends
 					"smFacilityFactorDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("factoryDialog.hide()");
 
 	}
@@ -2624,6 +2626,7 @@ public class SmApplicationBackingBean extends
 					"smFacilityDockDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("dockYardDialog.hide()");
 
 	}
@@ -2711,6 +2714,7 @@ public class SmApplicationBackingBean extends
 					"smWorkShopDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
 
@@ -2796,6 +2800,7 @@ public class SmApplicationBackingBean extends
 					"smFacStoreDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		saveOrUpdateAppl();
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
 
@@ -4874,6 +4879,7 @@ public class SmApplicationBackingBean extends
 			reqDTO.setOutcome(res);
 			reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
 					.getSupplierId());
+			reqDTO.setBpmTaskName(getManagedBean().getBpmTaskName());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setLocation(getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -5031,6 +5037,13 @@ public class SmApplicationBackingBean extends
 						// new FacesScopes().getUserSessionBean()
 						// .getUserId(), getManagedBean()
 						// .getReasonDesc());
+						if (getManagedBean()
+								.getBpmTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+							reqDTO.setLastApprovedAppl(SmApplicationUtil
+									.getLastApprovedApplictionForSupplier(getManagedBean()));
+						}
 						msgConst = MessageConst.INFO_700008;
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						msgConst = MessageConst.INFO_700014;

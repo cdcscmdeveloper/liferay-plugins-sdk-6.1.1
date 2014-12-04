@@ -224,13 +224,17 @@ public class CommonApplBackingBean extends
 			}
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				"Review Application (Escalated)")
-				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")
+				SupplierManagementConst.BPM_TASK_REVIEW_APPL_ESCALATED)
 				|| resDTO.getTaskName().equalsIgnoreCase(
-						"Review Application (Special Category)")
-				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")
+						SupplierManagementConst.BPM_TASK_REVIEW_APPL)
 				|| resDTO.getTaskName().equalsIgnoreCase(
-						"Review Site Visit After Approve")) {
+						SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT)
+				|| resDTO.getTaskName().equalsIgnoreCase(
+						SupplierManagementConst.BPM_TASK_VERIFY_APPL)
+				|| resDTO
+						.getTaskName()
+						.equalsIgnoreCase(
+								SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 			log.info(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName()
@@ -249,27 +253,35 @@ public class CommonApplBackingBean extends
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				smApplBB.getManagedBean();
-				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SupplierManagementConst.BPM_TASK_REVIEW_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT)
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Application (Special Category)")
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Verify Application")
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Site Visit After Approve")) {
+								SupplierManagementConst.BPM_TASK_VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						"Review Application (Escalated)")) {
+						SupplierManagementConst.BPM_TASK_REVIEW_APPL_ESCALATED)) {
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
 				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Site Visit After Approve")) {
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SupplierManagementConst.BPM_TASK_VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else {
@@ -280,6 +292,7 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setSupplierToPOList(
 							smObj.getSupplierList());
 				}
+				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
@@ -302,33 +315,42 @@ public class CommonApplBackingBean extends
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				smApplBB.getManagedBean();
-				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SupplierManagementConst.BPM_TASK_REVIEW_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT)
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Application (Special Category)")
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Verify Application")
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Site Visit After Approve")) {
+								SupplierManagementConst.BPM_TASK_VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						"Review Application (Escalated)")) {
+						SupplierManagementConst.BPM_TASK_REVIEW_APPL_ESCALATED)) {
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
 				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								"Review Site Visit After Approve")) {
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SupplierManagementConst.BPM_TASK_VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else {
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
+				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
 				if (smObj.getSupplierList() != null) {
 					smApplBB.getManagedBean().setSupplierToPOList(
 							smObj.getSupplierList());
