@@ -344,6 +344,34 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	private void freqScheduleValidation(ScQtSchedule schedule) {
+		debugLogger("frequencyScheduleValidation");
+
+	    ScLoa loa = 	getManagedBean().getScLoa();
+	    
+	    Calendar startDate = Calendar.getInstance();
+	    startDate.set(Integer.valueOf(schedule.getStartYear()),Integer.valueOf(schedule.getStartMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractEffDate())), 0,0,0);
+	    
+	    Calendar EndDate = Calendar.getInstance();
+	    EndDate.set(Integer.valueOf(schedule.getEndYear()),Integer.valueOf(schedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractExpDate())),0,0,0);
+	    
+	    if (startDate.after(EndDate)) {
+	    	throw new EpException("Start date must be before end date");
+		}
+	    
+		if (EndDate.before(startDate)) {
+			throw new EpException("End date must be after start date");
+		}
+		
+		if(!(startDate.getTime().after(loa.getContractEffDate()) && (startDate.getTime().before(loa.getContractExpDate())))){
+			throw new EpException("Start date should be in contract validity period.");
+        }
+		
+		if(!(EndDate.getTime().after(loa.getContractEffDate()) && (EndDate.getTime().before(loa.getContractExpDate())))){
+			throw new EpException("End date should be in contract validity period.");
+        }
+	}
+	
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
 		System.out.println("===== ScLoaLoiItem : "
@@ -2253,18 +2281,55 @@ public class LOADetailBackingBean extends
 	}
 
 	public List<SelectItem> getYearsDisplayDtls() {
-
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		ScLoa loa = 	getManagedBean().getScLoa();
 
 		try {
-			int year = Calendar.getInstance().get(Calendar.YEAR);
+			//int year = Calendar.getInstance().get(Calendar.YEAR);
+			Calendar calendar = Calendar.getInstance(); 
+			int effYear = 0;
+			int expYear = 0;
+			if(loa != null){
 
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			selectItems.add(new SelectItem(year, String.valueOf(year)));
-			for (int i = 0; i < 20; i++) {
-				year = year + 1;
-				selectItems.add(new SelectItem(year, String.valueOf(year)));
+				if(loa.getContractEffDate() != null){
+					calendar.setTime(loa.getContractEffDate());  
+					effYear = calendar.get(Calendar.YEAR);
+				}
+
+				if(loa.getContractExpDate() != null){
+					calendar.setTime(loa.getContractExpDate());  
+					expYear = calendar.get(Calendar.YEAR);
+				}
+
+				int noOfYears = expYear - effYear;
+				selectItems.add(new SelectItem(null, "--Select One--"));
+
+				for (int i = 0; i <= noOfYears +1; i++) {
+
+					if(i == 0){
+						selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+					}
+					
+					if(noOfYears == 0){
+						selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+						break;
+					}
+					effYear = effYear+1;
+					
+					if(effYear == expYear){
+						selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+						break;
+					}
+					
+					selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+				}
 			}
+
+			/*
+			 * selectItems.add(new SelectItem(year, String.valueOf(year))); for
+			 * (int i = 0; i < 20; i++) { year = year + 1; selectItems.add(new
+			 * SelectItem(year, String.valueOf(year))); }
+			 */
 
 			this.getManagedBean().setYearsDisplayList(selectItems);
 		} finally {
@@ -2313,7 +2378,7 @@ public class LOADetailBackingBean extends
 
 		int index = freqSchedule.indexOf(schedule);
 		freqSchedule.set(index, schedule);
-
+		freqScheduleValidation(schedule);
 		this.getManagedBean().setScheduleList(freqSchedule);
 	}
 
