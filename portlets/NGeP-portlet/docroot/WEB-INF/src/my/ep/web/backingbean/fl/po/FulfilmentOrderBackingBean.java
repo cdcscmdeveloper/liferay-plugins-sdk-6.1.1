@@ -296,8 +296,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				if(getManagedBean().getFlRequest().getCtContract().isFactored()){
-					getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId();
-					getCrSelectedFactoringCompDtl(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+					if(getManagedBean().getFulfilmentOrder().isFactored()){
+						getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId();
+						getCrSelectedFactoringCompDtl(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+					}else{
+						getManagedBean().getFlRequest().getCtContract().setFactored(false);
+					}
+					
 				}
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
