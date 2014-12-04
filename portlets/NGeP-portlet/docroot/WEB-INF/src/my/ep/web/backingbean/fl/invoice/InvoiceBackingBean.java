@@ -200,7 +200,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
-			log.info("######## SLA end : "+System.currentTimeMillis()+" : "+new Date());
+			log.info("######## INVOICE SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if(resDTO.isSuccessful()) {
 				String messagePrefix = "";
 				String messageId = MessageConst.INFO_700026;
@@ -1034,7 +1034,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		log.info("######## SLA start : "+System.currentTimeMillis()+" : "+new Date());
+		log.info("######## INVOICE SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
