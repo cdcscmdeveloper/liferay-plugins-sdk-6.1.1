@@ -40,7 +40,7 @@
 						<p:selectOneMenu id="startMonth" style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.spec.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
+							<p:ajax process="@all" event="change" partialSubmit="true" update="@form" 
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />						
 						</p:selectOneMenu>
 					</p:column>
@@ -50,7 +50,7 @@
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
 							style="width:100px;" required="true" label="#{lbl['lbl.sc.spec.freq.schedule.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"
+							<p:ajax process="@all" event="change" partialSubmit="true" update="@form"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}" />
 						</p:selectOneMenu>
 					</p:column>
@@ -61,7 +61,7 @@
 							value="#{frequency.endMonth}" label="#{lbl['lbl.sc.spec.end.month']}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails"
+							<p:ajax event="change" update="@form" process="@all"
 								partialSubmit="true"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
@@ -72,7 +72,7 @@
 						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" disabled="#{!isEditableStatus}"
 							required="true" label="#{lbl['lbl.sc.spec.freq.schedule.end.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails"
+							<p:ajax event="change" update="@form" process="@all"
 								partialSubmit="true"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
