@@ -2218,12 +2218,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					// supplier list
 					if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
-						simpleQuoteBackingBean.getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
-					}
+						// panel supplier
+						if(scQuote.getPanelItem() != null){
+							simpleQuoteBackingBean.getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+						} else {
+							  if(scQuote.getProcurementType() != null &&  scQuote.getProcurementType().getParameterCode()
+									.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+								// govt supplers
+								simpleQuoteBackingBean.getManagedBean().setGovtSellers(scQuote.getScQuoteSuppliers());
 
-					// panel supplier
-					if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
-						simpleQuoteBackingBean.getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+							 } else { // supplier list
+								  simpleQuoteBackingBean.getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
+							}
+						}
 					}
 
 					// status
