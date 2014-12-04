@@ -40,7 +40,7 @@
 				</f:facet>
 				<h:outputText value="#{technongovt.clientName}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea  id="clientName" value="#{technongovt.clientName}"
+				<p:inputTextarea id="clientName" value="#{technongovt.clientName}"
 					rows="3" cols="17" maxlength="50" required="true"
 					label="#{lbl['lbl.sc.sp.agencyname']}"
 					rendered="#{technongovt.brandNew eq true}">
@@ -57,7 +57,7 @@
 				</f:facet>
 				<h:outputText value="#{technongovt.contractTitle}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea id="contractTitle" 
+				<p:inputTextarea id="contractTitle"
 					value="#{technongovt.contractTitle}" rows="3" cols="22"
 					maxlength="1000" required="true"
 					label="#{lbl['lbl.sc.sp.contracttitle']}"
@@ -80,6 +80,7 @@
 					label="#{lbl['lbl.sc.sp.contractno']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true"
+						listener="#{supplierProposalDetailBackingBean.validateContractNo(rowIndex)}"
 						update="@this,contractNoMsg" />
 				</p:inputText>
 				<p:message id="contractNoMsg" for="contractNo" display="icon" />
@@ -158,13 +159,15 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" partialSubmit="true" 
-				process="@all" rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}" partialSubmit="true"
+				process="@all"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
 				update="@([id$=nonFedExpPanel])" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}" partialSubmit="true"
-				process="@this" icon="ui-icon-delete" rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				process="@this" icon="ui-icon-delete"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				update="@([id$=nonFedExpPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
 
