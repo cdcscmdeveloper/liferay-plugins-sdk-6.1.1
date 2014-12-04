@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.invoice;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +200,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
+			log.info("######## SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if(resDTO.isSuccessful()) {
 				String messagePrefix = "";
 				String messageId = MessageConst.INFO_700026;
@@ -1032,7 +1034,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		
+		log.info("######## SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
