@@ -647,6 +647,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ScRequestNote requestNote = null;
 		String [] outcomes = getManagedBean().getOutComes();
 		String taskId  = getManagedBean().getTaskId();
+		 Long defaultCountryId = getManagedBean().getDefaultCountryId();
 		try {
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
@@ -844,6 +845,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				    quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
 		    		getManagedBean().setOutComes(outcomes);
 		    		getManagedBean().setTaskId(taskId);
+		    		getManagedBean().setDefaultCountryId(defaultCountryId);
 					reloadSimpleQuote(quoteResDTO.getQuoteBidDtl());
 					
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
