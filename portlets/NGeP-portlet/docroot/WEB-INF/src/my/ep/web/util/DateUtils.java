@@ -34,6 +34,17 @@ public class DateUtils {
 		return year.substring(2);
 	}
 	
+	/**
+	 * @ param Date date
+	 * @return days of month
+	 */
+	public	static	String	getDays(Date date){
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(date);
+		String	days	=	String.valueOf(c1.get(Calendar.DAY_OF_MONTH));
+		return days;
+	}
+	
 	/*
 	 * Getting a java.util.Date Object without time
 	 */
