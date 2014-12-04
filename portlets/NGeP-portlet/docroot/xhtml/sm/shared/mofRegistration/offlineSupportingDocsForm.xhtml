@@ -133,6 +133,17 @@
 					<h:outputText value="#{table.pmDocument.docName}"
 						style="float: left;white-space: normal;" />
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.btn.download']}"
+					style="width : 95%;">
+					<p:commandLink rendered="#{table.pmDocument.download}"
+						action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{backingBean.file}" />
+						<p:graphicImage value="/css/images/design/download.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>				
 
 
 			</p:dataTable>
