@@ -61,7 +61,7 @@
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
 				style="width:#{isPendingNegotiation ? '45%' : '80%'}">
 				<h:outputText
-					value="#{negoTerm.pmTerm.termDesc}"
+					value="#{negoTerm.termDesc}"
 					rendered="#{!empty negoTerm.pmTerm}" />
 
 				<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"

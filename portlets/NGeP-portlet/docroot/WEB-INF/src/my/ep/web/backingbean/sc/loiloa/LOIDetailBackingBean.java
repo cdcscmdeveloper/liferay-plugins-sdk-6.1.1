@@ -1916,8 +1916,13 @@ public class LOIDetailBackingBean extends
 			userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			
+			Long createdBy = scLoi.getCreatedBy();
+			if (createdBy == null) {
+				createdBy = new FacesScopes().getUserSessionBean().getUserId();
+			}
+			
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(scLoi.getCreatedBy());
+			userReqDTO.setUserId(createdBy);
 			PmUser createdByUser = userSO.retrieveUserByUserId(userReqDTO)
 					.getPmUser();
 			
@@ -2005,17 +2010,9 @@ public class LOIDetailBackingBean extends
 			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
 				if(!loiTerm.isSelected()){
 					removeList.add(loiTerm);
-				}else{
-					if(loiTerm.getPmTerm() != null){
-						loiTerm.setTermDesc(loiTerm.getPmTerm().getTermDesc());
-					}
 				}
 			}
 			scLoi.getScNegoTerms().removeAll(removeList);
-		}else{
-			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {			
-				loiTerm.setTermDesc(loiTerm.getTermDesc());				
-			}
 		}
 		
 		
