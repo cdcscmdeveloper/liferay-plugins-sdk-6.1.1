@@ -165,7 +165,7 @@ public class LOIDetailBackingBean extends
 				awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 				awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
 			}
-			else if (new FacesScopes().hasRoleUser(RoleCode.SC_SECRETARY.value())){
+			else {
 				awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
 				awardDataType.setSecretary(new FacesScopes().getUserSessionBean().getLoginId());
 			}
