@@ -36,7 +36,9 @@
 
 
 		</div>
-		<p:spacer height="175"></p:spacer>
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
 		<p:panel>
 			<table>
 				<tr>
@@ -52,8 +54,8 @@
 			toggleable="true">
 			<table>
 				<tr>
-					<td><p:outputLabel value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel>
-						<ui:fragment
+					<td style="width: 10%;"><p:outputLabel
+							value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel> <ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</ui:fragment></td>
@@ -76,10 +78,7 @@
 						</p:selectOneMenu></td>
 
 					<td style="width: 35%"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel> <ui:fragment
-							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</ui:fragment></td>
+							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
 
 							<p:inputText readonly="true"
