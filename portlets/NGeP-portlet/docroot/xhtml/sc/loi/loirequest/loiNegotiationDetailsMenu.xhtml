@@ -12,23 +12,23 @@
 			selection="#{lOIDetailBackingBean.managedBean.selectedNegoLocationList}"
 			rows="10" rowKey="#{negoloc}" rowIndexVar="rowIndex">
 			<ac:paginator for="negoloctbl" />
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{isEditableStatus}" />
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.location']}"
 				style="width:40%">
-				<p:inputText value="#{negoloc.negoLocation}" size="30" disabled="#{afterNegotiation}"/>
+				<p:inputText value="#{negoloc.negoLocation}" size="30" disabled="#{!isEditableStatus or afterNegotiation}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.date']}"
 				style="width:10%">
-				<p:calendar id="date" disabled="#{afterNegotiation}"
+				<p:calendar id="date" disabled="#{!isEditableStatus or afterNegotiation}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 					size="12" value="#{negoloc.negoDate}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.remarks']}"
 				style="width:40%">
-				<p:inputText value="#{negoloc.remark}" size="30" disabled="#{afterNegotiation}"/>
+				<p:inputText value="#{negoloc.remark}" size="30" disabled="#{!isEditableStatus or afterNegotiation}"/>
 			</p:column>
 
 		</p:dataTable>
@@ -38,11 +38,11 @@
 				process="@this,negoloctbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationLocation}"
 				update="negoloctbl" icon="ui-icon-add" 
-				rendered="#{!afterNegotiation}"/>
+				rendered="#{!afterNegotiation and isEditableStatus}"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
 			    action="#{lOIDetailBackingBean.deleteNegoLocations}" 
-			    update="negoloctbl" rendered="#{!afterNegotiation}"
+			    update="negoloctbl" rendered="#{!afterNegotiation and isEditableStatus}"
 				process="@this negoloctbl" partialSubmit="true" icon="ui-icon-delete" />
 		</div>
 
@@ -56,7 +56,8 @@
 		    rowKey="#{negoTerm}" rowIndexVar="rowIndex">
 		
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!empty negoTerm.pmTerm}" />
+				disabledSelection="#{!empty negoTerm.pmTerm}"
+				rendered="#{isEditableStatus}" />
             #{negoTerm.brandNew}-#{negoTerm.loiTermId ne null}
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
 				style="width:#{isPendingNegotiation ? '45%' : '80%'}">
@@ -65,7 +66,7 @@
 					rendered="#{!empty negoTerm.pmTerm}" />
 
 				<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"
-					value="#{negoTerm.termDesc}" autoResize="false" disabled="#{afterNegotiation}"
+					value="#{negoTerm.termDesc}" autoResize="false" disabled="#{!isEditableStatus or afterNegotiation}"
 					rendered="#{empty negoTerm.pmTerm}" />
 
 			</p:column>
@@ -78,7 +79,7 @@
 				</p:inputTextarea>
 			</p:column>
 
-			<p:column headerText="Negotiate" rendered="#{not isPendingNegotiation}">
+			<p:column headerText="Negotiate" rendered="#{isPendingSubmissionStatus}">
 				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{empty negoTerm.pmTerm}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
@@ -92,9 +93,9 @@
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 				process="@this negoTermstbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationTerm}"
-				update="negoTermstbl" icon="ui-icon-add" rendered="#{!afterNegotiation}"/>
+				update="negoTermstbl" icon="ui-icon-add" rendered="#{!afterNegotiation and isEditableStatus}"/>
 
-			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}" rendered="#{!afterNegotiation}"
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}" rendered="#{!afterNegotiation and isEditableStatus}"
 			   action="#{lOIDetailBackingBean.deleteNegoTerm}" update="negoTermstbl"
 				process="@this negoTermstbl" partialSubmit="true" icon="ui-icon-delete" />
 		</div>
