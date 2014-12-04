@@ -40,7 +40,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" /></td>
 				<td><p:inputTextarea id="delAddrText" cols="32" rows="5"
-						value="test" style=" margin-bottom:5px;" disabled="true" /></td>
+						value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.supplierAddress)}" style=" margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -94,7 +94,7 @@
 				<td style="width: 164px;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.file.no']}" /></td>
 				<td><p:inputText disabled="true"
-						value="#{lOIDetailBackingBean.managedBean.qt.fileNo}" size="30" />
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fileNo}" size="30" />
 					<p:spacer width="2px"></p:spacer> <p:inputText disabled="true"
 						size="4"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.fileExtnNo}" /></td>

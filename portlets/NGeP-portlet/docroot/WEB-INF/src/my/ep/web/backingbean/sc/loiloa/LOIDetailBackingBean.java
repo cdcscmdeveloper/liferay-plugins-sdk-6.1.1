@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
@@ -106,11 +108,13 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.type.sc.TermType;
 import my.ep.util.MessageUtils;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -385,8 +389,8 @@ public class LOIDetailBackingBean extends
 						LoiLoaBean loiLoaBean = new LoiLoaBean();
 						loiLoaBean.setScLoi(scLoi);
 						loiLoaBean.setLoiLoaType("LOI");
-						loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(
-								scLoi.getScLoiWorkFlowStatuses(), null));
+						loiLoaBean.setLoiLoaStatus(getStatusDescById(
+								scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()));
 						loiloaBeans.add(loiLoaBean);
 					}
 				}
@@ -413,26 +417,6 @@ public class LOIDetailBackingBean extends
 			}
 		} catch (Exception ex) {
 			handleException(ex);
-		}
-	}
-
-	/**
-	 * to get ptj drop down Listing
-	 */
-	private void populateUserMinistryList() {
-		// to get ptj
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null) {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(user.getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			if (resDTO.getUserOrgList() != null
-					&& resDTO.getUserOrgList().size() > 0) {
-				getManagedBean().setPmOrgProfile(
-						resDTO.getUserOrgList().get(0).getPmOrgProfile());
-			}
 		}
 	}
 
@@ -1076,7 +1060,7 @@ public class LOIDetailBackingBean extends
 			approverUser = scLoiApproval.getApprover();
 
 			if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoi
-					.getPmStatus().getStatusId().longValue())) {
+					.getScWorkFlowStatus().getPmStatus().getStatusId().longValue())) {
 				getManagedBean().setScLoiApproval(scLoi.getScLoiApproval());
 			}
 		}
@@ -1103,7 +1087,6 @@ public class LOIDetailBackingBean extends
 		// status
 		getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
 
-		populateUserMinistryList();
 //		initializeRemarks(new ScLoi());
 		// getApproverNames();
 
@@ -1119,7 +1102,7 @@ public class LOIDetailBackingBean extends
 		scLoi.setFileExtnNo("001");
 
 		
-		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getPmStatus().getStatusId())){
+		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())){
 		
 			
 			// Fulfilment Schedule
@@ -1492,7 +1475,7 @@ public class LOIDetailBackingBean extends
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 
 			parseLOIDetails(scLoi, "SAVE");
 
@@ -1656,7 +1639,7 @@ public class LOIDetailBackingBean extends
 					.getPayLoadData();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			parseLOIDetails(scLoi, outcome);
 
@@ -1751,7 +1734,7 @@ public class LOIDetailBackingBean extends
 					.getPayLoadData();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 			
 			parseLOIDetails(scLoi, outcome);
 		
@@ -1818,7 +1801,7 @@ public class LOIDetailBackingBean extends
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
-		generateLoiLetterFromVelocityToPdf((ScAttachment) pbAttachment);
+		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(), (ScAttachment) pbAttachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
@@ -1853,12 +1836,105 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
-	private void generateLoiLetterFromVelocityToPdf(ScAttachment attachment)
+	private void generateLoiLetterFromVelocityToPdf(ScLoi scLoi, ScAttachment attachment)
 			throws Exception {
 		attachment.setFileName("Loi Letter.pdf");
 		populateAttachmentDetails(attachment);
+		
+		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils.getDisplayDateTimeFormat(
+								CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat numberDF = new DecimalFormat(
+				commonUtils.getDisplayNumberFormat(
+						CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils.getDisplayNumberFormat(
+						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
+		
+		context.put("dateSDF", dateSDF);
+		context.put("numberDF", numberDF);
+		context.put("amountDF", amountDF);
+		
+		context.put("fileNo", scLoiLoa.getFileNo());
+		
+		String fileExtnNo = scLoi.getFileExtnNo();
+		if (fileExtnNo == null) {
+			fileExtnNo = "&lt;&lt;3-digits&gt;&gt;";
+		}
+		context.put("fileExtnNo", fileExtnNo);
+		
+		context.put("loiNo", scLoi.getLoiNo());
 
+		String supplierName = scLoiLoa.getSupplierName();
+		supplierName = supplierName.replaceAll("&", "&#38;");
+		context.put("supplierName", supplierName);
+		
+
+		String supplierAddress = null;
+		if (scLoi.getSupplierAddress() != null) {
+			supplierAddress = getFullAddress(scLoi.getSupplierAddress());
+			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+		} else {
+			supplierAddress = "&lt;&lt;Address&gt;&gt;";
+		}
+		context.put("supplierAddress", supplierAddress);
+		
+		String title = scLoiLoa.getTitle();
+		title = title.replaceAll("&", "&#38;");
+		context.put("title", title);
+		
+		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
+			LOADetailBackingBean backingBean = new LOADetailBackingBean();
+			
+			for (ScLoiLoaItem scLoiLoaItem : scLoi.getScLoiLoaItems()) {
+				scLoiLoaItem.setTotalPrice(backingBean.calcSubTotalPrice(scLoiLoaItem));
+			}
+			
+			context.put("scLoiLoaItems", scLoi.getScLoiLoaItems());
+		}
+		
+		if (scLoi.getScNegoLocations() != null && scLoi.getScNegoLocations().size() > 0) {
+			context.put("scNegoLocations", scLoi.getScNegoLocations());
+		}
+		
+		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+			context.put("scNegoTerms", scLoi.getScNegoTerms());
+		}
+		
+		String ackDueDays = "14";
+		if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
+			ackDueDays = DateUtils.getDaysDifference(scLoi.getIssueDate(), scLoi.getAckDueDate()) + "";
+		}
+		context.put("ackDueDays", ackDueDays);
+		
+		IUserSO userSO = null;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(scLoi.getCreatedBy());
+			PmUser createdByUser = userSO.retrieveUserByUserId(userReqDTO)
+					.getPmUser();
+			
+			if (createdByUser != null) {
+				String officerName = createdByUser.getUserName();
+				officerName = officerName.replaceAll("&", "&#38;");
+				context.put("officerName", officerName);
+				
+				String officerDesignation = createdByUser.getDesignation();
+				officerDesignation = officerDesignation.replaceAll("&", "&#38;");
+				context.put("officerDesignation", officerDesignation);
+			}
+			
+		} finally {
+			userSO = null;
+		}
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOI_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
@@ -1869,15 +1945,12 @@ public class LOIDetailBackingBean extends
 			scLoi.setIssueDate(new Date());
 
 			List<ScLoiWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoiWorkFlowStatus>();
-			ScLoiWorkFlowStatus workFlowStatus = new ScLoiWorkFlowStatus();
-			workFlowStatus.setScLoi(scLoi);
-			workFlowStatus.setPmStatus(scLoi.getPmStatus());
-			workFlowStatus.setCurrent(true);
-			workFlowStatuses.add(workFlowStatus);
+			
+			workFlowStatuses.add((ScLoiWorkFlowStatus)scLoi.getScWorkFlowStatus());
 			scLoi.setScLoiWorkFlowStatuses(workFlowStatuses);
 		}
 
-		Long statusId = scLoi.getPmStatus().getStatusId().longValue();
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 
 		if (scLoi.isApprovalReq()
 				&& QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)) {
@@ -1946,7 +2019,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		
-		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getPmStatus().getStatusId())){
+		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())){
 			if(("P").equals(getManagedBean().getScQt().getScheduleType())){
 				this.saveProgressivePaymntList();
 			}else if(("F").equals(getManagedBean().getScQt().getScheduleType())){
