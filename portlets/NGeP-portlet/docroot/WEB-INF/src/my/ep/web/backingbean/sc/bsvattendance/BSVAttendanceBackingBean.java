@@ -302,6 +302,8 @@ public class BSVAttendanceBackingBean extends
 			}
 			if (resDTO.isSuccessful()) {
 				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);
+
+				renewSesionObject();
 				getregistrationDetails(bsv);
 				FacesContext
 						.getCurrentInstance()
@@ -334,7 +336,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	private boolean isOneAuthorizedPersonal(
 			List<ScQtBsvAttendance> bsvAttandance) {
-		if(null == bsvAttandance || bsvAttandance.isEmpty()){
+		if (null == bsvAttandance || bsvAttandance.isEmpty()) {
 			return false;
 		}
 		for (ScQtBsvAttendance attendance : bsvAttandance) {

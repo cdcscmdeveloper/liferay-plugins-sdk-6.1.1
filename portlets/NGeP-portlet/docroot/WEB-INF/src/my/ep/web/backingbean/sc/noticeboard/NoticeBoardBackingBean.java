@@ -507,78 +507,8 @@ public class NoticeBoardBackingBean extends
 
 	public String gotoSupplierRegistration(Long qtId) {
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
-		this.getManagedBean().setMofAccounts(null);
-		this.getManagedBean().setAttendanceList(null);
-		this.getManagedBean().setSelectedBsvAttandance(null);
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTNoticeBoardSO.class);
-		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		reqDTO.setUserId(pmUser.getUserId());
-		reqDTO.setQtId(qtId);
-		NoticeBoardResDTO resDTO = qtNoticeBoardSO
-				.retrieveSupplierRegistrationDtl(reqDTO);
-		ScQt scQt = resDTO.getScQt();
-		this.getManagedBean().setScQt(resDTO.getScQt());
 
-		this.getManagedBean().setMofAccounts(resDTO.getMofAccounts());
-		if (!scQt.isZonal()) {
-			ScQtBsv scQtBsv = resDTO.getScQtBsv();
-
-			BriefingZoneBean briefingZoneBean = new BriefingZoneBean(null,
-					resDTO.getBriefingResultBean(),
-					resDTO.getSiteVisitResultBean(), scQtBsv);
-			this.getManagedBean().setNormalBsvBean(briefingZoneBean);
-		} else if (scQt.isZonal()) {
-			List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
-			// Need to construct tab bean for zone
-			MenuModel zoneMenuModel = new DefaultMenuModel();
-			List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
-
-			if (null != zoneDtls) {
-				int zoneTabIndex = 0;
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-
-				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-
-					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-					briefingReqDTO.setQtId(scQt.getQtId());
-					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION,
-									IQTBriefingSO.class);
-					BriefingResDTO briefingResDTO = briefingSO
-							.retrieveBriefingSiteVisitDtls(briefingReqDTO);
-
-					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							specZoneDtl, briefingResDTO.getBriefingList(),
-							briefingResDTO.getSiteVisitList(),
-							briefingResDTO.getScQtBsv());
-					bsvZoneBeans.add(briefingZoneBean);
-
-					MenuItem zoneItem = new MenuItem();
-					zoneItem.setValue(specZoneDtl.getZoneName());
-					zoneItem.setUpdate("@form");
-					zoneItem.setActionExpression(FacesScopes
-							.createMethodExpression(facesContext,
-									"#{noticeBoardBackingBean.bsvZoneTabChangeAction("
-											+ zoneTabIndex + ")}", null,
-									new Class[] { Integer.class }));
-					zoneMenuModel.addMenuItem(zoneItem);
-
-					zoneTabIndex++;
-				}
-			}
-
-			getManagedBean().setZoneMenuModel(zoneMenuModel);
-			if (bsvZoneBeans.size() > 0) {
-				getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));
-			}
-			this.getManagedBean().setZoneBean(bsvZoneBeans);
-		}
-
+		retriveBsvDetails(qtId);
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
 	}
 
@@ -1339,6 +1269,12 @@ public class NoticeBoardBackingBean extends
 		reqDTO.setQtBriefingList(bsvDetails);
 		BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
 		if (resDto.isSuccessful()) {
+			ScQt currentQt = this.getManagedBean().getScQt();
+			SmSupplier supplier= this.getManagedBean().getSmSupplier();
+			renewSesionObject();
+			this.getManagedBean().setScQt(currentQt);
+			this.getManagedBean().setSmSupplier(supplier);
+			retriveBsvDetails(currentQt.getQtId());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1448,4 +1384,105 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
+		IQTDetailSO detailSO;
+		ScQt scQt = scQtDocReport.getScQt();
+
+		QuationTenderResDTO resDTO = null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			resDTO = detailSO.retriveQTDocDetails(reqDTO);
+		} finally {
+			detailSO = null;
+		}
+		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+		qtDocumentsBackingBean.getManagedBean().setQt(null);
+		qtDocumentsBackingBean.getManagedBean().setQt(resDTO.getQtDetail());
+		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
+				.getScQtDocReportAttachment();
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = qtDocumentsBackingBean
+					.generateDocumentAttachment(scQtDocReport);
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		}
+		downloadFile(scQtDocReportAttachment);
+	}
+
+	private void retriveBsvDetails(Long qtId) {
+		this.getManagedBean().setMofAccounts(null);
+		this.getManagedBean().setAttendanceList(null);
+		this.getManagedBean().setSelectedBsvAttandance(null);
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTNoticeBoardSO.class);
+		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+		reqDTO.setUserId(pmUser.getUserId());
+		reqDTO.setQtId(qtId);
+		NoticeBoardResDTO resDTO = qtNoticeBoardSO
+				.retrieveSupplierRegistrationDtl(reqDTO);
+		ScQt scQt = resDTO.getScQt();
+		this.getManagedBean().setScQt(resDTO.getScQt());
+
+		this.getManagedBean().setMofAccounts(resDTO.getMofAccounts());
+		if (!scQt.isZonal()) {
+			ScQtBsv scQtBsv = resDTO.getScQtBsv();
+
+			BriefingZoneBean briefingZoneBean = new BriefingZoneBean(null,
+					resDTO.getBriefingResultBean(),
+					resDTO.getSiteVisitResultBean(), scQtBsv);
+			this.getManagedBean().setNormalBsvBean(briefingZoneBean);
+		} else if (scQt.isZonal()) {
+			List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
+			// Need to construct tab bean for zone
+			MenuModel zoneMenuModel = new DefaultMenuModel();
+			List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
+
+			if (null != zoneDtls) {
+				int zoneTabIndex = 0;
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+
+				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+
+					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+					briefingReqDTO.setQtId(scQt.getQtId());
+					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTBriefingSO.class);
+					BriefingResDTO briefingResDTO = briefingSO
+							.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+
+					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
+							specZoneDtl, briefingResDTO.getBriefingList(),
+							briefingResDTO.getSiteVisitList(),
+							briefingResDTO.getScQtBsv());
+					bsvZoneBeans.add(briefingZoneBean);
+
+					MenuItem zoneItem = new MenuItem();
+					zoneItem.setValue(specZoneDtl.getZoneName());
+					zoneItem.setUpdate("@form");
+					zoneItem.setActionExpression(FacesScopes
+							.createMethodExpression(facesContext,
+									"#{noticeBoardBackingBean.bsvZoneTabChangeAction("
+											+ zoneTabIndex + ")}", null,
+									new Class[] { Integer.class }));
+					zoneMenuModel.addMenuItem(zoneItem);
+
+					zoneTabIndex++;
+				}
+			}
+
+			getManagedBean().setZoneMenuModel(zoneMenuModel);
+			if (bsvZoneBeans.size() > 0) {
+				getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));
+			}
+			this.getManagedBean().setZoneBean(bsvZoneBeans);
+		}
+	}
 }
