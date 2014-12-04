@@ -44,7 +44,8 @@
 				id="poMachBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.machineryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.machineryVerified : false)}" />
 
-			<p:dataTable var="macBean" widgetVar="smMachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smMachineDtls}"
 				selection="#{backingBean.managedBean.selectedMachineList}"
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
@@ -189,15 +190,7 @@
 						label="#{lbl['lbl.sm.machine.purMthd']}" id="smMachPurMthd"
 						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.cash']}"
-							itemValue="A" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.credit.card']}"
-							itemValue="B" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.debit.card']}"
-							itemValue="C" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.online.banking']}"
-							itemValue="D" />
+						<f:selectItems value="#{backingBean.getDropdownCodeValues('BM')}" />
 					</p:selectOneMenu> <p:message id="smMachPurMthdMsg" for="smMachPurMthd"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -208,14 +201,17 @@
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purchase.year']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.machine.purchase.year']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
-						required="#{backingBean.managedBean.valueReqd}" validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
+						required="#{backingBean.managedBean.valueReqd}"
+						validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
 						label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
 						value="#{backingBean.managedBean.selectedMachine.purchaseYear}"
 						size="35">
-						<f:validateLongRange minimum="1950" maximum="#{backingBean.managedBean.currYear}" />
+						<f:validateLongRange minimum="1950"
+							maximum="#{backingBean.managedBean.currYear}" />
 					</p:inputText> <p:message id="smMachPurYrMsg" for="smMachPurYr"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
