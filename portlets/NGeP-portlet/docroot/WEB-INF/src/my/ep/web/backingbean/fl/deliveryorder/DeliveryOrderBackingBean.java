@@ -412,6 +412,16 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 						totalDeliveryQty = 0;
 						totalDeliveryAmount = 0;
 						for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
+							if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+								if(itemAddress.getDeliveredAmt() == null){
+									itemAddress.setDeliveredAmt(new BigDecimal(0));
+								}
+								if(itemAddress.getDeliveredAmt().doubleValue() > 0 && itemAddress.getDeliveredQty().doubleValue() <= 0){
+									throw new EpException(MessageConst.ERROR_740008, new String[]{"Delivery Quantity",getFullAddress(selectedDelAddress.getPmAddress())});
+								}else if(itemAddress.getDeliveredAmt().doubleValue() <= 0 && itemAddress.getDeliveredQty().doubleValue() > 0){
+									throw new EpException(MessageConst.ERROR_740008, new String[]{"Delivery Amount",getFullAddress(selectedDelAddress.getPmAddress())});
+								}
+							}
 							totalDeliveryQty = totalDeliveryQty + itemAddress.getDeliveredQty().doubleValue();
 							totalDeliveryAmount = totalDeliveryAmount + itemAddress.getDeliveredAmt().doubleValue();
 						}
@@ -420,7 +430,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 						}
 						if(totalDeliveryAmount==0) {
 							throw new EpException(MessageConst.ERROR_740008, new String[]{"Total Delivery Amount",getFullAddress(selectedDelAddress.getPmAddress())});
-						}						
+						}
 					}
 				}
 			}
