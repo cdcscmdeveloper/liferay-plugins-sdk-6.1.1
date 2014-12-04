@@ -22,19 +22,21 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-			disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{specificationBackingBean.acceptCompanyScoring}" >
-					<f:setPropertyActionListener
+				action="#{specificationBackingBean.acceptCompanyScoring}">
+				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="30" />
-				</p:commandButton>
+			</p:commandButton>
 
 
 
 		</div>
 
-		<p:spacer height="175"></p:spacer>
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
 
 		<p:panel>
 
