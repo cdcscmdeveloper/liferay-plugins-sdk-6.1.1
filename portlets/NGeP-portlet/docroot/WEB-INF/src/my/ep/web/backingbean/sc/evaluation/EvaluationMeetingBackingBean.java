@@ -634,12 +634,14 @@ public class EvaluationMeetingBackingBean extends
 			String committeeType = this.getManagedBean().getCommitteeType();
 			String taskName = this.getManagedBean().getTaskName();
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			Object object = this.getManagedBean().getPayLoad();
 			meetingso.saveQTDtl(metReqDtO);
 			renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setCurrentStatusId(currentStatusId);
+			this.getManagedBean().setPayLoad(object);
 			getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 			retriveMeetingDetails(qtId, committeeType);
 			FacesContext.getCurrentInstance().addMessage(
@@ -719,6 +721,7 @@ public class EvaluationMeetingBackingBean extends
 					.setDeletedCommitteeActivityList(getCommitteeToBeRemoveList());
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
+			metReqDtO.setCommitteType(this.getManagedBean().getCommitteeType());
 
 		} finally {
 
