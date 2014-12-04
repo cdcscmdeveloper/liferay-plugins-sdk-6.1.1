@@ -220,7 +220,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
 
-			PmStatus status = getStatusById(QTStatusConst.ACTIVE_STATUS);
+			PmStatus status = getStatusById(QTStatusConst.MS_PENDING);
 			meeting.setMeetingStatus(status);
 			
 			meetingList.add(meeting);

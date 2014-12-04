@@ -36,6 +36,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -386,7 +387,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			
 			IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(1L);//FIXME
+			statusreq.setStatusId(QTStatusConst.MS_PENDING);
 			StatusResDTO statusres = statussO.retrieveStatusByStatusId(statusreq);
 			meeting.setMeetingStatus(statusres.getPmStatus());
 			
