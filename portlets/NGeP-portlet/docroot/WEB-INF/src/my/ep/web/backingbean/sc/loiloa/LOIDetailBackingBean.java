@@ -376,7 +376,7 @@ public class LOIDetailBackingBean extends
 					for (ScLoa scLoa : scLoiLoa.getScloas()) {
 						LoiLoaBean loiLoaBean = new LoiLoaBean();
 						loiLoaBean.setScLoa(scLoa);
-						loiLoaBean.setLoiLoaType("LOA");
+						loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 						loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(null,
 								scLoa.getScLoaWorkFlowStatuses()));
 						loiloaBeans.add(loiLoaBean);
@@ -388,7 +388,7 @@ public class LOIDetailBackingBean extends
 					for (ScLoi scLoi : scLoiLoa.getScLois()) {
 						LoiLoaBean loiLoaBean = new LoiLoaBean();
 						loiLoaBean.setScLoi(scLoi);
-						loiLoaBean.setLoiLoaType("LOI");
+						loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 						loiLoaBean.setLoiLoaStatus(getStatusDescById(
 								scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()));
 						loiloaBeans.add(loiLoaBean);
