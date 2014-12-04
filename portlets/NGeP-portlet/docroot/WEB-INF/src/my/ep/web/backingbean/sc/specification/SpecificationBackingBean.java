@@ -4911,13 +4911,13 @@ public class SpecificationBackingBean extends
 				break;
 			}
 		}
-		if (null != list.getPmDocument()
+		/*if (null != list.getPmDocument()
 				&& QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
 						.equalsIgnoreCase(list.getPmDocument()
 								.getDocDefinitionKey()) && list.isScoringReq()) {
 			throw new EpException(MessageConst.ERROR_760196);
 
-		}
+		}*/
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
