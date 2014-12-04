@@ -14,15 +14,13 @@
    <body>
       <div id="u15_rtf">
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;&#160; </span><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">SURAT NIAT</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;File No&gt;&gt;&lt;&lt;3-digits&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;LOI No&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;Company Name&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;Address&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#FF0000;">&lt;&lt;SUPPLIER ADDRESS INFO&gt;&gt;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$fileNo - $fileExtnNo</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiNo</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierName</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierAddress</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan,</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;Sourcing Title&gt;&gt;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$title</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Merujuk kepada cadangan tawaran yang tersebut di atas, Kerajaan Malaysia ingin memberitahu tuan bahawa pada amnya terma-terma</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">cadangan tawaran tuan boleh diterima oleh Kerajaan.</span></p>
@@ -32,24 +30,57 @@
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">tertentu untuk kontrak yang dicadangkan itu, terutama terma-terma yang</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">berkenaan dengan perkara-perkara berikut:</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> &lt;&lt;List of Item&gt;&gt;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"><table border="1" cellspacing="0" width="100%">
+         																																						<thead>
+         																																						<tr>
+         																																							<th>Item</th>
+         																																							<th>Kuantiti</th>
+         																																							<th>Unit Ukuran</th>
+         																																							<th>Harga Ditawarkan(RM)</th>
+         																																							<th>Jumlah Kecil(RM)</th>
+         																																						</tr>
+         																																						</thead>
+         																																						<tbody>
+         																																						#foreach( $scLoiLoaItem in $scLoiLoaItems )
+         																																						<tr>
+         																																							<td>$scLoiLoaItem.scRequestItem.itemName</td>
+         																																							<td align="right">$numberDF.format($scLoiLoaItem.qty)</td>
+         																																							<td>$scLoiLoaItem.scRequestItem.uom.uomName</td>
+         																																							<td align="right">$amountDF.format($scLoiLoaItem.unitPrice)</td>
+         																																							<td align="right">$amountDF.format($scLoiLoaItem.totalPrice)</td>
+         																																						</tr>
+         																																						#end
+         																																						</tbody>
+         																																					</table></span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Berikut adalah terma terma yang akan di runding:-</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.1 harga tender; &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.2 pembiayaan kontrak yang dicadangkan; &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.3 penyertaan tenaga kerja tempatan/Bumiputera; &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.4 pemindahan teknologi/latihan/guna tenaga tempatan; &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.5 terma-terma pembayaran; &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.6 kandungan tempatan - berhubung dengan misalnya bahan-bahan,</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">ejen pengembaraan, pengangkutan, insurans dan lain-lain. &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">*2.7 ......................................................................... &lt;&lt;terma&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"><ol type="i">
+																																							  #foreach( $scNegoTerm in $scNegoTerms )
+																																							  <li>$scNegoTerm.termDesc; #if ($scNegoTerm.negoResult) $scNegoTerm.negoResult #else &lt;&lt;Keputusan&gt;&gt; #end</li>
+																																							  #end
+																																							</ol></span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan pada tarikh dan tempat seperti berikut:</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt; List of Negotiation Place and Time&gt;&gt;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"><table border="1" cellspacing="0" width="100%">
+         																																						<thead>
+         																																						<tr>
+         																																							<th>Tempat</th>
+         																																							<th>Masa</th>
+         																																							<th>Catatan</th>
+         																																						</tr>
+         																																						</thead>
+         																																						<tbody>
+         																																						#foreach( $scNegoLocation in $scNegoLocations )
+         																																						<tr>
+         																																							<td>$scNegoLocation.negoLocation</td>
+         																																							<td>$dateSDF.format($scNegoLocation.negoDate)</td>
+         																																							<td>$scNegoLocation.remark</td>
+         																																						</tr>
+         																																						#end
+         																																						</tbody>
+         																																					</table></span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">4. Jika tuan bersetuju, sila klik butang "Sah" untuk persetujuan rundingan dan pengesahan kehadiran dalam tempoh &lt;&lt;Bilangan Hari&gt;&gt;&#160; hari daripada tarikh surat ini.</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">4. Jika tuan bersetuju, sila klik butang "Sah" untuk persetujuan rundingan dan pengesahan kehadiran dalam tempoh $ackDueDays hari daripada tarikh surat ini.</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">5. Surat ini adalah RAHSIA KERAJAAN dan tidak boleh disebarkan kepada</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">mana-mana pihak lain.</span></p>
@@ -61,14 +92,8 @@
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya yang menurut perintah,</span></p>
          <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;Officer name&gt;&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&lt;&lt;Designation&gt;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
-         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;text-decoration:none;">&#160;</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$officerName</span></p>
+         <p style="text-align:left;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$officerDesignation</span></p>
       </div>
    </body>
 </html>
