@@ -1614,7 +1614,7 @@ public class QTDetailBackingBean extends
 								e.printStackTrace();
 							}
 						} else {
-							attachment.setScQtDocReport(scQtDocReport);
+							//attachment.setScQtDocReport(scQtDocReport);
 							scQtDocReport
 									.setScQtDocReportAttachment(attachment);
 						}
