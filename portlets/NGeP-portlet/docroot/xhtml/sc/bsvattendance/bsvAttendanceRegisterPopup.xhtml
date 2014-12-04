@@ -28,10 +28,10 @@
 					</p:column>
 					<p:column width="100%" style="text-align:right">
 						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save"
-							process="@form"
+							process="@form" 
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('null')}" />
 						<p:commandButton value="#{lbl['lbl.btn.complete']}"
-							icon="ui-icon-check" process="@form"
+							icon="ui-icon-check" process="@form" 
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" />
 					</p:column>
 				</p:row>
@@ -91,7 +91,7 @@
 									<td><p:commandButton
 											value="#{lbl['lbl.sc.action.delete']}"
 											process="@this,complisttbl" partialSubmit="true"
-											update="complisttbl,attendanceDetailstbl"
+											update="@all"
 											action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"
 											icon="ui-icon-delete" /></td>
 								</tr>
