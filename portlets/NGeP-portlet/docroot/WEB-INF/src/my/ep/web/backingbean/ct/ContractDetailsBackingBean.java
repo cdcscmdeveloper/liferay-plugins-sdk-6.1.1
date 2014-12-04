@@ -311,8 +311,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		         ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		         setValidateContractField(resDTO);
-		         ConstructSideTabMenu();
-		         checkContractSharing();
+		         ConstructSideTabMenu();		         
 		    
 		         FacesContext fc = FacesContext.getCurrentInstance();
 			     fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -459,7 +458,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 				getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 			}
-			
+			checkContractSharing();
 			initializeRemarks();
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
