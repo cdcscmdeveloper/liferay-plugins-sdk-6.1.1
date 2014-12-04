@@ -9,6 +9,7 @@
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
 			action="#{lOIDetailBackingBean.submitLoiListAction}" 
-			process="@form" update="@form"  />
+			process="@form" update="@form"
+			rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}" />
 	</div>
 </ui:composition>

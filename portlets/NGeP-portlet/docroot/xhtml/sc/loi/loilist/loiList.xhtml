@@ -12,7 +12,7 @@
 
 		<ui:include src="loiListButtons.xhtml" />
 
-		<ui:include src="/xhtml/sc/loi/loiListHeader.xhtml" />
+		<ui:include src="loiListHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
 			toggleable="true">
@@ -38,7 +38,7 @@
 
 			<p:spacer height="20px"></p:spacer>
 
-			<p:dataTable id="loiLoaDtl" var="loiLoa" style="width:60%"
+			<p:dataTable id="loiLoaDtl" var="loiLoa" 
 				value="#{lOIDetailBackingBean.managedBean.recSupplierList}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedLoiLoa}"
 				selectionMode="single" rowKey="#{loiLoa}" rows="10"
@@ -48,14 +48,13 @@
 					listener="#{lOIDetailBackingBean.onRowRecSupplierAction}"
 					update=":form:loiLoaId" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}"
-					style="width:40%">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}">
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 
 	            <p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
-					style="width:20%">
-					<p:commandButton icon="ui-icon-add" value="Create LOI" rendered="#{empty loiLoa.scLois}" 
+					style="width:30%">
+					<p:commandButton icon="ui-icon-add" value="Create LOI" rendered="#{!loiLoa.loiCreated}" 
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 				</p:column>
 			</p:dataTable>
@@ -63,22 +62,22 @@
 
 		<p:panel header="lOI/LOA LIST" toggleable="true">
 
-			<p:dataTable id="loiLoaId" var="loiloaBean" style="width:70%"
+			<p:dataTable id="loiLoaId" var="loiloaBean" 
 				value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
 				rowIndexVar="rowIndex">
 
-				<p:column headerText="lOI/LOA No" style="width:20%">
+				<p:column headerText="lOI/LOA No">
 					<h:outputText value="#{loiloaBean.scLoi.loiNo}"
 						rendered="#{loiloaBean.scLoi ne null}" />
 					<h:outputText value="#{loiloaBean.scLoa.loaNo}"
 						rendered="#{loiloaBean.scLoa ne null}" />
 				</p:column>
 
-				<p:column headerText="Type" style="width:10%">
-					<h:outputText value="#{loiloaBean.loiLoaType}" />
+				<p:column headerText="Type" style="width:20%">
+					<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
 				</p:column>
 
-				<p:column headerText="Item" style="width:10%">
+				<p:column headerText="Item" style="width:15%">
 					<p:commandButton icon="ui-icon-evaluate" value="view"
 						partialSubmit="true" process="@this"
 						action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
@@ -92,7 +91,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
-					style="width:10%">
+					style="width:15%">
 					<p:commandLink actionListener="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi)}">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
