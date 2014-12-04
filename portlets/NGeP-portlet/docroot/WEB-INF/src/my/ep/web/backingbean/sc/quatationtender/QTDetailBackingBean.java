@@ -2145,6 +2145,7 @@ public class QTDetailBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setQtdetail(this.getManagedBean().getQt());
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTScheduleDetails(reqDTO);
 				ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
@@ -2360,8 +2361,8 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
-
+			// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setQtdetail(this.getManagedBean().getQt());
 			QuationTenderResDTO resDTO = detailSO.retrieveQTActivities(reqDTO);
 			if (resDTO.isSuccessful()) {
 				this.getManagedBean().setQtActivityBeans(
