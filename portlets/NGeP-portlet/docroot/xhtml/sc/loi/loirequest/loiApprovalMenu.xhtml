@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.loi.contract.signer.dtl']}"
 		toggleable="true">
@@ -13,18 +14,26 @@
 						value="#{lbl['lbl.sc.loiloa.loi.contract.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td width="82%"><p:selectOneMenu id="contractSigner"  disabled="#{afterNegotiation}"
-						value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
-						style="width: 280px;margin-bottom: 5px;" required="true"
-						label="#{lbl['lbl.sc.loiloa.loi.contract.signer']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{lOIDetailBackingBean.managedBean.contractSigners}"
-							var="contractUser" itemLabel="#{contractUser.userName}"
-							itemValue="#{contractUser.userId}" />
-					</p:selectOneMenu> <p:message id="contractSignerMsg" for="contractSigner"
-						display="icon" /></td>
+				<td width="82%">
+					<c:if test="#{isEditableStatus and !afterNegotiation}">
+						<p:selectOneMenu id="contractSigner" 
+							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
+							style="width: 280px;margin-bottom: 5px;"
+							required="true"
+							label="#{lbl['lbl.sc.loiloa.loi.contract.signer']}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
+								var="contractUser" itemLabel="#{contractUser.userName}"
+								itemValue="#{contractUser.userId}" />
+						</p:selectOneMenu>
+						<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
+					</c:if>
+					<c:if test="#{!isEditableStatus or afterNegotiation}">
+						<p:inputText size="40"
+							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userName}"
+							disabled="true" />
+					</c:if>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
@@ -34,21 +43,22 @@
 		id="approvalId" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
-				<td colspan="3"><p:selectOneRadio  disabled="#{afterNegotiation}"
+				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
+				<td width="82%" colspan="3"><p:selectOneRadio  disabled="#{afterNegotiation or !isEditableStatus}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" update="approvalId" />
 					</p:selectOneRadio></td>
 			</tr>
+			<c:if test="#{isEditableStatus and !afterNegotiation}">
 			<tr>
-				<td style="width: 154px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.approver']}"
 						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}" /></td>
 				<td><p:selectOneMenu id="approversId" 
 						value="#{lOIDetailBackingBean.managedBean.reqApprove}"
-						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+						disabled="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -58,18 +68,19 @@
 							itemValue="#{appName.userId}" />
 					</p:selectOneMenu></td>
 			</tr>
+			</c:if>
 		</table>
 	</p:panel>
 
 	<p:panel label="REMARK" header="REMARK" toggleable="true"
 		toggleSpeed="500">
-		<table style="width: 100%">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td class="TableFieldLeft" width="12%"></td>
-				<td class="TableFieldRight"><p:dataGrid id="catatan"
+				<td class="TableFieldLeft" width="11%"></td>
+				<td class="TableFieldRight" width="89%"><p:dataGrid id="catatan"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
+						<table border="0" cellspacing="0" cellpadding="0" width="100%">
 							<tr>
 								<td rowspan="2" style="vertical-align: top;" align="left">
 									<h:graphicImage
@@ -97,23 +108,27 @@
 			</tr>
 		</table>
 	</p:panel>
-
-	<p:panel header="History" toggleable="true">
-		<p:dataTable id="historyItemtbl" var="loi"
-			value="#{lOIDetailBackingBean.managedBean.lois}"
-			rowIndexVar="rowIndex">
-			<p:column headerText="Approved By">
-				<h:outputText value="#{loi.scLoiApproval.approver.userName}" />
+	
+	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
+		<p:dataTable id="apprHistTbl" var="scLoiApproval"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiApproval}">
+			
+			<ac:paginator for="apprHistTbl" />
+			
+			<p:column headerText="#{lbl['lbl.sc.qt.appby']}" style="width:40%">
+				#{scLoiApproval.approver.userName}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.qt.status']}" style="width:35%">
+				#{lOADetailBackingBean.getApprovalActionDisplayName(scLoiApproval.approverAction)}
+		
 			</p:column>
 
-			<p:column headerText="Status">
-				<h:outputText value="#{loi.scLoiApproval.approverAction}" />
+			<p:column headerText="#{lbl['lbl.sc.qt.date']}" style="width:25%">
+				<h:outputText value="#{scLoiApproval.approverActionDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
 			</p:column>
-
-			<p:column headerText="Date">
-				<h:outputText value="#{loi.scLoiApproval.approverActionDate}" />
-			</p:column>
-
 		</p:dataTable>
 	</p:panel>
 
