@@ -1263,7 +1263,9 @@ public class SmApplicationUtil {
 		if (isExistEmailInPmUser(smPersonnel.getEmail())) {
 			throw new EpException(MessageConst.ERROR_722540);
 		}
-		if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())) {
+		if (smPersonnel.getAuthorizedFlg() == 1
+				&& isExistUserByIdentificationNo(smPersonnel
+						.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_722541);
 		}
 		try {
@@ -1276,8 +1278,10 @@ public class SmApplicationUtil {
 		}
 
 		try {
-			if (UserLocalServiceUtil.getUserByScreenName(
-					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
+			if (smPersonnel.getAuthorizedFlg() == 1
+					&& UserLocalServiceUtil.getUserByScreenName(
+							Long.valueOf(getCompanyId()),
+							smPersonnel.getEmail()) != null) {
 				throw new EpException(MessageConst.ERROR_722541);
 			}
 		} catch (NumberFormatException | PortalException | SystemException e) {
