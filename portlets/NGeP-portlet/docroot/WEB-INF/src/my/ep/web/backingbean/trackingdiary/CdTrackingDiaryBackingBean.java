@@ -39,11 +39,13 @@ public class CdTrackingDiaryBackingBean extends
 	private SearchFilterBean extensionCodeFilterBean 	= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docTypeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docIdFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+
 	private IPagingDataModel<CmUnspsc> searchDataModel 	= new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
+
 	public CdTrackingDiaryBackingBean() {
-	    String unspscCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("unspscCode");
-	    System.out.println("unspscCode====================================: "+unspscCode);
+//	    String unspscCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("unspscCode");
+//	    System.out.println("unspscCode====================================: "+unspscCode);
 	}
 	
 	public void unspscSearch() {
@@ -62,9 +64,10 @@ public class CdTrackingDiaryBackingBean extends
 			throw new EpException(MessageConst.ERROR_715026);
 		}
 
-		searchDataModel.reloadData();	}
+		searchDataModel.reloadData();	
+		
+	}
 
-	
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
 
 		private static final long serialVersionUID = 1L;
@@ -116,8 +119,8 @@ public class CdTrackingDiaryBackingBean extends
 			}
 			return new SearchResultBean();
 		}
-
 	}
+
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
 		private static final long serialVersionUID = 1L;
@@ -135,8 +138,10 @@ public class CdTrackingDiaryBackingBean extends
 			docTypeFilterBean.setSearchField("docType");
 			docTypeFilterBean.setSearchValue("PO");
 			searchBean.getDataFilterBeans().add(docTypeFilterBean);
+
 			docIdFilterBean.setSearchField("docId");
 			docIdFilterBean.setSearchValue("2233");
+			
 			searchBean.getDataFilterBeans().add(docTypeFilterBean);
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -147,21 +152,18 @@ public class CdTrackingDiaryBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
+			System.out.println("SearchTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
 			return resDTO.getResultBean();
 			
 		}
-
 	}
 
-
 	public String goToTrackingDiarySearch(CmUnspsc unspscObj) {
-		log.debug("*******www***goToExtensionSearch************"+ unspscObj.getUnspscCode());
+		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 		getManagedBean().setCmUnspsc(unspscObj);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}
-
 
 	public String reset() {
 		System.out.println("In reset action...................");
