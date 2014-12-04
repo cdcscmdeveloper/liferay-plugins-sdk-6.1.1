@@ -39,7 +39,8 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
-		<p:dataTable var="bankInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}">
+		<p:dataTable var="bankInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.bankDtls.bankName']}</f:facet>
 				#{bankInfo.smSupplierBank.pmFinancialOrg.finOrgName}
@@ -75,7 +76,7 @@
 
 
 	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
-		<p:dataTable var="finLsItem"
+		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
 			rowIndexVar="rowIndex" style="width:80%">
 
@@ -90,7 +91,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
-				<p:inputTextarea rows="2" cols="40" autoResize="false" disabled="#{viewFlag}" maxlength="2500"
+				<p:inputTextarea rows="5" cols="100" autoResize="false" disabled="#{viewFlag}" maxlength="2500"
 					value="#{svoSiteVisitBackingBean.managedBean.remarkMap[finLsItem.pmParameter.parameterId].remark}" />
 			</p:column>
 		</p:dataTable>
