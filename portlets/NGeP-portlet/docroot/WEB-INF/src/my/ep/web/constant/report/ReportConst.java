@@ -346,6 +346,10 @@ public class ReportConst {
 	public static final String CT_LST_OF_AGREEMENT_RPT_VAL = "CT_015";
 	public static final String CT_LST_OF_SUPPLAGREEMENT_RPT_VAL = "CT_018";
 	public static final String CT_LST_OF_CIRCULAR_RPT_VAL = "CT_021";
+	public static final String CT_LST_OF_PANEL_CIRCULAR_NO_RPT_VAL = "CT_022";
+	public static final String CT_LST_OF_PANEL_ITEM_NAME_RPT_VAL = "CT_023";
+	public static final String CT_LST_OF_PANEL_COVERAGE_RPT_VAL = "CT_024";
+	
 	///sm
 	public static final String AMP_SM_TO_DATE_EQ = "&createddateto=";
 	public static final String AMP_SM_FROM_DATE_EQ = "&createddatefrom=";
