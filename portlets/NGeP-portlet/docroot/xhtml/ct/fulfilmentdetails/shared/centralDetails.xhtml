@@ -104,6 +104,17 @@
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement']}" />
 			   </h:panelGrid>
 		     </h:panelGrid> 
+		       <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
+			  <p:selectBooleanCheckbox id="exemptCentralId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
+			    	disabled="#{contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract}" style="text-align:top;">
+			     <p:ajax event="change" update=":form:justificationCentralPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <h:panelGrid columns="2">
+				  <p:outputLabel value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
+				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
+			  </h:panelGrid>
+		   </h:panelGrid>
 	 	</h:panelGrid>
 	 	<h:panelGrid columns="4" style="width:770px;" 
 		        columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
@@ -120,6 +131,22 @@
 				  <f:verbatim/>	<f:verbatim/>	
 			</h:panelGrid>
 	 </h:panelGrid>
+	 <p:outputPanel id="justificationCentralPanel">
+	            <h:panelGrid columns="2" style="width:740px;" 
+	                   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
+                      <h:panelGroup>
+		                    <div style="height:65px; width:162px; vertical-align:top;">
+		                       <h:panelGrid columns="2" style="float:right;margin-right:-8px;">
+			   	                  <p:outputLabel id="justificationOutputLbls" value="#{lbl['lbl.ct.justification.ap201']}" />
+			                   </h:panelGrid>
+		                  </div>
+	                </h:panelGroup>
+	             
+	                     <p:inputTextarea id="justificationCentralLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
+		                     rows="4" style="width:550px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+		                     autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputTextarea>	
+                </h:panelGrid> 
+             </p:outputPanel>
   </p:panel>
 </ui:composition>
 

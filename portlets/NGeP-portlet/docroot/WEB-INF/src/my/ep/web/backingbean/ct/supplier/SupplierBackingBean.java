@@ -648,12 +648,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		  }
 		}
 		
-		if(getManagedBean().getCtContract().getCtFactoring() != null && getSupplierUserRole() &&
-			    getManagedBean().getCtContract().getCtFactoring().getStatus() != null &&
-				getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()){
-			    throw new EpException(MessageConst.WARN_755014,	new String[] {getManagedBean().getCtContract().getLoa().getLoaNo()});
-		}
-		
 		if(!getManagedBean().isAgreeFactoringClause()) {
 			if(!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
@@ -906,12 +900,20 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			                      contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 		                          contractSupplierResDTO = contractSupplierSO.retrieveSupplierLoaWithContract(contractSupplierReqDTO);
 		                          List<CtContract> list = contractSupplierResDTO.getContractList();
-		                          items = new SelectItem[list.size() + 1];
-			                      items[0] = new SelectItem(null, "- Select One -");
-			                      int i = 1;
-			                       for (CtContract contractLoa : list) {
-			                    	       items[i++] = new SelectItem(contractLoa.getLoa().getLoaId(), contractLoa.getLoa().getLoaNo());
-			                       } 
+		                          List<CtContract> contractList = new ArrayList<CtContract>();
+			                       for (CtContract contractLoa : list) {  
+			                    	   ContractSupplierResDTO ctSupplierResDTO = contractSupplierSO.retrieveFactoringByLoaId(contractLoa.getLoa().getLoaId());
+			                    	   if(ctSupplierResDTO.getFactoring() != null && getSupplierUserRole() && ctSupplierResDTO.getFactoring().getStatus() != null &&
+			                    			   ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()) {
+			                   		         continue;
+			                    	    } contractList.add(contractLoa);
+			                    	} 
+			                       items = new SelectItem[contractList.size()+1];
+				                    items[0] = new SelectItem(null, "- Select One -");
+				                    int i = 1;
+				                    for (CtContract ctLoalist : contractList) {  
+	                         	       items[i++] = new SelectItem(ctLoalist.getLoa().getLoaId(), ctLoalist.getLoa().getLoaNo());
+				                    }  
                                 }
 		                      getManagedBean().setContractSupplierLoa(items);
 		               } finally {
