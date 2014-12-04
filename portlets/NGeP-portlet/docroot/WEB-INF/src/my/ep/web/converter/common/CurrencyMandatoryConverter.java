@@ -28,7 +28,15 @@ public class CurrencyMandatoryConverter implements Converter {
 				currVal = new BigDecimal(value);
 				currVal.setScale(2, RoundingMode.HALF_UP);
 				if (currVal.compareTo(BigDecimal.ZERO) == 0) {
-					currVal = null;
+					currVal.setScale(2, RoundingMode.CEILING);
+					throw new ConverterException(
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"Currency Numeric Error",
+									SmCommonUtil
+											.getMessage(
+													"lbl.sm.inputcurrency.zero.errmsg",
+													null)));
 				} else {
 					if (getLength(currVal) > 14) {
 						throw new ConverterException(
