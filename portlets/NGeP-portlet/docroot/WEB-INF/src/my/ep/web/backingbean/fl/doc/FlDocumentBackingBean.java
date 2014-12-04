@@ -282,6 +282,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 						if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
 							contractSupplierResDTO.getFactoring().getPmFinancialBranch();
 						}
+					}else{
+						resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
 					}
 				}
 				
@@ -421,18 +423,33 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
+			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
 			
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setSelectedTabIndex(0);
-			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
-			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			flOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(flOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
-				flOrderBB.getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId();
-				flOrderBB.getCrSelectedFactoringCompDtl(flOrderBB.getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
-			}
+					Long supplieContractId=coResDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					contractSupplierReqDTO.setContractId(supplieContractId);
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						coResDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
+							flOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						}
+						if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
+							contractSupplierResDTO.getFactoring().getPmFinancialBranch();
+						}
+					}else{
+						flOrderBB.getManagedBean().getFlRequest().getCtContract().setFactored(false);
+					}
+			}	
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}

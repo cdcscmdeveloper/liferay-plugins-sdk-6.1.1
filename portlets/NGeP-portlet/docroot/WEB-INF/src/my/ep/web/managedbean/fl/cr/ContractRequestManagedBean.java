@@ -237,8 +237,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean zonalPrice = false;
 	private boolean zonalTierPrice = false;
 	private boolean tariffPrice = false;
+	private boolean serviceItem = false;
 	private PmParameter pmPriceType;
 	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
+	private BigDecimal UomFrequency ; 
+	private BigDecimal UomPerYear ; 
+	private BigDecimal UomPerMonth ; 
+	private BigDecimal UomPerDay ; 
 	
 	private boolean emailValidate = false;
 	private boolean queryDisplay=false;
@@ -2393,4 +2398,73 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.contractListTable = contractListTable;
 	}
 
+	/**
+	 * @return the serviceItem
+	 */
+	public boolean isServiceItem() {
+		return serviceItem;
+	}
+
+	/**
+	 * @param serviceItem the serviceItem to set
+	 */
+	public void setServiceItem(boolean serviceItem) {
+		this.serviceItem = serviceItem;
+	}
+
+	/**
+	 * @return the uomFrequency
+	 */
+	public BigDecimal getUomFrequency() {
+		return UomFrequency;
+	}
+
+	/**
+	 * @return the uomPerYear
+	 */
+	public BigDecimal getUomPerYear() {
+		return UomPerYear;
+	}
+
+	/**
+	 * @return the uomPerMonth
+	 */
+	public BigDecimal getUomPerMonth() {
+		return UomPerMonth;
+	}
+
+	/**
+	 * @return the uomPerDay
+	 */
+	public BigDecimal getUomPerDay() {
+		return UomPerDay;
+	}
+
+	/**
+	 * @param uomFrequency the uomFrequency to set
+	 */
+	public void setUomFrequency(BigDecimal uomFrequency) {
+		UomFrequency = uomFrequency;
+	}
+
+	/**
+	 * @param uomPerYear the uomPerYear to set
+	 */
+	public void setUomPerYear(BigDecimal uomPerYear) {
+		UomPerYear = uomPerYear;
+	}
+
+	/**
+	 * @param uomPerMonth the uomPerMonth to set
+	 */
+	public void setUomPerMonth(BigDecimal uomPerMonth) {
+		UomPerMonth = uomPerMonth;
+	}
+
+	/**
+	 * @param uomPerDay the uomPerDay to set
+	 */
+	public void setUomPerDay(BigDecimal uomPerDay) {
+		UomPerDay = uomPerDay;
+	}
 }
