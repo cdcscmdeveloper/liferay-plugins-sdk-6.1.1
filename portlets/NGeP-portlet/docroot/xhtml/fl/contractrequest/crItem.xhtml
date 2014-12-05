@@ -516,6 +516,30 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>					
 			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.frequency.per.uom']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.uomFrequency}" 
+						size="35" /></td>					
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.no.uom.per.day']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.uomPerDay}" 
+						size="35" /></td>					
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.no.uom.per.month']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.uomPerMonth}" 
+						size="35" /></td>					
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.no.uom.per.year']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.uomPerYear}" 
+						size="35" /></td>					
+			</tr>
 		</table> 
 		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
