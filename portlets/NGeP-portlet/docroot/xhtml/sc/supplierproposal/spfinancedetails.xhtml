@@ -11,20 +11,18 @@
 		<p:dataTable id="financeDeailsId" var="financeList"
 			value="#{supplierProposalDetailBackingBean.managedBean.financeCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
-			rowKey="#{financeList}" rowIndexVar="rowIndex" rows="10"
+			rowKey="#{financeList}" rowIndexVar="rowIndex" 
 			first="#{supplierProposalDetailBackingBean.managedBean.financialTableRow}">
-
-			<ac:paginator for="financeDeailsId" />
 
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column headerText="" />
 
 					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
-						style="width:68%" />
+						style="width:60%" />
 
 					<p:column headerText="#{lbl['lbl.sc.instruction']}"
-						style="width:15%" />
+						style="width:28%" />
 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%" />
 

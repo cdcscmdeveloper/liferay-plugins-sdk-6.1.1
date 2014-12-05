@@ -11,20 +11,18 @@
 		<p:dataTable id="techDeailsId" var="techList"
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
-			rowKey="#{techList}" rowIndexVar="rowIndex" rows="10"
+			rowKey="#{techList}" rowIndexVar="rowIndex" 
 			first="#{supplierProposalDetailBackingBean.managedBean.technicalTableRow}">
-
-			<ac:paginator for="techDeailsId" />
 
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column headerText="" />
 
 					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
-						style="width:68%" />
+						style="width:60%" />
 
 					<p:column headerText="#{lbl['lbl.sc.instruction']}"
-						style="width:20%" />
+						style="width:28%" />
 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%" />
 
