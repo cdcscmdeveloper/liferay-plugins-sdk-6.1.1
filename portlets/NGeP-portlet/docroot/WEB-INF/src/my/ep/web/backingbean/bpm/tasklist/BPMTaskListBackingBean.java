@@ -399,7 +399,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
-				+ "Sign Contract", SourcingConstants.LOI_PTJ_PAGE);
+				+ SCProcessNameConst.APPROVE_LOI, SourcingConstants.LOI_PTJ_PAGE);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.NEGOTIATE_LOI,
 				SourcingConstants.LOI_PTJ_PAGE);

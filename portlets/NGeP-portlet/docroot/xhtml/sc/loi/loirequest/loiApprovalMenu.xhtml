@@ -54,11 +54,10 @@
 			<c:if test="#{isEditableStatus and !afterNegotiation}">
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loi.approver']}"
-						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}" /></td>
+						value="#{lbl['lbl.sc.loiloa.loi.approver']}" /></td>
 				<td><p:selectOneMenu id="approversId" 
-						value="#{lOIDetailBackingBean.managedBean.reqApprove}"
-						disabled="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+						value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
+						disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
