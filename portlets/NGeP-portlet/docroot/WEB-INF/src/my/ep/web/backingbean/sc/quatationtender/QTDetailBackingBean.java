@@ -1219,6 +1219,7 @@ public class QTDetailBackingBean extends
 						.getLanguage();
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setScQt(getManagedBean().getQt());
 				reqDTO.setLanguageCode(languageCode);
 				BriefingResDTO resDTO = qTBriefingSO
 						.retrieveBriefingSiteVisitDtl(reqDTO);
@@ -1607,17 +1608,20 @@ public class QTDetailBackingBean extends
 						ScQtDocReportAttachment attachment = scQtDocReport
 								.getScQtDocReportAttachment();
 						if (attachment == null) {
+
 							try {
 								attachment = qtDocumentsBackingBean
 										.generateDocumentAttachment(scQtDocReport);
 							} catch (Exception e) {
+								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						} else {
-							//attachment.setScQtDocReport(scQtDocReport);
-							scQtDocReport
-									.setScQtDocReportAttachment(attachment);
-						}
+
+						} /*
+						 * else { //attachment.setScQtDocReport(scQtDocReport);
+						 * scQtDocReport
+						 * .setScQtDocReportAttachment(attachment); }
+						 */
 						scAttachments.add(attachment);
 					}
 				}
@@ -2148,6 +2152,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setQtdetail(this.getManagedBean().getQt());
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTScheduleDetails(reqDTO);
+				this.getManagedBean().setQt(resDTO.getQtDetail());
 				ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
 						.getContactPersons();
 				List<ScQtContactPerson> qtContactPerson = new ArrayList<ScQtContactPerson>();
@@ -2322,7 +2327,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setExcludedDocNames(list);
 
 				List<ScQtDocReport> scQtDocReports = new ArrayList<ScQtDocReport>();
-				if (this.getManagedBean().getScQtDocReportList() == null) {
+				/*if (this.getManagedBean().getScQtDocReportList() == null) {*/
 					resDTO = detailSO.retriveQTDocDetails(reqDTO);
 					if (resDTO.getReports() != null
 							&& !resDTO.getReports().isEmpty()) {
@@ -2346,7 +2351,7 @@ public class QTDetailBackingBean extends
 						this.getManagedBean().setScQtDocReportList(
 								scQtDocReports);
 					}
-				}
+				//}
 			} finally {
 				detailSO = null;
 			}
