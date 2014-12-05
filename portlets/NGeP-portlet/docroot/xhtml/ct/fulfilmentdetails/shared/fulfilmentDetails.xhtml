@@ -143,7 +143,7 @@
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <h:panelGrid columns="2">
-				 <p:outputLabel value="#{lbl['lbl.ct.concession']}" />
+				 <h:outputText value="#{lbl['lbl.ct.concession']}" />
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.concession']}" />
 			 </h:panelGrid>
 		   </h:panelGrid>
@@ -152,7 +152,7 @@
 		        value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
-			     <p:outputLabel value="#{lbl['lbl.ct.fee.exmption']}"/>
+			     <h:outputText value="#{lbl['lbl.ct.fee.exmption']}"/>
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fee.exmption']}" />
 			 </h:panelGrid>
 		   </h:panelGrid>
@@ -160,7 +160,7 @@
 		     <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" />
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
-			     <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
+			     <h:outputText value="#{lbl['lbl.ct.agreement']}" />
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement']}" />
 			 </h:panelGrid>
 	       </h:panelGrid>	
@@ -170,7 +170,7 @@
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
-				  <p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
+				  <h:outputText value="#{lbl['lbl.ct.mto']}"  />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>	
@@ -180,8 +180,8 @@
 			     <p:ajax event="change" update=":form:justificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2" >
-				  <p:outputLabel value="#{lbl['lbl.ct.ap201']}" style="text-align:left;" />
+			  <h:panelGrid columns="2">
+				  <h:outputText value="#{lbl['lbl.ct.ap201']}"  />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>
@@ -192,7 +192,7 @@
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
-				  <p:outputLabel value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
+				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>		
