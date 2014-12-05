@@ -59,7 +59,7 @@
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</ui:fragment></td>
-					<td><p:selectOneMenu required="true"
+					<td><p:selectOneMenu required="true" style="width:100px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.from.month']}"
 							value="#{specificationBackingBean.managedBean.fromMonth}">
@@ -69,6 +69,7 @@
 								update="toDetailsUpdate,bankInfo,amountdetails"
 								listener="#{specificationBackingBean.fromChange}"></p:ajax>
 						</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
+							style="width:60px;"
 							value="#{specificationBackingBean.managedBean.startYear}">
 
 							<f:selectItem
@@ -81,11 +82,11 @@
 							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
 
-							<p:inputText readonly="true"
+							<p:inputText readonly="true" size="10"
 								value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
 							<p:spacer width="5"></p:spacer>
 
-							<p:inputText readonly="true"
+							<p:inputText readonly="true" size="7"
 								value="#{specificationBackingBean.managedBean.endYear}"></p:inputText>
 
 						</h:panelGroup></td>

@@ -17,7 +17,7 @@
 			rowKey="#{cateGory}">
 
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
-			<p:column style="width:18%">
+			<p:column style="width:23%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.category.code']}" />
@@ -55,12 +55,12 @@
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
-				style="width:28%;white-space: normal;">
+				style="width:26%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
-				style="width:28%;white-space: normal;">
+				style="width:25%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
 
