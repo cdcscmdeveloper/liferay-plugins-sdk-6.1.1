@@ -2713,7 +2713,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		getManagedBean().setPtjCodeName(null);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setCounter(1);
-		agencyDataModel.getList().clear();
+		agencyDataModel.resetData();
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
