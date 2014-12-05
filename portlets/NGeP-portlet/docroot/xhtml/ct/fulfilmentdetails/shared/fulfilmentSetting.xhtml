@@ -55,8 +55,9 @@
 			 </h:panelGrid>
              <p:outputLabel value="#{lbl['lbl.ct.approver.notify']}"  />  
              <p:inputText maxlength="4" disabled="#{contractDetailsBackingBean.managedBean.viewContract or 
-             	ParameterConst.contractTypeCentral == contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode or 
-             	(ParameterConst.contractTypeMinistry == contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode and 
+             	(!contractDetailsBackingBean.managedBean.directPurchase and 
+             	ParameterConst.contractTypeCentral == contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode) or 
+             	(!contractDetailsBackingBean.managedBean.directPurchase and ParameterConst.contractTypeMinistry == contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode and 
              	 !contractDetailsBackingBean.managedBean.ctContract.mto)}"
              	value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.approverMtoDays}"
              	style="width:50px;" label="#{lbl['lbl.ct.approver.notify']}" />  
