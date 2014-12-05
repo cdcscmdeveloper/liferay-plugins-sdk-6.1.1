@@ -433,50 +433,6 @@
 		</div>
 	</p:dialog>
 
-	<p:dialog id="addPurchasedItemDialog" header="#{lbl['lbl.fl.item.list']}"
-		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
-		width="600" resizable="false">
-		<p:dataTable id="purchasedItemDt" var="purchasedItem"
-			value="#{purchaseRequestBackingBean.managedBean.requestNoteWithDtlsList}"
-			rowKey="#{purchasedItem}"
-			selection="#{purchaseRequestBackingBean.managedBean.selectedPurchasedItemList}">
-			<p:ajax event="rowSelect" update=":form:addPurchasedItemDialog"
-				process="@this" />
-			<ac:paginator for="purchasedItemDt" />
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.type']}"></p:column>
-					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.code']}"></p:column>
-					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.name']}"></p:column>
-					<p:column rowspan="1" headerText="#{lbl['lbl.fl.uom']}"></p:column>
-				</p:row>
-			</p:columnGroup>
-			<p:column selectionMode="multiple" />
-			<p:column>
-				<h:outputText />
-			</p:column>
-			<p:column>
-				<h:outputText />
-			</p:column>
-			<p:column>
-				<h:outputText
-					value="#{purchasedItem.scRequestSupplierItem.requestNoteItem.itemName}" />
-			</p:column>
-			<p:column>
-				<h:outputText />
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-				action="#{purchaseRequestBackingBean.updatePurchasedItemDt}"
-				oncomplete="addItems.hide();"
-				update="itemDataTable,@(.orderSummaryChange)"
-				process="@this,purchasedItemDt">
-			</p:commandButton>
-		</div>
-	</p:dialog>
 	<p:dialog id="addReceivingOfficerDialog" header="#{lbl['lbl.fl.receiving.officer']}"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
 		modal="true" width="600" resizable="false">
