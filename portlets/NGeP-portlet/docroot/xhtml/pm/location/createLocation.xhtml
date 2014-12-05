@@ -153,7 +153,8 @@
 							<f:selectItems var="stateLs"
 								value="#{locationBackingBean.managedBean.states}"
 								itemLabel="#{stateLs.stateName}" itemValue="#{stateLs.stateId}" />
-							<p:ajax event="change" update="divisionval,stateIdd"  listener="#{locationBackingBean.retrieveDivisionList}" />
+							<p:ajax event="change" update="divisionval"  listener="#{locationBackingBean.updateDivisionFlag(
+					  		locationBackingBean.managedBean.district.pmState.stateId)}"  />
 						</p:selectOneMenu></td><td> <p:message id="statevalMsg" for="stateval" display="icon" /></td>
 				</tr>
 				<tr>
@@ -165,8 +166,8 @@
 							label=" #{lbl['lbl.pm.state']}" required="#{locationBackingBean.managedBean.divisionFlag}"
 							styleClass="ppDropDownWidthL" style="width: 276px;margin-bottom: 5px;" >
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems var="divisionLs"
-								value="#{locationBackingBean.managedBean.divisions}"
+							<f:selectItems var="divisionLs,stateIdd"
+								  value="#{locationBackingBean.getDivisionList(locationBackingBean.managedBean.district.pmState.stateId)}" 
 								itemLabel="#{divisionLs.divisionName}" itemValue="#{divisionLs.divisionId}" />
 							
 						</p:selectOneMenu></td>

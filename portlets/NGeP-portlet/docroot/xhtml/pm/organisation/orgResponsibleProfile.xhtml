@@ -1,59 +1,58 @@
-<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:p="http://primefaces.org/ui">
-	<ac:lovPopup />
-	<p:panel header="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}"
-		toggleable="true">
-		<p:dataTable id="resProfileid" var="resprofile"
-			value="#{organisationBackingBean.managedBean.ptjGroupList}"
-			rowKey="#{resprofile}" rowIndexVar="rowIndex"
-			selection="#{organisationBackingBean.managedBean.selectedPtjGroup}">
-
-			<p:column selectionMode="multiple" style="width:2%" />
-
-			<ac:paginator for="resprofile" />
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.org.ptjCode']}" />
-				</f:facet>
-				<ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20"
-					 readonly="true"
-					value="#{resprofile.pmOrgProfiles.pmOrgValidity.orgCode}"
-					postUpdateListener="profileManagementBackingBean.updatePtjCode
-					(organisationBackingBean.managedBean.ptjGroupList.pmOrgProfiles)"					
-					saveObject="organisationBackingBean.managedBean.selectedPtj.pmOrgProfiles">
-				</ac:lov>
-			</p:column>			
-			 <p:column headerText="#{lbl['lbl.pm.org.ptjName']}" > 
-       			#{resprofile.groupName}
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.responsible.org']}" toggleable="true">
+		<br/>
+	   	<p:dataTable id="dtOrgUnit" var="orgUnit" styleClass="dtOrgUnit" 
+		     value="#{organisationBackingBean.managedBean.profileGroup}"
+		     selection="#{organisationBackingBean.managedBean.selectedProfileGroup}" 
+		     selectionMode="single"
+		     rowIndexVar="index" rowKey="#{orgUnit}">   
+			
+			<ac:paginator for="dtOrgUnit"/>
+		    
+	        <p:column width="10%">
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
+			    </f:facet>
+			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="12" 
+			    	
+	            	update=":form:dtOrgUnit" readonly="true"
+					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+					value="#{orgUnit.authorizedOrgProfile.pmOrgValidity.orgCode}" 
+					postUpdateListener="organisationBackingBean.updateOrgCode
+					(organisationBackingBean.managedBean.profileGroup[#{index}].authorizedOrgProfile, #{index})"
+					saveObject="organisationBackingBean.managedBean.profileGroup[#{index}].authorizedOrgProfile"
+					
+					>
+				</ac:lov> 
+				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
+		    </p:column>
+		    <p:column   style="white-space:nowrap; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
+       			#{orgUnit.authorizedOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu value="#{resprofile.recordStatusFlg}"
-					required="true" style="margin-bottom: 5px;">
-					<f:selectItems
-						value="#{organisationBackingBean.getStatusOptions()}" />
-				</p:selectOneMenu>
-
-			</p:column>
-
+	           
+	       
+	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
+      		    <p:commandLink action="#{organisationBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
+      		    	immediate="true" update="dtOrgUnit">
+					<p:graphicImage value="/css/images/design/delete.png"/>
+				</p:commandLink>
+	        </p:column>  
 		</p:dataTable>
+       	<br/>
+       	<br/>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				process="@this,resProfileid" partialSubmit="true"
-				action="#{organisationBackingBean.addNewPtjAction}"
-				update="resProfileid" icon="ui-icon-add" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="resProfileid"
-				process="@this,resProfileid" partialSubmit="true"
-				action="#{organisationBackingBean.deletePtjAction}" />
-
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,dtOrgUnit" partialSubmit="true" immediate="true" 
+		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" />
 		</div>
-
+    	<ac:lovPopup /> 		
 	</p:panel>
-	<p:spacer height="1" />
-
-</ui:composition>
+</ui:composition>	

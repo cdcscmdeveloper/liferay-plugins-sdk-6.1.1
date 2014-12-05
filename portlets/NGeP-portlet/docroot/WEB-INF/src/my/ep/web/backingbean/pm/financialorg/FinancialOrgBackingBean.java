@@ -213,6 +213,7 @@ public class FinancialOrgBackingBean extends
 				new ArrayList<PmFinancialAcc>());
 		getManagedBean().setPmFinancialSvc(new ArrayList<PmFinancialSvc>());
 		getManagedBean().getFinancialOrg().setRecordStatusFlg(null);
+		getManagedBean().setRegType(null);
 
 		getManagedBean().setPmAddress(new PmAddress());
 		getManagedBean().setContactPerson(new PmContact());

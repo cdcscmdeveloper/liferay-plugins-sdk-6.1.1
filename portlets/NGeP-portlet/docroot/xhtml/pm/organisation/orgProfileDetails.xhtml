@@ -4,8 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel>
-		
+	<p:panel>		
 			<table class="ppOneTable">
 				<tr>
 					<td><h:outputLabel
@@ -16,15 +15,13 @@
 							value="#{organisationBackingBean.managedBean.orgTypeId}"
 							style="width: 275px;margin-bottom: 5px;" required="true">
 							<f:selectItems
-								value="#{organisationBackingBean.getOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
+								value="#{organisationBackingBean.getNewOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
 							<p:ajax event="change" update="@form"
 								listener="#{organisationBackingBean.resetOrgProfile}" />
 						</p:selectOneMenu></td>
 					<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
 				</tr>
-			</table>
-
-		
+			</table>		
 	</p:panel>
 	<p:panel header="#{lbl['lbl.pm.header.general.org.profile']}"
 		id="orgproflieId" styleClass="sampleDetails" toggleable="true">
@@ -176,10 +173,10 @@
 			</tr>
 		</table>
 	</p:panel>
-	<!-- <ui:fragment
+	 <ui:fragment
 		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
-	</ui:fragment>  -->
+	</ui:fragment>  
 
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
@@ -191,10 +188,10 @@
 			</p:tab>
 
 
-		<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+		<p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
-			</p:tab>  -->
+			</p:tab> 
 		</p:tabView>
 	</p:panel>
 

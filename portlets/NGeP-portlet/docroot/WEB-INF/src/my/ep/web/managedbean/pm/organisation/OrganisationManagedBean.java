@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -49,6 +51,11 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmZone> zoneList;
 	private PmZone zone = new PmZone();
 	private Long zoneId;
+	private Long ptjGroupId;
+	private Long agOfficeId;
+	private Long parentOrgProfileId;
+	private PmAgOffice pmAgOffice;
+	private PmOrgProfile parentOrgProfile;
 	// Office Address
 	private List<PmAddressType> officeAddressTypeList;
 	private List<PmContact> contactList;
@@ -62,12 +69,14 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmDistrict> districtList;
 
 	// Delivery Address
-	private List<PmAddress> deliveryAddresList;
-	private PmAddress deliveryAddress;
-	private PmContact deliveryContactPerson;
-	private List<PmAddressType> deliveryAddressTypeList;
-	private List<PmAddressType> selectedDelAddressTypes;
-	private PmAddressType selectedDeliveryAddressType;
+	private List<PmAddressType> deliveryAddressList;
+	private PmAddressType selectedDeliveryAddress;
+	private PmAddressType deliveryAddress;
+	private List<PmAddressType> addressTypesList;
+	private Map<Long, List<PmAddressType>> manualAddressMap;
+	
+	
+	
 	//
 	private List<PmPtjGroup> ptjGroup;
 	private PmPtjGroup pmPtjGroup;
@@ -85,6 +94,10 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmPtjGroup> ptjGroupList;
 	private List<PmPtjGroup> selectedPtjGroup;
 	private PmPtjGroup selectedPtj= new PmPtjGroup();
+	
+	private List<PmProfileGroup> profileGroup;
+	private List<PmProfileGroup> selectedProfileGroups;
+	private PmProfileGroup selectedProfileGroup;
 
 	private DualListModel<PmUser> supplierUsers;
 	private List<PmUser> sourceUsers;
@@ -93,9 +106,9 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
-		deliveryAddress= new PmAddress();
+		
 		officeContactPerson = new PmContact();
-		deliveryContactPerson = new PmContact();
+		
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
 		officeAddressTypeList = new ArrayList<PmAddressType>();
@@ -105,6 +118,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		orgProfile.setPmAgOffice(new PmAgOffice());
 		orgProfile.setPmPtjGroup(new PmPtjGroup());
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
+		
 
 	}
 
@@ -123,51 +137,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.contactList = contactList;
 	}
 
-	/**
-	 * @return the deliveryAddress
-	 */
-	public PmAddress getDeliveryAddress() {
-		return deliveryAddress;
-	}
-
-	/**
-	 * @return the deliveryAddressTypeList
-	 */
-	public List<PmAddressType> getDeliveryAddressTypeList() {
-		return deliveryAddressTypeList;
-	}
-
-	/**
-	 * @param deliveryAddressTypeList
-	 *            the deliveryAddressTypeList to set
-	 */
-	public void setDeliveryAddressTypeList(
-			List<PmAddressType> deliveryAddressTypeList) {
-		this.deliveryAddressTypeList = deliveryAddressTypeList;
-	}
-
-	/**
-	 * @param deliveryAddress
-	 *            the deliveryAddress to set
-	 */
-	public void setDeliveryAddress(PmAddress deliveryAddress) {
-		this.deliveryAddress = deliveryAddress;
-	}
-
-	/**
-	 * @return the deliveryContactPerson
-	 */
-	public PmContact getDeliveryContactPerson() {
-		return deliveryContactPerson;
-	}
-
-	/**
-	 * @param deliveryContactPerson
-	 *            the deliveryContactPerson to set
-	 */
-	public void setDeliveryContactPerson(PmContact deliveryContactPerson) {
-		this.deliveryContactPerson = deliveryContactPerson;
-	}
+	
 
 	/**
 	 * @return the countryList
@@ -394,37 +364,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.zoneId = zoneId;
 	}
 
-	/**
-	 * @return the selectedDelAddressTypes
-	 */
-	public List<PmAddressType> getSelectedDelAddressTypes() {
-		return selectedDelAddressTypes;
-	}
-
-	/**
-	 * @param selectedDelAddressTypes
-	 *            the selectedDelAddressTypes to set
-	 */
-	public void setSelectedDelAddressTypes(
-			List<PmAddressType> selectedDelAddressTypes) {
-		this.selectedDelAddressTypes = selectedDelAddressTypes;
-	}
-
-	/**
-	 * @return the selectedDeliveryAddressType
-	 */
-	public PmAddressType getSelectedDeliveryAddressType() {
-		return selectedDeliveryAddressType;
-	}
-
-	/**
-	 * @param selectedDeliveryAddressType
-	 *            the selectedDeliveryAddressType to set
-	 */
-	public void setSelectedDeliveryAddressType(
-			PmAddressType selectedDeliveryAddressType) {
-		this.selectedDeliveryAddressType = selectedDeliveryAddressType;
-	}
+	
 
 	/**
 	 * @return the zone
@@ -729,20 +669,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setOrganisationSearchBean(OrganisationSearchBean organisationSearchBean) {
 		this.organisationSearchBean = organisationSearchBean;
 	}
-
-	/**
-	 * @return the deliveryAddresList
-	 */
-	public List<PmAddress> getDeliveryAddresList() {
-		return deliveryAddresList;
-	}
-
-	/**
-	 * @param deliveryAddresList the deliveryAddresList to set
-	 */
-	public void setDeliveryAddresList(List<PmAddress> deliveryAddresList) {
-		this.deliveryAddresList = deliveryAddresList;
-	}
+	
 
 	/**
 	 * @return the orgTypeId
@@ -757,6 +684,194 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setOrgTypeId(Long orgTypeId) {
 		this.orgTypeId = orgTypeId;
 	}
+
+	
+
+	/**
+	 * @return the deliveryAddressList
+	 */
+	public List<PmAddressType> getDeliveryAddressList() {
+		return deliveryAddressList;
+	}
+
+	/**
+	 * @param deliveryAddressList the deliveryAddressList to set
+	 */
+	public void setDeliveryAddressList(List<PmAddressType> deliveryAddressList) {
+		this.deliveryAddressList = deliveryAddressList;
+	}
+
+	/**
+	 * @return the selectedDeliveryAddress
+	 */
+	public PmAddressType getSelectedDeliveryAddress() {
+		return selectedDeliveryAddress;
+	}
+
+	/**
+	 * @param selectedDeliveryAddress the selectedDeliveryAddress to set
+	 */
+	public void setSelectedDeliveryAddress(PmAddressType selectedDeliveryAddress) {
+		this.selectedDeliveryAddress = selectedDeliveryAddress;
+	}
+
+	
+
+	/**
+	 * @return the deliveryAddress
+	 */
+	public PmAddressType getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	/**
+	 * @param deliveryAddress the deliveryAddress to set
+	 */
+	public void setDeliveryAddress(PmAddressType deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
+	/**
+	 * @return the addressTypesList
+	 */
+	public List<PmAddressType> getAddressTypesList() {
+		return addressTypesList;
+	}
+
+	/**
+	 * @param addressTypesList the addressTypesList to set
+	 */
+	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
+		this.addressTypesList = addressTypesList;
+	}
+
+	/**
+	 * @return the manualAddressMap
+	 */
+	public Map<Long, List<PmAddressType>> getManualAddressMap() {
+		return manualAddressMap;
+	}
+
+	/**
+	 * @param manualAddressMap the manualAddressMap to set
+	 */
+	public void setManualAddressMap(Map<Long, List<PmAddressType>> manualAddressMap) {
+		this.manualAddressMap = manualAddressMap;
+	}
+
+	/**
+	 * @return the ptjGroupId
+	 */
+	public Long getPtjGroupId() {
+		return ptjGroupId;
+	}
+
+	/**
+	 * @param ptjGroupId the ptjGroupId to set
+	 */
+	public void setPtjGroupId(Long ptjGroupId) {
+		this.ptjGroupId = ptjGroupId;
+	}
+
+	/**
+	 * @return the agOfficeId
+	 */
+	public Long getAgOfficeId() {
+		return agOfficeId;
+	}
+
+	/**
+	 * @param agOfficeId the agOfficeId to set
+	 */
+	public void setAgOfficeId(Long agOfficeId) {
+		this.agOfficeId = agOfficeId;
+	}
+
+	/**
+	 * @return the parentOrgProfileId
+	 */
+	public Long getParentOrgProfileId() {
+		return parentOrgProfileId;
+	}
+
+	/**
+	 * @param parentOrgProfileId the parentOrgProfileId to set
+	 */
+	public void setParentOrgProfileId(Long parentOrgProfileId) {
+		this.parentOrgProfileId = parentOrgProfileId;
+	}
+
+	/**
+	 * @return the pmAgOffice
+	 */
+	public PmAgOffice getPmAgOffice() {
+		return pmAgOffice;
+	}
+
+	/**
+	 * @param pmAgOffice the pmAgOffice to set
+	 */
+	public void setPmAgOffice(PmAgOffice pmAgOffice) {
+		this.pmAgOffice = pmAgOffice;
+	}
+
+	/**
+	 * @return the parentOrgProfile
+	 */
+	public PmOrgProfile getParentOrgProfile() {
+		return parentOrgProfile;
+	}
+
+	/**
+	 * @param parentOrgProfile the parentOrgProfile to set
+	 */
+	public void setParentOrgProfile(PmOrgProfile parentOrgProfile) {
+		this.parentOrgProfile = parentOrgProfile;
+	}
+
+	/**
+	 * @return the profileGroup
+	 */
+	public List<PmProfileGroup> getProfileGroup() {
+		return profileGroup;
+	}
+
+	/**
+	 * @param profileGroup the profileGroup to set
+	 */
+	public void setProfileGroup(List<PmProfileGroup> profileGroup) {
+		this.profileGroup = profileGroup;
+	}
+
+	/**
+	 * @return the selectedProfileGroups
+	 */
+	public List<PmProfileGroup> getSelectedProfileGroups() {
+		return selectedProfileGroups;
+	}
+
+	/**
+	 * @param selectedProfileGroups the selectedProfileGroups to set
+	 */
+	public void setSelectedProfileGroups(List<PmProfileGroup> selectedProfileGroups) {
+		this.selectedProfileGroups = selectedProfileGroups;
+	}
+
+	/**
+	 * @return the selectedProfileGroup
+	 */
+	public PmProfileGroup getSelectedProfileGroup() {
+		return selectedProfileGroup;
+	}
+
+	/**
+	 * @param selectedProfileGroup the selectedProfileGroup to set
+	 */
+	public void setSelectedProfileGroup(PmProfileGroup selectedProfileGroup) {
+		this.selectedProfileGroup = selectedProfileGroup;
+	}
+
+	
 
 
 	
