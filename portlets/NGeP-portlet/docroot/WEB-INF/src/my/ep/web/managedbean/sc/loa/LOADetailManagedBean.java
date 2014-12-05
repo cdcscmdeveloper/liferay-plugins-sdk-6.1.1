@@ -94,6 +94,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String bondAmountWord;
 	private Object payLoad;
 	
+	 private String action;
+	
 	public LOADetailManagedBean() {
 	}
 
@@ -742,6 +744,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	public void setAgencyProfileDDList(List<Object[]> agencyProfileDDList) {
 		this.agencyProfileDDList = agencyProfileDDList;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }

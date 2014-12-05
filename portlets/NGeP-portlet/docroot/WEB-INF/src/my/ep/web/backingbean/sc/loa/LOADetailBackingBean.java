@@ -65,6 +65,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmClause;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -115,6 +116,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -127,6 +129,8 @@ import org.primefaces.model.StreamedContent;
 public class LOADetailBackingBean extends
 		SourcingBaseBackingBean<LOADetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
+	private PmDigiSign pmDigiSign;
+	private String textBeforeSign;
 
 	public LOADetailBackingBean() {
 		log.info("inside LOADetailBackingBean constructor");
@@ -1847,10 +1851,16 @@ public class LOADetailBackingBean extends
 		return null;
 	}
 
-	public String updateBpmTaskAction(String outcome) {
-		debugLogger("updateBpmTaskAction");
+	/**
+	 * @param action
+	 * @param object
+	 * @return AwardSupplierResDTO
+	 */
+	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
+		debugLogger("updateBPMTask");
 
 		IQTAwardSO qtAwardSO = null;
+		AwardSupplierResDTO resDTO = null;
 
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1876,7 +1886,10 @@ public class LOADetailBackingBean extends
 					}
 				}
 			}
-
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+						scLoa.getLoaId(), scLoa.getLoaNo());
+			}
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -1884,13 +1897,11 @@ public class LOADetailBackingBean extends
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-
-			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
+			reqDTO.setDigiSignData(digiSign);
+		    resDTO = qtAwardSO.saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
-
-				renewSesionObject();
 
 				String messageCode = null;
 
@@ -1925,14 +1936,33 @@ public class LOADetailBackingBean extends
 				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 						scLoa.getLoaNo());
+				
+				renewSesionObject();
 			}
 
 		} finally {
 			qtAwardSO = null;
 		}
 
-		return null;
+		
+		return resDTO;
 	}
+
+	public void updateBpmTaskAction(String outcome) {
+		debugLogger("updateBpmTaskAction");
+		this.getManagedBean().setAction(outcome);
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+			} else if(isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+		} else {
+			updateBPMTask(outcome, null);
+		}	
+	}
+
 
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -3034,4 +3064,27 @@ public class LOADetailBackingBean extends
 
 		return total;
 	}
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScLoa().getLoaNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}	
 }

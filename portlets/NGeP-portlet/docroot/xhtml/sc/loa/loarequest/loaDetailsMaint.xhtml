@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
@@ -18,8 +19,11 @@
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		
 		<ui:include src="loaButtons.xhtml" />
-		
 		<ui:include src="loaHeader.xhtml" />
+
+		<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
+			postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+
 		<p:panel id="loaMainPanel">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
