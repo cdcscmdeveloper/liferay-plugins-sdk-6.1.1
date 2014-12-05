@@ -69,8 +69,9 @@ public class gpkiBackingBean {
 	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
 	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
 	    String subjectDN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("subjectDN");
-
-	    Long userId = (Long) MDC.get(LogKey.USER_ID);
+	    FacesScopes facesScope = new FacesScopes();
+	    Long userId = facesScope.getUserSessionBean().getUserId();
+//	    Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 
 		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
