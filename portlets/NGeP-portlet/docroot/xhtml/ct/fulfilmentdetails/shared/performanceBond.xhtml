@@ -15,8 +15,7 @@
 		!contractDetailsBackingBean.managedBean.directPurchase}">
 		 <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/> -->
 		 <p:dataTable id="tableBond" var="varBond"
-			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-			  rowKey="#{varBond}" selection="#{contractDetailsBackingBean.selectedBondList}">
+			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}">
 			  <ac:paginator for="tableBond" />
 			  <p:columnGroup type="header">
 				<p:row>
@@ -30,8 +29,12 @@
 					<p:column headerText="#{lbl['lbl.txt.attachment']}" />
 				</p:row>
 			 </p:columnGroup>
-			<p:column selectionMode="multiple" style="width:2%;"
-				rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" />
+			 <p:column style="width:2%;">
+		           <p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox"
+		           		rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+				       <p:ajax event="change" update=":form:delPdBtn" listener="#{contractDetailsBackingBean.selectOneCheckboxSelect}"></p:ajax>
+			       </p:selectBooleanCheckbox>
+		      </p:column>
 			
 			<p:column style="width:10%;">
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
@@ -90,15 +93,17 @@
 		<div class="ppRightBtn">
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@form" 
-				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" immediate="true"
 				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 					</p:tooltip>
 				</p:commandButton>
 				<p:spacer width="1" />
-				<p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();"
-				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+		  
+			     <p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@this" onsuccess="dlgPerformDel.show();"
+				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+				   disabled="#{contractDetailsBackingBean.managedBean.buttonHideActive}" >
 					<p:tooltip for="delPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -126,12 +131,9 @@
 				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
-					update="tableBond" process="@form"
-					actionListener="#{contractDetailsBackingBean.delBondDetails()}"
-					onclick="dlgPerformDel.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
-					onclick="dlgPerformDel.hide();" type="button" />
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=tableBond])" immediate="true"
+		       process="@all" actionListener="#{contractDetailsBackingBean.removeAddRow()}" onclick="dlgPerformDel.hide();"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgPerformDel.hide();" type="button" />
 			</div>
 		</p:dialog>
 	</p:panel>

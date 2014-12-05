@@ -2967,6 +2967,33 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  	   }
 	}
 	
+public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
+		
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideActive(false);
+		}else{
+			getManagedBean().setButtonHideActive(true);
+		}	
+	}
+
+public void removeAddRow(){
+	try {
+		if(getManagedBean().getContractVer().getCtPerformanceBonds() != null){
+			Iterator<CtPerformanceBond> performanceBond = getManagedBean().getContractVer().getCtPerformanceBonds().iterator();
+			while(performanceBond.hasNext()){
+				CtPerformanceBond  bond = performanceBond.next();
+				if(bond.isSelectedCheckBox()){
+					performanceBond.remove();
+				}
+			}
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	}
+}
+	
+	
 	public boolean isContractSharing() {		
 		for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()){
 			if(!getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName()

@@ -167,6 +167,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private int counter;
 	
 	private String financialAccNo;
+	private boolean buttonHideActive = false;
 	
 	public String[] getAction() {
 		return action;
@@ -1029,5 +1030,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setWarningPercentage(String warningPercentage) {
 		this.warningPercentage = warningPercentage;
+	}
+
+	public boolean isButtonHideActive() {
+		return buttonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		this.buttonHideActive = buttonHideActive;
 	}
 }
