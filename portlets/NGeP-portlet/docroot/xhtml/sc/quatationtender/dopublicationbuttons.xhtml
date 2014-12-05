@@ -14,7 +14,7 @@
 					<tr>
 						<td align="right"> -->
 						<ui:fragment
-							rendered="#{qTDetailBB.managedBean.processName ne 'Quotation Tender Creation'}">
+							rendered="#{qTDetailBB.managedBean.taskName eq null}">
 							<p:commandButton value="#{lbl['lbl.btn.back']}"
 								style="float:left;" icon="ui-icon-back"
 								action="#{qTDetailBB.gotoQtSearchPage}" />
