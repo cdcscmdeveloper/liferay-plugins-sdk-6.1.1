@@ -36,7 +36,8 @@
 						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-						<p:commandButton value="lbl.btn.#{fn:toLowerCase(bpmAction)}"
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"  update="@form"
 							action="#{flOrderBB.gpkiSignAction(bpmAction)}" />
