@@ -816,7 +816,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
-		reqDTO.setIncludeDetail(true);
+		reqDTO.setIncludeDetail(false);
 		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPurchaseRequest(reqDTO);
 		List<ScRequestNoteDtl> noteDtlList = new ArrayList<ScRequestNoteDtl>();
 		noteDtlList.addAll(purResDTO.getPurchaseRequest().getRequestNoteDtls());
