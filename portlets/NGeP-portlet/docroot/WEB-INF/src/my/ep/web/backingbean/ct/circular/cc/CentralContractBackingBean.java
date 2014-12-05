@@ -311,18 +311,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(),null));
 			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
-				SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
-										getManagedBean().getSearchContractNo());
-				filterBean.setCaseInsensitive(true);
-				searchBean.getDataFilterBeans().add(filterBean);
-			}
-			if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));	
+			
+			}if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
 				SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
 												getManagedBean().getSearchContractName());
 				filterBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(filterBean);
-			}
-			if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
+			}if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
 				List<Long> circularContractIdList = new ArrayList<Long>();
 				for(CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 					circularContractIdList.add(circularContract.getCtContract().getContractId());
@@ -334,37 +330,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setFilterByCircularContract(true);
 			ContractResDTO resDTO = contractSO.searchContract(reqDTO);
 			if(resDTO.isSuccessful()) {
-				
-				//Find Cancelled circular, and allow those cancelled circular's contract to be added
-				CircularReqDTO circularReqDTO = new CircularReqDTO();
-				ISearchBean<CtCancelCircular> cancelCircularSearchBean = new SearchBean<CtCancelCircular>();
-				cancelCircularSearchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
-						SearchOperator.OPERATOR_EQUALS.value(), 
-						ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
-				if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularVer.ctCircularContracts.ctContract.contractNo",SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchContractNo());
-					filterBean.setCaseInsensitive(true);
-					cancelCircularSearchBean.getDataFilterBeans().add(filterBean);				
-				}
-				if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularVer.ctCircularContracts.ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getSearchContractName());
-					filterBean.setCaseInsensitive(true);
-					cancelCircularSearchBean.getDataFilterBeans().add(filterBean);
-				}							
-				circularReqDTO.setCancelCircularSearchBean(cancelCircularSearchBean);
-				circularReqDTO.setContractFlag(true);
-				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-				CircularResDTO circularResDTO = circularSO.searchCancelledCircular(circularReqDTO);
-				if(circularResDTO.getCancelCircularResultBean() != null) {
-					for (CtCancelCircular cancelCircular : circularResDTO.getCancelCircularResultBean().getResultList()) {
-						for (CtCircularContract circularContract: cancelCircular.getCircularVer().getCtCircularContracts()) {
-							resDTO.getContractResultBean().getResultList().add(circularContract.getCtContract());
-						}
-					}
-				}				
 				getManagedBean().setContractList(resDTO.getContractResultBean().getResultList());
 			}
 		} catch (Exception e) {
