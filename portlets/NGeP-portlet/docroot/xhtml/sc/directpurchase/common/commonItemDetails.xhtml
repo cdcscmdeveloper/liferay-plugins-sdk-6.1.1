@@ -120,7 +120,7 @@
 					   <p:row>
 			            <p:column  styleClass="ppPanelGrid" style="border:none !important;width:10%;padding-left: 0px;">
 			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
-									 postUpdateListener="#{requestNoteBackingBean.beforeSavePostListener(requestNoteDtl)}"
+									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
 									 update="@form"
@@ -129,7 +129,7 @@
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
 							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
-									 postUpdateListener="#{requestNoteBackingBean.afterSavePostListener(requestNoteDtl)}"
+									 postUpdateListener="requestNoteBackingBean.afterSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
 									 update="@form"
