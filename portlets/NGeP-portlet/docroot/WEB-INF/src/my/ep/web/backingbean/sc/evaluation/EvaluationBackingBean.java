@@ -2639,7 +2639,7 @@ public class EvaluationBackingBean extends
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier());
 					proposalPage = detailBackingBean
-							.retrievePaidUpCapitalDtls(proposalCheckList);
+							.retrievePaidUpCapitalNdDeclarationDtls();
 
 					evaluationPage = "paidUpCapital.xhtml";
 				}
@@ -2722,7 +2722,7 @@ public class EvaluationBackingBean extends
 					 * .getScQtSupplier().getSmSupplier());
 					 */
 					proposalPage = detailBackingBean
-							.retrieveSupplierDtls(proposalCheckList);
+							.retrieveSupplierDtls();
 
 					evaluationPage = "/xhtml/sc/evaluation/supplierInfo.xhtml";
 					// return "supplierInfo.xhtml";
