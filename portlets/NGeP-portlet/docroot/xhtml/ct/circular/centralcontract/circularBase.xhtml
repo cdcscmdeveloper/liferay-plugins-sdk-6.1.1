@@ -47,7 +47,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
         <p:messages id="messages" showSummary="false" escape="false" showDetail="true" 
-             autoUpdate="#{centralContractBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+             autoUpdate="#{centralContractBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 	    <f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />	
           <ui:include src="circularButtons.xhtml" />
 		  <ui:include src="circularHeader.xhtml" />
