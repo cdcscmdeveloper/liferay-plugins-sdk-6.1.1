@@ -1266,11 +1266,13 @@ public class NoticeBoardBackingBean extends
 		reqDTO.setQtBriefingList(bsvDetails);
 		BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
 		if (resDto.isSuccessful()) {
+			String prvPage = this.getManagedBean().getPreviousPage();
 			ScQt currentQt = this.getManagedBean().getScQt();
-			SmSupplier supplier= this.getManagedBean().getSmSupplier();
+			SmSupplier supplier = this.getManagedBean().getSmSupplier();
 			renewSesionObject();
 			this.getManagedBean().setScQt(currentQt);
 			this.getManagedBean().setSmSupplier(supplier);
+			this.getManagedBean().setPreviousPage(prvPage);
 			retriveBsvDetails(currentQt.getQtId());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
