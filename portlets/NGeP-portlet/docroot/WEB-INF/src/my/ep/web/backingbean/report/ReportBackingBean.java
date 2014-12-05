@@ -83,11 +83,32 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 
 	public ReportBackingBean() {		
 	}	
+	private ScQt scqt;
+	List<SelectItem> reportList;
+	private List<SelectItem> moduleList;
+	private List<SelectItem> regTypeList;
+	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();	
+	private List<String> authoriztionList=new ArrayList<String>();
+	private List<String> orgProfileList=new ArrayList<String>();
+	private List<String> scYearList = new ArrayList<String>();	
+	private List<SelectItem> orgProfileIdNameList=new ArrayList<SelectItem>();
+	private List<SelectItem> userListbyprofileRole=new ArrayList<SelectItem>();	
+	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> districtLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
+	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> procurementList = new ArrayList<SelectItem>();	
+	private List<SelectItem> scProcureAllList = new ArrayList<SelectItem>();	
+	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();	
+	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();	
+	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
+	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();		
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
 	FLReportBackingBean flReportBackingBean;
 	SMReportBackingBean smReportBackingBean;
-	CTReportBackingBean ctReportBackingBean;
+	CTReportBackingBean ctReportBackingBean;	
 	
 	public CTReportBackingBean getCtReportBackingBean() {
 		return ctReportBackingBean;
@@ -119,29 +140,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setSmReportBackingBean(SMReportBackingBean smReportBackingBean) {
 		this.smReportBackingBean = smReportBackingBean;
 	}
-	List<SelectItem> reportList;
-	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
-	private List<SelectItem> moduleList;
-	private List<SelectItem> regTypeList;
-	List<String> authoriztionList=new ArrayList<String>();
-	List<String> orgProfileList=new ArrayList<String>();
-	List<SelectItem> orgProfileIdNameList=new ArrayList<SelectItem>();
-	List<SelectItem> userListbyprofileRole=new ArrayList<SelectItem>();
-	private ScQt scqt;
-	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
-	private List<SelectItem> districtLst = new ArrayList<SelectItem>();	
-	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();	
-	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();	
-	private List<SelectItem> procurementList = new ArrayList<SelectItem>();	
-	private List<SelectItem> scProcureAllList = new ArrayList<SelectItem>();	
-	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();	
-	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();	
-	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
-	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();	
-	private List<String> scYearList = new ArrayList<String>();	
-	
-	
 	public List<SelectItem> getOrgProfileIdNameList() {
 		return orgProfileIdNameList;
 	}
@@ -171,8 +169,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setOrgProfileList(List<String> orgProfileList) {
 		this.orgProfileList = orgProfileList;
-	}
-	
+	}	
 	private String userId;
 	private String roleCode;	
 	private Date fromDate;
@@ -332,8 +329,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctAgreement;
 	private String ctStatus;
 	private String ctContrMontrStatus;
-	private String ctComplete;
-	
+	private String ctComplete;	
 	
 	public String getFlGroupOne() {
 		return flGroupOne;
@@ -449,7 +445,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String constructedParamString;
 	private String reportFileNameJSP;	
 	
-	
 	public String getCtContractNo() {
 		return ctContractNo;
 	}
@@ -539,8 +534,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setScPIno(String scPIno) {
 		this.scPIno = scPIno;
-	}
-	
+	}	
 	public Date getScPublishFromDate() {
 		return scPublishFromDate;
 	}
@@ -1573,13 +1567,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){	
 				generateMonthList();
 				generateYearList();
-				scReportBackingBean.criteriaVariablesByReportBySC(rptGenBean,authoriztionList);
+				scReportBackingBean.enableCriteriaVariablesByReportBySC(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){				
-				flReportBackingBean.criteriaVariablesByReportByFL(rptGenBean,authoriztionList);
+				flReportBackingBean.enableCriteriaVariablesByReportByFL(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){				
-				smReportBackingBean.criteriaVariablesByReportBySM(rptGenBean,authoriztionList);
+				smReportBackingBean.enableCriteriaVariablesByReportBySM(rptGenBean,authoriztionList);
 			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))){				
-				ctReportBackingBean.criteriaVariablesByReportByCT(rptGenBean,authoriztionList);
+				ctReportBackingBean.enableCriteriaVariablesByReportByCT(rptGenBean,authoriztionList);
 			}
 			resetReportForm();
 			retrieveDates();
@@ -1832,10 +1826,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.URL_NOT_CONNECTED));
 				}
 				//loadReportWithParamsString(constructedParamString);
-				//loadReport(generatedURL);	
-				//loadReportWithParams(paramLst);
-				//getReportPdf();
-				//getStreamPDFFile(constructedParamString);//put try catch
 			}
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
@@ -2285,7 +2275,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
-			}			
+			}
 		}else{
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}		
@@ -2409,8 +2399,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			if((this.getFlGroupSix()!=null)&&(this.getFlGroupSix()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFlGroupSixVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupSix());
-			}
-			
+			}			
 			if((this.getFlGroupSeven()!=null)&&(this.getFlGroupSeven()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFlGroupSevenVar(ReportConst.CT_AMP_GROUP_EQ+this.getFlGroupSeven());
 			}
@@ -2667,10 +2656,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		HttpURLConnection urlConnection = null;
 		URL obj = new URL(gnrtdURL.toString());
 		log.info(gnrtdURL.toString());
-	    urlConnection = (HttpURLConnection) obj.openConnection();  
-	    
-	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
-        
+	    urlConnection = (HttpURLConnection) obj.openConnection(); 	    
+	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());         
 	    PortletResponse portletResponse = (PortletResponse) FacesContext
       	      .getCurrentInstance().getExternalContext().getResponse();
 	    HttpServletResponse res = PortalUtil
@@ -2678,42 +2665,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	    int position = reportFile.lastIndexOf(".jsp");
 	    if(position != -1) {
 	    	reportFile = reportFile.substring(0, position);
-	    }
-	    
+	    }	    
 	    res.setHeader("Content-Disposition", "attachment; filename=\""
     	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
-	    res.setHeader("Content-Transfer-Encoding", "binary");
-	    res.setContentType("application/pdf");
-	    res.flushBuffer();
-	    
-	    OutputStream out = res.getOutputStream();
-        	  
-	    byte[] b = new byte[128];
-        int size;
-        while ((size = buf.read(b, 0, b.length)) != -1) {
-        	out.write(b, 0, size);
-        }
-        buf.close();
-        out.close();
-	}
-	public void getStreamPDFFile(String paramConstrString) throws IOException {		
-		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
-		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
-		reportUrl.append(ReportConst.AMP_REPORT_NAME);
-		reportUrl.append(paramConstrString);		
-		reportUrl.append(excNextUrl);				
-		HttpURLConnection urlConnection = null;
-		URL obj = new URL(reportUrl.toString());
-	    urlConnection = (HttpURLConnection) obj.openConnection();	    
-	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
-	    PortletResponse portletResponse = (PortletResponse) FacesContext
-      	      .getCurrentInstance().getExternalContext().getResponse();
-	    HttpServletResponse res = PortalUtil
-	      	      .getHttpServletResponse(portletResponse);
-	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + "NGeP_Report.pdf" + "\"");//
 	    res.setHeader("Content-Transfer-Encoding", "binary");
 	    res.setContentType("application/pdf");
 	    res.flushBuffer();	    
@@ -2726,114 +2680,4 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
         buf.close();
         out.close();
 	}
-	public StreamedContent getStreamedContentPDFFile(String paramConstrString) {
-		StringBuilder gnrtdURL = new StringBuilder();
-		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
-		gnrtdURL.append(paramConstrString); 
-		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
-		log.info( gnrtdURL.toString());
-		HttpURLConnection urlConnection = null;		
-		if(gnrtdURL!=null) {		
-			try {
-				URL obj = new URL(gnrtdURL.toString());
-				urlConnection = (HttpURLConnection) obj.openConnection();				
-				pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"application/pdf");	           
-				/*InputStream in = urlConnection.getInputStream();
-				byte[] buf = new byte[512];
-				int len;
-				while (true) {
-					len = in.read(buf);
-					if (len == -1) {
-						break;
-					}
-					tmpOut.write(buf, 0, len);
-				}
-				tmpOut.flush();
-				in.close();
-				tmpOut.close();*/
-				/*ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
-				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
-				pdfFile= new DefaultStreamedContent(stream, "application/pdf");*/
-				urlConnection.disconnect();
-	        } catch (IOException ex) {
-	        	ex.printStackTrace();
-	        }
-		}
-		return pdfFile;
-	}
-	public File newDownloadingFile(String url) throws IOException {		
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		res.setHeader( "Content-Disposition", "attachment; filename=\"" + "testing.pdf" + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		File localFile = new File("C:\\Jangari\\testing.pdf");
-		if(url!=null) {
-			log.info(url);
-			InputStream input = null;
-			try {
-				URL obj = new URL(url);
-				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();				
-				input = new BufferedInputStream(uc.getInputStream()); 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	        byte[] buf = new byte[1024];
-	        try {
-	            for (int readNum; (readNum = input.read(buf)) != -1;) {
-	                bos.write(buf, 0, readNum); 	               
-	            }
-	        } catch (IOException ex) {
-	        	ex.printStackTrace();
-	        }
-	        byte[] bytes = bos.toByteArray();	        
-	        FileOutputStream fos = new FileOutputStream(localFile);
-	        fos.write(bytes);
-	        fos.flush();
-	        fos.close();			
-			input.close();	
-		}				
-		out.flush();
-		out.close(); 		
-		return localFile;
-	}
-	public StreamedContent getReportPdf() {		
-		String reportUrl = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=Total_Catalog_Item_Unspscwise.jsp&frdt=26/09/2014&todt=30/09/2014&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
-		HttpURLConnection urlConnection = null;
-		try {
-		    URL obj = new URL(reportUrl);
-		    urlConnection = (HttpURLConnection) obj.openConnection();	    
-		    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
-		    ResourceResponse portletResponse = (ResourceResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();            
-            /*PortletResponse portletResponse = (PortletResponse) FacesContext
-            	      .getCurrentInstance().getExternalContext().getResponse();*/
-            HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
-            res.setHeader("Content-Disposition", "attachment; filename=\""
-            	          + "test-report.pdf" + "\"");//
-            res.setHeader("Content-Transfer-Encoding", "binary");
-            res.setContentType("application/pdf");
-            res.flushBuffer();
-            OutputStream out = res.getOutputStream();            	  
-            byte[] b = new byte[128];
-            int size;
-            while ((size = buf.read(b, 0, b.length)) != -1) {
-                out.write(b, 0, size);
-            }
-            ITextRenderer renderer = new ITextRenderer();
-            //renderer.setDocument(doc, null);
-            //renderer.layout();               
-		    renderer.createPDF(out);					
-		    //out.write(getPdfStream());
-            out.flush();
-            out.close();
-        } catch (IOException ex) {
-	          ex.printStackTrace();
-	    }catch (DocumentException e) {
-			e.printStackTrace();
-		}		
-		return null;
-	}	
 }

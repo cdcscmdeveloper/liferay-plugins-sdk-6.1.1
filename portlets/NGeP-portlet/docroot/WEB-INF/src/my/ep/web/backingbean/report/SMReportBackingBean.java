@@ -50,7 +50,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	/*
 	 *Enable SM module criteria by report name 
 	 */
-	public void criteriaVariablesByReportBySM(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
+	public void enableCriteriaVariablesByReportBySM(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.SM_LST_OF_APP_RPT_VAL:
 	        	rptGenBean.setSmSupportingDocumentView(true);

@@ -22,7 +22,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	/*
 	 *Enable CT module criteria by report name 
 	 */
-	public void criteriaVariablesByReportByCT(ReportsGenerateBean rptGenBean, List<String> authoriztionList){
+	public void enableCriteriaVariablesByReportByCT(ReportsGenerateBean rptGenBean, List<String> authoriztionList){
 		
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL:
