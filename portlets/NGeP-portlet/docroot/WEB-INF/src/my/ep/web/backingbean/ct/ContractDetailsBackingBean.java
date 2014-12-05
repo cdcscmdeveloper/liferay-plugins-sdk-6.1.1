@@ -176,7 +176,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtDeductionClause[] selectedDeductionClauses;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
-	private boolean isContractSharing;
 	
 	public ContractDetailsBackingBean() {
 	   
@@ -458,7 +457,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 				getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 			}
-			checkContractSharing();
 			initializeRemarks();
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
@@ -1631,7 +1629,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			 reqDTO.setOrgProfileId(selectedPmOrgProfile[i].getOrgProfileId());
 			 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			 ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
-			 ctAgency.setAp178(true);
+			 
+			 if(!getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId()
+						.equals(ctAgency.getOrgProfile().getParentOrgProfile().getOrgProfileId()))
+				 ctAgency.setAp178(true);
 		  	
 		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
@@ -1652,7 +1653,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if (selectedPmOrgProfile.length>0){
 			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
 		}
-		checkContractSharing();
 		selectedPmOrgProfile = null;
 	}
 	 
@@ -1671,8 +1671,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						}
 			     }	
 		   }
-	  }selectedListOfAgency = null;	
-	  checkContractSharing();
+	  }selectedListOfAgency = null;
 	}
 	
 	public void selectedZoneValue(){
@@ -2967,23 +2966,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	       			ctAgency.setChkStatus(true);		        		   
  	   }
 	}
-
-	public boolean getIsContractSharing() {
-		return isContractSharing;
-	}
-
-	public void setContractSharing(boolean isContractSharing) {
-		this.isContractSharing = isContractSharing;
-	}
 	
-	private void checkContractSharing(){
-		setContractSharing(Boolean.FALSE);				
+	public boolean isContractSharing() {		
 		for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()){
 			if(!getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName()
 					.equals(ctAgency.getOrgProfile().getParentOrgProfile().getOrgName())){
-				 setContractSharing(Boolean.TRUE);
-				 break;
+				 return true;
 			}
 		}
+		return false;
 	}
 }
