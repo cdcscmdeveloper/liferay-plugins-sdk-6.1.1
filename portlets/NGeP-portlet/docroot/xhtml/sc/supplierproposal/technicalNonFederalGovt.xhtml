@@ -18,7 +18,7 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
 			rowKey="#{technongovt}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="technongovtid" />
-			<p:column style="width:2%">
+			<p:column style="width:2% ;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
@@ -33,14 +33,14 @@
 						listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column id="clientNameColId" style="white-space : normal">
+			<p:column id="clientNameColId" style="white-space : normal; width : 20%; ">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.agencyname']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.clientName}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea id="clientName" value="#{technongovt.clientName}"
+				<p:inputTextarea id="clientName" value="#{technongovt.clientName}" style = "width : 80%;"
 					rows="3" cols="17" maxlength="50" required="true"
 					label="#{lbl['lbl.sc.sp.agencyname']}"
 					rendered="#{technongovt.brandNew eq true}">
@@ -50,7 +50,7 @@
 				<p:message id="clientNameMsg" for="clientName" display="icon" />
 			</p:column>
 
-			<p:column style="white-space : normal">
+			<p:column style="white-space : normal; width : 20%;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.contracttitle']}" />
@@ -58,7 +58,7 @@
 				<h:outputText value="#{technongovt.contractTitle}"
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputTextarea id="contractTitle"
-					value="#{technongovt.contractTitle}" rows="3" cols="22"
+					value="#{technongovt.contractTitle}" rows="3" cols="22" style = "width : 80%;"
 					maxlength="1000" required="true"
 					label="#{lbl['lbl.sc.sp.contracttitle']}"
 					rendered="#{technongovt.brandNew eq true}">
@@ -68,14 +68,14 @@
 				<p:message id="contractTitleMsg" for="contractTitle" display="icon" />
 			</p:column>
 
-			<p:column>
+			<p:column style = "width : 10%;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.contractno']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.contractNo}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputText id="contractNo" value="#{technongovt.contractNo}"
+				<p:inputText id="contractNo" value="#{technongovt.contractNo}" style = "width : 76%;"
 					size="17" maxlength="30" required="true"
 					label="#{lbl['lbl.sc.sp.contractno']}"
 					rendered="#{technongovt.brandNew eq true}">
@@ -86,7 +86,7 @@
 				<p:message id="contractNoMsg" for="contractNo" display="icon" />
 			</p:column>
 
-			<p:column>
+			<p:column style = "width : 10%;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.effectivedt']}" />
@@ -97,7 +97,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 				<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}"
-					readonlyInput="true" showOn="button" navigator="true" size="7"
+					readonlyInput="true" showOn="button" navigator="true" size="7" style = "width : 76%;"
 					mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMinDate}"
 					maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
@@ -109,7 +109,7 @@
 				</p:calendar>
 				<p:message id="effectiveDateMsg" for="effectiveDate" display="icon"
 					showSummary="true" showDetail="false" />
-			</p:column>
+			</p:column style = "width : 10%;">
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -122,7 +122,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 					<p:calendar id="expiryDate" value="#{technongovt.expiryDate}"
-						readonlyInput="true" showOn="button" navigator="true" size="7"
+						readonlyInput="true" showOn="button" navigator="true" size="7" style = "width : 76%;"
 						mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedMinDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
 						label="#{lbl['lbl.sc.sp.expirydt']}"
@@ -136,7 +136,7 @@
 						showSummary="true" showDetail="false" />
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
+			<p:column style = "width : 10%;" headerText="#{lbl['lbl.sc.sp.contractperiod']}">
 
 				<h:panelGroup id="contractPeriodPanelGropID">
 					<h:outputText style="float:right"
@@ -148,11 +148,11 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.remarks']}"
+			<p:column style = "width : 18%;" headerText="#{lbl['lbl.sc.sp.remarks']}"
 				style="white-space : normal">
 				<h:outputText value="#{technongovt.remark}"
 					rendered="#{technongovt.brandNew eq false}" />
-				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="17"
+				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="17" style = "width : 96%;"
 					maxlength="300" rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true" update="@this" />
 				</p:inputTextarea>
