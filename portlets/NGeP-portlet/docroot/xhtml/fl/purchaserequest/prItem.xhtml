@@ -155,7 +155,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{flItem.orderedQty}" size="13" id="orderedQty"
-						styleClass="colFloatRight" maxlength="13"
+						styleClass="colFloatRight" maxlength="#{flItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						onkeypress="if (event.keyCode == 13) { return false; }" >
 						<f:converter converterId="dynamicNumberConverter" />
