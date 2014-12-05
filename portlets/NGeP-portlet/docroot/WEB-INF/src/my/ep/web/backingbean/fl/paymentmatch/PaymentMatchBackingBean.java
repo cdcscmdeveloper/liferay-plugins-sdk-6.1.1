@@ -1043,20 +1043,19 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
 					getManagedBean().setHaveAdvancedPymt(true);
 					deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
+					ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(paymentAdvice.getFlRequest().getCtContract().getContractId());
+					if(ctRes.getPaidAdvancePaymentAmt() == null){
+						ctRes.setPaidAdvancePaymentAmt(new BigDecimal(0));
+					}
+					getManagedBean().setPaidAmt(ctRes.getPaidAdvancePaymentAmt());
+					if(deductionAmt.doubleValue() == 0){
+						getManagedBean().setPaidPerc(new BigDecimal(0));
+					}else{
+						getManagedBean().setPaidPerc(ctRes.getPaidAdvancePaymentAmt().divide(deductionAmt).multiply(new BigDecimal(100)));	
+					}
+					getManagedBean().setBalanceAmt(deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt()));
 				}
 			}
-			ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(paymentAdvice.getFlRequest().getCtContract().getContractId());
-			if(ctRes.getPaidAdvancePaymentAmt() == null){
-				ctRes.setPaidAdvancePaymentAmt(new BigDecimal(0));
-			}
-			getManagedBean().setPaidAmt(ctRes.getPaidAdvancePaymentAmt());
-			if(deductionAmt.doubleValue() == 0){
-				getManagedBean().setPaidPerc(new BigDecimal(0));
-			}else{
-				getManagedBean().setPaidPerc(ctRes.getPaidAdvancePaymentAmt().divide(deductionAmt).multiply(new BigDecimal(100)));	
-			}
-			
-			getManagedBean().setBalanceAmt(deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt()));
 		}
 	}
 	
