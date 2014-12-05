@@ -80,7 +80,8 @@
 			  				contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 					 		contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
 					 		!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText id="astatus" style="width:170px;" disabled="true"
+				<p:inputTextarea id="astatus" disabled="true" rows="3"  style="width:170px;margin-bottom: 5px;" autoResize="false" 
+					maxlength="1000" 
 					value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
 				<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
@@ -117,7 +118,7 @@
 			 			 	contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 					 	 	contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
 					 	 	contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText for="astatus1" style="width:170px;" disabled="true" 
+				<p:inputTextarea for="astatus1" style="width:170px;margin-bottom: 5px;" disabled="true" rows="2" maxlength="1000" autoResize="false" 
 				  	value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
 				<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />

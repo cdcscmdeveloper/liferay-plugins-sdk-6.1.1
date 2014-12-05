@@ -31,13 +31,12 @@
                   </h:panelGrid>
           
                   <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  
-                  <p:inputText disabled="true" style="width:170px;" 
+                   <p:inputTextarea disabled="true" style="width:170px;margin-bottom: 5px;" rows="2" autoResize="false"
                       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
-                 
                   <p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
                   <h:panelGrid columns="3">
                   	 <h:panelGrid columns="3"> 
-	                   	 <p:inputText disabled="true" style="width:210px;" id="supplierCompanyName"
+	                   	 <p:inputText disabled="true" style="width:310px;" id="supplierCompanyName"
 	             	         value="#{contractDetailsBackingBean.managedBean.supplierCompanyName}" />
 	             	     <p:spacer width="1"/>
 						 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
@@ -99,7 +98,7 @@
                     columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
                        
                           <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
-                           <p:inputText disabled="true" style="width:170px;" 
+                           <p:inputText disabled="true" style="width:310px;" 
                                 value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankName}"/>
   
                            <p:outputLabel  value="#{lbl['lbl.ct.account.no']}" />  
