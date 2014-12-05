@@ -918,6 +918,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+		if(null != flItemAddr.getOrderedQty()){
+			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
+			flItemAddr.setOrderedQty(formattedOrderedQty);
+		}	
 		// Tier only
 		if(getManagedBean().getPmPriceType() != null 
 				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
