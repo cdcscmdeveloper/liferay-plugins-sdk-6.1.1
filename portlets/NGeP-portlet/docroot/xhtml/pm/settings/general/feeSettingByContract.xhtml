@@ -46,6 +46,7 @@
 				disabled="#{feeObj.contractId.contractNo == null}" size="35"
 				headerText="Contract Item" readonly="true"
 				postUpdateListener="ruleCatalogueBackingBean.scRequestItemCodeUpdate(#{rowIndex},ruleCatalogueBackingBean.managedBean.feeExemptionsForContract)"
+				conditionField="recordStatus^1|ctContractVer.ctContract.contractId^#{feeObj.contractId.contractId}"
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedCtContractItem"
 				value="#{feeObj.requestItemId.itemName}">
 			</ac:lov>

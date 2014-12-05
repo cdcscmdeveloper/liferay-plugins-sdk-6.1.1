@@ -51,6 +51,7 @@
 				disabled="#{feeObj.orgProfileId.smSupplier == null}" size="30"
 				readonly="true" headerText="Item"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
+				conditionField="cmSupplierItems.supplierId^#{feeObj.orgProfileId.smSupplier.supplierId}"
 				value="#{feeObj.itemId.itemName}">
 			</ac:lov>
 
