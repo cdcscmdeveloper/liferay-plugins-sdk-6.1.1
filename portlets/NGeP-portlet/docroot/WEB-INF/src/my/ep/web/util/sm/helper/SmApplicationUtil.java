@@ -177,8 +177,7 @@ public class SmApplicationUtil {
 			resultCount = resDTO.getCount().intValue();
 			if (resultCount < count) {
 				if (count == 5
-						|| ((count == 10) && (resDTO.getSmPersonnelList() != null && resDTO
-								.getSmPersonnelList().size() < 5)))
+						|| ((count == 10) && (resultCount < 5)))
 					validPerCount = 1;
 				else
 					validPerCount = 2;
