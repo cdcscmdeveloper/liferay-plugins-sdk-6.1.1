@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" style="vertical-align: baseline;"><p:tabMenu
+			<td width="20%" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex}"
-					styleClass="sidemenu" style="display : table-caption;">
+					styleClass="sidemenu" style="display : table -caption;">
 					<p:menuitem value="#{lbl['lbl.sc.technical.proposal']}"
 						action="#{supplierProposalDetailBackingBean.retrieveTechnicalProposalList}"
 						update="@form" />
@@ -31,14 +31,15 @@
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
 						<ui:include src="spfinancedetails.xhtml" />
 					</c:if>
-					<h:panelGroup rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
+					<h:panelGroup
+						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
 						<ui:include src="spdeclaration.xhtml" />
 					</h:panelGroup>
 				</h:panelGroup></td>
 		</tr>
 	</table>
-	
-	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true" 
+
+	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true"
 		resizable="false" width="700px" height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
