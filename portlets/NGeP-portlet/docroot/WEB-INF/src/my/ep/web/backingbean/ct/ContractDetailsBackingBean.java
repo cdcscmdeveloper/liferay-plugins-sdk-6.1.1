@@ -940,13 +940,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		     		 getManagedBean().getContractVer().setCtSchedules(null);  	
 		     	}
 		    	
-		    	 if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().isEmpty()) && getManagedBean().getCtContract().isFrequencySchedule()) {
+		    	 if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2) && getManagedBean().getCtContract().isFrequencySchedule()) {
 		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-		    		   throw new EpException(MessageConst.ERROR_100022,new String[] { "Fulfilment Schedule" });
+		    		   throw new EpException(MessageConst.ERROR_750022);
 		          
-		    	   } else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().isEmpty() && !getManagedBean().getCtContract().isFrequencySchedule()) {
+		    	   } else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()) {
 		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-		    			throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Payment" });
+		    			throw new EpException(MessageConst.ERROR_750022);
 		 			}
 		    	 
 		    		 if(contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty() && !getManagedBean().getCtContract().isFrequencySchedule()) {
