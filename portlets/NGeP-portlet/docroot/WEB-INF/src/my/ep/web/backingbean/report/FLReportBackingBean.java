@@ -23,7 +23,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	/*
 	 * Enable FL module criteria by report name
 	 */
-	public void criteriaVariablesByReportByFL(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
+	public void enableCriteriaVariablesByReportByFL(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 		
 	switch (getManagedBean().getReportValue()) {
 		case ReportConst.CON_REQ_RPT_MIN_VAL:	

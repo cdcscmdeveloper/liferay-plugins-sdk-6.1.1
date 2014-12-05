@@ -39,7 +39,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	/*
 	 *Enable SC module criteria by report name 
 	 */
-	public void criteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
+	public void enableCriteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean,	List<String> authoriztionList){
 	
 		switch (getManagedBean().getReportValue()) {
 		 	case ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL:

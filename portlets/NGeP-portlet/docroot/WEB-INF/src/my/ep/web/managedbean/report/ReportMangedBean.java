@@ -17,12 +17,9 @@ public class ReportMangedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> reportList=new ArrayList<SelectItem>();
-	//private String moduleName;
 	private String reportName;
 	private String reportValue;
 	private String moduleValue;
-	private boolean notSelfView = false;
-	private boolean selfView = true;
 			
 	public String getReportValue() {
 		return reportValue;
@@ -35,25 +32,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	}
 	public void setModuleValue(String moduleValue) {
 		this.moduleValue = moduleValue;
-	}
-	public boolean isNotSelfView() {
-		return notSelfView;
-	}
-	public void setNotSelfView(boolean notSelfView) {
-		this.notSelfView = notSelfView;
-	}
-	public boolean isSelfView() {
-		return selfView;
-	}
-	public void setSelfView(boolean selfView) {
-		this.selfView = selfView;
-	}
-	/*public String getModuleName() {
-		return moduleName;
-	}
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
-	}*/
+	}	
 	public ReportsGenerateBean getRptGenBean() {
 		return rptGenBean;
 	}

@@ -34,21 +34,7 @@ public class ReportsGenerateBean {
 	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
-		/*private boolean itemTypeView = false;
-		private boolean itemStatusView = false;
-		private boolean unspscCodeView = false;
-		private boolean unspscTitleView = false;
-		private boolean extentionCodeView = false;
-		private boolean companyNameView = false;
-		private boolean registrationTypeView = false;
-		private boolean fromDateView = false;
-		private boolean toDateView = false;
-		private boolean quotationNoView = false;
-		private boolean paymentIdView = false;
-		private boolean itemCategoryView = false;
-		private boolean itemNameView = false;
-		private boolean basicRegView = false;
-		private boolean mofRegView = false;*/		
+				
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
@@ -2173,8 +2159,6 @@ public class ReportsGenerateBean {
 		public void setToDateView(boolean toDateView) {
 			this.toDateView = toDateView;
 		}
-				
-		
 		public List<SelectItem> getStateLst() {
 			return stateLst;
 		}
