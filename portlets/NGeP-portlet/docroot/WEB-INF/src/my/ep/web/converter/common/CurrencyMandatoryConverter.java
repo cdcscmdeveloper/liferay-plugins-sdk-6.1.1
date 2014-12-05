@@ -21,14 +21,14 @@ public class CurrencyMandatoryConverter implements Converter {
 	public Object getAsObject(FacesContext context, UIComponent component,
 			String value) {
 
-		BigDecimal currVal = null;
+		BigDecimal currVal = new BigDecimal(0);
+		currVal.setScale(2, RoundingMode.CEILING);
 		try {
 			if (value != null && StringUtils.isNotBlank(value)) {
 				value = value.replace(",", "");
 				currVal = new BigDecimal(value);
 				currVal.setScale(2, RoundingMode.HALF_UP);
 				if (currVal.compareTo(BigDecimal.ZERO) == 0) {
-					currVal.setScale(2, RoundingMode.CEILING);
 					throw new ConverterException(
 							new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
@@ -69,7 +69,7 @@ public class CurrencyMandatoryConverter implements Converter {
 							"lbl.sm.inputcurrency.numericformat.errmsg", null)));
 		}
 
-		return currVal==null?currVal:currVal.setScale(2, RoundingMode.HALF_UP);
+		return currVal;
 	}
 
 	@Override
