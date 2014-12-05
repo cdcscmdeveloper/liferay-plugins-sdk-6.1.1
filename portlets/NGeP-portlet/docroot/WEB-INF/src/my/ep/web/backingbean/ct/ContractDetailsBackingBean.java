@@ -2939,10 +2939,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.ministry.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+		if(isBPKCCA()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.central.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
+	}
+	
+	public boolean isBPKCCA() {
+	    	if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()))
+				return true;
+	    	else
+	    		return false;
 	}
 	
 	public void checkAgencyStatus(CtAgency ctAgency){
