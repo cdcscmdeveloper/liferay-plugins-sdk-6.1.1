@@ -105,7 +105,7 @@
 
 			<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3"
 				update=":form:settingTabId:ruleTypeValueTableID" size="20"
-				headerText="Category" required="true" label="#{lbl['lbl.pm.category']}"
+				headerText="Category" readonly="true" label="#{lbl['lbl.pm.category']}"
 				postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
 				value="#{typeValueObj.categoryDisplayValue}">

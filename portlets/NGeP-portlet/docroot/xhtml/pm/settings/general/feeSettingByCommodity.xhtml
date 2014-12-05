@@ -29,7 +29,7 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.unspsc.code']}" />
 			</f:facet>
-			<ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true"
+			<ac:lov id="lovCommodity" lovId="CM_UNSPSC" readonly="true"
 				label="#{lbl['lbl.cm.unspsc.code']}"
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 				size="15" headerText="unspsc commodity"
@@ -49,11 +49,10 @@
 			            </p:column>
 		<p:column id="cmTypelist">
 			<f:facet name="header">
-				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value=" #{lbl['lbl.pm.unspsc.type']}" />
 			</f:facet>
 
-			<p:selectOneMenu value="#{feeObj.typeId.typeId}" required="true"
+			<p:selectOneMenu value="#{feeObj.typeId.typeId}"
 				label="UNSPSC Type" disabled="#{feeObj.unspscId.unspscCode == null}"
 				style="width:128px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />

@@ -11,39 +11,41 @@
 	<div class="header-info">
 		<table style="width: 100%;">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
-				<td><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.requestCode.docNo}"
-						disabled="true" size="30"></p:inputText></td>
+				<td width="9%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="15%"><h:outputText
+						style="white-space: normal!important; text-align : left;"
+						value="#{unspscCodeBackingBean.managedBean.requestCode.docNo}"/></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}"></p:outputLabel></td>
-				<td><p:inputText
-						value="#{unspscCodeBackingBean.managedBean.docStatus}"
-						disabled="true" size="30"></p:inputText></td>
+				<td width="5%"><p:outputLabel value="#{lbl['lbl.cm.doc.status']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="15%"><h:outputText 
+						style="white-space: normal!important; text-align : left;"
+						value="#{unspscCodeBackingBean.managedBean.docStatus}"/></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.cm.company.name']}"></p:outputLabel></td>
-				<td><c:choose>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.company.name']}" style="text-align : right;"></p:outputLabel></td>
+				<td width="15%"><c:choose>
 						<c:when
 							test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null}">
-							<p:inputText
+							<h:outputText
+					    	style="white-space: normal!important; text-align : left;"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.companyName}"
-								disabled="true" size="30"></p:inputText>
+								/>
 						</c:when>
 						<c:otherwise>
-							<p:inputText value="N/A" disabled="true" size="30"></p:inputText>
+							<h:outputText value="N/A" style="text-align : left;" />
 						</c:otherwise>
 					</c:choose></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.cm.ep.no']}"></p:outputLabel></td>
+				<td width="5%"><p:outputLabel value="#{lbl['lbl.cm.ep.no']}" style="text-align : right;"></p:outputLabel></td>
 				<td><c:choose>
 						<c:when
 							test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null}">
-							<p:inputText
+							<h:outputText
+					    	style="white-space: normal!important; text-align : left;"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.epNo}"
-								disabled="true" size="30"></p:inputText>
+								/>
 						</c:when>
 						<c:otherwise>
-							<p:inputText value="N/A" disabled="true" size="30"></p:inputText>
+							<h:outputText value="N/A" style="text-align : left;" />
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
