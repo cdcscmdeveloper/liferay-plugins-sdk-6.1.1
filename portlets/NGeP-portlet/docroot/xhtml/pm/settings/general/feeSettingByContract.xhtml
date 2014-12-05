@@ -26,7 +26,7 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.contract.no']}" />
 			</f:facet>
-			<ac:lov id="lovContract" lovId="CT_CONTRACT_FOR_FEE" required="true"
+			<ac:lov id="lovContract" lovId="CT_CONTRACT_FOR_FEE" readonly="true"
 				label="#{lbl['lbl.pm.contract.no']}" size="20" headerText="Contract"
 				update=":form:settingTabId:feeSettingId:feeByContractTableID"
 				postUpdateListener="ruleCatalogueBackingBean.updateDatesForFeeBaseOnContract(#{rowIndex} ,ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId)"
