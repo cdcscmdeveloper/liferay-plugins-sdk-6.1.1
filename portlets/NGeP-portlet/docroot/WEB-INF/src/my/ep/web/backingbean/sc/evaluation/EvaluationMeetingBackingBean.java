@@ -378,21 +378,17 @@ public class EvaluationMeetingBackingBean extends
 
 	public void okCommitteeAction() {
 		// debugLogger("okCommitteeAction");
-		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		IParameterSO parameterSo = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IParameterSO.class);
 
 		UserReqDTO userReqDTO = new UserReqDTO();
 
 		// ScCommittee scCommittee = this.getManagedBean().getScCommittee();
 		// ScQt scQt = this.getManagedBean().getQt();
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(60730L);
-		StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
-				statusReqDTO);
-		PmStatus status = statusResDTO.getPmStatus();
+		/*
+		 * StatusReqDTO statusReqDTO = new StatusReqDTO();
+		 * statusReqDTO.setStatusId(60730L); StatusResDTO statusResDTO =
+		 * getStatusSO().retrieveStatusByStatusId( statusReqDTO);
+		 */
+		// PmStatus status = statusResDTO.getPmStatus();
 		// scQt.setQtStatus(status);
 
 		List<ScQtCommitteeActivity> committeeActivity = getManagedBean()
@@ -558,6 +554,8 @@ public class EvaluationMeetingBackingBean extends
 									.retrieveParameterById(reqDTO);
 							committeeMember.setMemberRole(resDTO
 									.getPmParameter());
+						} else {
+							committeeMember.setMemberRole(new PmParameter());
 						}
 					}
 
