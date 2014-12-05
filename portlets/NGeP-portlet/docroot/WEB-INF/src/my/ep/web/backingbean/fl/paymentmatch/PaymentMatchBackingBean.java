@@ -612,7 +612,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 		}
 		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
-		if(!resDTO.isFeeExemption()){
+		if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
 			for (FlPaymentItem data : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
 				//check item whther is exempted for this supplier.
 
@@ -625,7 +625,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 				}
 				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
-				if(!resDTO.isFeeExemption()){
+				if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
 					nonExemptedItemList.add(data.getFlInvoiceItem().getInvAmt());
 				}
 			}
