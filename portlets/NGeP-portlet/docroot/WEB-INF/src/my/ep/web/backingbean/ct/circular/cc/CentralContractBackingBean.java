@@ -430,9 +430,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         try {
         	
         	if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
-        		getManagedBean().setAutoUpdate(false);
-        		RequestContext.getCurrentInstance().addCallbackParam("epException", true);	
-        		throw new EpException(MessageConst.WARN_755015);
+        		throw new EpException(MessageConst.ERROR_755016);
         	}
         	
         	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
@@ -1110,6 +1108,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void addCircularContractListener() {
 		log.info("CentralContractBackingBean.addCircularContractListener()");
 		try {
+			getManagedBean().setAutoUpdate(false);
 			getManagedBean().setSearchContractNo(null);
 			getManagedBean().setSearchContractName(null);
 			getManagedBean().setContractList(new ArrayList<CtContract>());
