@@ -223,6 +223,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("-------rpt--------" + catType);
 		this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 		
+		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
+		
+		if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
+			for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
+				SmSvTemplateAddress svTempAdd = new SmSvTemplateAddress();
+				svTempAdd.setSmSvTemplate(svTemplate);
+				svTempAdd.setSmSvAddress(selectedAdd);
+				svTemplate.getSmSvTemplateAddresses().add(svTempAdd);
+			}
+		}
+		
 		//log.info("---svTemplate selected ADD----------" + this.getManagedBean().getSelectedSvTemplate().getSmSvTemplateAddresses().size());
 	}
 
