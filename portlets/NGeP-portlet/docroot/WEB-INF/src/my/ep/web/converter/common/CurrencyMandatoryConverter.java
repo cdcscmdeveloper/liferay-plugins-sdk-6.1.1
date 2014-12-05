@@ -2,6 +2,8 @@ package my.ep.web.converter.common;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -20,9 +22,9 @@ public class CurrencyMandatoryConverter implements Converter {
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component,
 			String value) {
-
-		BigDecimal currVal = new BigDecimal(0);
-		currVal.setScale(2, RoundingMode.CEILING);
+		
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		BigDecimal currVal = new BigDecimal(formatter.format(0));
 		try {
 			if (value != null && StringUtils.isNotBlank(value)) {
 				value = value.replace(",", "");
