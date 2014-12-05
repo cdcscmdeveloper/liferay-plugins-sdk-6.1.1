@@ -76,6 +76,7 @@ public class BSVAttendanceBackingBean extends
 
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			reqDTO.setQtId(qtId);
+			// reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setLanguageCode(languageCode);
 
 			BriefingResDTO resDTO = qTBriefingSO
@@ -302,8 +303,12 @@ public class BSVAttendanceBackingBean extends
 			}
 			if (resDTO.isSuccessful()) {
 				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);
-
+				String previousPage = this.getManagedBean().getPreviousPage();
+				ScQt scQt = this.getManagedBean().getScQt();
 				renewSesionObject();
+				this.getManagedBean().setPreviousPage(previousPage);
+				this.getManagedBean().setScQt(scQt);
+
 				getregistrationDetails(bsv);
 				FacesContext
 						.getCurrentInstance()
@@ -413,7 +418,7 @@ public class BSVAttendanceBackingBean extends
 
 	public String backBtn() {
 		log.info("** Back Button **");
-
+		retrieveBriefingSiteVisitList(this.getManagedBean().getScQt().getQtId());
 		return this.getManagedBean().getPreviousPage()
 				+ ".xhtml?faces-redirect=true";
 
