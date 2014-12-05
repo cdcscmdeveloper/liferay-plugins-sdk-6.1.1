@@ -29,8 +29,9 @@
 						icon="ui-icon-back" action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
-						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-						<p:commandButton value="lbl.btn.#{fn:toLowerCase(bpmAction)}"
+						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">	
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}" />
