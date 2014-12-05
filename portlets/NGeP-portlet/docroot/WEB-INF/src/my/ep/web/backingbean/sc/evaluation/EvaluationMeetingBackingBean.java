@@ -640,7 +640,7 @@ public class EvaluationMeetingBackingBean extends
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setCurrentStatusId(currentStatusId);
 			this.getManagedBean().setPayLoad(object);
-			getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
+			//getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 			retriveMeetingDetails(qtId, committeeType);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
