@@ -18,7 +18,7 @@
 				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!financialacc.brandNew}" 
 					required="true" style="margin-bottom: 5px;">
-					<f:selectItem itemValue=" " itemLabel="---Select---" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="finorgLs"
 						value="#{organisationBackingBean.managedBean.pmFinancialOrg}"
 						itemLabel="#{finorgLs.finOrgName}"
@@ -61,15 +61,7 @@
 	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
 		toggleable="true">
 		
-		<p:pickList id="approverpickList" value="#{organisationBackingBean.managedBean.supplierUsers}"
-				var="data" showTargetControls="true"
-				itemLabel="#{data.userName}"
-				itemValue="#{data}" >
-				<f:facet name="sourceCaption">#{lbl['lbl.pm.org.availableUers']}										
-			</f:facet>
-			<f:facet name="targetCaption">#{lbl['lbl.pm.org.selectedUsers']}										
-			</f:facet>
-			</p:pickList>
+		
 	</p:panel>
 
 </ui:composition>

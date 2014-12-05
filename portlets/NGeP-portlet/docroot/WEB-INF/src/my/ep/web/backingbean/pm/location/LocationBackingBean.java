@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.pm.location;
 
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -65,7 +67,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public static final boolean SEARCH_DEFAULT = false;
 
 	public LocationBackingBean() {
-
+		resetLocationSearchBean();
 	}
 
 	public void preLoading() {
@@ -83,7 +85,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public void resetLocation() {
 		getManagedBean().setState(new PmState());
 		getManagedBean().setCity(new PmCity());
-		getManagedBean().setDivision(new PmDivision());
+		//getManagedBean().setDivision(new PmDivision());
 		getManagedBean().setDistrict(new PmDistrict());
 		getManagedBean().getState().setPmCountry(new PmCountry());
 		getManagedBean().getDivision().setPmState(new PmState());
@@ -592,6 +594,27 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 	}
+	public void updateDivisionFlag(Long stateId){
+		
+		
+		if(stateId!=null){
+			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+			this.getManagedBean().setDivisionFlag(
+					(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? false : true);
+			if(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())){
+				this.getManagedBean().setDivision(new PmDivision());
+				
+			}
+		}
+		
+		
+	}
+	public List<PmDivision> getDivisionList(Long stateId) {
+		
+		return PmCommonUtil.retrievePmDivisionList(stateId);
+	}
+	
+	
 
 	public SelectItem[] getSearchStatusOptions() {
 		SelectItem[] items = new SelectItem[2];
@@ -600,7 +623,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		return items;
 	}
 
-	public SelectItem[] getRecordStatusOptions() {
+	public SelectItem[] getStatusOptions() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(1, "Active");
 		items[1] = new SelectItem(0, "Inactive");
@@ -615,9 +638,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		this.getManagedBean().setLocationSearchBean(new LocationSearchBean());
 	}
 
-	public static SelectItem[] getStatusOptions() {
+	/*public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getStatusOptions();
-	}
+	}*/
 
 	public IPagingDataModel<VPmLocation> getSearchLocation() {
 		return searchLocation;
