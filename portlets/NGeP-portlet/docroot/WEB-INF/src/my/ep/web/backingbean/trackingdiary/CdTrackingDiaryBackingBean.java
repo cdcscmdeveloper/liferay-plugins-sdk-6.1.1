@@ -35,10 +35,11 @@ public class CdTrackingDiaryBackingBean extends
 	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cdTrackingDiaryDetailSearch.xhtml";
 	private SearchFilterBean titleFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean codeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean codeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean extensionCodeFilterBean 	= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docTypeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docIdFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean docNoFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 	private IPagingDataModel<CmUnspsc> searchDataModel 	= new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
@@ -141,8 +142,12 @@ public class CdTrackingDiaryBackingBean extends
 
 			docIdFilterBean.setSearchField("docId");
 			docIdFilterBean.setSearchValue("2233");
+			searchBean.getDataFilterBeans().add(docIdFilterBean);
 			
-			searchBean.getDataFilterBeans().add(docTypeFilterBean);
+			docNoFilterBean.setSearchField("docNo");
+			docNoFilterBean.setSearchValue("2233");
+			searchBean.getDataFilterBeans().add(docNoFilterBean);
+
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
