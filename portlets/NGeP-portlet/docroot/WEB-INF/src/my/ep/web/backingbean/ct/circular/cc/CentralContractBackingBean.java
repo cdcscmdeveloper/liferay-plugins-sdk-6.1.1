@@ -37,11 +37,11 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -56,8 +56,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.circular.CircularDetailReqDTO;
-import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -66,6 +64,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -89,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -618,63 +619,77 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	public void validateCircular(String outcome) {
-		ICircularDetailSO circularDetailSO = null;
-		circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularDetailSO.class);
-		getManagedBean().setAutoUpdate(true);
-		
-		/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
-			}*/
-		
-			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				    throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+		IQTAwardSO qtAwardSO = null;
+		IContractSO contractSO = null;
+		try {
+			qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			getManagedBean().setAutoUpdate(true);
+			
+			/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
+				}*/
+			
+				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+				}
+				
+				if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
+				}
+				
+				if(getManagedBean().getApproverModel().getTarget().size()==0) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+				}
+			//}
+			
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			String contractRemark = getManagedBean().getCircularVer().getContractRemarks().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0) && (contractRemark == null || contractRemark.length() == 0)) {
+	 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
 			}
 			
-			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			ContractReqDTO contractReqDTO = new ContractReqDTO();
+			for(CtCircularContract circularContrart : getManagedBean().getCircularVer().getCtCircularContracts()) {				
+				awardSupplierReqDTO.setQtId(circularContrart.getCtContract().getQuotationTender().getQtId());
+				AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOILOAListBySupplier(awardSupplierReqDTO);
+				
+				for(ScLoa scLoa : awardSupplierResDTO.getLoaResultBean().getResultList()) {
+					contractReqDTO.setLoaId(scLoa.getLoaId());
+					CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
+					if(ctContract==null || ctContract.getLatestContractVer()==null) { 
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+						throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
+					}
+				}
 			}
 			
-			if(getManagedBean().getApproverModel().getTarget().size()==0) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+				// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getCircularVer().getCircularNo());
+				sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+				sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+				sb.append(outcome);
+				getManagedBean().setTextBeforeSign(sb.toString());
+				// set action
+				getManagedBean().setAction(outcome);
 			}
-		//}
-		
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-			String remark = getManagedBean().getRemarkList().get(0).getRemark();
- 			String contractRemark = getManagedBean().getCircularVer().getContractRemarks().get(0).getRemark();
- 			if((remark == null || remark.length() == 0) && (contractRemark == null || contractRemark.length() == 0)) {
- 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
- 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
- 			}
 		}
-		
-		CircularDetailReqDTO cdReqDTO = new CircularDetailReqDTO();
-		cdReqDTO.setCtCircularContractList(getManagedBean().getCircularVer().getCtCircularContracts());
-		CircularDetailResDTO cdResDTO = circularDetailSO.validateSourcingLOA(cdReqDTO);
-		
-		if(cdResDTO.getContractPhysicalNo() != null){
-			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750005, new String[]{cdResDTO.getContractPhysicalNo()});
-		}
-		circularDetailSO = null;	
-		
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo());
-			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
-			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());
-			// set action
-			getManagedBean().setAction(outcome);
-		}
+		 finally {
+			 qtAwardSO = null;
+			 contractSO = null;
+		  }
 	}
 
 	public void fileUpload(FileUploadEvent event) throws Exception {
