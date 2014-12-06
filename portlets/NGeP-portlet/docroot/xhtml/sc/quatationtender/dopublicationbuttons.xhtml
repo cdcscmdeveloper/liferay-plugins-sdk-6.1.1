@@ -28,7 +28,7 @@
 								value="#{lbl['lbl.so.submit']}"
 								action="#{qTDetailBB.submitQtDetailsForApproval}" process="@form"
 								icon="ui-icon-submit" update="@form"
-								rendered="#{qTDetailBB.managedBean.qt.getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />
+								rendered="#{qTDetailBB.managedBean.currentStatusId ge QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />
 
 
 							<c:if test="#{qTDetailBB.managedBean.taskId ne null}">
