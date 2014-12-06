@@ -1551,7 +1551,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
        getManagedBean().setChkSchedule(false);
   	   getManagedBean().setChkProgressive(false);
-  	 
+  	   getManagedBean().setProgSchedButtonDeactive(false);
   	   if(getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
   		   getManagedBean().getContractVer().getCtContract().setFrequencySchedule(true);
   	   } else if(getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
@@ -1867,6 +1867,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			                	   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())) {
 			    	             	      dataList.setValidateScheduleDate(true);
 			                	          getManagedBean().setProgSchedButtonDeactive(true);
+			                	          throw new EpException(MessageConst.ERROR_750023);
 			                	   }
 			                }
 					    } else {
@@ -1880,6 +1881,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
     	calculatePercentage(ctProgressivePayment);
+    	getManagedBean().setProgSchedButtonDeactive(false);
     	if(ctProgressivePayment.getEndMonth() == null || ctProgressivePayment.getStartMonth() == null) {
     		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
@@ -1906,6 +1908,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    	  if(dataList.equals(ctProgressivePayment)) {
 			    		 dataList.setValidateProgressiveDate(true);
 			    		 getManagedBean().setProgSchedButtonDeactive(true);
+			    		 throw new EpException(MessageConst.ERROR_750024);
 			    	}
 			    }
 			 }
