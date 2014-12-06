@@ -9,10 +9,10 @@
 		<div align="left" class="header-info">
 			<table>
 				<tr>
-					<td style="width: 14%">
+					<td style="width: 13%">
 						<h:outputLabel value="#{lbl['lbl.so.qtnno']}" />
 					</td>
-					<td style="width: 3%" class="header-info-text">
+					<td style="width: 2%" class="header-info-text">
 						#{qTDetailBB.managedBean.qt.qtNo}
 					</td>
 					<ui:fragment rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
@@ -22,12 +22,12 @@
 						<td style="width: 10%" class="header-info-text">
 							#{qTDetailBB.managedBean.qt.ppPlan.planNo}</td>
 					</ui:fragment>
-					<td style="width: 5%">
+					<td style="width: 4%">
 						<h:outputLabel value="#{lbl['lbl.so.ptj.name']}" />
 					</td>
 					<td style="width: 46%" class="header-info-text">
 						#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}</td>
-					<td style="width: 6%">
+					<td style="width: 5%">
 						<h:outputLabel value="#{lbl['lbl.so.status']}" />
 					</td>
 					<td style="width: 80%" class="header-info-text">
