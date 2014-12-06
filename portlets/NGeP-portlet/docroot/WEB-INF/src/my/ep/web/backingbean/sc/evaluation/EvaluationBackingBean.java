@@ -50,6 +50,7 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -668,6 +669,16 @@ public class EvaluationBackingBean extends
 			List<ScQtProposalChecklist> technicalCompliance = this
 					.getManagedBean().getComplianceTechnicalProposalCheckList();
 			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
+				for (ScQtProposalChecklist proposalCheckList : technicalCompliance) {
+					if (!proposalCheckList.isCompliance()) {
+						if (null == proposalCheckList.getRemark()
+								|| "".equalsIgnoreCase(proposalCheckList
+										.getRemark())) {
+							throw new EpException(MessageConst.ERROR_760198);
+						}
+
+					}
+				}
 				reqDTO.setComplianceList(technicalCompliance);
 			}
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
@@ -2721,8 +2732,7 @@ public class EvaluationBackingBean extends
 					 * proposalCheckList.getScQtProposal()
 					 * .getScQtSupplier().getSmSupplier());
 					 */
-					proposalPage = detailBackingBean
-							.retrieveSupplierDtls();
+					proposalPage = detailBackingBean.retrieveSupplierDtls();
 
 					evaluationPage = "/xhtml/sc/evaluation/supplierInfo.xhtml";
 					// return "supplierInfo.xhtml";
@@ -4051,7 +4061,7 @@ public class EvaluationBackingBean extends
 		debugLogger("generateMaklumatTenderFromVelocity");
 
 		TemplateDocBackingBean backingBean = new TemplateDocBackingBean();
-		
+
 		ScQtEvaluationReport qtEvaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
 		if (qtEvaluationReport != null) {
 			scQtEvaluationReport = qtEvaluationReport;
@@ -4068,7 +4078,7 @@ public class EvaluationBackingBean extends
 			// save clone to db
 			docMaster = saveClonedTplDocMaster(scQtEvaluationReport);
 		}
-		
+
 		backingBean.goToMaint(docMaster);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
