@@ -1511,9 +1511,6 @@ public class SPDetailBackingBean extends
 
 			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
 					.equalsIgnoreCase(docDefinitionKey)) {
-				getManagedBean().setYear(
-						scQtProposalChecklist.getScQtCheckList()
-								.getScQtCheckListValue().getYear());
 				pageUrl = retrieveFinCompanyExpDtls(scQtProposalChecklist);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_DETAILS
@@ -1928,12 +1925,18 @@ public class SPDetailBackingBean extends
 	 */
 	public String retrieveFinCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
+		
+		getManagedBean().setYear(
+				scQtProposalChecklist.getScQtCheckList()
+						.getScQtCheckListValue().getYear());
+		
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			reqDTO.setYear(getManagedBean().getYear().intValue());
+			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList()
+					.getScQtCheckListValue().getYear().intValue());
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
