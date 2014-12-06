@@ -2077,6 +2077,19 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.setLocationLevel(null);
 			this.getManagedBean().getScQt().setFulfilmentType(null);
+			if (this.getManagedBean().getScQt().isZonal()) {
+				validateBusinessOwner(true);
+				ScQtSupplierCriteria supplierCriteria = getManagedBean()
+						.getScQt().getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					specMaster.setTplSpecZone(supplierCriteria
+							.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			}
 
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 			List<ScQtDoc> qtDocs = new ArrayList<ScQtDoc>();
@@ -4911,13 +4924,15 @@ public class SpecificationBackingBean extends
 				break;
 			}
 		}
-		/*if (null != list.getPmDocument()
-				&& QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
-						.equalsIgnoreCase(list.getPmDocument()
-								.getDocDefinitionKey()) && list.isScoringReq()) {
-			throw new EpException(MessageConst.ERROR_760196);
-
-		}*/
+		/*
+		 * if (null != list.getPmDocument() &&
+		 * QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
+		 * .equalsIgnoreCase(list.getPmDocument() .getDocDefinitionKey()) &&
+		 * list.isScoringReq()) { throw new
+		 * EpException(MessageConst.ERROR_760196);
+		 * 
+		 * }
+		 */
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
