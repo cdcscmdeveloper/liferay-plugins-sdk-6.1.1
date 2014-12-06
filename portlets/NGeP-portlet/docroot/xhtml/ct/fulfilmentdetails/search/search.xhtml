@@ -82,12 +82,12 @@
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.companyName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:8%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:5%;">
 						<h:outputText value="#{data.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  style="width:8%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  style="width:5%;">
 						<h:outputText value="#{data.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
@@ -95,7 +95,7 @@
 					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.loaPhysicalNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:10%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:8%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:14%;">
