@@ -109,13 +109,13 @@ public class OrganisationBackingBean extends
 		retrievePtjGroupList();
 		retrieveOrgProfileList();
 		retrieveFinancialOrgList();
-		resetOrganisationSearchBean();
+		
 
 	}
 
-	public void preLoading() {
+	public void preLoadingOrg() {
 
-		this.resetOrganisationSearchBean();
+		this.resetOrganisationSearchBean();		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -1094,6 +1094,7 @@ public class OrganisationBackingBean extends
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setOrganisationSearchBean(
 				new OrganisationSearchBean());
+		searchOrganisation = new SearchOrgPagingDataModel();
 	}
 
 	/**

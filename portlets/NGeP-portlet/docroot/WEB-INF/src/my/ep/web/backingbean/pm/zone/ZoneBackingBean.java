@@ -50,12 +50,12 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	public static final boolean SEARCH_DEFAULT = false;
 
 	public ZoneBackingBean() {
-		resetZoneSearchBean();
+	
 	}
 
-	public void preLoading() {
+	public void preLoadingZone() {
 		log.info("preLoading");
-		this.resetZoneSearchBean();
+		this.resetZoneSearchBean();		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);
@@ -67,6 +67,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	public void resetZoneSearchBean() {
 		log.info("ZoneSearchBean");
 		this.getManagedBean().setZoneSearchBean(new ZoneSearchBean());
+		searchZone = new SearchZonePagingDataModel();
 	}
 
 	public void searchZone() {
@@ -135,8 +136,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
-		getManagedBean().setPmZone(resDTO.getPmZone());
-		getManagedBean().setSelectedZones(resDTO.getPmZone().getPmZoneStates());
+		getManagedBean().setPmZone(resDTO.getPmZone());		
 		getManagedBean().setZoneStateList(resDTO.getPmZone().getPmZoneStates());
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -169,13 +169,13 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	private ISearchBean<PmZone> getSearchBeanData(ISearchBean<PmZone> searchBean) {
-		log.info("getSearchBeanData - Start");
+		
 		ZoneSearchBean zSearchBean = this.getManagedBean().getZoneSearchBean();
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
 		if (zSearchBean.getZoneCode() != null
 				&& zSearchBean.getZoneCode().trim().length() > 0) {
-			log.info("+ zoneCode " + zSearchBean.getZoneCode());
+			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneCode",
 							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
@@ -184,7 +184,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 		if (zSearchBean.getZoneCode() != null
 				&& zSearchBean.getZoneName().trim().length() > 0) {
-			log.info("+ zoneName " + zSearchBean.getZoneName());
+			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneName",
 							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
@@ -201,15 +201,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 
 		if (isEmpty && !isSearchable) {
-			log.info("+ status " + zSearchBean.getStatus());
-
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getZoneSearchBean().getStatus()));
 		}
-
-		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
 

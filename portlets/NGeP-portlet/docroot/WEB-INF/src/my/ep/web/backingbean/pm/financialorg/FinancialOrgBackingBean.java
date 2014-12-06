@@ -79,15 +79,14 @@ public class FinancialOrgBackingBean extends
 	public FinancialOrgBackingBean() {
 		retrieveCountryList();
 		retrievePmFinancialOrgList();
-		resetFinancialOrgSearchBean();
+		
 
 	}
 
-	public void preLoading() {
+	public void preLoadingFinOrg() {
 		log.info("preLoading");
-		// load critical mappers
-
 		this.resetFinancialOrgSearchBean();
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -969,6 +968,7 @@ public class FinancialOrgBackingBean extends
 		log.info("resetFinancialOrgSearchBean");
 		this.getManagedBean().setFinancialOrgSearchBean(
 				new FinancialOrgSearchBean());
+		 searchFinancialOrg = new FinancialOrgPagingDataModel();
 	}
 
 	private PmAddress setDefaultAddr() {

@@ -5014,7 +5014,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/location/locationMain.xhtml</value>
+			<value>/xhtml/pm/location/preRenderLocation.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -5045,7 +5045,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/financialorg/financialOrgSearchMain.xhtml</value>
+			<value>/xhtml/pm/financialorg/preRenderFinOrg.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -5076,7 +5076,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/organisation/organisationMain.xhtml</value>
+			<value>/xhtml/pm/organisation/preRenderOrg.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
