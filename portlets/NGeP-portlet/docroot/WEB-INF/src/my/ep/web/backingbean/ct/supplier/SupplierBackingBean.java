@@ -903,7 +903,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		                          List<CtContract> contractList = new ArrayList<CtContract>();
 			                       for (CtContract contractLoa : list) {  
 			                    	   ContractSupplierResDTO ctSupplierResDTO = contractSupplierSO.retrieveFactoringByLoaId(contractLoa.getLoa().getLoaId());
-			                    	   if(ctSupplierResDTO.getFactoring() != null && getSupplierUserRole() && ctSupplierResDTO.getFactoring().getStatus() != null &&
+			                    	   if(ctSupplierResDTO.getFactoring() != null && ctSupplierResDTO.getFactoring().getStatus() != null &&
 			                    			   ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()) {
 			                   		         continue;
 			                    	    } contractList.add(contractLoa);
