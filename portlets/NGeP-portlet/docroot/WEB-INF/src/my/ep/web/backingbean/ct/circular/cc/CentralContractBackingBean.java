@@ -404,10 +404,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         	
         	CtCircularContract circularContract = null;
         	for(CtContract contract : getManagedBean().getSelectedContractList()) {
-        		if(getManagedBean().getCircularVer().getStartDate()==null) {
-        			getManagedBean().getCircularVer().setStartDate(contract.getLatestContractVer().getCtContractValue().getEffDate());
-        			getManagedBean().getCircularVer().setEndDate(contract.getLatestContractVer().getCtContractValue().getExpDate());
-        		}
         		circularContract = new CtCircularContract();
         		
         		reqDTO.setContractId(contract.getContractId());
@@ -1105,8 +1101,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 			getManagedBean().getCircularVer().getCtCircularContracts().remove(getManagedBean().getSelectedCircularContract());
 			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-   			getManagedBean().getCircularVer().setStartDate(null);
-   			getManagedBean().getCircularVer().setEndDate(null);
    			this.getManagedBean().setSelectedCircularItem(null);
 				this.getManagedBean().setSelectedZoneItems(null);
 				this.getManagedBean().setSelectedCircularContract(null);
