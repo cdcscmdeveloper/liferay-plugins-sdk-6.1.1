@@ -3057,6 +3057,8 @@ public class QTDetailBackingBean extends
 						IQTDetailSO.class);
 		int activeIndex = this.getManagedBean().getActiveIndex();
 
+		int subTabIndex = this.getManagedBean().getSelectedTabIndex();
+		
 		QuationTenderResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
@@ -3160,6 +3162,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
+		this.getManagedBean().setSelectedTabIndex(subTabIndex);
 	}
 
 	public void qtDetailsTabChange(Integer activeIndex) {
