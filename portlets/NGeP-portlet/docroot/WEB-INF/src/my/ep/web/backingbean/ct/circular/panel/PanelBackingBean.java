@@ -1629,14 +1629,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void extendStartEndDate(){
 		
 		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
-			this.getManagedBean().getCircularVer().setExtendStartDate(this.getManagedBean().getCircularVer().getStartDate());
-			Calendar cal = Calendar.getInstance();
-	        cal.setTime(new Date());
-	        cal.add(Calendar.MONTH, this.getManagedBean().getCircularVer().getExtPeriod()); 
-	        this.getManagedBean().getCircularVer().setExtendEndDate( cal.getTime());
+			Calendar c = Calendar.getInstance();
+			c.setTime(getManagedBean().getCircularVer().getEndDate());
+			c.add(Calendar.DATE, 1);
+			getManagedBean().getCircularVer().setExtendStartDate(c.getTime());
+			
+			c.setTime(getManagedBean().getCircularVer().getEndDate());
+			c.add(Calendar.MONTH, getManagedBean().getCircularVer().getExtPeriod());
+			getManagedBean().getCircularVer().setExtendEndDate(c.getTime());
 		}else{
-			this.getManagedBean().getCircularVer().setExtendStartDate(null);
-			this.getManagedBean().getCircularVer().setExtendEndDate(null);
+			getManagedBean().getCircularVer().setExtendStartDate(null);
+			getManagedBean().getCircularVer().setExtendEndDate(null);
 		}
 	}
 	
