@@ -640,7 +640,7 @@ public class EvaluationMeetingBackingBean extends
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setCurrentStatusId(currentStatusId);
 			this.getManagedBean().setPayLoad(object);
-			//getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
+			// getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 			retriveMeetingDetails(qtId, committeeType);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -693,15 +693,7 @@ public class EvaluationMeetingBackingBean extends
 
 			if (scQtCommitteeActivity != null
 					&& !scQtCommitteeActivity.isEmpty()) {
-				for (ScQtCommitteeActivity committeeactivity : scQtCommitteeActivity) {
-					if (null != committeeactivity.getScCommitteeMember()
-							.getMemberRole()
-							&& null == committeeactivity.getScCommitteeMember()
-									.getMemberRole().getParameterId()) {
-						committeeactivity.getScCommitteeMember().setMemberRole(
-								null);
-					}
-				}
+
 				qtCommittee.setCommitteeActivities(scQtCommitteeActivity);
 			}
 
