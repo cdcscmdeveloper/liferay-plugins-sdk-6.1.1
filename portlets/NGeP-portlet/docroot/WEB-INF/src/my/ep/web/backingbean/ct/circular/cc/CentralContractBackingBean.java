@@ -393,12 +393,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public void addSelectedContract() {
 		IContractSO contractSO = null;
-        try {
+        
         	
         	if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
         		throw new EpException(MessageConst.WARN_755015);
         	}
-        	
+        	try {
         	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
         	ContractReqDTO reqDTO = new ContractReqDTO();
         	
