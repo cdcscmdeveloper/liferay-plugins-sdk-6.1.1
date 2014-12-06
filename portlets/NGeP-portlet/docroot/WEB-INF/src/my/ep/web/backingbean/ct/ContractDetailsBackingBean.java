@@ -902,18 +902,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					double bondAmount = 0.0;
 					for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
 						bondAmount = bondAmount + performanceBond.getBondAmount();
+						if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+							if(performanceBond.getBondAmount()==0) {
+								RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+								throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),"0"});
+							}
+						} 
 						if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
 						} 
 					}
 				 
-					if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-						if(bondAmount==0) {
-							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-							throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),"0"});
-						}
-					} else if(contractVer.getCtContract().getLoa().getBondAmt() == null 
+					if(contractVer.getCtContract().getLoa().getBondAmt() == null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_750021);
