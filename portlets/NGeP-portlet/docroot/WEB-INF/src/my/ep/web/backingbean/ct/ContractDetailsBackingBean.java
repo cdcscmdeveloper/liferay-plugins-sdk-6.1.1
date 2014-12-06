@@ -887,90 +887,91 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			
-		 if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
+			if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
+				if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
+					if(getManagedBean().getCtContract().getLatestContractVer() != null 
+							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
+							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds().size() > 0
+							&& (contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty())) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+						throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
+					}
+				}
 			 
-			 if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
-			    if(getManagedBean().getCtContract().getLatestContractVer() != null 
-					 && getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
-					 && getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds().size() > 0
-					 && (contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty())) {
-			
-				     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
-			    }
-			 }
-			 
-			   if(contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
+				if(contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
+					double bondAmount = 0.0;
+					for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
+						bondAmount = bondAmount + performanceBond.getBondAmount();
+						if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
+						} 
+					}
 				 
-			                double bondAmount = 0.0;
-		                    for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
-		        	            	   bondAmount = bondAmount + performanceBond.getBondAmount();
-                                       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
-                                    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-						                     throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
-					               } 
-		                       }
-				        
-		                  if(contractVer.getCtContract().getLoa().getBondAmt() == null 
-		                       && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-		                	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-		                       throw new EpException(MessageConst.ERROR_750021);
-		                 
-		                  } else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
-				                       && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-					              int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
-					              if( retval >0 ){
-					            	  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				                     	throw new EpException(MessageConst.ERROR_750015);
-					              }
-					             if(retval < 0){
-					            	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-						             throw new EpException(MessageConst.ERROR_750017);  
-					            }
-					     }
-				     }	
-			  }
+					if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						if(bondAmount==0) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),"0"});
+						}
+					} else if(contractVer.getCtContract().getLoa().getBondAmt() == null 
+							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+						throw new EpException(MessageConst.ERROR_750021);
+					} else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
+							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
+						if( retval >0 ){
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_750015);
+						}
+						if(retval < 0){
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_750017);  
+						}
+					}
+				}	
+			}
 		 
-		    if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) 
-		    		&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-		    	
-		    	if(getManagedBean().getCtContract().isFrequencySchedule()){
-		    		  	 getManagedBean().getContractVer().setCtProgressivePayments(null);
-		     	} else {
-		     		 getManagedBean().getContractVer().setCtSchedules(null);  	
-		     	}
-		    	
-		    	 if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2) && getManagedBean().getCtContract().isFrequencySchedule()) {
-		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-		    		   throw new EpException(MessageConst.ERROR_750022);
-		          
-		    	   } else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()) {
-		    		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-		    			throw new EpException(MessageConst.ERROR_750022);
-		 			}
-		    	 
-		    		 if(contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty() && !getManagedBean().getCtContract().isFrequencySchedule()) {
-		    		     float percentage = 0.0f;
-		    			 for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
-		    				     percentage = percentage+progressivePayment.getPercentage();
-				                 if(progressivePayment.getPhaseNo()== null) {
-				                	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				        	           throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
-				                  }
-				        
-				                 if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ) {
-				                	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				            	       throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
-				                  }
-			                 }
-		    			 int value = Float.compare(percentage,100);
-		                 if(value != 0) {
-		                	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-		        	           throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Percentage 100%" });
-		                  }
-		    	        }
-		          }
-			
+			if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) 
+					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+
+				if(getManagedBean().getCtContract().isFrequencySchedule()){
+					getManagedBean().getContractVer().setCtProgressivePayments(null);
+				} else {
+					getManagedBean().getContractVer().setCtSchedules(null);  	
+				}
+
+				if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2) && getManagedBean().getCtContract().isFrequencySchedule()) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_750022);
+
+				} else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_750022);
+				}
+
+				if(contractVer.getCtProgressivePayments() != null && !contractVer.getCtProgressivePayments().isEmpty() && !getManagedBean().getCtContract().isFrequencySchedule()) {
+					float percentage = 0.0f;
+					for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
+						percentage = percentage+progressivePayment.getPercentage();
+						if(progressivePayment.getPhaseNo()== null) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
+						}
+
+						if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
+						}
+					}
+					int value = Float.compare(percentage,100);
+					if(value != 0) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+						throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Percentage 100%" });
+					}
+				}
+			}
+
 			if(contractVer.getCtAgencies().size()>0) {
 				double ceilingAmt = 0.0;
 				for(CtAgency ctAgency : contractVer.getCtAgencies()) {
@@ -986,16 +987,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
-				
+
 			}
-			
+
 			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 			}
-			
+
 			if(contractVer.getCtContractItems() != null){
-				
 				for(CtContractItem item : contractVer.getCtContractItems()) {
 					double totalCeilingQuantity = 0.0;
 					if(item.getCtItemMaxQties().size() != 0){
