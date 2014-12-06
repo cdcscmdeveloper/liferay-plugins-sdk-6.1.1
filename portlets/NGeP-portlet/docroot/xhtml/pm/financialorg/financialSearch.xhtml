@@ -59,7 +59,7 @@
 							action="#{financialOrgBackingBean.searchFinancialOrg}" />
 						&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							update="finSearchPanel" icon="ui-icon-reset"
+							update=":form:finSearchPanel,:form:searchFinancialOrg" icon="ui-icon-reset"
 							action="#{financialOrgBackingBean.resetFinancialOrgSearchBean}" />
 					</div>
 				</td>
