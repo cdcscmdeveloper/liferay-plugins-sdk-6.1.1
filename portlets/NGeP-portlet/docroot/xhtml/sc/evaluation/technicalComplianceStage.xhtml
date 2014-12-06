@@ -95,7 +95,10 @@
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 						<p:inputTextarea rows="2" cols="40" maxlength="200"
+							id="complianceRemarksid"
 							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
+						<p:message id="complianceRemarksidEvaluation"
+							for="complianceRemarksid" display="icon"></p:message>
 
 
 					</ui:fragment>
