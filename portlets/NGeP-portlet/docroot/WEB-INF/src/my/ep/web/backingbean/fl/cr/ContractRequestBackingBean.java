@@ -2073,7 +2073,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			if(!itemQuantityNotZero) {
-				throw new EpException(MessageConst.ERROR_740027, new String[]{oneOffItemAddr.getScRequestItem().getItemName(),"0"});
+				if(ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
+					throw new EpException(MessageConst.ERROR_740037, new String[]{oneOffItemAddr.getScRequestItem().getItemName(),"0"});
+				}else{
+					throw new EpException(MessageConst.ERROR_740027, new String[]{oneOffItemAddr.getScRequestItem().getItemName(),"0"});
+				}
+				
 			}
 		}
 	}
