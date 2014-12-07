@@ -109,8 +109,8 @@
 				</p:calendar>
 				<p:message id="effectiveDateMsg" for="effectiveDate" display="icon"
 					showSummary="true" showDetail="false" />
-			</p:column style = "width : 10%;">
-			<p:column>
+			</p:column>
+			<p:column style = "width : 10%;">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.sp.expirydt']}" />
@@ -148,8 +148,7 @@
 
 			</p:column>
 
-			<p:column style = "width : 18%;" headerText="#{lbl['lbl.sc.sp.remarks']}"
-				style="white-space : normal">
+			<p:column style = "width : 18%;white-space : normal;" headerText="#{lbl['lbl.sc.sp.remarks']}">
 				<h:outputText value="#{technongovt.remark}"
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputTextarea value="#{technongovt.remark}" rows="3" cols="17" style = "width : 96%;"
