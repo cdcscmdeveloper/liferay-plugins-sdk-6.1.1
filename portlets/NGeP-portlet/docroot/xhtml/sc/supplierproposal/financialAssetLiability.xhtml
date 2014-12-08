@@ -9,8 +9,8 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.current.asset']}" /></td>
-				<td><p:inputText style="text-align:right"
+				<td><LABEL><span class="mandatory">* </span>#{lbl['lbl.sc.sp.current.asset']}</LABEL></td>
+				<td><p:inputText style="text-align:right" required="true"
 						disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
 						size="30">
@@ -22,12 +22,13 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
-				<td><p:inputText style="text-align:right"
+				<td><h:outputText value="* " styleClass="mandatory"  /><h:outputLabel
+						value="#{lbl['lbl.sc.sp.current.liability']}"  /></td>
+				<td><p:inputText style="text-align:right" required="true"
 						disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
 						size="30">
+						<f:validateLongRange minimum="1" maximum="99999999999" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" process="@this"
