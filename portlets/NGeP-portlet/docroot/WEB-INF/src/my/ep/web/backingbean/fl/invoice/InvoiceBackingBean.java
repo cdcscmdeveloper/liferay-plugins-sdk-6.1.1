@@ -468,8 +468,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 
 			if(haveAdvancedPmyt){
 				ContractResDTO ctRes = contractSO.calAdvancePaymentTracking(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
-				ctRes.getPaidAdvancePaymentAmt();
-				balanceAmt = deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt());
+				if(ctRes.getPaidAdvancePaymentAmt()!=null) {
+					balanceAmt = deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt());
+				}
 				
 				if(balanceAmt.doubleValue() > 0){
 					newTotalAmt = ctRes.getPaidInvoiceAmt().doubleValue() / (contractValue.doubleValue());
