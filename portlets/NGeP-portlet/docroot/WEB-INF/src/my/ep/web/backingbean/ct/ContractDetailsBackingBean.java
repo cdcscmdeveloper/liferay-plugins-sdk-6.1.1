@@ -1055,7 +1055,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				}
 			
 			if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
-					(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
+					action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
 					getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement" });
 			}
