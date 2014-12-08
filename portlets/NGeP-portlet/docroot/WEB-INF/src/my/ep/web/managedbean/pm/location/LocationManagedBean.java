@@ -46,6 +46,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	private List<PmCity> cites;
 
 	private List<VPmLocation> vPmLocation;
+	
+	private boolean disabledVal= false;
 
 	
 
@@ -224,6 +226,20 @@ public class LocationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedType(String selectedType) {
 		this.selectedType = selectedType;
+	}
+
+	/**
+	 * @return the disabledVal
+	 */
+	public boolean isDisabledVal() {
+		return disabledVal;
+	}
+
+	/**
+	 * @param disabledVal the disabledVal to set
+	 */
+	public void setDisabledVal(boolean disabledVal) {
+		this.disabledVal = disabledVal;
 	}
 
 }

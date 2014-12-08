@@ -9,14 +9,13 @@
 	<p:panel header="#{lbl['lbl.pm.location.details']}" toggleable="true"
 		id="crtLocationId">
 		<table>
-
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.location.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="locationcode"
 						label="#{lbl['lbl.pm.location.type']}"
 						styleClass="ppDropDownWidthM"
-						style="width: 135px;margin-bottom: 5px;"
+						style="width: 135px;margin-bottom: 5px;" disabled="#{locationBackingBean.managedBean.disabledVal}"
 						value="#{locationBackingBean.managedBean.selectedType}"
 						required="true">
 						<f:selectItems
