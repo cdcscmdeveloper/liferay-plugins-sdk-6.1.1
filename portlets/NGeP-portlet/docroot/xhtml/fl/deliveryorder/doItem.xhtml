@@ -172,8 +172,8 @@
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.rejected.qty']}"/>
     				</f:facet>
 						<h:outputText value="#{doItems.rejectedQty}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+							<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>
 						<p:commandLink oncomplete="rejectionDialog.show();"
 							rendered="#{doItems.rejectedQty > 0}"
