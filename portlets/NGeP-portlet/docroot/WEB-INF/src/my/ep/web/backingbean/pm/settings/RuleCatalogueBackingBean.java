@@ -65,31 +65,32 @@ public class RuleCatalogueBackingBean extends
 	private static Logger log = Logger
 			.getLogger(RuleCatalogueBackingBean.class);
 
-	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+	private ISearchBean<PmParameterDesc> parameterSearchBean;
 
-	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
-		if (this.docTypeSearchBean == null) {
-			this.docTypeSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "docTypeId");
+	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
+		if (this.parameterSearchBean == null) {
+			this.parameterSearchBean = super.createSearchBean(
+					PmParameterDesc.class, "parameterId");
 		}
 
-		return this.docTypeSearchBean;
+		return this.parameterSearchBean;
 	}
 
 	public RuleCatalogueBackingBean() {
 		System.out
 				.println("........in constructor of RuleCatalogueBackingBean........");
-		 IFeeExemptionSO feeSO = (IFeeExemptionSO)
-				 BusinessDelegate.getInstance().getServiceObject(
-				  "pm", IFeeExemptionSO.class);
-//		 PmFeeExemption fee = new PmFeeExemption();
-		 FeeExemptionReqDTO req = new FeeExemptionReqDTO();
-//		 req.setFeeExemption(fee);
-//		 feeSO.insertFeeExemption(req);
-		 List<PmFeeExemption> list = feeSO.getFeeExemptionsForOrgAndItem(req).getFeeExemptions();
-		 log.info("....................list.get(1).getFeeExemptionId()="+list.get(1).getFeeExemptionId());
-		 req.setFeeExemption(list.get(1));
-		 feeSO.deleteFeeExemption(req);
+		IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IFeeExemptionSO.class);
+		// PmFeeExemption fee = new PmFeeExemption();
+		FeeExemptionReqDTO req = new FeeExemptionReqDTO();
+		// req.setFeeExemption(fee);
+		// feeSO.insertFeeExemption(req);
+		List<PmFeeExemption> list = feeSO.getFeeExemptionsForOrgAndItem(req)
+				.getFeeExemptions();
+		log.info("....................list.get(1).getFeeExemptionId()="
+				+ list.get(1).getFeeExemptionId());
+		req.setFeeExemption(list.get(1));
+		feeSO.deleteFeeExemption(req);
 		// IRuleSO ruleSO = null;
 		// try {
 		// boolean result = false;
@@ -176,7 +177,7 @@ public class RuleCatalogueBackingBean extends
 		// } catch (Exception e) {
 		// e.printStackTrace();
 		// }
-		
+
 	}
 
 	public boolean isValidDateRange(Date effDate, Date ExpDate) {
@@ -276,7 +277,7 @@ public class RuleCatalogueBackingBean extends
 					.getServiceObject("cm", ICodificationSO.class);
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
-				if(exemption.getTypeId() == null){
+				if (exemption.getTypeId() == null) {
 					exemption.setTypeId(new CmType());
 				}
 				cReqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
@@ -294,7 +295,8 @@ public class RuleCatalogueBackingBean extends
 						}
 					}
 				}
-				this.getManagedBean().getFeeExemptionsForComodity().add(exemption);
+				this.getManagedBean().getFeeExemptionsForComodity()
+						.add(exemption);
 			}
 
 			// this.getManagedBean().setFeeExemptionIndex(1);
@@ -947,18 +949,18 @@ public class RuleCatalogueBackingBean extends
 		// <= end1.getTime()));
 		Date currentDate = new Date();
 		if (end1 == null) {
-			
-			if(start1.getTime() > currentDate.getTime()){
+
+			if (start1.getTime() > currentDate.getTime()) {
 				end1 = start1;
-			}else{
-			   end1 = currentDate;
+			} else {
+				end1 = currentDate;
 			}
 		}
 		if (end2 == null) {
-			if(start2.getTime() > currentDate.getTime()){
+			if (start2.getTime() > currentDate.getTime()) {
 				end2 = start2;
-			}else{
-			   end2 = currentDate;
+			} else {
+				end2 = currentDate;
 			}
 		}
 		return start1.getTime() <= end2.getTime()
@@ -971,7 +973,7 @@ public class RuleCatalogueBackingBean extends
 		exemptionList.addAll(this.getManagedBean()
 				.getFeeExemptionsForOrgAndItem());
 
-		System.out.print("............................exemptionList.size="
+		log.info("............................exemptionList.size="
 				+ exemptionList.size());
 
 		for (PmFeeExemption exemption : exemptionList) {
@@ -1003,24 +1005,33 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
-			for(PmFeeExemption ex : exemptionList){
-				if(ex.getItemId() == null){
+			for (PmFeeExemption ex : exemptionList) {
+				if (ex.getItemId() == null) {
 					ex.setItemId(new CmItem());
 				}
 			}
+		
 			// hit error and return
 			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
 		// add deleted list before update
 		exemptionList.addAll(this.getManagedBean()
 				.getDeletedOrgAndItemFeeExemptions());
-
+		for (PmFeeExemption exe : exemptionList) {// befor update clear remained
+													// empty objs
+			if (exe.getItemId() != null && exe.getItemId().getItemId() == null) {// clear
+																					// empty
+				// objects
+				exe.setItemId(null);
+			}
+		}
 		IFeeExemptionSO exemptionSO = null;
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 			reqDTO.setFeeExemptionList(exemptionList);
+		
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
 			// retrieve
@@ -1059,24 +1070,24 @@ public class RuleCatalogueBackingBean extends
 		boolean result = false;
 
 		for (int i = 0; i < feeExemptionList.size(); i++) {
-//			log.info("...................first loop");
+			// log.info("...................first loop");
 			PmFeeExemption baseExemption = feeExemptionList.get(i);
 			if (baseExemption.getRecordStatusFlg() == 0) {
 				// if record inactive choose next one
 				continue;
 			}
-//			log.info(".................after continue..in..first loop");
+			// log.info(".................after continue..in..first loop");
 			// log.info(".........................baseExemption.getFeeExemptionType()="
 			// + baseExemption.getFeeExemptionType());
 			for (int j = i + 1; j <= (feeExemptionList.size() - 1); j++) {
-//				log.info("...................second loop");
+				// log.info("...................second loop");
 				PmFeeExemption ex = feeExemptionList.get(j);
 				if (ex.getRecordStatusFlg() == 0) {
 					// if record inactive choose next one
 					continue;
 				}
-//				log.info(".................after continiue..in..second loop");
-//
+				// log.info(".................after continiue..in..second loop");
+				//
 
 				if ((ex.getFeeExemptionType().equals("1") && ex
 						.getOrgProfileId().getOrgProfileId() == baseExemption
@@ -1120,9 +1131,9 @@ public class RuleCatalogueBackingBean extends
 				if (result == true) {
 					return result;
 				}
-			}// end of first loop
+			}// end of second loop
 
-		}// end of second loop
+		}// end of first loop
 
 		return result;
 	}
@@ -1162,8 +1173,8 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
-			for(PmFeeExemption ex : exemptionList){
-				if(ex.getRequestItemId() == null){
+			for (PmFeeExemption ex : exemptionList) {
+				if (ex.getRequestItemId() == null) {
 					ex.setRequestItemId(new ScRequestItem());
 				}
 			}
@@ -1173,7 +1184,16 @@ public class RuleCatalogueBackingBean extends
 		// add deleted records before update
 		exemptionList.addAll(this.getManagedBean()
 				.getDeletedContractFeeExemptions());
-
+		for (PmFeeExemption exe : exemptionList) {
+			if (exe.getRequestItemId() != null
+					&& exe.getRequestItemId().getRequestNoteItemId() == null) {// clear
+																				// remaining
+				// empty
+				// //
+				// objects
+				exe.setRequestItemId(null);
+			}
+		}
 		IFeeExemptionSO exemptionSO = null;
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
@@ -1232,7 +1252,8 @@ public class RuleCatalogueBackingBean extends
 						new String[] {});
 			}
 			if (exemption1.getTypeId() != null
-					&& exemption1.getTypeId().getTypeId() == null) {// if type not
+					&& exemption1.getTypeId().getTypeId() == null) {// if type
+																	// not
 																	// selected
 																	// remove
 																	// empty
@@ -1254,8 +1275,8 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
-			for(PmFeeExemption ex :exemptionList){
-				if(ex.getTypeId() == null){
+			for (PmFeeExemption ex : exemptionList) {
+				if (ex.getTypeId() == null) {
 					ex.setTypeId(new CmType());
 				}
 			}
@@ -1265,6 +1286,11 @@ public class RuleCatalogueBackingBean extends
 		// add deleted records before update
 		exemptionList.addAll(this.getManagedBean()
 				.getDeletedComodityFeeExemptions());
+		for (PmFeeExemption exe : exemptionList) { // clear remaining empty objs
+			if (exe.getTypeId() != null && exe.getTypeId().getTypeId() == null) {
+				exe.setTypeId(null);
+			}
+		}
 		IFeeExemptionSO exemptionSO = null;
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
@@ -1278,13 +1304,13 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().getDeletedComodityFeeExemptions().clear();
 			reqDTO = new FeeExemptionReqDTO();
 			resDTO = exemptionSO.getFeeExemptionsForComodity(reqDTO);
-			
+
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-				if(exemption.getTypeId() == null){
+				if (exemption.getTypeId() == null) {
 					exemption.setTypeId(new CmType());
 				}
 				cReqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
@@ -1302,7 +1328,8 @@ public class RuleCatalogueBackingBean extends
 						}
 					}
 				}
-				this.getManagedBean().getFeeExemptionsForComodity().add(exemption);
+				this.getManagedBean().getFeeExemptionsForComodity()
+						.add(exemption);
 			}
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
