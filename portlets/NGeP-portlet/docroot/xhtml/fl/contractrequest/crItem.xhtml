@@ -160,12 +160,13 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
-					<p:inputText value="#{item.orderedQty}" size="14" id="orderedQty"
+					<p:inputText value="#{item.orderedQty}" size="14" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}"
 						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" styleClass="colFloatRight" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />							
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />	
+						<f:validateDoubleRange minimum="0.001" maximum="9999999999.999" />						
 						<p:ajax update="subTotalTxt,unitPrice,orderedQty,itemDataTable"
 							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
