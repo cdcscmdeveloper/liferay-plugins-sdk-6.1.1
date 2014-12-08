@@ -97,6 +97,10 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
+	
+	//uom
+	private String measurementCodes;	
+	private String measurementNames;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -688,5 +692,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.buttonAction = buttonAction;
 	}
 
+	public String getMeasurementCodes() {
+		return measurementCodes;
+	}
+
+	public void setMeasurementCodes(String measurementCodes) {
+		this.measurementCodes = measurementCodes;
+	}
+
+	public String getMeasurementNames() {
+		return measurementNames;
+	}
+
+	public void setMeasurementNames(String measurementNames) {
+		this.measurementNames = measurementNames;
+	}
 	
 }

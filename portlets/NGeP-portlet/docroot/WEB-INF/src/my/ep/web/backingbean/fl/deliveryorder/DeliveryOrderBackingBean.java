@@ -20,8 +20,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -34,6 +38,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
@@ -47,13 +53,17 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
@@ -82,6 +92,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * @return FacesScopes
 	 */
 	private FlFulfilmentItemAddr amountSectionItemRow;
+	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
@@ -696,6 +707,80 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 		return Boolean.FALSE;
 	}
-
 	
+	private class UnitOfMeasurementPagingDataModel extends PagingDataModel<PmUom> {
+		private static final long serialVersionUID = 1L;
+
+		public UnitOfMeasurementPagingDataModel() {
+			super("measurementSR");
+		}
+
+		@Override
+		public ISearchResultBean<PmUom> pageChangeListener(ISearchBean<PmUom> searchBean) {
+			try {	
+				ISearchBean<PmUom> searchBeanData = getMeasurementSearchBeanData(searchBean);
+				UomReqDTO reqDTO = new UomReqDTO();
+				reqDTO.setMeasurementSearchBean(searchBeanData);				
+				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+				UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getMeasurementSearchResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
+		
+		if (getManagedBean().getMeasurementCodes() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
+			SearchFilterBean uomSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			uomSearchBean
+					.setSearchField("uomCode");
+			uomSearchBean
+					.setCaseInsensitive(true);
+			uomSearchBean.setSearchValue(getManagedBean()
+					.getMeasurementCodes());
+			searchBean.getDataFilterBeans().add(uomSearchBean);
+		}
+
+		if (getManagedBean().getMeasurementNames() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementNames())) {
+			SearchFilterBean uomSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			uomSearchBean
+					.setSearchField("uomName");
+			uomSearchBean
+					.setCaseInsensitive(true);
+			uomSearchBean.setSearchValue(getManagedBean()
+					.getMeasurementNames());
+			searchBean.getDataFilterBeans().add(uomSearchBean);
+		}
+		return searchBean;
+	}
+
+	public IPagingDataModel<PmUom> getUnitOfMeasurementDataModel() {
+		return unitOfMeasurementDataModel;
+	}
+
+	public void setUnitOfMeasurementDataModel(
+			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
+		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
+	}	
+	
+	public void retrieveMeasurement(){		
+		unitOfMeasurementDataModel.reloadData();		
+	}
+	
+	public void resetMeasurementSearch() {		
+		this.getManagedBean().setMeasurementCodes(null);
+		this.getManagedBean().setMeasurementNames(null);
+		getUnitOfMeasurementDataModel().resetData();
+		unitOfMeasurementDataModel.reloadData();		
+	}	
 }
