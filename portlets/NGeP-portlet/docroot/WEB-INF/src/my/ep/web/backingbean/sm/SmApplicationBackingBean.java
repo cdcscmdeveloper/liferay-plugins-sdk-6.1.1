@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -151,6 +153,7 @@ public class SmApplicationBackingBean extends
 	private int currentTab;
 	private int outputTab;
 	private StreamedContent file;
+	NumberFormat formatter = new DecimalFormat("#0.00");
 
 	public SmApplicationBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -581,8 +584,8 @@ public class SmApplicationBackingBean extends
 						.getSmCompanyBasic().getCompanyName());
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
-				fac.setPurchasePrice(new BigDecimal(0));
-				fac.setRentalRate(new BigDecimal(0));
+				fac.setPurchasePrice(new BigDecimal(0.00));
+				fac.setRentalRate(new BigDecimal(0.00));
 				fac.setRevNo(1);
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
@@ -717,6 +720,12 @@ public class SmApplicationBackingBean extends
 			} else {
 				SmAppl smAppl = SmApplicationUtil.defaultSmAppl(resDTO
 						.getSmAppl());
+				if (smAppl.getApplType() != null
+						&& smAppl.getApplType().equalsIgnoreCase(
+								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					log.info("*** This is cancellation application *****");
+					throw new EpException(MessageConst.ERROR_722581);
+				}
 				getManagedBean().setSmAppl(smAppl);
 				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(getManagedBean()
 						.getSmAppl().getApplId());
@@ -734,6 +743,14 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
 						log.info("*** This is application with pending payment *****");
 						throw new EpException(MessageConst.ERROR_722577);
+					} else if (sts
+							.getPmStatus()
+							.getStatusId()
+							.compareTo(
+									SupplierManagementConst.PM_STATUS_PENDING_REVIEW_CANCELLATION) == 0) {
+						log.info("*** This is duplicate request for the delete pending *****");
+						throw new EpException(MessageConst.ERROR_722582,
+								new String[] { smAppl.getApplNo() });
 					}
 					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
 				}
@@ -1376,7 +1393,17 @@ public class SmApplicationBackingBean extends
 						new PmCity());
 			}
 		}
+		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		initBusinessPremise();
+	}
+
+	private void setFacilityDefaultPrices(SmFacility fac) {
+		if (fac.getRentalRate() == null) {
+			fac.setRentalRate(new BigDecimal(0.00));
+		}
+		if (fac.getPurchasePrice() == null) {
+			fac.setPurchasePrice(new BigDecimal(0.00));
+		}
 	}
 
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
@@ -5037,10 +5064,11 @@ public class SmApplicationBackingBean extends
 						// new FacesScopes().getUserSessionBean()
 						// .getUserId(), getManagedBean()
 						// .getReasonDesc());
-						if (getManagedBean()
-								.getBpmTaskName()
-								.equalsIgnoreCase(
-										SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+						if (getManagedBean().getBpmTaskName() != null
+								&& getManagedBean()
+										.getBpmTaskName()
+										.equalsIgnoreCase(
+												SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 							reqDTO.setLastApprovedAppl(SmApplicationUtil
 									.getLastApprovedApplictionForSupplier(getManagedBean()));
 						}
@@ -5855,12 +5883,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setApplStoreFacilities(new ArrayList<SmFacility>());
 
 		for (SmFacility smFac : smFacilities) {
-			if (smFac.getPurchasePrice() == null) {
-				smFac.setPurchasePrice(new BigDecimal(0));
-			}
-			if (smFac.getRentalRate() == null) {
-				smFac.setRentalRate(new BigDecimal(0));
-			}
+			setFacilityDefaultPrices(smFac);
 			if (smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 					|| smFac.getFacilityType()
