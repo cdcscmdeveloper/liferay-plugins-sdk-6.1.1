@@ -57,7 +57,7 @@
 							icon="ui-icon-search" action="#{locationBackingBean.searchLocation}" />
 						&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							update="locationSearchPanel" icon="ui-icon-reset"
+							update=":form:locationSearchPanel,:form:searchLocations" icon="ui-icon-reset"
 							action="#{locationBackingBean.resetLocationSearchBean}" />
 					</div>
 				</td>

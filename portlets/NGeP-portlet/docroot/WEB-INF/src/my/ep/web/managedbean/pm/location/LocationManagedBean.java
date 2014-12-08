@@ -47,7 +47,7 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private List<VPmLocation> vPmLocation;
 
-	private int status;
+	
 
 	private VPmLocation location;
 	private boolean divisionFlag=true;
@@ -57,8 +57,8 @@ public class LocationManagedBean extends BaseManagedBean {
 		division = new PmDivision();
 		district = new PmDistrict();
 		city = new PmCity();
-		state.setPmCountry(new PmCountry());
-		division.setPmState(state);
+		state.setPmCountry(new PmCountry());		
+		//division.setPmState(state);
 		district.setPmState(state);
 		//district.setPmDivision(division);
 		city.setPmDistrict(district);
@@ -163,13 +163,6 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.country = country;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
 
 	
 

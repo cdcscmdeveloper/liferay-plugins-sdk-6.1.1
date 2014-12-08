@@ -39,7 +39,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
 				<p:commandLink
-					action="#{locationBackingBean.editLocation(location.locationType,location.locationId)}">
+					action="#{locationBackingBean.redirectToLocation(location.locationType,location.locationId)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						title="Update Location"
 						value="/resources/ep/images/design/edit.png" />
@@ -49,7 +49,7 @@
 		<br />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.create']}" icon="ui-icon-add"
-				action="#{locationBackingBean.addLocation()}" />
+				action="#{locationBackingBean.redirectToLocation(null,null)}" />
 		</div>
 	</p:panel>
 </ui:composition>
