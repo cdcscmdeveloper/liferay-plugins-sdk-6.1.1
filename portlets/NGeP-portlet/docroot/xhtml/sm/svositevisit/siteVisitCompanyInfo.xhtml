@@ -35,24 +35,6 @@
 				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.sitevist.total.owner']}" /></td>
 				<td><p:inputText readonly="true" id="ttlOwnerId" value="#{svoSiteVisitBackingBean.managedBean.totalEquityOwner}" /> #{lbl['lbl.sm.persons']}</td>
 			</tr>
-			
-			<ui:repeat varStatus="equityStat" var="equityOwner" value="#{svoSiteVisitBackingBean.managedBean.equityOwnerLs}">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
-					<p:outputLabel value="&#160;" rendered="#{equityStat.index != 0}" /></td>
-					<td><p:inputText readonly="true" value="#{equityOwner.name}" /></td>
-					<td>&#160;</td>
-				</tr>
-			</ui:repeat>
-<!-- 			<tr> -->
-<!-- 				<td><p:outputLabel value="Owner Name 1." /></td> -->
-<!-- 				<td><p:inputText /></td> -->
-<!-- 			</tr> -->
-
-<!-- 			<tr> -->
-<!-- 				<td><p:outputLabel value="2." /></td> -->
-<!-- 				<td><p:inputText /></td> -->
-<!-- 			</tr> -->
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
@@ -124,6 +106,27 @@
 					</p:inputText></td>
 				<td><p:inputText readonly="true" value="#{svoSiteVisitBackingBean.calculateEquityPercentage(svTask.smAppl.smCompanyBasic.foreignCompanyEquity)}" />%</td>
 			</tr>
+			
+			<c:choose>
+					<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.equityOwnerLs}">
+					<ui:repeat varStatus="equityStat" var="equityOwner" value="#{svoSiteVisitBackingBean.managedBean.equityOwnerLs}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
+							<p:outputLabel value="&#160;" rendered="#{equityStat.index != 0}" /></td>
+							<td><p:inputText readonly="true" value="#{equityOwner.name}" /></td>
+							<td>&#160;</td>
+						</tr>
+					</ui:repeat>
+					</c:when>
+					
+					<c:otherwise>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /></td>
+						<td><p:inputText readonly="true"  /></td>
+						<td>&#160;</td>
+					</tr>
+					</c:otherwise>
+			</c:choose>
 		</table>
 	</p:panel>
 
@@ -148,15 +151,28 @@
 				<td><p:inputText id="bodNonMalaysianId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.dirNonMalaysian}" /> #{lbl['lbl.sm.persons']}</td>
 				<td><p:inputText id="bodNonMalaysianPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateDirectorPercentage(svoSiteVisitBackingBean.managedBean.dirNonMalaysian)}"/>%</td>
 			</tr>
-			<ui:repeat varStatus="status" var="bod"
-				value="#{svoSiteVisitBackingBean.managedBean.bodLs}">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" rendered="#{status.index == 0}" />
-					<p:outputLabel value="&#160;" rendered="#{status.index != 0}" /></td>
-					<td><p:inputText readonly="true" value="#{bod.name}" /></td>
-					<td>&#160;</td>
-				</tr>
-			</ui:repeat>
+
+				
+				<c:choose>
+					<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.bodLs}">
+						<ui:repeat varStatus="status" var="bod" value="#{svoSiteVisitBackingBean.managedBean.bodLs}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" rendered="#{status.index == 0}" /> 
+								<p:outputLabel value="&#160;" rendered="#{status.index != 0}" /></td>
+							<td><p:inputText readonly="true" value="#{bod.name}" /></td>
+							<td>&#160;</td>
+						</tr>
+						</ui:repeat>
+					</c:when>
+
+					<c:otherwise>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" /></td>
+							<td><p:inputText readonly="true" /></td>
+							<td>&#160;</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 		</table>
 	</p:panel>
 
@@ -190,17 +206,29 @@
 <!-- 				<td><p:inputText /></td> -->
 <!-- 			</tr> -->
 			
-			<ui:repeat varStatus="mgmtStatus" var="mgmt" value="#{svoSiteVisitBackingBean.managedBean.mgmtLs}">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
-					<p:outputLabel value="&#160;" rendered="#{mgmtStatus.index != 0}" /></td>
-					<td><p:inputText readonly="true" value="#{mgmt.name}" /></td>
-				</tr>
-			</ui:repeat>
-<!-- 			<tr> -->
-<!-- 				<td><p:outputLabel value="Manager Name" /></td> -->
-<!-- 				<td><p:inputText /></td> -->
-<!-- 			</tr> -->
+			
+			
+			<c:choose>
+				<c:when test="#{not empty svoSiteVisitBackingBean.managedBean.mgmtLs}">
+					<ui:repeat varStatus="mgmtStatus" var="mgmt" value="#{svoSiteVisitBackingBean.managedBean.mgmtLs}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
+							<p:outputLabel value="&#160;" rendered="#{mgmtStatus.index != 0}" /></td>
+							<td><p:inputText readonly="true" value="#{mgmt.name}" /></td>
+						</tr>
+					</ui:repeat>
+				</c:when>
+				
+				<c:otherwise>
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" />
+							<p:outputLabel value="&#160;" />
+						</td>
+						<td><p:inputText readonly="true" /></td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
 		</table>
 	</p:panel>
 
