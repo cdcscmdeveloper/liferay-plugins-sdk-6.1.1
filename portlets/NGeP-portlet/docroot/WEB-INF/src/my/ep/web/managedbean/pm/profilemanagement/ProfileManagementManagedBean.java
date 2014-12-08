@@ -34,7 +34,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
 	private static final Logger log= EpLogger.getLogger(ProfileManagementManagedBean.class);	
-	private boolean dummy; //TODO remove
 	private UserProfilesSearchBean userProfileSearchBean;
 	private PmUser selectedUser;
 	private PmAddress userAddress; //Address Type - C
@@ -51,7 +50,21 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmUserAttachment> deletePmUserAttachments;
 	private boolean deletePortrait;
 	private List<PmUserNotification> notifications;
+	private boolean addressEntered;
 	
+
+	/**
+	 * @return the addressEntered
+	 */
+	public boolean isAddressEntered() {
+		return addressEntered;
+	}
+	/**
+	 * @param addressEntered the addressEntered to set
+	 */
+	public void setAddressEntered(boolean addressEntered) {
+		this.addressEntered = addressEntered;
+	}
 	/**
 	 * @return the fileEventMapper
 	 */
@@ -90,18 +103,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setDeleteReceivingAddrTypes(
 			List<PmAddressType> deleteReceivingAddrTypes) {
 		this.deleteReceivingAddrTypes = deleteReceivingAddrTypes;
-	}
-	/**
-	 * @return the dummy
-	 */
-	public boolean isDummy() {
-		return dummy;
-	}
-	/**
-	 * @param dummy the dummy to set
-	 */
-	public void setDummy(boolean dummy) {
-		this.dummy = dummy;
 	}
 
 	
