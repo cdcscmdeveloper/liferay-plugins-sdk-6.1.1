@@ -72,17 +72,21 @@
 				valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"></p:inputText>
 		</p:column>
 		<p:column width="25%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M') or (ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'N')}">
+			rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'}">
 			<f:facet name="header">
-			<h:outputText value="*" styleClass="mandatory" />
+			  <h:outputText value="*" styleClass="mandatory" />
+			  
 					                 #{lbl['lbl.pm.value']}
-				           </f:facet>
-
-			<p:inputText value="#{typeValueObj.ruleValue}" size="20"
-				partialSubmit="true" process=":form:settingTabId"
+		    </f:facet>
+           <p:selectOneMenu
+				value="#{typeValueObj.ruleValue}"
 				update=":form:settingTabId" required="true" requiredMessage="Value is mandatory"
-				valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"></p:inputText>
-		</p:column>
+							valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"
+							style="width:250px;">
+	            		 <f:selectItems value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.financialOrgRegType, ruleCatalogueBackingBean.parameterSearchBean)}" /> 
+			</p:selectOneMenu>
+						
+				</p:column>
       <p:column width="25%"
 			rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P'}">
 			<f:facet name="header">
