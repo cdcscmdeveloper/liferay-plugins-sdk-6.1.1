@@ -12,22 +12,24 @@
 			var="supplierCategory">
 			<ac:paginator for="supplierCategory"></ac:paginator>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}" style="width : 10%; ">
 				<h:outputText
-					value="#{supplierCategory.pmCategoryL1.categoryL1Code}"></h:outputText>
+					value="#{supplierCategory.pmCategoryL1.categoryL1Code}"/><h:outputText
+					value="#{supplierCategory.pmCategoryL2.categoryL2Code}"/><h:outputText
+					value="#{supplierCategory.pmCategoryL3.categoryL3Code}"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}" style="white-space : normal; width : 40%; ">
 				<h:outputText value="#{supplierCategory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}" style="white-space : normal; width : 20%; ">
 				<h:outputText value="#{supplierCategory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}" style="white-space : normal; width : 20%; ">
 				<h:outputText value="#{supplierCategory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}" style="width : 10%; ">
 				<h:outputText
 					value="#{(supplierCategory.specialCategory) ? 'Special' : 'Normal'}"></h:outputText>
 			</p:column>
