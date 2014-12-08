@@ -855,18 +855,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  			}
  		}
 		
-		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
-				(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
-				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement" });
-		}
-		
-		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
-		    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
-		}
-		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 	    	getZoneObjDetails();
 			if(contractVer.getCtContractZones()!=null) {
@@ -1058,6 +1046,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						throw new EpException(MessageConst.ERROR_750013);//Total ceiling amount for all PTJ defined in contract must be equals to contract amount.
 					}
 				}
+			}
+			
+			if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
+				    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
+				}
+			
+			if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
+					(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
+					getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement" });
 			}
 		}
 		
