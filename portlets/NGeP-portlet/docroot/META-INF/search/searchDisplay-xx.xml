@@ -692,7 +692,6 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.proj.desc" />
-					<property name="searchable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmSetia.setiaCode" />
