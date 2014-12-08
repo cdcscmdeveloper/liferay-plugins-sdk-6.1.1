@@ -118,7 +118,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true">
-		<p:dataTable id="facility" rowIndexVar="index"
+		<p:dataTable id="facility" rowIndexVar="index" rows="10"
 			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
 			<ac:paginator for="facility"></ac:paginator>
 			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
@@ -139,7 +139,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}">
 				<p:outputLabel value="#{facility.areaSquareFeet}"></p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal; ">
 				<p:outputLabel style="float : left;"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></p:outputLabel>
 			</p:column>

@@ -21,33 +21,33 @@
 
 			<ac:paginator for="techgovtid" />
 
-			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}" style="white-space : normal;">
+			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}" style="white-space : normal; width : 22%; ">
 				<h:outputText value="#{techgovt.scLoiLoa.pmOrgProfile.orgName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}" style="white-space : normal;">
+			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}" style="white-space : normal; width : 30%; ">
 				<h:outputText value="#{techgovt.scLoiLoa.title}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}" style="width : 12%; ">
 				<h:outputText value="#{techgovt.loaNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}" style="width : 12%; ">
 				<h:outputText value="#{techgovt.contractEffDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}" style="width : 12%; ">
 				<h:outputText value="#{techgovt.contractExpDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}" style=" width : 12%; ">
 				<h:outputText style="float : right"
 					value="#{techgovt.contractDuration.intValue()/12}">
 					<f:convertNumber

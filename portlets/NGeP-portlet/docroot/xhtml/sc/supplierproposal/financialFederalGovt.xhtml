@@ -21,33 +21,39 @@
 
 			<ac:paginator for="financegovtid" />
 
-			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}" style="white-space : normal;">
+			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}"
+				style="white-space : normal; width : 20%; ">
 				<h:outputText value="#{financegovt.scLoiLoa.pmOrgProfile.orgName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}" style="white-space : normal;">
+			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}"
+				style="white-space : normal; width : 30%; ">
 				<h:outputText value="#{financegovt.scLoiLoa.title}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}"
+				style=" width : 10%; ">
 				<h:outputText value="#{financegovt.loaNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}"
+				style=" width : 10%; ">
 				<h:outputText value="#{financegovt.contractEffDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}"
+				style=" width : 10%; ">
 				<h:outputText value="#{financegovt.contractExpDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}"
+				style="width : 10%; ">
 				<h:outputText style="float : right"
 					value="#{financegovt.contractDuration.intValue()/12}">
 					<f:convertNumber
@@ -56,7 +62,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.contract.amt']}"
-				style="text-align:right">
+				style="text-align:right; width : 10%;">
 				<h:outputText value="#{financegovt.loaAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
