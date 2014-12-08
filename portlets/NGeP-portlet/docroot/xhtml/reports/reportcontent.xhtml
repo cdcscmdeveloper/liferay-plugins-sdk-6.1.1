@@ -75,7 +75,7 @@
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
     				</p:commandButton> 	           
 					<p:commandButton value="#{lbl['lbl.so.reset']}"	action="#{reportBackingBean.resetReportForm}"
-					update="@form" icon="ui-icon-reset" partialSubmit="true" process="@form"/>					        					
+					update="@form"  partialSubmit="true" process="@form"/>					        					
 				   </div>
 				   </h:panelGroup>
 					<p:dialog id="reportGenDialog" widgetVar="reportGenDialog"
