@@ -506,15 +506,19 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	
+	
 	public void retrieveDistrictList(AjaxBehaviorEvent e) {
-		Long districtId = (Long) e.getComponent().getAttributes().get("value");
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setDistrictId(districtId);
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+		Long stateId = (Long) e.getComponent().getAttributes().get("value");
+		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+		districtReqDTO.setStateId(stateId);
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDistrictSO.class);
-		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
-		getManagedBean().setDistricts(resDTO.getDistrictList());
+		DistrictResDTO districtResDTO = districtSO
+				.retriveDistrictListByStateID(districtReqDTO);
+		getManagedBean().setDistricts(districtResDTO.getDistrictList());
+		
 
 	}
 	
