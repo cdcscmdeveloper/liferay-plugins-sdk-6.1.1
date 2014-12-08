@@ -38,17 +38,17 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishPeriod}"
-						readonly="true" id="publishingperiod" disabled="true" size="30"
+						readonly="true" id="publishingperiod" disabled="true" size="14"
 						style="margin-top:5px; text-align:right" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.closingdate']}" /></td>
 				<td><p:inputText id="closingDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonly="true" disabled="true" style="margin-top:5px" size="18">
+						readonly="true" disabled="true" style="margin-top:5px" size="14">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160; <h:inputText value="12:00 PM" disabled="true" size="4"
+					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText value="12:00 PM" disabled="true" size="4"
 						style="width: 50px;margin-top: 5px;margin-bottom: 0px;" /></td>
 			</tr>
 			<c:if
@@ -73,19 +73,10 @@
 				</tr>
 			</c:if>
 			<tr>
-				<td style="width: 204px;"><p:outputLabel
-						value="#{lbl['lbl.so.expectloadate']}" /></td>
-				<td><p:calendar id="loaDate"
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
-						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonlyInput="true" showOn="button" /></td>
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
-						readonly="true" disabled="true" size="30"
+						readonly="true" disabled="true" size="14"
 						style="margin-top:5px;text-align:right" /></td>
 			</tr>
 			<tr>
@@ -93,10 +84,19 @@
 						value="#{lbl['lbl.so.proposal.validity.until']}" /></td>
 				<td><p:inputText id="proposalvalidityid"
 						value="#{qTScheduleDetailBackingBean.managedBean.proposalValidityUntil}"
-						readonly="true" disabled="true" style="margin-top:5px;" size="30">
+						readonly="true" disabled="true" style="margin-top:5px;" size="14">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
+			</tr>
+			<tr>
+				<td style="width: 204px;"><p:outputLabel
+						value="#{lbl['lbl.so.expectloadate']}" /></td>
+				<td><p:calendar id="loaDate"
+						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
+						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
+						readonlyInput="true" showOn="button" /></td>
 			</tr>
 		</table>
 	</p:panel>
