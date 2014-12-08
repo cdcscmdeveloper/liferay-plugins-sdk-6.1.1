@@ -281,7 +281,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				this.getManagedBean().setSelectedUserOrg(pmUser.getPmUserOrgs().get(0));
 				showReceivingAddress();
 			}
-			
+			addressEntered(); 
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); 
@@ -318,6 +318,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setConfirmPassword(null);
 		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
 		
+		this.getManagedBean().setAddressEntered(false);
 		this.getManagedBean().setSelectedUser(pmUser);
 		this.getManagedBean().setSelectedUserOrg(null);
 		this.getManagedBean().setSelectedRoles(null);
@@ -430,6 +431,23 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return currentDate;
 	}
 
+	public void addressEntered(){
+		logger.info("addressEntered");
+		if(!this.getManagedBean().getSelectedUser().isOrgAddress()){
+			PmAddress pmAddress = this.getManagedBean().getUserAddress();
+			//address is optional
+			if(pmAddress.getPmCountry().getCountryId()!=null || !StringUtils.isBlank(pmAddress.getAddress1()) ||
+					!StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId()!=null ||
+					pmAddress.getPmDistrict().getDistrictId()!=null || pmAddress.getPmDivision().getDivisionId()!=null
+					){
+				this.getManagedBean().setAddressEntered(true);
+			}else{
+				this.getManagedBean().setAddressEntered(false);
+			}
+		}
+		logger.info("addressEntered: " +this.getManagedBean().isAddressEntered());
+	}
+	
 	/**
 	 * update division flag to either disable or enable division selection on UI
 	 * @param divisionType
@@ -462,6 +480,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}else if(2==address){ //district);
 			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
 		}
+		addressEntered();
 	}
 
 	/**
@@ -1419,32 +1438,143 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * load user address - C
 	 * @param user
 	 */
-	private void loadUserAddress(PmUser user){
+	private void loadUserAddress(PmUser user, boolean isAddressEntered){
+		logger.info("loadUserAddress");
 		if(!user.isBrandNew()){
+			boolean isUserAddressExist = false;
 			//update contact address
 			if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
 				for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
-					if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
-						addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
-						if(addressTypeObj.getPmAddress().getPmDivision()!=null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId()==null){
-							addressTypeObj.getPmAddress().setPmDivision(null);
+					if(DbValueConst.RECORD_STATUS_ACTIVE == addressTypeObj.getRecordStatusFlg()){
+						if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+							//update address
+							if(isAddressEntered){
+								logger.info("update address");
+								addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
+								if(addressTypeObj.getPmAddress().getPmDivision()!=null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId()==null){
+									addressTypeObj.getPmAddress().setPmDivision(null);
+								}
+							}else{
+								logger.info("update address (remove)");
+								//remove address
+								addressTypeObj.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							}
+							isUserAddressExist = true;
+							break;
 						}
-						break;
+					}
+				}
+				if(!isUserAddressExist){
+					logger.info("add address");
+					//add address
+					PmAddressType pmAddressType = new PmAddressType();
+					pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+					pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+					if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+						pmAddressType.getPmAddress().setPmDivision(null);
+					}
+					pmAddressType.setPmOrgProfile(null);
+					user.addPmAddressType(pmAddressType);
+				}
+			}
+		}else{
+			if(isAddressEntered){
+				logger.info("add address");
+				if(user.getPmAddressTypes()==null){
+					user.setPmAddressTypes(new ArrayList<PmAddressType>());
+				}
+				PmAddressType pmAddressType = new PmAddressType();
+				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+				if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+					pmAddressType.getPmAddress().setPmDivision(null);
+				}
+				pmAddressType.setPmOrgProfile(null);
+				user.addPmAddressType(pmAddressType);
+			}
+		}
+
+	}
+	
+	/**
+	 * load user address - C
+	 * @param user
+	 */
+	private void cloneUserAddress(PmUser user){
+		logger.info("cloneUserAddress");
+		//getting current active org's address
+		PmAddress orgAddress = null;
+		
+		if(user.getPmUserOrgs()!=null){
+			Long orgProfileId = null;
+			for(PmUserOrg userOrg: user.getPmUserOrgs()){
+				if(userOrg.isCurrentActive()){
+					orgProfileId = userOrg.getPmOrgProfile().getOrgProfileId();
+					break;
+				}
+			}
+			//search address type B and orgProfileId
+			List <PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByOrgId(orgProfileId,  ProfileManagementConst.ADDRESS_BILLING);
+			orgAddress = (addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : null;
+			logger.info(orgAddress!=null ? "orgAddress exist: YES" : "orgAddress exist: NO");
+		}
+		
+		if(!user.isBrandNew()){
+			boolean isUserAddressExist = false;
+			//update contact address
+			if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
+				for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
+					if(DbValueConst.RECORD_STATUS_ACTIVE == addressTypeObj.getRecordStatusFlg()){
+						if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+							//update address
+							if(orgAddress!=null){
+								logger.info("update address");
+								//copy orgAddress and update address TODO
+								addressTypeObj.setPmAddress(orgAddress);
+								if(addressTypeObj.getPmAddress().getPmDivision()!=null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId()==null){
+									addressTypeObj.getPmAddress().setPmDivision(null);
+								}
+							}else{
+								logger.info("update address (remove)");
+								//remove address because org doesn't have an address
+								addressTypeObj.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							}
+							isUserAddressExist = true;
+							break;
+						}
+					}
+				}
+				if(!isUserAddressExist){
+					logger.info("add address");
+					//copy orgAddress and add address
+					if(orgAddress!=null){
+						PmAddressType pmAddressType = new PmAddressType();
+						pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+						pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+						if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+							pmAddressType.getPmAddress().setPmDivision(null);
+						}
+						pmAddressType.setPmOrgProfile(null);
+						user.addPmAddressType(pmAddressType);
 					}
 				}
 			}
 		}else{
-			if(user.getPmAddressTypes()==null){
-				user.setPmAddressTypes(new ArrayList<PmAddressType>());
+			//copy orgAddress and update address TODO
+			if(orgAddress!=null){
+				logger.info("add address");
+				if(user.getPmAddressTypes()==null){
+					user.setPmAddressTypes(new ArrayList<PmAddressType>());
+				}
+				PmAddressType pmAddressType = new PmAddressType();
+				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+				if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+					pmAddressType.getPmAddress().setPmDivision(null);
+				}
+				pmAddressType.setPmOrgProfile(null);
+				user.addPmAddressType(pmAddressType);
 			}
-			PmAddressType pmAddressType = new PmAddressType();
-			pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
-			pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
-			if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
-				pmAddressType.getPmAddress().setPmDivision(null);
-			}
-			pmAddressType.setPmOrgProfile(null);
-			user.addPmAddressType(pmAddressType);
 		}
 
 	}
@@ -1550,9 +1680,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @throws Exception
 	 */
 	public void validateResponsibleOrg(PmUser user) throws Exception {
-		logger.info("overlappingValidation");
+		logger.info("validateResponsibleOrg");
 
 		if (user.getPmUserOrgs() != null && !user.getPmUserOrgs().isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date endLess = sdf.parse("2099-12-31");
 			for (int index1 = 0; index1 < user.getPmUserOrgs().size(); index1++) {
 				if (user.getPmUserOrgs().get(index1).getRecordStatusFlg() 
 						== DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -1567,12 +1699,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								Date startB = user.getPmUserOrgs().get(index2).getEffDate();
 								Date endB = user.getPmUserOrgs().get(index2).getExpDate();
 
-								// not last item
-								if ((index2 + 1) == user.getPmUserOrgs().size()) {
-									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-									Date endLess = sdf.parse("2099-12-31");
+								// not null
+								if(endA==null){
+									endA = endLess;
+								}if(endB==null){
 									endB = endLess;
 								}
+								
 								boolean isStartABeforeEndB = ((startA
 										.compareTo(endB)) < 0 || startA
 										.equals(endB));
@@ -1613,7 +1746,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			for(PmUserOrg userOrg: user.getPmUserOrgs()){
 				if(userOrg.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE){
 					if(checkEffDate(userOrg)){
+						userOrg.setCurrentActive(true);
 						activeNumber++;
+					}else{
+						userOrg.setCurrentActive(false);
 					}
 				}
 			}
@@ -1679,14 +1815,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(StringUtils.isBlank(user.getEmail())){
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-		if(StringUtils.isBlank(user.getPreferredLanguage())){
-			throw new EpException(MessageConst.ERROR_770037);
-		}
-		if(user.getNotifyRemovalDay()==null 
-				|| (user.getNotifyRemovalDay()!=null 
-				&& user.getNotifyRemovalDay()==0)){
-			throw new EpException(MessageConst.ERROR_770038);
-		}
+//		if(StringUtils.isBlank(user.getPreferredLanguage())){
+//			throw new EpException(MessageConst.ERROR_770037);
+//		}
+//		if(user.getNotifyRemovalDay()==null 
+//				|| (user.getNotifyRemovalDay()!=null 
+//				&& user.getNotifyRemovalDay()==0)){
+//			throw new EpException(MessageConst.ERROR_770038);
+//		}
 //		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
 //			throw new EpException("Old Password is mandatory.");
 //		}
@@ -1695,35 +1831,48 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	/**
 	 * Validation for PmAddress's fields
 	 * @param pmAddress
+	 * @return boolean
 	 */
-	private void validateUserAddress(PmAddress pmAddress){
+	private boolean validateUserAddress(PmAddress pmAddress){
 		logger.info("validateUserAddress");
-		if(pmAddress.getPmCountry().getCountryId()==null){
-			throw new EpException(MessageConst.ERROR_770039);
-		}
-
-		if(StringUtils.isBlank(pmAddress.getAddress1())){
-			throw new EpException(MessageConst.ERROR_770040);
-		}
+		boolean addressEntered = false;
+		if(!this.getManagedBean().getSelectedUser().isOrgAddress()){
+			//address is optional
+			if(pmAddress.getPmCountry().getCountryId()!=null || !StringUtils.isBlank(pmAddress.getAddress1()) ||
+					!StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId()!=null ||
+					pmAddress.getPmDistrict().getDistrictId()!=null || pmAddress.getPmDivision().getDivisionId()!=null
+					){
+				addressEntered = true;
+			}
+			if(addressEntered){
+				if(pmAddress.getPmCountry().getCountryId()==null){
+					throw new EpException(MessageConst.ERROR_770039);
+				}
 		
-		if(StringUtils.isBlank(pmAddress.getPostcode())){
-			throw new EpException(MessageConst.ERROR_770041);
-		}
+				if(StringUtils.isBlank(pmAddress.getAddress1())){
+					throw new EpException(MessageConst.ERROR_770040);
+				}
+				
+				if(StringUtils.isBlank(pmAddress.getPostcode())){
+					throw new EpException(MessageConst.ERROR_770041);
+				}
+				
+				if(pmAddress.getPmState().getStateId()==null){
+					throw new EpException(MessageConst.ERROR_770042);
+				}
 		
-		if(pmAddress.getPmState().getStateId()==null){
-			throw new EpException(MessageConst.ERROR_770042);
-		}
-
-		if(pmAddress.getPmDistrict().getDistrictId()==null){
-			throw new EpException(MessageConst.ERROR_770043);
-		}
-		
-		if(this.getManagedBean().isDivisionFlagC()){
-			if(pmAddress.getPmDivision().getDivisionId()==null){
-				throw new EpException(MessageConst.ERROR_770044);
+				if(pmAddress.getPmDistrict().getDistrictId()==null){
+					throw new EpException(MessageConst.ERROR_770043);
+				}
+				
+				if(this.getManagedBean().isDivisionFlagC()){
+					if(pmAddress.getPmDivision().getDivisionId()==null){
+						throw new EpException(MessageConst.ERROR_770044);
+					}
+				}
 			}
 		}
-	
+		return addressEntered;
 	}
 	
 	/**
@@ -1797,15 +1946,15 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		UserReqDTO reqDTO = null;
 		IUserSO userSO = null;
 		PmUser user =  null; 
-//		boolean isChangePwd = false;
-
+		boolean addressEntered = false;
+		
 		try {
 			
 			user = this.getManagedBean().getSelectedUser();
 			
 			// Validation
 			validateUser(user);
-			validateUserAddress(this.getManagedBean().getUserAddress());
+			addressEntered = validateUserAddress(this.getManagedBean().getUserAddress());
 			validateResponsibleOrg(user);
 			oneActiveResponsibleOrg(user);
 			validatePreference(user);
@@ -1826,8 +1975,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					throw new EpException("Old Password is invalid."); 
 				}
 			}*/
+			if(this.getManagedBean().getSelectedUser().isOrgAddress()){
+				cloneUserAddress(user);
+			}else{
+				loadUserAddress(user, addressEntered);
+			}
 			
-			loadUserAddress(user);
+			
 			
 			loadUserOrgType(user);
 			
