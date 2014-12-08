@@ -18,9 +18,9 @@
 			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
 							 action="#{salutationBackingBean.retrieveSalutation}"
 						     update="salutationSR" process="salutationSearch"/>
+           
             <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
-            				 type="reset" actionListener="#{salutationBackingBean.resetSalSearch}"
-            				 process="@this" update="salPanel" />
+            				 action="#{salutationBackingBean.resetSalSearch}"  update="salPanel, salutationSR" />
 	  </div>
     <br/>
 	<br/>
