@@ -91,6 +91,23 @@ public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
 	private static final String FILE_DATETIME_FORMAT = "ddMMyyyyHHmmss";
 	
+	
+	
+//	
+//	public static RainPmRoleRestriction retrieveRestrictedRoles(String roleCode) {	
+//		RainPmRoleRestriction pmRoleRestriction = null;
+//		RoleReqDTO roleReqDTO = new RoleReqDTO();
+//		roleReqDTO.setRoleCode(roleCode);
+//		IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
+//				ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+//		RoleResDTO resDto = roleSO.retrieveRoleRestrictionByRoleCode(roleReqDTO);
+//		if(resDto.isSuccessful()){
+//			pmRoleRestriction = resDto.getPmRoleRestriction();
+//		}
+//		return pmRoleRestriction;
+//	}
+//	
+	
 	/**
 	 * get record status options 
 	 * @return SelectItem[] 
@@ -546,6 +563,37 @@ public class PmCommonUtil {
 		return pmUserOrgs;
 	}
 	
+	/**
+	 * retrieve address type list by orgProfileId
+	 * @param orgProfileId
+	 * @return List<PmAddressType>
+	 */
+	public static List<PmAddressType> retrieveAddressTypesByOrgId(Long orgProfileId, String addressType){
+		List <PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();
+		IAddressSO addressSO = null;
+		try {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			AddressResDTO resDTO = null;
+			if(orgProfileId!=null){
+				reqDTO.setOrgProfileId(orgProfileId);
+			}
+			if(addressType!=null){
+				reqDTO.setAddressType(addressType);
+			}
+			addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmAddressTypes = resDTO.getAddressTypeList();
+			}
+				
+		} catch (Exception e) {
+			throw new EpException("Unable to retrieve org. address: {0}.", new String[]{e.getMessage()}); 
+			
+		}finally{
+			addressSO = null;
+		}	
+		return pmAddressTypes;
+	}
 	
 
 	/**
@@ -572,7 +620,7 @@ public class PmCommonUtil {
 			}
 				
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770060 , new String[]{userId.toString(), e.getMessage()}); 
+			throw new EpException(MessageConst.ERROR_770060 , new String[]{userId.toString(), e.getMessage()}); //TODO
 			
 		}finally{
 			addressSO = null;
