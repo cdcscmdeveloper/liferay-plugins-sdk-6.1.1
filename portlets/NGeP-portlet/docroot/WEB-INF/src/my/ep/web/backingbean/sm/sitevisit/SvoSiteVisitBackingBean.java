@@ -108,6 +108,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1256995);
 		//this.getManagedBean().setAppId(1256752);
 		//this.getManagedBean().setAppId(1256816);
+		this.getManagedBean().setActiveIndex(0);
+		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setAppId(this.getManagedBean().getAppId());
