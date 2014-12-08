@@ -62,7 +62,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public static final String NAV_TO_SEARCH = "locationMain";
 	public static final String NAV_TO_MAINTAIN = "maintainLocationMain";
 	// Default value
-	public static final boolean SEARCH_DEFAULT = false;
+	public static final boolean SEARCH_DEFAULT = false;	
 
 	public LocationBackingBean() {
 		retrieveCountryList();
@@ -85,8 +85,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		if (id != null && id > 0) {
 			maintainLocation(locationType, id);
+			getManagedBean().setDisabledVal(true);
 		} else {
 			initialLocation();
+			getManagedBean().setDisabledVal(false);
 		}
 		return NAV_TO_MAINTAIN;
 	}
@@ -401,7 +403,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IDistrictSO.class);
-
 
 			districtReqDTO.setStateId(resDTO.getPmCity().getPmDistrict()
 					.getPmState().getStateId());
