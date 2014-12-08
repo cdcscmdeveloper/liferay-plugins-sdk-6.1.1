@@ -9,14 +9,14 @@
 	
 	<p:panel header="#{lbl['lbl.sc.spec.company.branches']}" toggleable="true" >
 			<p:dataTable id="companyBranch" rowIndexVar="index" var="companyBranch" value="#{smAppl.smSupplierBranches}"
-				rowKey="#{companyBranch}">
+				rowKey="#{companyBranch}" rows="10">
 				<ac:paginator for="companyBranch"></ac:paginator>
 				
 				<p:column headerText="#{lbl['lbl.sc.spec.branch.name']}">
 					<p:outputLabel style="float : left;" value="#{companyBranch.branchName}"></p:outputLabel>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal;" >
 					<p:outputLabel style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(companyBranch.smAddress)}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contact.person']}">
