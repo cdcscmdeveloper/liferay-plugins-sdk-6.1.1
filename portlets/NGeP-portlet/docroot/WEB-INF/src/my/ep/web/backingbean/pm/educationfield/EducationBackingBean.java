@@ -79,6 +79,7 @@ public class EducationBackingBean extends
 		
 		this.getManagedBean().setFieldCodes(new String());
 		this.getManagedBean().setFieldNames(new String());
+		educationFieldDataModel.reloadData();
 		
 		
 	}
@@ -254,9 +255,9 @@ public class EducationBackingBean extends
 			
 		  for(PmEduFieldRestr restr : eduField.getPmEduFieldRestrs()){
 		   restr.setPmEduField(eduField);
-		   restr.setPmCategoryL1(restr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1());
-		   restr.setPmCategoryL2(restr.getPmCategoryL3().getPmCategoryL2());
-		   restr.setPmCategoryL3(restr.getPmCategoryL3());
+//		   restr.setPmCategoryL1(restr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1());
+//		   restr.setPmCategoryL2(restr.getPmCategoryL3().getPmCategoryL2());
+//		   restr.setPmCategoryL3(restr.getPmCategoryL3());
 		  }
 		}		
 		
