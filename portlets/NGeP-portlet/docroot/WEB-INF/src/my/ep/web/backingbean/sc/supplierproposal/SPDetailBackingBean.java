@@ -210,25 +210,26 @@ public class SPDetailBackingBean extends
 				Date closingDate = getManagedBean().getQt().getClosingDate();
 				if (new Date(System.currentTimeMillis()).after(closingDate)) {
 					getManagedBean().setClosed(true);
-					getManagedBean().setClosingTime("o");
-				}
-
-				Date today = new Date();
-				long days = DateUtils.getDaysDifference(today, getManagedBean()
-						.getQt().getClosingDate());
-				DecimalFormat df = new DecimalFormat("#00");
-				getManagedBean().setClosingTime(df.format(days) + " Days");
-				if (days == 0) {
-					Long durationInMills = DateUtils.getDateDiffInMillis(
-							DateUtils.getCurrentDate(), getManagedBean()
-									.getQt().getClosingDate());
-					if (durationInMills > 0) {
-						getManagedBean().setClosingTime(
-								durationFormatter(durationInMills));
-					} else {
-						getManagedBean().setClosingTime("o");
+					getManagedBean().setClosingTime("0");
+				}else{
+					Date today = new Date();
+					long days = DateUtils.getDaysDifference(today, getManagedBean()
+							.getQt().getClosingDate());
+					DecimalFormat df = new DecimalFormat("#00");
+					getManagedBean().setClosingTime(df.format(days) + " Days");
+					if (days == 0) {
+						Long durationInMills = DateUtils.getDateDiffInMillis(
+								DateUtils.getCurrentDate(), getManagedBean()
+										.getQt().getClosingDate());
+						if (durationInMills > 0) {
+							getManagedBean().setClosingTime(
+									durationFormatter(durationInMills));
+						} else {
+							getManagedBean().setClosingTime("0");
+						}
 					}
 				}
+
 			}
 			// checking for proposal validity
 			reqDTO.setScQt(resDTO.getScQt());
@@ -2570,9 +2571,7 @@ public class SPDetailBackingBean extends
 						e.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
 						userLocale);
 				getManagedBean().setMessage(message);
-				if(FacesContext.getCurrentInstance().getMessageList() != null){
-					FacesContext.getCurrentInstance().getMessageList().clear();
-				}
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
