@@ -60,7 +60,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
 					<ui:fragment
-						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+						rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 						<p:commandLink ajax="false"
 							actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
 							process="@this" partialSubmit="true">
@@ -75,13 +75,13 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
 					style="width:20%">
 					<h:outputText
-						value="#{complianceTechnicalSupplier.submitted ? 'Submitteed' : 'Not Submitted'}"></h:outputText>
+						value="#{complianceTechnicalSupplier.scQtProposal.submitted ? 'Submitteed' : 'Not Submitted'}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
 					<p:selectOneMenu
-						disabled="#{complianceTechnicalSupplier.submitted eq 'false' }"
+						disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' }"
 						value="#{complianceTechnicalSupplier.compliance}">
 
 						<f:selectItems
@@ -93,7 +93,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%;white-space: normal;">
 					<ui:fragment
-						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+						rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 						<p:inputTextarea rows="2" cols="40" maxlength="200"
 							id="complianceRemarksid"
 							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
