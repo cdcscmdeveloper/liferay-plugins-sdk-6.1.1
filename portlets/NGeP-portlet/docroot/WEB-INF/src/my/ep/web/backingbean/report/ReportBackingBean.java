@@ -1475,7 +1475,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		
-		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
+		//userId = new FacesScopes().getUserSessionBean().getUserId().toString();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
