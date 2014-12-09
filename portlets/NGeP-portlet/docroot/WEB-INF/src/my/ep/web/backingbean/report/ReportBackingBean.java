@@ -1475,56 +1475,56 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {	
-		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(ReportConst.ENG_LANG);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();		
-		if (null != roleDesc) {			
-			for (PmRoleDesc pmRoleDesc : roleDesc) {				
-				pmRoleDesc.getPmRole().getRoleCode();							
-				if(!authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode())){
-					authoriztionList.add(pmRoleDesc.getPmRole().getRoleCode());
-				}
-			}			
-		}
-		userResDTO = userSO.retrieveUserOrgListByUserId(reqDTO);		
-		if(userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size()>0){			
-			List<PmUserOrg> userOrg=userResDTO.getUserOrgList();
-			for (PmUserOrg pmuserOrg : userOrg) {
-				if(pmuserOrg.getPmOrgProfile().getOrgProfileId()!=null){
-					if(!orgProfileList.contains((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString())){
-						orgProfileList.add((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());	
-						SelectItem selectItem= new SelectItem();
-						selectItem.setLabel(pmuserOrg.getPmOrgProfile().getOrgName());
-						selectItem.setValue((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());
-						orgProfileIdNameList.add(selectItem);
+			userId = new FacesScopes().getUserSessionBean().getUserId().toString();
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+			UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+			List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();		
+			if (null != roleDesc) {			
+				for (PmRoleDesc pmRoleDesc : roleDesc) {				
+					pmRoleDesc.getPmRole().getRoleCode();							
+					if(!authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode())){
+						authoriztionList.add(pmRoleDesc.getPmRole().getRoleCode());
+					}
+				}			
+			}
+			userResDTO = userSO.retrieveUserOrgListByUserId(reqDTO);		
+			if(userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size()>0){			
+				List<PmUserOrg> userOrg=userResDTO.getUserOrgList();
+				for (PmUserOrg pmuserOrg : userOrg) {
+					if(pmuserOrg.getPmOrgProfile().getOrgProfileId()!=null){
+						if(!orgProfileList.contains((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString())){
+							orgProfileList.add((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());	
+							SelectItem selectItem= new SelectItem();
+							selectItem.setLabel(pmuserOrg.getPmOrgProfile().getOrgName());
+							selectItem.setValue((pmuserOrg.getPmOrgProfile().getOrgProfileId()).toString());
+							orgProfileIdNameList.add(selectItem);
+						}
 					}
 				}
 			}
-		}
-		String roleCode=ReportConst.EMPTY_VAL;
-		if(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF)){
-			roleCode=ReportConst.APPROVER_NAIK_TARAF;
-		}else if(authoriztionList.contains(ReportConst.APPROVER)){
-				roleCode=ReportConst.APPROVER;
-		}
-		if(roleCode!=null&&roleCode!=ReportConst.EMPTY_VAL){
-			for (int i=0; i < orgProfileList.size(); i++) {
-				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-				//reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-				reqDTO.setRoleCode(roleCode);
-				reqDTO.setOrgProfileId(Long.parseLong(orgProfileList.get(i)));
-			userResDTO = userSO.retrieveUserListByRole(reqDTO);
-			List<PmUser> list = userResDTO.getUserList();
-				for (PmUser user : list) {
-					SelectItem selectItem= new SelectItem();
-					selectItem.setLabel(user.getUserName());
-					selectItem.setValue(user.getUserId());
-					userListbyprofileRole.add(selectItem);				
+			String roleCode=ReportConst.EMPTY_VAL;
+			if(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF)){
+				roleCode=ReportConst.APPROVER_NAIK_TARAF;
+			}else if(authoriztionList.contains(ReportConst.APPROVER)){
+					roleCode=ReportConst.APPROVER;
+			}
+			if(roleCode!=null&&roleCode!=ReportConst.EMPTY_VAL){
+				for (int i=0; i < orgProfileList.size(); i++) {
+					reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+					//reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+					reqDTO.setRoleCode(roleCode);
+					reqDTO.setOrgProfileId(Long.parseLong(orgProfileList.get(i)));
+				userResDTO = userSO.retrieveUserListByRole(reqDTO);
+				List<PmUser> list = userResDTO.getUserList();
+					for (PmUser user : list) {
+						SelectItem selectItem= new SelectItem();
+						selectItem.setLabel(user.getUserName());
+						selectItem.setValue(user.getUserId());
+						userListbyprofileRole.add(selectItem);				
+					}
 				}
 			}
-		}
 		}
 		return authoriztionList;
 	}	
