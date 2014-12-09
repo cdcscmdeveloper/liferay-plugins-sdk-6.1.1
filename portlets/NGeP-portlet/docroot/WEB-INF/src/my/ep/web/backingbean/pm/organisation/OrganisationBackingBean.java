@@ -740,18 +740,7 @@ public class OrganisationBackingBean extends
 		DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
 		getManagedBean().setDistrictList(resDTO.getDistrictList());
 
-	}
-
-	public void retrieveCityList(AjaxBehaviorEvent e) {
-		Long districtId = (Long) e.getComponent().getAttributes().get("value");
-		CityReqDTO reqDTO = new CityReqDTO();
-		reqDTO.setDistrictId(districtId);
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICitySO.class);
-		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
-		this.getManagedBean().setCityList(resDTO.getCityList());
-	}
+	}	
 
 	public void assignNewAddress() {
 
