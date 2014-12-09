@@ -45,7 +45,7 @@
 
 
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
-			toggleable="true">
+			toggleable="true" collapsed="true">
 			<p:dataTable var="cashHand" id="complianceTech" rows="10"
 				value="#{evaluationBackingBean.managedBean.technicalComplinaceList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">
@@ -71,6 +71,7 @@
 			</p:dataTable>
 
 		</p:panel>
+		<p:spacer height="25"></p:spacer>
 		<ui:param name="statusHide"
 			value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
 		<ui:param name="checklistScoreType"
@@ -84,7 +85,7 @@
 		<ui:param name="pageDisable"
 			value="#{evaluationBackingBean.managedBean.readOnly}"></ui:param>
 		<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
-
+        <p:spacer height="25"></p:spacer>
 		<ui:include src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
 
 

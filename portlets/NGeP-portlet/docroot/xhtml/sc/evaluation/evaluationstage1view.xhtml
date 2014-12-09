@@ -36,7 +36,7 @@
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
-			style="float:right;"
+			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
