@@ -22,7 +22,7 @@
 		</td>
 		<td width="17%">
 			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}" />
-			<p:outputLabel value="*" styleClass="mandatory" rendered="#{editable}" />
+			<p:outputLabel value="*" styleClass="mandatory" rendered="#{editable and templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode != ParameterConst.answerTypeText}" />
 		</td>
 		<td width="36%">
 			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedScoreTypeId}" 
