@@ -14,7 +14,7 @@
 			<ac:paginator for="bankdetails" />
 			<p:ajax event="rowSelect"
 				listener="#{supplierProposalDetailBackingBean.onRowSelectionListener}"
-				update=":form:cheque" />
+				update="@([id$=cheque])" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.act.no']}" style="width : 30%;">
 				<p:outputLabel value="#{bankDtls.accountNo}" />
@@ -22,7 +22,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}" style="width : 35%;">
 				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="width : 35%;">
+			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal; width : 35%;">
 				<p:outputLabel style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
 			</p:column>
 		</p:dataTable>
