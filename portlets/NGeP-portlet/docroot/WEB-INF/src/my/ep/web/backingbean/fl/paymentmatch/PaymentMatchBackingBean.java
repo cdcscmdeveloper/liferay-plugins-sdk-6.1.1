@@ -468,10 +468,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==0){
-			validateDuplicateDeduction();
 		}
 		if(selectedTabIndex==1){
-			validateDuplicateDeduction();
 			//populateChargeLineData();	
 			setClassName("@(.pmChargeLinePnlClass)");
 		}
