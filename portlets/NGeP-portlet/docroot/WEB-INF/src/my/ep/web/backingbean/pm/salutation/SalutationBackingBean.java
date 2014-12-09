@@ -73,6 +73,7 @@ public class SalutationBackingBean extends
 		
         this.getManagedBean().setSalutationCodes(new String());
         this.getManagedBean().setSalutationNames(new String());
+        this.getManagedBean().setStatus(1L);
         salutationDataModel.reloadData();
 		
 	}
