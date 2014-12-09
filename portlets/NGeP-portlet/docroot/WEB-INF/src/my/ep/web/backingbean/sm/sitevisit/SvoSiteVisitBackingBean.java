@@ -108,6 +108,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1256995);
 		//this.getManagedBean().setAppId(1256752);
 		//this.getManagedBean().setAppId(1256816);
+		//this.getManagedBean().setAppId(1257091);
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -205,19 +206,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			List<SmSupplierCategory> suppCatLs = retrieveActiveCategoryCode(smSvTask.getSmAppl().getSmSupplier().getSmAppl().getApplId());
 			this.getManagedBean().setCategoryApplicable(suppCatLs);
 			
-			List<SmSupplierCategory> catLs = retrieveActiveCategoryCode(smSvTask.getSmAppl().getApplId());
+			List<SmSupplierCategory> catLs = retrieveAllApprovedCategoryCode(smSvTask.getSmAppl().getApplId());
 			
 			this.getManagedBean().setSvTaskCategories(new ArrayList<SmSupplierCategory>());
 			for(SmSvCategory taskCat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
+				log.info("Supp Category L3>>>>>>" + taskCat.getPmCategoryL3().getCategoryL3Id());
+				
 				INNER:
 				for(SmSupplierCategory suppCat : catLs){
+					log.info("suppCat L3>>>>>" +   suppCat.getPmCategoryL3().getCategoryL3Id());
 					if(taskCat.getPmCategoryL3().getCategoryL3Id() == suppCat.getPmCategoryL3().getCategoryL3Id()){
 						this.getManagedBean().getSvTaskCategories().add(suppCat);
 						break INNER;
 					}
 				}
 			}
-			log.info("*********categories**" +this.getManagedBean().getSmSvTask().getSmSvCategories().size());
 		}
 	}
 	
@@ -1178,6 +1181,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return resDTO.getSmSupplierCategoryList();
 	}
 	
+	public List<SmSupplierCategory> retrieveAllApprovedCategoryCode(Long applId){
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		reqDTO.setApplId(applId);
+		
+		SupplierSearchResDTO resDTO = reqSO.retrieveCategoryCodeByApplId(reqDTO);
+		
+		return resDTO.getSmSupplierCategoryList();
+	}
+	
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
@@ -1348,14 +1361,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 //		String strTemplate = "lbl.sm.sitevisit.category.categorycode_" + templateType;
 //		Locale locale = new Locale("en");
 //		String lblTemplate = ResourceBundleUtils.getMessage(strTemplate,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
-		List<SmSupplierCategory> catLs = retrieveActiveCategoryCode(svTask.getSmAppl().getApplId());
+		
 		VelocityContext context = new VelocityContext();
 		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());	
 		context.put("applNo", svTask.getSmAppl().getApplNo());
 		context.put("businessRegistrationNo",  svTask.getSmAppl().getSmSupplier().getRegNo());
 		context.put("visitingPurpose", templateDesc);
-		context.put("catApplicable", catLs);
+		context.put("catApplicable", this.getManagedBean().getSvTaskCategories());
 		context.put("contactPersonName", this.getManagedBean().getContactPerson().getName());
 		context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
 		context.put("templateType",templateDesc);
@@ -1543,7 +1556,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				templateType.equals(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA) || templateType.equals(SupplierManagementConst.CAT_TYPE_TRANSPORTATION) || 
 				templateType.equals(templateType.equals(SupplierManagementConst.CAT_TYPE_TRAVEL))){
 			
-		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
+		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
+				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 			List<SmSupplierCategory> catLs = retrieveActiveCategoryCode(svTask.getSmAppl().getSmSupplier().getSmAppl().getApplId());
 			context.put("categoryCodeLs", catLs);
 		}
