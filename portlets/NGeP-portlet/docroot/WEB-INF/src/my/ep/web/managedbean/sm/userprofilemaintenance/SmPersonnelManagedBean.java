@@ -55,6 +55,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> permAddDistrictList;
 	private List<SelectItem> permAddCityList;
 	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
+	private List<SmPersonnel> smPersonnelList;
 	private boolean disableRole = false;
 	private boolean editMode;
 	private SmAddress tempAddress;
@@ -68,6 +69,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> assignList;
 	private Long assignAdminPersonnelId;
 	private boolean fromUserMaintain;
+	private boolean afterSaving;
+	private boolean upgradeMofDraftAppl;
 	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -453,6 +456,30 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setFromUserMaintain(boolean fromUserMaintain) {
 		this.fromUserMaintain = fromUserMaintain;
+	}
+
+	public List<SmPersonnel> getSmPersonnelList() {
+		return smPersonnelList;
+	}
+
+	public void setSmPersonnelList(List<SmPersonnel> smPersonnelList) {
+		this.smPersonnelList = smPersonnelList;
+	}
+
+	public boolean isAfterSaving() {
+		return afterSaving;
+	}
+
+	public void setAfterSaving(boolean afterSaving) {
+		this.afterSaving = afterSaving;
+	}
+
+	public boolean isUpgradeMofDraftAppl() {
+		return upgradeMofDraftAppl;
+	}
+
+	public void setUpgradeMofDraftAppl(boolean upgradeMofDraftAppl) {
+		this.upgradeMofDraftAppl = upgradeMofDraftAppl;
 	}
 
 }
