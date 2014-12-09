@@ -61,14 +61,19 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td width="84%" class="TableFieldRight">
-						<p:inputText id="durationMonth" styleClass="ppNumericAlign"
-							value="#{templateSpecBean.specMaster.durationMonth}" 
-							required="true" maxlength="4"
-							label="#{lbl['lbl.tpl.spec.content.duration.month']}">
-							<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
-							<p:ajax partialSubmit="true" process="@this" update="@this" />
-						</p:inputText>
-						<p:message id="durationMonthMsg" for="durationMonth" display="icon" />
+						<c:if test="#{isContentTypeAnswer or isContentTypeScore}">
+							#{templateSpecBean.specMaster.durationMonth}
+						</c:if>
+						<c:if test="#{!isContentTypeAnswer and !isContentTypeScore}">
+							<p:inputText id="durationMonth" styleClass="ppNumericAlign"
+								value="#{templateSpecBean.specMaster.durationMonth}" 
+								required="true" maxlength="4"
+								label="#{lbl['lbl.tpl.spec.content.duration.month']}">
+								<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText>
+							<p:message id="durationMonthMsg" for="durationMonth" display="icon" />
+						</c:if>
 					</td>
 				</tr>
 				</table>
