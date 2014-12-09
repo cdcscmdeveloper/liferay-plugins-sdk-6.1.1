@@ -17,7 +17,7 @@
 		<ac:paginator for="tierQtyTbl" />
 		<ui:param name="uomCode" value="#{templateSpecBean.selectedSpecQuestion.clUom.uomCode}" />
 		
-		<p:column style="width:20px;" rendered="#{editable}">
+		<p:column style="width:20px;" rendered="#{editable and isSpecTypeTechnical}">
 			<f:facet name="header">
 				<p:selectBooleanCheckbox id="selAllChk" value="#{templateSpecBean.selectAll}">
 					<p:ajax partialSubmit="true" process="@this" update="tierQtyTbl"  listener="#{templateSpecBackingBean.selectAll(templateSpecBean.selectAll, templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}" />
@@ -29,13 +29,13 @@
 		</p:column>
 		<p:column>
 			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+				<h:outputText value="* " styleClass="mandatory" rendered="#{editable and isSpecTypeTechnical}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"/>
 			</f:facet>
 			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" style="width:65%;" styleClass="ppNumericAlign" 
 				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"
-				disabled="#{!editable}">
+				disabled="#{!editable or !isSpecTypeTechnical}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
@@ -43,13 +43,13 @@
 		</p:column>
 		<p:column>
 			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
+				<h:outputText value="* " styleClass="mandatory" rendered="#{editable and isSpecTypeTechnical}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"/>
 			</f:facet>
 			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" style="width:65%;" styleClass="ppNumericAlign" 
 				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"
-				disabled="#{!editable}">
+				disabled="#{!editable or !isSpecTypeTechnical}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
@@ -63,7 +63,7 @@
 			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" style="width:65%;" styleClass="ppNumericAlign" 
 				rendered="#{rowIndex > 0}" required="true" maxlength="6"
 				label="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}"
-				disabled="#{!editable}">
+				disabled="#{!editable or !isSpecTypeTechnical}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="6" integerOnly="true" />
 			</p:inputText>
@@ -79,7 +79,7 @@
 				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 				oncomplete="tierQtyWidget.paginator.endLink.click();"
 				update="tierQtyTbl" icon="ui-icon-add"
-				rendered="#{editable}" />
+				rendered="#{editable and isSpecTypeTechnical}" />
 			<p:tooltip id="addTierTtp" for="addTierBtn">
 				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}"  />
 			</p:tooltip>
@@ -89,7 +89,7 @@
 				icon="ui-icon-delete"
 				action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
 				update="tierQtyTbl"
-				rendered="#{editable}">
+				rendered="#{editable and isSpecTypeTechnical}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
 			</p:commandButton>
 		</td>
