@@ -13,9 +13,8 @@
 	<div align="right">
 
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" process="@all"
-			partialSubmit="true"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
-			icon="ui-icon-save" />
+			update="@all" icon="ui-icon-save" />
 
 		<ui:repeat var="bpmAction"
 			value="#{evaluationMeetingBackingBean.managedBean.outComes}">
@@ -120,12 +119,11 @@
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
 			widgetVar="prepareCommittee" rows="10" rowIndexVar="index"
 			value="#{evaluationMeetingBackingBean.managedBean.committeeMemberActivity}"
-			selection="#{evaluationMeetingBackingBean.managedBean.committeeActivitySelect}"
 			rowKey="#{committeeMember}">
 			<ac:paginator for="evaluationpreparecommittee" />
 
 
-			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
+
 			<p:column style="width:2px;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
