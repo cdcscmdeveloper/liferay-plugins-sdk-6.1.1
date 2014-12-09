@@ -1620,7 +1620,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * check whether request note dtl is prod or service in Request Note
 	 */
 	public boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
-		log.info("checkServiceOrProduct");
+		log.debug("checkServiceOrProduct");
 		boolean prodOrService = false;
 		if(scRequestNoteDtl.getRequestItem() != null){
 			ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
@@ -2502,7 +2502,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	public boolean  checkPriceOffered(String priceTypeCode) {
-		log.info("checkPriceOffered");
+		log.debug("checkPriceOffered");
 		if(priceTypeCode != null){
 			if(priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) ||
 					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) ||
