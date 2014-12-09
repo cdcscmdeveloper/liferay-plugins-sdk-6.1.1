@@ -383,7 +383,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		           }
 		     }
 		
-		 } if (getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty() ) {
+		 } 
+		   
+		    if (getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty() ) {
 		        getManagedBean().setChkSchedule(true);
 		        Collections.sort(getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
 		        for(CtSchedule ctSchedule : getManagedBean().getContractVer().getCtSchedules()) {
@@ -393,16 +395,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        	}
 		        }
 		        ScheduleDate();
-		 } if (getManagedBean().getContractVer().getCtProgressivePayments() != null
-				   && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
+		 } if (getManagedBean().getContractVer().getCtProgressivePayments() != null && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
 			     Collections.sort(getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
 			     for(CtProgressivePayment ctProgressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			    	 if(ctProgressivePayment.isUseInFulfilment()) {
 			    		 getManagedBean().setDisableScheduleRadio(true);
 			    		 break;
 			    	 }
-			     }			     
-			     ProgressiveDate();
+			     }ProgressiveDate();
 		   }
 		    
 		    if(getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
@@ -441,6 +441,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}else {
 				getManagedBean().setFrequencySchedule("P");
 			}
+			
+			 if(getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)){
+			    	getManagedBean().setDisableScheduleRadio(true);
+			    	getManagedBean().setFrequencySchedule("S");
+	  	    }
 			
 			if(getManagedBean().getContractVer().getCtPerformanceBonds() != null && !getManagedBean().getContractVer().getCtPerformanceBonds().isEmpty()){
 				   for(CtPerformanceBond bond : getManagedBean().getContractVer().getCtPerformanceBonds()){
@@ -1047,18 +1052,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					}
 				}
 			}
-			
-			if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
-				    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
-				}
-			
-			if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
-					action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
-					getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement" });
+		}
+		
+		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
+			    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
 			}
+		
+		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
+				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
+				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement" });
 		}
 		
 		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
