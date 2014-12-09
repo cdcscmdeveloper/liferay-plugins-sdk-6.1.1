@@ -942,47 +942,60 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				reqType.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				
 				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
-					if(deduction.getDeductionType().getParameterId() == null){
-						throw new EpException(MessageConst.ERROR_740035);
-					}
-					if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
-						if(deduction.getDeductionDesc().trim().equalsIgnoreCase("") || deduction.getDeductionDesc() == null){
+					if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+
+						if(deduction.getDeductionType().getParameterId() == null){
+							throw new EpException(MessageConst.ERROR_740035);
+						}
+						if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)){
+							if(deduction.getDeductionDesc().trim().equalsIgnoreCase("") || deduction.getDeductionDesc() == null){
+								searchBean.getDataFilterBeans().add(new SearchFilterBean(
+										"pmParameter.parameterCode",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										deduction.getDeductionType().getParameterCode()));
+								reqType.setParameterDescSearchBean(searchBean);
+
+								resType = parameterSO.retrieveParameterDescListByType(reqType);
+								throw new EpException(MessageConst.ERROR_745058,new String[]{resType.getParameterDescList().get(0).getCodeName()});
+							}
+
+						}
+						if(deduction.getPmVotFund().getVotFundCode() == null){
 							searchBean.getDataFilterBeans().add(new SearchFilterBean(
 									"pmParameter.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									deduction.getDeductionType().getParameterCode()));
 							reqType.setParameterDescSearchBean(searchBean);
-							
+
 							resType = parameterSO.retrieveParameterDescListByType(reqType);
-							throw new EpException(MessageConst.ERROR_745058,new String[]{resType.getParameterDescList().get(0).getCodeName()});
+							throw new EpException(MessageConst.ERROR_745059,new String[]{resType.getParameterDescList().get(0).getCodeName()});
 						}
-						
-					}
-					if(deduction.getPmVotFund().getVotFundCode() == null){
-						searchBean.getDataFilterBeans().add(new SearchFilterBean(
-								"pmParameter.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								deduction.getDeductionType().getParameterCode()));
-						reqType.setParameterDescSearchBean(searchBean);
-						
-						resType = parameterSO.retrieveParameterDescListByType(reqType);
-						throw new EpException(MessageConst.ERROR_745059,new String[]{resType.getParameterDescList().get(0).getCodeName()});
-					}
-					if(deduction.getPmGlAccount().getGlAccCode() == null){
-						searchBean.getDataFilterBeans().add(new SearchFilterBean(
-								"pmParameter.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								deduction.getDeductionType().getParameterCode()));
-						reqType.setParameterDescSearchBean(searchBean);
-						
-						resType = parameterSO.retrieveParameterDescListByType(reqType);
-						throw new EpException(MessageConst.ERROR_745060,new String[]{resType.getParameterDescList().get(0).getCodeName()});
-					}
-					String unique = deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode();
-					if(deductionList.contains(unique)){
-						throw new EpException(MessageConst.ERROR_740036);
-					}else{
-						deductionList.add(deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
+						if(deduction.getPmGlAccount().getGlAccCode() == null){
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									"pmParameter.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									deduction.getDeductionType().getParameterCode()));
+							reqType.setParameterDescSearchBean(searchBean);
+
+							resType = parameterSO.retrieveParameterDescListByType(reqType);
+							throw new EpException(MessageConst.ERROR_745060,new String[]{resType.getParameterDescList().get(0).getCodeName()});
+						}
+						if(deduction.getDeductionAmt() == null || deduction.getDeductionAmt().doubleValue() <= 0){
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									"pmParameter.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									deduction.getDeductionType().getParameterCode()));
+							reqType.setParameterDescSearchBean(searchBean);
+
+							resType = parameterSO.retrieveParameterDescListByType(reqType);
+							throw new EpException(MessageConst.ERROR_745061,new String[]{resType.getParameterDescList().get(0).getCodeName()});
+						}
+						String unique = deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode();
+						if(deductionList.contains(unique)){
+							throw new EpException(MessageConst.ERROR_740036);
+						}else{
+							deductionList.add(deduction.getDeductionType().getParameterId().toString() +deduction.getPmVotFund().getVotFundCode() +deduction.getPmGlAccount().getGlAccCode());
+						}
 					}
 				}
 			}
