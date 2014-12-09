@@ -78,7 +78,7 @@
 	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
 		<p:dataTable var="finLsItem" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
-			rowIndexVar="rowIndex" style="width:80%">
+			rowIndexVar="rowIndex">
 
 			<p:column headerText="#{lbl['lbl.sm.itemsLbl']}">
 				#{finLsItem.pmParameter.pmParameterDescs[0].codeName}
