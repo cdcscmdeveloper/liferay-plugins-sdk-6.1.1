@@ -29,8 +29,6 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.primefaces.model.DualListModel;
-
 @ManagedBean(name = "organisationMB")
 @SessionScoped
 public class OrganisationManagedBean extends BaseManagedBean implements
@@ -98,10 +96,11 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmProfileGroup> profileGroup;
 	private List<PmProfileGroup> selectedProfileGroups;
 	private PmProfileGroup selectedProfileGroup;
-
-	private DualListModel<PmUser> supplierUsers;
-	private List<PmUser> sourceUsers;
+    private List<PmUser> supplierUserList;
+	private List<PmUser> supplierUsers;
+	private List<PmUser> selectedSupplierUsers;
 	private List<PmUser> selectedUsers;
+	private PmUser user;
 
 	public OrganisationManagedBean() {
 
@@ -563,35 +562,6 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.selectedPtjGroup = selectedPtjGroup;
 	}
 
-	/**
-	 * @return the supplierUsers
-	 */
-	public DualListModel<PmUser> getSupplierUsers() {
-		return supplierUsers;
-	}
-
-	/**
-	 * @param supplierUsers
-	 *            the supplierUsers to set
-	 */
-	public void setSupplierUsers(DualListModel<PmUser> supplierUsers) {
-		this.supplierUsers = supplierUsers;
-	}
-
-	/**
-	 * @return the sourceUsers
-	 */
-	public List<PmUser> getSourceUsers() {
-		return sourceUsers;
-	}
-
-	/**
-	 * @param sourceUsers
-	 *            the sourceUsers to set
-	 */
-	public void setSourceUsers(List<PmUser> sourceUsers) {
-		this.sourceUsers = sourceUsers;
-	}
 
 	/**
 	 * @return the selectedUsers
@@ -869,6 +839,62 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setSelectedProfileGroup(PmProfileGroup selectedProfileGroup) {
 		this.selectedProfileGroup = selectedProfileGroup;
+	}
+
+	/**
+	 * @return the supplierUsers
+	 */
+	public List<PmUser> getSupplierUsers() {
+		return supplierUsers;
+	}
+
+	/**
+	 * @param supplierUsers the supplierUsers to set
+	 */
+	public void setSupplierUsers(List<PmUser> supplierUsers) {
+		this.supplierUsers = supplierUsers;
+	}
+
+	/**
+	 * @return the supplierUserList
+	 */
+	public List<PmUser> getSupplierUserList() {
+		return supplierUserList;
+	}
+
+	/**
+	 * @param supplierUserList the supplierUserList to set
+	 */
+	public void setSupplierUserList(List<PmUser> supplierUserList) {
+		this.supplierUserList = supplierUserList;
+	}
+
+	/**
+	 * @return the selectedSupplierUsers
+	 */
+	public List<PmUser> getSelectedSupplierUsers() {
+		return selectedSupplierUsers;
+	}
+
+	/**
+	 * @param selectedSupplierUsers the selectedSupplierUsers to set
+	 */
+	public void setSelectedSupplierUsers(List<PmUser> selectedSupplierUsers) {
+		this.selectedSupplierUsers = selectedSupplierUsers;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public PmUser getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(PmUser user) {
+		this.user = user;
 	}
 
 	

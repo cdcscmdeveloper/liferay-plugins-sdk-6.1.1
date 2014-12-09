@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.ptjgroup.IPtjGroupSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -36,6 +37,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.ptjgroup.PtjGroupResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
@@ -59,6 +62,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
@@ -109,6 +113,7 @@ public class OrganisationBackingBean extends
 		retrievePtjGroupList();
 		retrieveOrgProfileList();
 		retrieveFinancialOrgList();
+		
 		
 
 	}
@@ -254,6 +259,7 @@ public class OrganisationBackingBean extends
 
 	public String editOrganization(PmOrgProfile orgProfile) {
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
+		retrieveSupplierUserList(orgProfile);
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -741,6 +747,16 @@ public class OrganisationBackingBean extends
 		getManagedBean().setDistrictList(resDTO.getDistrictList());
 
 	}	
+	public void retrieveCityList(AjaxBehaviorEvent e) {
+		Long districtId = (Long) e.getComponent().getAttributes().get("value");
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setDistrictId(districtId);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
+		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+		this.getManagedBean().setCityList(resDTO.getCityList());
+	}
 
 	public void assignNewAddress() {
 
@@ -1058,6 +1074,58 @@ public class OrganisationBackingBean extends
 			}
 			this.getManagedBean().getProfileGroup().remove(pmProfileGroup);
 		}
+	}
+	private void retrieveSupplierUserList(PmOrgProfile orgProfile) {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+
+		UserResDTO resDTO = userSO.retrieveUserListByOrgProfileId(reqDTO);
+
+		this.getManagedBean().setSupplierUserList(resDTO.getUserList());
+	}
+	public void addUser() {
+		
+		if (getManagedBean().getUser() == null) {
+			this.getManagedBean().setUser(new PmUser());
+		}
+		if (this.getManagedBean().getSupplierUsers() != null
+				&& !this.getManagedBean().getSupplierUsers().isEmpty()) {
+			this.getManagedBean().setSupplierUsers(null);
+		}
+
+		
+
+	}
+
+	public void deleteUser() {
+
+		List<PmUser> userList = getManagedBean().getSelectedSupplierUsers();
+		List<PmUser> selectedUserList = getManagedBean().getSelectedUsers();
+		for (PmUser usrList : userList) {
+			if (usrList.isSelected()) {
+				selectedUserList.add(usrList);
+			}
+		}
+		if (userList.size() == selectedUserList.size()) {
+			userList.clear();
+		} else {
+			for (PmUser user : selectedUserList) {
+				userList.remove(user);
+			}
+		}
+	}
+
+	public void conformUsers() {
+		
+		
+		List<PmUser> selectedUserList = getManagedBean()
+				.getSelectedSupplierUsers();
+		this.getManagedBean().setSupplierUsers(selectedUserList);
+		
+
 	}
 
 	/**

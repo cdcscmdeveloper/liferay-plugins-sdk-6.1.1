@@ -60,8 +60,66 @@
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
 		toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.pm.header.general.org.supplierusr']}" />
+		</f:facet>
+		<p:dataTable id="supplierUsers"
+			value="#{organisationBackingBean.managedBean.supplierUsers}" var="supUser"
+			rowIndexVar="index" rowKey="#{supUser}"
+			selection="#{organisationBackingBean.managedBean.selectedUsers}">
+			<ac:paginator for="supplierUsers"></ac:paginator>
+
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.loginid']}" style="width :15%">
+				<h:outputText value="#{supUser.loginId}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}" style="width :40%">
+				<h:outputText value="#{supUser.userName}" />
+			</p:column>
+
+		</p:dataTable>
+		<br />
 		
-		
+		<div align="right">
+
+			<p:commandButton value="Add" process="@this"
+				action="#{organisationBackingBean.addUser}" immediate="true" update="userSearch"
+				oncomplete="userlistpopup.show();" icon="ui-icon-add" />
+
+			<p:commandButton value="Delete" icon="ui-icon-delete"
+				process="@this,supplierUsers" partialSubmit="true"
+				action="#{organisationBackingBean.deleteUser}" update="supplierUsers" />
+		</div>		
 	</p:panel>
+	<p:dialog id="userSearch" header="USER LIST"
+		widgetVar="userlistpopup" modal="true" width="600" height="300"
+		resizable="false">
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			severity="error, info" />
+		<p:dataTable id="searchUserId" var="user"
+			value="#{organisationBackingBean.managedBean.supplierUserList}"
+			selection="#{organisationBackingBean.managedBean.selectedSupplierUsers}"
+			rowKey="#{user.userId}" rowIndexVar="index">
+			<p:column selectionMode="multiple" style="width:2%" />
+			<ac:paginator for="searchUserId"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.loginid']}" style="width :15%" >
+				<h:outputText value="#{user.loginId}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}" style="width :40%" >
+				<h:outputText value="#{user.userName}" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="OK" action="#{organisationBackingBean.conformUsers}"
+				ajax="true" icon="ui-icon-check"
+				update="userSearch,supplierUsers"
+				process="@this, userSearch" onclick="userlistpopup.hide();" />
+
+			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+				onclick="userlistpopup.hide();" />
+		</div>
+	</p:dialog>
 
 </ui:composition>
