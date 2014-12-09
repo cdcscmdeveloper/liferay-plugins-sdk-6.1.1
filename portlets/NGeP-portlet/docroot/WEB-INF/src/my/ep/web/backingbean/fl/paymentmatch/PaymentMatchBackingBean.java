@@ -502,9 +502,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				BigDecimal percAmt = new BigDecimal(0);
 				BigDecimal contractValue = getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getContractAmount();
 				resDTO = contractSO.calAdvancePaymentTracking(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
+				if(resDTO.getPaidInvoiceAmt() == null){
+					resDTO.setPaidInvoiceAmt(new BigDecimal(0));
+				}
 				if(getManagedBean().getBalanceAmt().doubleValue() > 0){
-					newTotalAmt = resDTO.getPaidInvoiceAmt().doubleValue() / (contractValue.doubleValue());
-					percAmt =	new BigDecimal(newTotalAmt).multiply(perc);	
+					if(contractValue == null || contractValue.doubleValue() == 0){
+						return; 
+					}else{
+						newTotalAmt = resDTO.getPaidInvoiceAmt().doubleValue() / (contractValue.doubleValue());
+					}
+					
+					percAmt = new BigDecimal(newTotalAmt).multiply(perc);	
 					if(contractValue.doubleValue() <= FulfilmentConst.CONTRACT_VALUE_500K){
 						if(percAmt.doubleValue() >= FulfilmentConst.PERC_50){
 							FacesContext.getCurrentInstance().addMessage(null,
