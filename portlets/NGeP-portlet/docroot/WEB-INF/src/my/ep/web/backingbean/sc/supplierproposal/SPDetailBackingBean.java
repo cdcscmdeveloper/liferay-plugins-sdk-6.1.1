@@ -629,6 +629,7 @@ public class SPDetailBackingBean extends
 
 	public String saveTechNonGovCompanyExpAction(boolean isCompleted) {
 		debugLogger("saveTechNonGovCompanyExpAction");
+		validateContractNo();
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2256,14 +2257,16 @@ public class SPDetailBackingBean extends
 		BigDecimal liabilities = assetLiability.getCurrentLiabilities();
 		BigDecimal acidRatio = null;
 
-		if (asset != null && liabilities != null && asset.intValue() > 0
-				&& liabilities.intValue() > 0) {
+		if (asset != null && liabilities != null && liabilities.intValue() > 0) {
 
 			MathContext mc = new MathContext(14);
 
 			acidRatio = asset.divide(liabilities, mc);
+			assetLiability.setAcidRatio(acidRatio);
+		}else{
+			assetLiability.setAcidRatio(new BigDecimal(0));
 		}
-		assetLiability.setAcidRatio(acidRatio);
+		
 	}
 
 	public void addNonFederalGovtExperience() {
@@ -2567,7 +2570,9 @@ public class SPDetailBackingBean extends
 						e.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
 						userLocale);
 				getManagedBean().setMessage(message);
-
+				if(FacesContext.getCurrentInstance().getMessageList() != null){
+					FacesContext.getCurrentInstance().getMessageList().clear();
+				}
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -3039,18 +3044,22 @@ public class SPDetailBackingBean extends
 		return duration;
 	}
 
-	public void validateContractNo(int index) {
+	private void validateContractNo() {
 
+		List<String> loaOrContractNoList = new ArrayList<String>();
+		
 		List<ScQtPRPExperience> experiences = this.getManagedBean()
 				.getScQtPRPExperiences();
-		ScQtPRPExperience compareExperience = experiences.get(index);
-		for (int i = 0; i < experiences.size(); i++) {
-			if (i != index
-					&& compareExperience.getContractNo().equalsIgnoreCase(
-							experiences.get(i).getContractNo())) {
-				throw new EpException("Duplicate LOA No/Contract No");
+		if(null != experiences){
+			
+			for(ScQtPRPExperience experience : experiences){
+				String loaOrContractNo = experience.getContractNo();
+				if(loaOrContractNoList.contains(loaOrContractNo)){
+					throw new EpException("Duplicate Loa/Contract No Found");
+				}else {
+					loaOrContractNoList.add(loaOrContractNo);
+				}
 			}
-
 		}
 
 	}
