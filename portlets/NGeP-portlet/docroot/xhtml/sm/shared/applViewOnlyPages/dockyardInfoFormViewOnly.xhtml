@@ -17,9 +17,9 @@
 				<h:outputText value="#{doc.facilityName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.dockyard.address']}">
-				<h:outputText rendered="#{not empty doc.smAddress}"
-					value="#{doc.smAddress.address1},#{doc.smAddress.address2},#{doc.smAddress.address3}" />
+			<p:column headerText="#{lbl['lbl.sm.dockyard.address']}" style="width :60%;white-space : normal">
+				<h:outputText value="#{viewSmApplBackingBean.getFullAddress(doc.smAddress)}"
+					style="float : left" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="dockYardDialog.show()"

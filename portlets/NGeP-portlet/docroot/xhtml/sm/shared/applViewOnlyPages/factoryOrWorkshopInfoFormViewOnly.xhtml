@@ -18,9 +18,9 @@
 				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.factory.address']}">
-				<h:outputText rendered="#{not empty fac.smAddress}"
-					value="#{fac.smAddress.address1},#{fac.smAddress.address2},#{fac.smAddress.address3}" />
+			<p:column headerText="#{lbl['lbl.sm.factory.address']}" style="width :60%;white-space : normal">
+				<h:outputText value="#{viewSmApplBackingBean.getFullAddress(fac.smAddress)}"
+					style="float : left" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink action="#{viewSmApplBackingBean.assignSelFactory(fac)}"

@@ -18,9 +18,10 @@
 					<h:outputText value="#{branchBean.branchName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.companyaddress']}">
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}" style="width :50%;white-space : normal">
 					<h:outputText
-						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
+						value="#{viewSmApplBackingBean.getFullAddress(branchBean.smAddress)}"
+						style="float : left" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"
 					style="width :150px;white-space : normal">
