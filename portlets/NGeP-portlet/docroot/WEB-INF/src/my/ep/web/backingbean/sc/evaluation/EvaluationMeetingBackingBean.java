@@ -223,8 +223,8 @@ public class EvaluationMeetingBackingBean extends
 										.isEmpty()) {
 							for (ScCommitteeMember scCommitteeMember : sccommittee
 									.getScCommitteeMembers()) {
-								scCommitteeMember.setScCommittee(sccommittee);
-								setUserDetails(scCommitteeMember);
+								// scCommitteeMember.setScCommittee(sccommittee);
+								// setUserDetails(scCommitteeMember);
 
 								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 								activity.setScQtCommittee(this.getManagedBean()
@@ -633,15 +633,18 @@ public class EvaluationMeetingBackingBean extends
 			String taskName = this.getManagedBean().getTaskName();
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			Object object = this.getManagedBean().getPayLoad();
-			meetingso.saveQTDtl(metReqDtO);
+			MeetingResDTO meetingResDTO = meetingso.saveQTDtl(metReqDtO);
 			renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setCurrentStatusId(currentStatusId);
 			this.getManagedBean().setPayLoad(object);
+			this.getManagedBean().setCloneQtnTenderSearchBean(
+					new QtnTenderSearchBean());
 			// getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 			retriveMeetingDetails(qtId, committeeType);
+
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -707,8 +710,8 @@ public class EvaluationMeetingBackingBean extends
 
 			metReqDtO.setDeletedMeetingList(getMeetingToBeRemoveList());
 
-			metReqDtO
-					.setDeletedCommitteeActivityList(getCommitteeToBeRemoveList());
+			 metReqDtO
+			 .setDeletedCommitteeActivityList(getCommitteeToBeRemoveList());
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
 			metReqDtO.setCommitteType(this.getManagedBean().getCommitteeType());
@@ -755,6 +758,8 @@ public class EvaluationMeetingBackingBean extends
 							ICommitteSO.class);
 			resDTO = committeSO
 					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			this.getManagedBean().setCloneCommitteMemebers(
+					new ArrayList<ScCommitteeMember>());
 			if (null != resDTO
 					&& null != resDTO.getCommMemberResultBean()
 					&& null != resDTO.getCommMemberResultBean().getResultList()
@@ -1073,15 +1078,15 @@ public class EvaluationMeetingBackingBean extends
 		ScQtCommitteeActivity activity = committeeActivity.get(index);
 
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.COMMITTEE_ROLE);
+		if (null != activity.getScCommitteeMember().getMemberRole()
+				.getParameterId()) {
+			for (PmParameterDesc paramDesc : localParamDesc) {
 
-		for (PmParameterDesc paramDesc : localParamDesc) {
-			if (null != activity.getScCommitteeMember().getMemberRole()
-					.getParameterId()) {
 				if (paramDesc
 						.getPmParameter()
 						.getParameterId()
-						.equals(Long.valueOf(activity.getScCommitteeMember()
-								.getMemberRole().getParameterId()))) {
+						.equals(activity.getScCommitteeMember().getMemberRole()
+								.getParameterId())) {
 
 					activity.getScCommitteeMember().setMemberRole(
 							paramDesc.getPmParameter());
@@ -1089,8 +1094,8 @@ public class EvaluationMeetingBackingBean extends
 				}
 			}
 		}
-
-		this.getManagedBean().getCommitteeMemberActivity().set(index, activity);
+		this.getManagedBean().getCommitteeMemberActivity().remove(index);
+		this.getManagedBean().getCommitteeMemberActivity().add(index, activity);
 
 	}
 
