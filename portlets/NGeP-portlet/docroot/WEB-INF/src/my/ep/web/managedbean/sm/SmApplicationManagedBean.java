@@ -312,6 +312,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBasicInfoVO basicInfo;
 	private boolean allowedToApprove;
 	private boolean disabledJustification;
+	private boolean alreadyReachAuthorizedPersonnelLimit;
 	private String regCatCodeConfirmHeader;
 	private String regCatCodeConfirmMsg;
 	
@@ -2389,6 +2390,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBpmTaskName(String bpmTaskName) {
 		this.bpmTaskName = bpmTaskName;
+	}
+
+	public boolean isAlreadyReachAuthorizedPersonnelLimit() {
+		return alreadyReachAuthorizedPersonnelLimit;
+	}
+
+	public void setAlreadyReachAuthorizedPersonnelLimit(
+			boolean alreadyReachAuthorizedPersonnelLimit) {
+		this.alreadyReachAuthorizedPersonnelLimit = alreadyReachAuthorizedPersonnelLimit;
 	}
 
 }
