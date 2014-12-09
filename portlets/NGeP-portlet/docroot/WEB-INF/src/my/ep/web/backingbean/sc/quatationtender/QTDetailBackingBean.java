@@ -868,6 +868,23 @@ public class QTDetailBackingBean extends
 			}
 
 			scQt.setScQtBriefings(bsvs);
+			
+			//Publish/Closing/sample Date
+			Date publishDate = scQt.getPublishDate();
+			if(publishDate != null){
+				scQt.setPublishDate(DateUtils.setDefaultDateTime(publishDate));
+			}
+			
+			Date closingDate = scQt.getClosingDate();
+			if(closingDate != null){
+				scQt.setClosingDate(DateUtils.setDefaultDateTime(closingDate));
+			}
+			
+			Date sampleClosingDate = scQt.getSampleClosingDate();
+			if(sampleClosingDate != null){
+				scQt.setSampleClosingDate(DateUtils.setDefaultDateTime(sampleClosingDate));
+			}
+			
 			// Setting Sample Submission to qtDetails.
 			List<ScQtSampleSubmission> sampleSubmissionList = null;
 			if (scQt.isZonal()) {
