@@ -16,7 +16,9 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -30,6 +32,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -44,6 +48,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -65,6 +70,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -151,6 +157,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
+			//Need to add sorting..
 			this.getManagedBean().setCategoryList(
 					resDTO.getCategoryResultBean().getResultList());
 
@@ -681,9 +688,8 @@ public class NoticeBoardBackingBean extends
 	public void checkSupplierQulificationStatus() {
 		this.getManagedBean().setQualificationBean(null);
 		String mofNo = getMofNo();
-
+		setVisible(false);
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
-			setVisible(false);
 			throw new EpException("Mof No should not be Null or Empty");
 		}
 
@@ -1017,7 +1023,7 @@ public class NoticeBoardBackingBean extends
 
 					}
 				}
-
+				searchBean.getSortColumns().add(new  SearchOrderBean("PUBLISH_DATE"));
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtSearchBean(searchBean);
 
@@ -1196,6 +1202,9 @@ public class NoticeBoardBackingBean extends
 	 * TO register the supplier for Bsv...
 	 */
 	public void registerSupplierForBSV() {
+		if (null == this.getManagedBean().getSmSupplier()) {
+			throw new EpException(MessageConst.ERROR_760200);
+		}
 		List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
 		List<BriefingZoneBean> zoneBeans = null;
 		if (this.getManagedBean().getScQt().isZonal()) {
@@ -1310,7 +1319,7 @@ public class NoticeBoardBackingBean extends
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		//QuationTenderResDTO resDTO = null;
+		// QuationTenderResDTO resDTO = null;
 		ScQt scQt = null;
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1322,25 +1331,22 @@ public class NoticeBoardBackingBean extends
 		} finally {
 			qtNoticeBoardSO = null;
 		}
-		
-/*		IQTDetailSO detailSO;
-		this.getManagedBean().setScQtDocReports(null);
 
-		QuationTenderResDTO resDTO = null;
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(qtId);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			resDTO = detailSO.retriveQTDocDetails(reqDTO);
-			if (resDTO.getReports() != null && !resDTO.getReports().isEmpty()) {
-				this.getManagedBean().setScQtDocReports(resDTO.getReports());
-			}
-
-		} finally {
-			detailSO = null;
-		}*/
+		/*
+		 * IQTDetailSO detailSO; this.getManagedBean().setScQtDocReports(null);
+		 * 
+		 * QuationTenderResDTO resDTO = null; try { detailSO =
+		 * BusinessDelegate.getInstance().getServiceObject(
+		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		 * QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		 * reqDTO.setQtId(qtId);
+		 * reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION); resDTO =
+		 * detailSO.retriveQTDocDetails(reqDTO); if (resDTO.getReports() != null
+		 * && !resDTO.getReports().isEmpty()) {
+		 * this.getManagedBean().setScQtDocReports(resDTO.getReports()); }
+		 * 
+		 * } finally { detailSO = null; }
+		 */
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
 		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
@@ -1384,6 +1390,7 @@ public class NoticeBoardBackingBean extends
 
 	public NoticeBoardBackingBean() {
 		reset();
+		
 	}
 
 	public boolean isShowHours(String clsDate) throws Exception {
@@ -1402,33 +1409,30 @@ public class NoticeBoardBackingBean extends
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
 		log.info("** Qtn / TenderDetsils **");
 		ScQt scQt = this.getManagedBean().getScQt();
-		
-		/*IQTNoticeBoardSO qtNoticeBoardSO = null;
-		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-		ScQt scQt = scQtDocReport.getScQt();
-		//QuationTenderResDTO resDTO = null;
-		try {
-			
-			
-			
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			reqDTO.setQtId(scQt.getQtId());
-			NoticeBoardResDTO resDTO = qtNoticeBoardSO
-					.retrieveQtNoticeDtl(reqDTO);
-			ScQt scQt = resDTO.getScQt();
 
-			this.getManagedBean().setScQt(resDTO.getScQt());
-			
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			resDTO = detailSO.retriveQTDocDetails(reqDTO);
-		} finally {
-			qtNoticeBoardSO = null;
-		}*/
+		/*
+		 * IQTNoticeBoardSO qtNoticeBoardSO = null; NoticeBoardReqDTO reqDTO =
+		 * new NoticeBoardReqDTO(); ScQt scQt = scQtDocReport.getScQt();
+		 * //QuationTenderResDTO resDTO = null; try {
+		 * 
+		 * 
+		 * 
+		 * qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+		 * reqDTO.setQtId(scQt.getQtId()); NoticeBoardResDTO resDTO =
+		 * qtNoticeBoardSO .retrieveQtNoticeDtl(reqDTO); ScQt scQt =
+		 * resDTO.getScQt();
+		 * 
+		 * this.getManagedBean().setScQt(resDTO.getScQt());
+		 * 
+		 * detailSO = BusinessDelegate.getInstance().getServiceObject(
+		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		 * QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		 * reqDTO.setQtId(scQt.getQtId());
+		 * reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION); resDTO =
+		 * detailSO.retriveQTDocDetails(reqDTO); } finally { qtNoticeBoardSO =
+		 * null; }
+		 */
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
 		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
@@ -1514,5 +1518,29 @@ public class NoticeBoardBackingBean extends
 			}
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
+	}
+
+	public boolean checkIsSupplierUser() {
+
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode("en");
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(RoleCode.SUPPLIER_ADMIN.toString());
+		roleCodes.add(RoleCode.SUPPLIER_USER.toString());
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				if (roleCodes.contains(pmRoleDesc.getPmRole().getRoleCode())) {
+					return true;
+				}
+
+			}
+		}
+		return false;
+
 	}
 }
