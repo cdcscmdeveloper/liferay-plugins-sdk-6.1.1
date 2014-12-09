@@ -56,6 +56,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -90,17 +91,27 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 
 		log.info("viewVirtualCert appl ID>>>>" + supp.getSmAppl().getApplId());
 		log.info("isQuestionnaire>>>>" + supp.getSmAppl().isQuestionnaire());
-		if(!supp.getSmAppl().isQuestionnaire()){
-			QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-			quesBackingBean.getManagedBean().setTargetUrl(xhtml);
-			quesBackingBean.getManagedBean().setSmSupp(supp);
-			quesBackingBean.getManagedBean().setSmAppl(supp.getSmAppl());
-			quesBackingBean.retrieveQuestionnaire();	
-			retrieveCertInfo(supp.getSupplierId());
+		log.info("Appl Type>>>>" + supp.getSmAppl().getApplType());
+		
+
+		if(!supp.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.BUMI_APPLTYPE)){
+			if(!supp.getSmAppl().isQuestionnaire()){
+				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+				quesBackingBean.getManagedBean().setTargetUrl(xhtml);
+				quesBackingBean.getManagedBean().setSmSupp(supp);
+				quesBackingBean.getManagedBean().setSmAppl(supp.getSmAppl());
+				quesBackingBean.retrieveQuestionnaire();	
+				retrieveCertInfo(supp.getSupplierId());
 
 
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+			}else{
+				retrieveCertInfo(supp.getSupplierId());
+
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
+			}
 		}else{
 			retrieveCertInfo(supp.getSupplierId());
 
