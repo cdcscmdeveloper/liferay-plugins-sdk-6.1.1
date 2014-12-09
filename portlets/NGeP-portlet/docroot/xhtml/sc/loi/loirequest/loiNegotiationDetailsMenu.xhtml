@@ -58,25 +58,35 @@
 			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{!empty negoTerm.pmTerm}"
 				rendered="#{isEditableStatus}" />
-            #{negoTerm.brandNew}-#{negoTerm.loiTermId ne null}
+            
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
 				style="width:#{isPendingNegotiation ? '45%' : '80%'}">
-				<h:outputText
-					value="#{negoTerm.termDesc}"
-					rendered="#{!empty negoTerm.pmTerm}" />
+				<c:if test="#{!isEditableStatus or afterNegotiation}">
+					<h:outputText value="#{negoTerm.termDesc}" />
+				</c:if>
 
-				<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"
-					value="#{negoTerm.termDesc}" autoResize="false" disabled="#{!isEditableStatus or afterNegotiation}"
-					rendered="#{empty negoTerm.pmTerm}" />
+				<c:if test="#{isEditableStatus and afterNegotiation}">
+					<h:outputText value="#{negoTerm.termDesc}" rendered="#{!empty negoTerm.pmTerm}" />
+					
+					<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"
+						value="#{negoTerm.termDesc}" autoResize="false"
+						rendered="#{empty negoTerm.pmTerm}" />
+				</c:if>
 
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.results']}"
 				style="width:45%" rendered="#{isPendingNegotiation}">
-				<p:inputTextarea  cols="70" rows="2"
-					value="#{negoTerm.negoResult}" autoResize="false" >
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
-				</p:inputTextarea>
+				<c:if test="#{!isEditableStatus or afterNegotiation}">
+					<h:outputText value="#{negoTerm.negoResult}" />
+				</c:if>
+
+				<c:if test="#{isEditableStatus and afterNegotiation}">
+					<p:inputTextarea  cols="70" rows="2"
+						value="#{negoTerm.negoResult}" autoResize="false" >
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+					</p:inputTextarea>
+				</c:if>
 			</p:column>
 
 			<p:column headerText="Negotiate" rendered="#{isPendingSubmissionStatus}">

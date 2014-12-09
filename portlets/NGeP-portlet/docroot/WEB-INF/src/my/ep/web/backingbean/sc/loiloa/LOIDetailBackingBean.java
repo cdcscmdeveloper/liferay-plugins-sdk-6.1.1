@@ -1085,7 +1085,7 @@ public class LOIDetailBackingBean extends
 				getManagedBean().getScLoi().getScLoiRemarks(), ScLoiRemark.class));
 
 		// status
-		getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
+		getCurrentStatus(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());
 
 //		initializeRemarks(new ScLoi());
 		// getApproverNames();
