@@ -354,6 +354,24 @@ public class DateUtils {
 	    return (diff / (24 * 60 * 1000));
 	}
 	
-	
+
+
+/**
+	 * Set the default 12 noon for the date example publish/closing date
+	 * 
+	 * @param date A Date instance
+	 * @return A date instance with time 12 noon
+	 */
+	public static Date setDefaultDateTime(Date date){
+		
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    calendar.set(Calendar.HOUR_OF_DAY, 12);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    
+	    Date newDate = new Timestamp(calendar.getTime().getTime());
+		return newDate;
+	}
 
 }
