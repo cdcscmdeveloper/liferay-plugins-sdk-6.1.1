@@ -422,6 +422,7 @@ public class ApprovalBackingBean extends
 		} else if ("Publication Approval".equalsIgnoreCase(this
 				.getManagedBean().getApprovalType())) {
 
+			this.setDefaultDateTime(reqDTO.getQtdetail());
 			detailSO.validateScheduleDetails(reqDTO);
 
 			/*
@@ -432,6 +433,24 @@ public class ApprovalBackingBean extends
 
 		}
 		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+	}
+	
+	private void setDefaultDateTime(ScQt scQt){
+		//Publish/Closing/sample Date
+		Date publishDate = scQt.getPublishDate();
+		if(publishDate != null){
+			scQt.setPublishDate(DateUtils.setDefaultDateTime(publishDate));
+		}
+		
+		Date closingDate = scQt.getClosingDate();
+		if(closingDate != null){
+			scQt.setClosingDate(DateUtils.setDefaultDateTime(closingDate));
+		}
+		
+		Date sampleClosingDate = scQt.getSampleClosingDate();
+		if(sampleClosingDate != null){
+			scQt.setSampleClosingDate(DateUtils.setDefaultDateTime(sampleClosingDate));
+		}
 	}
 
 	public String gpkiSignAction(PmDigiSign digiSign) {
