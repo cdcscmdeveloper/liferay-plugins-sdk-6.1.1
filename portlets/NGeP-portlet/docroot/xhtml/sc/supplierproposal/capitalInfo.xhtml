@@ -140,23 +140,23 @@
 				value="#{supplierProposalDetailBackingBean.managedBean.equityShareHolders}"
 				rowKey="sharePerson" rows="10">
 				<ac:paginator for="sharePerson" />
-				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}" style="width : 20%;">
 					<p:outputLabel style="float : left" value="#{sharePerson.name}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}" style="width : 15%;">
 					<p:outputLabel value="#{sharePerson.identificationNo}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.citizen']}" style="width : 15%;">
 					<p:outputLabel style="float : left;"
 						value="#{(sharePerson.pmCountry.countryCode eq 'MY') ? 'Yes' : 'No'}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.amount']}" style="width : 15%;">
 					<p:outputLabel value="#{sharePerson.shareAmt}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}" style="width : 15%;">
 					<p:outputLabel value="#{sharePerson.sharePercentage}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.share.position']}" style="width : 20%;">
 					<p:outputLabel style="float : left" value="#{sharePerson.designation}"></p:outputLabel>
 				</p:column>
 			</p:dataTable>
@@ -167,16 +167,16 @@
 			<p:dataTable id="shareCompany" rowIndexVar="index" var="shareCompany"
 				value="#{smAppl.smEquityCompanies}" rowKey="#{shareCompany}" rows="10" >
 				<ac:paginator for="shareCompany" />
-				<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.company.name']}" style="width : 25%;">
 					<p:outputLabel style="float : left" value="#{shareCompany.companyName}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}" style="width : 25%;">
 					<p:outputLabel value="#{shareCompany.regNo}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.amount']}" style="width : 25%;">
 					<p:outputLabel value="#{shareCompany.shareAmt}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}" style="width : 25%;">
 					<p:outputLabel value="#{shareCompany.sharePercentage}"></p:outputLabel>
 				</p:column>
 			</p:dataTable>

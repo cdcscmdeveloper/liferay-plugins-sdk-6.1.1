@@ -121,25 +121,25 @@
 		<p:dataTable id="facility" rowIndexVar="index" rows="10"
 			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
 			<ac:paginator for="facility"></ac:paginator>
-			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
+			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}" style="width : 25%; white-space : normal;">
 				<h:outputText value="#{facility.facilityName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width : 15%;">
 				<h:outputText rendered="#{facility.facilityType eq 'F'}" value="FACTORY"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 'D'}" value="DOCKYARD"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 'w'}" value="WORKSHOP"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 's'}" value="STORE"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}" style="width : 15%;">
 				<h:outputText
 					value="#{(facility.ownershipType eq 'O') ? 'Owned' : 'Rented'}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}" style="width : 15%;">
 				<p:outputLabel value="#{facility.areaSquareFeet}"></p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal; ">
+			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal; width : 30%;">
 				<p:outputLabel style="float : left;"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></p:outputLabel>
 			</p:column>
