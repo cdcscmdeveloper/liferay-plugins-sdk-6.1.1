@@ -10,10 +10,9 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<br/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address']}" escape="false"/>
-		<p:commandLink oncomplete="uomRefDialog.show();"  style="font-size:10px;font-style:italic"
+		<p:commandLink oncomplete="uomRefDialog.show();" value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
 					action="#{createDOBackingBean.resetMeasurementSearch}" process="@this"
-					update=":form:uomRefDlg">here				
-		</p:commandLink>
+					update=":form:uomRefDlg"/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address2']}" />
 		<p:dataTable id="doDelAddress" var="doDelAddress"
 			styleClass="orderSummaryChange hide-column-names "
