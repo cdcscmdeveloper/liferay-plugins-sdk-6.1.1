@@ -79,6 +79,7 @@ public class EducationBackingBean extends
 		
 		this.getManagedBean().setFieldCodes(new String());
 		this.getManagedBean().setFieldNames(new String());
+		this.getManagedBean().setStatus(1L);
 		educationFieldDataModel.reloadData();
 		
 		
@@ -231,9 +232,9 @@ public class EducationBackingBean extends
 			throw new EpException("Field Name is Mandatory");
 		}	
 		
-		if(getManagedBean().getEduRestrList() == null || getManagedBean().getEduRestrList().isEmpty() ){
-			throw new EpException("Please Add at Least One Category");
-		}
+//		if(getManagedBean().getEduRestrList() == null || getManagedBean().getEduRestrList().isEmpty() ){
+//			throw new EpException("Please Add at Least One Category");
+//		}
 	
 	}	
 	
@@ -245,19 +246,21 @@ public class EducationBackingBean extends
 		debugLogger("saveEducationDtls");
 		
 		PmEduField eduField = this.getManagedBean().getPmEduField();
-		eduField.setPmEduFieldRestrs(getManagedBean().getEduRestrList());
-		List<PmEduFieldRestr> eduFieldRestr = getManagedBean().getEduRestrList();		
-		
-		eduField.setPmEduFieldRestrs(eduFieldRestr);
 		validationMessage(eduField);
+		if(getManagedBean().getEduRestrList() != null && getManagedBean().getEduRestrList().size() > 0){
+		    eduField.setPmEduFieldRestrs(getManagedBean().getEduRestrList());
+		}else{
+			eduField.setPmEduFieldRestrs(null);
+		}
+//		List<PmEduFieldRestr> eduFieldRestr = getManagedBean().getEduRestrList();		
 		
-		if(getManagedBean().getEduRestrList() != null || !getManagedBean().getEduRestrList().isEmpty()){
+//		eduField.setPmEduFieldRestrs(eduFieldRestr);
+			
+		if(getManagedBean().getEduRestrList() != null && !getManagedBean().getEduRestrList().isEmpty()){
 			
 		  for(PmEduFieldRestr restr : eduField.getPmEduFieldRestrs()){
 		   restr.setPmEduField(eduField);
-//		   restr.setPmCategoryL1(restr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1());
-//		   restr.setPmCategoryL2(restr.getPmCategoryL3().getPmCategoryL2());
-//		   restr.setPmCategoryL3(restr.getPmCategoryL3());
+
 		  }
 		}		
 		
