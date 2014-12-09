@@ -56,7 +56,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -93,8 +92,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		log.info("isQuestionnaire>>>>" + supp.getSmAppl().isQuestionnaire());
 		log.info("Appl Type>>>>" + supp.getSmAppl().getApplType());
 		
-
-		if(!supp.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.BUMI_APPLTYPE)){
+		if(!supp.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
 			if(!supp.getSmAppl().isQuestionnaire()){
 				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
 				quesBackingBean.getManagedBean().setTargetUrl(xhtml);
