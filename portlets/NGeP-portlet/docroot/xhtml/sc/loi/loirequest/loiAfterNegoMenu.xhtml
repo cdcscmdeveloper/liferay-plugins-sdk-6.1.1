@@ -16,7 +16,7 @@
 			
 			<ac:paginator for="suppDocTbl" />
 
-			<p:column selectionMode="multiple" style="width:2%"/>
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{isEditableStatus}" />
 
 			<p:column headerText="#{lbl['lbl.sc.title']}">
 				<h:inputText style="width:96%" value="#{scLoiSuppDoc.title}"/>
@@ -45,12 +45,14 @@
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
-				update="suppDocTbl" icon="ui-icon-add" />
+				update="suppDocTbl" icon="ui-icon-add"
+				rendered="#{isEditableStatus}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs, lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs)}"
-				icon="ui-icon-delete" update="suppDocTbl" />
+				icon="ui-icon-delete" update="suppDocTbl"
+				rendered="#{isEditableStatus}" />
 		</div>
 	</p:panel>
 	

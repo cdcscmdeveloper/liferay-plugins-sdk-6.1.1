@@ -18,7 +18,7 @@
 			
 					
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
-			action="#{lOIDetailBackingBean.saveAction}"  rendered="#{isEditableStatus || isPendingNegotiation}"
+			action="#{lOIDetailBackingBean.saveAction}"  rendered="#{isEditableStatus}"
 			process="@form" update="@form" />
 			
 		<c:choose>

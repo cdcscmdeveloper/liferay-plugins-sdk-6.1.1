@@ -14,7 +14,7 @@
 		<ui:param name="isPendingSubmissionStatus"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUBMISSION}" />
 		<ui:param name="isEditableStatus"
-			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUBMISSION || ((lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_APPROVAL || lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_REVISION || lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_NEGOTIATION) and !empty lOADetailBackingBean.managedBean.taskId)}" />
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUBMISSION || ((lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_APPROVAL || lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_REVISION || lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_NEGOTIATION) and !empty lOIDetailBackingBean.managedBean.taskId)}" />
 		<ui:param name="isSupplierAckStatus"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingNegotiation"
