@@ -149,25 +149,33 @@
 
 			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
 				width="100%">
-				<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.mof.regno']}" />
-				<p:selectOneMenu
-					value="#{noticeBoardBackingBean.managedBean.mofNumber}"
-					style="width:180px;margin-bottom:5px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
-					<f:selectItems
-						value="#{noticeBoardBackingBean.managedBean.mofAccounts}"
-						var="mofAccount" itemLabel="#{mofAccount.mofNo}"
-						itemValue="#{mofAccount.mofNo}">
-					</f:selectItems>
-					<p:ajax event="change"
-						listener="#{noticeBoardBackingBean.mofNoOnchange}"
-						update="companyName,attendanceDetailstbl"></p:ajax>
-				</p:selectOneMenu>
-
-				<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.supp.name']}" />
-				<p:inputText id="companyName"
-					value="#{noticeBoardBackingBean.managedBean.smSupplier.companyName}"
-					readonly="true" size="29"></p:inputText>
+				<p:column>
+					<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.mof.regno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</p:column>
+				<p:column>
+					<p:selectOneMenu
+						value="#{noticeBoardBackingBean.managedBean.mofNumber}"
+						style="width:180px;margin-bottom:5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
+						<f:selectItems
+							value="#{noticeBoardBackingBean.managedBean.mofAccounts}"
+							var="mofAccount" itemLabel="#{mofAccount.mofNo}"
+							itemValue="#{mofAccount.mofNo}">
+						</f:selectItems>
+						<p:ajax event="change"
+							listener="#{noticeBoardBackingBean.mofNoOnchange}"
+							update="companyName,attendanceDetailstbl"></p:ajax>
+					</p:selectOneMenu>
+				</p:column>
+				<p:column>
+					<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.supp.name']}" />
+				</p:column>
+				<p:column>
+					<p:inputText id="companyName"
+						value="#{noticeBoardBackingBean.managedBean.smSupplier.companyName}"
+						readonly="true" size="29"></p:inputText>
+				</p:column>
 			</h:panelGrid>
 
 
