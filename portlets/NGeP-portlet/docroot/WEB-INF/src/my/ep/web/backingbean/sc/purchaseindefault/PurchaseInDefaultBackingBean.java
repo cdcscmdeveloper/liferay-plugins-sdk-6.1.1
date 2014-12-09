@@ -229,7 +229,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				FacesScopes facesScopes = new FacesScopes();
 				// validate  quantity
 		    	if(scPurchaseInDefault.getQuantity() != null && scPurchaseInDefault.getQuantity().intValue() < 0){
-					throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), "0"});
 		    	}
 				
@@ -247,7 +247,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					
 					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
 						if(scPurchaseInDefault.getContractedItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
-							throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 						}
@@ -257,7 +257,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
 					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
 						if(scPurchaseInDefault.getPanelItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
-							throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 						}

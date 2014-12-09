@@ -673,25 +673,25 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
 			   RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-			        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Type"});		 
+			        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Type"});		 
 		   }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
 			   RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-				        throw new EpException(MessageConst.INFO_100022, new String[]{"File Reference No."});			 
+				        throw new EpException(MessageConst.ERROR_100022, new String[]{"File Reference No."});			 
 			   }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
 			   RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-		        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Title"});
+		        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Title"});
 	       }
 		   
 		   if(getManagedBean().getContractVer().getCtAmendment().getDescription() == null || getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
 			   RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-		        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Description"});
+		        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Description"});
 	       }
 		   
 		   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {

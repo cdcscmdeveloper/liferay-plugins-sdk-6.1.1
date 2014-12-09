@@ -797,7 +797,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark().length()==0 )) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException",
 						true);
-				throw new EpException("100022", new String[]{"Circular Details/Item Remark"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Details/Item Remark"});
 			}
 		}
 		

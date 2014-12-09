@@ -484,7 +484,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
 				 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-				 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
+				 throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	    }
 		
@@ -638,13 +638,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		getManagedBean().setAutoUpdate(true);
 		if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Factoring Agreement" });
+			throw new EpException(MessageConst.ERROR_100022,	new String[] { "Copy Of Factoring Agreement" });
 		}
 	
 		if(getManagedBean().isRemoveFactoring()){
 		    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
 		    	RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			    throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Remove Factoring" });
+			    throw new EpException(MessageConst.ERROR_100022,	new String[] { "Copy Of Remove Factoring" });
 		  }
 		}
 		
