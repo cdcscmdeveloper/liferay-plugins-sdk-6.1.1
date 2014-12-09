@@ -670,7 +670,7 @@ public class EvaluationBackingBean extends
 					.getManagedBean().getComplianceTechnicalProposalCheckList();
 			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
 				for (ScQtProposalChecklist proposalCheckList : technicalCompliance) {
-					if (!proposalCheckList.isCompliance()) {
+					if (!proposalCheckList.getCompliance()) {
 						if (null == proposalCheckList.getRemark()
 								|| "".equalsIgnoreCase(proposalCheckList
 										.getRemark())) {
