@@ -160,6 +160,9 @@
 						onkeypress="if (event.keyCode == 13) { return false; }" >
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+						<f:attribute name="max" value="#{item.scRequestItem.uom.decimalScale == 1 ? 9999999999.9 : item.scRequestItem.uom.decimalScale == 2 ? 9999999999.99 : item.scRequestItem.uom.decimalScale == 3 ? 9999999999.999 : 9999999999}"/>
+						<f:attribute name="min" value="#{item.scRequestItem.uom.decimalScale == 1 ? 0.1 : item.scRequestItem.uom.decimalScale == 2 ? 0.01 : item.scRequestItem.uom.decimalScale == 3 ? 0.001 : 1}"/>						
+						<f:validator validatorId="quantityDoubleRangeValidator" />
 						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange),unitPrice,orderedQty,itemDataTable"
 							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
@@ -214,7 +217,7 @@
 
 	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.delivery.address']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
-		visible="#{facesContext.validationFailed}" modal="true" width="900px"
+		 modal="true" width="900px"
 		 resizable="false">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/>
 		<p:ajax event="close"
