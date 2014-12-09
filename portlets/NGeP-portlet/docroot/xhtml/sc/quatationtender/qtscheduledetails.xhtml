@@ -26,7 +26,7 @@
 										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
 										update="proposalvalidityid, closingDate, publishId" />
 								</p:calendar> <h:inputText value="12:00 PM" disabled="true" size="4"
-									style="width: 50px" /></td>
+									style="width: 52px;margin-top: 1px;margin-bottom: 0px;" /></td>
 							<td><p:message id="noticePublishMsg" for="noticePublish"
 									display="icon" /></td>
 						</tr>
@@ -49,7 +49,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText value="12:00 PM" disabled="true" size="4"
-						style="width: 50px;margin-top: 5px;margin-bottom: 0px;" /></td>
+						style="width: 52px;margin-top: 5px;margin-bottom: 0px;" /></td>
 			</tr>
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
