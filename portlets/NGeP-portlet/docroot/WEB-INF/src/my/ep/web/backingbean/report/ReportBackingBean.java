@@ -1474,8 +1474,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		
-		//userId = new FacesScopes().getUserSessionBean().getUserId().toString();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {	
+		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
@@ -1524,6 +1524,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					userListbyprofileRole.add(selectItem);				
 				}
 			}
+		}
 		}
 		return authoriztionList;
 	}	
