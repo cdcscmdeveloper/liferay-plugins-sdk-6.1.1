@@ -18,9 +18,10 @@
 					<h:outputText value="#{assocBean.companyName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.companyaddress']}">
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}" style="width: 60%;white-space: normal;">
 					<h:outputText
-						value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
+						value="#{viewSmApplBackingBean.getFullAddress(assocBean.smAddress)}"
+						style="float : left" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:asDisp"

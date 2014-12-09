@@ -29,6 +29,13 @@
 					<h:outputText value="#{lbl['lbl.sm.bankDtls.both.regandpay']}"
 						rendered="#{bankBean.accountPurpose eq 'B'}" />
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.bankDtls.addr']}"
+					style="width :50%;white-space : normal">
+					<h:outputText
+						value="#{viewSmApplBackingBean.getFullAddress(bankBean.smAddress)}"
+						style="float : left" />
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{viewSmApplBackingBean.viewSignatories(bankBean)}"

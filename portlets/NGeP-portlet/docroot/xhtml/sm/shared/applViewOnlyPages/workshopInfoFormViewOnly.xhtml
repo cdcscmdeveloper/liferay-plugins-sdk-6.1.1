@@ -18,9 +18,9 @@
 				<h:outputText value="#{work.facilityName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.workshop.address']}">
-				<h:outputText rendered="#{not empty work.smAddress}"
-					value="#{work.smAddress.address1},#{work.smAddress.address2},#{work.smAddress.address3}" />
+			<p:column headerText="#{lbl['lbl.sm.workshop.address']}" style="width :60%;white-space : normal">
+				<h:outputText value="#{viewSmApplBackingBean.getFullAddress(work.smAddress)}"
+					style="float : left" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink partialSubmit="true" process="@this"
