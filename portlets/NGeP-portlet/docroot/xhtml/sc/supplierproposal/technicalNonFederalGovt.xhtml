@@ -80,7 +80,6 @@
 					label="#{lbl['lbl.sc.sp.contractno']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true"
-						listener="#{supplierProposalDetailBackingBean.validateContractNo(rowIndex)}"
 						update="@this,contractNoMsg" />
 				</p:inputText>
 				<p:message id="contractNoMsg" for="contractNo" display="icon" />
@@ -171,6 +170,8 @@
 				action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
 
 		</div>
+		
+		<p:spacer height="10"></p:spacer>
 		<h:panelGroup id="totalcontractyrs">
 			<table style="width: 100%">
 				<tr>
