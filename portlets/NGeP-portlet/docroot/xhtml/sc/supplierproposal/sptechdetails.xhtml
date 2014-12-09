@@ -78,7 +78,7 @@
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP'}">
 					<p:commandButton oncomplete="attachmentDlg.show();return false;" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-						value="Attachment" icon="iconAttachment">
+						value="Attachment" >
 						<f:setPropertyActionListener value="#{techList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
 					</p:commandButton>
