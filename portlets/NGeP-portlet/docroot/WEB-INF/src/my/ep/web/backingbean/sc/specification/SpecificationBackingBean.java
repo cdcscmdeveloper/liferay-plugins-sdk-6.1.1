@@ -6487,7 +6487,7 @@ public class SpecificationBackingBean extends
 
 				} else {
 					/*
-					 * throw new EpException( MessageConst.INFO_100022, new
+					 * throw new EpException( MessageConst.ERROR_100022, new
 					 * String[] { "You Can't Provide Numbers In between" +
 					 * previous.getRangeFrom() + " and " + previous.getRangeTo()
 					 * });

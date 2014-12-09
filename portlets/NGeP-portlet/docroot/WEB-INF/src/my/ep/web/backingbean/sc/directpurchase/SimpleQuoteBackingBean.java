@@ -1086,7 +1086,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 				
 				if(quote.getJustificationType().getParameterCode() == null){
-					throw new EpException(MessageConst.INFO_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
+					throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
@@ -1096,7 +1096,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 				
 				if(quote.getJustificationType().getParameterCode() == null){
-					throw new EpException(MessageConst.INFO_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
+					throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				

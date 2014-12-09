@@ -992,7 +992,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			scRequestItem.setUom(cmSupplierItem.getPmUom());
 		} else{
 			Locale locale = new FacesScopes().getUserLocale();
-			throw new EpException(MessageConst.INFO_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.uom",
+			throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.uom",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 		return scRequestItem;
@@ -1233,7 +1233,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		if(scRequestItem.getQuantity() !=null && scRequestItem.getQuantity().intValue() < 0){
 			Locale locale = new FacesScopes().getUserLocale();
-			throw new EpException(MessageConst.INFO_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+			throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), "0"});
 		}
 		
