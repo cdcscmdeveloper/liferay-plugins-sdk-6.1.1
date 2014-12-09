@@ -13,17 +13,21 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<p:commandButton value="#{lbl['lbl.btn.back']}" ajax="false" icon="ui-icon-back"
-							immediate="true" action="#{smPersonnelBackingBean.cancel}" />
+						<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
+							immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</td>
 					<td style="white-space: nowrap; float: right;">
-						<p:commandButton value="#{lbl['lbl.sm.button.save']}" ajax="false" icon="ui-icon-save"
-							action="#{smPersonnelBackingBean.save}" />
+						<p:commandButton value="#{lbl['lbl.sm.button.save']}"  icon="ui-icon-save"
+							action="#{smPersonnelBackingBean.save}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					</td>
 				</tr>
 			</table>	
@@ -43,7 +47,8 @@
 						<td><p:outputLabel rendered="#{smPersonnelBackingBean.managedBean.editMode}"
 								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
 						<td><p:selectOneRadio id="accountstatus" required="false"
-								value="#{smPersonnelBackingBean.managedBean.accountStatus}" disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" 
+								value="#{smPersonnelBackingBean.managedBean.accountStatus}" disabled="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_ADMIN')
+								or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser}" 
 								rendered="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
@@ -69,7 +74,7 @@
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmCountry.countryId}"
 								style="width: 207px;margin-bottom: 5px;" required="true"
 								disabled="#{smPersonnelBackingBean.managedBean.editMode}">
-								<f:selectItem itemLabel="- Select One -" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.countryList}" />
 							</p:selectOneMenu>
@@ -191,8 +196,9 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
 								style="width: 207px;margin-bottom: 5px;" required="true" 
-								disabled="#{(smPersonnelBackingBean.managedBean.editMode and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER'))}">
-								<f:selectItem itemLabel="- Select One -" itemValue="" />
+								disabled="#{(smPersonnelBackingBean.managedBean.editMode and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER' 
+								or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER'))}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 								<p:ajax event="change" partialSubmit="true" process="basicBURole" update="softCertId, contrSignId, contrSignSelDropDownId" />
 							</p:selectOneMenu>
@@ -212,30 +218,32 @@
 									showSummary="true" showDetail="false" display="icon" /></td>		
 					</tr>
 					
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
-						<td style="float: left;">
-							<p:outputPanel id="softCertId">
-								<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
-								<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
-							</p:outputPanel>
-						</td>
-					</tr>
-					<tr>
-						<td><p:outputPanel id="contrSignId">
-								<p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" 
-									rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
-							</p:outputPanel>
-						</td>		
-						<td><p:outputPanel id="contrSignSelDropDownId">
-								<p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
-									rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
-									<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-								</p:selectOneRadio>
-							</p:outputPanel>
-						</td>
-					</tr>
+					<p:outputPanel rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType ne 'J'}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
+							<td style="float: left;">
+								<p:outputPanel id="softCertId">
+									<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
+									<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+								</p:outputPanel>
+							</td>
+						</tr>
+						<tr>
+							<td><p:outputPanel id="contrSignId">
+									<p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" 
+										rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
+								</p:outputPanel>
+							</td>		
+							<td><p:outputPanel id="contrSignSelDropDownId">
+									<p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
+										rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+									</p:selectOneRadio>
+								</p:outputPanel>
+							</td>
+						</tr>
+					</p:outputPanel>
 				</table>
 			</p:panel>
 		</p:panelGrid>

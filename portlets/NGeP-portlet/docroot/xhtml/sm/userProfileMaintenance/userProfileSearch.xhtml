@@ -13,56 +13,19 @@
 
 
 	<ui:define name="contentSection">
-
-
-		<p:panel id="searchSmUserProfile" header="#{lbl['lbl.sm.userprofile.search.users']}"
-			styleClass="noBorders tr,noBorders td">
-			<table style="width: 100%;">
-				<tr>
-					<td style="width: 10%;"><p:outputLabel
-							value="#{lbl['lbl.sm.userprofile.search.username']}" /></td>
-					<td><p:inputText id="username"
-							value="#{smPersonnelBackingBean.managedBean.searchUsername}"
-							size="35" /></td>
-				</tr>
-				<tr>
-					<td style="width: 10%;"><p:outputLabel
-							value="#{lbl['lbl.sm.userprofile.search.userrole']}" /></td>
-					<td><p:selectOneMenu id="userEPRole"
-							value="#{smPersonnelBackingBean.managedBean.searchEPRole}"
-							style="width: 207px; margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{smPersonnelBackingBean.managedBean.searchRoleList}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<!-- <tr>
-				<td style="width: 350px;"/>
-				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Company Role" /></td>
-				<td style="width: 500px;"><p:selectOneMenu id="companyRole" value="#{smPersonnelBackingBean.managedBean.searchCompanyRole}" style="width: 207px; margin-bottom: 5px;">
-						<f:selectItem itemLabel="- Select One -" itemValue="" />
-					</p:selectOneMenu></td>
-			</tr> -->
-			</table>
-
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{smPersonnelBackingBean.managedBean.searchSmPersonnel}"
-					update="smPersonnelDataModelId" icon="ui-icon-search" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					icon="ui-icon-reset"
-					action="#{smPersonnelBackingBean.resetSmPersonnelSearch}"
-					update="searchSmUserProfile" />
-			</div>
-
-		</p:panel>
-
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<h:panelGrid id="search" style="width:100%;">
 
-			<p:panel header="#{lbl['lbl.sm.userprofile.results']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sm.userprofile.authorized.personnels']}" toggleable="true">
 
-				<p:dataTable id="smPersonnelDataModelId" lazy="true"
-					value="#{smPersonnelBackingBean.managedBean.smPersonnelDataModel2}"
+				<p:dataTable id="smPersonnelDataModelId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{smPersonnelBackingBean.managedBean.smPersonnelList}"
 					var="personnel" rowKey="#{personnel}" rowIndexVar="index">
 					<ac:paginator for="smPersonnelDataModelId" />
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
@@ -89,9 +52,9 @@
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
 						<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or personnel.epRole eq 'MOF_SUPPLIER_ADMIN'}" />
 						<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
-							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}" />
+							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER' or personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
 						<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
 							rendered="#{personnel.epRole eq 'CM_USER'}" />
 						<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
@@ -99,8 +62,8 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}">
-						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" ajax="false"
-							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
+						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}" update="@form">
 							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 						</p:commandLink>
 					</p:column>
@@ -112,7 +75,7 @@
 					<tr>
 						<td><p:commandButton value="#{lbl['lbl.sm.userprofile.add.new']}"
 								oncomplete="confirmDialog.show();" style="float:right;"
-								icon="ui-icon-add"
+								icon="ui-icon-add" 
 								disabled="#{smPersonnelBackingBean.managedBean.disableAddNewUser}">
 							</p:commandButton></td>
 						<td style="width: 20px"><p:graphicImage id="uidti"
@@ -130,7 +93,7 @@
 		</h:panelGrid>
 
 		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDialog" modal="true" width="500" height="100">
+			widgetVar="confirmDialog" modal="true" width="500" height="100" >
 			<p:panel id="dPanel" style="width:100%">
 				<table>
 					<tr>
