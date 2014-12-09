@@ -18,6 +18,7 @@
 			<p:commandButton value="#{zoneBackingBean.managedBean.pmZone.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" 
 				style="float:right;" action="#{zoneBackingBean.saveZone}"
 				update="@([id$=Msg])" /></div>
+				<br/>
 			<ui:include src="/xhtml/pm/zonesearch/zoneMaintenanceDetails.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>

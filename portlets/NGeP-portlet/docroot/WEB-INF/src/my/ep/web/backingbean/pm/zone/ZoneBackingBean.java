@@ -309,7 +309,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		for (PmZoneState zstate : selectedStateList) {
 			if (getManagedBean().getZoneStateList().size() > 0) {
 				if (getManagedBean().getZoneStateList().contains(zstate.getPmState())) {
-					throw new EpException(MessageConst.ERROR_760120);
+					throw new EpException(MessageConst.ERROR_770135);
 				} 
 			}
 		}
