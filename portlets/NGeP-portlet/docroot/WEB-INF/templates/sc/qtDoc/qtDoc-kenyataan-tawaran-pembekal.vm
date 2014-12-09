@@ -88,7 +88,11 @@
 							</tr>
 							#foreach( $categoryResults in $categoryResults1 )
 							<tr>
-								<td>$categoryResults.pmCategoryL3.categoryL3Code</td>
+								<td>
+									$categoryResults.pmCategoryL1.categoryL1Code
+									$categoryResults.pmCategoryL2.categoryL2Code
+									$categoryResults.pmCategoryL3.categoryL3Code
+								</td>
 								<td>$categoryResults.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
             					<td>$categoryResults.pmCategoryL3.pmCategoryL2.categoryName</td>
             					<td>$categoryResults.pmCategoryL3.categoryName</td>
