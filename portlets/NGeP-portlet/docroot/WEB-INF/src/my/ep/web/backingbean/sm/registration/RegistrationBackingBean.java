@@ -431,7 +431,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setAuthorizedFlg(SupplierManagementConst.FIRST_USER_AUTHO);
 		smPersonnel.setContactPerson(SupplierManagementConst.FIRST_USER_CONT_PERSON);
 		smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
-		smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
+		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
 		smPersonnel.setClerical(true);
