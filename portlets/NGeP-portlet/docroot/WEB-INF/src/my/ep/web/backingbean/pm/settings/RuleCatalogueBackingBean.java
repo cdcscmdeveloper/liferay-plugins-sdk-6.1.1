@@ -613,31 +613,25 @@ public class RuleCatalogueBackingBean extends
 	public void addMoreRuleValue() {
 		log.info(".................addMoreRuleValue...................");
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
+		log.info("...................newRuleValue.getRuleValue()="+newRuleValue.getRuleValue());
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(new Date());
 
 		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
-			newRuleValue.setCategoryL3Id(new PmCategoryL3());// make sure to
+			newRuleValue.setCategoryL3Id(new PmCategoryL3());   // make sure to
 																// delete the
 																// new obj
 																// before update
 																// if doesn't
 																// selected
 		}
-		// int indexOfSelectedRuleType =
-		// this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
-		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
+
 		int index = this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size();
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.add(index, newRuleValue);
-		// this.getManagedBean().getConfigRuleList().add(indexOfSelectedRuleType,
-		// this.getManagedBean().getSelectedRuleType());
-		// for(PmConfigRuleValue value :
-		// this.getManagedBean().getConfigRuleList().get(indexOfSelectedRuleType).getConfigRuleValues()){
-		// log.info(".......................value.getRuleValue()="+value.getRuleValue());
-		// }
+	
 
 	}
 
@@ -894,7 +888,7 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().setConfigRuleList(resDTO.getRuleTypeList());
 			this.getManagedBean().setSelectedRuleType(
 					resDTO.getRuleTypeList().get(0));
-			RuleConfigHelper.getInstance().relodeRuleTypeValueMap();
+			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
 			// fill up ruleType's ruleValueList
 			for (PmConfigRule cRule : this.getManagedBean().getConfigRuleList()) {
 				cRule.setConfigRuleValues(RuleConfigHelper.getInstance()
@@ -1070,24 +1064,29 @@ public class RuleCatalogueBackingBean extends
 		boolean result = false;
 
 		for (int i = 0; i < feeExemptionList.size(); i++) {
-			// log.info("...................first loop");
+			 log.info("...................first loop");
 			PmFeeExemption baseExemption = feeExemptionList.get(i);
 			if (baseExemption.getRecordStatusFlg() == 0) {
 				// if record inactive choose next one
 				continue;
 			}
 			// log.info(".................after continue..in..first loop");
-			// log.info(".........................baseExemption.getFeeExemptionType()="
-			// + baseExemption.getFeeExemptionType());
+			 log.info(".........................baseExemption.getFeeExemptionType()="
+			 + baseExemption.getFeeExemptionType());
+			 log.info("...........ex.getUnspscId().getUnspscCode()="+baseExemption
+					 .getUnspscId().getUnspscCode());
 			for (int j = i + 1; j <= (feeExemptionList.size() - 1); j++) {
-				// log.info("...................second loop");
+				 log.info("...................second loop");
 				PmFeeExemption ex = feeExemptionList.get(j);
 				if (ex.getRecordStatusFlg() == 0) {
 					// if record inactive choose next one
 					continue;
 				}
-				// log.info(".................after continiue..in..second loop");
+				 log.info(".................after continiue..in..second loop");
 				//
+log.info("...........ex.getFeeExemptionType()="+ex.getFeeExemptionType());
+log.info("...........ex.getUnspscId().getUnspscCode()="+ex
+		.getUnspscId().getUnspscCode());
 
 				if ((ex.getFeeExemptionType().equals("1") && ex
 						.getOrgProfileId().getOrgProfileId() == baseExemption

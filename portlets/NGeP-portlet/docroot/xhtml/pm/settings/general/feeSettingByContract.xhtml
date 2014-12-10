@@ -20,7 +20,7 @@
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForContract}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
-
+ <ac:paginator for="feeByContractTableID" />
 		<p:column>
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
@@ -34,7 +34,7 @@
 				conditionField="recordStatus^1"
 				value="#{feeObj.contractId.contractNo}">
 			</ac:lov>
-
+   <p:message id="lovContractMsg" for="lovContract" display="icon" />
 
 		</p:column>
 		<p:column>
@@ -60,7 +60,7 @@
 		                		</f:facet>
 
 			<p:calendar showOn="button" id="effDate"
-				mindate="#{feeObj.defaultEffDate}"
+				mindate="#{feeObj.defaultEffDate}" style="width :100px;"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
@@ -73,8 +73,8 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="contractFeeExpDateId"
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+			<p:calendar showOn="button" id="contractFeeExpDateId" 
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :100px;"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}">
@@ -98,13 +98,14 @@
 
 			</f:facet>
 			<p:commandLink id="contractdeleteFee" partialSubmit="true" process="@this"
+			disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				action="#{ruleCatalogueBackingBean.deleteContractFee(rowIndex)}"
 				update=":form:settingTabId:feeSettingId:feeByContractTableID">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
-
+	<br />
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 		partialSubmit="true" process=":form:settingTabId"

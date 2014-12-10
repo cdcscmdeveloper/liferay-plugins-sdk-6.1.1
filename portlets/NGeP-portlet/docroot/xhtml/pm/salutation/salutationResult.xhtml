@@ -27,7 +27,8 @@
 	</p:panel>
 	
 	<p:panel id="salutationResult" header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
-	<p:dataTable id="salutationSR" value="#{salutationBackingBean.salutationDataModel}"
+	<p:dataTable id="salutationSR"  emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+	value="#{salutationBackingBean.salutationDataModel}"
 				rows="10" var="salutationList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="salutationSR" />
 		

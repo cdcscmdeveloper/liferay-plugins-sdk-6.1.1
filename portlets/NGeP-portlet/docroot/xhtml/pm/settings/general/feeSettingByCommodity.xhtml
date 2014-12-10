@@ -22,7 +22,7 @@
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
-
+  <ac:paginator for="feeByComodityTableID" />
 		<p:column>
 			<f:facet name="header">
 
@@ -38,7 +38,7 @@
 				conditionField="recordStatus^1|unspscLevel^3"
 				value="#{feeObj.unspscId.unspscCode}">
 			</ac:lov>
-
+ <p:message id="lovCommodityMsg" for="lovCommodity" display="icon" />
 
 		</p:column>
 		<p:column>
@@ -65,7 +65,7 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
-			<p:calendar showOn="button" id="effDate"
+			<p:calendar showOn="button" id="effDate"  style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -80,13 +80,12 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="comodityfeeExpDateId"
+			<p:calendar showOn="button" id="comodityfeeExpDateId"  style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}">
-				<f:attribute name="startDate" value="#{feeObj.effDate}" />
-				<f:validator validatorId="primeDateRangeValidator" />
+				
 			</p:calendar>
 		</p:column>
 
@@ -105,14 +104,14 @@
 
 			</f:facet>
 			<p:commandLink id="comoditydeleteFee" partialSubmit="true"
-				process="@this"
+				process="@this" disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				action="#{ruleCatalogueBackingBean.deleteComodityFee(rowIndex)}"
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
-
+	<br />
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 			partialSubmit="true" process=":form:settingTabId"

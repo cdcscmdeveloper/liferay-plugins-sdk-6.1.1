@@ -74,7 +74,8 @@ public class SalutationBackingBean extends
         this.getManagedBean().setSalutationCodes(new String());
         this.getManagedBean().setSalutationNames(new String());
         this.getManagedBean().setStatus(1L);
-        salutationDataModel.reloadData();
+
+        salutationDataModel = new SalutationPagingDataModel();
 		
 	}
 	
@@ -229,6 +230,7 @@ public class SalutationBackingBean extends
 		 debugLogger("saveSaluationDtls");
 		 
 		 PmSalutation salutation= this.getManagedBean().getPmSalutation();
+		 log.info("............salutation.getSalutationCode()="+salutation.getSalutationCode());
 		 validationMessage(salutation);
 		 
 		 SalutationReqDTO reqDTO = new SalutationReqDTO();
