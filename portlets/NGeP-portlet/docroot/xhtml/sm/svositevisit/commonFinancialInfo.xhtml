@@ -60,12 +60,16 @@
 
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.termsConditionsLbl']}</f:facet>
-				<p:inputTextarea rows="4" cols="35" autoResize="false" value="#{bankInfo.smSupplierBank.signatureInstruction}" readonly="true"/>
+				<p:inputTextarea rows="5" cols="35" autoResize="false" value="#{bankInfo.smSupplierBank.signatureInstruction}" readonly="true"/>
 			</p:column>
 			
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.verifyLbl']}</f:facet>
 				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.remark']}">
+				<p:inputTextarea rows="5" cols="40" autoResize="false" value="#{bankInfo.remark}" disabled="#{viewFlag}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -86,13 +90,12 @@
 
 			<p:column headerText="#{lbl['lbl.sm.availableLbl']}">
 				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
-
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
 				<p:inputTextarea rows="5" cols="100" autoResize="false" disabled="#{viewFlag}" maxlength="2500"
-					value="#{svoSiteVisitBackingBean.managedBean.remarkMap[finLsItem.pmParameter.parameterId].remark}" />
+					value="#{finLsItem.remark}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
