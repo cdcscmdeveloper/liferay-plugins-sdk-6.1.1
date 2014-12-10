@@ -4887,7 +4887,7 @@ public class SmApplicationBackingBean extends
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 		renewSesionObject();
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		return "cancelPendingAcknowledge";
 	}
 
 	public String submitPOorApproverReviewToBPM(String res) {
