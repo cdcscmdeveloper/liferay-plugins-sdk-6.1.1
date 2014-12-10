@@ -62,7 +62,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public static final String NAV_TO_SEARCH = "locationMain";
 	public static final String NAV_TO_MAINTAIN = "maintainLocationMain";
 	// Default value
-	public static final boolean SEARCH_DEFAULT = false;	
+	public static final boolean SEARCH_DEFAULT = false;
 
 	public LocationBackingBean() {
 		retrieveCountryList();
@@ -105,10 +105,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setCity(new PmCity());
 		getManagedBean().setDistrict(new PmDistrict());
 		getManagedBean().setDivision(new PmDivision());
-		getManagedBean().getState().setPmCountry(new PmCountry());		
+		getManagedBean().getState().setPmCountry(new PmCountry());
 		getManagedBean().getDivision().setPmState(new PmState());
 		getManagedBean().getDistrict().setPmState(new PmState());
-		//getManagedBean().getDistrict().setPmDivision(new PmDivision());
+		// getManagedBean().getDistrict().setPmDivision(new PmDivision());
 		getManagedBean().getCity().setPmDistrict(new PmDistrict());
 		getManagedBean().setStates(new ArrayList<PmState>());
 		getManagedBean().setDivisions(new ArrayList<PmDivision>());
@@ -332,7 +332,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		}
 		if (locationType
 				.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
-			
+
 			DivisionReqDTO divisionReqDTO = new DivisionReqDTO();
 			divisionReqDTO.setDivisionId(locationId);
 			IDivisionSO divisionSO = BusinessDelegate.getInstance()
@@ -344,20 +344,27 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			stateReqDTO.setCountryId(resDTO.getPmDivision().getPmState()
 					.getPmCountry().getCountryId());
 			IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStateSO.class);
 			StateResDTO stateResDTO = reqSO
 					.retriveStatesListByCountryID(stateReqDTO);
 			getManagedBean().setStates(stateResDTO.getStateList());
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
-			this.getManagedBean().getState().setStateId(resDTO.getPmDivision().getPmState().getStateId());
-			this.getManagedBean().getState().getPmCountry().setCountryId(resDTO.getPmDivision().getPmState().getPmCountry().getCountryId());
-			
+			this.getManagedBean()
+					.getState()
+					.setStateId(
+							resDTO.getPmDivision().getPmState().getStateId());
+			this.getManagedBean()
+					.getState()
+					.getPmCountry()
+					.setCountryId(
+							resDTO.getPmDivision().getPmState().getPmCountry()
+									.getCountryId());
+
 		}
 		if (locationType
 				.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
-			
+
 			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 			districtReqDTO.setDistrictId(locationId);
 			IDistrictSO districtSO = BusinessDelegate.getInstance()
@@ -365,28 +372,40 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							IDistrictSO.class);
 			DistrictResDTO resDTO = districtSO
 					.retriveDistrictDtlByID(districtReqDTO);
-			
+
 			StateReqDTO stateReqDTO = new StateReqDTO();
 			stateReqDTO.setCountryId(resDTO.getPmDistrict().getPmState()
 					.getPmCountry().getCountryId());
 			IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStateSO.class);
 			StateResDTO stateResDTO = reqSO
 					.retriveStatesListByCountryID(stateReqDTO);
-			getManagedBean().setStates(stateResDTO.getStateList());			
+			getManagedBean().setStates(stateResDTO.getStateList());
 			this.getManagedBean().setState(resDTO.getPmDistrict().getPmState());
 			this.getManagedBean().setDistrict(resDTO.getPmDistrict());
-			getManagedBean().getState().getPmCountry().setCountryId(resDTO.getPmDistrict().getPmState().getPmCountry().getCountryId());
-			getManagedBean().getDistrict().getPmState().setStateId(resDTO.getPmDistrict().getPmState().getStateId());
-			getManagedBean().getDistrict().setDistrictId(resDTO.getPmDistrict().getDistrictId());
-			/*if(resDTO.getPmDistrict().getPmDivision()!=null){
-			getManagedBean().getDistrict().getPmDivision().setDivisionId(resDTO.getPmDistrict().getPmDivision().getDivisionId());
-			}*/
+			getManagedBean()
+					.getState()
+					.getPmCountry()
+					.setCountryId(
+							resDTO.getPmDistrict().getPmState().getPmCountry()
+									.getCountryId());
+			getManagedBean()
+					.getDistrict()
+					.getPmState()
+					.setStateId(
+							resDTO.getPmDistrict().getPmState().getStateId());
+			getManagedBean().getDistrict().setDistrictId(
+					resDTO.getPmDistrict().getDistrictId());
+			/*
+			 * if(resDTO.getPmDistrict().getPmDivision()!=null){
+			 * getManagedBean()
+			 * .getDistrict().getPmDivision().setDivisionId(resDTO
+			 * .getPmDistrict().getPmDivision().getDivisionId()); }
+			 */
 		}
 		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
-			
+
 			CityReqDTO cityReqDTO = new CityReqDTO();
 			cityReqDTO.setCityId(locationId);
 			ICitySO citySO = BusinessDelegate.getInstance().getServiceObject(
@@ -394,10 +413,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			CityResDTO resDTO = citySO.retriveCityByDtlId(cityReqDTO);
 			this.getManagedBean().setCity(resDTO.getPmCity());
 			StateReqDTO stateReqDTO = new StateReqDTO();
-			stateReqDTO.setCountryId(resDTO.getPmCity().getPmDistrict().getPmState().getPmCountry().getCountryId());
+			stateReqDTO.setCountryId(resDTO.getPmCity().getPmDistrict()
+					.getPmState().getPmCountry().getCountryId());
 			IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IStateSO.class);
 			StateResDTO stateResDTO = reqSO
 					.retriveStatesListByCountryID(stateReqDTO);
@@ -411,12 +430,21 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.getPmState().getStateId());
 			DistrictResDTO districtResDTO = districtSO
 					.retriveDistrictListByStateID(districtReqDTO);
-			getManagedBean().setDistricts(
-					districtResDTO.getDistrictList());			
-			getManagedBean().getState().getPmCountry().setCountryId(resDTO.getPmCity().getPmDistrict().getPmState().getPmCountry().getCountryId());
-			getManagedBean().getDistrict().getPmState().setStateId(resDTO.getPmCity().getPmDistrict().getPmState().getStateId());
-			getManagedBean().getDistrict().setDistrictId(resDTO.getPmCity().getPmDistrict().getDistrictId());
-			
+			getManagedBean().setDistricts(districtResDTO.getDistrictList());
+			getManagedBean()
+					.getState()
+					.getPmCountry()
+					.setCountryId(
+							resDTO.getPmCity().getPmDistrict().getPmState()
+									.getPmCountry().getCountryId());
+			getManagedBean()
+					.getDistrict()
+					.getPmState()
+					.setStateId(
+							resDTO.getPmCity().getPmDistrict().getPmState()
+									.getStateId());
+			getManagedBean().getDistrict().setDistrictId(
+					resDTO.getPmCity().getPmDistrict().getDistrictId());
 
 		}
 
@@ -485,10 +513,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setStates(resDTO.getStateList());
 	}
 
-	
-
-	
-
 	public void retriveDivisionValues(AjaxBehaviorEvent e) {
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
 		StateReqDTO reqDTO = new StateReqDTO();
@@ -500,22 +524,25 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setState(resDTO.getPmState());
 
 	}
-	/*public void retrieveDivisionList(AjaxBehaviorEvent e){
-		Long stateId = (Long) e.getComponent().getAttributes().get("value");
-		DivisionReqDTO reqDTO= new DivisionReqDTO();
-		reqDTO.setStateId(stateId);
-		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
-		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
-		getManagedBean().setDivisions(resDTO.getDivisionList());
-		
-		if(resDTO.getDivisionList().size()==0) {
-			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
-			districtReqDTO.setStateId(stateId);
-			IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
-			getManagedBean().setDistricts(districtResDTO.getDistrictList());			
-		}
-	}*/
+
+	/*
+	 * public void retrieveDivisionList(AjaxBehaviorEvent e){ Long stateId =
+	 * (Long) e.getComponent().getAttributes().get("value"); DivisionReqDTO
+	 * reqDTO= new DivisionReqDTO(); reqDTO.setStateId(stateId); IDivisionSO
+	 * reqSO = (IDivisionSO)
+	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
+	 * .PROFILE_MANAGEMENT, IDivisionSO.class); DivisionResDTO resDTO =
+	 * reqSO.retriveDivisionListByState(reqDTO);
+	 * getManagedBean().setDivisions(resDTO.getDivisionList());
+	 * 
+	 * if(resDTO.getDivisionList().size()==0) { DistrictReqDTO districtReqDTO =
+	 * new DistrictReqDTO(); districtReqDTO.setStateId(stateId); IDistrictSO
+	 * districtSO = (IDistrictSO)
+	 * BusinessDelegate.getInstance().getServiceObject
+	 * (ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class); DistrictResDTO
+	 * districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
+	 * getManagedBean().setDistricts(districtResDTO.getDistrictList()); } }
+	 */
 
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
@@ -528,23 +555,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setDivisions(resDTO.getDivisionList());
 	}
 
-	
-	
 	public void retrieveDistrictList(AjaxBehaviorEvent e) {
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
 		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 		districtReqDTO.setStateId(stateId);
-		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDistrictSO.class);
 		DistrictResDTO districtResDTO = districtSO
 				.retriveDistrictListByStateID(districtReqDTO);
 		getManagedBean().setDistricts(districtResDTO.getDistrictList());
-		
 
 	}
-	
 
 	public void retrieveCityList(AjaxBehaviorEvent e) {
 		Long districtId = (Long) e.getComponent().getAttributes().get("value");
@@ -557,7 +579,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 	}
-	
 
 	public void updateDivisionFlag(Long stateId) {
 
@@ -577,15 +598,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public List<PmDivision> getDivisionList(Long stateId) {
-
+		
 		return PmCommonUtil.retrievePmDivisionList(stateId);
-	}	
+	}
 
 	public SelectItem[] getStatusOptions() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+		
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	/**
