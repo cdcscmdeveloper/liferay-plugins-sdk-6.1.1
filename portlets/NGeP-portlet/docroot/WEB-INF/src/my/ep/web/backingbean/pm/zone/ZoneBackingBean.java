@@ -368,10 +368,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public SelectItem[] getRecordStatusOptions() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+		
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	public IPagingDataModel<PmZone> getSearchZone() {

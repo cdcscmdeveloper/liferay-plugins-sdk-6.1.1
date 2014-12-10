@@ -77,6 +77,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -86,6 +87,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -157,7 +159,6 @@ public class OrganisationBackingBean extends
 
 	public void initialOrganisation() {
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
-
 		getManagedBean().setOrgProfile(new PmOrgProfile());
 		retrieveCountryList();
 		retrievePmZoneList();
@@ -168,15 +169,10 @@ public class OrganisationBackingBean extends
 		getManagedBean().getOfficeAddress().setPmState(new PmState());
 		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
 		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
-		// getManagedBean().getOfficeAddress().setPmDivision(new PmDivision());
-		// getManagedBean().getOfficeAddress().getPmDivision().setDivisionId(1L);
-
-		// getManagedBean().getDeliveryAddress().setPmDivision(new
-		// PmDivision());
+		
 		getManagedBean().setContactList(new ArrayList<PmContact>());
 		getManagedBean().setOfficeContactPerson(new PmContact());
-		getManagedBean().getOrgProfile().setPmZone(new PmZone());
-		// getManagedBean().setOrgTypeId(null);
+		getManagedBean().getOrgProfile().setPmZone(new PmZone());		
 		getManagedBean().setOrgType(null);
 		getManagedBean().getOrgProfile().setRecordStatusFlg(null);
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
@@ -463,7 +459,7 @@ public class OrganisationBackingBean extends
 				orgResDTO.getPmOrgProfile().getPmOrgValidity());
 		this.getManagedBean().setOrgProfile(orgResDTO.getPmOrgProfile());
 
-		return "/xhtml/pm/organisation/maintainOrganisation.xhtml";
+		return NAV_TO_SEARCH;
 
 	}
 
@@ -487,6 +483,7 @@ public class OrganisationBackingBean extends
 
 		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
 		PmOrgValidity orgValidity = this.getManagedBean().getOrgValidity();
+		List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
 		if (orgProfile.isBrandNew()) {
 			orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
 
@@ -564,6 +561,7 @@ public class OrganisationBackingBean extends
 			 * orgValidity.setPmOrgProfile(orgProfile);
 			 * orgProfile.setPmOrgValidity(orgValidity);
 			 */
+		
 			if (getManagedBean().getOrgProfile().isGovtSeller()) {
 
 				IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
@@ -594,7 +592,25 @@ public class OrganisationBackingBean extends
 				regResDTO.setSuccessful(true);
 
 			}
+			
+			orgValidity.setPmOrgProfile(orgProfile);
 		}
+
+		if(getManagedBean().getOrgProfile().isGroupOrg()){
+			
+			List<PmProfileGroup> stateZones = getManagedBean().getProfileGroup();
+       PmOrgProfile pmorg= new PmOrgProfile();
+          pmorg.setOrgProfileId(1L);
+			for (PmProfileGroup zoneSta : stateZones) {
+
+				zoneSta.setMainOrgProfile(orgProfile);
+				zoneSta.setAuthorizedOrgProfile(pmorg);
+
+			}
+			profileGroup.addAll(stateZones);
+			
+		}
+		orgProfile.setMainProfileGroups(profileGroup);
 		//orgValidity.setPmOrgProfile(orgProfile);
 		orgProfile.setPmOrgValidity(orgValidity);
 		reqDTO.setPmOrgProfile(orgProfile);
@@ -610,7 +626,7 @@ public class OrganisationBackingBean extends
 									+ "Submit successfully."));
 		}
 
-		return "/xhtml/pm/organisation/organisationMain";
+		return NAV_TO_SEARCH;
 
 	}
 
@@ -975,10 +991,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public static SelectItem[] getStatusOptions() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	public void updateOrgCode(PmOrgProfile pmOrgProfile, int index) {
