@@ -43,7 +43,8 @@
 			<p:blockUI block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
 				id="poBasEqui"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.equityCompVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.equityCompVerifed : false)}" />
-			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
@@ -148,12 +149,15 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="equiCompShrAmt"
+						disabled="#{!backingBean.managedBean.valueReqd}"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.equiComp.shrAmt']}"
 						validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
 						size="35">
-						<f:validateDoubleRange minimum="1" />
+						<f:validateDoubleRange for="contractorContractVal"
+							minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+							maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" update="equiCompShrAmt, equiCompShrPer"

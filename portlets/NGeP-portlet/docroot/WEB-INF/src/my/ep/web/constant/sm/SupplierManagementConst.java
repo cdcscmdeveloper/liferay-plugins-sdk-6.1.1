@@ -364,6 +364,9 @@ public class SupplierManagementConst {
 	public static final String BPM_TASK_VERIFY_APPL = "Verify Application";
 	public static final String BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE = "Review Site Visit After Approve";
 
+	public static final double MIN_AMT_RANGE = 0.01;
+	public static final double MAX_AMT_RANGE = 99999999999999.99;
+
 	// PM Cert body
 	public static final String PM_CERT_BODY_OTHERS = "LL";
 
@@ -743,6 +746,14 @@ public class SupplierManagementConst {
 
 	public String getBPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE() {
 		return BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE;
+	}
+
+	public double getMIN_AMT_RANGE() {
+		return MIN_AMT_RANGE;
+	}
+
+	public double getMAX_AMT_RANGE() {
+		return MAX_AMT_RANGE;
 	}
 
 }

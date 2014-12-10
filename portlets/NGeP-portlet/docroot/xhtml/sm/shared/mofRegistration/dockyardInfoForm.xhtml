@@ -258,12 +258,20 @@
 				<td><p:outputPanel id="docPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
-							<p:inputText id="smDocPrice" label="#{lbl['lbl.cm.price']}"
+							<p:inputText id="smDocPrice"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.cm.price']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
 								size="20"
 								required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smDocPriceMsg" />
 							</p:inputText>
 							<p:message id="smDocPriceMsg" for="smDocPrice" showSummary="true"
 								showDetail="false" display="icon" />
@@ -271,12 +279,19 @@
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
 							<p:inputText id="smDocRent"
-								label="#{lbl['lbl.sm.facility.rent.rm']}"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
 								size="20"
 								required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smDocRentMsg" />
 							</p:inputText>
 							<p:message id="smDocRentMsg" for="smDocRent" showSummary="true"
 								showDetail="false" display="icon" />

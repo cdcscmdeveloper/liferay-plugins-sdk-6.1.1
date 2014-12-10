@@ -552,9 +552,14 @@ public class SmApplicationBackingBean extends
 					setDefaultApproverReviewSection();
 				}
 
-				if (applicationType.equalsIgnoreCase("C")) {
+				if (applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setSupplierCancellationRemarks(applicationType,
 							getManagedBean().getSmAppl().getApplId());
+					getManagedBean()
+							.setBasicInfo(
+									SmApplicationUtil
+											.getSmSupplierBasicInfoVO(getManagedBean()));
 				}
 			}
 
@@ -602,9 +607,6 @@ public class SmApplicationBackingBean extends
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
 				// set basic info for cancel mof
-				getManagedBean().setBasicInfo(
-						SmApplicationUtil
-								.getSmSupplierBasicInfoVO(getManagedBean()));
 			}
 			getManagedBean()
 					.setSupplierParentCatList(
@@ -1407,6 +1409,24 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	private void setPreviousFacilityValues(SmFacility facilityBean) {
+		getManagedBean().setRentPrevVal(facilityBean.getRentalRate());
+		getManagedBean().setPurPricePrevVal(facilityBean.getPurchasePrice());
+		getManagedBean().setOwnerTypePrevVal(facilityBean.getOwnershipType());
+	}
+
+	private void resetFacilityValues(SmFacility fac) {
+		if (fac.getFacilityId() == null) {
+			fac.getSmAddress().setPostcode("");
+			fac.setOwnershipType("");
+		} else {
+			fac.setRentalRate(getManagedBean().getRentPrevVal());
+			fac.setPurchasePrice(getManagedBean().getPurPricePrevVal());
+			fac.setOwnershipType(getManagedBean().getOwnerTypePrevVal());
+		}
+
+	}
+
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		log.info("**** Enter Share Holder privilege ******");
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
@@ -2013,6 +2033,12 @@ public class SmApplicationBackingBean extends
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
 		assignValReqdToTrue();
+		if (consultantBean.getConsultantFee() == null) {
+			consultantBean.setConsultantFee(new BigDecimal(0));
+		}
+		if (consultantBean.getContractValue() == null) {
+			consultantBean.setContractValue(new BigDecimal(0));
+		}
 		getManagedBean()
 				.setSupplierParentCatList(
 						SmApplicationUtil
@@ -2110,7 +2136,8 @@ public class SmApplicationBackingBean extends
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			exp.setProcurementModeId(new Integer(0));
 		}
-
+		exp.setConsultantFee(new BigDecimal(0));
+		exp.setContractValue(new BigDecimal(0));
 		List<SmCompanyExperienceCat> expCatList = new ArrayList<SmCompanyExperienceCat>();
 		SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
 		cat.setPmCategoryL1(new PmCategoryL1());
@@ -2571,9 +2598,7 @@ public class SmApplicationBackingBean extends
 
 	public void cancelFactorySaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedFactoryFacility().getSmAddress()
-				.setPostcode("");
-		getManagedBean().getSelectedFactoryFacility().setOwnershipType("");
+		resetFacilityValues(getManagedBean().getSelectedFactoryFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:factoryDialog");
 		RequestContext.getCurrentInstance().execute("factoryDialog.hide()");
 	}
@@ -2586,6 +2611,8 @@ public class SmApplicationBackingBean extends
 				.getPmState().getStateId(), facilityBean.getSmAddress()
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_FACTORY_FACILITY_PANEL);
+		setFacilityDefaultPrices(facilityBean);
+		setPreviousFacilityValues(facilityBean);
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
@@ -2596,6 +2623,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewFactoryBean() {
 		getManagedBean().setSelectedFactoryFacility(new SmFacility());
+		setFacilityDefaultPrices(getManagedBean().getSelectedFactoryFacility());
 		getManagedBean().getSelectedFactoryFacility().setRevNo(1);
 		getManagedBean().getSelectedFactoryFacility().setSmAddress(
 				(SmApplicationUtil.setDefaultAddr(getManagedBean()
@@ -2661,9 +2689,7 @@ public class SmApplicationBackingBean extends
 
 	public void cancelDockyardSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedDockyardFacility().getSmAddress()
-				.setPostcode("");
-		getManagedBean().getSelectedDockyardFacility().setOwnershipType("");
+		resetFacilityValues(getManagedBean().getSelectedDockyardFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:dockYardDialog");
 		RequestContext.getCurrentInstance().execute("dockYardDialog.hide()");
 	}
@@ -2674,6 +2700,8 @@ public class SmApplicationBackingBean extends
 				.getPmState().getStateId(), facilityBean.getSmAddress()
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
+		setFacilityDefaultPrices(facilityBean);
+		setPreviousFacilityValues(facilityBean);
 		getManagedBean().setSelectedDockyardFacility(facilityBean);
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
@@ -2684,6 +2712,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewDockyardBean() {
 		getManagedBean().setSelectedDockyardFacility(new SmFacility());
+		setFacilityDefaultPrices(getManagedBean().getSelectedDockyardFacility());
 		getManagedBean().getSelectedDockyardFacility().setRevNo(1);
 		getManagedBean().getSelectedDockyardFacility().setSmAddress(
 				(SmApplicationUtil.setDefaultAddr(getManagedBean()
@@ -2748,9 +2777,7 @@ public class SmApplicationBackingBean extends
 
 	public void cancelWorkShopSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedWorkShopFacility().getSmAddress()
-				.setPostcode("");
-		getManagedBean().getSelectedWorkShopFacility().setOwnershipType("");
+		resetFacilityValues(getManagedBean().getSelectedWorkShopFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:workShopDialog");
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
@@ -2761,6 +2788,8 @@ public class SmApplicationBackingBean extends
 				.getPmState().getStateId(), facilityBean.getSmAddress()
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
+		setFacilityDefaultPrices(facilityBean);
+		setPreviousFacilityValues(facilityBean);
 		getManagedBean().setSelectedWorkShopFacility(facilityBean);
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
@@ -2771,6 +2800,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewWorkshopBean() {
 		getManagedBean().setSelectedWorkShopFacility(new SmFacility());
+		setFacilityDefaultPrices(getManagedBean().getSelectedWorkShopFacility());
 		getManagedBean().getSelectedWorkShopFacility().setRevNo(1);
 		getManagedBean().getSelectedWorkShopFacility().setSmAddress(
 				(SmApplicationUtil.setDefaultAddr(getManagedBean()
@@ -2812,7 +2842,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	// Workshop end
-	// Workshop start
+	// Store start
 	public void addOrUpdateStoreToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
@@ -2834,9 +2864,7 @@ public class SmApplicationBackingBean extends
 
 	public void cancelStoreSaveorUpdate() {
 		assignValReqdToFalse();
-		getManagedBean().getSelectedStoreFacility().getSmAddress()
-				.setPostcode("");
-		getManagedBean().getSelectedStoreFacility().setOwnershipType("");
+		resetFacilityValues(getManagedBean().getSelectedStoreFacility());
 		RequestContext.getCurrentInstance().reset(":form:tt:storeDialog");
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
@@ -2847,6 +2875,8 @@ public class SmApplicationBackingBean extends
 				.getPmState().getStateId(), facilityBean.getSmAddress()
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_STORE_FACILITY_PANEL);
+		setFacilityDefaultPrices(facilityBean);
+		setPreviousFacilityValues(facilityBean);
 		getManagedBean().setSelectedStoreFacility(facilityBean);
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage(
@@ -2857,6 +2887,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewStoreBean() {
 		getManagedBean().setSelectedStoreFacility(new SmFacility());
+		setFacilityDefaultPrices(getManagedBean().getSelectedStoreFacility());
 		getManagedBean().getSelectedStoreFacility().setRevNo(1);
 		getManagedBean().getSelectedStoreFacility().setSmAddress(
 				(SmApplicationUtil.setDefaultAddr(getManagedBean()
@@ -2897,7 +2928,7 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	// Workshop end
+	// Store end
 	// manufacturer start
 	public void addOrUpdateManufacturerToSmAppl() {
 		if (getManagedBean().getSelectedManufacturer().getPmUom().getUomId() != null) {
@@ -3331,6 +3362,7 @@ public class SmApplicationBackingBean extends
 		// disableJustification(shareHolderBean);
 	}
 
+	@SuppressWarnings("unused")
 	private void disableJustification(SmPersonnel shareHolderBean) {
 		getManagedBean().setDisabledJustification(false);
 		if (getManagedBean().getSmAppl() != null && shareHolderBean != null

@@ -314,6 +314,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disabledJustification;
 	private String regCatCodeConfirmHeader;
 	private String regCatCodeConfirmMsg;
+	private BigDecimal rentPrevVal;
+	private BigDecimal purPricePrevVal;
+	private String ownerTypePrevVal;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2389,5 +2392,29 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBpmTaskName(String bpmTaskName) {
 		this.bpmTaskName = bpmTaskName;
+	}
+
+	public BigDecimal getPurPricePrevVal() {
+		return purPricePrevVal;
+	}
+
+	public void setPurPricePrevVal(BigDecimal purPricePrevVal) {
+		this.purPricePrevVal = purPricePrevVal;
+	}
+
+	public BigDecimal getRentPrevVal() {
+		return rentPrevVal;
+	}
+
+	public void setRentPrevVal(BigDecimal rentPrevVal) {
+		this.rentPrevVal = rentPrevVal;
+	}
+
+	public String getOwnerTypePrevVal() {
+		return ownerTypePrevVal;
+	}
+
+	public void setOwnerTypePrevVal(String ownerTypePrevVal) {
+		this.ownerTypePrevVal = ownerTypePrevVal;
 	}
 }

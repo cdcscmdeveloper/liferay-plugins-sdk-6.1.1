@@ -260,25 +260,40 @@
 				<td><p:outputPanel id="workPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
-							<p:inputText label="#{lbl['lbl.cm.price']}" id="smWrkShpPrice"
+							<p:inputText id="smWrkShpPrice"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.cm.price']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
 								size="20"
 								required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smWrkShpPriceMsg" />
 							</p:inputText>
 							<p:message id="smWrkShpPriceMsg" for="smWrkShpPrice"
 								showSummary="true" showDetail="false" display="icon" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
-							<p:inputText label="#{lbl['lbl.sm.facility.rent.rm']}"
-								id="smWrkShpRent"
+							<p:inputText id="smWrkShpRent"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
 								size="20"
 								required="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smWrkShpRentMsg" />
 							</p:inputText>
 							<p:message id="smWrkShpRentMsg" for="smWrkShpRent"
 								showSummary="true" showDetail="false" display="icon" />
