@@ -16,7 +16,7 @@
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
-			rows="10" editable="true" rowIndexVar="index" 
+			rows="10" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.complianceSummaryQualSuppliers}"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
@@ -24,7 +24,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
-				<h:outputText value="#{qualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+				<h:outputText
+					value="#{qualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -56,15 +57,14 @@
 		<p:dataTable var="disQualifiedSupplier"
 			value="#{evaluationBackingBean.managedBean.complianceSummaryDisQualSuppliers}"
 			id="complianceDisQualifiedSupplier" editable="true" rows="10"
-			rowIndexVar="index" 
-			rowKey="#{disQualifiedSupplier}">
+			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="complianceDisQualifiedSupplier" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
 				<h:outputText
-					value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>

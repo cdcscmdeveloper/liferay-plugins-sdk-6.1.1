@@ -18,8 +18,7 @@
 			<ac:paginator for="evaluationSummaryItem" />
 
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
-				update="@form"
-				listener="#{evaluationBackingBean.summaryItemSelect}"></p:ajax>
+				update="@form" listener="#{evaluationBackingBean.summaryItemSelect}"></p:ajax>
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}"
 				style="width:35%">
 
@@ -45,23 +44,22 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
 
-					<h:outputText
-						value="#{summaryqualSup.evaluationResultDtls[0].evalRank}"></h:outputText>
+					<h:outputText value="#{summaryqualSup.evalRank}"></h:outputText>
 				</p:column>
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
 					style="width:30%">
 
-					<h:outputText value="#{summaryqualSup.scQtProposal.supplierNo}"></h:outputText>
+					<h:outputText
+						value="#{summaryqualSup.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-					<h:outputText
-						value="#{summaryqualSup.evaluationResultDtls[0].totalScore}"></h:outputText>
+					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
@@ -98,13 +96,12 @@
 					style="width:30%">
 
 					<h:outputText
-						value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+						value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-					<h:outputText
-						value="#{disQualifiedSupplier.evaluationResultDtls[0].totalScore}"></h:outputText>
+					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 				</p:column>
 
 
