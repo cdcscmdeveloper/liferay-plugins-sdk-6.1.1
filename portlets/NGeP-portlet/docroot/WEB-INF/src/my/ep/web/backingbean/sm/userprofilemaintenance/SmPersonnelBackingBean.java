@@ -23,6 +23,7 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -66,6 +67,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -143,18 +145,20 @@ public class SmPersonnelBackingBean extends
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 
 		SelectItem role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage("lbl.sm.person.composition.suppUser", null));
-		
-		if(getManagedBean().isUpgradeMofDraftAppl()){
+		role.setLabel(SmCommonUtil.getMessage(
+				"lbl.sm.person.composition.suppUser", null));
+
+		if (getManagedBean().isUpgradeMofDraftAppl()) {
 			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-		}else{
+		} else {
 			role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
 		}
-		if (!getManagedBean().isDisableRole()){
+		if (!getManagedBean().isDisableRole()) {
 			roles.add(role);
-		}	
+		}
 		role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage("lbl.sm.person.composition.catUser", null));
+		role.setLabel(SmCommonUtil.getMessage(
+				"lbl.sm.person.composition.catUser", null));
 		role.setValue(RoleCode.CM_USER.value());
 		roles.add(role);
 
@@ -169,11 +173,12 @@ public class SmPersonnelBackingBean extends
 				&& smSupplier.getBusinessType().equalsIgnoreCase("A")) {
 			validPerCount = true;
 		} else {
-			//disabled add button if authorized personnel already 3
+			// disabled add button if authorized personnel already 3
 			if (getManagedBean().getSmPersonnelList() != null
 					&& getManagedBean().getSmPersonnelList().size() >= 3) {
 				validPerCount = true;
 			}
+
 		}
 		return validPerCount;
 	}
@@ -281,13 +286,14 @@ public class SmPersonnelBackingBean extends
 		buildRoleList();
 
 		SelectItem role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage("lbl.sm.person.composition.suppAdmin", null));
-		if(getManagedBean().isUpgradeMofDraftAppl()){
+		role.setLabel(SmCommonUtil.getMessage(
+				"lbl.sm.person.composition.suppAdmin", null));
+		if (getManagedBean().isUpgradeMofDraftAppl()) {
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		}else{
+		} else {
 			role.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
 		}
-		
+
 		getManagedBean().getRoleList().add(role);
 
 		getPersonnelInfoById(personnelId);
@@ -999,11 +1005,12 @@ public class SmPersonnelBackingBean extends
 		// if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 		// ||
 		// getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
-		getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(1);
 		// else
 		// if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
 		// getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(0);
 		// updateAccountStatus();
+		getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+				Integer.parseInt(ParameterConst.FLAG_YES));
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
 		} else {
@@ -1027,12 +1034,13 @@ public class SmPersonnelBackingBean extends
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
+
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
 		// reqDTO = new PersonnelReqDTO();
 		// reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 		// resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
-		System.out.println("Result:" + resDTO.isSuccessful());
+		log.info("Result:" + resDTO.isSuccessful());
 		if (resDTO.isSuccessful()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,

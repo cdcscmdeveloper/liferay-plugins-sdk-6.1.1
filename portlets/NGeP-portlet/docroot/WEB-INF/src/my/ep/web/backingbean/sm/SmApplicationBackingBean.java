@@ -130,6 +130,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -3490,17 +3491,20 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().setSelectedPersonnel(null);
 
 		assignSelShareHolderAddress(shr);
-		if (getManagedBean().getPersonnelCountCheck() == 0
-				|| getManagedBean().getPersonnelCountCheck() == 1) {
-			shr.setJustificationReqd(false);
-		} else if (getManagedBean().getPersonnelCountCheck() == 2) {
-			shr.setJustificationReqd(true);
-		}
+
+		// display justification
+		shr.setJustificationReqd(SmApplicationUtil
+				.getSmAuthorizedPersonnelCountVO(
+						getManagedBean().getSmSupplier().getSupplierId(),
+						getManagedBean().getSmAppl().getApplType(),
+						getManagedBean().getSmAppl().getApplId(),true)
+				.isJustificationRequired());
+
 		getManagedBean().setSelectedShareHolder(shr);
 		if (getManagedBean().isValidSmUserLimit()) {
-			getManagedBean().setUserWithRole(true);
-		} else {
 			getManagedBean().setUserWithRole(false);
+		} else {
+			getManagedBean().setUserWithRole(true);
 		}
 		buildRoleList();
 		getManagedBean().setRedirectToPersonPage(true);
@@ -6119,18 +6123,22 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmStaffTotals(),
 				getManagedBean().getSmAppl().getSupplierType());
 		getManagedBean().setPersonCalc(calcVO);
+		
+		//not sure for what.disabled temporary
+//		int countCheck = SmApplicationUtil.validatePersonLimit(getManagedBean()
+//				.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean()
+//				.getSmAppl().getApplType(), getManagedBean().getSmAppl()
+//				.getApplId());
+//
+//		getManagedBean().setPersonnelCountCheck(countCheck);
 
-		int countCheck = SmApplicationUtil.validatePersonLimit(getManagedBean()
-				.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean()
-				.getSmAppl().getApplType(), getManagedBean().getSmAppl()
-				.getApplId());
+		// set already reach valid max authorized personnel and justification
+		SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil.getSmAuthorizedPersonnelCountVO(
+						getManagedBean().getSmSupplier().getSupplierId(),
+						getManagedBean().getSmAppl().getApplType(),
+						getManagedBean().getSmAppl().getApplId(),false);
+		getManagedBean().setValidSmUserLimit(countVO.isReachAuthorizedPersonnelLimit());
 
-		getManagedBean().setPersonnelCountCheck(countCheck);
-		if (countCheck == 0) {
-			getManagedBean().setValidSmUserLimit(false);
-		} else {
-			getManagedBean().setValidSmUserLimit(true);
-		}
 		log.info("*** END calcPersonnelListCount**** ");
 	}
 
