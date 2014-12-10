@@ -8,7 +8,7 @@
 	
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
-			<p:column style="width:65px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+			<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
 					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
@@ -43,7 +43,7 @@
 		</h:outputText>
 	</p:column>
 	
-	<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+	<p:column style="width:97px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}"/>
@@ -52,7 +52,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard}" />
 		</f:facet>
 		
-		<p:inputText id="ratePerUom" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+		<p:inputText id="ratePerUom" style="min-width:0px !important;width:86px;" styleClass="ppNumericAlign"
 			value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}" required="#{isSpecificationReq}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
@@ -78,7 +78,7 @@
 		</h:panelGroup>
 	</p:column>
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<p:column style="width:115px;#{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[answerlbl]}" rendered="#{!isZonal}">
+	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}" headerText="#{lbl[answerlbl]}" rendered="#{!isZonal}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" rendered="#{!isSpecTypeFinancial}" />
 			<h:outputText value="#{lbl[answerlbl]}"/>
@@ -93,11 +93,13 @@
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
-			<p:inputText id="answerText" style="width:76%;" value="#{tplSpecAnswer.answerText}" 
-				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" maxlength="200"
-				label="#{lbl[answerlbl]}" />
+			<p:inputTextarea id="answerText" style="width:138px;" value="#{tplSpecAnswer.answerText}" 
+				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" rows="1" maxlength="200"
+				label="#{lbl[answerlbl]}">
+				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
+			</p:inputTextarea>
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText}" />
-			<p:inputText id="answerNumeric" style="width:76%;" styleClass="ppNumericAlign" 
+			<p:inputText id="answerNumeric" style="width:138px;" styleClass="ppNumericAlign" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
@@ -110,7 +112,7 @@
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
-			<h:selectOneMenu id="answerCompliance" style="width:85%;" 
+			<h:selectOneMenu id="answerCompliance" style="width:150px;" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
@@ -142,7 +144,7 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</h:outputText>
 	</p:column>
-	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.note']}" rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
-		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" />
+	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.note']}" rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
+		<p:inputTextarea style="width:188px;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>
