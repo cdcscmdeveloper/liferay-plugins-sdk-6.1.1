@@ -33,7 +33,7 @@
 		          		<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"  width="15%"> 
-				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}" disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode}">  
+				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}" disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew}">  
 			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 			            	<p:ajax event="change" listener="#{profileManagementBackingBean.userRoleStatusChange(role)}" />
 			          	</p:selectOneMenu> 
