@@ -111,7 +111,7 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 			}
 
 			if (throwable instanceof ViewExpiredException) {
-				msgCode = MessageConst.ERROR_100054;
+				msgCode = MessageConst.ERROR_100056;
 				isValidationException = true;
 				navigateToErrorPage = true;
 				
