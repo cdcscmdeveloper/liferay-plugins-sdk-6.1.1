@@ -13,7 +13,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
@@ -27,11 +26,12 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
+import my.ep.web.managedbean.pm.usergroup.UsergroupSearchBean;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * @author DK
@@ -45,16 +45,23 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			.getLogger(UsergroupBackingBean.class);
 
 	private IPagingDataModel<PmUserGroup> userGroupList = new UserGroupProfilePagingDataModel();
-
-	private UserGroupSearchBean userGrpBean = new UserGroupSearchBean();
-
+	
+	
+	private Long orgProfileId = null; 
+	
+	
+	public UsergroupBackingBean() {
+		this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
+	}
 	
 	/**
 	 *  reset search group detail
 	 */
 	public void reset() {
-		userGrpBean = new UserGroupSearchBean();
-
+		System.out.println("inside reset");
+		 this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
+		 this.getManagedBean().setStatus(null);
+		 this.userGroupList = new UserGroupProfilePagingDataModel(); 
 	}
 
 	private void debugLogger(Object message) {
@@ -96,7 +103,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserGroupSO.class);
-			return groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
+			ISearchResultBean<PmUserGroup> iSearchResultBean = groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
+			List<PmUserGroup> pmUserGroups = iSearchResultBean.getResultList();
+			System.out.println("UserGroupProfilePagingDataModel :"+pmUserGroups.size());
+			return iSearchResultBean;
 		}
 
 		/**
@@ -224,14 +234,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		userGroupList.reloadData();
 	}
 
-	public UserGroupSearchBean getUserGrpBean() {
-		return userGrpBean;
-	}
-
-	public void setUserGrpBean(UserGroupSearchBean userGrpBean) {
-		this.userGrpBean = userGrpBean;
-	}
-
 	public void setUserGroupList(IPagingDataModel<PmUserGroup> userGroupList) {
 		this.userGroupList = userGroupList;
 	}
@@ -247,6 +249,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			}
 		}
 		this.getManagedBean().setUserGroups(groupUsers);
+	}
+	
+	public void  userListner(){
+		orgProfileId = this.getManagedBean().getUserGroup().getPmOrgProfile().getOrgProfileId();
+		System.out.println("orgProfileId :"+orgProfileId);
+		RequestContext.getCurrentInstance().update("usergrouping");
 	}
 
 	public void deleteUserGroup() {
@@ -302,6 +310,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		if(userGroup.getPmOrgProfile()==null){
 			throw new EpException("PTJ Code and Name is Mandatory");
 		}
+		
+		if(this.getManagedBean().getUserGroups().size()==0){
+			throw new EpException("Please select atleast one profile.");
+			}
 	}
 
 	/**
@@ -311,10 +323,19 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		debugLogger("saveUserGroup");
 		
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
+		userGroup.setRoleCode("FL_APPROVER");
 		userGroupValidationMsg(userGroup);
+		
+		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
+		
+		userGroup.setPmUserGroupUsers(pmUserGroupUsers );
 		
 		UserGroupReqDTO reqDto = new UserGroupReqDTO();
 		reqDto.setUserGroup(userGroup);
+		
+		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
+		
+		System.out.println("save orgProfileId :"+orgProfileId);
 		
 		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 
@@ -332,6 +353,14 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		
 		  return "/xhtml/pm/usergroupsearch/userGroupSearchMain.xhtml";
 	 }
-		
+	
+	public String constuctConditionFields() {
+		System.out.println("orgProfileId :"+orgProfileId);
+			if (null != orgProfileId) {
+				return "pmUserOrgs.pmOrgProfile.orgProfileId^" + orgProfileId;
+		           }
+		return "";
+	}
+
 }
 

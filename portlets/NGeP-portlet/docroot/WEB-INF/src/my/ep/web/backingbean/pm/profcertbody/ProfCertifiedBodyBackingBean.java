@@ -6,9 +6,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -26,6 +23,10 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodyManagedBean;
+import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author DK
@@ -43,7 +44,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 	public ProfCertifiedBodyBackingBean() {
 		log.info("inside constructor");
-
+		reset();
 	}
 
 	private void debugLogger(Object message) {
@@ -57,11 +58,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * reset professional & cert search detail
 	 * 
 	 */
-	public void resetSearch() {
+	public void reset() {
 		debugLogger("resetSearch");
-		
-        this.getManagedBean().setBodyCode(new String());
-        this.getManagedBean().setBodyName(new String());
+		System.out.println("inside reset...");
+        this.getManagedBean().setProfCertifiedBodySearchBean(new ProfCertifiedBodySearchBean());
+        this.getManagedBean().getProfCertifiedBodySearchBean().setBodyCode(null);
+        this.getManagedBean().getProfCertifiedBodySearchBean().setStatus(null);
+        profCertBodyModel = new CertBodyPagingDataModel();
 	}
 
 	/**
@@ -106,9 +109,10 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	public SelectItem[] getBodyType() {
 
 		SelectItem[] items = null;
-			items = new SelectItem[2];
-			items[0] = new SelectItem(0, "Professional");
-			items[1] = new SelectItem(1, "Certified");
+			items = new SelectItem[3];
+			items[0] = new SelectItem(0, "Select One");
+			items[1] = new SelectItem(1, "Professional");
+			items[2] = new SelectItem(2, "Certified");
 
 		return items;
 	}
@@ -149,47 +153,55 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			if (null == searchBean) {
 				searchBean = new SearchBean<PmCertBody>();
 			}			
-			if (getManagedBean().getCertType() != null){
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("isCertifiedBody",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getCertType()));
+			if (getManagedBean().getProfCertifiedBodySearchBean().getCertType() != null){
+				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==2){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("isCertifiedBody",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
+				}
+				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==1){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("isProfessionalBody",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
+				}
 				
-			} else if (getManagedBean().getCertType() == null ) {
+			} else if (getManagedBean().getProfCertifiedBodySearchBean().getCertType() == null ) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("isProfessionalBody",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getCertType()));
+								getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
 			}			
-			if (getManagedBean().getBodyCode() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getBodyCode())) { 
+			if (getManagedBean().getProfCertifiedBodySearchBean().getBodyCode() != null
+					&& !"".equalsIgnoreCase(getManagedBean().getProfCertifiedBodySearchBean().getBodyCode())) { 
 				SearchFilterBean profCertSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());				
 			
 				profCertSearchBean.setSearchField("bodyCode");
 				profCertSearchBean.setCaseInsensitive(true);		
-				profCertSearchBean.setSearchValue(getManagedBean().getBodyCode());
+				profCertSearchBean.setSearchValue(getManagedBean().getProfCertifiedBodySearchBean().getBodyCode());
 				
 				searchBean.getDataFilterBeans().add(profCertSearchBean);
 				
 			}
-			if (getManagedBean().getBodyCode() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getBodyName())) { 
+			if (getManagedBean().getProfCertifiedBodySearchBean().getBodyCode() != null
+					&& !"".equalsIgnoreCase(getManagedBean().getProfCertifiedBodySearchBean().getBodyName())) { 
 				SearchFilterBean profCertSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());				
 					
 				profCertSearchBean.setSearchField("bodyName");
 				profCertSearchBean.setCaseInsensitive(true);		
-				profCertSearchBean.setSearchValue(getManagedBean().getBodyName());
+				profCertSearchBean.setSearchValue(getManagedBean().getProfCertifiedBodySearchBean().getBodyName());
 						
 				searchBean.getDataFilterBeans().add(profCertSearchBean);
 						
 			}
-			if (null != getManagedBean().getStatus()) {
+			if (null != getManagedBean().getProfCertifiedBodySearchBean().getStatus()) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getStatus()));
+								getManagedBean().getProfCertifiedBodySearchBean().getStatus()));
 			}
 
 			ICertBodySO bodySO = EpEjbBusinessDelegate.getInstance()
@@ -200,9 +212,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 			return bodySO.retrieveBodyList(certBodyReqDTO)
 					.getCertBodyResultBean();
-
 		}
-
 	}
 
 	private boolean isNullOrEmpty(String str) {
@@ -213,7 +223,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	}
 
 	public void searchProfessionalCertBody() {
-		getProfCertBodyModel().reloadData();
+		if(0==getManagedBean().getProfCertifiedBodySearchBean().getCertType()){
+			throw new EpException("Professional / Certified is Mandatory");
+		}else{
+			getProfCertBodyModel().reloadData();
+		}
 	}
 	
 	/**
@@ -232,7 +246,14 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		if(StringUtils.isBlank(certBody.getDescription())){
 			throw new EpException("Description is Mandatory");
-		}			
+		}
+		
+		if(!certBody.isCertifiedBody()&&!certBody.isProfessionalBody()){
+			throw new EpException("Please Select Professional / Certified.");
+		}
+		/*if(!certBody.isProfessionalBody()){
+			throw new EpException("Please Select Professional / Certified.");
+		}	*/
 		
 	}		
 
@@ -274,5 +295,5 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		this.getManagedBean().setCertBody(certBody);
 		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
 	}
-
+	
 }
