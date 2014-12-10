@@ -38,7 +38,7 @@
 		</p:dataTable>
 	</p:panel>
 	
-	<p:dialog id="rptDialogId" header="#{lbl['lbl.sm.rptpreview']}" widgetVar="rptDlg" modal="true" height="650" width="1200" dynamic="true">
+	<p:dialog id="rptDialogId" header="#{lbl['lbl.sm.rptpreview']}" widgetVar="rptDlg" modal="true" height="525" width="1200" dynamic="true">
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
 			<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
 		</c:if>
