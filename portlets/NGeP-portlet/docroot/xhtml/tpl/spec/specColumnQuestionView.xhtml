@@ -45,12 +45,12 @@
 		</p:column>
 	</c:if>
 	
-	<p:column style="width:115px;" headerText="#{lbl['lbl.tpl.spec.content.price.type']}" rendered="#{!isItemTypeService}">
+	<p:column style="width:85px;" headerText="#{lbl['lbl.tpl.spec.content.price.type']}" rendered="#{!isItemTypeService}">
 		<h:outputText value="#{templateSpecBackingBean.getParameterDesc(question.clPriceTypeCode)}" rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
 	
 	<ui:insert name="qtySection">
-		<p:column style="width:65px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+		<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 		
 			<h:outputText value="#{question.clQuantity}" rendered="#{isQuestionTypeItem and isPriceTypeAllStandard}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
