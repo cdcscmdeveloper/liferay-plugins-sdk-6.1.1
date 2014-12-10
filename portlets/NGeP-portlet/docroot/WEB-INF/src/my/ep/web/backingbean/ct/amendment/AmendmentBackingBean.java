@@ -1374,7 +1374,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 //				valuesMap.put("ADDRESS", "");	
 //			}			
 //			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getContractName());
-//			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getCtContract().getContractPhysicalNo());
+//			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getContractVer().getContractPhysicalNo());
 //			valuesMap.put("AMENDMENT_EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
 //			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
 //			valuesMap.put("BOND_AMOUNT_IN_TEXT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");

@@ -23,7 +23,7 @@
 			        </p:column>
 			
 			        <p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:10%;white-space:normal;">
-				        <h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
+				        <h:outputText value="#{circularContractsVar.ctContract.latestContractVer.contractPhysicalNo}" />
 			        </p:column>
 			
 			        <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:8%;">
@@ -252,7 +252,7 @@
 						<h:outputText value="#{contractListVar.loaPhysicalNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:20%;white-space:normal;">
-						<h:outputText value="#{contractListVar.contractPhysicalNo}" />
+						<h:outputText value="#{contractListVar.latestContractVer.contractPhysicalNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:20%;">
 						<h:outputText value="#{contractListVar.contractNo}" />

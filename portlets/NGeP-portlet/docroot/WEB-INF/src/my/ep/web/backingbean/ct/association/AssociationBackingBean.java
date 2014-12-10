@@ -322,7 +322,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 							SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));	
 						
 		        }if(getManagedBean().getCtProductCode()!=null && getManagedBean().getCtProductCode().length()>0) {
-		        	SearchFilterBean filterBean = new SearchFilterBean("ctAssocContracts.ctContract.contractPhysicalNo",
+		        	SearchFilterBean filterBean = new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.contractPhysicalNo",
 													SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCtProductCode());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
