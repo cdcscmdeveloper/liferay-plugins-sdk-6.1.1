@@ -35,7 +35,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SMSiteVisitDataType bpmPojo;
 	private int activeIndex;
 	private SmSvTask smSvTask;
-	private Map<Long,SmRemark> remarkMap;
 	private SmSvAddress selectedSmSvAddress;
 	private Map<String,SmSvTemplate> smSvTemplateMap;
 	private SmSvTemplate selectedSvTemplate;
@@ -138,14 +137,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSmSvTask(SmSvTask smSvTask) {
 		this.smSvTask = smSvTask;
-	}
-
-	public Map<Long, SmRemark> getRemarkMap() {
-		return remarkMap;
-	}
-
-	public void setRemarkMap(Map<Long, SmRemark> remarkMap) {
-		this.remarkMap = remarkMap;
 	}
 
 	public SmSvAddress getSelectedSmSvAddress() {
