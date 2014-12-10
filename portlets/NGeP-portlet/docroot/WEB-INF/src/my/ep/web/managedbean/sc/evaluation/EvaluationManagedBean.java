@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
@@ -103,8 +104,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtCheckListScore technicalContractUserScore;
 	private ScQtCheckListScore technicalNoOfYearsUserScore;
 
-	private List<ScQtEvaluationResult> complianceSummaryQualSuppliers;
-	private List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers;
+	private List<ScQtEvaluationResultDtl> complianceSummaryQualSuppliers;
+	private List<ScQtEvaluationResultDtl> complianceSummaryDisQualSuppliers;
 
 	private List<ScQtProposalChecklist> evaluationComplianceList;
 	private List<TplSpecQuestion> specItemList;
@@ -123,13 +124,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtPRPAssetLiability> assetList;
 	private List<ScQtProposalScore> techGovProposalScore;
 
-	private List<ScQtEvaluationResult> evaluationSummaryQualSuppliers;
-	private List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers;
+	private List<ScQtEvaluationResultDtl> evaluationSummaryQualSuppliers;
+	private List<ScQtEvaluationResultDtl> evaluationSummaryDisQualSuppliers;
 
 	private List<ScRequestItem> summaryItemList;
 	private ScRequestItem singlesummaryItemList;
-	private List<ScQtEvaluationResult> itemSummaryQualSuppliers;
-	private List<ScQtEvaluationResult> itemSummaryDisQualSuppliers;
+	private List<ScQtEvaluationResultDtl> itemSummaryQualSuppliers;
+	private List<ScQtEvaluationResultDtl> itemSummaryDisQualSuppliers;
 	private int itemTotQualSuppliers;
 	private int itemTotDisQualSuppliers;
 
@@ -187,9 +188,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String localOutCome;
 	private boolean readOnly;
 	private boolean memberOnly;
-    private List<ScQtCommitteRemarks> evaluationSignOffRemarks;
-    private Date today=new Date();
-	
+	private List<ScQtCommitteRemarks> evaluationSignOffRemarks;
+	private Date today = new Date();
+	private BigDecimal userScores;
+	private BigDecimal ContractScores;
+	private int techindex = -1;
+	private boolean statusOnly;
 
 	/**
 	 * @return the today
@@ -199,7 +203,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param today the today to set
+	 * @param today
+	 *            the today to set
 	 */
 	public void setToday(Date today) {
 		this.today = today;
@@ -213,7 +218,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationSignOffRemarks the evaluationSignOffRemarks to set
+	 * @param evaluationSignOffRemarks
+	 *            the evaluationSignOffRemarks to set
 	 */
 	public void setEvaluationSignOffRemarks(
 			List<ScQtCommitteRemarks> evaluationSignOffRemarks) {
@@ -235,14 +241,16 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param memberOnly the memberOnly to set
+	 * @param memberOnly
+	 *            the memberOnly to set
 	 */
 	public void setMemberOnly(boolean memberOnly) {
 		this.memberOnly = memberOnly;
 	}
 
 	/**
-	 * @param readOnly the readOnly to set
+	 * @param readOnly
+	 *            the readOnly to set
 	 */
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
@@ -256,7 +264,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param localOutCome the localOutCome to set
+	 * @param localOutCome
+	 *            the localOutCome to set
 	 */
 	public void setLocalOutCome(String localOutCome) {
 		this.localOutCome = localOutCome;
@@ -1037,38 +1046,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the complianceSummaryQualSuppliers
-	 */
-	public List<ScQtEvaluationResult> getComplianceSummaryQualSuppliers() {
-		return complianceSummaryQualSuppliers;
-	}
-
-	/**
-	 * @param complianceSummaryQualSuppliers
-	 *            the complianceSummaryQualSuppliers to set
-	 */
-	public void setComplianceSummaryQualSuppliers(
-			List<ScQtEvaluationResult> complianceSummaryQualSuppliers) {
-		this.complianceSummaryQualSuppliers = complianceSummaryQualSuppliers;
-	}
-
-	/**
-	 * @return the complianceSummaryDisQualSuppliers
-	 */
-	public List<ScQtEvaluationResult> getComplianceSummaryDisQualSuppliers() {
-		return complianceSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * @param complianceSummaryDisQualSuppliers
-	 *            the complianceSummaryDisQualSuppliers to set
-	 */
-	public void setComplianceSummaryDisQualSuppliers(
-			List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers) {
-		this.complianceSummaryDisQualSuppliers = complianceSummaryDisQualSuppliers;
-	}
-
-	/**
 	 * @return the complianceQualifiedSuppliers
 	 */
 	public int getComplianceQualifiedSuppliers() {
@@ -1268,38 +1245,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the evaluationSummaryQualSuppliers
-	 */
-	public List<ScQtEvaluationResult> getEvaluationSummaryQualSuppliers() {
-		return evaluationSummaryQualSuppliers;
-	}
-
-	/**
-	 * @param evaluationSummaryQualSuppliers
-	 *            the evaluationSummaryQualSuppliers to set
-	 */
-	public void setEvaluationSummaryQualSuppliers(
-			List<ScQtEvaluationResult> evaluationSummaryQualSuppliers) {
-		this.evaluationSummaryQualSuppliers = evaluationSummaryQualSuppliers;
-	}
-
-	/**
-	 * @return the evaluationSummaryDisQualSuppliers
-	 */
-	public List<ScQtEvaluationResult> getEvaluationSummaryDisQualSuppliers() {
-		return evaluationSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * @param evaluationSummaryDisQualSuppliers
-	 *            the evaluationSummaryDisQualSuppliers to set
-	 */
-	public void setEvaluationSummaryDisQualSuppliers(
-			List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers) {
-		this.evaluationSummaryDisQualSuppliers = evaluationSummaryDisQualSuppliers;
-	}
-
-	/**
 	 * @return the evaTotQualifiedSuppliers
 	 */
 	public int getEvaTotQualifiedSuppliers() {
@@ -1342,38 +1287,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setSummaryItemList(List<ScRequestItem> summaryItemList) {
 		this.summaryItemList = summaryItemList;
-	}
-
-	/**
-	 * @return the itemSummaryQualSuppliers
-	 */
-	public List<ScQtEvaluationResult> getItemSummaryQualSuppliers() {
-		return itemSummaryQualSuppliers;
-	}
-
-	/**
-	 * @param itemSummaryQualSuppliers
-	 *            the itemSummaryQualSuppliers to set
-	 */
-	public void setItemSummaryQualSuppliers(
-			List<ScQtEvaluationResult> itemSummaryQualSuppliers) {
-		this.itemSummaryQualSuppliers = itemSummaryQualSuppliers;
-	}
-
-	/**
-	 * @return the itemSummaryDisQualSuppliers
-	 */
-	public List<ScQtEvaluationResult> getItemSummaryDisQualSuppliers() {
-		return itemSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * @param itemSummaryDisQualSuppliers
-	 *            the itemSummaryDisQualSuppliers to set
-	 */
-	public void setItemSummaryDisQualSuppliers(
-			List<ScQtEvaluationResult> itemSummaryDisQualSuppliers) {
-		this.itemSummaryDisQualSuppliers = itemSummaryDisQualSuppliers;
 	}
 
 	/**
@@ -1827,6 +1740,161 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setDocDefinitionKey(String docDefinitionKey) {
 		this.docDefinitionKey = docDefinitionKey;
+	}
+
+	/**
+	 * @return the userScores
+	 */
+	public BigDecimal getUserScores() {
+		return userScores;
+	}
+
+	/**
+	 * @param userScores
+	 *            the userScores to set
+	 */
+	public void setUserScores(BigDecimal userScores) {
+		this.userScores = userScores;
+	}
+
+	/**
+	 * @return the contractScores
+	 */
+	public BigDecimal getContractScores() {
+		return ContractScores;
+	}
+
+	/**
+	 * @param contractScores
+	 *            the contractScores to set
+	 */
+	public void setContractScores(BigDecimal contractScores) {
+		ContractScores = contractScores;
+	}
+
+	/**
+	 * @return the techindex
+	 */
+	public int getTechindex() {
+		return techindex;
+	}
+
+	/**
+	 * @param techindex
+	 *            the techindex to set
+	 */
+	public void setTechindex(int techindex) {
+		this.techindex = techindex;
+	}
+
+	/**
+	 * @return the evaluationSummaryQualSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getEvaluationSummaryQualSuppliers() {
+		return evaluationSummaryQualSuppliers;
+	}
+
+	/**
+	 * @param evaluationSummaryQualSuppliers
+	 *            the evaluationSummaryQualSuppliers to set
+	 */
+	public void setEvaluationSummaryQualSuppliers(
+			List<ScQtEvaluationResultDtl> evaluationSummaryQualSuppliers) {
+		this.evaluationSummaryQualSuppliers = evaluationSummaryQualSuppliers;
+	}
+
+	/**
+	 * @return the evaluationSummaryDisQualSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getEvaluationSummaryDisQualSuppliers() {
+		return evaluationSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @param evaluationSummaryDisQualSuppliers
+	 *            the evaluationSummaryDisQualSuppliers to set
+	 */
+	public void setEvaluationSummaryDisQualSuppliers(
+			List<ScQtEvaluationResultDtl> evaluationSummaryDisQualSuppliers) {
+		this.evaluationSummaryDisQualSuppliers = evaluationSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @return the itemSummaryQualSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getItemSummaryQualSuppliers() {
+		return itemSummaryQualSuppliers;
+	}
+
+	/**
+	 * @param itemSummaryQualSuppliers
+	 *            the itemSummaryQualSuppliers to set
+	 */
+	public void setItemSummaryQualSuppliers(
+			List<ScQtEvaluationResultDtl> itemSummaryQualSuppliers) {
+		this.itemSummaryQualSuppliers = itemSummaryQualSuppliers;
+	}
+
+	/**
+	 * @return the itemSummaryDisQualSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getItemSummaryDisQualSuppliers() {
+		return itemSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @param itemSummaryDisQualSuppliers
+	 *            the itemSummaryDisQualSuppliers to set
+	 */
+	public void setItemSummaryDisQualSuppliers(
+			List<ScQtEvaluationResultDtl> itemSummaryDisQualSuppliers) {
+		this.itemSummaryDisQualSuppliers = itemSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @return the complianceSummaryQualSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getComplianceSummaryQualSuppliers() {
+		return complianceSummaryQualSuppliers;
+	}
+
+	/**
+	 * @param complianceSummaryQualSuppliers
+	 *            the complianceSummaryQualSuppliers to set
+	 */
+	public void setComplianceSummaryQualSuppliers(
+			List<ScQtEvaluationResultDtl> complianceSummaryQualSuppliers) {
+		this.complianceSummaryQualSuppliers = complianceSummaryQualSuppliers;
+	}
+
+	/**
+	 * @return the complianceSummaryDisQualSuppliers
+	 */
+	public List<ScQtEvaluationResultDtl> getComplianceSummaryDisQualSuppliers() {
+		return complianceSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @param complianceSummaryDisQualSuppliers
+	 *            the complianceSummaryDisQualSuppliers to set
+	 */
+	public void setComplianceSummaryDisQualSuppliers(
+			List<ScQtEvaluationResultDtl> complianceSummaryDisQualSuppliers) {
+		this.complianceSummaryDisQualSuppliers = complianceSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @return the statusOnly
+	 */
+	public boolean isStatusOnly() {
+		return statusOnly;
+	}
+
+	/**
+	 * @param statusOnly the statusOnly to set
+	 */
+	public void setStatusOnly(boolean statusOnly) {
+		this.statusOnly = statusOnly;
 	}
 
 }
