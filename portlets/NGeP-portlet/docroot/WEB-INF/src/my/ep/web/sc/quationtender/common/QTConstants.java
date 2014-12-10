@@ -64,7 +64,7 @@ public interface QTConstants {
 	public static final String SUPPLIER_LOI_PAGE = "/xhtml/sc/loi/supplierresponse/loiSupplierMaint.xhtml";
 	public static final String MULTI_LOI_PAGE = "loiNegotiationResultMenu.xhtml";
 	public static final String QT_LOA_LIST_PAGE = "qtLoaList";
-	public static final String QT_SUPPLIER_A1_PAGE ="/xhtml/sc/loa/supplierresponse/a1form/loaSupplierAOneMaint.xhtml";
+	public static final String QT_SUPPLIER_A1_PAGE = "/xhtml/sc/loa/supplierresponse/a1form/loaSupplierAOneMaint.xhtml";
 
 	public static final String SC_LOI_TAB = "LOI";
 	public static final String SC_AWARD_TAB = "Award Details";
@@ -95,7 +95,7 @@ public interface QTConstants {
 	public static final String DP_OTHERS = "OT";
 
 	// committee Appointment
-	public static final String BUSINESS_OWNER  = "Business Owner";
+	public static final String BUSINESS_OWNER = "Business Owner";
 	public static final String SPECIFICATION_COMMITTEE_TAB = "Specification Committee";
 	public static final String OPENING_COMMITTEE_TAB = "Opening Committee";
 	public static final String TECHNICAL_COMMITTEE_TAB = "Technical Evaluation Committee";
@@ -139,7 +139,7 @@ public interface QTConstants {
 	public static final String BSV_TYPE_BRIEFING = "B";
 	public static final String BSV_TYPE_SITEVISIT = "S";
 	public static final String BSV_TYPE_BRIEFING_SITEVIST = "B";
-	
+
 	public static final String USER_SELECTION = "E";
 	public static final String ACCESS_RIGHT = "E";
 
@@ -165,7 +165,7 @@ public interface QTConstants {
 	public static final String FINANCIAL_ASSET_LIABILITY_CODE = "AL";
 	public static final String FINANCIAL_PAID_UP_CAPITAL_CODE = "PC";
 	public static final String FINANCIAL_SUPPLIER_DETAILS_CODE = "SD";
-	
+
 	public static final String AUTO_SCORE = "1";
 	public static final String USER_SCORE = "2";
 
@@ -179,9 +179,11 @@ public interface QTConstants {
 	public static final String FINANCIAL_EVALUATION_BY_ITEM = "FI";
 	public static final String RECOMMENDATION_BY_PACKAGE = "RP";
 	public static final String RECOMMENDATION_BY_ITEM = "RI";
-	public static final String AWARD_TYPE_PACKAGE="P";
-	public static final String AWARD_TYPE_ITEM="I";
-	public static final String PREFERENCE_MARGIN="M";
+	public static final String AWARD_TYPE_PACKAGE = "P";
+	public static final String AWARD_TYPE_ITEM = "I";
+	public static final String PREFERENCE_MARGIN = "M";
 	public static final String FINANCIAL_EVALUATION = "F";
+
+	public static final int CHECKLIST_USER_SCORE = 2;
 
 }
