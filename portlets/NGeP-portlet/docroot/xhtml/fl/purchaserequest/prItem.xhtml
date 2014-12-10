@@ -66,7 +66,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
 				</f:facet>
 				<h:outputText style="text-align:right" />
-				<p:commandLink oncomplete="addOfficer.show();"
+				<p:commandLink oncomplete="addOfficer.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.receivingOfficerList(address)}"
 					update=":form:addReceivingOfficerDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images/design" name="register.png"

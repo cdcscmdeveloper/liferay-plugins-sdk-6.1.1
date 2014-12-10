@@ -74,7 +74,7 @@
 					<h:outputText value="#{lbl['lbl.fl.receiving.officer']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
 				</f:facet>
-				<p:commandLink oncomplete="addOfficer.show();"
+				<p:commandLink oncomplete="addOfficer.show();" process="@this" 
 					action="#{contractRequestBackingBean.receivingOfficerList(address)}"
 					update=":form:addReceivingOfficerDialog">
 					<p:graphicImage library="ep/images/design" name="register.png"
