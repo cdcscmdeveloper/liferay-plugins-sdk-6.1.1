@@ -72,7 +72,7 @@
 				<td style="width: 180px;"><p:outputLabel
 						value="#{lbl['lbl.fl.frn.dl.ordered.date']}" /></td>
 
-				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.estStartDate}">
+				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.createdDate}">
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ordered.date']}"/>
