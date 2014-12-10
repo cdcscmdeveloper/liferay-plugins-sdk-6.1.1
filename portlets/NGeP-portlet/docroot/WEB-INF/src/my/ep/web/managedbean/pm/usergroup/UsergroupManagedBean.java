@@ -25,20 +25,17 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private PmUserGroup userGroup;
-	
+
 	private List<PmUserGroupUser> userGroups;
 	private List<PmUser> users;
 	private List<PmUserGroupUser> selectedUsrGrps;
-	private String userName;	
-	private String role;	
-	private String ptjCode;	
-	private String ptjName;	
-	private String groupName;
-	private String groupCode;
-	private String status;
-	
-	private String orgConditionField;	
+	private String role;
+	private UsergroupSearchBean usergroupSearchBean;
+
+	private String orgConditionField;
 	private PmOrgProfile orgProfile;
+
+	private String orgId;
 
 	public PmUserGroup getUserGroup() {
 		return userGroup;
@@ -73,19 +70,19 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	public String getPtjCode() {
-		return ptjCode;
+		return usergroupSearchBean.getPtjCode();
 	}
 
 	public void setPtjCode(String ptjCode) {
-		this.ptjCode = ptjCode;
+		this.usergroupSearchBean.setPtjCode(ptjCode);
 	}
 
 	public String getUserName() {
-		return userName;
+		return usergroupSearchBean.getUserName();
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName;
+		this.usergroupSearchBean.setUserName(userName);
 	}
 
 	public String getRole() {
@@ -97,35 +94,35 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	public String getPtjName() {
-		return ptjName;
+		return usergroupSearchBean.getPtjName();
 	}
 
 	public void setPtjName(String ptjName) {
-		this.ptjName = ptjName;
+		this.usergroupSearchBean.setPtjName(ptjName);
 	}
 
 	public String getGroupName() {
-		return groupName;
+		return usergroupSearchBean.getGroupName();
 	}
 
 	public void setGroupName(String groupName) {
-		this.groupName = groupName;
+		this.usergroupSearchBean.setGroupName(groupName);
 	}
 
 	public String getGroupCode() {
-		return groupCode;
+		return usergroupSearchBean.getGroupCode();
 	}
 
 	public void setGroupCode(String groupCode) {
-		this.groupCode = groupCode;
+		this.usergroupSearchBean.setGroupCode(groupCode);
 	}
 
-	public String getStatus() {
-		return status;
+	public Long getStatus() {
+		return usergroupSearchBean.getStatus();
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStatus(Long status) {
+		this.usergroupSearchBean.setStatus(status);
 	}
 
 	public String getOrgConditionField() {
@@ -143,7 +140,21 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	public void setOrgProfile(PmOrgProfile orgProfile) {
 		this.orgProfile = orgProfile;
 	}
-		
-		
-}
 
+	public UsergroupSearchBean getUsergroupSearchBean() {
+		return usergroupSearchBean;
+	}
+
+	public void setUsergroupSearchBean(UsergroupSearchBean usergroupSearchBean) {
+		this.usergroupSearchBean = usergroupSearchBean;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+}
