@@ -19,7 +19,7 @@ public class QuantityDoubleRangeValidator implements Validator {
         }
         
         if (min==null || min =="") {
-            return;
+            min = 0;
         }
         
         if (value == null || value == "") {
