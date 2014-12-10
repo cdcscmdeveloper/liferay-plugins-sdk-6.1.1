@@ -17,7 +17,7 @@
 			severity="error,info"></p:messages>
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back"
+				style="float:left;" icon="ui-icon-back" update="@form"
 				action="#{evaluationBackingBean.technicalBackaction}" />
 
 			<ui:include src="financialotherchecklistbuttons.xhtml"></ui:include>
@@ -85,7 +85,7 @@
 		<ui:param name="pageDisable"
 			value="#{evaluationBackingBean.managedBean.readOnly}"></ui:param>
 		<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
-        <p:spacer height="25"></p:spacer>
+		<p:spacer height="25"></p:spacer>
 		<ui:include src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
 
 

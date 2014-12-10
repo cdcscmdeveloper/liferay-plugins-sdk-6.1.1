@@ -20,8 +20,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
 
-				<h:outputText
-					value="#{finEvaluationqualifiedSupplier.evaluationResultDtls[0].evalRank}"></h:outputText>
+				<h:outputText value="#{finEvaluationqualifiedSupplier.evalRank}"></h:outputText>
 			</p:column>
 
 
@@ -29,14 +28,13 @@
 				style="width:30%">
 
 				<h:outputText
-					value="#{finEvaluationqualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+					value="#{finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-				<h:outputText
-					value="#{finEvaluationqualifiedSupplier.evaluationResultDtls[0].totalScore}"></h:outputText>
+				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
 
@@ -52,7 +50,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
-						value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
+						value="#{(!empty qualifiedList) ? qualifiedList.size() :0}"></p:inputText></td>
 			</tr>
 
 		</table>
@@ -74,14 +72,13 @@
 				style="width:30%">
 
 				<h:outputText
-					value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-				<h:outputText
-					value="#{disQualifiedSupplier.evaluationResultDtls[0].totalScore}"></h:outputText>
+				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
 
@@ -97,7 +94,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
-						value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
+						value="#{(!empty disQualifiedSupplier) ? disQualifiedList.size():0}"></p:inputText></td>
 			</tr>
 
 		</table>
