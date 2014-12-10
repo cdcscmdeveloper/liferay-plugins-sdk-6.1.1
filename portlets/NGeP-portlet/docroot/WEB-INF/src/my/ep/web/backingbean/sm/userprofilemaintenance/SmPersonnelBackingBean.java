@@ -1083,6 +1083,7 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setSmPersonnel(smPersonnel);
+		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
 
 		smPersonnel.setSmAppl(getManagedBean().getUpdateSmPersonnel()
 				.getSmAppl());
