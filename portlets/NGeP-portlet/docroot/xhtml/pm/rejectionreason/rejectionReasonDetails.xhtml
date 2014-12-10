@@ -36,7 +36,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:outputLabel value="* " styleClass="mandatory" />
 					</th>
 					<td>
-						<p:inputText id="itReasonCode" styleClass="ppDisplayTextM" required="true" maxlength="10" 
+						<p:inputText id="itReasonCode" styleClass="ppDisplayTextM" style="text-transform:uppercase"
+							required="true" maxlength="10" 
 							disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}" 
 							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pp.uppercase']}"
