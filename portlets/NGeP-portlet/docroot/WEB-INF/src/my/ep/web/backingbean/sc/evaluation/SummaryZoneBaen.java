@@ -7,6 +7,7 @@ import java.util.List;
 
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -20,14 +21,14 @@ public class SummaryZoneBaen {
 	private String zoneName;
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private List<ScRequestItem> itemList;
-	private List<ScQtEvaluationResult> qualifiedList;
-	private List<ScQtEvaluationResult> disqualifiedList;
+	private List<ScQtEvaluationResultDtl> qualifiedList;
+	private List<ScQtEvaluationResultDtl> disqualifiedList;
 	private List<ScQtProposalChecklist> finSpecSupplierList;
 	private ScQtScoreOfferPrice offerPrice;
 
 	public SummaryZoneBaen(TplSpecZoneDtl tplSpecZoneDtl,
-			List<ScQtEvaluationResult> qualifiedList,
-			List<ScQtEvaluationResult> disqualifiedList) {
+			List<ScQtEvaluationResultDtl> qualifiedList,
+			List<ScQtEvaluationResultDtl> disqualifiedList) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.disqualifiedList = disqualifiedList;
 		this.qualifiedList = qualifiedList;
@@ -39,12 +40,13 @@ public class SummaryZoneBaen {
 		this.itemList = itemList;
 
 	}
-	
+
 	public SummaryZoneBaen(TplSpecZoneDtl tplSpecZoneDtl,
-			List<ScQtProposalChecklist> finSpecSupplierList,ScQtScoreOfferPrice offerPrice,int n) {
+			List<ScQtProposalChecklist> finSpecSupplierList,
+			ScQtScoreOfferPrice offerPrice, int n) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.finSpecSupplierList = finSpecSupplierList;
-		this.offerPrice=offerPrice;
+		this.offerPrice = offerPrice;
 
 	}
 
@@ -79,36 +81,6 @@ public class SummaryZoneBaen {
 	}
 
 	/**
-	 * @return the qualifiedList
-	 */
-	public List<ScQtEvaluationResult> getQualifiedList() {
-		return qualifiedList;
-	}
-
-	/**
-	 * @param qualifiedList
-	 *            the qualifiedList to set
-	 */
-	public void setQualifiedList(List<ScQtEvaluationResult> qualifiedList) {
-		this.qualifiedList = qualifiedList;
-	}
-
-	/**
-	 * @return the disqualifiedList
-	 */
-	public List<ScQtEvaluationResult> getDisqualifiedList() {
-		return disqualifiedList;
-	}
-
-	/**
-	 * @param disqualifiedList
-	 *            the disqualifiedList to set
-	 */
-	public void setDisqualifiedList(List<ScQtEvaluationResult> disqualifiedList) {
-		this.disqualifiedList = disqualifiedList;
-	}
-
-	/**
 	 * @return the itemList
 	 */
 	public List<ScRequestItem> getItemList() {
@@ -131,7 +103,8 @@ public class SummaryZoneBaen {
 	}
 
 	/**
-	 * @param finSpecSupplierList the finSpecSupplierList to set
+	 * @param finSpecSupplierList
+	 *            the finSpecSupplierList to set
 	 */
 	public void setFinSpecSupplierList(
 			List<ScQtProposalChecklist> finSpecSupplierList) {
@@ -146,10 +119,39 @@ public class SummaryZoneBaen {
 	}
 
 	/**
-	 * @param offerPrice the offerPrice to set
+	 * @param offerPrice
+	 *            the offerPrice to set
 	 */
 	public void setOfferPrice(ScQtScoreOfferPrice offerPrice) {
 		this.offerPrice = offerPrice;
+	}
+
+	/**
+	 * @return the qualifiedList
+	 */
+	public List<ScQtEvaluationResultDtl> getQualifiedList() {
+		return qualifiedList;
+	}
+
+	/**
+	 * @param qualifiedList the qualifiedList to set
+	 */
+	public void setQualifiedList(List<ScQtEvaluationResultDtl> qualifiedList) {
+		this.qualifiedList = qualifiedList;
+	}
+
+	/**
+	 * @return the disqualifiedList
+	 */
+	public List<ScQtEvaluationResultDtl> getDisqualifiedList() {
+		return disqualifiedList;
+	}
+
+	/**
+	 * @param disqualifiedList the disqualifiedList to set
+	 */
+	public void setDisqualifiedList(List<ScQtEvaluationResultDtl> disqualifiedList) {
+		this.disqualifiedList = disqualifiedList;
 	}
 
 }
