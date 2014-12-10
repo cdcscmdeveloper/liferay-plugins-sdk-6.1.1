@@ -2042,6 +2042,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			}
 		} else if(selectedTabIndex==4){
+			chargeLineValidationBeforeApproverList();
 			validatePreparedOrgAndAgencies();
 			initializeApproverGroup();
 		}
@@ -3511,4 +3512,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			fulfilmentRequestSO = null;
 		}
 	}
+	public void chargeLineValidationBeforeApproverList(){
+		FlFulfilmentItemAddr itemAddress = null;
+		TreeNode[] selectedNodesCount=getManagedBean().getSelectedNodes();
+		if(null!=selectedNodesCount && selectedNodesCount.length>=1){
+			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+				itemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
+				itemAddress.getCoaValue();
+				if("N".equalsIgnoreCase(itemAddress.getCoaValue())){
+					throw new EpException(MessageConst.ERROR_745063);
+				}
+			}
+		}
+	}
+	
 }
