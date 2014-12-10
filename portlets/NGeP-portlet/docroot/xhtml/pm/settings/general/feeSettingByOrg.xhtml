@@ -24,7 +24,7 @@
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
-
+          <ac:paginator for="feeByOrgItemTableID" />
 		<p:column>
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
@@ -40,7 +40,7 @@
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedSmSupplier"
 				value="#{feeObj.orgProfileId.smSupplier.companyName}">
 			</ac:lov>
-
+ <p:message id="lovSupplierMsg" for="lovSupplier" display="icon" />
 
 		</p:column>
 		<p:column>
@@ -65,7 +65,7 @@
 		                		</f:facet>
 
 			<p:calendar showOn="button" id="effDate"
-		    	disabled = "#{feeObj.isG2G == 1}" style="width :128px;"
+		    	disabled = "#{feeObj.isG2G == 1}" style="width :55px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -81,7 +81,7 @@
 			                	</f:facet>
 
 			<p:calendar showOn="button" id="FeeOrgExpDateId"
-		    	disabled = "#{feeObj.isG2G == 1}" style="width :128px;"
+		    	disabled = "#{feeObj.isG2G == 1}" style="width :55px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				validatorMessage="Expire Date should be greater than Effective Date"
@@ -107,7 +107,7 @@
 
 			</f:facet>
 			<p:commandLink id="orgDeleteFee" partialSubmit="true" process="@this"
-			disabled = "#{feeObj.isG2G == 1}"
+			disabled="#{(feeObj.isG2G == 1) || (!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
 				action="#{ruleCatalogueBackingBean.deleteOrgAndItemFee(rowIndex)}"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -116,7 +116,7 @@
 		</p:column>
 	</p:dataTable>
 
-
+	<br />
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 			partialSubmit="true" process=":form:settingTabId"

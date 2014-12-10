@@ -191,7 +191,9 @@ public class RuleConfigHelper {
 		return list;
 	}
 
-	public void relodeRuleTypeValueMap() {
+	public void relodeRuleTypeValueMaps() {
+		ruleTypeMap.clear();
+		ruleTypeObjMap.clear();
 		ruleTypeValueMap.clear();
 		List<PmConfigRule> ruleTypeList = getRuleTypeList();
 		for (PmConfigRule rule : ruleTypeList) {

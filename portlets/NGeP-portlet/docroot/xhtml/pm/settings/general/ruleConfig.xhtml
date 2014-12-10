@@ -66,10 +66,11 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-			<p:inputText value="#{typeValueObj.ruleValue}" size="20"
-				partialSubmit="true" process=":form:settingTabId"
-				update=":form:settingTabId" required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkIntegerField}" validatorMessage="Value Of Amount Type should be a Digit!"
-				valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"></p:inputText>
+			<p:inputText value="#{typeValueObj.ruleValue}" size="20" id="amountValueId"
+				 required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkIntegerField}" validatorMessage="Value Of Amount Type should be a Digit!" >
+				 <p:ajax partialSubmit="true" process="@this" update="@this" />
+				 </p:inputText>
+				 	 <p:message id="amountValueMsg" for="amountValueId" display="icon" />			
 		</p:column>
 		<p:column width="25%"
 			rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'}">
@@ -78,14 +79,14 @@
 			  
 					                 #{lbl['lbl.pm.value']}
 		    </f:facet>
-           <p:selectOneMenu
+           <p:selectOneMenu id="parameterCodeValueId"
 				value="#{typeValueObj.ruleValue}"
-				update=":form:settingTabId" required="true" requiredMessage="Value is mandatory"
-							valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"
+				required="true" requiredMessage="Value is mandatory"
 							style="width:250px;">
 	            		 <f:selectItems value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.financialOrgRegType, ruleCatalogueBackingBean.parameterSearchBean)}" /> 
+			 <p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:selectOneMenu>
-						
+			 <p:message id="parameterCodeValueMsg" for="parameterCodeValueId" display="icon" />			
 				</p:column>
       <p:column width="25%"
 			rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P'}">
@@ -94,10 +95,11 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-			<p:inputText value="#{typeValueObj.ruleValue}" size="20"
-				partialSubmit="true" process=":form:settingTabId"
-				update=":form:settingTabId" required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkFloatField}" validatorMessage="Value of Percentage Type should be a Float!"
-				valueChangeListener="#{ruleCatalogueBackingBean.ruleValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].ruleValue)}"></p:inputText>
+			<p:inputText value="#{typeValueObj.ruleValue}" size="20" id="percentageValueId"
+				 required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkFloatField}" validatorMessage="Value of Percentage Type should be a Float!">
+				 <p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputText>
+				 <p:message id="percentageValueMsg" for="percentageValueId" display="icon" />		
 		</p:column>
 		
 		<p:column width="25%"
@@ -114,7 +116,7 @@
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
 				value="#{typeValueObj.categoryDisplayValue}">
 			</ac:lov>
-
+           <p:message id="lovCategoryMsg" for="lovCategory" display="icon" />	
 		</p:column>
 
 		<p:column width="15%"
@@ -123,9 +125,10 @@
 								
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			                	</f:facet>
-			<p:inputText value="#{typeValueObj.fromValue}" size="15" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
-				valueChangeListener="#{ruleCatalogueBackingBean.fromValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].fromValue)}"></p:inputText>
-		
+			<p:inputText value="#{typeValueObj.fromValue}" size="15" id="fromValueId" >
+				 <p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputText>
+		  <p:message id="fromValueMsg" for="fromValueId" display="icon" />
 		</p:column>
 
 		<p:column width="15%"
@@ -133,9 +136,10 @@
 			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
-			<p:inputText value="#{typeValueObj.toValue}" size="15" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
-				valueChangeListener="#{ruleCatalogueBackingBean.toValueUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].toValue)}"></p:inputText>
-		
+			<p:inputText value="#{typeValueObj.toValue}" size="15" id="toValueId" >
+			 <p:ajax partialSubmit="true" process="@this" update="@this" />
+			 </p:inputText>
+		<p:message id="toValueMsg" for="toValueId" display="icon" />
 		</p:column>
 
 		<p:column width="30%"
@@ -152,11 +156,10 @@
 				<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
 			</f:facet>
 
-			<p:calendar showOn="button" id="effDate"
+			<p:calendar showOn="button" id="effDate" style="width:100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				required="true" label="#{lbl['lbl.pm.as.effdate']}"
 				readonlyInput="true" partialSubmit="true" process="@this" update=":form:settingTabId:ruleTypeValueTableID"
-				valueChangeListener="#{ruleCatalogueBackingBean.effDateUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].effDate)}"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{typeValueObj.effDate}">
 				<p:ajax event="dateSelect" update="@([id$=ruleConfigExpDateId])" process="@this" />
@@ -168,15 +171,12 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="ruleConfigExpDateId"
+			<p:calendar showOn="button" id="ruleConfigExpDateId" style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true" partialSubmit="true" process=":form:settingTabId"
 				update=":form:settingTabId"
-				valueChangeListener="#{ruleCatalogueBackingBean.expDateUpdate(index,ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[index].expDate)}"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{typeValueObj.expDate}">
-				<f:attribute name="startDate" value="#{typeValueObj.effDate}" />
-                 <f:validator validatorId="primeDateRangeValidator" />
 			</p:calendar>
 		</p:column>
 
