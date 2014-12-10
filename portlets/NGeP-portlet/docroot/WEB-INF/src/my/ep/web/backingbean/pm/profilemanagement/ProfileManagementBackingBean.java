@@ -67,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -948,7 +949,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			 }
 		}
 	}
-
+	
+	
 	/**
 	 * Show receiving addresses and user roles for selected responsible org.
 	 * @param index
@@ -1636,7 +1638,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					if(orgAddress!=null){
 						PmAddressType pmAddressType = new PmAddressType();
 						pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
-						pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+						pmAddressType.setPmAddress(orgAddress);
 						if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
 							pmAddressType.getPmAddress().setPmDivision(null);
 						}
@@ -1654,7 +1656,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				PmAddressType pmAddressType = new PmAddressType();
 				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
-				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+				pmAddressType.setPmAddress(orgAddress);
 				if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
 					pmAddressType.getPmAddress().setPmDivision(null);
 				}
