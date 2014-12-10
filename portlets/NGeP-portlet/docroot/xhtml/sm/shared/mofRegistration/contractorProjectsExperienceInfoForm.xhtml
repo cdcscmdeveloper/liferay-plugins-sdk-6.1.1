@@ -43,7 +43,8 @@
 			<p:blockUI block=":form:tt:contrInfPan" widgetVar="buiPoContr"
 				id="poContrBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
-			<p:dataTable var="contrBean" widgetVar="suppContrExpDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable var="contrBean" widgetVar="suppContrExpDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
 				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
 				rowKey="#{contrBean}" rowIndexVar="index" id="contDt">
@@ -141,9 +142,8 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
-						size="35" >
-						</p:inputText>
-						<p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
+						size="35">
+					</p:inputText> <p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -151,11 +151,19 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				<td><p:inputText label="#{lbl['lbl.sm.projDtls.contrVal']}"
+						disabled="#{!backingBean.managedBean.valueReqd}"
 						id="contractorContractVal" maxlength="17"
 						required="#{backingBean.managedBean.valueReqd}"
+						validatorMessage="#{lbl['lbl.sm.projDtls.contrVal']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 						value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 						size="35">
-						<f:converter converterId="currencyMandatoryConverter" />
+						<f:validateDoubleRange for="contractorContractVal"
+							minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+							maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this" partialSubmit="true"
+							update="@this,contractorContractValMsg" />
 					</p:inputText> <p:message id="contractorContractValMsg"
 						for="contractorContractVal" showSummary="true" showDetail="false"
 						display="icon" /></td>
@@ -189,10 +197,9 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
-						cols="36" > 
+						cols="36">
 						<f:validateLength maximum="255" />
-						</p:inputTextarea>
-						<p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
+					</p:inputTextarea> <p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>

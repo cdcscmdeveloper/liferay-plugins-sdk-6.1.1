@@ -67,9 +67,13 @@
 						<td style="width: 21%;"><p:outputLabel
 								value="#{lbl['lbl.sm.equiStatus.authCap']}" /></td>
 						<td style="width: 40%;"><p:inputText id="authCapAmt"
-								size="10" label="#{lbl['lbl.sm.equiStatus.authCap']}"
+								maxlength="17" size="10"
+								label="#{lbl['lbl.sm.equiStatus.authCap']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}"
+								validatorMessage="#{lbl['lbl.sm.equiStatus.authCap']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 								required="true">
+								<f:validateDoubleRange
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax event="blur"
@@ -94,12 +98,16 @@
 
 					<tr>
 						<td style="width: 21%;"><p:outputLabel
-								value="#{lbl['lbl.sm.equiStatus.ttlShare']}" />
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
+								value="#{lbl['lbl.sm.equiStatus.ttlShare']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td style="width: 40%;"><p:inputText id="totalShrAmt"
-								size="10" label="#{lbl['lbl.sm.equiStatus.ttlShare']}"
+								maxlength="17" size="10"
+								label="#{lbl['lbl.sm.equiStatus.ttlShare']}"
+								validatorMessage="#{lbl['lbl.sm.equiStatus.ttlShare']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalShare}"
 								required="true">
+								<f:validateDoubleRange
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax event="blur"
@@ -121,7 +129,7 @@
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.equiStatus.members']}" /></td>
-						<td><p:inputText size="10"
+						<td><p:inputText size="10" maxlength="6"
 								label="#{lbl['lbl.sm.equiStatus.members']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalMember}">
 								<f:convertNumber
@@ -144,9 +152,12 @@
 									<p:column>#{lbl['lbl.sm.equiStatus.bumi']}</p:column>
 
 									<p:column>
-										<p:inputText id="bumiAmt"
+										<p:inputText id="bumiAmt" maxlength="17"
 											label="#{lbl['lbl.sm.equiStatus.bumi']} #{lbl['lbl.sm.person.shrAmt']}"
+											validatorMessage="#{lbl['lbl.sm.equiStatus.bumi']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}">
+											<f:validateDoubleRange
+												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 											<p:ajax event="blur"
@@ -167,9 +178,12 @@
 									<p:column>#{lbl['lbl.sm.equiStatus.nonBumi']} </p:column>
 
 									<p:column>
-										<p:inputText id="nomBumAmt"
+										<p:inputText id="nomBumAmt" maxlength="17"
 											label="#{lbl['lbl.sm.equiStatus.nonBumi']} #{lbl['lbl.sm.person.shrAmt']}"
+											validatorMessage="#{lbl['lbl.sm.equiStatus.nonBumi']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}">
+											<f:validateDoubleRange
+												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 											<p:ajax event="blur"
@@ -189,10 +203,13 @@
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.nonMy']}</p:column>
 									<p:column>
-										<p:inputText
+										<p:inputText maxlength="17"
 											label="#{lbl['lbl.sm.equiStatus.nonMy']} #{lbl['lbl.sm.person.shrAmt']}"
+											validatorMessage="#{lbl['lbl.sm.equiStatus.nonMy']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}"
 											id="frgAmt">
+											<f:validateDoubleRange
+												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 											<p:ajax event="blur"
@@ -216,13 +233,16 @@
 										<p:column>#{lbl['lbl.sm.equiStatus.utAgency']}</p:column>
 
 										<p:column>
-											<p:inputText
+											<p:inputText maxlength="17"
 												label="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']}"
+												validatorMessage="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
 												id="gvtUtAmt">
 												<p:ajax event="blur"
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.calculateCapital}" />
+												<f:validateDoubleRange
+													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 											</p:inputText>
@@ -240,10 +260,13 @@
 										<p:column>#{lbl['lbl.sm.equiStatus.govtEquity']}</p:column>
 
 										<p:column>
-											<p:inputText
+											<p:inputText maxlength="17"
 												label="#{lbl['lbl.sm.equiStatus.govtEquity']} #{lbl['lbl.sm.person.shrAmt']}"
+												validatorMessage="#{lbl['lbl.sm.equiStatus.govtEquity']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquity}"
 												id="gvtEquAmt">
+												<f:validateDoubleRange
+													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 												<p:ajax event="blur"
@@ -264,10 +287,13 @@
 										<p:column>#{lbl['lbl.sm.equiStatus.frgComp']}</p:column>
 
 										<p:column>
-											<p:inputText
+											<p:inputText maxlength="17"
 												label="#{lbl['lbl.sm.equiStatus.frgComp']} #{lbl['lbl.sm.person.shrAmt']}"
+												validatorMessage="#{lbl['lbl.sm.equiStatus.frgComp']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}"
 												id="lclAmt">
+												<f:validateDoubleRange
+													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 												<p:ajax event="blur"
@@ -288,10 +314,13 @@
 										<p:column>#{lbl['lbl.sm.equiStatus.lclComp']}</p:column>
 
 										<p:column>
-											<p:inputText
+											<p:inputText maxlength="17"
 												label="#{lbl['lbl.sm.equiStatus.lclComp']} #{lbl['lbl.sm.person.shrAmt']}"
+												validatorMessage="#{lbl['lbl.sm.equiStatus.lclComp']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}"
 												id="frgCmpAmt">
+												<f:validateDoubleRange
+													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 												<p:ajax event="blur"

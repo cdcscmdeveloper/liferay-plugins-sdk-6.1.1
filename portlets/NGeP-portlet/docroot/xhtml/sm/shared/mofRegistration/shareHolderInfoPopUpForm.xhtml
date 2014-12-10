@@ -77,7 +77,8 @@
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
-							<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{backingBean.trimPersonnelPassportValue}"/>
+							<p:ajax process="@this" partialSubmit="true" update="@this"
+								listener="#{backingBean.trimPersonnelPassportValue}" />
 						</p:inputText>
 						<p:message id="equiPerPasptNumMsg" for="equiPerPasptNum"
 							showSummary="true" showDetail="false" display="icon" />
@@ -146,26 +147,26 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> <p:message id="equiEmailMsg" for="equiEmail" showSummary="true"
 						showDetail="false" display="icon" /></td>
-				
-				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" />
-					<p:outputPanel id="mobileOutputPanel">
-						<p:outputLabel id="equiPerMobMandatory" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
-						value="*" styleClass="mandatory" />
-					</p:outputPanel>
-				</td>
-				<td><p:inputText size="35" maxlength="12" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+
+				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputPanel
+						id="mobileOutputPanel">
+						<p:outputLabel id="equiPerMobMandatory"
+							rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
+							value="*" styleClass="mandatory" />
+					</p:outputPanel></td>
+				<td><p:inputText size="35" maxlength="12"
+						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq 1}"
 						value="#{backingBean.managedBean.selectedShareHolder.mobileNo}"
 						validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
 						label="#{lbl['lbl.sm.mobileNo']}" id="equiPerMob">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
-						<p:outputPanel id="equiPerMobMsgOutputPanel">
+					</p:inputText> <p:outputPanel id="equiPerMobMsgOutputPanel">
 						<p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
-						showDetail="false" display="icon" />
-						</p:outputPanel></td>
+							showDetail="false" display="icon" />
+					</p:outputPanel></td>
 
 			</tr>
-			
+
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
@@ -237,7 +238,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						<p:ajax event="change" 
+						<p:ajax event="change"
 							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMob,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel])"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
@@ -266,8 +267,7 @@
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
-				<td style="padding-top: 5px;">
-						<p:inputTextarea cols="90"
+				<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"
 						id="persJust" label="#{lbl['lbl.sm.person.justification']}"
 						value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
@@ -320,7 +320,9 @@
 						validatorMessage="#{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 						value="#{backingBean.managedBean.selectedShareHolder.shareAmt}"
 						size="35">
-						<f:validateDoubleRange minimum="1" />
+						<f:validateDoubleRange for="contractorContractVal"
+							minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+							maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" update="shareAmtPanel"
@@ -728,7 +730,8 @@
 
 		<p:dataTable id="shrAqdt"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffAcademics}"
-			var="aq" widgetVar="suppPrsnAcadDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			var="aq" widgetVar="suppPrsnAcadDtWidVar"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{backingBean.managedBean.selectedShrHldrAcademics}"
 			rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="shrAqdt" />

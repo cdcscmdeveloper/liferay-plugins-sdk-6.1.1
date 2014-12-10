@@ -177,8 +177,7 @@ public class SmApplicationUtil {
 		if (resDTO != null && resDTO.getCount() != null) {
 			resultCount = resDTO.getCount().intValue();
 			if (resultCount < count) {
-				if (count == 5
-						|| ((count == 10) && (resultCount < 5)))
+				if (count == 5 || ((count == 10) && (resultCount < 5)))
 					validPerCount = 1;
 				else
 					validPerCount = 2;
@@ -2888,65 +2887,69 @@ public class SmApplicationUtil {
 			smSupplierBasicInfoVO.setAddress(bean.getSmAppl()
 					.getSmCompanyBasic().getSmCompanyAddresses().get(0));
 			if (smSupplierBasicInfoVO.getAddress().getSmAddress() != null) {
-				addressLine = smSupplierBasicInfoVO.getAddress().getSmAddress()
-						.getAddress1();
+				StringBuilder sb = new StringBuilder();
+				sb.append(smSupplierBasicInfoVO.getAddress().getSmAddress()
+						.getAddress1());
 				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
 						.getSmAddress().getAddress2())) {
-					addressLine = addressLine
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getAddress2();
+					sb.append(",")
+							.append("<br/>")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getAddress2());
 				}
 				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
 						.getSmAddress().getAddress3())) {
-					addressLine = addressLine
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getAddress3();
+					sb.append(",")
+							.append("<br/>")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getAddress3());
 				}
 				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
 						.getSmAddress().getAddress4())) {
-					addressLine = addressLine
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getAddress4();
-				}
-				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
-						.getSmAddress().getPostcode())) {
-					postCodeCityCountry = smSupplierBasicInfoVO.getAddress()
-							.getSmAddress().getPostcode();
-				}
-				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
-						.getPmCity() != null) {
-					postCodeCityCountry = postCodeCityCountry
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getPmCity().getCityName();
+					sb.append(",")
+							.append("<br/>")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getAddress4());
 				}
 				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
 						.getPmDistrict() != null) {
-					postCodeCityCountry = postCodeCityCountry
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getPmDistrict().getDistrictName();
+					sb.append(",")
+							.append("<br/>")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getPmDistrict()
+									.getDistrictName());
 				}
+				if (StringUtils.isNotBlank(smSupplierBasicInfoVO.getAddress()
+						.getSmAddress().getPostcode())
+						&& smSupplierBasicInfoVO.getAddress().getSmAddress()
+								.getPmCity() != null) {
+					sb.append(",")
+							.append("<br/>")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getPostcode())
+							.append("  ")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getPmCity().getCityName());
+
+				}
+
 				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
 						.getPmState() != null) {
-					postCodeCityCountry = postCodeCityCountry
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getPmState().getStateName();
+					sb.append(",")
+							.append("<br/>")
+							.append(smSupplierBasicInfoVO.getAddress()
+									.getSmAddress().getPmState().getStateName());
 				}
 				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
 						.getPmCountry() != null) {
-					postCodeCityCountry = postCodeCityCountry
-							+ ","
-							+ smSupplierBasicInfoVO.getAddress().getSmAddress()
-									.getPmCountry().getCountryName();
+					sb.append(",")
+					.append("<br/>")
+					.append(smSupplierBasicInfoVO.getAddress().getSmAddress()
+							.getPmCountry().getCountryName());
 				}
-				smSupplierBasicInfoVO.setAddressLine(addressLine);
-				smSupplierBasicInfoVO
-						.setPostCodeStateCityCountry(postCodeCityCountry);
+				smSupplierBasicInfoVO.setAddressLine(sb.toString());
+				// smSupplierBasicInfoVO
+				// .setPostCodeStateCityCountry(postCodeCityCountry);
 			}
 
 		}

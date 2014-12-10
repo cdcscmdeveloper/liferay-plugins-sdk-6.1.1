@@ -46,9 +46,8 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td style="padding-bottom: 2px;"><p:selectOneRadio
 							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
@@ -59,10 +58,8 @@
 								itemValue="R" />
 							<p:ajax update="ofp" event="change" process="@this"
 								listener="#{backingBean.officeFacilitySelected}" />
-						</p:selectOneRadio>
-						<p:message for="ownTypeId" showDetail="false"
-							showSummary="true" display="icon" />
-					</td>
+						</p:selectOneRadio> <p:message for="ownTypeId" showDetail="false" showSummary="true"
+							display="icon" /></td>
 					<td>&#160;</td>
 					<td>&#160;</td>
 
@@ -73,28 +70,30 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						
-						<p:outputPanel rendered="#{!backingBean.managedBean.disabledHomeOffice}">
-							<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio 
+
+						<p:outputPanel
+							rendered="#{!backingBean.managedBean.disabledHomeOffice}">
+							<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
 									id="rentedFacTypeId"
 									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
 									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-									<f:selectItem 
+									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
 										itemValue="H" />
-									
+
 									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
 										itemValue="B" />
-		
+
 								</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
 									showSummary="true" showDetail="false" display="icon" /></td>
-						 </p:outputPanel>
-						 <p:outputPanel rendered="#{backingBean.managedBean.disabledHomeOffice}">
-						 	<td colspan="3">
-								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.disabledHomeOffice}">
+							<td colspan="3"><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
 							</td>
-						 </p:outputPanel>
+						</p:outputPanel>
 
 					</tr>
 					<tr>
@@ -110,120 +109,125 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.monthRent']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="rental" 
+						<td><p:inputText id="rental"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
 								size="35" required="true" maxlength="17"
+								validatorMessage="#{lbl['lbl.sm.facility.monthRent']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								label="#{lbl['lbl.sm.facility.monthRent']}">
-								<f:converter converterId="currencyMandatoryConverter" />
-								<p:ajax process="@this" partialSubmit="true" update="@this,rentalMsg" />
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,rentalMsg" />
 							</p:inputText> <p:message id="rentalMsg" for="rental" showSummary="true"
 								showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" style="padding-top :5px;" /> 
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
+								style="padding-top :5px;" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
 						<td><p:inputText id="companyAdd1" size="35" maxlength="35"
-											required="true" label="#{lbl['lbl.sm.companyaddress']}"
-											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
-										<p:message id="companyAdd1Msg" for="companyAdd1"
-											showSummary="true" showDetail="false" display="icon" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu
-											style="width: 207px;margin-bottom: 5px;" id="companyCntry"
-											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}"
-											required="true" label="#{lbl['lbl.sm.country']}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="basicCountry"
-												value="#{backingBean.managedBean.countryLs}"
-												itemValue="#{basicCountry.countryId}"
-												itemLabel="#{basicCountry.countryName}" />
-											<p:ajax event="change"
-												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId, 
+								required="true" label="#{lbl['lbl.sm.companyaddress']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
+							<p:message id="companyAdd1Msg" for="companyAdd1"
+								showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="companyCntry"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}"
+								required="true" label="#{lbl['lbl.sm.country']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="basicCountry"
+									value="#{backingBean.managedBean.countryLs}"
+									itemValue="#{basicCountry.countryId}"
+									itemLabel="#{basicCountry.countryName}" />
+								<p:ajax event="change"
+									listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmState,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-												update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
-										</p:selectOneMenu> <p:message id="cmpnyCntryNameMsg" for="companyCntry"
-											showSummary="true" showDetail="false" display="icon" /></td>
+									update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
+							</p:selectOneMenu> <p:message id="cmpnyCntryNameMsg" for="companyCntry"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="35" value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu
-											style="width: 207px;margin-bottom: 5px;"
-											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
-											id="basicOffFacState" required="true"
-											label="#{lbl['lbl.sm.state']}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="offState"
-												value="#{backingBean.managedBean.basicOffFacStates}"
-												itemValue="#{offState.stateId}"
-												itemLabel="#{offState.stateName}" />
-											<p:ajax event="change"
-												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId, 
+						<td><p:inputText size="35" maxlength="35"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
+								id="basicOffFacState" required="true"
+								label="#{lbl['lbl.sm.state']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offState"
+									value="#{backingBean.managedBean.basicOffFacStates}"
+									itemValue="#{offState.stateId}"
+									itemLabel="#{offState.stateName}" />
+								<p:ajax event="change"
+									listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-												update="basicOffFacDist,basicOffFacCity" />
+									update="basicOffFacDist,basicOffFacCity" />
 
-										</p:selectOneMenu> <p:message id="basicOffFacStateMsg" for="basicOffFacState"
-											showSummary="true" showDetail="false" display="icon" /></td>
+							</p:selectOneMenu> <p:message id="basicOffFacStateMsg" for="basicOffFacState"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="35" value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu
-											style="width: 207px;margin-bottom: 5px;" id="basicOffFacDist"
-											required="true" label="#{lbl['lbl.sm.district']}"
-											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="offDist"
-												value="#{backingBean.managedBean.basicOffFacDistricts}"
-												itemValue="#{offDist.districtId}"
-												itemLabel="#{offDist.districtName}" />
-											<p:ajax event="change"
-												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId, 
+						<td><p:inputText size="35" maxlength="35"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacDist" required="true"
+								label="#{lbl['lbl.sm.district']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offDist"
+									value="#{backingBean.managedBean.basicOffFacDistricts}"
+									itemValue="#{offDist.districtId}"
+									itemLabel="#{offDist.districtName}" />
+								<p:ajax event="change"
+									listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-												update="basicOffFacCity" />
-										</p:selectOneMenu> <p:message id="basicOffFacDistMsg" for="basicOffFacDist"
-											showSummary="true" showDetail="false" display="icon" /></td>
+									update="basicOffFacCity" />
+							</p:selectOneMenu> <p:message id="basicOffFacDistMsg" for="basicOffFacDist"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" maxlength="35" value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu
-											style="width: 207px;margin-bottom: 5px;" id="basicOffFacCity"
-											required="true" label="#{lbl['lbl.sm.towncity']}"
-											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
-											<f:selectItems var="offCity"
-												value="#{backingBean.managedBean.basicOffFacCities}"
-												itemValue="#{offCity.cityId}"
-												itemLabel="#{offCity.cityName}" />
-										</p:selectOneMenu> <p:message id="basicOffFacCityMsg" for="basicOffFacCity"
-											showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:inputText size="35" maxlength="35"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								id="basicOffFacCity" required="true"
+								label="#{lbl['lbl.sm.towncity']}"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="offCity"
+									value="#{backingBean.managedBean.basicOffFacCities}"
+									itemValue="#{offCity.cityId}" itemLabel="#{offCity.cityName}" />
+							</p:selectOneMenu> <p:message id="basicOffFacCityMsg" for="basicOffFacCity"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText size="35" maxlength="5" required="true"
 								label="#{lbl['lbl.sm.postcode']}" id="companyPostCode"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
-								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">	 
-							<f:validator validatorId="postcodeValidator"/>
-							</p:inputText>
-							<p:message id="companyPostCodeMsg" for="companyPostCode"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText> <p:message id="companyPostCodeMsg" for="companyPostCode"
 								showSummary="true" showDetail="false" display="icon" /></td>
 						<td colspan="2"></td>
 					</tr>
@@ -235,28 +239,30 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						
-						<p:outputPanel rendered="#{!backingBean.managedBean.disabledHomeOffice}">
-							<td style="padding-bottom: 4px;"><p:selectOneRadio 
+
+						<p:outputPanel
+							rendered="#{!backingBean.managedBean.disabledHomeOffice}">
+							<td style="padding-bottom: 4px;"><p:selectOneRadio
 									id="rentedFacTypeId"
 									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
 									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-									<f:selectItem 
+									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
 										itemValue="H" />
-									
+
 									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
 										itemValue="B" />
-		
+
 								</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
 									showSummary="true" showDetail="false" display="icon" /></td>
-						 </p:outputPanel>
-						 <p:outputPanel rendered="#{backingBean.managedBean.disabledHomeOffice}">
-						 	<td>
-								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.disabledHomeOffice}">
+							<td><p:outputLabel styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.facility.facilityType.business.office']}"></p:outputLabel>
 							</td>
-						 </p:outputPanel>
+						</p:outputPanel>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>
@@ -277,18 +283,17 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td style="padding-bottom: 3px;"><p:calendar
-								showOn="button" id="purchaseDate" navigator="true"
-								readonlyInput="true" display="inline"
-								maxdate="#{CommonConstants.CURRENT_DATE}"
+						<td style="padding-bottom: 3px;"><p:calendar showOn="button"
+								id="purchaseDate" navigator="true" readonlyInput="true"
+								display="inline" maxdate="#{CommonConstants.CURRENT_DATE}"
 								label="#{lbl['lbl.sm.facility.purchaseDate']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								required="true" yearRange="-99:+0">
 							</p:calendar> <p:message id="purchaseDateMsg" for="purchaseDate"
 								showSummary="true" showDetail="false" display="icon" /></td>
-						 <td>&#160;</td>
-						 <td>&#160;</td>
+						<td>&#160;</td>
+						<td>&#160;</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel
@@ -296,10 +301,16 @@
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText size="35" id="purchasePrice" maxlength="17"
 								label="#{lbl['lbl.sm.facility.purchasePrice']}"
+								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"
 								required="true">
-								<f:converter converterId="currencyMandatoryConverter" />
-								<p:ajax process="@this" partialSubmit="true" update="@this,purchasePriceMsg" />
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,purchasePriceMsg" />
 							</p:inputText> <p:message id="purchasePriceMsg" for="purchasePrice"
 								showSummary="true" showDetail="false" display="icon" /></td>
 						<td>&#160;</td>
@@ -311,7 +322,8 @@
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td colspan="3"><p:inputTextarea autoResize="true" cols="41" maxlength="200"
+						<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 					</tr>
 
@@ -324,7 +336,8 @@
 								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
 
 					</tr>

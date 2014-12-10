@@ -257,12 +257,20 @@
 				<td><p:outputPanel id="storPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
-							<p:inputText id="smFacStorePrice" label="#{lbl['lbl.cm.price']}"
+							<p:inputText id="smFacStorePrice"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.cm.price']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedStoreFacility.purchasePrice}"
 								size="20"
 								required="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smFacStorePriceMsg" />
 							</p:inputText>
 							<p:message id="smFacStorePriceMsg" for="smFacStorePrice"
 								showSummary="true" showDetail="false" display="icon" />
@@ -270,12 +278,19 @@
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
 							<p:inputText id="smFacStoreRent"
-								label="#{lbl['lbl.sm.facility.rent.rm']}"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedStoreFacility.rentalRate}"
 								size="20"
 								required="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smFacStoreRentMsg" />
 							</p:inputText>
 							<p:message id="smFacStoreRentMsg" for="smFacStoreRent"
 								showSummary="true" showDetail="false" display="icon" />

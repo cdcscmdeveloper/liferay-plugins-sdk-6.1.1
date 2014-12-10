@@ -261,12 +261,19 @@
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
 							<p:inputText id="smFacFactoryPrice"
-								label="#{lbl['lbl.cm.price']}"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.cm.price']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
 								size="20"
 								required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smFacFactoryPriceMsg" />
 							</p:inputText>
 							<p:message id="smFacFactoryPriceMsg" for="smFacFactoryPrice"
 								showSummary="true" showDetail="false" display="icon" />
@@ -274,12 +281,19 @@
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 							<p:inputText id="smFacFactoryRent"
-								label="#{lbl['lbl.sm.facility.rent.rm']}"
+								disabled="#{!backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
+								validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
 								size="20"
 								required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+								<f:validateDoubleRange
+									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this" partialSubmit="true"
+									update="@this,smFacFactoryRentMsg" />
 							</p:inputText>
 							<p:message id="smFacFactoryRentMsg" for="smFacFactoryRent"
 								showSummary="true" showDetail="false" display="icon" />

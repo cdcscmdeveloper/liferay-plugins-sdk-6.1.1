@@ -43,14 +43,16 @@
 			<p:blockUI block=":form:tt:consInfPan" widgetVar="buiPoCons"
 				id="poConsBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
-			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
 				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
 				rowKey="#{consBean}" rowIndexVar="index" id="consDt">
 				<ac:paginator for="consDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
-				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}" style="word-break:break-all;">
+				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}"
+					style="word-break:break-all;">
 					<p:outputLabel value="#{consBean.title}"
 						style="float: left;white-space: normal;" />
 				</p:column>
@@ -102,7 +104,8 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.experienceRemark}" /></td>
 					</tr>
 				</table>
@@ -115,7 +118,8 @@
 								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.experienceRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200"
 								value="#{backingBean.managedBean.apprvrSecReview.experienceRemark}" /></td>
 
 					</tr>
@@ -167,10 +171,18 @@
 									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText label="#{lbl['lbl.sm.projDtls.projCost']}"
 									id="consultantProjCost" maxlength="17"
+									disabled="#{!backingBean.managedBean.valueReqd}"
 									required="#{backingBean.managedBean.valueReqd}"
+									validatorMessage="#{lbl['lbl.sm.projDtls.projCost']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35">
-									<f:converter converterId="currencyMandatoryConverter" />
+									<f:validateDoubleRange
+										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<p:ajax process="@this" partialSubmit="true"
+										update="@this,consultantProjCostMsg" />
 								</p:inputText> <p:message id="consultantProjCostMsg" for="consultantProjCost"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
@@ -203,9 +215,9 @@
 									value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
 							<td><p:inputTextarea maxlength="500"
 									value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
-									cols="36" style="margin-bottom:5px;" >
+									cols="36" style="margin-bottom:5px;">
 									<f:validateLength maximum="500" />
-									</p:inputTextarea></td>
+								</p:inputTextarea></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -229,10 +241,18 @@
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
 							<td><p:inputText id="consultantProjConsultFee"
+									disabled="#{!backingBean.managedBean.valueReqd}"
 									label=" #{lbl['lbl.sm.projDtls.consultFee']}" maxlength="17"
+									validatorMessage="#{lbl['lbl.sm.projDtls.consultFee']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
 									size="35">
-									<f:converter converterId="currencyMandatoryConverter" />
+									<f:validateDoubleRange
+										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<p:ajax process="@this" partialSubmit="true"
+										update="@this,consultantProjConsultFeeMsg" />
 								</p:inputText> <p:message id="consultantProjConsultFeeMsg"
 									for="consultantProjConsultFee" showSummary="true"
 									showDetail="false" display="icon" /></td>
