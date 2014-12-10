@@ -22,8 +22,9 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><h:outputText value="* " styleClass="mandatory"  /><h:outputLabel
-						value="#{lbl['lbl.sc.sp.current.liability']}"  /></td>
+				<td><ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
 				<td><p:inputText style="text-align:right" required="true"
 						disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"

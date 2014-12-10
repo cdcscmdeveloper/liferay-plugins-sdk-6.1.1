@@ -23,7 +23,9 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.amount']}" />
 				</f:facet>
 				<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}"
