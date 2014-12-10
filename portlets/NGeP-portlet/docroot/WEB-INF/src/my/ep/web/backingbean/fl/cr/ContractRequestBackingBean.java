@@ -1217,6 +1217,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void selectAddrEvent() {
 		populateItemsForSelectedAddress();
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.reset("form:itemDetPanelGroup");
 	}
 	
 	public void calculateSubTotal(BigDecimal quantity) {
