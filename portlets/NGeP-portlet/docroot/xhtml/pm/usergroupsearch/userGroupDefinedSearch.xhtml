@@ -15,10 +15,10 @@
 			<p:inputText value="#{usergroupBackingBean.managedBean.userName}" size="30" />
 			
 			<h:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.groupCode}" size="30" />
+			<p:inputText value="#{usergroupBackingBean.managedBean.groupCode}" size="30" style="text-transform: uppercase" maxlength="10"/>
 			
 			<h:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.groupName}" size="30" />
+			<p:inputText value="#{usergroupBackingBean.managedBean.groupName}" size="30" maxlength="50"/>
 
 			<h:outputLabel value="#{lbl['lbl.pm.ug.search.ptjcode']}"></h:outputLabel>
 			<p:inputText value="#{usergroupBackingBean.managedBean.ptjCode}" size="30" />
