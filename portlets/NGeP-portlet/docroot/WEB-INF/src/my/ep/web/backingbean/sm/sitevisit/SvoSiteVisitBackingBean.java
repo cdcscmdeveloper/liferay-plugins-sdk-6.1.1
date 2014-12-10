@@ -125,7 +125,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(smSvTask.getSmSvFinChecklists().size() < 1){
 				log.info("******getSmSvFinChecklists() == null******");
 				List<PmParameterDesc> pmParamDesc = new ArrayList<PmParameterDesc>();
-				this.getManagedBean().setRemarkMap(new HashMap<Long,SmRemark>());
 				pmParamDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SVO_FIN_CHECKLIST, new FacesScopes().getUserLocale().getLanguage());
 				for(PmParameterDesc pmdesc : pmParamDesc){
 					SmSvFinChecklist svCL = new SmSvFinChecklist();
@@ -135,26 +134,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					pmdesc.getPmParameter().setPmParameterDescs(new ArrayList<PmParameterDesc>());
 					pmdesc.getPmParameter().getPmParameterDescs().add(pmdesc);
 
-					SmRemark remarkObj = new SmRemark();
-					remarkObj.setDocType(SupplierManagementConst.SVO_FIN_CHECKLIST);
-					this.getManagedBean().getRemarkMap().put(pmdesc.getPmParameter().getParameterId(), remarkObj);
-
 					svCL.setSmSvTask(smSvTask);
 					smSvTask.getSmSvFinChecklists().add(svCL);
-				}
-			}else{
-				log.info("****FIN LIST MORE THAN 1******" + smSvTask.getSmSvFinChecklists().size());
-				this.getManagedBean().setRemarkMap(new HashMap<Long,SmRemark>());
-				for(SmSvFinChecklist finCheckList : smSvTask.getSmSvFinChecklists()){
-					SmRemark remark = retrieveSmRemark(SupplierManagementConst.SVO_FIN_CHECKLIST,finCheckList.getSvFinChecklistId());
-
-					if(remark == null){
-						log.info("***Remark is null");
-						remark = new SmRemark();
-						remark.setDocType(SupplierManagementConst.SVO_FIN_CHECKLIST);
-					}
-
-					this.getManagedBean().getRemarkMap().put(finCheckList.getPmParameter().getParameterId(),remark); 
 				}
 			}
 
@@ -229,8 +210,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 		
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
+		log.info("rpt - Selected Address>>>>>" + svTemplate.getSelectedAddresses().length);
+		svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
 		
 		if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
+			log.info("selected Address is not null>>>>>");
 			for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
 				SmSvTemplateAddress svTempAdd = new SmSvTemplateAddress();
 				svTempAdd.setSmSvTemplate(svTemplate);
@@ -672,9 +656,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 		
-		reqDTO.setUserRole(RoleCode.UPS_SVO.value());
 		reqDTO.setSmSvTask(this.getManagedBean().getSmSvTask());
-		reqDTO.setSmRemarkMap(this.getManagedBean().getRemarkMap());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
