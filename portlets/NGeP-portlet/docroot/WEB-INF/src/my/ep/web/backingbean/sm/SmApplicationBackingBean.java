@@ -3497,7 +3497,7 @@ public class SmApplicationBackingBean extends
 				.getSmAuthorizedPersonnelCountVO(
 						getManagedBean().getSmSupplier().getSupplierId(),
 						getManagedBean().getSmAppl().getApplType(),
-						getManagedBean().getSmAppl().getApplId(),true)
+						getManagedBean().getSmAppl().getApplId(), true)
 				.isJustificationRequired());
 
 		getManagedBean().setSelectedShareHolder(shr);
@@ -4873,18 +4873,19 @@ public class SmApplicationBackingBean extends
 			reqDTO.setUserList(new ArrayList<String>());
 		}
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
+
+		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
+				"lbl.sm.cancelpending.reject.uppercase", null) : SmCommonUtil
+				.getMessage("lbl.sm.cancelpending.approve.uppercase", null);
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils
-								.getMessage(
-										MessageConst.INFO_700055,
-										new String[] {
-												getManagedBean().getSmAppl()
-														.getApplNo(),
-												res.toUpperCase() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700055,
+								new String[] {
+										getManagedBean().getSmAppl()
+												.getApplNo(), res },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 		renewSesionObject();
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
@@ -6123,21 +6124,24 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmStaffTotals(),
 				getManagedBean().getSmAppl().getSupplierType());
 		getManagedBean().setPersonCalc(calcVO);
-		
-		//not sure for what.disabled temporary
-//		int countCheck = SmApplicationUtil.validatePersonLimit(getManagedBean()
-//				.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean()
-//				.getSmAppl().getApplType(), getManagedBean().getSmAppl()
-//				.getApplId());
-//
-//		getManagedBean().setPersonnelCountCheck(countCheck);
+
+		// not sure for what.disabled temporary
+		// int countCheck =
+		// SmApplicationUtil.validatePersonLimit(getManagedBean()
+		// .getSmAppl().getSmSupplier().getSupplierId(), getManagedBean()
+		// .getSmAppl().getApplType(), getManagedBean().getSmAppl()
+		// .getApplId());
+		//
+		// getManagedBean().setPersonnelCountCheck(countCheck);
 
 		// set already reach valid max authorized personnel and justification
-		SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil.getSmAuthorizedPersonnelCountVO(
-						getManagedBean().getSmSupplier().getSupplierId(),
-						getManagedBean().getSmAppl().getApplType(),
-						getManagedBean().getSmAppl().getApplId(),false);
-		getManagedBean().setValidSmUserLimit(countVO.isReachAuthorizedPersonnelLimit());
+		SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil
+				.getSmAuthorizedPersonnelCountVO(getManagedBean()
+						.getSmSupplier().getSupplierId(), getManagedBean()
+						.getSmAppl().getApplType(), getManagedBean()
+						.getSmAppl().getApplId(), false);
+		getManagedBean().setValidSmUserLimit(
+				countVO.isReachAuthorizedPersonnelLimit());
 
 		log.info("*** END calcPersonnelListCount**** ");
 	}
