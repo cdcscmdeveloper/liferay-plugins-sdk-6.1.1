@@ -29,7 +29,7 @@
 			<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 				style="width :5%">
 				<p:commandLink
-					action="#{organisationBackingBean.editOrganization(organisation)}"
+					action="#{organisationBackingBean.redirectToOrganisation(organisation.orgProfileId)}"
 					update="@form">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						title="Edit Organisation"
@@ -42,6 +42,6 @@
 
 		<p:commandButton id="addLocation"
 			value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"
-			action="#{organisationBackingBean.addOrganisation()}" />
+			action="#{organisationBackingBean.redirectToOrganisation(null)}" />
 	</div>
 </ui:composition>

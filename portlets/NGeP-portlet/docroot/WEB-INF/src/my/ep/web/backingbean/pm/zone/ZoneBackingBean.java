@@ -304,7 +304,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zoneState.setPmState(newState);
 			zoneState.setPmZone(getManagedBean().getPmZone());
 			this.getManagedBean().getZoneStateList().add(zoneState);
-
 		}
 		for (PmZoneState zstate : selectedStateList) {
 			if (getManagedBean().getZoneStateList().size() > 0) {
@@ -329,47 +328,30 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				if (zone.getPmZoneStates() != null
 						&& !zone.getPmZoneStates().isEmpty()) {
 					for (PmZoneState state : zone.getPmZoneStates()) {
-						for (PmState pmState : stList) {
+						stList.remove(state.getPmState());
+						/*for (PmState pmState : stList) {
 							if (state.getPmState().getStateId() == pmState
 									.getStateId()) {
 								pmState.setExistingState(true);
 							}
 
-						}
+						}*/
 					}
 				}
 			}
-
-		this.getManagedBean().setStates(stList);
-	}
-
-	private void retrieveStateList() {
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateResDTO resDTO = stateSO.retrieveStateList();
-
-		List<PmState> stList = resDTO.getStateList();
-		if (getManagedBean().getSelectedZones() != null
-				&& !getManagedBean().getSelectedZones().isEmpty())
-			for (PmZone zone : getManagedBean().getPmZonesList()) {
-				if (zone.getPmZoneStates() != null
-						&& !zone.getPmZoneStates().isEmpty()) {
-					for (PmZoneState state : zone.getPmZoneStates()) {
-						for (PmState pmState : stList) {
-							if (state.getPmState().getStateId() == pmState
-									.getStateId()) {
-								pmState.setExistingState(true);
-							} else {
-								pmState.setExistingState(false);
-							}
-						}
-					}
+		List<PmZoneState> selectStates = getManagedBean().getZoneStateList();
+		for(PmZoneState zoneState : selectStates){
+			stList.remove(zoneState.getPmState());
+			/*for(PmState pmState : stList){
+				if(zoneState.getPmState().getStateId().equals(pmState.getStateId())){
+					pmState.setExistingState(true);
 				}
-			}
-
+			}*/
+		}
 		this.getManagedBean().setStates(stList);
 	}
+
+	
 
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getStatusOptions();
