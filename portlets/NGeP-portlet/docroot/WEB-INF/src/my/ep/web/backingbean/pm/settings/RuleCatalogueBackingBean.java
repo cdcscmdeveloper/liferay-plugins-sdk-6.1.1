@@ -1071,10 +1071,6 @@ public class RuleCatalogueBackingBean extends
 				continue;
 			}
 			// log.info(".................after continue..in..first loop");
-			 log.info(".........................baseExemption.getFeeExemptionType()="
-			 + baseExemption.getFeeExemptionType());
-			 log.info("...........ex.getUnspscId().getUnspscCode()="+baseExemption
-					 .getUnspscId().getUnspscCode());
 			for (int j = i + 1; j <= (feeExemptionList.size() - 1); j++) {
 				 log.info("...................second loop");
 				PmFeeExemption ex = feeExemptionList.get(j);
@@ -1084,9 +1080,6 @@ public class RuleCatalogueBackingBean extends
 				}
 				 log.info(".................after continiue..in..second loop");
 				//
-log.info("...........ex.getFeeExemptionType()="+ex.getFeeExemptionType());
-log.info("...........ex.getUnspscId().getUnspscCode()="+ex
-		.getUnspscId().getUnspscCode());
 
 				if ((ex.getFeeExemptionType().equals("1") && ex
 						.getOrgProfileId().getOrgProfileId() == baseExemption

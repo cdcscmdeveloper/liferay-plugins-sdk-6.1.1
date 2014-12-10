@@ -80,7 +80,7 @@ public class EducationBackingBean extends
 		this.getManagedBean().setFieldCodes(new String());
 		this.getManagedBean().setFieldNames(new String());
 		this.getManagedBean().setStatus(1L);
-		educationFieldDataModel.reloadData();
+		educationFieldDataModel = new EducationFieldPagingDataModel();
 		
 		
 	}
