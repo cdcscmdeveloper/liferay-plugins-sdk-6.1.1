@@ -144,6 +144,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -190,6 +191,45 @@ public class SmApplicationUtil {
 
 		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
+	}
+	
+	public static SmAuthorizedPersonnelCountVO getSmAuthorizedPersonnelCountVO(Long supplierId, String applType,
+			Long applId,boolean isAddNewPersonnel){
+		int resultCount =0;
+				
+		SmAuthorizedPersonnelCountVO countVO = new SmAuthorizedPersonnelCountVO();
+		countVO.setReachAuthorizedPersonnelLimit(false);
+		countVO.setJustificationRequired(false);
+		
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		reqDTO.setApplId(applId);
+		reqDTO.setMof(true);
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCount(reqDTO);
+		
+		int authPersLimit = 0;
+		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			authPersLimit = 5;
+		}else{
+			authPersLimit = 10;
+		}
+		
+		if (resDTO != null && resDTO.getCount() != null) {
+			resultCount = resDTO.getCount().intValue();
+			if(resultCount>=authPersLimit){
+				countVO.setReachAuthorizedPersonnelLimit(true);
+			}
+			
+			if(isAddNewPersonnel){
+				resultCount = resultCount+1;
+			}
+			if(resultCount>5){
+				countVO.setJustificationRequired(true);
+			}
+		}
+		return countVO;
 	}
 
 	public static boolean valiateNewCategoryAdded(

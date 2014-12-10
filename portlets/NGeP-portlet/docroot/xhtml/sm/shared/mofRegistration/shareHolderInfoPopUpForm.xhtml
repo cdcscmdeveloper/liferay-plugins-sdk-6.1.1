@@ -228,7 +228,7 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel"
-		rendered="#{backingBean.managedBean.validSmUserLimit or backingBean.managedBean.userWithRole}">
+		rendered="#{!backingBean.managedBean.validSmUserLimit or backingBean.managedBean.userWithRole}">
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
@@ -271,7 +271,7 @@
 						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"
 						id="persJust" label="#{lbl['lbl.sm.person.justification']}"
 						value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
-						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
+						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser or backingBean.managedBean.selectedShareHolder.recordStatus}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
 			</tr>
 			<tr>
