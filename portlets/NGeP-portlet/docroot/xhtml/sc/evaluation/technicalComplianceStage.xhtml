@@ -22,6 +22,7 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveTechnicalCompliance}" />
 		</div>
@@ -62,6 +63,7 @@
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 						<p:commandLink ajax="false"
+							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 							actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
 							process="@this" partialSubmit="true">
 							<p:graphicImage library="ep/images/design"
@@ -81,7 +83,7 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
 					<p:selectOneMenu
-						disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' }"
+						disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 						value="#{complianceTechnicalSupplier.compliance}">
 
 						<f:selectItems
@@ -95,6 +97,7 @@
 					<ui:fragment
 						rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 						<p:inputTextarea rows="2" cols="40" maxlength="200"
+							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 							id="complianceRemarksid"
 							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
 						<p:message id="complianceRemarksidEvaluation"
