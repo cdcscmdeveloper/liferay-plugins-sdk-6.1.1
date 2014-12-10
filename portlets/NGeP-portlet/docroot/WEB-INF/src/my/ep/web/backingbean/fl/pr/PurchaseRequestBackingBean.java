@@ -752,6 +752,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void selectAddrEvent() {
 		populateItemsForSelectedAddress();
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.reset("form:itemDetPanelGroup");
 	}
 
 	private void populateItemsForSelectedAddress() {
