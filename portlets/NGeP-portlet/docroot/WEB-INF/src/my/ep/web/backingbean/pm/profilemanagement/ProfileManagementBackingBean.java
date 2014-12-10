@@ -591,7 +591,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		pmOrgProfile.setOrgTypeCode(new PmParameter());
 		pmOrgProfile.setPmOrgValidity(new PmOrgValidity());
-	
+		pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
 		pmUserOrg.setPmOrgProfile(pmOrgProfile);
 		pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
 		this.getManagedBean().getSelectedUser().addPmUserOrg(pmUserOrg);
