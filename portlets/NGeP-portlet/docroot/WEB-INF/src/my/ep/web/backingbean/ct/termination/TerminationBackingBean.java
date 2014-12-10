@@ -446,10 +446,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
 				context.put("supplierAddress",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
 				context.put("contractTitle",getManagedBean().getCtContract().getContractName());
-				if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
+				if(getManagedBean().getContractVer().getContractPhysicalNo()==null) {
 					context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
 				} else {
-					context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractPhysicalNo());
+					context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
 				}
 				context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 				context.put("reasonDescMap",reasonDescMap );

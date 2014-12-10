@@ -1110,7 +1110,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("contractTitle", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
 			context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegistrationNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-			context.put("physicalContactNo", getManagedBean().getCtContract().getContractPhysicalNo());
+			context.put("physicalContactNo", getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo());
 			context.put("contractStartDate",df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
 			context.put("contractEndDate",df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));
 			context.put("contractPeriod", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractPeriod()+ "");

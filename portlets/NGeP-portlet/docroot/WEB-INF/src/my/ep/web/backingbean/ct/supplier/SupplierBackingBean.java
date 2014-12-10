@@ -978,10 +978,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					}
 								
 					context.put("jabatanMinistry", jabatanMinistry);
-					if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
+					if(getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo()==null) {
 						context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
 					} else {
-						context.put("contractPhycicalNo",getManagedBean().getCtContract().getContractPhysicalNo());
+						context.put("contractPhycicalNo",getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo());
 					}
 					context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 				}
