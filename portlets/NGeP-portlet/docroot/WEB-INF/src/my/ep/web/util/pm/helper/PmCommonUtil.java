@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -30,6 +31,8 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -58,9 +61,11 @@ import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmRoleRestr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -93,20 +98,52 @@ public class PmCommonUtil {
 	
 	
 	
-//	
-//	public static RainPmRoleRestriction retrieveRestrictedRoles(String roleCode) {	
-//		RainPmRoleRestriction pmRoleRestriction = null;
-//		RoleReqDTO roleReqDTO = new RoleReqDTO();
-//		roleReqDTO.setRoleCode(roleCode);
-//		IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
-//				ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
-//		RoleResDTO resDto = roleSO.retrieveRoleRestrictionByRoleCode(roleReqDTO);
-//		if(resDto.isSuccessful()){
-//			pmRoleRestriction = resDto.getPmRoleRestriction();
-//		}
-//		return pmRoleRestriction;
-//	}
-//	
+	public static boolean checkSingleRole(String roleCode) {
+		log.info("checkSingleRole");
+		boolean isExist = false;
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setRoleCode(roleCode);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			if(resDTO.isSuccessful()){
+				isExist = (resDTO.getUserList()!=null && !resDTO.getUserList().isEmpty()) ? true : false;
+			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770136, new String[]{e.getMessage()});
+		}finally{
+			userSO = null;
+		}		
+		return isExist;
+	}
+	
+	public static boolean checkRoleRestriction(String roleCode, List<PmUserRole> userRoles) {
+		log.info("checkRoleRestriction");
+		List <String> checkRoles = new ArrayList<String>();
+		IRoleSO roleSO = null;
+		boolean restrictedRole = false;
+		try{
+			for(PmUserRole pmUserRole:userRoles){
+				checkRoles.add(pmUserRole.getPmRole().getRoleCode());
+			}
+			
+			RoleReqDTO roleReqDTO = new RoleReqDTO();
+			roleReqDTO.setRoleCode(roleCode);
+			roleReqDTO.setRestrictedRoles(checkRoles);
+			roleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+			RoleResDTO resDto = roleSO.checkRoleRestriction(roleReqDTO);
+			restrictedRole = resDto.isRestrictedRole();
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770137, new String[]{e.getMessage()});
+		}finally{
+			roleSO = null;
+		}
+		return restrictedRole;
+	}
+	
 	
 	/**
 	 * get record status options 

@@ -41,6 +41,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmUserOrg selectedUserOrg;
 	private List<PmUserRole> deleteUserRoles;
 	private List<PmRoleDesc> selectedRoles;
+	private PmRoleDesc selectedRole;
 	private int selectedTabIndex;
 	private List<PmAddressType> selectedReceivingAddrTypes; //Address Type - R
 	private List<PmAddressType> selectedDeliveringAddrTypes; //Address Type - D
@@ -299,6 +300,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setNotifications(List<PmUserNotification> notifications) {
 		this.notifications = notifications;
+	}
+	/**
+	 * @return the selectedRole
+	 */
+	public PmRoleDesc getSelectedRole() {
+		return selectedRole;
+	}
+	/**
+	 * @param selectedRole the selectedRole to set
+	 */
+	public void setSelectedRole(PmRoleDesc selectedRole) {
+		this.selectedRole = selectedRole;
 	}
 
 
