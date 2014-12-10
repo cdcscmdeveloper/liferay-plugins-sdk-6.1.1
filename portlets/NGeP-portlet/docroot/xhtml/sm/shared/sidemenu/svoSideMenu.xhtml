@@ -7,8 +7,8 @@
 
 	<p:tabMenu  styleClass="sidemenu" style="display : table-caption;" activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex">
 		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,'')}" />
-		<p:menuitem value="#{lbl['lbl.sm.svo.financial.info']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
-		<p:menuitem value="#{lbl['lbl.sm.sitevist.svo.category.applicable']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,'')}" />
 		
 		<c:forEach items="#{svoSiteVisitBackingBean.managedBean.indexPageMap}" var="entry">
