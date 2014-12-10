@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.ModuleCodeConst;
@@ -18,6 +19,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -250,8 +252,32 @@ public class UnitOfMeasurementBackingBean extends
 		
 		if(StringUtils.isBlank(uom.getUomName())){
 			throw new EpException("UOM Name is Mandatory");
-		}		
+		}
+		
+		uniqueUOMCode(uom.getUomCode());
 	}	
+	private void uniqueUOMCode(String uomCode){
+
+		ISearchBean<PmUom> searchBean =  new SearchBean<PmUom>();
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"uomCode",
+						SearchOperator.OPERATOR_LIKE.value(),
+						uomCode, true));
+		
+		
+		UomReqDTO reqDTO = new UomReqDTO();
+		reqDTO.setMeasurementSearchBean(searchBean);
+		
+		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+		UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
+		if (resDTO.isSuccessful()) {
+			if(resDTO.getMeasurementSearchResultBean()!=null && resDTO.getMeasurementSearchResultBean().getResultList()!=null 
+					&& !resDTO.getMeasurementSearchResultBean().getResultList().isEmpty()){
+				throw new EpException("UOM Code is existing.");
+			}
+		}
+	}
 	
 	/**
 	 * save and update unit of measurement details
