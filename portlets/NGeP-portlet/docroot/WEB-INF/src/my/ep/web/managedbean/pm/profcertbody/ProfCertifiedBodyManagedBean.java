@@ -8,7 +8,6 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.web.managedbean.BaseManagedBean;
 
-
 /**
  * @author DK
  * 
@@ -22,65 +21,14 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Search Bean 	
-	 */ 	
-	private String bodyCode;
-	
-	private String bodyName;
-	
-	private Long status;
-	
-	private Integer certType;
+	private ProfCertifiedBodySearchBean profCertifiedBodySearchBean;
 
 	/**
 	 * Search Bean List
 	 */
-    private List<PmCertBody> certBodyList; 
-    
-    private PmCertBody certBody;
+	private List<PmCertBody> certBodyList;
 
-	/**
-	 * @return the bodyCode
-	 */
-	public String getBodyCode() {
-		return bodyCode;
-	}
-
-	/**
-	 * @param bodyCode the bodyCode to set
-	 */
-	public void setBodyCode(String bodyCode) {
-		this.bodyCode = bodyCode;
-	}
-
-	/**
-	 * @return the bodyName
-	 */
-	public String getBodyName() {
-		return bodyName;
-	}
-
-	/**
-	 * @param bodyName the bodyName to set
-	 */
-	public void setBodyName(String bodyName) {
-		this.bodyName = bodyName;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public Long getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status the status to set
-	 */
-	public void setStatus(Long status) {
-		this.status = status;
-	}
+	private PmCertBody certBody;
 
 	/**
 	 * @return the certBodyList
@@ -90,7 +38,8 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param certBodyList the certBodyList to set
+	 * @param certBodyList
+	 *            the certBodyList to set
 	 */
 	public void setCertBodyList(List<PmCertBody> certBodyList) {
 		this.certBodyList = certBodyList;
@@ -104,24 +53,23 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param certBody the certBody to set
+	 * @param certBody
+	 *            the certBody to set
 	 */
 	public void setCertBody(PmCertBody certBody) {
 		this.certBody = certBody;
 	}
 
-	/**
-	 * @return the certType
-	 */
-	public Integer getCertType() {
-		return certType;
+	public ProfCertifiedBodySearchBean getProfCertifiedBodySearchBean() {
+		if(profCertifiedBodySearchBean== null){
+			profCertifiedBodySearchBean= new ProfCertifiedBodySearchBean();
+		}
+		return profCertifiedBodySearchBean;
 	}
-	/**
-	 * @param certType the certType to set
-	 */
-	public void setCertType(Integer certType) {
-		this.certType = certType;
-	}	
-	
-	
+
+	public void setProfCertifiedBodySearchBean(
+			ProfCertifiedBodySearchBean profCertifiedBodySearchBean) {
+		this.profCertifiedBodySearchBean = profCertifiedBodySearchBean;
+	}
+
 }
