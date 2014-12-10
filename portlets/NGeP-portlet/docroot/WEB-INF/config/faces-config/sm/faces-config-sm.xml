@@ -22,7 +22,7 @@
 			<redirect />
 		</navigation-case>
 		<navigation-case>
-			<from-outcome>cancelPendingAcknowledge</from-outcome>
+			<from-outcome>cancelPendingAcknowledgePage</from-outcome>
 			<to-view-id>/xhtml/sm/deletePendingMofAppln/cancelPendingAcknowledgePage.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
