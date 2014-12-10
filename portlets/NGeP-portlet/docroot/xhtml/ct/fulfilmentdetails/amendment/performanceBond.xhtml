@@ -7,59 +7,50 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" toggleable="true"  toggleSpeed="500"
-	    rendered="#{contractDetailsBackingBean.managedBean.ctContract.bondReq}"  >
+	    rendered="#{amendmentBackingBean.managedBean.ctContract.bondReq 
+			and amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"  >
         <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	  	</f:facet>
-        <p:dataTable  id="tableBond" var="data" 
+        <p:dataTable  id="tableBond" var="varBond" 
            value="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds}"> 
 	      <ac:paginator for="tableBond" />
          
             <p:column headerText="#{lbl['lbl.ct.ref.no']}"   style="width:10%;">
-                <p:inputText value="#{data.refNo}" style="width:70px;" disabled="true"/>
+                <p:inputText value="#{varBond.refNo}" style="width:70px;" disabled="true"/>
             </p:column>	
          
             <p:column headerText="#{lbl['lbl.ct.financial.inst']}"  style="width:25%;">
-                <p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" style="width:180px;" disabled="true">
+                <p:selectOneMenu id="orgName" value="#{varBond.financialOrg.financialOrgId}" style="width:180px;" disabled="true">
                      <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/>
                 </p:selectOneMenu>
             </p:column>	
          
             <p:column headerText="#{lbl['lbl.ct.amount']}" style="width:10%;" >
-                  <p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" style="width:70px;"  disabled="true" >
+                  <p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" style="width:70px;"  disabled="true" >
                       <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
              </p:column>	
          
             <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;" > 
-                 <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button" size="10" disabled="true" 
+                 <p:calendar value="#{varBond.effDate}" id="popupButtonCal4" showOn="button" size="10" disabled="true" 
                     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
             </p:column>	
            
             <p:column headerText="#{lbl['lbl.ct.expiry.date']}"  style="width:10%;"> 
-                <p:calendar value="#{data.expDate}" id="popupButtonCal5" showOn="button" disabled="true"  
+                <p:calendar value="#{varBond.expDate}" id="popupButtonCal5" showOn="button" disabled="true"  
                    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"/> 
             </p:column>	
            
             <p:column styleClass="column-align-center" headerText="#{lbl['lbl.txt.attachment']}"  style="width:25%;">
                <h:panelGroup id="uploadBondPg">
 					<h:commandLink styleClass="blue_font"
-						value="#{data.fileName}"
-						rendered="#{data.filePath != null}" style="float:left;"
-						action="#{amendmentBackingBean.downloadFile(data.filePath, data.fileName)}" />
+						value="#{varBond.fileName}"
+						rendered="#{varBond.filePath != null}" style="float:left;"
+						action="#{amendmentBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup> 
 			</p:column>
-            
-             <p:column style="width:10%;">
-             	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.status']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.status']}"/>
-               		<p:selectOneMenu id="rStatus" value="#{data.recordStatusFlg}" style="width:100%;" disabled="true" >
-                  		<f:selectItems value="#{amendmentBackingBean.getStatusDropdown()}"/>
-               		</p:selectOneMenu>
-               	</f:facet>
-             </p:column>
 	    
 	    </p:dataTable>
   </p:panel>
