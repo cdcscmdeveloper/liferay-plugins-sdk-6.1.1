@@ -21,7 +21,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="9%"><h:outputText value="* " styleClass="mandatory"
-						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide" />
 					<h:outputText value="#{lbl['lbl.sc.sp.ttlemployees']}" /></td>
 				<td width="91%"><h:panelGroup id="totalNoOfEmployeesInvolved">
 						<p:inputText id="totalEmployees" style="text-align:right"

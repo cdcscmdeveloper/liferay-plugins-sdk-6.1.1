@@ -26,10 +26,12 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{supplierProposalDetailBackingBean.selectedCashOnHand(rowIndex)}" />
 				</p:selectBooleanCheckbox>
-			</p:column >
+			</p:column>
 			<p:column style="white-space : normal; width : 21%; ">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.bank.name']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.bankName}"
@@ -45,7 +47,9 @@
 			</p:column>
 			<p:column style="width : 21%; ">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.ac.no']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.accountNum}"
@@ -62,7 +66,9 @@
 
 			<p:column style="width : 23%; ">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.ac.type']}" />
 				</f:facet>
 				<p:outputLabel style="float : left"
@@ -84,14 +90,16 @@
 
 			<p:column style="white-space : normal; width : 23%; ">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.address']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.bankAddress}"
 					rendered="#{cashonhand.brandNew eq false}" />
 				<p:inputTextarea id="bankAddress" value="#{cashonhand.bankAddress}"
-					cols="35" rows="2" required="true" maxlength="100" style="width : 85%;"
-					label="#{lbl['lbl.sc.sp.address']}"
+					cols="35" rows="2" required="true" maxlength="100"
+					style="width : 85%;" label="#{lbl['lbl.sc.sp.address']}"
 					rendered="#{cashonhand.brandNew eq true}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankAddressMsg" />
@@ -99,9 +107,11 @@
 				<p:message id="bankAddressMsg" for="bankAddress" display="icon" />
 			</p:column>
 
-			<p:column style="text-align:right ; width : 10%;"> 
+			<p:column style="text-align:right ; width : 10%;">
 				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
 					<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.amount']}" />
 				</f:facet>
 				<h:outputText value="#{cashonhand.cashAmount}"
@@ -125,13 +135,15 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}" process="@all" partialSubmit="true"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				process="@all" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
 				update="@([id$=cashOnHandPanel])" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}" icon="ui-icon-delete" partialSubmit="true"
-				process="@this" update="@([id$=cashOnHandPanel])"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
+				icon="ui-icon-delete" partialSubmit="true" process="@this"
+				update="@([id$=cashOnHandPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
 
 		</div>
