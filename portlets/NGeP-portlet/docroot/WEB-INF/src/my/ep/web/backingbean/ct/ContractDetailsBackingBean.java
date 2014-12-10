@@ -930,7 +930,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 		 
 			if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) 
-					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
 
 				if(getManagedBean().getCtContract().isFrequencySchedule()){
 					getManagedBean().getContractVer().setCtProgressivePayments(null);
@@ -2809,21 +2809,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
         return new Date();
     }
     
-    public boolean getRendringValue(int temp){
-    	
-    	if(temp == 1 && getManagedBean().getCtContract().isAgreement() &&
-    			getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() != ContractStatusConst.AC_COMPLETE &&
-    					getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() != ContractStatusConst.SA_COMPLETE) {
-    		            return true;
-    	}
-    	
-    	if(temp == 2 && getManagedBean().getCtContract().isAgreement() &&
-    			getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() == ContractStatusConst.AC_COMPLETE &&
-    					getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() == ContractStatusConst.SA_COMPLETE) {
-    		            return true;
-    	} return false;
-    }
-    
     public boolean isAddAgencyButtonFlg() {
     	if(getManagedBean().isViewContract()) {
     		return false;
@@ -2857,10 +2842,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public boolean getConditionalValue(){
     	if(getManagedBean().isViewContract()) {
     		return true;
-    	} else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-    			&& getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 500000 && !getManagedBean().getCtContract().isAgreement()) {
-    		return true;
-    	} else if (!getManagedBean().getCtContract().isAgreement() && getManagedBean().getCtContract().getContractPhysicalNo() == null) {
+    	} else if (!getManagedBean().getCtContract().isAgreement() && getManagedBean().getContractVer().getContractPhysicalNo() == null) {
     		if (getManagedBean().getContractVer().getCtContractValue().isConcession())
     			return false;
     		else
