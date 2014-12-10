@@ -597,7 +597,7 @@
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
-		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info,warn" />
+		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="false" closable="true" severity="error,info,warn" />
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.search.criteria']}" escape="false"/>
 			<table>
@@ -623,11 +623,13 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" widgetVar="addItemsSearch"
-					action="#{contractRequestBackingBean.searchContractItemList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					icon="ui-icon-search" update="resultPanel" />
+					action="#{contractRequestBackingBean.searchContractItemList}" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					process="searchPanel"
+					icon="ui-icon-search" update="resultPanel,messages2" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{contractRequestBackingBean.searchReset}" icon="ui-icon-reset"
-					process="@this" update="searchPanel,resultPanel"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+					process="@this" update="searchPanel,resultPanel,messages2"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
 		
@@ -658,7 +660,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton  value="#{lbl['lbl.btn.add']}"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();" update="itemDataTable"
+				oncomplete="addItems.hide();" update="itemDataTable,messages2"
 				process="@this,itemListResultDt">
 			</p:commandButton>
 		</div>
