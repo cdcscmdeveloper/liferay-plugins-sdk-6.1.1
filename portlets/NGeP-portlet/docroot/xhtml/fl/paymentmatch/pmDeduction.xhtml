@@ -19,12 +19,12 @@
 					<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 					<f:selectItems var="ctDeduction"
 						value="#{paymentMatchBackingBean.getDropdownValuesByCtDetails()}"/>
-						 <p:ajax event="change" process="@this" update=":form:deductionDataTable:deductionList,:form:deductionDataTable"
+						 <p:ajax event="change" process="@this" update="deductionList,descId,danaPnl,gosodoPnl,deductionAmtPnl"
 						 listener="#{paymentMatchBackingBean.checkDeductionList(deduction)}"/>
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
-				<p:inputText value="#{deduction.deductionDesc}" disabled="#{deduction.deductionType.parameterId == null}"/>
+				<p:inputText id="descId" value="#{deduction.deductionDesc}" disabled="#{deduction.deductionType.parameterId == null}"/>
 			</p:column>
 			<p:column>
 			<f:facet name="header" style="width:8%;">
@@ -41,27 +41,31 @@
 					<h:outputText value="#{lbl['lbl.fl.payment.match.amanah']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
 				</f:facet>
-					<ac:lov id="dana" update=":form:deductionDataTable:dana" disabled="#{deduction.deductionType.parameterId == null}"
+				<p:outputPanel id="danaPnl">
+					<ac:lov id="dana" update=":form:deductionDataTable"
+						disabled="#{deduction.deductionType.parameterId == null}"
 						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
-						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index+1}].pmVotFund"
-						readonly="true"
-						size="4"
+						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
+						readonly="true" size="4"
 						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{paymentMatchBackingBean.managedBean.feeVotFund.votFundCode}^2"
-						value="#{deduction.pmVotFund.votFundCode}"	>
-					</ac:lov>				
+						value="#{deduction.pmVotFund.votFundCode}">
+					</ac:lov>
+				</p:outputPanel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gosodo']}">
 			<f:facet name="header" style="width:8%;">
 					<h:outputText value="#{lbl['lbl.fl.gosodo']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/>
 				</f:facet>
-					<ac:lov id="gosodo" update=":form:deductionDataTable:gosodo" disabled="#{deduction.deductionType.parameterId == null}"
+				<p:outputPanel id="gosodoPnl">
+					<ac:lov id="gosodo" update=":form:deductionDataTable"
+						disabled="#{deduction.deductionType.parameterId == null}"
 						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
-						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index+1}].pmGlAccount"
-						readonly="true"
-						size="10"
-						value="#{deduction.pmGlAccount.glAccCode}"	>
-					</ac:lov>			
+						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
+						readonly="true" size="10"
+						value="#{deduction.pmGlAccount.glAccCode}">
+					</ac:lov>
+				</p:outputPanel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right">
 				<p:outputPanel id="deductionAmtPnl">

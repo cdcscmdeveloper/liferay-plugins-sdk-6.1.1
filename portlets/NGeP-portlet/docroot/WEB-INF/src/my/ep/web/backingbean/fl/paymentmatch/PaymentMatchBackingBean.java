@@ -174,7 +174,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			  
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
 			reqDTO.setPaymentAdvice(paymentAdvice);
-			
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
@@ -328,32 +327,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	private FlPaymentAdvice initializePaymentAdvice(FulfilmentResDTO resDTO) {
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-		IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
-		
 		FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 		paymentAdvice.setFlInvoice(resDTO.getInvoice());
 		paymentAdvice.setFeeAmt(resDTO.getInvoice().getFeeAmt());
 		paymentAdvice.setFlRequest(resDTO.getInvoice().getFlRequest());
 		paymentAdvice.setFulfilmentOrder(resDTO.getInvoice().getFlFulfilmentOrder());
-
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
-		parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
-		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		
-		FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
-		paymentDeduction.setFlPaymentAdvice(paymentAdvice);
-		paymentDeduction.setDeductionType(parameterResDTO.getPmParameter());
-		paymentDeduction.setDeductionAmt(paymentAdvice.getFeeAmt());
-		paymentDeduction.setDeductionDesc(" ");
-		
-		ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(null);
-		paymentDeduction.setPmVotFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
-		paymentDeduction.setPmGlAccount(configGeneralResDTO.getPmConfigGeneral().getPmGlAccount());
-		
-		paymentAdvice.setFlPaymentDeduction(new ArrayList<FlPaymentDeduction>());
-		paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
 		
 		setAdjustmentDocNo(resDTO.getInvoice());
 		setStopInstrNo(resDTO.getInvoice().getFlFulfilmentOrder());
@@ -893,13 +871,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			deduction.setDeductionType(resDTO.getPmParameter());
-		}else{
+		}
 			deduction.setDeductionDesc(null);
 			deduction.setPmGlAccount(null);
 			deduction.setPmVotFund(null);
-			deduction.setDeductionAmt(new BigDecimal(0));
-		}
-		
 
 		if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
@@ -1043,8 +1018,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			validateDuplicateDeduction();
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
-				validateDuplicateDeduction();
 				calPmSummary();
 			}
 			
