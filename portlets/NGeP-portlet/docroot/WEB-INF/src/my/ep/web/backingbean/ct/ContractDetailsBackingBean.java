@@ -913,6 +913,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_750021);
+				
 					} else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
@@ -1063,7 +1064,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
 				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
 				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement" });
+			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement for AP201" });
 		}
 		
 		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
@@ -1375,32 +1376,158 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 		return items;
 	}
+	
+	public String changeIntToString(int temp){
+		String months = "";
 		
-	public List<SelectItem> getMonthList(){
-		
-		if(getManagedBean().getMonthList() == null) {
-		     List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
-		    try {
-		    	    selectItems.add(new SelectItem(null, "--Select One--"));
-					selectItems.add(new SelectItem(0, "January"));
-					selectItems.add(new SelectItem(1, "February"));
-					selectItems.add(new SelectItem(2, "March"));
-					selectItems.add(new SelectItem(3, "April"));
-					selectItems.add(new SelectItem(4, "May"));
-					selectItems.add(new SelectItem(5, "June"));
-					selectItems.add(new SelectItem(6, "July"));
-					selectItems.add(new SelectItem(7, "August"));
-					selectItems.add(new SelectItem(8, "September"));
-					selectItems.add(new SelectItem(9, "October"));
-					selectItems.add(new SelectItem(10, "November"));
-					selectItems.add(new SelectItem(11, "December"));
-			   getManagedBean().setMonthList(selectItems);
-		   } finally {
-			   selectItems = null;
-		   }
+		if (temp ==1) {
+			months = "01";
+		} else if (temp ==2) {
+			months = "02";
+		} else if (temp ==3) {
+			months = "03";
+		} else if (temp ==4) {
+			months = "04";
+		} else if (temp ==5) {
+			months = "05";
+		} else if (temp ==6) {
+			months = "06";
+		} else if (temp ==7) {
+			months = "07";
+		} else if (temp ==8) {
+			months = "08";
+		} else if (temp ==9) {
+			months = "09";
+		} else if (temp ==10) {
+			months = "10";
+		} else if (temp ==11) {
+			months = "11";
+		} else if (temp ==12) {
+			months = "12";
 		}
-		 return getManagedBean().getMonthList();
+		
+		return months;
+		
+	}
+	
+	public List<SelectItem> getMonthList(){
+		return new ArrayList<SelectItem>();
+	}
+	
+	public List<SelectItem> retrieveStartMonthList(CtSchedule schedule){
+		 
+	     List<SelectItem> selectItems = null;
+	     Map<String, String> months = null;
+	     SimpleDateFormat dateFormat = null;
+        try {
+	
+					months = new HashMap<>();
+					months.put("01", "January");
+					months.put("02", "February");
+					months.put("03", "March");
+					months.put("04", "April");
+					months.put("05", "May");
+					months.put("06", "June");
+					months.put("07", "July");
+					months.put("08", "August");
+					months.put("09", "September");
+					months.put("10", "October");
+					months.put("11", "November");
+					months.put("12", "December");  
+					
+					int schedStartYear =0;
+					dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+					String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					int startMonth = Integer.valueOf(fromdate.substring(3, 5));
+					int startYear = Integer.valueOf(fromdate.substring(6, 10));
+				
+					if(schedule.getStartYear() != null) {
+					    schedStartYear = Integer.valueOf(schedule.getStartYear());
+				 	}
+		
+					 String enddate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+					 int endMonth = Integer.valueOf(enddate.substring(3, 5));
+					 int endYear = Integer.valueOf(enddate.substring(6, 10));
+		 
+					 selectItems = new ArrayList<SelectItem>();
+					 selectItems.add(new SelectItem(null, "-Select One-"));
+					 
+					 if(schedStartYear == startYear && schedStartYear != endYear) { 
+					      for(int i=startMonth; i <= 12; i++) 
+					    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+			
+				    } else if(schedStartYear == startYear  && schedStartYear == endYear) { 
+					      for(int i=startMonth; i <= endMonth; i++) 
+					    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+			
+				    }else if(schedStartYear != startYear  && schedStartYear == endYear) { 
+					      for(int i=1; i <= endMonth; i++) 
+					    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+			
+				    } else if(schedStartYear > startYear && schedStartYear < endYear) {
+				             for(int i=1; i <= 12; i++) 
+				                selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+					 } 
+             } finally { }
+	 return selectItems;
+}
+	
+	public List<SelectItem> retrieveEndMonthList(CtSchedule schedule){
+		 
+		     List<SelectItem> selectItems = null;
+		     Map<String, String> months = null;
+		     SimpleDateFormat dateFormat = null;
+	         try {
+		
+						months = new HashMap<>();
+						months.put("01", "January");
+						months.put("02", "February");
+						months.put("03", "March");
+						months.put("04", "April");
+						months.put("05", "May");
+						months.put("06", "June");
+						months.put("07", "July");
+						months.put("08", "August");
+						months.put("09", "September");
+						months.put("10", "October");
+						months.put("11", "November");
+						months.put("12", "December");  
+						
+					    int schedEndYear =0;
+						dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+						int startMonth = Integer.valueOf(fromdate.substring(3, 5));
+						int startYear = Integer.valueOf(fromdate.substring(6, 10));
+					
+						if(schedule.getStartYear() != null) {
+							    schedEndYear = Integer.valueOf(schedule.getEndYear());
+						}
+			
+						 String enddate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+						 int endMonth = Integer.valueOf(enddate.substring(3, 5));
+						 int endYear = Integer.valueOf(enddate.substring(6, 10));
+			 
+						 selectItems = new ArrayList<SelectItem>();
+						 selectItems.add(new SelectItem(null, "-Select One-"));
+						 
+						  if(schedEndYear == endYear && schedEndYear == startYear) { 
+						      for(int i=startMonth; i <= endMonth; i++) 
+						    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+				
+					    } else if(schedEndYear == endYear && schedEndYear != startYear) { 
+						      for(int i=1; i <= endMonth; i++) 
+						    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+				
+					    }  else if(schedEndYear != endYear && schedEndYear == startYear) { 
+						      for(int i=startMonth; i <= 12; i++) 
+						    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+				
+					    } else if( schedEndYear >  startYear && schedEndYear < endYear) {
+					             for(int i=1; i <= 12; i++) 
+					                selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+						 } 
+                  } finally { }
+		 return selectItems;
 	 }
 
 	public List<String> getYearList() {
@@ -1408,9 +1535,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if(getManagedBean().getYearList() == null) {
 			getManagedBean().setYearList(new ArrayList<String>());
 		    SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		    int startDate = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
-		    int endDate = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
-		    for(int i = startDate; i <= endDate; i++) {
+		    int startYear = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+		    int endYear = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+		    for(int i = startYear; i <= endYear; i++) {
 		    	getManagedBean().getYearList().add(String.valueOf(i));
 		    }
 		}
@@ -1844,43 +1971,27 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	return new String();
 	 }
 		 
-     public void validateDate(CtSchedule ctSchedule){
-    	
+     public void validateDate(CtSchedule ctSchedule,  int index){
+    	 
+    	 getManagedBean().getContractVer().getCtSchedules().remove(index);
+    	 getManagedBean().getContractVer().getCtSchedules().add(index, ctSchedule);
+    	 
     	 getManagedBean().setProgSchedButtonDeactive(false);
-    	 if(ctSchedule.getEndMonth() == null || ctSchedule.getStartMonth() == null) {
-    		  for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-    			   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
- 			          dataList.setValidateScheduleDate(false);
- 			   }
-    	
-    	 } else {    	 
+    	 if(ctSchedule.getEndMonth() != null && ctSchedule.getStartMonth() != null) {
+    		  
 	    	           int startYear = Integer.valueOf((String) ctSchedule.getStartYear());  
 			            int endYear = Integer.valueOf((String) ctSchedule.getEndYear());
 			            int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());  
 			            int endMonth = Integer.valueOf((String) ctSchedule.getEndMonth());
-			            
-			            SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		                int startContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(3, 5));
-					    int endContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(3, 5));
-					    int startContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
-					    int endContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
-					    
-					    if((startMonth > endMonth && startYear >= endYear)|| (startMonth <= endMonth && startYear > endYear) 
-					    	 ||(startMonth < startContractMonth -1 && startYear == startContractYear) || (startMonth > endContractMonth-1 && startYear == endContractYear)
-					    	 || (endMonth > endContractMonth-1 && endYear == endContractYear) || (endMonth < startContractMonth -1 && endYear == startContractYear)) {
+			      
+					    if((startMonth > endMonth && startYear >= endYear)|| (startMonth <= endMonth && startYear > endYear)) {
 			                   for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {			            
 			                	   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())) {
-			    	             	      dataList.setValidateScheduleDate(true);
-			                	          getManagedBean().setProgSchedButtonDeactive(true);
-			                	          throw new EpException(MessageConst.ERROR_750023);
+			    	             	     getManagedBean().setProgSchedButtonDeactive(true);
+			                	         throw new EpException(MessageConst.ERROR_750023);
 			                	   }
 			                }
-					    } else {
-			                  for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-				                   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
-				                       dataList.setValidateScheduleDate(false);
-				              }
-			            }
+					    } 
     	        }
 	  }
 		 
@@ -2355,101 +2466,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public void ScheduleDate(){
-		String startMonth = "";
-		String endMonth = "";
+	
 		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
 			   
 			   if(ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
-			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-                String fromdate = dateFormat.format(ctSchedules.getFromDate());
-			    String todate = dateFormat.format(ctSchedules.getToDate());
-			    String startdate = fromdate.substring(3, 5);
-			    String startYear = fromdate.substring(6,fromdate.length());
-			    String enddate = todate.substring(3, 5);
-			    String endYear = todate.substring(6, todate.length());
-                if (startdate.equalsIgnoreCase("01")) {
-				     startMonth = "0";
-			    }
-			  if (startdate.equalsIgnoreCase("02")) {
-				   startMonth = "1";
-			  }
-				if (startdate.equalsIgnoreCase("03")) {
-					startMonth = "2";
-				}
-				if (startdate.equalsIgnoreCase("04")) {
-					startMonth = "3";
-				}
-				if (startdate.equalsIgnoreCase("05")) {
-					startMonth = "4";
-				}
-				if (startdate.equalsIgnoreCase("06")) {
-					startMonth = "5";
-				}
-	
-				if (startdate.equalsIgnoreCase("07")) {
-					startMonth = "6";
-				}
-				if (startdate.equalsIgnoreCase("08")) {
-					startMonth = "7";
-				}
-				if (startdate.equalsIgnoreCase("09")) {
-					startMonth = "8";
-				}
-				if (startdate.equalsIgnoreCase("10")) {
-					startMonth = "9";
-				}
-				if (startdate.equalsIgnoreCase("11")) {
-					startMonth = "10";
-				}
-				if (startdate.equalsIgnoreCase("12")) {
-					startMonth = "11";
-				}
-	
-				if (enddate.equalsIgnoreCase("01")) {
-					endMonth = "0";
-				}
-				if (enddate.equalsIgnoreCase("02")) {
-					endMonth = "1";
-				}
-				if (enddate.equalsIgnoreCase("03")) {
-					endMonth = "2";
-				}
-				if (enddate.equalsIgnoreCase("04")) {
-					endMonth = "3";
-				}
-				if (enddate.equalsIgnoreCase("05")) {
-					endMonth = "4";
-				}
-				if (enddate.equalsIgnoreCase("06")) {
-					endMonth = "5";
-				}
-	
-				if (enddate.equalsIgnoreCase("07")) {
-					endMonth = "6";
-				}
-				if (enddate.equalsIgnoreCase("08")) {
-					endMonth = "7";
-				}
-				if (enddate.equalsIgnoreCase("09")) {
-					endMonth = "8";
-				}
-				if (enddate.equalsIgnoreCase("10")) {
-					endMonth = "9";
-				}
-				if (enddate.equalsIgnoreCase("11")) {
-					endMonth = "10";
-				}
-				if (enddate.equalsIgnoreCase("12")) {
-					endMonth = "11";
-				}
-
-			ctSchedules.setStartMonth(startMonth);
-			ctSchedules.setEndMonth(endMonth);
-			ctSchedules.setStartYear(startYear);
-			ctSchedules.setEndYear(endYear);
-	    	}
-		}
-	}
+			            SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+             
+					    String fromdate = dateFormat.format(ctSchedules.getFromDate());
+						ctSchedules.setStartMonth(fromdate.substring(3, 5));
+						ctSchedules.setStartYear(fromdate.substring(6,fromdate.length()));
+					   
+					    String todate = dateFormat.format(ctSchedules.getToDate());
+					    ctSchedules.setEndMonth(todate.substring(3, 5));
+					    ctSchedules.setEndYear(todate.substring(6, todate.length()));
+		  	    }
+		  }
+	 }
 	
 	public void ProgressiveDate(){
 		String startMonth = "";
@@ -2551,90 +2583,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 public void scheduleProgressiveDate(){
 	    	
 	    	if(getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-				
-				  if(getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
-					    String Startmonth = "";
-					    String endmonth = "";
-					for(CtSchedule schedule : this.getManagedBean().getContractVer().getCtSchedules()) {
-					   if(schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-							Startmonth = "01";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-							Startmonth = "02";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-							Startmonth = "03";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-							Startmonth = "04";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-							Startmonth = "05";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-							Startmonth = "06";
-						}
-
-						else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-							Startmonth = "07";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-							Startmonth = "08";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-							Startmonth = "09";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-							Startmonth = "10";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-							Startmonth = "11";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-							Startmonth = "12";
-						}
-					 
-						if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-							endmonth = "01";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-							endmonth = "02";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-							endmonth = "03";
-						}
-
-						else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-							endmonth = "04";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-							endmonth = "05";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-							endmonth = "06";
-						}
-
-						else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-							endmonth = "07";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-							endmonth = "08";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-							endmonth = "09";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-							endmonth = "10";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-							endmonth = "11";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-							endmonth = "12";
-						 }
-					   
-						Date d1 = new Date();
-
-						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-						String localDate = format.format(d1);
-						String date = localDate.substring(0, 2);
-						String fromdate = date + "/" + Startmonth + "/"+ schedule.getStartYear();
-						String toDate = date + "/" + endmonth + "/"+ schedule.getEndYear();
-
-						try {
-							schedule.setFromDate(format.parse(fromdate));
-							schedule.setToDate(format.parse(toDate));
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}getManagedBean().getContractVer().setCtProgressivePayments(null);
+	    		
+	    		   if(getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
+					   for(CtSchedule schedule : this.getManagedBean().getContractVer().getCtSchedules()) {
+					        if(schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
+			                      Date d1 = new Date();
+                                  SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						          String localDate = format.format(d1);
+						          String date = localDate.substring(0, 2);
+						          String fromdate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
+						          String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+                                  try {
+							              schedule.setFromDate(format.parse(fromdate));
+							              schedule.setToDate(format.parse(toDate));
+						          } catch (ParseException e) {
+							            e.printStackTrace();
+						          }
+					         }
+				       } getManagedBean().getContractVer().setCtProgressivePayments(null);
 				  }
-				}
-		
-	    	} else {
+	    	  } else {
 				           if (getManagedBean().getContractVer().getCtProgressivePayments() != null && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
 					String Startmonth = "";
 					String endmonth = "";
@@ -2701,10 +2669,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 						String localDate = format.format(d1);
 						String date = localDate.substring(0, 2);
-						String fromdate = date + "/" + Startmonth + "/"
-								+ schedule.getStartYear();
-						String toDate = date + "/" + endmonth + "/"
-								+ schedule.getEndYear();
+						String fromdate = date + "/" + Startmonth + "/"+ schedule.getStartYear();
+						String toDate = date + "/" + endmonth + "/"+ schedule.getEndYear();
 						try {
 							schedule.setFromDate(format.parse(fromdate));
 							schedule.setToDate(format.parse(toDate));

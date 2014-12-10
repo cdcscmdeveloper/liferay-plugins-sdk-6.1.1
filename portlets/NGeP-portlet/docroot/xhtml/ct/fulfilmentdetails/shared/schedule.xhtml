@@ -24,7 +24,8 @@
          <p:outputPanel id="paymentSchedule">   
              <h:panelGroup  style="width:100%;" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}">    
 	                <p:dataTable id="payScheduleTableId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
-	                     var="payScheduleObj" rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{payScheduleObj}" >
+	                     var="payScheduleObj" widgetVar="scheduleObj"
+	                      rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{payScheduleObj}" >
 	                
 	                   <ac:paginator for="payScheduleTableId" />
 	                   <p:column selectionMode="multiple" style="width:1%;" disabledSelection="#{payScheduleObj.useInFulfilment}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
@@ -37,36 +38,32 @@
 		      
 		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
 		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" disabled="#{payScheduleObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
-                               <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
-                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn"  process="@form" 
-                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                               <f:selectItems value="#{contractDetailsBackingBean.retrieveStartMonthList(payScheduleObj)}"/>  
+                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn, :form:messages"  process="@form" 
+                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{contractDetailsBackingBean.validateDate(payScheduleObj, index)}"/> 
                            </p:selectOneMenu> 
                            <p:spacer width="1"/>
                            <p:selectOneMenu id="fromYear" value="#{payScheduleObj.startYear}" disabled="#{payScheduleObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
                                <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" process="@form" 
-                                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                               <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn,:form:messages" process="@form" 
+                                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{contractDetailsBackingBean.validateDate(payScheduleObj, index)}"/> 
                            </p:selectOneMenu> 
 		               </p:column> 	
 		       
 		                <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
 		                    <h:panelGroup>
 		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}" disabled="#{payScheduleObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
-                                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                                   <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn" process="@form" 
-                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}" />
+                                   <f:selectItems value="#{contractDetailsBackingBean.retrieveEndMonthList(payScheduleObj)}" />  
+                                   <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn,:form:messages" process="@form" 
+                                      onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj, index)}" />
                                 </p:selectOneMenu>
                                 <p:spacer width="1"/>
                                 <p:selectOneMenu id="toYear" value="#{payScheduleObj.endYear}" 
                             	    disabled="#{payScheduleObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" >
                                     <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
-                                    <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn"  process="@form" 
-                                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                                    <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn,:form:messages"  process="@form" 
+                                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj, index)}"/> 
                                 </p:selectOneMenu>
-                                <p:spacer width="5"/>
-		                        <p:graphicImage id="schedValidation" library="ep/images/design"  value="/css/images/design/reject.png"  
-		                              name="reject.png"  rendered="#{payScheduleObj.validateScheduleDate}" styleClass="ui-icon-reject" style="margin-bottom: -5px;" />
-			                     <p:tooltip for="schedValidation" showEffect="fade" value="#{lbl['lbl.ct.validation.schedule.date']}"/> 
 		                     </h:panelGroup>
 		                 </p:column> 
 		            
@@ -93,7 +90,8 @@
 		               <div class="ppRightBtn"> 
 		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" update=":form:payScheduleTableId"
 		                        action="#{contractDetailsBackingBean.addScheduleDetails}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
-		                        disabled="#{contractDetailsBackingBean.managedBean.progSchedButtonDeactive}">
+		                        disabled="#{contractDetailsBackingBean.managedBean.progSchedButtonDeactive}"
+		                        oncomplete="scheduleObj.paginator.endLink.click();" >
 		                      <p:tooltip for="addScheduleBtn">
 						         <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
 						      </p:tooltip>
