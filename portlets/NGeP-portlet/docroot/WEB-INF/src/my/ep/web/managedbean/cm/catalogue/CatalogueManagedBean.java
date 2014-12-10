@@ -19,12 +19,15 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -350,6 +353,17 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(new SearchFilterBean("agencyList", SearchOperator.OPERATOR_IS_NULL.value(), null), 
 						new SearchFilterBean("agencyList", SearchOperator.OPERATOR_LIKE.value(), orgProfileId, SearchCondition.CONDITION_OR.value()));
 				searchBean.getDataFilterBeans().add(agencyFilterBean);
+				
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
+				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+				if(orgProfileResDTO.getPmOrgProfile()!=null && orgProfileResDTO.getPmOrgProfile().getParentOrgProfile()!=null) {
+					String ministryId = "#"+orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()+"#";
+					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(new SearchFilterBean("exemptedMinistryList", SearchOperator.OPERATOR_IS_NULL.value(), null), 
+							new SearchFilterBean("exemptedMinistryList", SearchOperator.OPERATOR_NOT_LIKE.value(), ministryId, SearchCondition.CONDITION_OR.value()));
+					searchBean.getDataFilterBeans().add(ministryFilterBean);
+				}
 				
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
