@@ -11,7 +11,7 @@
 		<p:tabView widgetVar="tvRoleReceivingAddr" id="tvRoleReceivingAddr" dynamic="false" cache="false" orientation="top">	
 			<!-- Roles -->
 		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.roles']}">  
-			  	<p:dataTable id="dtRoles" var="role" styleClass="dtRoles"
+			  	<p:dataTable id="dtRoles" var="role" styleClass="dtRoles" rows="10"
 			  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 				     value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmUserRoles}"
 				     selection="#{profileManagementBackingBean.managedBean.deleteUserRoles}"

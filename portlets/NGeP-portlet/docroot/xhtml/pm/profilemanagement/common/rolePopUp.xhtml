@@ -8,22 +8,29 @@
 
 
 	<p:dialog id="dlRoleOptions" header="#{lbl['lbl.pm.profiles.authorisation.role.opt']}" 
-		widgetVar="dlRoleOptions" dynamic="true" width="1000" height="300">
+		widgetVar="dlRoleOptions" dynamic="true" width="1000" height="400">
 		<!-- Validation Message -->
 		<p:messages id="messagesRole" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:outputPanel id="opRoleOptions">
-			<p:dataTable id="dtRoleOptions" var="roleDesc" lazy="true"
+			<p:dataTable id="dtRoleOptions" var="roleDesc" lazy="true" rows="10"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 				value="#{profileManagementBackingBean.roleDataModel}"
-				selection="#{profileManagementBackingBean.managedBean.selectedRoles}">
-				<p:ajax event="toggleSelect" update="@this" process="@this" />
-				<p:ajax event="rowSelectCheckbox" update="@this" />
-				<p:ajax event="rowUnselectCheckbox" update="@this" process="@this"/>
-				<p:ajax event="rowUnselect" update="@this" process="@this"/>
-				<p:ajax event="rowSelect" update="@this" process="@this"/>
+				selection="#{profileManagementBackingBean.managedBean.selectedRole}"
+			 	selectionMode="single">
+			 	<p:ajax event="rowSelect" update="dtRoleOptions">
+					<f:param name="disableValidation" value="" />     
+				</p:ajax>
 				<ac:paginator for="dtRoleOptions"/>
-				<p:column selectionMode="multiple" width="2%" disabledSelection="#{roleDesc.selected}" />
-			    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role.name']}"> 
+				<p:columnGroup type="header">
+					<p:row>
+					 	<p:column>
+						    <f:facet name="header">
+						     	<h:outputText value="#{lbl['lbl.pm.profiles.authorisation.role.name']}" />
+						    </f:facet>
+					    </p:column>
+				 	</p:row>
+			 	</p:columnGroup>
+			    <p:column> 
 		         	#{roleDesc.roleName}
 		        </p:column>
 			</p:dataTable>
