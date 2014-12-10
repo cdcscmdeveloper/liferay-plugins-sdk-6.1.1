@@ -41,6 +41,7 @@ public class UnitOfMeasurementBackingBean extends
 			.getLogger(UnitOfMeasurementManagedBean.class);
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
+	public static final boolean SEARCH_DEFAULT = false;
 	
 	public UnitOfMeasurementBackingBean() {
 		log.info("inside constructor");
@@ -73,6 +74,8 @@ public class UnitOfMeasurementBackingBean extends
 		
 		this.getManagedBean().setMeasurementCodes(new String());
 		this.getManagedBean().setMeasurementCodes(new String());
+		unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
+		
 		
 	}	
 	
@@ -126,7 +129,8 @@ public class UnitOfMeasurementBackingBean extends
 	 * on UOM codes and names search
 	 */
 	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
-			
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
 		if (getManagedBean().getMeasurementCodes() != null
 				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
 			SearchFilterBean uomSearchBean = new SearchFilterBean(
@@ -138,6 +142,7 @@ public class UnitOfMeasurementBackingBean extends
 			uomSearchBean.setSearchValue(getManagedBean()
 					.getMeasurementCodes());
 			searchBean.getDataFilterBeans().add(uomSearchBean);
+			isEmpty = false;
 		}
 
 		if (getManagedBean().getMeasurementNames() != null
@@ -151,6 +156,7 @@ public class UnitOfMeasurementBackingBean extends
 			uomSearchBean.setSearchValue(getManagedBean()
 					.getMeasurementNames());
 			searchBean.getDataFilterBeans().add(uomSearchBean);
+			isEmpty = false;
 		}	
 		
 		if(getManagedBean().getStatus() != null
@@ -163,7 +169,15 @@ public class UnitOfMeasurementBackingBean extends
 					.getStatus());
 			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}			
-
+		
+		if(isEmpty && !isSearchable){
+			SearchFilterBean codesSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			codesSearchBean
+					.setSearchField("recordStatusFlg");
+			codesSearchBean.setSearchValue(null);
+			searchBean.getDataFilterBeans().add(codesSearchBean);
+		}
 		return searchBean;
 	}		
 	
