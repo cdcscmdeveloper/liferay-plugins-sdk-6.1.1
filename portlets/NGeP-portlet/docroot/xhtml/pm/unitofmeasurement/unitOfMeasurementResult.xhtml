@@ -23,8 +23,8 @@
 							 action="#{unitOfMeasurementBackingBean.retrieveMeasurement}"
 						     update="measurementSR" process="measurementSearch"/>
             <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
-            				 type="reset" actionListener="#{unitOfMeasurementBackingBean.resetMeasurementSearch}"
-            				 process="@this" update="measurementPanel" />
+            				 type="reset" action="#{unitOfMeasurementBackingBean.resetMeasurementSearch}"
+            				 process="@this" update="measurementSearch, measurementSR" />
 	  </div>
     <br/>
 	<br/>
