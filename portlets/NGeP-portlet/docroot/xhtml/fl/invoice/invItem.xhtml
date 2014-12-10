@@ -21,7 +21,7 @@
 					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
 				</f:facet>
 				<h:outputText
-					value="#{chargeLineNode.flFulfilmentItem.cmItem.extensionCode}"
+					value="#{chargeLineNode.flFulfilmentItem.itemCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;" >
