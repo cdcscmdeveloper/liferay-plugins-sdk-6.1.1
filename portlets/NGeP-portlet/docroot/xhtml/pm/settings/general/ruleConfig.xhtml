@@ -66,7 +66,7 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-			<p:inputText value="#{typeValueObj.ruleValue}" size="20" id="amountValueId"
+			<p:inputText value="#{typeValueObj.ruleValue}" size="20" id="amountValueId" disabled="#{!(typeValueObj.brandNew)}"
 				 required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkIntegerField}" validatorMessage="Value Of Amount Type should be a Digit!" >
 				 <p:ajax partialSubmit="true" process="@this" update="@this" />
 				 </p:inputText>
@@ -80,7 +80,7 @@
 					                 #{lbl['lbl.pm.value']}
 		    </f:facet>
            <p:selectOneMenu id="parameterCodeValueId"
-				value="#{typeValueObj.ruleValue}"
+				value="#{typeValueObj.ruleValue}" disabled="#{!(typeValueObj.brandNew)}"
 				required="true" requiredMessage="Value is mandatory"
 							style="width:250px;">
 	            		 <f:selectItems value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.financialOrgRegType, ruleCatalogueBackingBean.parameterSearchBean)}" /> 
@@ -95,7 +95,7 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-			<p:inputText value="#{typeValueObj.ruleValue}" size="20" id="percentageValueId"
+			<p:inputText value="#{typeValueObj.ruleValue}" size="20" id="percentageValueId" disabled="#{!(typeValueObj.brandNew)}"
 				 required="true" requiredMessage="Value is mandatory" validator="#{webappBean.checkFloatField}" validatorMessage="Value of Percentage Type should be a Float!">
 				 <p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
@@ -109,7 +109,7 @@
 					                 #{lbl['lbl.pm.value']}
 				                </f:facet>
 
-			<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3"
+			<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" disabled="#{!(typeValueObj.brandNew)}"
 				update=":form:settingTabId:ruleTypeValueTableID" size="20"
 				headerText="Category" readonly="true" label="#{lbl['lbl.pm.category']}"
 				postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
@@ -125,7 +125,7 @@
 								
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			                	</f:facet>
-			<p:inputText value="#{typeValueObj.fromValue}" size="15" id="fromValueId" >
+			<p:inputText value="#{typeValueObj.fromValue}" size="15" id="fromValueId" disabled="#{!(typeValueObj.brandNew)}" >
 				 <p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
 		  <p:message id="fromValueMsg" for="fromValueId" display="icon" />
@@ -136,7 +136,7 @@
 			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
-			<p:inputText value="#{typeValueObj.toValue}" size="15" id="toValueId" >
+			<p:inputText value="#{typeValueObj.toValue}" size="15" id="toValueId" disabled="#{!(typeValueObj.brandNew)}" >
 			 <p:ajax partialSubmit="true" process="@this" update="@this" />
 			 </p:inputText>
 		<p:message id="toValueMsg" for="toValueId" display="icon" />

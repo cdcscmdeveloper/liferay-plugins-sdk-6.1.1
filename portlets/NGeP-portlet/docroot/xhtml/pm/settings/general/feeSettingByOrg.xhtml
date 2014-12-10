@@ -32,7 +32,7 @@
 			</f:facet>
 			<ac:lov id="lovSupplier" lovId="SM_SUPPLIER_WITH_PROFILE" size="25"
 				readonly="true"
-				disabled = "#{feeObj.isG2G == 1}"
+				disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.settings.fee.org.suplier.name']}"
 				headerText="Supplier"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
@@ -49,7 +49,7 @@
 				                </f:facet>
 
 			<ac:lov id="lovItem" lovId="CM_ITEM"
-				disabled="#{feeObj.orgProfileId.smSupplier == null or (feeObj.isG2G == 1)}" size="30"
+				disabled="#{feeObj.orgProfileId.smSupplier == null or !(feeObj.brandNew)}" size="30"
 				readonly="true" headerText="Item"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
 				conditionField="cmSupplierItems.supplierId^#{feeObj.orgProfileId.smSupplier.supplierId}"
