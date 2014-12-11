@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:80px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+	<p:column style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 		<h:outputText value="#{question.tplSpecEstimations[0].estimatedCost}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
@@ -20,7 +20,7 @@
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
-	<p:column style="width:150px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
-		<p:inputTextarea style="width:96%;" value="#{question.clReviewRemark}" rows="1" maxlength="500" />
+	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered1="#{isContentTypeReview}">
+		<p:inputTextarea style="width:188px;" value="#{question.clReviewRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>
