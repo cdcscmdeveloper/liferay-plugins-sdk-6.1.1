@@ -6,28 +6,40 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:70px;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}">
-		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
-			value="#{tplSpecAnswer.autoScore}"
-			rendered="#{isScoring}" disabled="true">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-		</p:inputText>
+	<p:column style="width:70px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}">
+		<h:panelGroup rendered="#{isScoring}">
+			<h:outputText value="#{tplSpecAnswer.autoScore}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+			 / 
+			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+		</h:panelGroup>
 	</p:column>
-	<p:column style="width:50px;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}">
+	<p:column style="width:70px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
 		</f:facet>
-		<p:inputText id="userScore" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
-			value="#{tplSpecAnswer.userScore}"
-			rendered="#{!isScoring}" required="true" maxlength="3"
-			label="#{lbl['lbl.tpl.spec.content.user.score']}">
-			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
-			<f:attribute name="min" value="0" />
-		</p:inputText>
-		<p:message id="userScoreMsg" for="userScore" display="icon" />
+		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring}">
+			<p:inputText id="userScore" style="min-width:0px !important;width:20px;" styleClass="ppNumericAlign"
+				value="#{tplSpecAnswer.userScore}"
+				required="true" maxlength="3"
+				label="#{lbl['lbl.tpl.spec.content.user.score']}">
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+				<f:attribute name="min" value="0" />
+				<f:attribute name="max" value="#{tplSpecAnswer.tplSpecQuestion.maxScore.toString()}" />
+				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg" />
+			</p:inputText>
+			 / 
+			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+			<p:message id="userScoreMsg" for="userScore" display="icon" />
+		</h:panelGroup>
 	</p:column>
-	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
-		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" />
+	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
+		<p:inputTextarea style="width:188px;" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>
