@@ -154,6 +154,7 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1282,21 +1283,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	private void checkContractAmount(FlFulfilmentRequest flRequest){
-		if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-			IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
-			FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
-			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			BigDecimal prevSumAmt = itemSummarySO.retrieveContractAccumulatedAmount(reqDTO);
-			BigDecimal sumOrderedAmt = BigDecimal.ZERO;
-			for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
-					sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
-				}
+		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		BigDecimal prevSumAmt = itemSummarySO.retrieveContractAccumulatedAmount(reqDTO);
+		BigDecimal sumOrderedAmt = BigDecimal.ZERO;
+		for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
 			}
-			BigDecimal checkTotalAmt = prevSumAmt.add(sumOrderedAmt);
-			if(checkTotalAmt.doubleValue()>flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().doubleValue()) {
-				throw new EpException(MessageConst.ERROR_740002, new String[]{flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().toString()});
-			}
+		}
+		BigDecimal checkTotalAmt = prevSumAmt.add(sumOrderedAmt);
+		if(checkTotalAmt.doubleValue()>flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().doubleValue()) {
+			throw new EpException(MessageConst.ERROR_740002, new String[]{flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().toString()});
 		}
 	}
 	
@@ -1332,6 +1331,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void checkCeilingQty(FlFulfilmentRequest flRequest){//TODO db change qt item change
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+		
+		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
 		ContractItemResDTO ctResDTO = new ContractItemResDTO();
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
@@ -1348,20 +1350,60 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
 				
-				IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
-				FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
 				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 				BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 				checkCeilingQty = prevSumQty.add(sumOrderedQty);
 
-				if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
-					throw new EpException(MessageConst.ERROR_740033,new String[]{itemAddr.getCmItem().getItemName()});
+				if(checkCeilingQty.doubleValue() >  ctResDTO.getItemCeilingQuantity().doubleValue()){
+					throw new EpException(MessageConst.ERROR_740033,new String[]{itemAddr.getScRequestItem().getItemName()});
 				}
 			}
 		}
 	}
 	
+	private void checkMaximumQty(FlFulfilmentRequest flRequest) {
+		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+		
+		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		
+		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
+		ContractItemResDTO ctResDTO = null;
+		ctReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+		
+		Map<ScRequestItem, BigDecimal> requestItemQtyMap = new HashMap<ScRequestItem, BigDecimal>();
+		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				if(requestItemQtyMap.containsKey(itemAddr.getScRequestItem())) {
+					requestItemQtyMap.put(itemAddr.getScRequestItem(), requestItemQtyMap.get(itemAddr.getScRequestItem()).add(itemAddr.getOrderedQty()));
+				} else{
+					requestItemQtyMap.put(itemAddr.getScRequestItem(), itemAddr.getOrderedQty());
+				}
+			}
+		}
+		
+		BigDecimal itemMaxQty = BigDecimal.ZERO;
+		BigDecimal prevSumQty = BigDecimal.ZERO;
+		BigDecimal sumQty = BigDecimal.ZERO;
+		for(ScRequestItem requestNoteItem : requestItemQtyMap.keySet()) {
+			ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+			ctResDTO = contractItemSO.getItemMaxQuantity(ctReqDTO);
+			if(ctResDTO.getCtItemMaxQuantity()!=null) {
+				itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
+			}
+			if(itemMaxQty!=null) {
+				reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+				prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+				sumQty = requestItemQtyMap.get(requestNoteItem).add(prevSumQty);
+				if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
+					throw new EpException(MessageConst.ERROR_740038,new String[]{requestNoteItem.getItemName()});
+				}
+			}
+		}
+		
+	}
 	
 	public void initializeApproverGroup() {
 		IFulfilmentRequestSO requestSO = null;
@@ -3488,9 +3530,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			
-			checkContractAmount(flRequest);
-			checkCeilingAmount(flRequest);
-			checkCeilingQty(flRequest);
+			if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				checkContractAmount(flRequest);
+				checkCeilingAmount(flRequest);
+				checkCeilingQty(flRequest);
+				checkMaximumQty(flRequest);
+			}
+			
 			if(isRequisitioner()){
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -3516,6 +3562,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	public void chargeLineValidationBeforeApproverList(){
 		FlFulfilmentItemAddr itemAddress = null;
+		updateSelectedTreeNodes();
 		TreeNode[] selectedNodesCount=getManagedBean().getSelectedNodes();
 		if(null!=selectedNodesCount && selectedNodesCount.length>=1){
 			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
