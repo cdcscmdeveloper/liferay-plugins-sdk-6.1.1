@@ -222,19 +222,26 @@ public class SmApplicationBackingBean extends
 			}
 			if (this.getManagedBean().isValidResubmit()) {
 				if (!activeExist) {
-					QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-					quesBackingBean.getManagedBean().setTargetUrl(xhtml);
-					quesBackingBean.getManagedBean().setSmSupp(supplierProfile);
-					quesBackingBean.getManagedBean().setSmAppl(appl);
-					quesBackingBean.retrieveQuestionnaire();
-
 					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication()
-							.getNavigationHandler()
-							.handleNavigation(fc, null,
-									"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-					getManagedBean().setSmAppl(appl);
-					getManagedBean().setSmSupplier(supplierProfile);
+					if (!appl.getApplType().equalsIgnoreCase(
+							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+						QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+						quesBackingBean.getManagedBean().setTargetUrl(xhtml);
+						quesBackingBean.getManagedBean().setSmSupp(
+								supplierProfile);
+						quesBackingBean.getManagedBean().setSmAppl(appl);
+						quesBackingBean.retrieveQuestionnaire();
+						fc.getApplication()
+								.getNavigationHandler()
+								.handleNavigation(fc, null,
+										"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+						getManagedBean().setSmAppl(appl);
+						getManagedBean().setSmSupplier(supplierProfile);
+					} else {
+						getManagedBean().setSmAppl(appl);
+						getManagedBean().setSmSupplier(supplierProfile);
+						prerenderApplicationForResubmission();
+					}
 				} else {
 					getManagedBean().setResubmitInValidMsg(
 							SmCommonUtil.getMessage("lbl.sm.activeDrftExist",
