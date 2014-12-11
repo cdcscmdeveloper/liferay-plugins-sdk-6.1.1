@@ -9,7 +9,9 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td><LABEL><span class="mandatory">* </span>#{lbl['lbl.sc.sp.current.asset']}</LABEL></td>
+				<td><LABEL><ui:fragment rendered="#{!statusHide}">
+							<span class="mandatory">* </span>
+						</ui:fragment> #{lbl['lbl.sc.sp.current.asset']}</LABEL></td>
 				<td><p:inputText style="text-align:right" required="true"
 						disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"

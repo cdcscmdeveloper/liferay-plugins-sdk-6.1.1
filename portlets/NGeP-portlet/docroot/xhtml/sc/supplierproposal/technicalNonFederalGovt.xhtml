@@ -18,7 +18,8 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
 			rowKey="#{technongovt}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="technongovtid" />
-			<p:column style="width:2% ;">
+			<p:column style="width:2% ;" rendered="#{!statusHide}">
+
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
@@ -32,6 +33,7 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{supplierProposalDetailBackingBean.selected(rowIndex)}" />
 				</p:selectBooleanCheckbox>
+
 			</p:column>
 			<p:column id="clientNameColId"
 				style="white-space : normal; width : 20%; ">
