@@ -1960,9 +1960,13 @@ public class LocationSingleton {
 
 				if (null != pmDistrict && !districts.contains(pmDistrict)) {
 					if (divisonNode == null) {
-						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+						if(stateNode!=null) {
+							new DefaultTreeNode(QTConstants.NODE_DISTRICT,
 								locCriteria, stateNode);
-
+						} else {
+							new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+									locCriteria, zoneNode);
+						}
 					} else {
 						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
 								locCriteria, divisonNode);
