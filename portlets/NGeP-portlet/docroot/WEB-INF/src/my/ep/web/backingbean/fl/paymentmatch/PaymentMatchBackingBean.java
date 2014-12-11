@@ -668,18 +668,20 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setDeductionAmt(totalDeductionAmt);
 			
 			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt).subtract(transFee));
-		}else if(nonExemptedItemAmt.doubleValue() > 0 && haveDeduction == false){
-			invMulty = nonExemptedItemAmt.multiply(serviceFee);
-			transFee = invMulty.divide(percentage);
-			getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
-			getManagedBean().setDeductionAmt(totalDeductionAmt);
-			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(transFee));
 		}else if(haveDeduction && nonExemptedItemAmt.doubleValue() <= 0){
 			if(totalDeductionAmt != null && totalDeductionAmt.doubleValue() > 0){
 				getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
 				getManagedBean().setDeductionAmt(totalDeductionAmt);
 				calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt).subtract(transFee));
 			}
+		} else if(nonExemptedItemAmt.doubleValue() > 0 && haveDeduction == false){
+			invMulty = nonExemptedItemAmt.multiply(serviceFee);
+			transFee = invMulty.divide(percentage);
+			getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
+			getManagedBean().setDeductionAmt(totalDeductionAmt);
+			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(transFee));
+		} else if(nonExemptedItemAmt.doubleValue() <= 0 && haveDeduction == false){
+			calPaymentAmt=getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew();
 		}
 		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
 	} 
