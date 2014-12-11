@@ -14,7 +14,7 @@
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="creditfaciitiesid" />
 
-			<p:column style="width:2%">
+			<p:column style="width:2%" rendered="#{!statusHide}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
@@ -31,6 +31,7 @@
 				</p:selectBooleanCheckbox>
 
 			</p:column>
+
 
 			<p:column style="white-space : normal; width : 22%; ">
 				<f:facet name="header">

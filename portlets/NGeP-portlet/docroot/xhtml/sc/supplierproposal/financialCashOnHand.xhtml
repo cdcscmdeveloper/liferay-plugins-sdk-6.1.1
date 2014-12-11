@@ -12,7 +12,7 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCashOnHand}"
 			rowKey="#{cashonhand}" rowIndexVar="rowIndex">
 			<ac:paginator for="cashonhand" />
-			<p:column style="width:2%">
+			<p:column style="width:2%" rendered="#{!statusHide}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
@@ -110,7 +110,7 @@
 			<p:column style="text-align:right ; width : 10%;">
 				<f:facet name="header">
 					<ui:fragment rendered="#{!statusHide}">
-					<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.amount']}" />
 				</f:facet>
