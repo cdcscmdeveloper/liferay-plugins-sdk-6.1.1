@@ -305,7 +305,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
  			if((remark == null || remark.length() == 0)) {
  				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
  			}
- 		}
+ 		}	
+				
+		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
+		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
@@ -316,11 +321,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_750014);
-		}
-		
-		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
 		}
 		
 		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 

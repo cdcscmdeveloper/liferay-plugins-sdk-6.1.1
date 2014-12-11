@@ -54,6 +54,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -89,6 +90,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -638,85 +641,129 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	   }
 	 
 	   public void validateContractAmendment(String action) {
-		   getManagedBean().setAutoUpdate(true);
+		   IContractSO contractSO = null;
+		   ICommitteSO committeSO = null;
 		   
-		   // Bug#1706: Letter of Acceptance is not mandatory
-//		   if(getManagedBean().getContractVer().getCtAmendment()!=null && 
-//				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
-//				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
-//				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
-//			   RequestContext.getCurrentInstance().addCallbackParam("epException",
-//						true);
-//			   throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
-//		   }
-		   
-		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || 
-				   (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
-				
-			  	String remark = getManagedBean().getRemarkList().get(0).getRemark();
-	 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
-	 			String ap201Remark = getManagedBean().getContractVer().getAp201Remark().get(0).getRemark();
-	 			if((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (ap201Remark == null || ap201Remark.length() == 0)) {
-	 				RequestContext.getCurrentInstance().addCallbackParam("epException",
+		   try {
+			   getManagedBean().setAutoUpdate(true);				   
+			   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || 
+					   (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
+					
+				  	String remark = getManagedBean().getRemarkList().get(0).getRemark();
+		 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+		 			String ap201Remark = getManagedBean().getContractVer().getAp201Remark().get(0).getRemark();
+		 			if((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (ap201Remark == null || ap201Remark.length() == 0)) {
+		 				RequestContext.getCurrentInstance().addCallbackParam("epException",
+								true);
+		 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+		 			}
+			   }		   
+			   
+			   if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+					 && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && !getManagedBean().getContractVer().getCtAmendment().isValueChange()
+					 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
+				   RequestContext.getCurrentInstance().addCallbackParam("epException",
 							true);
-	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-	 			}
-		   }
-		   
-		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-				 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
-			}
-		   
-		   if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
-				 && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && !getManagedBean().getContractVer().getCtAmendment().isValueChange()
-				 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
-			   RequestContext.getCurrentInstance().addCallbackParam("epException",
-						true);
-			        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Type"});		 
-		   }
-		   
-		   if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
-			   RequestContext.getCurrentInstance().addCallbackParam("epException",
-						true);
-				        throw new EpException(MessageConst.ERROR_100022, new String[]{"File Reference No."});			 
+				        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Type"});		 
 			   }
-		   
-		   if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
-			   RequestContext.getCurrentInstance().addCallbackParam("epException",
-						true);
-		        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Title"});
-	       }
-		   
-		   if(getManagedBean().getContractVer().getCtAmendment().getDescription() == null || getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
-			   RequestContext.getCurrentInstance().addCallbackParam("epException",
-						true);
-		        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Description"});
-	       }
-		   
-		   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-			     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
-			    	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				     throw new EpException(MessageConst.ERROR_750002);
-		         }
-		   }
-		   
-		   
-		   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
-					|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
-					|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
-					//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-					StringBuilder sb = new StringBuilder();
-					sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-					sb.append(getManagedBean().getContractVer().getDocType());
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
-					sb.append(action);			
-					getManagedBean().setTextBeforeSign(sb.toString());	
-					getManagedBean().setButtonAction(action);
+			   
+			   if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
+				   RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
+					        throw new EpException(MessageConst.ERROR_100022, new String[]{"File Reference No."});			 
+				   }
+			   
+			   if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
+				   RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
+			        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Title"});
+		       }
+			   
+			   if(getManagedBean().getContractVer().getCtAmendment().getDescription() == null || getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
+				   RequestContext.getCurrentInstance().addCallbackParam("epException",
+							true);
+			        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Description"});
+		       }
+			   
+			   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+					 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
 				}
-	  }
+			   
+			   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
+				    	 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					     throw new EpException(MessageConst.ERROR_750002);
+			         }
+			   }
+			   
+			   //Validation checking for committee
+			    if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && getManagedBean().getTaskId()==null) || 
+			    		action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			    	
+			    	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			    	committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+			    	CommitteReqDTO conReqDTO = new CommitteReqDTO();
+					CommitteResDTO committeResDTO = null;
+					
+			    	if (getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {    		
+						if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
+								getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
+								
+							if(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null)
+									conReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
+								else 
+									conReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+								      
+								conReqDTO.setFinalizationSecratary(false);
+								conReqDTO.setCommitteeType(contractSO.getCommitteType(getManagedBean().getContractVer()));
+								committeResDTO =  committeSO.retrieveCommitteMembersByQtIdAndCommType(conReqDTO);
+								
+								if (committeResDTO.getCommMemberResultBean() == null  ||  committeResDTO.getCommMemberResultBean().getResultList().isEmpty()) {
+									RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+									// throw new Exception("Committee secretary not formed.");
+									throw new EpException(MessageConst.ERROR_750019);
+								}
+						}			    		
+			    	}
+			    	else {
+			    		if (getManagedBean().getContractVer().getCtContract().getQuotationTender() == null) {
+			    			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			    			//throw new Exception("Quotation Tender not found.");
+			    			throw new EpException(MessageConst.ERROR_750020); 
+			    		}
+			    		else {
+			    			conReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
+			    			conReqDTO.setIshigerCommitte(false);
+			    			committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(conReqDTO);
+			    			if (committeResDTO.getHigherCommitteSecratary() == null) {
+			    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			    				throw new EpException(MessageConst.ERROR_750019);
+			    			}
+			    		}
+			    	}			    	
+			    }
+			   
+			   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+						//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+						StringBuilder sb = new StringBuilder();
+						sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+						sb.append(getManagedBean().getContractVer().getDocType());
+						sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+						sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+						sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+						sb.append(action);			
+						getManagedBean().setTextBeforeSign(sb.toString());	
+						getManagedBean().setButtonAction(action);
+					}
+			    } 
+		   finally {
+				     contractSO = null;
+				     committeSO = null;
+			    }
+	   }
 	 
 	 public void changeField() {
 			
