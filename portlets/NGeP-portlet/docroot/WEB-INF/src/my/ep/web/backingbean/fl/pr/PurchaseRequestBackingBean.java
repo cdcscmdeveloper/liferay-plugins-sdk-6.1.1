@@ -2622,6 +2622,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	public void chargeLineValidationBeforeApproverList(){
 		FlFulfilmentItemAddr itemAddress = null;
+		updateSelectedTreeNodes();
 		TreeNode[] selectedNodesCount=getManagedBean().getSelectedNodes();
 		if(null!=selectedNodesCount && selectedNodesCount.length>=1){
 			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
