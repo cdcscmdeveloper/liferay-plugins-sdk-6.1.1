@@ -37,6 +37,7 @@
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.state.pmCountry.countryId}"
 							id="country" label="#{lbl['lbl.pm.country']}" required="true"
+							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
 							styleClass="ppDropDownWidthL" style="margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -99,7 +100,8 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="divCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
-							value="#{locationBackingBean.managedBean.state.pmCountry.countryId}"
+							value="#{locationBackingBean.managedBean.division.pmState.pmCountry.countryId}"
+							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							style="width: 276px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -121,6 +123,7 @@
 					<td width="220"><p:selectOneMenu id="divState" required="true"
 							label="#{lbl['lbl.pm.address.state']}"
 							value="#{locationBackingBean.managedBean.division.pmState.stateId}"
+							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							style="width: 207px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -182,7 +185,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="disCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
-							value="#{locationBackingBean.managedBean.state.pmCountry.countryId}"
+							value="#{locationBackingBean.managedBean.district.pmState.pmCountry.countryId}"
 							style="width: 276px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -290,6 +293,7 @@
 					<td width="220"><p:selectOneMenu id="cityCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
 							value="#{locationBackingBean.managedBean.state.pmCountry.countryId}"
+							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							style="width: 276px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -311,6 +315,7 @@
 					<td width="220"><p:selectOneMenu id="cityState"
 							required="true" label="#{lbl['lbl.pm.address.state']}"
 							value="#{locationBackingBean.managedBean.district.pmState.stateId}"
+							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							style="width: 207px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -334,6 +339,7 @@
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.district']}"
 							value="#{locationBackingBean.managedBean.city.pmDistrict.districtId}"
 							id="cityDistrict" required="true" styleClass="ppDropDownWidthL"
+							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -385,8 +391,6 @@
 					<td><p:message id="cityStatusMsg" for="cityStatus"
 							display="icon" /></td>
 				</tr>
-
-
 			</ui:fragment>
 
 

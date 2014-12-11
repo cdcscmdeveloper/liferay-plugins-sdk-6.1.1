@@ -34,6 +34,7 @@ import my.ep.dto.pm.common.location.LocationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -45,6 +46,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -71,6 +73,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void preLoadingLocation() {
 		this.resetLocationSearchBean();
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -100,14 +103,20 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public void initialLocation() {
-
-		getManagedBean().setState(new PmState());
-		getManagedBean().setCity(new PmCity());
+		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+	
+		
+		getManagedBean().setState(new PmState());		
 		getManagedBean().setDistrict(new PmDistrict());
 		getManagedBean().setDivision(new PmDivision());
-		getManagedBean().getState().setPmCountry(new PmCountry());
+		getManagedBean().getState().setPmCountry(defaultCountry!=null ? defaultCountry : new PmCountry());
 		getManagedBean().getDivision().setPmState(new PmState());
+		getManagedBean().getDivision().getPmState().setPmCountry(new PmCountry());
 		getManagedBean().getDistrict().setPmState(new PmState());
+		getManagedBean().getDistrict().getPmState().setPmCountry(new PmCountry());
+		getManagedBean().setCity(new PmCity());
+		//getManagedBean().getCity().getPmDistrict().getPmState().setPmCountry(new PmCountry());
+		
 		// getManagedBean().getDistrict().setPmDivision(new PmDivision());
 		getManagedBean().getCity().setPmDistrict(new PmDistrict());
 		getManagedBean().setStates(new ArrayList<PmState>());

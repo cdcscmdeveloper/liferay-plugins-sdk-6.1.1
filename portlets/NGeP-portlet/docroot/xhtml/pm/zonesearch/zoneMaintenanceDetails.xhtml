@@ -18,6 +18,7 @@
 				<td class="TableFieldRight"><p:inputText styleClass="ppDisplayTextM"
 						label="#{lbl['lbl.pm.zone.code']}" 
 						value="#{zoneBackingBean.managedBean.pmZone.zoneCode}"
+						disabled="#{!zoneBackingBean.managedBean.pmZone.brandNew}"
 						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"
 						validatorMessage="#{lbl['lbl.pm.zone.code']} - #{lbl['lbl.pm.zone.uppercase']}"
 						required="true" >
@@ -43,7 +44,7 @@
 						label="#{lbl['lbl.pm.location.status']}" disabled="#{zoneBackingBean.managedBean.pmZone.brandNew}" 
 						value="#{zoneBackingBean.managedBean.pmZone.recordStatusFlg}"
 						required="true" >
-						<f:selectItems value="#{zoneBackingBean.getRecordStatusOptions()}" />
+						<f:selectItems value="#{zoneBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
 				<td><p:message id="zonestatusMsg" for="zonestatus"
 						display="icon" /></td>
