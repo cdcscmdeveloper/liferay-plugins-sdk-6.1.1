@@ -294,8 +294,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
 		StateReqDTO reqStateDTO = new StateReqDTO();
-		List<PmZoneState> selectedStateList = getManagedBean()
-				.getSelectedZones();
+		
 		for (PmState state : getManagedBean().getSelectedStates()) {
 			PmZoneState zoneState = new PmZoneState();
 			reqStateDTO.setStateId(state.getStateId());
@@ -305,14 +304,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zoneState.setPmZone(getManagedBean().getPmZone());
 			this.getManagedBean().getZoneStateList().add(zoneState);
 		}
-		for (PmZoneState zstate : selectedStateList) {
-			if (getManagedBean().getZoneStateList().size() > 0) {
-				if (getManagedBean().getZoneStateList().contains(zstate.getPmState())) {
-					throw new EpException(MessageConst.ERROR_770135);
-				} 
-			}
+		if (getManagedBean().getSelectedStates().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770051);
 		}
-
+		
 	}
 
 	private void retrievePmStateList() {
@@ -354,7 +349,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	
 
 	public static SelectItem[] getStatusOptions() {
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	public void zoneList() {
@@ -367,10 +362,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	}
 
-	public SelectItem[] getRecordStatusOptions() {
-		
-		return PmCommonUtil.getStatusOptionsDefault();
-	}
 
 	public IPagingDataModel<PmZone> getSearchZone() {
 		return searchZone;

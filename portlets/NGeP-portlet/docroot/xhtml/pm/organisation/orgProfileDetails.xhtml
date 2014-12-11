@@ -169,7 +169,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}"/> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="orgStatus" styleClass="ppDropDownWidthM"
-						label="#{lbl['lbl.pm.organisation.status']}"
+						label="#{lbl['lbl.pm.organisation.status']}" disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}" 
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
 						required="true" style="margin-bottom: 5px;">
 						<f:selectItems
