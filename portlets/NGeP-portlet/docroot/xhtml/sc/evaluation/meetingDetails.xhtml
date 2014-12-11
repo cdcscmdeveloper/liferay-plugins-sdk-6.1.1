@@ -44,7 +44,7 @@
 
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!evaluationBackingBean.managedBean.readOnly and !evaluationBackingBean.managedBean.statusOnly}">
+						rendered="#{!evaluationBackingBean.managedBean.readOnly or !evaluationBackingBean.managedBean.statusOnly}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.date']}" />
@@ -62,7 +62,7 @@
 			<p:column style="width:34%">
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!evaluationBackingBean.managedBean.readOnly and !evaluationBackingBean.managedBean.statusOnly}">
+						rendered="#{!evaluationBackingBean.managedBean.readOnly or !evaluationBackingBean.managedBean.statusOnly}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" />
@@ -80,7 +80,7 @@
 			<p:column style="width:10%">
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!evaluationBackingBean.managedBean.readOnly and !evaluationBackingBean.managedBean.statusOnly}">
+						rendered="#{!evaluationBackingBean.managedBean.readOnly or !evaluationBackingBean.managedBean.statusOnly}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.eva.mtng.status']}" />
