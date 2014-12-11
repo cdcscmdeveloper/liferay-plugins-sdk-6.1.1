@@ -49,26 +49,28 @@
 		</h:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
-	<p:column style="width:113px;">
+	<p:column style="width:106px;">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
 		
 		<c:if test="#{newable}">
-			<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
-				headerText="UOM Lov"
-				saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
-				value="#{question.clUom.uomName}"
-				conditionField="recordStatus^1"
-				rendered="#{isQuestionTypeItem}"
-				required="#{!question.selected}"
-				label="#{lbl['lbl.tpl.spec.content.uom']}"
-				size="9"
-				readonly="true"
-				update="@form">
-				<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-			</ac:lov>
+			<h:panelGroup layout="block" style="width:105px;">
+				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
+					headerText="UOM Lov"
+					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
+					value="#{question.clUom.uomName}"
+					conditionField="recordStatus^1"
+					rendered="#{isQuestionTypeItem}"
+					required="#{!question.selected}"
+					label="#{lbl['lbl.tpl.spec.content.uom']}"
+					size="8"
+					readonly="true"
+					update="@form">
+					<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
+				</ac:lov>
+			</h:panelGroup>
 		</c:if>
 		<c:if test="#{!newable}">
 			<h:outputText value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" />
@@ -236,13 +238,13 @@
 			<p:message id="answerTypeIdMsg" for="answerTypeId" display="icon" />
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:65px;white-space:normal;" rendered="#{isEstCostReq and !isSpecificationReq}">
+	<p:column style="width:56px;white-space:normal;" rendered="#{isEstCostReq and !isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}" style="white-space:nowrap;">
-			<p:inputText id="estCost" style="min-width:0px !important;width:53px;" styleClass="ppNumericAlign"
+			<p:inputText id="estCost" style="min-width:0px !important;width:44px;" styleClass="ppNumericAlign"
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
 				required="#{!question.selected}" rendered="#{isPriceTypeStandard}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
