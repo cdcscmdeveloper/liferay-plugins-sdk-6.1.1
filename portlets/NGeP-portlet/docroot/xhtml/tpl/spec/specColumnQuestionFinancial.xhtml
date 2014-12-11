@@ -6,23 +6,23 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:55px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+	<p:column style="width:97px;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
-		<p:inputText style="min-width:0px !important;width:90%;" rendered="#{isQuestionTypeItem}" disabled="true" />
+		<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
-	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
-		<p:inputText style="min-width:0px !important;width:90%;" styleClass="ppNumericAlign"
+	<p:column style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:104px;" styleClass="ppNumericAlign"
 			rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
-	<p:column style="width:80px;" rendered="#{isEstCostReq}">
+	<p:column style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
-		<p:inputText id="estimatedCost" style="min-width:0px !important;width:76%;" styleClass="ppNumericAlign" 
+		<p:inputText id="estimatedCost" style="min-width:0px !important;width:71px;" styleClass="ppNumericAlign" 
 			value="#{question.tplSpecEstimations[0].estimatedCost}" 
 			required="true" rendered="#{isPriceTypeStandard}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
@@ -40,11 +40,10 @@
 	</p:column>
 	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
 		<f:facet name="footer">
-			<p:inputText style="width:80%;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
-			<p:spacer width="16%" />
+			<p:inputText style="width:113px;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
-		<p:inputText style="min-width:0px !important;width:75%;" rendered="#{isQuestionTypeItem}" disabled="true" />
+		<p:inputText style="min-width:0px !important;width:75px;" rendered="#{isQuestionTypeItem}" disabled="true" />
 		<p:commandButton id="scoringBtn"
 			icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
 			style="background-color:transparent !important; border:0px none;"
