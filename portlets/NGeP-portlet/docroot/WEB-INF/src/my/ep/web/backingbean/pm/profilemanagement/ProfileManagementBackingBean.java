@@ -830,8 +830,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 		// Check single role for all users
 		if(this.getManagedBean().getSelectedRole().getPmRole().isSingleRole()){
-			if(PmCommonUtil.checkSingleRole(this.getManagedBean().getSelectedRole().getPmRole().getRoleCode())){ 
+			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
 				throw new EpException(MessageConst.ERROR_770134, new String[]{this.getManagedBean().getSelectedRole().getRoleName()});
+			}
+		}else{
+			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
+				for(PmUserRole pmUserRole:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+					if(pmUserRole.getPmRole().isSingleRole()){
+						throw new EpException(MessageConst.ERROR_770134, new String[]{this.getManagedBean().getSelectedRole().getRoleName()});
+					}
+				}
 			}
 		}
 	
