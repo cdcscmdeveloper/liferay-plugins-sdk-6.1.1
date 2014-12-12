@@ -671,10 +671,11 @@ public class EvaluationBackingBean extends
 			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
 				for (ScQtProposalChecklist proposalCheckList : technicalCompliance) {
 					if (proposalCheckList.getScQtProposal().isSubmitted()) {
-						if (null == proposalCheckList.getCompliance()) {
-							throw new EpException(MessageConst.ERROR_760204);
-						}
-						if (!proposalCheckList.getCompliance()) {
+						/*if (null == proposalCheckList.getCompliance()) {
+							// throw new EpException(MessageConst.ERROR_760204);
+						}*/
+						if (null != proposalCheckList.getCompliance()
+								&& !proposalCheckList.getCompliance()) {
 							if (null == proposalCheckList.getRemark()
 									|| "".equalsIgnoreCase(proposalCheckList
 											.getRemark())) {
