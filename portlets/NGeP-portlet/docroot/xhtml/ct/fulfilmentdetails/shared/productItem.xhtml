@@ -117,11 +117,7 @@
 			                      <h:outputText value="#{itemPrice.expDate}" style="float:left;">
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
-			                 </p:column>
-			                 
-			                <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		                        <p:outputLabel value="#{itemPrice.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		                    </p:column>  
+			                 </p:column> 
 			            </c:if>  
 			     
 			            <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
@@ -161,11 +157,7 @@
 			                      <h:outputText value="#{itemPrice.expDate}" style="float:left;">
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
-			                  </p:column>  
-			             
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		                           <p:outputLabel value="#{itemPrice.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		                      </p:column>     
+			                  </p:column>
 			              </c:if>   
 			        
 			              <c:if  test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode 
@@ -191,11 +183,7 @@
 			                        <h:outputText value="#{itemPrice.expDate}" style="float:left;">
                                         <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                     </h:outputText>
-			                   </p:column>
-			                   
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		                           <p:outputLabel value="#{itemPrice.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		                      </p:column>       
+			                   </p:column>     
 			             </c:if>
 			           
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
@@ -240,11 +228,7 @@
 			                      <h:outputText value="#{itemPrice.expDate}" style="float:left;">
                                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
-			                 </p:column>  
-			               
-			                 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		                           <p:outputLabel value="#{itemPrice.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		                     </p:column>     
+			                 </p:column>    
 			              </c:if> 
                     
                           <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
@@ -296,11 +280,7 @@
 			                        <h:outputText value="#{itemPrice.expDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                     </h:outputText>
-			                   </p:column>  
-			                   
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		                           <p:outputLabel value="#{itemPrice.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		                      </p:column>           
+			                   </p:column>          
 			             </c:if> 
 			           
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
@@ -356,11 +336,7 @@
 			                       <h:outputText value="#{itemPrice.expDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                    </h:outputText>
-			                   </p:column> 
-			                 
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		                         <p:outputLabel value="#{itemPrice.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		                      </p:column>      
+			                   </p:column>    
 			           </c:if>
 			    </p:dataTable>
 		  </h:panelGroup>
