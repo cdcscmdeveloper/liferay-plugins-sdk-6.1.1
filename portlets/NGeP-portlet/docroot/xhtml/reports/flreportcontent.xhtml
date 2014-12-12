@@ -24,22 +24,22 @@
 									</c:if>	
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flItemNameView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flItemName}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText  value="#{reportBackingBean.flItemName}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>											
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />
-									<p:inputText value="#{reportBackingBean.flPtj}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="300" value="#{reportBackingBean.flPtj}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flContractNo}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flContractNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSstView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.sst']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flSst}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flSst}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flJabatanView}">
@@ -49,17 +49,17 @@
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flMinistry}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="300" value="#{reportBackingBean.flMinistry}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flSupplier}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="100" value="#{reportBackingBean.flSupplier}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flStatus}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="100" value="#{reportBackingBean.flStatus}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDurationView}">
@@ -69,27 +69,30 @@
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRecievingOfficerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.recievingOfficer']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flRecievingOfficer}" style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="100" value="#{reportBackingBean.flRecievingOfficer}" style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeliveryAddressView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deliveryAddress']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flDeliveryAddress}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="2000" value="#{reportBackingBean.flDeliveryAddress}"  style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRecNoteNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flRecNoteNo}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flRecNoteNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.contractType']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flContractType}" style="margin-top:5px;width:290px;" >									
-					 				</p:inputText>
+									<p:selectOneMenu value="#{reportBackingBean.flGroupOne}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.CNTRL']}" itemValue="#{lbl['lbl.rpt.CNTRL']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.MNSTRY']}" itemValue="#{lbl['lbl.rpt.MNSTRY']}"></f:selectItem>										
+									</p:selectOneMenu>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRequisitionerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flRequisitioner}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="100" value="#{reportBackingBean.flRequisitioner}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMtoContractView}">
@@ -135,28 +138,28 @@
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractOrderView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.flContractOrder']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flContractOrder}" style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flContractOrder}" style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractRequestView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flContractRequest}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flContractRequest}"  style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPurchaseOrderNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.flPurchaseOrderNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flPurchaseOrderNo}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flPurchaseOrderNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPkpNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.pkpNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flPkpNo}" style="margin-top:5px;width:290px;">									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flPkpNo}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeliveryOrderNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deliveryOrderNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flDeliveryOrderNo}" style="margin-top:5px;width:290px;">									
+									<p:inputText maxlength="20" value="#{reportBackingBean.flDeliveryOrderNo}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flItemCodeView}">
