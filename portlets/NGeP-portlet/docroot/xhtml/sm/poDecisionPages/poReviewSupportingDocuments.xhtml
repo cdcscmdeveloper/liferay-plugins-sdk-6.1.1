@@ -32,9 +32,8 @@
 			<td>
 				<TABLE style="width: 100%">
 					<tr>
-						<td><h:outputText
-								value="#{lbl['lbl.sm.suppDoc.reviewNote']}" style="float :left"
-								escape="false" /> <h:inputHidden
+						<td><h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
+								style="float :left" escape="false" /> <h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <p:spacer
 								height="10px" /></td>
 					</tr>
@@ -59,7 +58,6 @@
 													<td><div align="left" style="width: 100%">
 															<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 																actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-																icon="ui-icon-prev"
 																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 																update=":form" />
 														</div></td>
@@ -67,7 +65,6 @@
 															<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 																<div align="right" style="width: 100%">
 																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																		icon="ui-icon-next" iconPos="right"
 																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 																		update=":form" />
@@ -76,7 +73,6 @@
 															<c:otherwise>
 																<div align="right" style="width: 100%">
 																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																		icon="ui-icon-next" iconPos="right"
 																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 																		update=":form" />
@@ -92,7 +88,6 @@
 													<td><div align="left" style="width: 100%">
 															<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 																actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-																icon="ui-icon-prev"
 																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 																update=":form" />
 														</div></td>
@@ -100,7 +95,6 @@
 															<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 																<div align="right" style="width: 100%">
 																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																		icon="ui-icon-next" iconPos="right"
 																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 																		update=":form" />
@@ -109,7 +103,6 @@
 															<c:otherwise>
 																<div align="right" style="width: 100%">
 																	<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																		icon="ui-icon-next" iconPos="right"
 																		actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 																		action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 																		update=":form" />
@@ -127,7 +120,6 @@
 											<td><div align="left" style="width: 100%">
 													<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 														actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-														icon="ui-icon-prev"
 														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 														update=":form" />
 												</div></td>
@@ -135,7 +127,6 @@
 													<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 														<div align="right" style="width: 100%">
 															<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																icon="ui-icon-next" iconPos="right"
 																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 																update=":form" />
@@ -144,7 +135,6 @@
 													<c:otherwise>
 														<div align="right" style="width: 100%">
 															<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-																icon="ui-icon-next" iconPos="right"
 																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 																update=":form" />

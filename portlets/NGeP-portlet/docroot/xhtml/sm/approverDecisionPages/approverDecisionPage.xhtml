@@ -6,59 +6,66 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sm.approver.decision.cancel.header']}" toggleable="true"
-		id="cancelDecisionPanel">
+	<p:panel header="#{lbl['lbl.sm.approver.decision.cancel.header']}"
+		toggleable="true" id="cancelDecisionPanel">
 
-			<table style="width: 50%;table-layout:fixed">
-				<tr height="10">
-					<td colspan="2"></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
-					<td><ac:labelDate styleClass="outputLabel-view" value="#{backingBean.managedBean.smAppl.applSubmitDate}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.current.status']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.currentStatus}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.reason.supplier']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.supplierRemarks}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}" styleClass="outputLabel-view-label" /></td>
-					<td><p:commandButton value="#{lbl['lbl.cm.download']}"
-							style="float: left;"
-							action="#{backingBean.downloadSelectedSuppDoc(backingBean.managedBean.cancellationAttachment.fileName,backingBean.managedBean.cancellationAttachment.filePath)}"
-							update=":form" icon="ui-icon-download" ajax="false">
-							<p:fileDownload value="#{backingBean.file}" />
-						</p:commandButton> <p:outputLabel
-							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
-							style="float: left;padding: 12px 0px 0px 10px;"
-							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" />
-					</td>
-				</tr>
-			</table>
-			
-			<br />
-			<p:separator />
-			<div>
-				<p>
-					<h:outputText value="#{lbl['lbl.sm.apprvr.splNotes']}"
-						escape="false" />
-				</p>
-			</div>
-			<p:separator />
+		<table style="width: 50%; table-layout: fixed">
+			<tr height="10">
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
+				<td><ac:labelDate styleClass="outputLabel-view"
+						value="#{backingBean.managedBean.smAppl.applSubmitDate}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.current.status']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						value="#{backingBean.managedBean.currentStatus}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.reason.supplier']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						value="#{backingBean.managedBean.supplierRemarks}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}"
+						styleClass="outputLabel-view-label" /></td>
+				<td><p:commandButton value="#{lbl['lbl.cm.download']}"
+						style="float: left;"
+						action="#{backingBean.downloadSelectedSuppDoc(backingBean.managedBean.cancellationAttachment.fileName,backingBean.managedBean.cancellationAttachment.filePath)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{backingBean.file}" />
+					</p:commandButton> <p:outputLabel
+						value="#{backingBean.managedBean.cancellationAttachment.fileName}"
+						style="float: left;padding: 12px 0px 0px 10px;"
+						rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" />
+				</td>
+			</tr>
+		</table>
 
-			<div style="width: 100%" align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
-					onclick="approveAppCanDialog.show();" />
-				<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
-					update="rejectAppCanDialog" partialSubmit="true" process="@this"
-					action="#{backingBean.approveOrRejectMofCancellation('rejectAppCanDialog')}" />
+		<br />
+		<p:separator />
+		<div>
+			<p>
+				<h:outputText value="#{lbl['lbl.sm.apprvr.splNotes']}"
+					escape="false" />
+			</p>
+		</div>
+		<p:separator />
 
-			</div>
+		<div style="width: 100%" align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
+				onclick="approveAppCanDialog.show();" />
+			<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+				update="rejectAppCanDialog" partialSubmit="true" process="@this"
+				action="#{backingBean.approveOrRejectMofCancellation('rejectAppCanDialog')}" />
+
+		</div>
 
 	</p:panel>
 </ui:composition>

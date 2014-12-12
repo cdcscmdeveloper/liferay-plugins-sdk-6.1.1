@@ -11,7 +11,9 @@
 	<ui:define name="resourceSection">
 		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
 			<script>
-				$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.mof.reg.appl']}");
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.mof.reg.appl']}");
 			</script>
 		</h:panelGroup>
 	</ui:define>
@@ -197,14 +199,12 @@
 									<td>
 										<div align="right" style="width: 99%" class="button-wrapper">
 											<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
-												update=":form" icon="ui-icon-delete"
-												onclick="mofApplDelConfirm.show()" type="button"
-												style="margin-bottom:5px;" />
+												update=":form" onclick="mofApplDelConfirm.show()"
+												type="button" style="margin-bottom:5px;" />
 											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
-												update=":form" icon="ui-icon-save"
-												style="margin-bottom:5px;" />
+												update=":form" style="margin-bottom:5px;" />
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 												<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
 													action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
@@ -227,14 +227,12 @@
 										<td>
 											<div align="right" style="width: 99%" class="button-wrapper">
 												<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
-													update=":form" icon="ui-icon-delete"
-													onclick="mofApplDelConfirm.show()" type="button"
-													style="margin-bottom:5px;" />
+													update=":form" onclick="mofApplDelConfirm.show()"
+													type="button" style="margin-bottom:5px;" />
 												<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
-													update=":form" icon="ui-icon-save"
-													style="margin-bottom:5px;" />
+													update=":form" style="margin-bottom:5px;" />
 												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 													<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
 														action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
@@ -258,8 +256,9 @@
 				<p:commandButton id="confApplDel" value="#{lbl['lbl.btn.yes']}"
 					oncomplete="mofApplDelConfirm.hide()" partialSubmit="true"
 					process="@this" action="#{backingBean.deleteDraftApplication}" />
-				<p:commandButton id="declineApplnDelete" value="#{lbl['lbl.btn.no']}"
-					onclick="mofApplDelConfirm.hide()" type="button" />
+				<p:commandButton id="declineApplnDelete"
+					value="#{lbl['lbl.btn.no']}" onclick="mofApplDelConfirm.hide()"
+					type="button" />
 
 			</p:confirmDialog>
 			<p:messages id="messages" showDetail="true" showSummary="false"
@@ -310,8 +309,7 @@
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-				<p:fileUpload
-					allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
 					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />

@@ -27,7 +27,7 @@
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
-							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
+							update=":form" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel>
 
@@ -108,13 +108,13 @@
 									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 										actionListener="#{backingBean.setTabValue('5','4')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
-										update=":form" icon="ui-icon-prev" />
+										update=":form" />
 								</div></td>
 							<td><div align="right" style="width: 100%">
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 										actionListener="#{backingBean.setTabValue('5','6')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
-										update=":form" icon="ui-icon-next" iconPos="right" />
+										update=":form" />
 								</div></td>
 						</tr>
 					</table>

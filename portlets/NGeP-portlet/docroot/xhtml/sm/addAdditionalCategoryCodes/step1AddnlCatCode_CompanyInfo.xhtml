@@ -28,7 +28,7 @@
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
-							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
+							update=":form" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <ui:include
 					src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
@@ -53,7 +53,7 @@
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 										actionListener="#{backingBean.setTabValue('0','1')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
-										update=":form" icon="ui-icon-next" iconPos="right" />
+										update=":form" />
 								</div></td>
 						</tr>
 					</table>

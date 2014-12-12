@@ -10,10 +10,12 @@
 		header="#{lbl['lbl.sm.suppDoc.document.onLnHdrLst']} - #{backingBean.managedBean.smAppl.applNo}">
 
 		<p:dataTable var="onTable" id="revOnSdList"
-			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}" rowIndexVar="index">
+			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}"
+			rowIndexVar="index">
 			<ac:paginator for="revOnSdList" />
-			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;">
+
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+				style="width : 5%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
@@ -31,7 +33,7 @@
 				<p:commandButton value="#{lbl['lbl.cm.download']}"
 					rendered="#{!onTable.pmDocument.hardCopyReq}"
 					action="#{backingBean.downloadSelectedSuppDoc(onTable.smApplDocFiles[0].fileName,onTable.smApplDocFiles[0].filePath)}"
-					update=":form" icon="ui-icon-download" ajax="false">
+					update=":form" ajax="false">
 					<p:fileDownload value="#{backingBean.file}" />
 				</p:commandButton>
 			</p:column>
