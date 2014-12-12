@@ -113,7 +113,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		
 		if (zone.isBrandNew()) {			
 			if (isExistZoneCode(getManagedBean().getPmZone().getZoneCode())) {
-				throw new EpException(MessageConst.ERROR_770134);
+				throw new EpException(MessageConst.ERROR_770138);
 
 			}
 
