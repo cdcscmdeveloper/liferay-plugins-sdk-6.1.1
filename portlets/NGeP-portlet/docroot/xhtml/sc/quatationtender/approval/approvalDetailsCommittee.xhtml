@@ -83,17 +83,25 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design" name="#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30" />
+												<h:graphicImage library="ep/images/design"
+													name="#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
 											</td>
-											<td><h:outputText value="#{attachFile.createdUser.userName}" />,
-												<h:outputText value="#{attachFile.createdDate}">
-													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+											<td><h:outputText
+													value="#{attachFile.createdUser.userName}" />, <h:outputText
+													value="#{attachFile.createdDate}">
+													<f:convertDateTime
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 												</h:outputText></td>
 										</tr>
 										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" immediate="true" action="#{approvalBackingBean.downloadFile(attachFile)}"/>
-												<p:commandLink action="#{approvalBackingBean.deleteFile}" immediate="true" update="@([id$=attachFileIds])">
-													<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1" />
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{approvalBackingBean.downloadFile(attachFile)}" />
+												<p:commandLink action="#{approvalBackingBean.deleteFile}"
+													immediate="true" update="@([id$=attachFileIds])">
+													<h:graphicImage library="ep/images/design"
+														name="icon_trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
 										</tr>
 									</table>
@@ -106,18 +114,7 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
-		<p:dataTable>
-			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
-			</p:column>
-		</p:dataTable>
-	</p:panel>
+
 
 	<p:dialog id="attachDlgids" widgetVar="committeeAttachDlg" modal="true"
 		dynamic="true" resizable="false" width="700px" height="200"

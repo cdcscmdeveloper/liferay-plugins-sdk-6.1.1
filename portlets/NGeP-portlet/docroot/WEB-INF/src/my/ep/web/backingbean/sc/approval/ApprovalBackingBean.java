@@ -95,6 +95,8 @@ public class ApprovalBackingBean extends
 
 	}
 
+	// TODO Need to check why this code... vidya
+
 	@PostConstruct
 	public void init() {
 		if (this.getManagedBean().getScQtApproval() == null) {
@@ -291,8 +293,8 @@ public class ApprovalBackingBean extends
 
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
 					.getScQtApprovalDtls()) {
-				if (approvalRequest.getDecessionType() == null) {
-					approvalRequest.setDecessionType(new PmParameter());
+				if (approvalRequest.getApproverAction() == null) {
+					approvalRequest.setApproverAction(new PmParameter());
 				}
 			}
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
@@ -512,6 +514,8 @@ public class ApprovalBackingBean extends
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
+					updateApprovalRequest(approval.getScQtApprovalDtls(),
+							outcome);
 					finalizeRemarks(approval.getScQtApprovalRemarks());
 					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 					qtApproval.add(approval);
@@ -597,6 +601,8 @@ public class ApprovalBackingBean extends
 									.setBpkRevise(true);
 						}
 					}
+					updateApprovalRequest(approval.getScQtApprovalDtls(),
+							outcome);
 					finalizeRemarks(approval.getScQtApprovalRemarks());
 					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 					qtApproval.add(approval);
@@ -608,7 +614,7 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 				qtReqDTO.setQtdetail(qt);
 				qtReqDTO.setOutcome(outcome);
-				// TODO Need to changed the docType..
+
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign, approvalDocType,
 							qt.getQtId(), qt.getQtNo());
@@ -869,7 +875,7 @@ public class ApprovalBackingBean extends
 			parameterReqDTO.setLanguageCode("en");
 			parameterReqDTO.setParameterId(requestdetails.getDecessionType()
 					.getParameterId());
-			requestdetails.setDecessionType(((ParameterResDTO) parameterSO
+			requestdetails.setApproverAction(((ParameterResDTO) parameterSO
 					.retrieveParameterById(parameterReqDTO)).getPmParameter());
 		}
 	}
@@ -902,6 +908,27 @@ public class ApprovalBackingBean extends
 
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
+	}
+
+	private void updateApprovalRequest(
+			List<ScQtApprovalRequest> approvalRequests, String outCome) {
+
+		//Need to change this logic...
+		PmParameter parameter = getParameterByTypeAndCode(
+				ParameterTypeConst.APPROVAL_DECISION_TYPE,
+				ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
+
+		if (null != approvalRequests && !approvalRequests.isEmpty()) {
+			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+				if (!"SUBMIT".equalsIgnoreCase(outCome)) {
+					approvalRequest.setApproverAction(parameter);
+				}
+				approvalRequest.setApproverActionDate(new Date());
+				approvalRequest.setApproverId(new FacesScopes()
+						.getUserSessionBean());
+			}
+		}
+
 	}
 
 }
