@@ -166,7 +166,7 @@
 							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
-					<p:commandLink oncomplete="reqItemInfo.show();"
+					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images" name="msginfo.png"
