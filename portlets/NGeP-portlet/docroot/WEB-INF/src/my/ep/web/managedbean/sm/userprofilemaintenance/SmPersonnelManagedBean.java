@@ -15,6 +15,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.type.aut.SearchOperator;
@@ -71,6 +72,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean fromUserMaintain;
 	private boolean afterSaving;
 	private boolean upgradeMofDraftAppl;
+	private SmAppl currSmAppl;
 	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -480,6 +482,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setUpgradeMofDraftAppl(boolean upgradeMofDraftAppl) {
 		this.upgradeMofDraftAppl = upgradeMofDraftAppl;
+	}
+
+	public SmAppl getCurrSmAppl() {
+		return currSmAppl;
+	}
+
+	public void setCurrSmAppl(SmAppl currSmAppl) {
+		this.currSmAppl = currSmAppl;
 	}
 
 }
