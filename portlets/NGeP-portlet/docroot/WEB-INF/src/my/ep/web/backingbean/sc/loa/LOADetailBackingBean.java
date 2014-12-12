@@ -106,6 +106,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
@@ -348,32 +349,74 @@ public class LOADetailBackingBean extends
 		}
 	}
 
-	private void freqScheduleValidation(ScQtSchedule schedule) {
+	private void freqScheduleValidation(ScQtSchedule scQtSchedule) {
 		debugLogger("frequencyScheduleValidation");
+		FacesScopes facesScopes = new FacesScopes();
+		Calendar startDate = null;
+		Calendar EndDate = null;
+		
+		if(scQtSchedule.getStartYear() == null || scQtSchedule.getStartYear().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.freq.schedule.start.year",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		if(scQtSchedule.getStartMonth() == null || scQtSchedule.getStartMonth().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.start.month",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		if(scQtSchedule.getEndYear() == null || scQtSchedule.getEndYear().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.freq.schedule.end.year",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		if(scQtSchedule.getEndMonth() == null || scQtSchedule.getEndMonth().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.end.month",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		
+		ScLoa loa = 	getManagedBean().getScLoa();
+		Calendar expDate = Calendar.getInstance();
+		expDate.setTime(loa.getContractExpDate());
+		expDate.add(Calendar.MONTH, 1);
+		expDate.set(Calendar.DAY_OF_MONTH, 1);
+		expDate.add(Calendar.DATE, -1);
+		Date contractExpDate = expDate.getTime();
+		
+		Calendar effDate =Calendar.getInstance();
+		effDate.setTime(loa.getContractEffDate());
+		effDate.set(Calendar.DAY_OF_MONTH, 1);
+		Date contractEffDate = effDate.getTime();  
+	   
+	    if(scQtSchedule.getStartYear() != null && scQtSchedule.getStartMonth() != null){
+	    	  startDate = Calendar.getInstance();
+	    	 startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0,0,0);
+	    }
+	   
+	    if(scQtSchedule.getEndYear() != null && scQtSchedule.getEndMonth() != null){
+	    	  EndDate = Calendar.getInstance();
+	    	  EndDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractExpDate())),0,0,0);
+	    }
+	    
+	    if(startDate != null && EndDate != null){
+	    	if (startDate.after(EndDate)) {
+	    		throw new EpException("Start date must be before end date");
+	    	}
 
-	    ScLoa loa = 	getManagedBean().getScLoa();
-	    
-	    Calendar startDate = Calendar.getInstance();
-	    startDate.set(Integer.valueOf(schedule.getStartYear()),Integer.valueOf(schedule.getStartMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractEffDate())), 0,0,0);
-	    
-	    Calendar EndDate = Calendar.getInstance();
-	    EndDate.set(Integer.valueOf(schedule.getEndYear()),Integer.valueOf(schedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractExpDate())),0,0,0);
-	    
-	    if (startDate.after(EndDate)) {
-	    	throw new EpException("Start date must be before end date");
-		}
-	    
-		if (EndDate.before(startDate)) {
-			throw new EpException("End date must be after start date");
-		}
-		
-		if(!(startDate.getTime().after(loa.getContractEffDate()) && (startDate.getTime().before(loa.getContractExpDate())))){
-			throw new EpException("Start date should be in contract validity period.");
-        }
-		
-		if(!(EndDate.getTime().after(loa.getContractEffDate()) && (EndDate.getTime().before(loa.getContractExpDate())))){
-			throw new EpException("End date should be in contract validity period.");
-        }
+	    	if (EndDate.before(startDate)) {
+	    		throw new EpException("End date must be after start date");
+	    	}
+
+	    	if (!(startDate.getTime().after(contractEffDate)
+					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
+				throw new EpException(
+						"Start date should be in contract validity period.");
+			}
+
+			if (!(EndDate.getTime().after(contractEffDate)
+					&& (EndDate.getTime().before(contractExpDate)) || contractExpDate.equals(EndDate.getTime()))) {
+				throw new EpException(
+						"End date should be in contract validity period.");
+			}
+	    }
+
 	}
 	
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
@@ -1742,9 +1785,15 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-
+			
+			if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+					freqScheduleValidation(scQtSchedule);
+				}
+			}
 			parseLOADetails(scLoa, "SAVE");
-
+			
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 
@@ -1808,6 +1857,12 @@ public class LOADetailBackingBean extends
 
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
+			
+			if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+					freqScheduleValidation(scQtSchedule);
+				}
+			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
@@ -2341,7 +2396,6 @@ public class LOADetailBackingBean extends
 					}
 					
 					if(noOfYears == 0){
-						selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
 						break;
 					}
 					effYear = effYear+1;
@@ -2408,7 +2462,6 @@ public class LOADetailBackingBean extends
 
 		int index = freqSchedule.indexOf(schedule);
 		freqSchedule.set(index, schedule);
-		freqScheduleValidation(schedule);
 		this.getManagedBean().setScheduleList(freqSchedule);
 	}
 
