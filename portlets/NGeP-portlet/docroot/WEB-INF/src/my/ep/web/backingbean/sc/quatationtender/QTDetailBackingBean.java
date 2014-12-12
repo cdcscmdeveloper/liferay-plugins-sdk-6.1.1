@@ -14,7 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -140,8 +139,6 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * @Author VidyasagarReddy
@@ -868,23 +865,24 @@ public class QTDetailBackingBean extends
 			}
 
 			scQt.setScQtBriefings(bsvs);
-			
-			//Publish/Closing/sample Date
+
+			// Publish/Closing/sample Date
 			Date publishDate = scQt.getPublishDate();
-			if(publishDate != null){
+			if (publishDate != null) {
 				scQt.setPublishDate(DateUtils.setDefaultDateTime(publishDate));
 			}
-			
+
 			Date closingDate = scQt.getClosingDate();
-			if(closingDate != null){
+			if (closingDate != null) {
 				scQt.setClosingDate(DateUtils.setDefaultDateTime(closingDate));
 			}
-			
+
 			Date sampleClosingDate = scQt.getSampleClosingDate();
-			if(sampleClosingDate != null){
-				scQt.setSampleClosingDate(DateUtils.setDefaultDateTime(sampleClosingDate));
+			if (sampleClosingDate != null) {
+				scQt.setSampleClosingDate(DateUtils
+						.setDefaultDateTime(sampleClosingDate));
 			}
-			
+
 			// Setting Sample Submission to qtDetails.
 			List<ScQtSampleSubmission> sampleSubmissionList = null;
 			if (scQt.isZonal()) {
@@ -1532,45 +1530,25 @@ public class QTDetailBackingBean extends
 
 	public void preRenderView() {
 
-		// SCQuotationTenderDataType quotationTenderDataType =
-		// getBpmTaskDetails(SCQuotationTenderDataType.class);
-		// this.getManagedBean().setQuotationTenderDataType(quotationTenderDataType);
-
-		renewSesionObject();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
-		log.info("taskId : " + taskId);
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		String taskName = res.getTaskName();
-		this.getManagedBean().setTaskName(taskName);
-		this.getManagedBean().setOutComes(res.getAction());
 		Long qtId = null;
-
+		Object payLoad = getBpmTaskDetails(Object.class);
 		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())
 				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
 			if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
-				// qtId = quotationTenderDataType.getQtId().longValue();
-				qtId = ((SCCommitteeDataType) obj).getQtId().longValue();
+
+				SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
+				this.getManagedBean().setQuotationTenderDataType(
+						committeDataType);
+
+				qtId = committeDataType.getQtId().longValue();
 			} else {
-				// qtId = quotationTenderDataType.getQtId().longValue();
-				qtId = ((SCEvaluationDataType) obj).getQtId().longValue();
+
+				SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
+				this.getManagedBean().setQuotationTenderDataType(evalDataType);
+				qtId = evalDataType.getQtId().longValue();
 
 			}
 			this.getManagedBean().setActiveIndex(1);
@@ -1579,7 +1557,9 @@ public class QTDetailBackingBean extends
 			retrieveCommitteeAppointmentTabDtl();
 		} else {
 			// qtId = quotationTenderDataType.getQtId().longValue();
-			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
+			SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
+			qtId = quationDataType.getQtId().longValue();
+			this.getManagedBean().setQuotationTenderDataType(quationDataType);
 			// retrieveFinalizationSecratryDtl(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
 		}
@@ -1587,8 +1567,6 @@ public class QTDetailBackingBean extends
 		if (null == this.getManagedBean().getQt().getProcurementMode()) {
 			this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 		}
-		this.getManagedBean().setQuotationTenderDataType(obj);
-		this.getManagedBean().setProcessName(res.getProcessName());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
