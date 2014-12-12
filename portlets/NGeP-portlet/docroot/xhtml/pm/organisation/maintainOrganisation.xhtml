@@ -10,17 +10,17 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="#{organisationBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages>
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true"
-						icon="ui-icon-back" update=":form" process="@this"
+						 update=":form" process="@this"
 						action="#{organisationBackingBean.backToSearch}"
 						style="float:left;" /></td>
-				<td><p:commandButton value="#{organisationBackingBean.managedBean.orgProfile.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}" 
+				<td><p:commandButton value="#{organisationBackingBean.managedBean.orgProfile.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" 
 						action="#{organisationBackingBean.saveOrganization}"
-						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" /></td>
+						update="@([id$=Msg])"  style="float:right;" /></td>
 			</tr>
 
 

@@ -57,6 +57,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -74,6 +75,7 @@ public class FinancialOrgBackingBean extends
 	public static final boolean SEARCH_DEFAULT = false;
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "financialOrgSearchMain";
+	public static final String NAV_TO_MAINTAIN ="maintainFinancialOrg";
 	private IPagingDataModel<PmFinancialOrg> searchFinancialOrg = new FinancialOrgPagingDataModel();
 
 	public FinancialOrgBackingBean() {
@@ -193,16 +195,8 @@ public class FinancialOrgBackingBean extends
 
 	}
 
-	public String addFinancialOrg() {
-		this.getManagedBean().setSelectedTabIndex(GENERRAL);
-		resetFinOrg();
-		retrieveCountryList();
-		retrievePmFinancialOrgList();
-		return "/xhtml/pm/financialorg/maintainFinancialOrg.xhtml";
-
-	}
-
-	public void resetFinOrg() {
+	public void initialFinOrg() {
+		this.getManagedBean().setSelectedTabIndex(GENERRAL);		
 		getManagedBean().setFinancialOrg(new PmFinancialOrg());
 		getManagedBean().getFinancialOrg().setPmCountry(new PmCountry());
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
@@ -212,8 +206,6 @@ public class FinancialOrgBackingBean extends
 				new ArrayList<PmFinancialAcc>());
 		getManagedBean().setPmFinancialSvc(new ArrayList<PmFinancialSvc>());
 		getManagedBean().getFinancialOrg().setRecordStatusFlg(null);
-		getManagedBean().setRegType(null);
-
 		getManagedBean().setPmAddress(new PmAddress());
 		getManagedBean().setContactPerson(new PmContact());
 		getManagedBean().getPmAddress().setPmCountry(new PmCountry());
@@ -228,13 +220,28 @@ public class FinancialOrgBackingBean extends
 		getManagedBean().getBranchAddress().setPmState(new PmState());
 		getManagedBean().getBranchAddress().setPmDistrict(new PmDistrict());
 		getManagedBean().getBranchAddress().setPmCity(new PmCity());
+
 	}
 
-	public String backToMain() {
+	
 
-		resetFinOrg();
-		return "/xhtml/pm/financialorg/financialOrgSearchMain.xhtml";
+	public String backToMain() {		
+		return NAV_TO_SEARCH;
 
+	}
+	public String redirectToFinOrg(Long id)
+			throws Exception {
+
+		if (id != null
+				&& id > 0) {
+			maintainFinancialOrg(id);
+
+		} else {
+			initialFinOrg();
+
+		}
+		getManagedBean().setShowParentMsg(true);
+		return NAV_TO_MAINTAIN;
 	}
 
 	public void saveFinancialOrg() {
@@ -253,15 +260,7 @@ public class FinancialOrgBackingBean extends
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 
-		if (getManagedBean().getRegType() != null
-				&& !getManagedBean().getRegType().isEmpty()) {
-			parameterReqDTO
-					.setParameterType(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
-			parameterReqDTO.setParameterCode(getManagedBean().getRegType());
-			ParameterResDTO parameterResDTO1 = parameterSO
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-			financialOrg.setCompanyTypeCode(parameterResDTO1.getPmParameter());
-		}
+		
 
 		if (financialOrg.isBrandNew()) {
 
@@ -426,23 +425,17 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 
-	public String editFinancialOrg(PmFinancialOrg financialOrg) {
+	public void maintainFinancialOrg(Long id) {
 		this.getManagedBean().setSelectedTabIndex(GENERRAL);
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-		reqDTO.setFinancialOrgId(financialOrg.getFinancialOrgId());
+		reqDTO.setFinancialOrgId(id);
 		IFinancialOrgSO finSO = (IFinancialOrgSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						IFinancialOrgSO.class);
 		FinancialOrgResDTO resDTO = finSO
 				.retrieveFinancialOrgDetailsById(reqDTO);
-		financialOrg = resDTO.getPmFinancialOrg();
-
-		/*
-		 * if (financialOrg.getCompanyTypeCode().getParameterId() != null) {
-		 * this.getManagedBean().setRegTypeId(
-		 * financialOrg.getCompanyTypeCode().getParameterCode()); }
-		 */
+		PmFinancialOrg financialOrg = resDTO.getPmFinancialOrg();	
 
 		getManagedBean().setFinancialOrg(financialOrg);
 		getManagedBean().setPmFinancialSvc(financialOrg.getPmFinancialSvcs());
@@ -687,8 +680,7 @@ public class FinancialOrgBackingBean extends
 		}
 
 		getManagedBean().setFinancialOrg(resDTO.getPmFinancialOrg());
-		return "/xhtml/pm/financialorg/maintainFinancialOrg.xhtml";
-
+		
 	}
 
 	public void addFinancialService() {
@@ -926,10 +918,24 @@ public class FinancialOrgBackingBean extends
 		this.getManagedBean().setPmFinancialOrg(resDTO.getFinancialOrgList());
 	}
 
-	public void okContacePersonAction() {
+	public void addContacePerson() {
+
+		RequestContext.getCurrentInstance()
+				.execute("contactPersonPopup.show()");
+		getManagedBean().setShowParentMsg(false);
+	}
+
+	public void okContacePerson() {
 
 		RequestContext.getCurrentInstance()
 				.execute("contactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+	}
+	public void closeContacePerson() {
+
+		RequestContext.getCurrentInstance()
+				.execute("contactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
 	}
 
 	public void okBranchContacePersonAction() {
@@ -955,10 +961,7 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public static SelectItem[] getStatusOptions() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	/**

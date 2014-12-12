@@ -10,12 +10,12 @@
 			severity="error, info" />
 		<div class="ppLeftBtn">
 			<p:commandButton value="#{lbl['lbl.pm.back.location']}"
-				icon="ui-icon-back" action="#{locationBackingBean.backToSearch}"
+				 action="#{locationBackingBean.backToSearch}"
 				immediate="true" />
 		</div>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.create']}" update="@([id$=Msg])"
-				icon="ui-icon-add" action="#{locationBackingBean.saveLocation}" />
+			<p:commandButton value="#{locationBackingBean.managedBean.state.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"  update="@([id$=Msg])"
+				 action="#{locationBackingBean.saveLocation}" />
 		</div>
 		<ui:include src="/xhtml/pm/location/maintainLocation.xhtml" />
 	</ui:define>

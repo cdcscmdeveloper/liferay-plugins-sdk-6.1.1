@@ -137,6 +137,7 @@ public class OrganisationBackingBean extends
 			initialOrganisation();
 
 		}
+		getManagedBean().setShowParentMsg(true);
 		return NAV_TO_MAINTAIN;
 	}
 
@@ -671,11 +672,24 @@ public class OrganisationBackingBean extends
 				resDTO.getPmParameter().getParameterCode());
 
 	}
+	public void addContacePerson() {
 
-	public void okContacePersonAction() {
+		RequestContext.getCurrentInstance()
+				.execute("contactPersonPopup.show()");
+		getManagedBean().setShowParentMsg(false);
+	}
+
+	public void okContacePerson() {
 
 		RequestContext.getCurrentInstance()
 				.execute("contactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+	}
+	public void closeContacePerson() {
+
+		RequestContext.getCurrentInstance()
+				.execute("contactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
 	}
 
 	private void retrievePmZoneList() {

@@ -9,16 +9,7 @@
 		styleClass="sampleDetails" toggleable="true">
 
 		<table>
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.pm.financialorg.regType']}" /> </td>
-				<td><p:selectOneMenu id="regType" styleClass="ppDropDownWidthL"						
-						value="#{financialOrgBackingBean.managedBean.regType}"
-						style="width: 276px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.financialOrgRegType)}" />
-					</p:selectOneMenu> </td>
-			</tr>
+			
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>

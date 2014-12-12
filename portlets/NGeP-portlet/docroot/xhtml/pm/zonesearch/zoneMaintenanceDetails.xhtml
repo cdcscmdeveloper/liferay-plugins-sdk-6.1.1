@@ -79,7 +79,7 @@
 
 			<p:commandButton value="Add" process="@this"
 				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"
-				oncomplete="statelistpopup.show();" icon="ui-icon-add" />
+				 icon="ui-icon-add" />
 
 			<p:commandButton value="Delete" icon="ui-icon-delete"
 				process="@this,selectedStateId" partialSubmit="true"
@@ -90,7 +90,7 @@
 	</p:panel>
 	<p:dialog id="stateSearch" header="SELECT STATE"
 		widgetVar="statelistpopup" modal="true" width="600" height="300"
-		resizable="false">
+		resizable="false" closable="false">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<p:dataTable id="searchStateId" var="state"
@@ -116,10 +116,10 @@
 			<p:commandButton value="OK" action="#{zoneBackingBean.okZoneAction}"
 				ajax="true" icon="ui-icon-check"
 				update="selectedStateId,searchStateId"
-				process="@this, searchStateId" onclick="statelistpopup.hide();" />
+				process="@this, stateSearch"  />
 
 			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
-				onclick="statelistpopup.hide();" />
+				action="#{zoneBackingBean.cancleZone}" />
 		</div>
 	</p:dialog>
 </ui:composition>

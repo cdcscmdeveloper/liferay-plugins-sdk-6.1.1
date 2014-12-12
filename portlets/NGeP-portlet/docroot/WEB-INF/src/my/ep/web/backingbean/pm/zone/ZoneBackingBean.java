@@ -35,6 +35,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "zoneBackingBean")
 @ViewScoped
@@ -53,7 +54,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	}
 
-	public void preLoadingZone() {		
+	public void preLoadingZone() {	
+		log.info("preLoading Zone method");
 		this.resetZoneSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -64,7 +66,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * reset search bean fields
 	 */
 	public void resetZoneSearchBean() {
-		log.info("ZoneSearchBean");
+		log.info("ZoneSearchBeanLoading ----");
 		this.getManagedBean().setZoneSearchBean(new ZoneSearchBean());
 		searchZone = new SearchZonePagingDataModel();
 	}
@@ -94,6 +96,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			initialZone();
 			
 		}
+		getManagedBean().setShowParentMsg(true);
 		return NAV_TO_MAINTAIN;
 	}
 
@@ -268,6 +271,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 
 		retrievePmStateList();
+		RequestContext.getCurrentInstance()
+		.execute("statelistpopup.show()");
+		getManagedBean().setShowParentMsg(false);
+		
 
 	}
 
@@ -307,6 +314,15 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		if (getManagedBean().getSelectedStates().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
+		RequestContext.getCurrentInstance()
+		.execute("statelistpopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+		
+	}
+	public void cancleZone(){
+		RequestContext.getCurrentInstance()
+		.execute("statelistpopup.hide()");
+		getManagedBean().setShowParentMsg(true);
 		
 	}
 

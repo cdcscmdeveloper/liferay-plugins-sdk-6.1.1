@@ -34,7 +34,7 @@ import my.ep.dto.pm.common.location.LocationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.common.PmAddress;
+
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -73,7 +73,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void preLoadingLocation() {
 		this.resetLocationSearchBean();
-		
+		log.info("preLoading Location");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -316,7 +316,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							"Save Location failed."));
 			throw e;
 		}
-
+this.getManagedBean().setSelectedType(null);
 		return NAV_TO_SEARCH;
 
 	}
@@ -512,27 +512,15 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public void retrieveStateList(AjaxBehaviorEvent e) {
-		Long countryIdId = (Long) e.getComponent().getAttributes().get("value");
+		Long countryId = (Long) e.getComponent().getAttributes().get("value");
 		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(countryIdId);
+		reqDTO.setCountryId(countryId);
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStates(resDTO.getStateList());
-	}
-
-	public void retriveDivisionValues(AjaxBehaviorEvent e) {
-		Long stateId = (Long) e.getComponent().getAttributes().get("value");
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setStateId(stateId);
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateResDTO resDTO = stateSO.retriveStateDetailsByID(reqDTO);
-		getManagedBean().setState(resDTO.getPmState());
-
-	}
+	}	
 
 	/*
 	 * public void retrieveDivisionList(AjaxBehaviorEvent e){ Long stateId =
@@ -575,19 +563,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				.retriveDistrictListByStateID(districtReqDTO);
 		getManagedBean().setDistricts(districtResDTO.getDistrictList());
 
-	}
-
-	public void retrieveCityList(AjaxBehaviorEvent e) {
-		Long districtId = (Long) e.getComponent().getAttributes().get("value");
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setDistrictId(districtId);
-		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDistrictSO.class);
-		DistrictResDTO resDTO = districtSO.retriveDistrictDtlByID(reqDTO);
-		getManagedBean().setDistrict(resDTO.getPmDistrict());
-
-	}
+	}	
 
 	public void updateDivisionFlag(Long stateId) {
 
