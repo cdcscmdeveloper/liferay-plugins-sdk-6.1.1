@@ -42,7 +42,7 @@
 								<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 									action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType)}"
-									update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
+									update=":form" style="margin-bottom:5px;" />
 							</div>
 						</p:outputPanel> <ui:include
 							src="/xhtml/sm/shared/mofRegistration/personnelInfoForm.xhtml" />
@@ -53,13 +53,13 @@
 											<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 												actionListener="#{backingBean.setTabValue('2','1')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
-												update=":form" icon="ui-icon-prev" />
+												update=":form" />
 										</div></td>
 									<td><div align="right" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 												actionListener="#{backingBean.setTabValue('2','3')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
-												update=":form" icon="ui-icon-next" iconPos="right" />
+												update=":form" />
 										</div></td>
 								</tr>
 							</table>

@@ -22,13 +22,13 @@
 										<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 											actionListener="#{backingBean.setTabValue('1','0')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
-											icon="ui-icon-prev" update=":form" />
+											update=":form" />
 									</div></td>
 								<td><div align="right" style="width: 99%">
 										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 											actionListener="#{backingBean.setTabValue('1','2')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
-											icon="ui-icon-next" iconPos="right" update=":form" />
+											update=":form" />
 									</div></td>
 							</tr>
 						</table>
@@ -39,7 +39,7 @@
 	</c:if>
 
 	<c:if test="#{backingBean.managedBean.supplierUser}">
-		
+
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/associatedCompanyInfoForm.xhtml" />
 		<ui:include
@@ -51,13 +51,13 @@
 							<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 								actionListener="#{backingBean.setTabValue('1','0')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
-								icon="ui-icon-prev" update=":form" />
+								update=":form" />
 						</div></td>
 					<td><div align="right" style="width: 99%">
 							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 								actionListener="#{backingBean.setTabValue('1','2')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
-								icon="ui-icon-next" iconPos="right" update=":form" />
+								update=":form" />
 						</div></td>
 				</tr>
 			</table>
