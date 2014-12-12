@@ -34,9 +34,9 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel></td>
-				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
-						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.status}">
-						<f:selectItems style="width:189px;"
+				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;" 
+						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.status}" disabled="true">
+						<f:selectItems style="width:189px;" 
 							value="#{profcertifiedbodyBackingBean.getCertStatusList()}" />
 					</p:selectOneMenu></td>
 			</tr>
