@@ -69,7 +69,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
-				<p:inputTextarea rows="5" cols="40" autoResize="false" value="#{bankInfo.remark}" disabled="#{viewFlag}" />
+				<p:inputTextarea rows="5" cols="40" autoResize="false"  maxlength="500" value="#{bankInfo.remark}" disabled="#{viewFlag}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -94,7 +94,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
-				<p:inputTextarea rows="5" cols="100" autoResize="false" disabled="#{viewFlag}" maxlength="2500"
+				<p:inputTextarea rows="5" cols="100" autoResize="false" disabled="#{viewFlag}" maxlength="500"
 					value="#{finLsItem.remark}" />
 			</p:column>
 		</p:dataTable>
