@@ -775,6 +775,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		flInvoiceDataModel.reloadData();
 	}
 	
+	public void preRenderDocSearch() {
+		FacesContext fc=FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "flAp59Search?faces-redirect=true");
+		
+	}
+	
 	private class FlInvoicePagingDataModel extends PagingDataModel<FlInvoice> {
 		private static final long serialVersionUID = 1L;
 
@@ -1012,6 +1019,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
+	}
+	
+	/**
+	 * Page navigation to FLAP59 search page in INV
+	 */
+	public String backToPerviousAp59() {
+		return "flAp59Search";
 	}
 	
 	public String gpkiSignAction(String outcome) throws Exception{
