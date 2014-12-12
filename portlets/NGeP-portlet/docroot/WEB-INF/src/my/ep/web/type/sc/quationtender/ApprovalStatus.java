@@ -10,25 +10,28 @@ import my.ep.type.IEnumType;
  * 
  */
 public enum ApprovalStatus implements IEnumType {
-	APPROVED(1), REVIEW(2);
-	private int approvalStatus;
+	APPROVE("A"), REVISE("V"), REJECT("R");
+	
+	private String approvalStatus;
 
-	ApprovalStatus(int status) {
+	ApprovalStatus(String status) {
 		approvalStatus = status;
 	}
 
 	@Override
-	public Object value() {
+	public String value() {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getApprovalStatus() {
 		return approvalStatus;
 	}
 
-	public void setApprovalStatus(int approvalStatus) {
+	public String getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
 
+
+	
 }
