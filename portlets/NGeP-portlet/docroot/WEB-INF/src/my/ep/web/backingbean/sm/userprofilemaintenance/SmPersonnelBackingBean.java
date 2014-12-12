@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -20,7 +21,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -43,8 +43,6 @@ import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
@@ -79,7 +77,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 @ManagedBean(name = "smPersonnelBackingBean")
-@ViewScoped
+@RequestScoped
 public class SmPersonnelBackingBean extends
 		BaseBackingBean<SmPersonnelManagedBean> {
 
