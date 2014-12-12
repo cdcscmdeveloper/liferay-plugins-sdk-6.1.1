@@ -20,9 +20,11 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -41,6 +43,8 @@ import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
@@ -52,6 +56,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -67,7 +72,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -82,16 +86,16 @@ public class SmPersonnelBackingBean extends
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
 
 	public SmPersonnelBackingBean() {
-		log.info("********************SmPersonnelBackingBean Constructor***************");
+
 	}
 
 	public void preRenderSmPersonnel() {
-		log.info("********************SmPersonnelBackingBean PreRender***************");
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(
 				resDTO.getPmCountry().getCountryId());
@@ -104,12 +108,11 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void preRenderUpdateOwnProfilePage() {
-		log.info("********************SmPersonnelBackingBean preRenderUpdateOwnProfilePage***************");
-
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(
 				resDTO.getPmCountry().getCountryId());
@@ -135,7 +138,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void resetSmPersonnelSearch() {
-		log.info("********************SmPersonnelBackingBean resetSmPersonnelSearch***************");
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
@@ -184,8 +186,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public String navigateToAddNewUserPage() {
-		log.info("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
-
 		getManagedBean().setEditMode(false);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		removeEPRole();
@@ -194,7 +194,8 @@ public class SmPersonnelBackingBean extends
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
 
 		// getManagedBean().setDisableRole(false);
@@ -257,7 +258,9 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
 
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
 		int countActiveAppl = smPersonnelSO
 				.countSupplierWithActiveApplBySupplierId(reqDTO);
 		PersonnelResDTO resDTO = null;
@@ -270,6 +273,10 @@ public class SmPersonnelBackingBean extends
 			reqDTO.setHasActiveAppl(false);
 			getManagedBean().setUpgradeMofDraftAppl(false);
 		}
+
+		// set latest active smAppl
+		getManagedBean().setCurrSmAppl(getCurrActiveSmAppl(smSupplier));
+
 		resDTO = smPersonnelSO
 				.retrieveAuthorizedPersonnelsForLatestActiveAppl(reqDTO);
 		if (resDTO.getSmPersonnelList() != null
@@ -280,7 +287,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public String navigateToUpdateUserPage(String personnelId) {
-		log.info("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getManagedBean().setEditMode(true);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		buildRoleList();
@@ -316,7 +322,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void initializeLists() {
-		log.info("********************SmPersonnelBackingBean initializeLists***************");
 		getCountryList();
 
 		if (getManagedBean().getBasicSmPersonnelMailingAddress() != null
@@ -335,7 +340,8 @@ public class SmPersonnelBackingBean extends
 
 			/* Construct Mailing Address Object */
 			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICountrySO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			CountryResDTO resCountryDTO = countrySO
@@ -375,7 +381,8 @@ public class SmPersonnelBackingBean extends
 
 			/* Construct Permanent Address Object */
 			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICountrySO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			CountryResDTO resCountryDTO = countrySO
@@ -403,7 +410,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void initializeUpdateLists() {
-		log.info("********************SmPersonnelBackingBean initializeUpdateLists***************");
 		getCountryList();
 
 		if (getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses() != null
@@ -424,7 +430,9 @@ public class SmPersonnelBackingBean extends
 
 				/* Construct Mailing Address Object */
 				ICountrySO countrySO = (ICountrySO) BusinessDelegate
-						.getInstance().getServiceObject("pm", ICountrySO.class);
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICountrySO.class);
 				CountryReqDTO reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
@@ -465,7 +473,9 @@ public class SmPersonnelBackingBean extends
 
 				/* Construct Permanent Address Object */
 				ICountrySO countrySO = (ICountrySO) BusinessDelegate
-						.getInstance().getServiceObject("pm", ICountrySO.class);
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICountrySO.class);
 				CountryReqDTO reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
@@ -498,7 +508,8 @@ public class SmPersonnelBackingBean extends
 	public void getCountryList() {
 
 		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 
 		CountryResDTO resDTO = countrySO.retrieveCountryList();
@@ -529,7 +540,8 @@ public class SmPersonnelBackingBean extends
 	public List<SelectItem> getStateList(Long countryId) {
 
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
 		StateReqDTO reqDTO = new StateReqDTO();
 
 		reqDTO.setCountryId(countryId);
@@ -552,7 +564,8 @@ public class SmPersonnelBackingBean extends
 	public List<SelectItem> getDistrictList(Long stateId) {
 
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 
 		reqDTO.setStateId(stateId);
@@ -575,7 +588,8 @@ public class SmPersonnelBackingBean extends
 	public List<SelectItem> getCityList(Long districtId) {
 
 		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICitySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
 		CityReqDTO reqDTO = new CityReqDTO();
 
 		reqDTO.setDistrictId(districtId);
@@ -636,7 +650,6 @@ public class SmPersonnelBackingBean extends
 	public void setUpdateMailingAddrSameAsPerm() {
 		if (getManagedBean().getUpdateSmPersonnelMailingAddress()
 				.isSameAsPerm()) {
-			System.out.println("********* Duplicate Mail Addr ***********");
 			SmAddress address = cloneAddress(getManagedBean()
 					.getUpdateSmPersonnelPermanentAddress().getSmAddress());
 			this.getManagedBean().getUpdateSmPersonnelMailingAddress()
@@ -650,11 +663,9 @@ public class SmPersonnelBackingBean extends
 					.getSmAddress().getPmDistrict().getDistrictId().toString());
 		} else {
 			if (getManagedBean().getTempAddress() != null) {
-				System.out.println("*********** Prev Addr ************** ");
 				getManagedBean().getUpdateSmPersonnelMailingAddress()
 						.setSmAddress(getManagedBean().getTempAddress());
 			} else {
-				System.out.println("*********** Not same Addr ************** ");
 				getManagedBean().getUpdateSmPersonnelMailingAddress()
 						.setSmAddress(setDefaultAddr());
 			}
@@ -681,43 +692,15 @@ public class SmPersonnelBackingBean extends
 		PmDistrict district = new PmDistrict();
 		PmCity city = new PmCity();
 
-		// CountryReqDTO countryReqDTO = new CountryReqDTO();
-		// countryReqDTO.setCountryId(refAddress.getPmCountry().getCountryId());
-		// ICountrySO countrySO = (ICountrySO)
-		// BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
-		// CountryResDTO countryResDTO =
-		// countrySO.retrieveCountryById(countryReqDTO);
-		// country = countryResDTO.getPmCountry();
 		country.setCountryId(refAddress.getPmCountry().getCountryId());
 		address.setPmCountry(country);
 
-		// StateReqDTO stateReqDTO = new StateReqDTO();
-		// IStateSO stateSO = (IStateSO)
-		// BusinessDelegate.getInstance().getServiceObject("pm",
-		// IStateSO.class);
-		// stateReqDTO.setStateId(refAddress.getPmState().getStateId());
-		// StateResDTO stateResDTO = stateSO.retriveStateByID(stateReqDTO);
-		// state = stateResDTO.getPmState();
 		state.setStateId(refAddress.getPmState().getStateId());
 		address.setPmState(state);
 
-		// DistrictReqDTO districtReqDTO = new DistrictReqDTO();
-		// IDistrictSO districtSO = (IDistrictSO)
-		// BusinessDelegate.getInstance().getServiceObject("pm",
-		// IDistrictSO.class);
-		// districtReqDTO.setDistrictId(refAddress.getPmDistrict().getDistrictId());
-		// DistrictResDTO districtResDTO =
-		// districtSO.retriveDistrictByID(districtReqDTO);
-		// district = districtResDTO.getPmDistrict();
 		district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
 		address.setPmDistrict(district);
 
-		// CityReqDTO cityReqDTO = new CityReqDTO();
-		// ICitySO citySO = (ICitySO)
-		// BusinessDelegate.getInstance().getServiceObject("pm", ICitySO.class);
-		// cityReqDTO.setCityId(refAddress.getPmCity().getCityId());
-		// CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);
-		// city = cityResDTO.getPmCity();
 		city.setCityId(refAddress.getPmCity().getCityId());
 		address.setPmCity(city);
 
@@ -730,7 +713,8 @@ public class SmPersonnelBackingBean extends
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		cntry = resDTO.getPmCountry();
 		addr.setPmCity(new PmCity());
@@ -742,11 +726,10 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void getPersonnelInfoById(String personnelId) {
-
-		System.out
-				.println("********************SmPersonnelBackingBean getPersonnelInfoById***************");
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 
 		reqDTO.setPersonnelId(Long.valueOf(personnelId));
@@ -820,7 +803,8 @@ public class SmPersonnelBackingBean extends
 
 			/* Construct Mailing Address Object */
 			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICountrySO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			CountryResDTO resCountryDTO = countrySO
@@ -871,7 +855,9 @@ public class SmPersonnelBackingBean extends
 
 	public void getPersonnelByPmUser(PmUser usr) {
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
 		PersonnelResDTO resDTO = smPersonnelSO
@@ -943,7 +929,8 @@ public class SmPersonnelBackingBean extends
 
 			/* Construct Mailing Address Object */
 			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICountrySO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			CountryResDTO resCountryDTO = countrySO
@@ -1000,15 +987,7 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public String save() throws Exception {
-
 		String returnValue = null;
-		// if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
-		// ||
-		// getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
-		// else
-		// if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
-		// getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(0);
-		// updateAccountStatus();
 		getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
 				Integer.parseInt(ParameterConst.FLAG_YES));
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
@@ -1023,14 +1002,15 @@ public class SmPersonnelBackingBean extends
 		// validatePersonnelBeforeSave(smPersonnel);
 		// setPersonnelAddress(smPersonnel);
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
-			System.out.println("********* Duplicate Mail Addr ***********");
 			SmAddress address = cloneAddress(getManagedBean()
 					.getBasicSmPersonnelPermanentAddress().getSmAddress());
 			this.getManagedBean().getBasicSmPersonnelMailingAddress()
 					.setSmAddress(address);
 		}
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
@@ -1067,7 +1047,8 @@ public class SmPersonnelBackingBean extends
 		}
 
 		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryReqDTO reqCountryDTO = new CountryReqDTO();
 		reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 		CountryResDTO resCountryDTO = countrySO
@@ -1076,7 +1057,9 @@ public class SmPersonnelBackingBean extends
 		smPersonnel.setPmCountry(country);
 
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 
 		FacesScopes fs = new FacesScopes();
@@ -1084,13 +1067,9 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
-
-		smPersonnel.setSmAppl(getManagedBean().getUpdateSmPersonnel()
-				.getSmAppl());
+		reqDTO.setApplId(getManagedBean().getCurrSmAppl().getApplId());
 
 		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
-
-		System.out.println("Result:" + resDTO.isSuccessful());
 
 		if (resDTO.isSuccessful()) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -1122,7 +1101,8 @@ public class SmPersonnelBackingBean extends
 		Long countryId = country.getCountryId();
 
 		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryReqDTO reqCountryDTO = new CountryReqDTO();
 		reqCountryDTO.setCountryId(countryId);
 		CountryResDTO resCountryDTO = countrySO
@@ -1132,7 +1112,8 @@ public class SmPersonnelBackingBean extends
 		s1.setPmCountry(newCountry);
 
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
 		StateReqDTO reqStateDTO = new StateReqDTO();
 		reqStateDTO.setStateId(stateId);
 		StateResDTO resStateDTO = stateSO.retriveStateByID(reqStateDTO);
@@ -1141,7 +1122,8 @@ public class SmPersonnelBackingBean extends
 		s1.setPmState(newState);
 
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
 		DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 		reqDistrictDTO.setDistrictId(districtId);
 		DistrictResDTO resDistrictDTO = districtSO
@@ -1151,7 +1133,8 @@ public class SmPersonnelBackingBean extends
 		s1.setPmDistrict(newDistrict);
 
 		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICitySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
 		CityReqDTO reqCityDTO = new CityReqDTO();
 		reqCityDTO.setCityId(cityId);
 		CityResDTO resCityDTO = citySO.retriveCityById(reqCityDTO);
@@ -1160,7 +1143,6 @@ public class SmPersonnelBackingBean extends
 		s1.setPmCity(newCity);
 
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
-			System.out.println("********* Duplicate Mail Addr ***********");
 			SmAddress address = cloneAddress(getManagedBean()
 					.getBasicSmPersonnelPermanentAddress().getSmAddress());
 			this.getManagedBean().getBasicSmPersonnelMailingAddress()
@@ -1268,18 +1250,18 @@ public class SmPersonnelBackingBean extends
 									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
 					&& addr.getSmAddress() != null) {
 				postCode = addr.getSmAddress().getPostcode();
-				System.out.println(" *** Perm Addr Post Code ****" + postCode);
 			}
 		}
 		IMyIdentitySO myIdentitySO = (IMyIdentitySO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IMyIdentitySO.class);
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMyIdentitySO.class);
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		reqDTO.setName(per.getName());
 		reqDTO.setNewIcNo(per.getIdentificationNo());
 		reqDTO.setType("Online");
 		reqDTO.setPostCode(postCode);
-		System.out
-				.println(" *** Req DTO Post Code ****" + reqDTO.getPostCode());
+
 		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
 		StringBuffer sb = new StringBuffer();
 		sb.append("MessageConst.ERROR_MYIDENTITY_");
@@ -1297,14 +1279,13 @@ public class SmPersonnelBackingBean extends
 
 	public boolean isExistEmailInPmUser(String email) {
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IUserSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setEmail(email);
 
 		UserResDTO resDTO = userSO.retrieveUserByEmail(reqDTO);
 
-		System.out.println("*********resDTO.getUserList().size()*****"
-				+ resDTO.getUserList().size());
 		if (resDTO.getUserList().size() > 0) {
 			return true;
 		} else {
@@ -1313,10 +1294,9 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public boolean isExistUserByIdentificationNo(String idNo) {
-		System.out.println("*********retrieveUserByIdentificationNo**********"
-				+ idNo);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IUserSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setLoginId(idNo);
 		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
@@ -1336,15 +1316,15 @@ public class SmPersonnelBackingBean extends
 			// if(valid){
 
 			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 
 			reqDTO.setSmPersonnel(smPersonnel);
 
 			PersonnelResDTO resDTO = smPersonnelSO
 					.updatePersonnelRecord(reqDTO);
-
-			System.out.println("Result:" + resDTO.isSuccessful());
 
 			if (resDTO.isSuccessful()) {
 				FacesContext.getCurrentInstance().addMessage(
@@ -1367,7 +1347,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void assignAccountPrivilege(AjaxBehaviorEvent e) {
-		System.out.println("**** Enter Account privilege ******");
 		if (getManagedBean().getBasicSmPersonnel().getAuthorizedFlg() == 0) {
 			getManagedBean().getBasicSmPersonnel().setSoftcertFlg(0);
 			getManagedBean().getBasicSmPersonnel().setContractSignerFlg(0);
@@ -1390,10 +1369,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
-		System.out.println("***** The selected value of IC type is --- "
-				+ getManagedBean().getBasicSmPersonnel()
-						.getIdentificationTypeId());
-		// getManagedBean().getSelectedShareHolder().setIdentificationNo("");
 		if (getManagedBean().getBasicSmPersonnel().getIdentificationTypeId() != null) {
 			getManagedBean().getBasicSmPersonnel().setIdentificationType(
 					retrievePmParameterById(getManagedBean()
@@ -1410,7 +1385,8 @@ public class SmPersonnelBackingBean extends
 
 	private PmParameter retrievePmParameterById(Long paramId) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IParameterSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(paramId);
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
@@ -1464,20 +1440,18 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public String navigateToVerifyAdmin() {
-		System.out
-				.println("********************SmPersonnelBackingBean navigateToVerifyAdmin***************");
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		return "adminVerify.xhtml";
 	}
 
 	public void navigateToDeactivateAdminPage() {
-		System.out
-				.println("********************SmPersonnelBackingBean navigateToDeactivateAdminPage***************");
 		List<SmPersonnel> personnels = new ArrayList<SmPersonnel>();
 		initUserPersonnelInfo();
 		if (getManagedBean().getUpdateSmPersonnel() != null) {
 			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel()
 					.getSmAppl().getSmSupplier().getSupplierId());
@@ -1538,8 +1512,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void assignVerifyIdentType(AjaxBehaviorEvent e) {
-		System.out.println("***** The selected value of IC type is --- "
-				+ getManagedBean().getAdminVerifyIdType().getParameterId());
 		if (getManagedBean().getAdminVerifyIdType().getParameterId() != null) {
 			getManagedBean().setAdminVerifyIdType(
 					retrievePmParameterById(getManagedBean()
@@ -1553,8 +1525,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void preRenderDeactivateSuppAdmin() {
-		System.out
-				.println("********************SmPersonnelBackingBean preRenderDeactivateSuppAdmin***************");
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -1565,7 +1535,8 @@ public class SmPersonnelBackingBean extends
 	public void deactivateAdmin() {
 		if (getManagedBean().getAssignAdminPersonnelId() != null) {
 			ISupplierUserActivationSO suppUserActivationSO = (ISupplierUserActivationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							ISupplierUserActivationSO.class);
 			SupplierUserActivationReqDTO userPmReqDTO = new SupplierUserActivationReqDTO();
 			SupplierUserActivationResDTO userPmResDTO = new SupplierUserActivationResDTO();
@@ -1590,7 +1561,8 @@ public class SmPersonnelBackingBean extends
 
 				if (smPersonnel.getPersonnelId() != null) {
 					IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-							.getInstance().getServiceObject("sm",
+							.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_MANAGEMENT,
 									IPersonnelSO.class);
 					PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 					reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
@@ -1636,13 +1608,25 @@ public class SmPersonnelBackingBean extends
 									"/xhtml/sm/userProfileMaintenance/outputMsg");
 				}
 			} catch (Exception ex) {
-				log.info("deactivateAdmin ex>>>>" + ex.getMessage());
-				log.info("personnel Id>>>>>"
-						+ userPmReqDTO.getSmPersonnel().getPersonnelId());
 				throw new EpException(ex.getMessage());
 			}
 		} else {
 			log.info("No option selected>>>>>");
+		}
+	}
+
+	private SmAppl getCurrActiveSmAppl(SmSupplier smSupplier) {
+		if (getManagedBean().isUpgradeMofDraftAppl()) {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(smSupplier.getSupplierId());
+
+			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
+			return smPersonnelSO.retrieveActiveSmApplBySupplierId(reqDTO).getCurrActiveSmAppl();
+		} else {
+			return smSupplier.getSmAppl();
 		}
 	}
 
