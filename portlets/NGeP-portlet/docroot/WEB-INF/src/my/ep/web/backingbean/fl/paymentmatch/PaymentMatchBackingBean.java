@@ -937,7 +937,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 							}
 
 						}
-						if(deduction.getPmVotFund().getVotFundCode() == null){
+						if(deduction.getPmVotFund() == null || deduction.getPmVotFund().getVotFundCode() == null){
 							searchBean.getDataFilterBeans().add(new SearchFilterBean(
 									"pmParameter.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
@@ -947,7 +947,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 							resType = parameterSO.retrieveParameterDescListByType(reqType);
 							throw new EpException(MessageConst.ERROR_745059,new String[]{resType.getParameterDescList().get(0).getCodeName()});
 						}
-						if(deduction.getPmGlAccount().getGlAccCode() == null){
+						if(deduction.getPmGlAccount() == null || deduction.getPmGlAccount().getGlAccCode() == null){
 							searchBean.getDataFilterBeans().add(new SearchFilterBean(
 									"pmParameter.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
