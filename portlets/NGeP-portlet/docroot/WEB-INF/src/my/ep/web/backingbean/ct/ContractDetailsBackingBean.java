@@ -903,6 +903,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 								throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),"0"});
 							}
 						} 
+						
+						if(performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance bond reference no" });
+						} 
+						
+						if(performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance bond financial institution" });
+						} 
+						
 						if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
@@ -1725,14 +1736,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     /*Implementation of Bond Details*/
     public void addBondDetails() {
-		CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
-	    ctPerformanceBond.setFinancialOrg(new PmFinancialOrg());
-	    ctPerformanceBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+    	
+		CtPerformanceBond newBond = new CtPerformanceBond();
+		newBond.setFinancialOrg(new PmFinancialOrg());
+		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 	    Calendar cal = Calendar.getInstance();
         cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
         cal.add(Calendar.YEAR, 1); 
-	    ctPerformanceBond.setExpDate(cal.getTime());
-		this.getManagedBean().getContractVer().getCtPerformanceBonds().add(ctPerformanceBond);
+        newBond.setExpDate(cal.getTime());
+     	getManagedBean().getContractVer().getCtPerformanceBonds().add(newBond);
 	}
     
     public void delBondDetails() {
@@ -2795,7 +2807,7 @@ public void removeAddRow(){
 	} catch (Exception e) {
 		e.printStackTrace();
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-	}
+	} finally{}
 }
 	
 	
@@ -2807,5 +2819,13 @@ public void removeAddRow(){
 			}
 		}
 		return false;
+	}
+	
+	public void selectAll(){
+		    if(getManagedBean().isSelectAll()) {
+		    	  for(CtPerformanceBond bonds : getManagedBean().getContractVer().getCtPerformanceBonds()) {
+		    		  bonds.setSelectedCheckBox(true);
+		    	  }
+		    }
 	}
 }
