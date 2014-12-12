@@ -1045,10 +1045,23 @@ public class QTDetailBackingBean extends
 			}
 		}
 		quationTenderReqDTO.setRemoveDeductions(deductionRemoveList);
-		quationTenderReqDTO.setRemoveDocReports(this.getManagedBean()
-				.getRemoveDocReports());
+		quationTenderReqDTO.setRemoveDocReports(getToBeRemoveList());
 		quationTenderReqDTO.setSaveFlow(this.getManagedBean().isSaveFlow());
 		return quationTenderReqDTO;
+	}
+
+	/**
+	 * @return
+	 */
+	private List<ScQtDocReport> getToBeRemoveList() {
+		List<ScQtDocReport> toBeRemoveList = new ArrayList<ScQtDocReport>();
+
+		List<ScQtDocReport> techList = getManagedBean()
+				.getMarkDeletedScQtDocReportList();
+		if (techList != null && techList.size() > 0) {
+			toBeRemoveList.addAll(techList);
+		}
+		return toBeRemoveList;
 	}
 
 	/**
@@ -2309,6 +2322,12 @@ public class QTDetailBackingBean extends
 		if (getManagedBean().getScQtDocReportList() == null) {
 			IQTDetailSO detailSO;
 			QuationTenderResDTO resDTO = null;
+			
+			if (getManagedBean().getMarkDeletedScQtDocReportList() == null) {
+				getManagedBean().setMarkDeletedScQtDocReportList(
+						new ArrayList<ScQtDocReport>());
+			}
+			
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);

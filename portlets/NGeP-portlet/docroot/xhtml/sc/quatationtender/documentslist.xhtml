@@ -13,9 +13,25 @@
 			rowKey="#{scQtDocReport}" rowIndexVar="rowIndex" rows="10">
 
 			<ac:paginator for="doctbl" />
+			
+			<p:column style="width:2%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk" value="#{qTDocumentsBackingBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="doctbl" listener="#{qTDocumentsBackingBean.selectAll(qTDocumentsBackingBean.selectAll, qTDocumentsBackingBean.managedBean.scQtDocReportList)}"/>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				
+				<p:selectBooleanCheckbox value="#{scQtDocReport.selected}"
+					disabled="true"
+					rendered="#{scQtDocReport.definationType.parameterCode eq 'TD'  or scQtDocReport.definationType.parameterCode eq 'SD' }">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
 
-			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!empty scQtDocReport.pmDocument}" />
+				<p:selectBooleanCheckbox value="#{scQtDocReport.selected}"
+					rendered="#{scQtDocReport.definationType.parameterCode eq 'UP'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.title']}" style="width:58%">
 				<h:inputText size="50" value="#{scQtDocReport.title}"
@@ -59,7 +75,10 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this, doctbl" partialSubmit="true" action="#{qTDocumentsBackingBean.addDocumentList}"
 				oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this, doctbl" partialSubmit="true" icon="ui-icon-delete"
-				action="#{qTDocumentsBackingBean.deleteDocumentList}" update="doctbl" />
+				action="#{qTDocumentsBackingBean.markDeleteSelectedRowsAction(qTDocumentsBackingBean.managedBean.scQtDocReportList, qTDocumentsBackingBean.managedBean.markDeletedScQtDocReportList)}"
+				update="doctbl" >
+				<f:setPropertyActionListener target="#{qTDocumentsBackingBean.selectAll}" value="#{false}" />
+			</p:commandButton>
 		</div>
 	</p:panel>
 </ui:composition>
