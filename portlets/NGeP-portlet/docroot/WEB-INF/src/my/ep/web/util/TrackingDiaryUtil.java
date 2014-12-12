@@ -3,7 +3,6 @@
  */
 package my.ep.web.util;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
@@ -92,7 +91,8 @@ public class TrackingDiaryUtil {
 	private TrackingDiaryUtil() {
 	}
 	
-	public static boolean insertTrackingDiary(String actionDesc, BigDecimal actionedBy, BigDecimal actionedByRole, BigDecimal docId, String docNo, String docType, BigDecimal groupId) {
+	public static boolean insertTrackingDiary(String actionDesc, Long actionedBy, String actionedByRole, 
+			Long docId, String docNo, String docType, Long groupId, Long statusId, String groupDocType) {
 	
 		System.out.println("In insertTrackingDiary  action...................");
 
@@ -104,7 +104,9 @@ public class TrackingDiaryUtil {
 		pmTrackingDiary.setDocNo(docNo);
 		pmTrackingDiary.setDocType(docType);
 		pmTrackingDiary.setGroupId(groupId);
-		
+		pmTrackingDiary.setStatusId(statusId);
+		pmTrackingDiary.setGroupDocType(groupDocType);
+	
 		TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 		reqDTO.setPmTrackingDiary(pmTrackingDiary);
 		
