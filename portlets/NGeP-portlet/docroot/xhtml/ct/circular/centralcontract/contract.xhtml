@@ -133,15 +133,6 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-						<p:selectOneMenu value="#{itemVar.recordStatusFlg}"
-							disabled="#{!centralContractBackingBean.managedBean.updateAction or
-								centralContractBackingBean.managedBean.viewContract}"
-							style="width:70px;">
-							<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-							<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-						</p:selectOneMenu>
-					</p:column>
 				</p:dataTable>
 			</h:panelGroup>
 		</p:outputPanel>
