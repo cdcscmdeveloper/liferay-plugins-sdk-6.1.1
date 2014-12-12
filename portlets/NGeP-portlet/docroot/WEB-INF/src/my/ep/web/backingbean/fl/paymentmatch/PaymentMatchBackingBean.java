@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -493,7 +494,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		if(deductionAmt.doubleValue() == 0){
 			getManagedBean().setPaidPerc(new BigDecimal(0));
 		}else{
-			getManagedBean().setPaidPerc(newPaidAmt.divide(deductionAmt).multiply(new BigDecimal(100)));	
+			getManagedBean().setPaidPerc(newPaidAmt.divide(deductionAmt,2,RoundingMode.HALF_UP).multiply(new BigDecimal(100)));	
 		}
 		getManagedBean().setBalanceAmt(deductionAmt.subtract(newPaidAmt));
 	}
@@ -691,7 +692,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					getManagedBean().getPaymentAdvice().setFeeAmt(new BigDecimal(0));
 				}else{
 					newInvoiceAmt = newInvoiceAmt.multiply(serviceFee);
-					transFee = newInvoiceAmt.divide(perc);
+					transFee = newInvoiceAmt.divide(perc,2,RoundingMode.HALF_UP);
 					getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
 				}
 			}
@@ -706,7 +707,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		} else if(nonExemptedItemAmt.doubleValue() > 0 && haveDeduction == false){
 			invMulty = nonExemptedItemAmt.multiply(serviceFee);
-			transFee = invMulty.divide(percentage);
+			transFee = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 			getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
 			getManagedBean().setDeductionAmt(totalDeductionAmt);
 			calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(transFee));
@@ -1086,7 +1087,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			if(deductionAmt.doubleValue() == 0){
 				getManagedBean().setPaidPerc(new BigDecimal(0));
 			}else{
-				getManagedBean().setPaidPerc(ctRes.getPaidAdvancePaymentAmt().divide(deductionAmt).multiply(new BigDecimal(100)));	
+				getManagedBean().setPaidPerc(ctRes.getPaidAdvancePaymentAmt().divide(deductionAmt,2,RoundingMode.HALF_UP).multiply(new BigDecimal(100)));	
 			}
 			getManagedBean().setBalanceAmt(deductionAmt.subtract(ctRes.getPaidAdvancePaymentAmt()));
 		}
