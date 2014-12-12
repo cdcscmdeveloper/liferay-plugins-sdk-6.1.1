@@ -189,8 +189,22 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					QuoteResDTO resDTO= getQuoteSO().getPanelSupplierByPanelItem(reqDTO);
 					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
 					if(selectedPanelItem != null) {
-						if(selectedPanelItem.getItemCategoryId() != null){
+						TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+						TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 
+						if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
+							if(productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
+								throw new EpException(MessageConst.ERROR_760160);
+							}
+						}
+
+						if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
+							if(serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
+								throw new EpException(MessageConst.ERROR_760160);
+							}
+						}
+
+						if(selectedPanelItem.getItemCategoryId() != null){
 							if(selectedPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)){
 								// panel item general 
 								scQuote.setTitle(selectedPanelItem.getScRequestItem().getItemName());
@@ -222,21 +236,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 									OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
 									scQuote = checkGovtSeller(orgProfileResDTO.getPmOrgProfile(), scQuote);
 								}
-							}
-						}
-
-						TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
-						TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
-
-						if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
-							if(productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
-								throw new EpException(MessageConst.ERROR_760160);
-							}
-						}
-
-						if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
-							if(serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
-								throw new EpException(MessageConst.ERROR_760160);
 							}
 						}
 						//adding selected item to item List
@@ -515,7 +514,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return suppliers;
 	}
 	
-	public void prepareQuestions(CtPanelItem ctPanelItem, CmSupplierItem cmSupplierItem) {
+	private void prepareQuestions(CtPanelItem ctPanelItem, CmSupplierItem cmSupplierItem) {
 		int itemCode = 0;
 		CmItem cmItem = null;
 		PmUom uom = null;
@@ -720,6 +719,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(!getManagedBean().getZoneTrees().isEmpty()){
 					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 				}
+				
+				validatePanelItem(quote.getPanelItem());
 
 				// panel item
 				if(getManagedBean().getPanelSuppliers() != null){
@@ -869,7 +870,37 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return null;
 	}
-	
+
+	private void validatePanelItem(CtPanelItem ctPanelItem) {
+		FacesScopes facesScopes = new FacesScopes();
+		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+		if(productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
+				productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
+
+			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
+
+				if(ctPanelItem.getMinimumOrderQty() < tplSpecQuestion.getClQuantity().intValue()){
+					throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+				}
+			}
+		}
+
+		if(serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
+				serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
+
+			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
+				if(ctPanelItem.getMinimumOrderQty() < tplSpecQuestion.getClQuantity().intValue()){
+					throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+				}
+			}
+		}
+	}
+
 	private void reloadSimpleQuote(ScQuote scQuote){
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
@@ -1119,7 +1150,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(!getManagedBean().getZoneTrees().isEmpty()){
 					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 				}
-
+				validatePanelItem(quote.getPanelItem());
+				
 				// panel item
 				if(getManagedBean().getPanelSuppliers() != null){
 
