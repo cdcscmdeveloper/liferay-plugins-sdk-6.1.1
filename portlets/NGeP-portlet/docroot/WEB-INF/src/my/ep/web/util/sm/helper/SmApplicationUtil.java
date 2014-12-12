@@ -191,40 +191,43 @@ public class SmApplicationUtil {
 		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
 	}
-	
-	public static SmAuthorizedPersonnelCountVO getSmAuthorizedPersonnelCountVO(Long supplierId, String applType,
-			Long applId,boolean isAddNewPersonnel){
-		int resultCount =0;
-				
+
+	public static SmAuthorizedPersonnelCountVO getSmAuthorizedPersonnelCountVO(
+			Long supplierId, String applType, Long applId,
+			boolean isAddNewPersonnel) {
+		int resultCount = 0;
+
 		SmAuthorizedPersonnelCountVO countVO = new SmAuthorizedPersonnelCountVO();
 		countVO.setReachAuthorizedPersonnelLimit(false);
 		countVO.setJustificationRequired(false);
-		
+
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setApplId(applId);
 		reqDTO.setMof(true);
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
 		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCount(reqDTO);
-		
+
 		int authPersLimit = 0;
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			authPersLimit = 5;
-		}else{
+		} else {
 			authPersLimit = 10;
 		}
-		
+
 		if (resDTO != null && resDTO.getCount() != null) {
 			resultCount = resDTO.getCount().intValue();
-			if(resultCount>=authPersLimit){
+			if (resultCount >= authPersLimit) {
 				countVO.setReachAuthorizedPersonnelLimit(true);
 			}
-			
-			if(isAddNewPersonnel){
-				resultCount = resultCount+1;
+
+			if (isAddNewPersonnel) {
+				resultCount = resultCount + 1;
 			}
-			if(resultCount>5){
+			if (resultCount > 5) {
 				countVO.setJustificationRequired(true);
 			}
 		}
@@ -2849,8 +2852,6 @@ public class SmApplicationUtil {
 	public static SmSupplierBasicInfoVO getSmSupplierBasicInfoVO(
 			SmApplicationManagedBean bean) {
 		SmSupplierBasicInfoVO smSupplierBasicInfoVO = bean.getBasicInfo();
-		String addressLine = "";
-		String postCodeCityCountry = "";
 		if (smSupplierBasicInfoVO == null) {
 			smSupplierBasicInfoVO = new SmSupplierBasicInfoVO();
 		}
@@ -2942,10 +2943,9 @@ public class SmApplicationUtil {
 				}
 				if (smSupplierBasicInfoVO.getAddress().getSmAddress()
 						.getPmCountry() != null) {
-					sb.append(",")
-					.append("<br/>")
-					.append(smSupplierBasicInfoVO.getAddress().getSmAddress()
-							.getPmCountry().getCountryName());
+					sb.append(",").append(
+							smSupplierBasicInfoVO.getAddress().getSmAddress()
+									.getPmCountry().getCountryName());
 				}
 				smSupplierBasicInfoVO.setAddressLine(sb.toString());
 				// smSupplierBasicInfoVO
