@@ -670,24 +670,36 @@ public class EvaluationBackingBean extends
 					.getManagedBean().getComplianceTechnicalProposalCheckList();
 			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
 				for (ScQtProposalChecklist proposalCheckList : technicalCompliance) {
-					if (proposalCheckList.getScQtProposal().isSubmitted()
-							&& !proposalCheckList.getCompliance()) {
-						if (null == proposalCheckList.getRemark()
-								|| "".equalsIgnoreCase(proposalCheckList
-										.getRemark())) {
-							throw new EpException(MessageConst.ERROR_760198);
+					if (proposalCheckList.getScQtProposal().isSubmitted()) {
+						if (null == proposalCheckList.getCompliance()) {
+							throw new EpException(MessageConst.ERROR_760204);
 						}
-
+						if (!proposalCheckList.getCompliance()) {
+							if (null == proposalCheckList.getRemark()
+									|| "".equalsIgnoreCase(proposalCheckList
+											.getRemark())) {
+								throw new EpException(MessageConst.ERROR_760198);
+							}
+						}
 					}
+
 				}
 				reqDTO.setComplianceList(technicalCompliance);
 			}
+
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
 				reqDTO.setComplianceList(presentatiodemo);
 			}
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
-			this.getManagedBean().setComplianceTechnicalProposalCheckList(
-					resDTO.getSaveComplianceList());
+			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
+				this.getManagedBean().setComplianceTechnicalProposalCheckList(
+						resDTO.getSaveComplianceList());
+			}
+
+			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
+				this.getManagedBean().setPresentationDemoSupplierList(
+						resDTO.getSaveComplianceList());
+			}
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -2857,6 +2869,35 @@ public class EvaluationBackingBean extends
 		return "financialotherchecklists.xhtml";
 	}
 
+	public void retrivePresetationDemoCheckList() {
+		IQTEvaluationSO evaluationSo = null;
+		EvaluationResDTO resDTO = new EvaluationResDTO();
+		// this.getManagedBean().setQtProposalChecklist(checklist);
+		try {
+			this.getManagedBean().setPresentationDemoActiveIndex(0);
+			this.getManagedBean().setDemo(
+					this.getManagedBean().getScQt().isDemoRequired());
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setEvalStage(QTConstants.TECHNICAL_DOC_TYPE);
+			// resDTO = evaluationSo.retrievePresentationDemoCheckList(reqDTO);
+
+			if (null != resDTO
+					&& null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
+				this.getManagedBean().setScQtChecklist(
+						resDTO.getCheckListResultBean().getResultList().get(0));
+
+			}
+
+		} finally {
+			evaluationSo = null;
+		}
+	}
+
 	public void retrivePresentationDemo() {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
@@ -3080,6 +3121,7 @@ public class EvaluationBackingBean extends
 
 			}
 			if (outputTab == 3) {
+				// retrivePresetationDemoCheckList();
 
 				retrivePresentationDemo();
 
@@ -3110,6 +3152,17 @@ public class EvaluationBackingBean extends
 						}
 
 					}
+				}
+				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)) {
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
+						saveMeetingDtls();
+					}
+
 				}
 
 				retrieveReportTabDtl();
@@ -3369,9 +3422,9 @@ public class EvaluationBackingBean extends
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			if (!this.getManagedBean().isDemo()) {
-				if(tabindex==0){
-				evaluationSO.saveQTDtl(reqDtO);
-				renewSesionObject();
+				if (tabindex == 0) {
+					evaluationSO.saveQTDtl(reqDtO);
+					renewSesionObject();
 				}
 			} else {
 				saveTechnicalCompliance();
@@ -3604,7 +3657,13 @@ public class EvaluationBackingBean extends
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
+		IQTEvaluationSO evaluationSO = null;
+		IParameterSO parameterSo = null;
 		if (event.getFile() != null) {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ScAttachment scAttachment = null;
 			ScQtEvaluationReport scQtEvaluationReport = this.getManagedBean()
 					.getScQtEvaluationReport();
@@ -3628,6 +3687,20 @@ public class EvaluationBackingBean extends
 			attachment.setDocNo(scQtEvaluationReport.getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
+			scQtEvaluationReport.setScQtEvaluationReportAttachment(attachment);
+			scQtEvaluationReport.setDocCategory(EvaluationReport
+					.getName(getManagedBean().getCommitteeType()));
+			scQtEvaluationReport.setTitle(getManagedBean().getCommitteeType()
+					+ "Title");
+			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+			docDefTypeReqDTO
+					.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			docDefTypeReqDTO
+					.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO docDefTypeResDTO = parameterSo
+					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+			scQtEvaluationReport.setDefinationType(docDefTypeResDTO
+					.getPmParameter());
 			scQtEvaluationReport.setScQtEvaluationReportAttachment(attachment);
 			this.getManagedBean().setScQtEvaluationReport(scQtEvaluationReport);
 
@@ -3666,7 +3739,10 @@ public class EvaluationBackingBean extends
 
 	public void reportUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
+		IQTEvaluationSO evaluationSO = null;
 		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			ScQtCheckList scQtChecklist = this.getManagedBean()
 					.getScQtChecklist();
 			if (null == scQtChecklist) {
@@ -3686,6 +3762,12 @@ public class EvaluationBackingBean extends
 			uploadAttachment(event.getFile(), attachment);
 
 			scQtChecklist.setScQtCheckListAttachment(attachment);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+
+			/*
+			 * EvaluationResDTO resDTO = evaluationSO
+			 * .saveOrUpdateReportDtls(reqDTO);
+			 */
 			this.getManagedBean().setScQtChecklist(scQtChecklist);
 		} finally {
 
