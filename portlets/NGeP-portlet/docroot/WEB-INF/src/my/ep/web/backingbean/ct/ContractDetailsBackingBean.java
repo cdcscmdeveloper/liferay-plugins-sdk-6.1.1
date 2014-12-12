@@ -1414,7 +1414,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return new ArrayList<SelectItem>();
 	}
 	
-	public List<SelectItem> retrieveStartMonthList(CtSchedule schedule){
+	public List<SelectItem> retrieveStartMonthList(String  tableStartYear){
 		 
 	     List<SelectItem> selectItems = null;
 	     Map<String, String> months = null;
@@ -1441,10 +1441,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					int startMonth = Integer.valueOf(fromdate.substring(3, 5));
 					int startYear = Integer.valueOf(fromdate.substring(6, 10));
 				
-					if(schedule.getStartYear() != null) {
-					    schedStartYear = Integer.valueOf(schedule.getStartYear());
-				 	}
-		
+					if(tableStartYear != null && !tableStartYear.equalsIgnoreCase("")) {
+					    schedStartYear = Integer.valueOf(tableStartYear);
+				 	} 
+					
 					 String enddate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					 int endMonth = Integer.valueOf(enddate.substring(3, 5));
 					 int endYear = Integer.valueOf(enddate.substring(6, 10));
@@ -1452,7 +1452,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					 selectItems = new ArrayList<SelectItem>();
 					 selectItems.add(new SelectItem(null, "-Select One-"));
 					 
-					 if(schedStartYear == startYear && schedStartYear != endYear) { 
+					 if((schedStartYear == 0) || (schedStartYear == startYear && schedStartYear != endYear)) { 
 					      for(int i=startMonth; i <= 12; i++) 
 					    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 			
@@ -1472,7 +1472,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 return selectItems;
 }
 	
-	public List<SelectItem> retrieveEndMonthList(CtSchedule schedule){
+	
+	
+	public List<SelectItem> retrieveEndMonthList(String tableEndYear){
 		 
 		     List<SelectItem> selectItems = null;
 		     Map<String, String> months = null;
@@ -1499,8 +1501,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						int startMonth = Integer.valueOf(fromdate.substring(3, 5));
 						int startYear = Integer.valueOf(fromdate.substring(6, 10));
 					
-						if(schedule.getStartYear() != null) {
-							    schedEndYear = Integer.valueOf(schedule.getEndYear());
+						if(tableEndYear != null && !tableEndYear.equalsIgnoreCase("")) {
+							    schedEndYear = Integer.valueOf(tableEndYear);
 						}
 			
 						 String enddate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -1694,9 +1696,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void addScheduleDetails(){
 		CtSchedule ctSchedules = new CtSchedule();
 		ctSchedules.setScheduleNo(getManagedBean().getContractVer().getCtSchedules().size()+1);
-		if(ctSchedules.getScheduleType() == null)
-			ctSchedules.setScheduleType(new PmParameter());
-		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
+		ctSchedules.setScheduleType(new PmParameter());
+		getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
 	
 	public void deleteScheduleDetails(){
@@ -1710,7 +1711,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void addFrequencyDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();
 		ctProgressivePayment.setPhaseNo(getManagedBean().getContractVer().getCtProgressivePayments().size()+1);
-		this.getManagedBean().getContractVer().getCtProgressivePayments().add(ctProgressivePayment);
+		getManagedBean().getContractVer().getCtProgressivePayments().add(ctProgressivePayment);
 	}
 
 	public void deleteFrequencyDetails() {
@@ -1995,48 +1996,30 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	        }
 	  }
 		 
-    public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
-    	calculatePercentage(ctProgressivePayment);
-    	getManagedBean().setProgSchedButtonDeactive(false);
-    	if(ctProgressivePayment.getEndMonth() == null || ctProgressivePayment.getStartMonth() == null) {
-    		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
-		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
-			        dataList.setValidateProgressiveDate(false);
-			    }
-			 }
-   	 	}
-    	else {
-		     int startYear = Integer.valueOf((String) ctProgressivePayment.getStartYear());  
-			 int endYear = Integer.valueOf((String) ctProgressivePayment.getEndYear());
-			 int startMonth = Integer.valueOf((String) ctProgressivePayment.getStartMonth());  
-			 int endMonth = Integer.valueOf((String) ctProgressivePayment.getEndMonth());
-			 
-			 SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-			 int startContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(3, 5));
-			 int endContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(3, 5));
-			 int startContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
-			 int endContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
-			  
-			if((startMonth > endMonth  &&  startYear >= endYear)||(startMonth <= endMonth  && startYear > endYear)
-					 ||(startMonth < startContractMonth -1 && startYear == startContractYear) || (startMonth > endContractMonth-1 && startYear == endContractYear)
-			    	 || (endMonth > endContractMonth-1 && endYear == endContractYear) || (endMonth < startContractMonth -1 && endYear == startContractYear)){
-			   for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
-			    	  if(dataList.equals(ctProgressivePayment)) {
-			    		 dataList.setValidateProgressiveDate(true);
-			    		 getManagedBean().setProgSchedButtonDeactive(true);
-			    		 throw new EpException(MessageConst.ERROR_750024);
-			    	}
-			    }
-			 }
-			else{
-			    for(CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
-	                 if(dataList.equals(ctProgressivePayment)){
-			    	    dataList.setValidateProgressiveDate(false);
-			          }
-			     }
-			 }
-    	}
-	}
+    public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment, int index){
+    	
+    	    getManagedBean().getContractVer().getCtProgressivePayments().remove(index);
+    	    getManagedBean().getContractVer().getCtProgressivePayments().add(index, ctProgressivePayment);
+    	 
+    	    calculatePercentage(ctProgressivePayment);
+    	    getManagedBean().setProgSchedButtonDeactive(false);
+    	    if(ctProgressivePayment.getEndMonth() != null && ctProgressivePayment.getStartMonth() != null) {
+    		
+		         int startYear = Integer.valueOf((String) ctProgressivePayment.getStartYear());  
+			     int endYear = Integer.valueOf((String) ctProgressivePayment.getEndYear());
+			     int startMonth = Integer.valueOf((String) ctProgressivePayment.getStartMonth());  
+			     int endMonth = Integer.valueOf((String) ctProgressivePayment.getEndMonth());
+			   
+			     if((startMonth > endMonth  &&  startYear >= endYear)||(startMonth <= endMonth  && startYear > endYear)) {
+			             for(CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
+			    	             if(dataList.equals(ctProgressivePayment)) {
+			    		             getManagedBean().setProgSchedButtonDeactive(true);
+			    		             throw new EpException(MessageConst.ERROR_750024);
+			    	             }
+			              }
+			      }
+    	   }
+	  }
 		 
     public void chkJustificationAction(){
 		  try {
@@ -2484,98 +2467,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 }
 	
 	public void ProgressiveDate(){
-		String startMonth = "";
-		String endMonth = "";
+	
 		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			   
 			if(ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
 			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-                String fromdate = dateFormat.format(ctSchedules.getFromDate());
-			    String todate = dateFormat.format(ctSchedules.getToDate());
-			    String startdate = fromdate.substring(3, 5);
-			    String startYear = fromdate.substring(6,fromdate.length());
-			    String enddate = todate.substring(3, 5);
-			    String endYear = todate.substring(6, todate.length());
-                if (startdate.equalsIgnoreCase("01")) {
-				     startMonth = "0";
-			    }
-			  if (startdate.equalsIgnoreCase("02")) {
-				   startMonth = "1";
-			  }
-				if (startdate.equalsIgnoreCase("03")) {
-					startMonth = "2";
-				}
-				if (startdate.equalsIgnoreCase("04")) {
-					startMonth = "3";
-				}
-				if (startdate.equalsIgnoreCase("05")) {
-					startMonth = "4";
-				}
-				if (startdate.equalsIgnoreCase("06")) {
-					startMonth = "5";
-				}
-	
-				if (startdate.equalsIgnoreCase("07")) {
-					startMonth = "6";
-				}
-				if (startdate.equalsIgnoreCase("08")) {
-					startMonth = "7";
-				}
-				if (startdate.equalsIgnoreCase("09")) {
-					startMonth = "8";
-				}
-				if (startdate.equalsIgnoreCase("10")) {
-					startMonth = "9";
-				}
-				if (startdate.equalsIgnoreCase("11")) {
-					startMonth = "10";
-				}
-				if (startdate.equalsIgnoreCase("12")) {
-					startMonth = "11";
-				}
-	
-				if (enddate.equalsIgnoreCase("01")) {
-					endMonth = "0";
-				}
-				if (enddate.equalsIgnoreCase("02")) {
-					endMonth = "1";
-				}
-				if (enddate.equalsIgnoreCase("03")) {
-					endMonth = "2";
-				}
-				if (enddate.equalsIgnoreCase("04")) {
-					endMonth = "3";
-				}
-				if (enddate.equalsIgnoreCase("05")) {
-					endMonth = "4";
-				}
-				if (enddate.equalsIgnoreCase("06")) {
-					endMonth = "5";
-				}
-	
-				if (enddate.equalsIgnoreCase("07")) {
-					endMonth = "6";
-				}
-				if (enddate.equalsIgnoreCase("08")) {
-					endMonth = "7";
-				}
-				if (enddate.equalsIgnoreCase("09")) {
-					endMonth = "8";
-				}
-				if (enddate.equalsIgnoreCase("10")) {
-					endMonth = "9";
-				}
-				if (enddate.equalsIgnoreCase("11")) {
-					endMonth = "10";
-				}
-				if (enddate.equalsIgnoreCase("12")) {
-					endMonth = "11";
-				}
-			
-			ctSchedules.setStartMonth(startMonth);
-			ctSchedules.setEndMonth(endMonth);
-			ctSchedules.setStartYear(startYear);
-			ctSchedules.setEndYear(endYear);
+               
+			    String fromdate = dateFormat.format(ctSchedules.getFromDate());
+			    ctSchedules.setStartMonth(fromdate.substring(3, 5));
+				ctSchedules.setStartYear(fromdate.substring(6,fromdate.length()));
+			   
+				String todate = dateFormat.format(ctSchedules.getToDate());
+				ctSchedules.setEndMonth(todate.substring(3, 5));
+			    ctSchedules.setEndYear(todate.substring(6, todate.length()));
+
 			}
 		}
 	}
@@ -2604,85 +2509,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				  }
 	    	  } else {
 				           if (getManagedBean().getContractVer().getCtProgressivePayments() != null && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-					String Startmonth = "";
-					String endmonth = "";
-					for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
-						if (schedule.getStartMonth() != null && schedule.getEndMonth() != null){
-						if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-							Startmonth = "01";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-							Startmonth = "02";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-							Startmonth = "03";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-							Startmonth = "04";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-							Startmonth = "05";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-							Startmonth = "06";
-						}
-
-						else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-							Startmonth = "07";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-							Startmonth = "08";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-							Startmonth = "09";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-							Startmonth = "10";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-							Startmonth = "11";
-						} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-							Startmonth = "12";
-						}
-						if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-							endmonth = "01";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-							endmonth = "02";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-							endmonth = "03";
-						}
-
-						else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-							endmonth = "04";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-							endmonth = "05";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-							endmonth = "06";
-						}
-
-						else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-							endmonth = "07";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-							endmonth = "08";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-							endmonth = "09";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-							endmonth = "10";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-							endmonth = "11";
-						} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-							endmonth = "12";
-						}
-						Date d1 = new Date();
-
-						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-						String localDate = format.format(d1);
-						String date = localDate.substring(0, 2);
-						String fromdate = date + "/" + Startmonth + "/"+ schedule.getStartYear();
-						String toDate = date + "/" + endmonth + "/"+ schedule.getEndYear();
-						try {
-							schedule.setFromDate(format.parse(fromdate));
-							schedule.setToDate(format.parse(toDate));
-						} catch (ParseException e) {
-							log.debug(e.getMessage());
-						}
-					  }
-					}
-					getManagedBean().getContractVer().setCtSchedules(null);
-				} 
-			}	
-	    }
+				            	for(CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
+						              if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
+						
+						                       Date d1 = new Date();
+                                               SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						                       String localDate = format.format(d1);
+						                       String date = localDate.substring(0, 2);
+						                       String fromdate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
+						                       String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+						                       try {
+							                          schedule.setFromDate(format.parse(fromdate));
+							                          schedule.setToDate(format.parse(toDate));
+						                      } catch (ParseException e) {
+							                          log.debug(e.getMessage());
+						                      }
+					                 }
+					           } getManagedBean().getContractVer().setCtSchedules(null);
+				        } 
+			    }	
+	      }
 	
 	public void resetAgencyDetails(){
 		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
