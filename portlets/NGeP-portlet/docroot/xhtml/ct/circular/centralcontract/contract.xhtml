@@ -93,7 +93,7 @@
 					style="float:left; font-weight:bold; padding-top:5px;" />
 				<div style="clear: both" />
 				<p:dataTable id="circularItemDt" var="itemVar"
-					value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
+					value="#{centralContractBackingBean.getActiveCircularItem()}"
 					selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}"
 					rowKey="#{itemVar}">
 					<ac:paginator for="circularItemDt" />

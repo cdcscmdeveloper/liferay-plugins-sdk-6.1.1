@@ -769,6 +769,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				setContractCircularVar(resDTO);
 			}
 			
+			getManagedBean().setSelectedCircularContract(null);
+			getManagedBean().setSelectedCircularItem(null);
+			getManagedBean().setSelectedZoneItems(null);
+			
 			return "circularBase.xhtml?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -903,6 +907,23 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 	getManagedBean().setZonePriceMap(null);
 			getManagedBean().setChkItemZone(false);
 			getManagedBean().setChkItemPrice(false);
+	}
+	
+	public List<CtCircularItem> getActiveCircularItem() {
+		List<CtCircularItem> activeItemList = new ArrayList<CtCircularItem>();
+		Date currentDate = new Date();
+		
+		for(CtCircularItem circularItem : getManagedBean().getSelectedCircularContract().getCtCircularItems()) {
+			for(CtContractItem contractItem : getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
+				if (circularItem.getCtContractItem().getScRequestItem().getRequestNoteItemId().equals(contractItem.getScRequestItem().getRequestNoteItemId())) {
+					if(contractItem.isRecordStatus() || (!contractItem.isRecordStatus() && (currentDate.before(contractItem.getEffDate()) || currentDate.after(contractItem.getExpDate())))) {
+						activeItemList.add(circularItem);						
+					}
+					break;
+				}
+			}
+		}
+		return activeItemList;
 	}
 	
 	public void setZoneListener(){
