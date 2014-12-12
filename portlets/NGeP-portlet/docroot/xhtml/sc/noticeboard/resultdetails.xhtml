@@ -29,26 +29,22 @@
 			<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
 				style="width:11%;white-space: normal;">
 				<h:outputText value="#{scqt[3]}">
-					<!-- <f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" /> -->
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
 				style="width:11%;white-space: normal;">
 				<h:outputText value="#{scqt[4]}">
-					<!-- <f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" /> -->
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText>
 
 				<h:outputText
 					value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
 					styleClass="lastUpdated" escape="false"
 					rendered="#{isChangesTab and !empty scqt[6]}" />
-				<h:outputText value="#{scqt[6]}" styleClass="lastUpdated"
-					rendered="#{isChangesTab and !empty scqt[6]}">
-					<!-- <f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" /> -->
+				<h:outputText value="#{scqt[6]}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty scqt[6]}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
