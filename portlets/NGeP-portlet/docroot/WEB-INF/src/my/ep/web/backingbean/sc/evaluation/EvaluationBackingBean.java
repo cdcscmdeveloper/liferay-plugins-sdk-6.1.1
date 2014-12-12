@@ -3369,8 +3369,10 @@ public class EvaluationBackingBean extends
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			if (!this.getManagedBean().isDemo()) {
+				if(tabindex==0){
 				evaluationSO.saveQTDtl(reqDtO);
 				renewSesionObject();
+				}
 			} else {
 				saveTechnicalCompliance();
 				renewSesionObject();
