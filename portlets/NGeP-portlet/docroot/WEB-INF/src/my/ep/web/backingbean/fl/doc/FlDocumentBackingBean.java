@@ -409,9 +409,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				}				
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.initializeRemarkAndAttachement(null, resDTO.getRemarkList(), resDTO.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
-			}
-			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 				getSumOrderedQty(flOrderBB.getManagedBean().getFlRequest());
@@ -451,9 +451,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					}
 			}	
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
-			}
-			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
