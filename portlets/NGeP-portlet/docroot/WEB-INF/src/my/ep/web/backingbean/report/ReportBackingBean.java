@@ -2663,14 +2663,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
       	      .getCurrentInstance().getExternalContext().getResponse();
 	    HttpServletResponse res = PortalUtil
 	      	      .getHttpServletResponse(portletResponse);
-	    int position = reportFile.lastIndexOf(".jsp");
+	    int position = reportFile.lastIndexOf(ReportConst.DOTJSP);
 	    if(position != -1) {
 	    	reportFile = reportFile.substring(0, position);
 	    }	    
-	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
-	    res.setHeader("Content-Transfer-Encoding", "binary");
-	    res.setContentType("application/pdf");
+	    res.setHeader(ReportConst.CONTENT_DISPOSITION, ReportConst.ATTACHMENTNFILENAMEEQUIFON
+    	          + reportFile + ReportConst.UNDERSCORE + ReportConst.REPORT_DATE_TIME.format(new Date()) + ReportConst.DOTPDFEIFON);//
+	    res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING, ReportConst.BINARY);
+	    res.setContentType(ReportConst.APPLICATIONEIFONPDF);
 	    res.flushBuffer();	    
 	    OutputStream out = res.getOutputStream();        	  
 	    byte[] b = new byte[128];
