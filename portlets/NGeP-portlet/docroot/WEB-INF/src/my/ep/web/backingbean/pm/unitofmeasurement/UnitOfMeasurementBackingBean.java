@@ -41,7 +41,9 @@ public class UnitOfMeasurementBackingBean extends
 	
 	private static final Logger log = EpLogger
 			.getLogger(UnitOfMeasurementManagedBean.class);
-	
+	//Navigation Details
+	public static final String NAV_TO_SEARCH = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+		
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	public static final boolean SEARCH_DEFAULT = false;
 	
@@ -56,6 +58,17 @@ public class UnitOfMeasurementBackingBean extends
 		}
 		log.info(message);
 	}
+	
+	/**
+	 * load clean view
+	 */
+	public void preLoading(){
+		debugLogger("preLoading");
+		this.resetMeasurementSearch();
+		FacesContext fc = FacesContext.getCurrentInstance(); 
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
+	}
+
 
 	/**
 	 * reload to UOM search page 
@@ -64,7 +77,7 @@ public class UnitOfMeasurementBackingBean extends
 	public String redirectMeasurementSearch() {
 		debugLogger("redirectMeasurementSearch");
 
-		return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+		return NAV_TO_SEARCH;
 
 	}	
 	
@@ -73,7 +86,7 @@ public class UnitOfMeasurementBackingBean extends
 	 */
 	public void resetMeasurementSearch() {
 		debugLogger("resetMeasurementSearch");
-		
+		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setMeasurementCodes(new String());
 		this.getManagedBean().setMeasurementCodes(new String());
 		unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
