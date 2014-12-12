@@ -60,7 +60,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 */
 	public void reset() {
 		debugLogger("resetSearch");
-		System.out.println("inside reset...");
         this.getManagedBean().setProfCertifiedBodySearchBean(new ProfCertifiedBodySearchBean());
         this.getManagedBean().getProfCertifiedBodySearchBean().setBodyCode(null);
         this.getManagedBean().getProfCertifiedBodySearchBean().setStatus(null);
@@ -110,9 +109,9 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 		SelectItem[] items = null;
 			items = new SelectItem[3];
-			items[0] = new SelectItem(0, "Select One");
-			items[1] = new SelectItem(1, "Professional");
-			items[2] = new SelectItem(2, "Certified");
+			items[0] = new SelectItem(null, "- Select One -");
+			items[1] = new SelectItem(0, "Professional");
+			items[2] = new SelectItem(1, "Certified");
 
 		return items;
 	}
@@ -154,13 +153,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				searchBean = new SearchBean<PmCertBody>();
 			}			
 			if (getManagedBean().getProfCertifiedBodySearchBean().getCertType() != null){
-				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==2){
+				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==1){
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("isCertifiedBody",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
 				}
-				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==1){
+				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==0){
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("isProfessionalBody",
 									SearchOperator.OPERATOR_EQUALS.value(),
@@ -223,7 +222,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	}
 
 	public void searchProfessionalCertBody() {
-		if(0==getManagedBean().getProfCertifiedBodySearchBean().getCertType()){
+		if(null==getManagedBean().getProfCertifiedBodySearchBean().getCertType()){
 			throw new EpException("Professional / Certified is Mandatory");
 		}else{
 			getProfCertBodyModel().reloadData();
@@ -251,10 +250,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		if(!certBody.isCertifiedBody()&&!certBody.isProfessionalBody()){
 			throw new EpException("Please Select Professional / Certified.");
 		}
-		/*if(!certBody.isProfessionalBody()){
-			throw new EpException("Please Select Professional / Certified.");
-		}	*/
-		
 	}		
 
 	/**
@@ -266,6 +261,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		PmCertBody certBody =  this.getManagedBean().getCertBody();
 		validationMessage(certBody);
+		
+		certBody.setBodyCode(certBody.getBodyCode().toUpperCase());
 		
 		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 		
