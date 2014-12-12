@@ -576,8 +576,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					} 
 				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
-								this.getManagedBean().getCircularVer().getCircularNo()}, 
+						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
+								resDTO.getCircular().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  	
 					renewSesionObject();
@@ -693,11 +693,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String circularRemark = getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark();
-				String itemRemark = getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark();
-	 			if((circularRemark == null || circularRemark.length() == 0) &&
-	 					(itemRemark == null || itemRemark.length() == 0)) {
-	 				RequestContext.getCurrentInstance().addCallbackParam("epException",
-							true);
+				if((circularRemark == null || circularRemark.length() == 0)) {
+	 				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 	 			}
 			}
