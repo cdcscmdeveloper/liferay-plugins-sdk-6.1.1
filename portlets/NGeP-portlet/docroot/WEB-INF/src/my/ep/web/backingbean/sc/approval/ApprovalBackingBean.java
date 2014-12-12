@@ -381,7 +381,7 @@ public class ApprovalBackingBean extends
 						.getPublishDate(), this.getManagedBean().getQt()
 						.getPublishPeriod());
 			}
-			this.getManagedBean().getQt().setClosingDate(clsDate);
+			this.setDefaultDateTime(this.getManagedBean().getQt());
 			getManagedBean().setProposalValidityUntil(
 					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
 							.getQtValidityPeriod()));
