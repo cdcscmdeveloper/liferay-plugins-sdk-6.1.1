@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.so.briefsamevisit']}" /></td>
-				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}">
+				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}" disabled="#{isClosedStatus}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
 						<p:ajax update="sameasbsvrequired, addtositebutton"
@@ -27,7 +27,7 @@
 			selection="#{bsvdtlbean.selectedBriefingDtls}">
 
 			<ac:paginator for="briefingdtlid" />
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!isClosedStatus}"/>
 			<p:column headerText="#{lbl['lbl.so.desc']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
@@ -93,17 +93,17 @@
 							value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
 							process="@this,briefingdtlid" partialSubmit="true"
 							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
-							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle'}" />
+							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle' or !isClosedStatus}" />
 					</h:panelGroup>
 					<p:commandButton id="briefingaddid" value="#{lbl['lbl.so.addbtn']}"
-						process="@this"
+						process="@this" rendered="#{!isClosedStatus}"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)"
 						icon="ui-icon-add" />
 
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
 						icon="ui-icon-delete" process="@this,briefingdtlid"
-						partialSubmit="true"
+						partialSubmit="true" rendered="#{!isClosedStatus}"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 						update="@([id$=briefingdtlid])" />
 				</div>
@@ -113,15 +113,15 @@
 			<tr>
 				<td style="width: 160px;"><p:outputLabel
 						value="#{lbl['lbl.so.attendance.brief']}" /></td>
-				<td style="width: 130px;"><p:selectOneRadio
-						value="#{bsvdtlbean.scQtBsv.allBriefingReq}">
+				<td style="width: 130px;"><p:selectOneRadio rendered="#{!isClosedStatus}"
+						value="#{bsvdtlbean.scQtBsv.allBriefingReq}" >
 						<f:selectItem itemLabel="All" itemValue="true" />
 						<f:selectItem itemLabel="At Least" itemValue="false" />
 						<p:ajax event="click"
 							listener="#{qTBriefingSiteVisitBackingBean.briefingClickEvent}"
 							update="@([id$=minbsvattend])"></p:ajax>
 					</p:selectOneRadio></td>
-				<td><p:inputText id="minbsvattend" size="5"
+				<td><p:inputText id="minbsvattend" size="5" rendered="#{!isClosedStatus}"
 						value="#{bsvdtlbean.scQtBsv.minBriefingAttend}"
 						readonly="#{bsvdtlbean.scQtBsv.allBriefingReq}" /></td>
 				<td />
@@ -139,7 +139,7 @@
 					rowKey="#{sitevisitdtls}" rowIndexVar="rowIndex" editable="true">
 
 					<ac:paginator for="sitevisitdtlid" />
-					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column selectionMode="multiple" style="width:2%" rendered="#{!isClosedStatus}"/>
 
 					<p:column headerText="#{lbl['lbl.so.desc']}"
 						style="white-space: normal;word-wrap: break-word;">
@@ -202,13 +202,13 @@
 					<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="addsitevisitid"
+							<p:commandButton id="addsitevisitid" rendered="#{!isClosedStatus}"
 								value="#{lbl['lbl.so.addbtn']}" process="@this"
 								action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 								oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)"
 								icon="ui-icon-add" />
 
-							<p:commandButton value="#{lbl['lbl.so.delete']}"
+							<p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{!isClosedStatus}"
 								icon="ui-icon-delete" process="@this, sitevisitdtlid"
 								partialSubmit="true"
 								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
@@ -221,7 +221,7 @@
 					<tr>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.so.attendance.site']}" /></td>
-						<td style="width: 130px;"><p:selectOneRadio
+						<td style="width: 130px;"><p:selectOneRadio rendered="#{!isClosedStatus}"
 								value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
 								<f:selectItem itemLabel="All" itemValue="true" />
 								<f:selectItem itemLabel="At Least" itemValue="false" />
@@ -229,7 +229,7 @@
 									listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
 									update="@([id$=minSiteVisitAtt])"></p:ajax>
 							</p:selectOneRadio></td>
-						<td><p:inputText id="minSiteVisitAtt" size="5"
+						<td><p:inputText id="minSiteVisitAtt" size="5" rendered="#{!isClosedStatus}"
 								value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
 								readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" /></td>
 						<td />
@@ -260,7 +260,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}" readonly="#{!isClosedStatus}"
 										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"

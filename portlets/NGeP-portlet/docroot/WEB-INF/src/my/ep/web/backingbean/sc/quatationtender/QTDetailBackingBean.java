@@ -826,7 +826,7 @@ public class QTDetailBackingBean extends
 					ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
 					scQtBsv.setBsvRemarks(finalizeRemarks(scQtBsv
 							.getBsvRemarks()));
-					scQtBsv.setScQt(this.getManagedBean().getQt());
+					// scQtBsv.setScQt(this.getManagedBean().getQt());
 					scQtBsv.setTplSpecZoneDtl(bsvDtlBean.getTplSpecZoneDtl());
 					if (null != scQtBsv) {
 						bsvs.add(scQtBsv);
@@ -856,7 +856,7 @@ public class QTDetailBackingBean extends
 				if (null != scQtBsv) {
 					scQtBsv.setBsvRemarks(finalizeRemarks(scQtBsv
 							.getBsvRemarks()));
-					scQtBsv.setScQt(this.getManagedBean().getQt());
+					// scQtBsv.setScQt(this.getManagedBean().getQt());
 					bsvs = new ArrayList<ScQtBsv>();
 					bsvs.add(scQtBsv);
 					scQt.setBsvRequired(scQtBsv.getScQtBsvDtls().size() > 0 ? true
@@ -1236,14 +1236,14 @@ public class QTDetailBackingBean extends
 				String languageCode = new FacesScopes().getUserLocale()
 						.getLanguage();
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
-				reqDTO.setQtId(getManagedBean().getQt().getQtId());
-				reqDTO.setScQt(getManagedBean().getQt());
+				// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setScQt(this.getManagedBean().getQt());
 				reqDTO.setLanguageCode(languageCode);
 				BriefingResDTO resDTO = qTBriefingSO
 						.retrieveBriefingSiteVisitDtl(reqDTO);
 				// getting Briefing Same As Site Visit value
 				ScQt scQt = resDTO.getScQt();
-				// getManagedBean().setScQt(scQt);
+				getManagedBean().setQt(scQt);
 				if (scQt.isZonal()) {
 					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
 					List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
@@ -1251,6 +1251,7 @@ public class QTDetailBackingBean extends
 						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 						briefingReqDTO.setQtId(getManagedBean().getQt()
 								.getQtId());
+						briefingReqDTO.setScQt(getManagedBean().getQt());
 						for (TplSpecZoneDtl specZoneDtl : zones) {
 							briefingReqDTO.setSpecZoneId(specZoneDtl
 									.getSpecZoneId());
@@ -1845,10 +1846,10 @@ public class QTDetailBackingBean extends
 									&& !approvalRequest.isEmpty()) {
 								for (int i = 0; i < approvalRequest.size(); i++) {
 									PmParameter parameter = approvalRequest
-											.get(i).getDecessionType();
+											.get(i).getApproverAction();
 									if (null == parameter) {
 										approvalRequest.get(i)
-												.setDecessionType(
+												.setApproverAction(
 														new PmParameter());
 										ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 										approvalRemark
@@ -2192,7 +2193,7 @@ public class QTDetailBackingBean extends
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				// reqDTO.setQtId(getManagedBean().getQt().getQtId());
 				reqDTO.setQtdetail(this.getManagedBean().getQt());
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTScheduleDetails(reqDTO);

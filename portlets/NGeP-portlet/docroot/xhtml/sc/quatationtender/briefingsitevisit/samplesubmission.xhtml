@@ -13,7 +13,7 @@
 					<td style="width: 80px;"><p:outputLabel
 							value="#{lbl['lbl.so.add1']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-					<td><p:inputText id="sampleaddress"
+					<td><p:inputText id="sampleaddress" disabled="#{!isClosedStatus}"
 							required="#{qTScheduleDetailBackingBean.managedBean.required}"
 							label="#{lbl['lbl.so.add1']}"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
@@ -22,7 +22,7 @@
 					<td style="width: 200px;"><p:outputLabel
 							value="#{lbl['lbl.so.state']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;" disabled="#{!isClosedStatus}"
 							id="samplestate"
 							required="#{qTScheduleDetailBackingBean.managedBean.required}"
 							label="#{lbl['lbl.so.state']}"
@@ -38,12 +38,12 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
-					<td><p:inputText
+					<td><p:inputText disabled="#{!isClosedStatus}"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address2}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu styleClass="stateDistrict"
+					<td><p:selectOneMenu styleClass="stateDistrict" disabled="#{!isClosedStatus}"
 							style="width: 218px;margin-bottom: 5px;" id="sampledistrict"
 							required="#{qTScheduleDetailBackingBean.managedBean.required}"
 							label="#{lbl['lbl.so.district']}"
@@ -61,12 +61,12 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
-					<td><p:inputText
+					<td><p:inputText disabled="#{!isClosedStatus}"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address3}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu styleClass="districtCity"
+					<td><p:selectOneMenu styleClass="districtCity" disabled="#{!isClosedStatus}"
 							style="width: 218px;margin-bottom: 5px;" id="samplecity"
 							required="#{qTScheduleDetailBackingBean.managedBean.required}"
 							label="#{lbl['lbl.so.city']}"
@@ -79,12 +79,12 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
-					<td><p:inputText
+					<td><p:inputText disabled="#{!isClosedStatus}"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address4}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="samplepost"
+					<td><p:inputText id="samplepost" disabled="#{!isClosedStatus}"
 							required="#{qTScheduleDetailBackingBean.managedBean.required}"
 							label="#{lbl['lbl.so.postcode']}"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"

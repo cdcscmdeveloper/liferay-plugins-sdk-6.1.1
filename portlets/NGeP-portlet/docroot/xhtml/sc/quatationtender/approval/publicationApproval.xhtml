@@ -10,7 +10,7 @@
 		toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
-			<p:pickList id="publicationapproverid"
+			<p:pickList id="publicationapproverid" disabled="#{isClosedStatus}"
 				value="#{qTDetailBB.managedBean.publicationApprovals}"
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.approver.userName}"
@@ -41,7 +41,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}" disabled="#{!isClosedStatus}"
 										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
@@ -53,14 +53,5 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
-		<p:dataTable>
-			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
-			</p:column>
-		</p:dataTable>
-	</p:panel>
+	
 </ui:composition>
