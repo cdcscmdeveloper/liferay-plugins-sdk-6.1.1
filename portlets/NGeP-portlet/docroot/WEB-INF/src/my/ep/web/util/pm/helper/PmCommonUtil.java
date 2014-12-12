@@ -98,26 +98,7 @@ public class PmCommonUtil {
 	
 	
 	
-	public static boolean checkSingleRole(String roleCode) {
-		log.info("checkSingleRole");
-		boolean isExist = false;
-		IUserSO userSO = null;
-		try {
-			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = null;
-			reqDTO.setRoleCode(roleCode);
-			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
-			if(resDTO.isSuccessful()){
-				isExist = (resDTO.getUserList()!=null && !resDTO.getUserList().isEmpty()) ? true : false;
-			}
-		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770136, new String[]{e.getMessage()});
-		}finally{
-			userSO = null;
-		}		
-		return isExist;
-	}
+
 	
 	public static boolean checkRoleRestriction(String roleCode, List<PmUserRole> userRoles) {
 		log.info("checkRoleRestriction");

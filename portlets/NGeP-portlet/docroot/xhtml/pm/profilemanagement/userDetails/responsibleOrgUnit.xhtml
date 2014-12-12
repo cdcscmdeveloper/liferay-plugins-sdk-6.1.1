@@ -32,7 +32,8 @@
 			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
 			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
 			     		update="lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, dtOrgUnit, 
-			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
+			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr, opFfcOrgCode, 
+			     			opOrgCode"/> 
 	            </p:selectOneMenu>		 
 	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
@@ -41,21 +42,33 @@
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
 			    </f:facet>
-			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="12" 
-			    	required="#{!empty param['disableValidation']}" 
-	            	update="@form" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
-					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
-					postUpdateListener="profileManagementBackingBean.updateOrgCode
-					(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, #{index})"
-					saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
-					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
-					>
-				</ac:lov> 
+			    <p:outputPanel id="opFfcOrgCode" rendered="#{ParameterConst.orgTypeFactoring eq orgUnit.pmOrgProfile.orgTypeCode.parameterCode}">
+				    <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="12" 
+				    	required="#{!empty param['disableValidation']}" 
+		            	update="@form" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{orgUnit.pmOrgProfile.pmFinancialOrg.bizRegNumber}" 
+						postUpdateListener="profileManagementBackingBean.updateOrgCode
+						(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, #{index})"
+						saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
+						/>
+				</p:outputPanel>
+				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne orgUnit.pmOrgProfile.orgTypeCode.parameterCode}">
+				    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="12" 
+				    	required="#{!empty param['disableValidation']}" 
+		            	update="@form" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
+						postUpdateListener="profileManagementBackingBean.updateOrgCode
+						(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, #{index})"
+						saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
+						conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
+						/>
+				</p:outputPanel>
 				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
 		    </p:column>
-	        <p:column   style="white-space:nowrap; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
-       			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
+	        <p:column style="white-space:nowrap; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" >
+	        	#{ParameterConst.orgTypeFactoring eq orgUnit.pmOrgProfile.orgTypeCode.parameterCode ? orgUnit.pmOrgProfile.pmFinancialOrg.finOrgName : orgUnit.pmOrgProfile.pmOrgValidity.orgName}	
 	        </p:column>
 	        <p:column width="8%"> 
 	        	<f:facet name="header">
