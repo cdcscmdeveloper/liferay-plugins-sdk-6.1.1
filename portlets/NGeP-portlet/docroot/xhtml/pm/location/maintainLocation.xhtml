@@ -185,6 +185,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="disCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
+							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.pmState.pmCountry.countryId}"
 							style="width: 276px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -206,6 +207,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="disState" required="true"
 							label="#{lbl['lbl.pm.address.state']}"
+							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"

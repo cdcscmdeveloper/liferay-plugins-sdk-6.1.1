@@ -39,7 +39,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private int selectedTabIndex;
 
 	// Financial Svc
-	private String regType;
+;
 	private PmFinancialSvc financialSvc;
 	private List<PmFinancialSvc> pmFinancialSvc;
 	private List<PmFinancialSvc> pmFinancialSvcUpdate;
@@ -85,6 +85,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private List<PmFinancialAcc> selectedPmFinancialBranchAcc;
 
 	private List<PmOrgProfile> orgProfileList;
+	private boolean showParentMsg;
 
 	private Date currentDate = new Date();
 
@@ -601,17 +602,18 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @return the regType
+	 * @return the showParentMsg
 	 */
-	public String getRegType() {
-		return regType;
+	public boolean isShowParentMsg() {
+		return showParentMsg;
 	}
 
 	/**
-	 * @param regType the regType to set
+	 * @param showParentMsg the showParentMsg to set
 	 */
-	public void setRegType(String regType) {
-		this.regType = regType;
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
 	}
+
 
 }

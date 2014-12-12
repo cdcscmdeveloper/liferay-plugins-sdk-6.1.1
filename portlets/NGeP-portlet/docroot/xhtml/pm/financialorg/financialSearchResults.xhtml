@@ -30,7 +30,7 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.action']}"
 				style="width :5%">
 				<p:commandLink
-					action="#{financialOrgBackingBean.editFinancialOrg(finorg)}"
+					action="#{financialOrgBackingBean.redirectToFinOrg(finorg.financialOrgId)}"
 					update="@form">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						title="Edit Financial Org"
@@ -44,7 +44,7 @@
 
 		<p:commandButton value="#{lbl['lbl.pm.financialorg.create']}"
 			icon="ui-icon-add"
-			action="#{financialOrgBackingBean.addFinancialOrg()}" />
+			action="#{financialOrgBackingBean.redirectToFinOrg(null)}" />
 	</div>
 	
 </ui:composition>

@@ -161,7 +161,7 @@
 			<tr>
 				<td><p:outputLabel value="Contact Person" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:commandLink oncomplete="contactPersonPopup.show();"
+				<td><p:commandLink action="#{organisationBackingBean.addContacePerson}"
 						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
 						partialSubmit="true">
 						<p:graphicImage library="ep/images/design" name="edit.png"
@@ -171,9 +171,9 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog id="contactPerson" header="Contact Person"
+	<p:dialog id="contactPerson" header="Contact Person" closable="false"
 		widgetVar="contactPersonPopup" modal="true" width="600" height="200">
-		<p:messages id="messagesRole" showDetail="true" autoUpdate="true"
+		<p:messages id="messagesRoleMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 		<p:panel id="contactPersond">
 			<table>
@@ -222,11 +222,12 @@
 
 			<div align="right">
 				<p:commandButton value="OK" process="@this, contactPerson"
-					action="#{organisationBackingBean.okContacePersonAction}"
-					ajax="true" icon="ui-icon-check" update="contactPerson" />
+					action="#{organisationBackingBean.okContacePerson}"
+					ajax="true" icon="ui-icon-check" update="@([id$=Msg])" />
 				&#160;&#160;
-				<p:commandButton value="Cancel" process="@this"
-					oncomplete="contactPersonPopup.hide();" icon="ui-icon-cancel" />
+				<p:commandButton value="Cancel" process="@this" 
+				action="#{organisationBackingBean.closeContacePerson}" 
+					 icon="ui-icon-cancel" />
 
 			</div>
 		</p:panel>

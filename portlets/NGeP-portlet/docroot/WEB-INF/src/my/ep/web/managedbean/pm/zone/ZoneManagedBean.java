@@ -30,6 +30,21 @@ public class ZoneManagedBean extends BaseManagedBean {
 	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();
 	private PmZoneState selectedZone;
 	private List<SelectItem> selections;
+	private boolean showParentMsg;
+
+	/**
+	 * @return the showParentMsg
+	 */
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	/**
+	 * @param showParentMsg the showParentMsg to set
+	 */
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
+	}
 
 	private List<PmState> stateList;
 	private PmState selectState;

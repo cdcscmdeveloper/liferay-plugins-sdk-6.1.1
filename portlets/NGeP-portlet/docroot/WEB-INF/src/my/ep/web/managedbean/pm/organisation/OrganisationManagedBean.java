@@ -73,8 +73,6 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmAddressType> addressTypesList;
 	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
-	
-	
 	//
 	private List<PmPtjGroup> ptjGroup;
 	private PmPtjGroup pmPtjGroup;
@@ -100,7 +98,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmUser> supplierUsers;
 	private List<PmUser> selectedSupplierUsers;
 	private List<PmUser> selectedUsers;
-	private PmUser user;
+	private PmUser user;	
+	private boolean showParentMsg;
 
 	public OrganisationManagedBean() {
 
@@ -895,6 +894,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setUser(PmUser user) {
 		this.user = user;
+	}
+
+	/**
+	 * @return the showParentMsg
+	 */
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	/**
+	 * @param showParentMsg the showParentMsg to set
+	 */
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
 	}
 
 	
