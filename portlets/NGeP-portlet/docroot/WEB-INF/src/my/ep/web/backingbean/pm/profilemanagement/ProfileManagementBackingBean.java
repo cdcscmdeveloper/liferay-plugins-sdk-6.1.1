@@ -120,6 +120,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	//Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
+	private static Map<Long, Object> orgTypeMapper;
 
 	/**
 	 * @return the tabUserProfile
@@ -566,9 +567,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public List<PmParameterDesc> getOrgTypeList() {
 		logger.info("getOrgTypeList");
-		return PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
+		List<PmParameterDesc> parameterDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
 				, new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
 				, null);
+		
+		orgTypeMapper = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+
+		return parameterDescs;
 	}
 	
 	/**
@@ -619,6 +627,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void updateOrgCode(PmOrgProfile pmOrgProfile, int index){
 		logger.info("updateOrgCode");
+	
+		
 		boolean isValid = true;
 		if(pmOrgProfile!=null && pmOrgProfile.getOrgProfileId()!=null){
 			if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null &&
@@ -674,6 +684,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if(this.getManagedBean().getSelectedUserOrg()!=null){
 				this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
 				this.getManagedBean().getSelectedUserOrg().setPmUserRoles(new ArrayList<PmUserRole>());
+			}
+			
+			if(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId()!=null){
+				PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId());
+				this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().setParameterCode(pmParameter.getParameterCode());
 			}
 		}	
 	}
