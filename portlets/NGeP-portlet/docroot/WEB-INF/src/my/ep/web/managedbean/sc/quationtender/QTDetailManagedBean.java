@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.sc.quationtender;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -215,10 +214,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplier> panelSuppliers;
 
 	// For Restricted Tender Search Criteria
-	private String supplierName;
-	private String mofAccountNo;
-	private BigDecimal minPaidUpCapital;
-
 	private TreeNode supplierSelectedTreeNode;
 
 	private int totalSearchSupplier;
@@ -436,6 +431,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtDocReport selectedScQtDocReport;
 	private ScQtDocReport scQtDocReport;
 	private TplDocMaster tplDocMaster;
+	private List<ScQtDocReport> markDeletedScQtDocReportList;
 
 	private IPagingDataModel<ScQt> cloneDocumentDataModel;
 	private QtnTenderSearchBean cloneDocumentSearchBean;
@@ -1563,30 +1559,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCircularCoverage(String circularCoverage) {
 		this.circularCoverage = circularCoverage;
-	}
-
-	public String getSupplierName() {
-		return supplierName;
-	}
-
-	public void setSupplierName(String supplierName) {
-		this.supplierName = supplierName;
-	}
-
-	public String getMofAccountNo() {
-		return mofAccountNo;
-	}
-
-	public void setMofAccountNo(String mofAccountNo) {
-		this.mofAccountNo = mofAccountNo;
-	}
-
-	public BigDecimal getMinPaidUpCapital() {
-		return minPaidUpCapital;
-	}
-
-	public void setMinPaidUpCapital(BigDecimal minPaidUpCapital) {
-		this.minPaidUpCapital = minPaidUpCapital;
 	}
 
 	public int getTotalSearchSupplier() {
@@ -2873,6 +2845,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
+	}
+
+	public List<ScQtDocReport> getMarkDeletedScQtDocReportList() {
+		return markDeletedScQtDocReportList;
+	}
+
+	public void setMarkDeletedScQtDocReportList(
+			List<ScQtDocReport> markDeletedScQtDocReportList) {
+		this.markDeletedScQtDocReportList = markDeletedScQtDocReportList;
 	}
 
 }
