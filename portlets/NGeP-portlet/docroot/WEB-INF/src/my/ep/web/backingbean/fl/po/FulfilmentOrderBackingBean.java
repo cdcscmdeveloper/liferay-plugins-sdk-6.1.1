@@ -127,12 +127,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
-			if(getManagedBean().isContractRequest() == Boolean.FALSE){
-				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				if(!flBB.getManagedBean().getRemarkList().isEmpty()){
-					reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-				}
-				
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
 			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
