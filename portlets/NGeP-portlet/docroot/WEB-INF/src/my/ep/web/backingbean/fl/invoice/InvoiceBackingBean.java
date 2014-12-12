@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.invoice;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -553,7 +554,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
 		invMulty = invoiceAmt.multiply(serviceFee);
-		feeAmount = invMulty.divide(percentage);
+		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceAmt.subtract(feeAmount));
 	}
@@ -644,7 +645,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
 		invMulty = nonExemptedItem.multiply(serviceFee);
-		feeAmount = invMulty.divide(percentage);
+		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 	}
