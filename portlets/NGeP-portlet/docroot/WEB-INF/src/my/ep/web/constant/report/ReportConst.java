@@ -603,6 +603,14 @@ public class ReportConst {
 	public static final String SUB_MOD_S1 = "S1";
 	
 	//Supplier Management
+	public static final String DOTJSP = ".jsp";
+	public static final String CONTENT_DISPOSITION = "Content-Disposition";
+	public static final String ATTACHMENTNFILENAMEEQUIFON = "attachment; filename=\"";
+	public static final String UNDERSCORE = "_";
+	public static final String DOTPDFEIFON = ".pdf\"";
+	public static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
+	public static final String BINARY = "binary";
+	public static final String APPLICATIONEIFONPDF="application/pdf";
 	//SM - JSP
 	public static final String SM_PAYMENT_RECEIPT_JSP = "sm_payment_receipt.jsp";
 	
