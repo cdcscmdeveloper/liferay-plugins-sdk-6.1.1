@@ -15,7 +15,7 @@
 			  <div class="rowBtnRight">
 				   <c:choose>
 				  		<c:when test="#{profileManagementBackingBean.managedBean.selectedUser.brandNew}">
-				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form" 
+				  			<p:commandButton value="#{lbl['lbl.btn.create]}" update="@form" 
 				  				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				  				action="#{profileManagementBackingBean.saveUserProfile()}">
 			  					<f:param name="disableValidation" value="true" />     
