@@ -483,7 +483,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 						}
 					}else if(contractValue.doubleValue() >= FulfilmentConst.CONTRACT_VALUE_500K){
-						if(perc.doubleValue() >= FulfilmentConst.PERC_90){
+						if(percAmt.doubleValue() >= FulfilmentConst.PERC_90){
 							FacesContext.getCurrentInstance().addMessage(null,
 									new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.INFO_745008,
 											new String[]{getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo(),FulfilmentConst.PERC_90.toString()},
