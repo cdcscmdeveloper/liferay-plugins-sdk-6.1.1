@@ -161,8 +161,7 @@ public class UnitOfMeasurementBackingBean extends
 			isEmpty = false;
 		}	
 		
-		if(getManagedBean().getStatus() != null
-				&& !"".equals(getManagedBean().getStatus())) {
+		if(getManagedBean().getStatus() != null) {
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
 			codesSearchBean
@@ -172,7 +171,7 @@ public class UnitOfMeasurementBackingBean extends
 			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}			
 		
-		if(isEmpty && !isSearchable){
+		if(isEmpty && !isSearchable && getManagedBean().getStatus()==null){
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
 			codesSearchBean
