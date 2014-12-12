@@ -13,7 +13,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		    	action="#{supportDocBackingBean.redirectToSearchSupportDoc}"/>
 
 	    	<div class="rowBtnRight">
-			 	<p:commandButton value="#{supportDocBackingBean.managedBean.selectedDocument.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}" 
+			 	<p:commandButton value="#{supportDocBackingBean.managedBean.selectedDocument.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" 
 			 		action="#{supportDocBackingBean.saveSupportDoc()}"
    					update="@form">
    					<f:param name="disableValidation" value="true" />     
