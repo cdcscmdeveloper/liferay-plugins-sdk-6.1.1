@@ -168,6 +168,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private String financialAccNo;
 	private boolean buttonHideActive = false;
+	private List<CtPerformanceBond> performanceBondList;
+	private int firstRowSelected;
+	private boolean selectAll;
 	
 	public String[] getAction() {
 		return action;
@@ -1038,5 +1041,29 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setButtonHideActive(boolean buttonHideActive) {
 		this.buttonHideActive = buttonHideActive;
+	}
+
+	public List<CtPerformanceBond> getPerformanceBondList() {
+		return performanceBondList;
+	}
+
+	public void setPerformanceBondList(List<CtPerformanceBond> performanceBondList) {
+		this.performanceBondList = performanceBondList;
+	}
+
+	public int getFirstRowSelected() {
+		return firstRowSelected;
+	}
+
+	public void setFirstRowSelected(int firstRowSelected) {
+		this.firstRowSelected = firstRowSelected;
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
 	}
 }
