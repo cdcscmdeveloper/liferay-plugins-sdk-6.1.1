@@ -43,25 +43,26 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 	private static final Logger logger = EpLogger
 			.getLogger(UsergroupBackingBean.class);
+	
+	private String NAV_TO_MAIN =  "userGroupSearchMain";
 
 	private IPagingDataModel<PmUserGroup> userGroupList = new UserGroupProfilePagingDataModel();
 	
 	
-	private Long orgProfileId = null; 
+	private Long orgProfileId = null;
 	
 	
 	public UsergroupBackingBean() {
-		this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
+//		this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
 	}
 	
 	/**
 	 *  reset search group detail
 	 */
 	public void reset() {
-		System.out.println("inside reset");
 		 this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
 		 this.getManagedBean().setStatus(null);
-		 this.userGroupList = new UserGroupProfilePagingDataModel(); 
+		 userGroupList = new UserGroupProfilePagingDataModel(); 
 	}
 
 	private void debugLogger(Object message) {
@@ -80,7 +81,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			SelectItem[] items =  new SelectItem[2];
 			items[0] = new SelectItem(1, "Active");
 			items[1] = new SelectItem(0, "Inactive");
-		    return items;
+			return items;//PmCommonUtil.getStatusOptionsDefault();
 		}	
 
 	/**
@@ -91,7 +92,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		private static final long serialVersionUID = 1L;
 
 		public UserGroupProfilePagingDataModel() {
-			super("searchGroupProfile");
+			super("searchGroupProfile",false);
 		}
 
 		@Override
@@ -105,7 +106,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 							IUserGroupSO.class);
 			ISearchResultBean<PmUserGroup> iSearchResultBean = groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
 			List<PmUserGroup> pmUserGroups = iSearchResultBean.getResultList();
-			System.out.println("UserGroupProfilePagingDataModel :"+pmUserGroups.size());
 			return iSearchResultBean;
 		}
 
@@ -192,7 +192,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-
 		}
 
 	}
@@ -219,7 +218,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String backToMainPages() {
 
-		return "/xhtml/pm/usergroupsearch/userGroupSearchMain.xhtml";
+		return NAV_TO_MAIN;
 	}
 
 	/**
@@ -227,9 +226,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String goToMaintenanceAction(PmUserGroup userGroup) {
 		this.getManagedBean().setUserGroup(userGroup);
+		System.out.println("inside  maintanace...");
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 	}
-
+	
 	public void searchUserGroupAction() {
 		userGroupList.reloadData();
 	}
@@ -285,7 +285,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String gotoMaintanance(PmUserGroup userGroup) {
 		debugLogger("gotoMaintanance");
-		
+		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
+		System.out.println("orgProfileId :"+orgProfileId);
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroup.getPmUserGroupUsers());
 		
@@ -321,9 +322,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String saveUserGroup() {
 		debugLogger("saveUserGroup");
-		
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
 		userGroup.setRoleCode("FL_APPROVER");
+		findDuplicateGroup(userGroup);
+		userGroup.setGroupCode(userGroup.getGroupCode().toUpperCase());
 		userGroupValidationMsg(userGroup);
 		
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
@@ -351,16 +353,43 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			}
 		
-		  return "/xhtml/pm/usergroupsearch/userGroupSearchMain.xhtml";
+		  return NAV_TO_MAIN;
 	 }
 	
 	public String constuctConditionFields() {
 		System.out.println("orgProfileId :"+orgProfileId);
 			if (null != orgProfileId) {
+				//return "pmUserOrgs.pmOrgProfile.orgProfileId^" + orgProfileId+"|"+"pmUserOrgs.roleCode^"+"FL_APPROVER";
 				return "pmUserOrgs.pmOrgProfile.orgProfileId^" + orgProfileId;
+				
 		           }
 		return "";
 	}
+	
+	private void findDuplicateGroup(PmUserGroup userGroup){
+		
+		ISearchBean<PmUserGroup> searchBean = null; 
+			UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+			reqDTO.setUserGroupSearchBean(searchBean);
+			IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserGroupSO.class);
+			ISearchResultBean<PmUserGroup> iSearchResultBean = groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
+			List<PmUserGroup> pmUserGroups = iSearchResultBean.getResultList();
+			for(PmUserGroup pmUserGroup:pmUserGroups){
+				if(pmUserGroup.getGroupCode().equalsIgnoreCase(userGroup.getGroupCode())&&(pmUserGroup.getPmOrgProfile().getOrgProfileId()==(userGroup.getPmOrgProfile().getOrgProfileId()))){
+					throw new EpException("Duplicate Group name please.");
+				}
+			}
+			System.out.println("findDuplicateGroup :"+pmUserGroups.size());
 
+     }
+	
+	public void preLoadgroupSearch(){
+		this.reset();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_MAIN);
+	}
 }
 
