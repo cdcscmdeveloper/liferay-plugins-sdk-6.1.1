@@ -41,6 +41,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			.getLogger(ProfCertifiedBodyBackingBean.class);
 
 	private IPagingDataModel<PmCertBody> profCertBodyModel = new CertBodyPagingDataModel();
+	
+	private String NAV_TO_MAIN =  "professionalCertifiedBodyMain";
 
 	public ProfCertifiedBodyBackingBean() {
 		log.info("inside constructor");
@@ -73,7 +75,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	public String redirectProfSearch() {
 		debugLogger("redirectProfSearch");
 
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedBodyMain.xhtml";
+		return NAV_TO_MAIN;
 
 	}
 
@@ -98,7 +100,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			SelectItem[] items =  new SelectItem[2];
 			items[0] = new SelectItem(1, "Active");
 			items[1] = new SelectItem(0, "Inactive");
-		    return items;
+		    return items;//PmCommonUtil.getStatusOptionsDefault();
 		}
 
 	/**
@@ -113,7 +115,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			items[1] = new SelectItem(0, "Professional");
 			items[2] = new SelectItem(1, "Certified");
 
-		return items;
+		return items;//PmCommonUtil.getStatusOptions();
 	}
 
 	/**
@@ -214,12 +216,12 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}
 	}
 
-	private boolean isNullOrEmpty(String str) {
+	/*private boolean isNullOrEmpty(String str) {
 		if (null == str || "".equals(str)) {
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 	public void searchProfessionalCertBody() {
 		if(null==getManagedBean().getProfCertifiedBodySearchBean().getCertType()){
@@ -281,7 +283,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			
 		}
 	
-			return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedBodyMain.xhtml";
+			return NAV_TO_MAIN;
 	}
 
 	/**
@@ -293,4 +295,10 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
 	}
 	
+	public void preLoadgroupSearch(){
+		this.reset();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_MAIN);
+	}
 }
