@@ -93,6 +93,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
+	
+	private Long invoiceId;
+	
 	/**
 	 * @return the docType
 	 */
@@ -608,6 +611,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+	public Long getInvoiceId() {
+		return invoiceId;
+	}
+	public void setInvoiceId(Long invoiceId) {
+		this.invoiceId = invoiceId;
 	}
 
 
