@@ -1371,7 +1371,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		try {
 			qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			reqDTO.setScQt(getManagedBean().getQt());
+			//reqDTO.setQtId(getManagedBean().getQt());
+			reqDTO.setScQt(this.getManagedBean().getQt());
 			BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingSiteVisitDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
 			if (scQt.isZonal()) {

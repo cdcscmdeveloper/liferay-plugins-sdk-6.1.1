@@ -483,7 +483,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// populateParentOrgProfile(tenderResDTO.getQtDetail());
 			// detailBackingBean.onChangeAction();
 			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
-			//ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+			// ApprovalBackingBean approvalBackingBean = new
+			// ApprovalBackingBean();
 
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
 
@@ -713,11 +714,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
-		
+
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
 		reportUrl.append(ReportConst.AMP_REPORT_NAME);
 		reportUrl.append(reportName);
-		
+
 		for (Entry<String, String> params : paramMap.entrySet()) {
 			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
@@ -915,27 +916,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
 	}
-	
+
 	public String retriveSupplierDescById(Long supplierId) {
-		
+
 		String status = "";
 		try {
-			ISupplierSearchSO suppSO =BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			ISupplierSearchSO suppSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 			reqDTO.setSupplierId(supplierId);
 			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-			SupplierSearchResDTO resDTO = suppSO.retriveSupplierStatusDescById(reqDTO);
+			SupplierSearchResDTO resDTO = suppSO
+					.retriveSupplierStatusDescById(reqDTO);
 			if (resDTO != null) {
 				status = resDTO.getSupplierStatus();
 			}
-		}finally{
-			
+		} finally {
+
 		}
 
 		return status;
 	}
-	
+
 	public boolean supplierStatusDateComparision(Date enddate) {
 		boolean isDate = false;
 		Date d1 = new Date();
@@ -950,6 +953,5 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return isDate;
 	}
-	
 
 }

@@ -641,9 +641,11 @@ public class QTDetailBackingBean extends
 				.getContractNo());
 
 		// No need to set the below fields automatically set by listener
-		PmUser users = new FacesScopes().getUserSessionBean();
-		scQt.setCreatedBy(users.getUserId());
-		scQt.setChangedBy(users.getUserId());
+		// PmUser users = new FacesScopes().getUserSessionBean();
+		/*
+		 * scQt.setCreatedBy(users.getUserId());
+		 * scQt.setChangedBy(users.getUserId());
+		 */
 		// Setting the pm status for qt details
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(1l);
@@ -689,6 +691,7 @@ public class QTDetailBackingBean extends
 		if (!this.getManagedBean().getQt().isPanel()) {
 			if (this.getManagedBean().getQt().getQtType()
 					.equals(QTConstants.OPEN_TYPE)) {
+				// TODO need to check why updating the twice.. sagar
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getQtCategoryList();
 				if (openList != null && !openList.isEmpty()) {
@@ -699,7 +702,7 @@ public class QTDetailBackingBean extends
 									.getPmCategoryL1());
 							scQtCategory.setPmCategoryL2(scQtCategory
 									.getPmCategoryL3().getPmCategoryL2());
-							scQtCategory.setScQt(this.getManagedBean().getQt());
+							// scQtCategory.setScQt(this.getManagedBean().getQt());
 							setUserDetails(scQtCategory);
 							categoryList.add(scQtCategory);
 						}
@@ -717,7 +720,7 @@ public class QTDetailBackingBean extends
 								.getPmCategoryL1());
 						scQtCategory.setPmCategoryL2(scQtCategory
 								.getPmCategoryL3().getPmCategoryL2());
-						scQtCategory.setScQt(this.getManagedBean().getQt());
+						// scQtCategory.setScQt(this.getManagedBean().getQt());
 						setUserDetails(scQtCategory);
 						categoryList.add(scQtCategory);
 					}
@@ -774,8 +777,10 @@ public class QTDetailBackingBean extends
 			 */
 		}
 		if (null != this.getManagedBean().getSupplierCriteria()) {
-			this.getManagedBean().getSupplierCriteria()
-					.setScQt(this.getManagedBean().getQt());
+			/*
+			 * this.getManagedBean().getSupplierCriteria()
+			 * .setScQt(this.getManagedBean().getQt());
+			 */
 			setUserDetails(this.getManagedBean().getSupplierCriteria());
 			scQt.setScQtSupplierCriteria(this.getManagedBean()
 					.getSupplierCriteria());
@@ -811,7 +816,7 @@ public class QTDetailBackingBean extends
 		}
 		scQt.setScQtApprovals(approvalList);
 		scQt.setScQtBriefings(null);
-		if (scQt.getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+		if (scQt.getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
 			// Setting the qtBreifing details to Qtdetails
 			List<BriefingZoneBean> beansList = this.getManagedBean()
 					.getBriefingZoneBean();
@@ -909,20 +914,18 @@ public class QTDetailBackingBean extends
 			scQt.setScQtSampleSubmission(sampleSubmissionList);
 			// Setting the contact person to qtdetails.
 
-			List<ScQtContactPerson> list = new ArrayList<ScQtContactPerson>();
 			List<ScQtContactPerson> contactPersonsList = this.getManagedBean()
 					.getScQtContactPersons();
 			List<ScQtContactPerson> deskOfficerAdminList = this
 					.getManagedBean().getPmuserContactpersonList();
-			if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
-				list.addAll(contactPersonsList);
-			}
+
 			if (deskOfficerAdminList != null && !deskOfficerAdminList.isEmpty()) {
-				list.addAll(deskOfficerAdminList);
+				contactPersonsList.addAll(deskOfficerAdminList);
 			}
-			if (list != null && !list.isEmpty()) {
-				scQt.setScQtContactPersons(list);
+			if (null != contactPersonsList) {
+				scQt.setScQtContactPersons(contactPersonsList);
 			}
+
 			// Setting the Deductions to qtdetails.
 			List<ScQtDeduction> deductionList = getManagedBean()
 					.getScQtDeductionList();
@@ -943,85 +946,25 @@ public class QTDetailBackingBean extends
 			scQt.setScQtDeductions(deductionList);
 
 			// Setting the Documents to qtdetails.
-
-			List<ScQtDocReport> scQtDocReportsList = null;
 			List<ScQtDocReport> docReportsList = getManagedBean()
 					.getScQtDocReportList();
 			if (docReportsList != null && !docReportsList.isEmpty()) {
-				scQtDocReportsList = new ArrayList<ScQtDocReport>();
-				scQtDocReportsList.addAll(docReportsList);
-
-				// for (int i = 0; i < docReportsList.size(); i++) {
-				for (int j = 0; j < scQtDocReportsList.size(); j++) {
-					if (scQt.getFulfilmentType().getParameterCode()
-							.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-							&& scQt.getScheduleType().equals(
-									SourcingConstants.FREQUENCY_SCHEDULE)) {
-						// Schedule
-						if (null != scQtDocReportsList.get(j).getPmDocument())
-							if (scQtDocReportsList
-									.get(j)
-									.getPmDocument()
-									.getDocDefinitionKey()
-									.equalsIgnoreCase(
-											SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE)) {
-								scQtDocReportsList.remove(j);
-								break;
-							}
-					} else if (scQt.getFulfilmentType().getParameterCode()
-							.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-							&& scQt.getScheduleType().equals(
-									SourcingConstants.PROGRESSIVE_PAYMENT)) {
-						// Progressive
-						if (null != scQtDocReportsList.get(j).getPmDocument())
-							if (scQtDocReportsList
-									.get(j)
-									.getPmDocument()
-									.getDocDefinitionKey()
-									.equalsIgnoreCase(
-											SourcingConstants.DOC_DEF_KEY_PROGRESSIVE_PAYMENT)) {
-								scQtDocReportsList.remove(j);
-								break;
-							}
-					} else if (scQt.getFulfilmentType().getParameterCode()
-							.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-						// Progressive
-						if (null != scQtDocReportsList.get(j).getPmDocument())
-							if (scQtDocReportsList
-									.get(j)
-									.getPmDocument()
-									.getDocDefinitionKey()
-									.equalsIgnoreCase(
-											SourcingConstants.DOC_DEF_KEY_PROGRESSIVE_PAYMENT)) {
-								scQtDocReportsList.remove(j);
-								break;
-							}
-					}
-				}
-				// }
+				scQt.setScQtDocReports(docReportsList);
 			}
-			scQt.setScQtDocReports(scQtDocReportsList);
 			// Setting the Publication Approvals to QtDetails
-			ScQtApproval approval = getManagedBean().getPublicationApproval();
-			if (null != approval) {
+			ScQtApproval pubApproval = getManagedBean()
+					.getPublicationApproval();
+			if (null != pubApproval) {
 				if (null == scQt.getScQtApprovals()) {
 					approvalList = new ArrayList<ScQtApproval>();
 				}
 
-				approval.setApproverSettings(this.getManagedBean()
+				pubApproval.setApproverSettings(this.getManagedBean()
 						.getPublicationApprovals().getTarget());
-				List<ScQtApprovalRemark> remarks = approval
+				List<ScQtApprovalRemark> remarks = pubApproval
 						.getScQtApprovalRemarks();
-				if (null != remarks) {
-					for (int i = 0; i < remarks.size(); i++) {
-						if (remarks.get(i).getRemark() == null
-								|| remarks.get(i).getRemark() == "") {
-							approval.getScQtApprovalRemarks().remove(i);
-						}
-					}
-				}
-				// approval.setScQt(this.getManagedBean().getQt());
-				approvalList.add(approval);
+				finalizeRemarks(remarks);
+				approvalList.add(pubApproval);
 				scQt.setScQtApprovals(approvalList);
 			}
 
@@ -1613,39 +1556,12 @@ public class QTDetailBackingBean extends
 				qt.setModified(true);
 				// check if its Pending Schedule and Documents , only execute
 				// this part
-
 				if (null == this.getManagedBean().getScQtDocReportList()) {
 					retrieveDocumentTabDtl();
 					qt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 				}
-				if (null != qt.getScQtDocReports()
-						&& !qt.getScQtDocReports().isEmpty()) {
-					QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-					List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
-					for (ScQtDocReport scQtDocReport : qt.getScQtDocReports()) {
-						ScQtDocReportAttachment attachment = scQtDocReport
-								.getScQtDocReportAttachment();
-						if (attachment == null) {
-
-							try {
-								attachment = qtDocumentsBackingBean
-										.generateDocumentAttachment(scQtDocReport);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						} /*
-						 * else { //attachment.setScQtDocReport(scQtDocReport);
-						 * scQtDocReport
-						 * .setScQtDocReportAttachment(attachment); }
-						 */
-						scAttachments.add(attachment);
-					}
-				}
 			}
-
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
@@ -1787,15 +1703,26 @@ public class QTDetailBackingBean extends
 						} else if (qtApproval.getApprovalCategory()
 								.getParameterCode()
 								.equals(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
-							if (SourcingConstants.APPROVE_ACTION
-									.equalsIgnoreCase(qtApproval
-											.getApproverAction())) {
-								DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
-										RoleCode.PUBLICATION_APPROVER,
-										qtApproval);
-								tabBeans.add(new TabBean(qtApproval
-										.getApprovalType(), qtApproval,
-										ptjApprovals));
+							List<ScQtApprovalRequest> approvarRequests = qtApproval
+									.getScQtApprovalDtls();
+							if (null != approvarRequests
+									&& !approvarRequests.isEmpty()) {
+								for (ScQtApprovalRequest scQtApprovalRequest : approvarRequests) {
+									if (null != scQtApprovalRequest
+											.getApproverAction()
+											&& SourcingConstants.APPROVE_ACTION
+													.equalsIgnoreCase(scQtApprovalRequest
+															.getApproverAction()
+															.getParameterCode())) {
+										DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
+												RoleCode.PUBLICATION_APPROVER,
+												qtApproval);
+										tabBeans.add(new TabBean(qtApproval
+												.getApprovalType(), qtApproval,
+												ptjApprovals));
+										break;
+									}
+								}
 							}
 						} else if (qtApproval
 								.getApprovalCategory()
@@ -2191,9 +2118,9 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
 						.getContactPersons();
-				List<ScQtContactPerson> qtContactPerson = new ArrayList<ScQtContactPerson>();
-				if (null == contactPersons.getResultList()
-						|| contactPersons.getResultList().isEmpty()) {
+				List<ScQtContactPerson> qtContactPerson = contactPersons
+						.getResultList();
+				if (qtContactPerson == null || qtContactPerson.isEmpty()) {
 					ScQtContactPerson contactPerson = new ScQtContactPerson();
 					PmUser user = new FacesScopes().getUserSessionBean();
 					contactPerson.setPhoneNo(user.getPhoneNo());
@@ -2205,8 +2132,6 @@ public class QTDetailBackingBean extends
 					contactPerson.setName(user.getUserName());
 					contactPerson.setScQt(this.getManagedBean().getQt());
 					qtContactPerson.add(contactPerson);
-				} else {
-					qtContactPerson.addAll(contactPersons.getResultList());
 				}
 				this.getManagedBean().setScQtContactPersons(qtContactPerson);
 				this.getManagedBean().setPmuserContactpersonList(
@@ -2319,79 +2244,24 @@ public class QTDetailBackingBean extends
 
 	public void retrieveDocumentTabDtl() {
 		debugLogger("retrieveDocumentTabDtl");
+		IQTDetailSO detailSO;
 		if (getManagedBean().getScQtDocReportList() == null) {
-			IQTDetailSO detailSO;
+
 			QuationTenderResDTO resDTO = null;
-			
-			if (getManagedBean().getMarkDeletedScQtDocReportList() == null) {
-				getManagedBean().setMarkDeletedScQtDocReportList(
-						new ArrayList<ScQtDocReport>());
-			}
-			
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setQtdetail(getManagedBean().getQt());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 
-				ScQt scQt = this.getManagedBean().getQt();
-				List<String> list = new ArrayList<String>();
-				if (scQt.getScQtDeliveryLocs().isEmpty()) {
-					list.add(SourcingConstants.DOC_TITLE_DELIVERY_SERVICE_ADDRESS);
-				}
-				if (scQt.getFulfilmentType().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-						&& scQt.getScheduleType().equals(
-								SourcingConstants.FREQUENCY_SCHEDULE)) {
-					// frequency schedule - Jadual Kekerapan, Progressive
-					// Payment - Jadual Pembayaran Berperingkat
-					list.add(SourcingConstants.DOC_TITLE_FREQUENCY_SCHEDULE);
-					list.add(SourcingConstants.DOC_TITLE_PROGRESSIVE_PAYMENT);
-				}
-				if (scQt.getPmProcurementCategory()
-						.getParameterCode()
-						.equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
-						|| scQt.getPmProcurementCategory()
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
-						|| scQt.getPmProcurementCategory()
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_ICT)
-						|| scQt.getPmProcurementCategory()
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)
-						|| scQt.getPmProcurementCategory()
-								.getParameterCode()
-								.equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)) {
-					list.add(SourcingConstants.DOC_TITLE_SCOPE_SERVICES);
-				}
-				reqDTO.setExcludedDocNames(list);
-
-				List<ScQtDocReport> scQtDocReports = new ArrayList<ScQtDocReport>();
-				/* if (this.getManagedBean().getScQtDocReportList() == null) { */
 				resDTO = detailSO.retriveQTDocDetails(reqDTO);
 				if (resDTO.getReports() != null
 						&& !resDTO.getReports().isEmpty()) {
 					this.getManagedBean().setScQtDocReportList(
 							resDTO.getReports());
-				} else if (resDTO.getQtDocuments() != null
-						&& resDTO.getQtDocuments().size() > 0) {
-					for (PmDocument pmDoc : resDTO.getQtDocuments()) {
-						ScQtDocReport scQtDocReport = new ScQtDocReport();
-						scQtDocReport.setScQt(this.getManagedBean().getQt());
-						scQtDocReport.setDocCategory(pmDoc.getDocCategoryCode()
-								.getParameterCode());
-						scQtDocReport.setPmDocument(pmDoc);
-						scQtDocReport.setTitle(pmDoc.getDocName());
-						scQtDocReport.setDefinationType(pmDoc
-								.getDocDefinitionTypeCode());
-						scQtDocReport.setBrandNew(false);
-						scQtDocReports.add(scQtDocReport);
-					}
-					this.getManagedBean().setScQtDocReportList(scQtDocReports);
 				}
-				// }
+
 			} finally {
 				detailSO = null;
 			}

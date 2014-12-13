@@ -223,6 +223,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			scQtCategories = new ArrayList<ScQtCategory>();
 		}
 		ScQtCategory category = new ScQtCategory();
+		//category.setScQt(this.getManagedBean().getQt());
 		category.setPmCategoryL1(new PmCategoryL1());
 		category.setPmCategoryL2(new PmCategoryL2());
 		category.setPmCategoryL3(new PmCategoryL3());
