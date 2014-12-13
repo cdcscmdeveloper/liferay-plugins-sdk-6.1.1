@@ -130,7 +130,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		private SupplierSearchBean supplierSearchBean;
 
 		public SupplierPagingDataModel(String componentId, SupplierSearchBean supplierSearchBean) {
-			super(componentId);
+			super(componentId, false);
 			this.supplierSearchBean = supplierSearchBean;
 		}
 		
