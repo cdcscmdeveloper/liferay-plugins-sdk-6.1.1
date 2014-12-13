@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.invoice;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -27,8 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -41,6 +44,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
@@ -49,9 +53,9 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -87,6 +91,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -101,6 +106,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.axis.encoding.Base64;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -108,8 +114,6 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 //import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 
@@ -454,11 +458,25 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			validateAdvancedPayment();
 		} else if(invoiceId!=null) {
+			try {
+				String key = invoiceId.substring(0,16);
+				String encoded = invoiceId.substring(16);
+				
+				// Create key and cipher
+				Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+				Cipher cipher = Cipher.getInstance("AES");
+				// decrypt the text
+				cipher.init(Cipher.DECRYPT_MODE, aesKey);
+				String decrypted = new String(cipher.doFinal(Base64.decode(new String(encoded))));
+				reqDTO.setInvoiceId(Long.valueOf(decrypted));
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+			  
 			renewSesionObject();
-			reqDTO.setInvoiceId(Long.valueOf(invoiceId));
 			resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 			
-			getManagedBean().setInvoiceId(Long.valueOf(invoiceId));
+			getManagedBean().setInvoiceId(resDTO.getInvoice().getInvoiceId());
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setButtonVal("View");
 			getManagedBean().setInvoice(resDTO.getInvoice());
@@ -1052,13 +1070,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		if(getManagedBean().getInvoiceId()==null) {
 			return "flDocSearch";
 		} else {
-			FacesScopes facesScope = new FacesScopes();
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-			String commonUrl = themeDisplay.getURLCurrent().substring(0,
-					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())
-							+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.redirect(commonUrl + "/notifications");
+			externalContext.redirect(commonUrl + "notifications");
 			return null;
 		}
 	}
