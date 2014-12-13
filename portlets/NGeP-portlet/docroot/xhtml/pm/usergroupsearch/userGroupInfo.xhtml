@@ -36,7 +36,7 @@
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 							size="10" readonly="true" />&#160;&#160;
       	                   <ac:lov id="uomLovId" lovId="PM_ORG_PROFILE_FPJ" size="60"
-							update=":form:orgCodeUpdate" headerText="Org Profile Lov"
+							update=":form:orgCodeUpdate,:form:pmUserId" headerText="Org Profile Lov"
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}"
 							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
@@ -66,7 +66,8 @@
 			value="#{usergroupBackingBean.managedBean.userGroups}"
 			var="groupuser"
 			selection="#{usergroupBackingBean.managedBean.selectedUsrGrps}"
-			rowKey="#{groupuser}">
+			rowKey="#{groupuser}"
+			>
 			<ac:paginator />
 			<p:column style="width:2%;text-align:center;"
 				selectionMode="multiple" />
@@ -91,7 +92,9 @@
 		</p:dataTable>
 
 		<br />
-		<div>
+		</p:panel>
+		<p:panel id="pmUserId">
+		<div >
 			<table style="width: 100%">
 				<tr>
 					<td class="TableFieldLeft" width="80%"></td>

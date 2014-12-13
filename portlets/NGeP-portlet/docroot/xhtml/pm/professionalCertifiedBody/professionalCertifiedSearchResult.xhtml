@@ -23,7 +23,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
 				 update="searchProfCertResult" action="#{profcertifiedbodyBackingBean.searchProfessionalCertBody}" />
             <p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{profcertifiedbodyBackingBean.reset}"
-               type="reset" icon="ui-icon-reset" />
+               process="@this" icon="ui-icon-reset" update="searchProfCertResult,:form:profPanel"/>
 	  </div>
     <br/>
 	<br/>
