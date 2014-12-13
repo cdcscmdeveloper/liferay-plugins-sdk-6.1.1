@@ -396,7 +396,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
-			selectAddrEvent();
+			populateItemsForSelectedAddress();
 			List<FlFulfilmentItemAddr> fulfilmentItemAddrList = null;
 			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
