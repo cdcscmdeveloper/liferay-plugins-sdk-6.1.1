@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -33,6 +31,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -46,6 +45,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -174,29 +174,38 @@ public class CommitteBackingBean extends
 	
 	private void populateUserSearchCriteria(UserCommitteeSearchBean userQCSearchBean, ISearchBean<PmUser> userSearchBean) {
 		if (userQCSearchBean != null) {
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+			
 			String name = userQCSearchBean.getName();
 			if (!StringUtils.isBlank(name)) {
-				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), name, true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
 			}
 			String idno = userQCSearchBean.getIdentificationNo();
 			if (!StringUtils.isBlank(idno)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.IDENTIFICATION_NO);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(idno);
-				searchFilterBean.add(bean);
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTConstants.IDENTIFICATION_NO,
+								SearchOperator.OPERATOR_LIKE.value(), idno,
+								true));
 			}
 			String idtype = userQCSearchBean.getIdentificationType();
 			if (!StringUtils.isBlank(idtype)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("identificationCode.parameterCode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(idtype);
-				searchFilterBean.add(bean);
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"identificationCode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(), idtype,
+								true));
 			}
-			userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()
+					.getParentOrgProfile()) {
+				userSearchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
+								SearchOperator.OPERATOR_EQUALS.value(), this
+										.getManagedBean().getQt()
+										.getPmOrgProfile()
+										.getParentOrgProfile()
+										.getOrgProfileId()));
+			}
 		}
 	}
 	
@@ -866,6 +875,7 @@ public class CommitteBackingBean extends
 
 	public void addCommitteMember(String titleName) {
 		debugLogger("addCommitteMember");
+		getManagedBean().getUserSearchQCDataModel().reloadData();
 		getManagedBean().getUserQCSearchBean().setName(null);
 		getManagedBean().getUserQCSearchBean().setIdentificationType(null);
 		getManagedBean().getUserQCSearchBean().setIdentificationNo(null);
@@ -874,7 +884,7 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
-		committeeMember.setUserSelection("E");
+		committeeMember.setUserSelection(QTConstants.USER_SELECTION);
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
 		// getManagedBean().setQtCommittee(qtCommittee);
@@ -1079,42 +1089,69 @@ public class CommitteBackingBean extends
 			memberList.add(member);
 			
 		} else {
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				if (null != user.getPmAddressTypes()) {
-					for (PmAddressType address : user.getPmAddressTypes()) {
-						if (null != address.getPmAddress()) {
-							committeeMember.setEmail(address.getPmAddress().getEmail());
-							break;
+			if (!this.getManagedBean().getSelectedPmUser().isEmpty()) {
+				List<PmUser> users = getManagedBean().getSelectedPmUser();
+				for (int i = 0; i < users.size(); i++) {
+					ScCommitteeMember committeeMember = new ScCommitteeMember();
+					committeeMember.setMemberName(users.get(i).getUserName());
+					committeeMember.setIcPassport(users.get(i)
+							.getIdentificationNo());
+					committeeMember.setDesignation(users.get(i)
+							.getDesignation());
+					committeeMember.setEmail(users.get(i).getEmail());
+					committeeMember.setGrade(users.get(i).getGrade());
+					committeeMember.setPNP(users.get(i).isPMP());
+					committeeMember.setPmUser(users.get(i));
+					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+					if (users.get(i).isPMP() == true) {
+						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+						ParameterResDTO resDTO = getParameterSO()
+								.retrieveParameterByTypeAndCode(reqDTO);
+						committeeMember.setMemberRole(resDTO.getPmParameter());
+					} else {
+						if (null != users.get(i).getMemberRole().getParameterId()) {
+							ParameterReqDTO reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterId(users.get(i).getMemberRole().getParameterId());
+							ParameterResDTO resDTO = getParameterSO().retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO.getPmParameter());
+						} else {
+							committeeMember.setMemberRole(new PmParameter());
 						}
 					}
+					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
+					committeeMember.setScCommittee(scCommittee);
+					setUserDetails(committeeMember);
+					memberList.add(committeeMember);
 				}
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPNP(user.isPMP());
-				committeeMember.setPmUser(user);
-				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-				if(committeeMember.isPNP() == true) {
-					ParameterReqDTO reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-					reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-					ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
-					committeeMember.setMemberRole(resDTO.getPmParameter());
-				} else {
-					committeeMember.setMemberRole(user.getMemberRole());
-				}
-				committeeMember.setAccessRight("E");
-				committeeMember.setScCommittee(scCommittee);
-				memberList.add(committeeMember);
+			} else {
+				throw new EpException(MessageConst.ERROR_760121);
 			}
+		}
+		if (isMemberExists(scCommittee.getScCommitteeMembers(), memberList)) {
+			throw new EpException(MessageConst.ERROR_760048,
+					new String[] { CommitteType.getValue(scCommittee
+							.getCommitteeType().getParameterCode()) });
+
 		}
 		sortMemberList(memberList);
 		this.getManagedBean().setScCommitteeMemberList(memberList);
 		
 		scCommittee.setScCommitteeMembers(memberList);
 		this.getManagedBean().getQtCommittee().setScCommittee(scCommittee);
+	}
+	
+	private boolean isMemberExists(List<ScCommitteeMember> existingMembers,
+			List<ScCommitteeMember> newMembers) {
+		if (!existingMembers.isEmpty()) {
+			for (ScCommitteeMember member : newMembers) {
+				if (existingMembers.contains(member)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public void sortMemberList(List<ScCommitteeMember> memberList) {
