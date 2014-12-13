@@ -3076,6 +3076,8 @@ public class QTDetailBackingBean extends
 				break;
 			case 1:
 				// retrieveCommitteeAppointmentTabDtl();
+				//this.getManagedBean().setSelectedTabIndex(0);
+				committeTabChangeAction(0);
 				break;
 
 			case 2:
