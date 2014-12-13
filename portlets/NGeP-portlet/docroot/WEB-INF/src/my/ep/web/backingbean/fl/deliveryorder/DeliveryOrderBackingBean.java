@@ -353,7 +353,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				if(itemAddr.getDeliveredQty().doubleValue()>remainingQty.doubleValue()) {
 					itemAddr.setDeliveredQty(new BigDecimal(0));
 					itemAddr.setDeliveredAmt(new BigDecimal(0));
-					throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
+					throw new EpException(MessageConst.ERROR_100032, new String[]{
+							ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+							ResourceBundleUtils.getMessage("lbl.fl.do.remaining.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
 		}
@@ -485,7 +487,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
 			itemAddress.setDeliveredQty(new BigDecimal(0));
 			itemAddress.setDeliveredAmt(new BigDecimal(0));
-			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
+			throw new EpException(MessageConst.ERROR_100032, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.fl.do.remaining.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});			
 		}
 		
 		if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) 
