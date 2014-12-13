@@ -65,6 +65,7 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -420,21 +421,17 @@ public class ApprovalBackingBean extends
 					}
 				}
 			}
+			RequestContext.getCurrentInstance().execute(
+					"reviceApprovalDlg.show()");
+		} else {
+			if ("Publication Approval".equalsIgnoreCase(this.getManagedBean()
+					.getApprovalType())) {
 
-		} else if ("Publication Approval".equalsIgnoreCase(this
-				.getManagedBean().getApprovalType())) {
-
-			this.setDefaultDateTime(reqDTO.getQtdetail());
-			detailSO.validateScheduleDetails(reqDTO);
-
-			/*
-			 * if (this.getManagedBean().getQt().isBsvRequired()) {
-			 * reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			 * detailSO.validatePublicationBsvDetails(reqDTO); }
-			 */
-
+				this.setDefaultDateTime(reqDTO.getQtdetail());
+				detailSO.validateScheduleDetails(reqDTO);
+			}
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}
-		RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 	}
 	
 	private void setDefaultDateTime(ScQt scQt){
@@ -808,12 +805,12 @@ public class ApprovalBackingBean extends
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.RESTR_APPROVAL_DECISION_TYPE_PROCEED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						scQt.setQtType(SourcingConstants.QT_TYPE_OPEN);
 						scQt.setScQtSuppliers(null);
 					} else if (ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						isRevise = true;
 						break;
 					}
@@ -821,14 +818,14 @@ public class ApprovalBackingBean extends
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						scQt.setQtValidityPeriod(Integer
 								.parseInt(approvalRequest.getOriginalValue()));
 						approvalRequest.setChangedValue(approvalRequest
 								.getOriginalValue());
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						isRevise = true;
 						break;
 					}
@@ -836,12 +833,12 @@ public class ApprovalBackingBean extends
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						scQt.setPublishPeriod(Integer.parseInt(approvalRequest
 								.getOriginalValue()));
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						isRevise = true;
 						break;
 					}
@@ -849,11 +846,11 @@ public class ApprovalBackingBean extends
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						scQt.setOpenFor(approvalRequest.getOriginalValue());
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
-									.getDecessionType().getParameterCode())) {
+									.getApproverAction().getParameterCode())) {
 						isRevise = true;
 						break;
 					}
@@ -873,7 +870,7 @@ public class ApprovalBackingBean extends
 							IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setLanguageCode("en");
-			parameterReqDTO.setParameterId(requestdetails.getDecessionType()
+			parameterReqDTO.setParameterId(requestdetails.getApproverAction()
 					.getParameterId());
 			requestdetails.setApproverAction(((ParameterResDTO) parameterSO
 					.retrieveParameterById(parameterReqDTO)).getPmParameter());
@@ -913,11 +910,12 @@ public class ApprovalBackingBean extends
 	private void updateApprovalRequest(
 			List<ScQtApprovalRequest> approvalRequests, String outCome) {
 
-		//Need to change this logic...
-		PmParameter parameter = getParameterByTypeAndCode(
-				ParameterTypeConst.APPROVAL_DECISION_TYPE,
-				ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
-
+		PmParameter parameter = null;
+		if (!"SUBMIT".equalsIgnoreCase(outCome)) {
+			parameter = getParameterByTypeAndCode(
+					ParameterTypeConst.APPROVAL_DECISION_TYPE, ApprovalStatus
+							.valueOf(outCome).getApprovalStatus());
+		}
 		if (null != approvalRequests && !approvalRequests.isEmpty()) {
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 				if (!"SUBMIT".equalsIgnoreCase(outCome)) {
