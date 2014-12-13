@@ -398,7 +398,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		this.getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
 	}
 
-	public String showTemplateAction(ScQtDocReport scQtDocReport) 
+	public String showTemplateAction(int index,ScQtDocReport scQtDocReport) 
 		throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
 		debugLogger("showTemplateAction");
 		
@@ -407,8 +407,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 			
-			getManagedBean().setScQtDocReport(scQtDocReport);
-			
+						
 			ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
 			if(qtDocReport != null){
 				scQtDocReport = qtDocReport;	
@@ -416,16 +415,19 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				//save list of documents if its not yet save
 				scQtDocReport = saveScQtReportList(scQtDocReport);
 			}
-				
+			
+			this.getManagedBean().setScQtDocReport(scQtDocReport);
 			TplDocMaster docMaster = scQtDocReport.getTplDocMaster();
 			if (docMaster == null) {
 				//clone standard tplDocMaster
 				TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtDocReport);
-				scQtDocReport.setTplDocMaster(tplDocMaster);
-				
+				scQtDocReport.setTplDocMaster(tplDocMaster);				
 				//save clone to db
 				docMaster = saveClonedTplDocMaster(scQtDocReport);
 			}
+		
+			this.getManagedBean().getScQtDocReportList().remove(index);
+			this.getManagedBean().getScQtDocReportList().add(index, this.getManagedBean().getScQtDocReport());
 			templateDocUrl = tplDocBB.goToMaint(docMaster);
 			
 		}finally {
@@ -477,7 +479,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			reqDTO.setScQtDocReport(scQtDocReport);
 			
 			QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
-			getManagedBean().setScQtDocReport(resDTO.getScQtDocReport());
+			this.getManagedBean().setScQtDocReport(resDTO.getScQtDocReport());
 			
 			TplDocMaster tplDocMaster = getManagedBean().getScQtDocReport().getTplDocMaster();
 			return tplDocMaster;

@@ -57,7 +57,7 @@
 			
 			<p:column style="width:10%;" headerText="#{lbl['lbl.so.action']}">
 				<p:commandLink
-					action="#{qTDocumentsBackingBean.showTemplateAction(scQtDocReport)}">
+					action="#{qTDocumentsBackingBean.showTemplateAction(rowIndex,scQtDocReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png"
 						rendered="#{scQtDocReport.definationType.parameterCode eq 'TD'}" />
