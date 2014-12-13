@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.invoice;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import java.util.TreeMap;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -104,6 +106,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 //import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 
@@ -299,11 +305,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
 		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:" + taskId);
-		FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
-		FinancialOrgResDTO finOrgResDTO = null;
-		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		String invoiceId = originalServletRequest.getParameter("invoiceId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
 		if(taskId != null){
 			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -312,11 +320,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			bpmReqDTO.setCtxToken(ctx);
 			bpmReqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			getManagedBean().setModificationCancel(false);
+			
+			FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
+			FinancialOrgResDTO finOrgResDTO = null;
+			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+			
 			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(res.getTaskName()) || FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT.equals(res.getTaskName())){
-				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 				reqDTO.setInvoiceId(Long.valueOf(res.getDocId()));
 				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 				getManagedBean().setDocProcess(res.getDocType());
@@ -443,6 +453,23 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}	
 			}
 			validateAdvancedPayment();
+		} else if(invoiceId!=null) {
+			renewSesionObject();
+			reqDTO.setInvoiceId(Long.valueOf(invoiceId));
+			resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+			
+			getManagedBean().setInvoiceId(Long.valueOf(invoiceId));
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal("View");
+			getManagedBean().setInvoice(resDTO.getInvoice());
+			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+				getFactoringBranchDtl(); 
+			}			
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 		}
 	}
 	
@@ -1017,9 +1044,23 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	
 	/**
 	 * Page navigation to FLDoc search page in INV
+	 * @throws SystemException 
+	 * @throws PortalException 
+	 * @throws IOException 
 	 */
-	public String backToPervious() {
-		return "flDocSearch";
+	public String backToPervious() throws PortalException, SystemException, IOException {
+		if(getManagedBean().getInvoiceId()==null) {
+			return "flDocSearch";
+		} else {
+			FacesScopes facesScope = new FacesScopes();
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,
+					themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "/notifications");
+			return null;
+		}
 	}
 	
 	/**
