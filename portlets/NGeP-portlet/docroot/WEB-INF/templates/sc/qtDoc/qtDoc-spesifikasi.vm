@@ -61,6 +61,7 @@
 						<td>Item</td>
 						<td>Specification</td>
 						<td>UOM</td>
+						<td>Price Type</td>
 						<td>Quantity</td>
 						<td>Answer</td>
 						<td>Note</td>
@@ -70,7 +71,22 @@
 							<td>$tplspecQuestion.clItem</td>
 							<td>$tplspecQuestion.clSpecDetail</td>
 							<td>$tplspecQuestion.clUom.uomName</td>
-							<td>$tplspecQuestion.clQuantity</td>
+							<td>
+								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "")
+								   $tplspecQuestion.clPriceTypeCode.parameterCode
+								#else
+								   $bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)
+								#end
+							</td>
+							<td>
+								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "09")
+									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+									#end
+								#else
+									$tplspecQuestion.clQuantity
+								#end
+							</td>
 							<td>$tplspecQuestion.clAnswerRequired</td>
 							<td>$tplspecQuestion.clReviewRemark</td>
 						</tr>

@@ -125,6 +125,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		log.info(message);
 	}
 
+	private boolean selectAll;
+	
 	public QTDocumentsBackingBean() {
 		// PagingDataModel for Clone Quotation Tender List
 		IPagingDataModel<ScQt> cloneSearchDocumentDataModel = getManagedBean().getCloneDocumentDataModel();
@@ -1125,6 +1127,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						question.setClUom(new PmUom());
 						question.getClUom().setUomName("");
 					}
+					if (question.getClPriceTypeCode() == null) {
+						question.setClPriceTypeCode(new PmParameter());
+						question.getClPriceTypeCode().setParameterCode("");
+					} else {
+						if (question.getClPriceTypeCode().getParameterCode() == null) {
+							question.getClPriceTypeCode().setParameterCode("");
+						}
+					}
 					if (question.getClQuantity() == null) {
 						question.setClQuantity(new BigDecimal(0));
 					}
@@ -1143,6 +1153,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				context.put("localGoods", localGoods);
 				context.put("itemType", itemTypes);
 				context.put("masters", masters);
+				context.put("bean", this);
 			}
 		} finally {
 			specSO = null;
@@ -1360,7 +1371,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		try {
 			qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setScQt(getManagedBean().getQt());
 			BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingSiteVisitDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
 			if (scQt.isZonal()) {
@@ -1404,4 +1415,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+	
 }
