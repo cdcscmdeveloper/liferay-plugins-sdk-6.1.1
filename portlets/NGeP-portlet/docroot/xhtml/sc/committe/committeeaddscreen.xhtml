@@ -56,50 +56,57 @@
 										size="30" /></td>
 							</tr>
 						</table>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+								action="#{committeBackingBean.searchUserAction}"
+								update="existingsearchid" icon="ui-icon-search"
+								process="@this, userPnlid" />
+							<p:commandButton value="#{lbl['lbl.so.reset']}"
+								action="#{committeBackingBean.reset}" update="userPnlid"
+								icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+								process="@this" />
+						</div>
 					</p:panel>
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-							action="#{committeBackingBean.existingCommitteeSearchAction}"
-							update="existingsearchid" icon="ui-icon-search"
-							process="@parent, userPnlid" />
-						<p:commandButton value="#{lbl['lbl.so.reset']}"
-							action="#{committeBackingBean.reset}" update="userPnlid"
-							icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-							process="@this" />
-					</div>
-					<p:spacer height="5" />
 					<p:panel header="#{lbl['lbl.so.result']}" toggleable="true">
 						<p:dataTable id="existingsearchid"
 							value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 							selection="#{committeBackingBean.managedBean.selectedPmUser}"
-							rowKey="#{existcommitteeuser}" var="existcommitteeuser"
+							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
 							lazy="true" styleClass="existingCommitteeResults"
-							style="width : 933px;">
+							sstyle="width : 100%;" rows="10">
 
 							<ac:paginator for="existingsearchid" />
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
 							<p:column headerText="#{lbl['lbl.so.bo.name']}">
-								<h:outputText value="#{existcommitteeuser.userName}" />
+								<h:outputText value="#{existcommitteeuser.userName}"
+									style="white-space: normal;" />
 							</p:column>
+
 							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
 								<h:outputText value="#{existcommitteeuser.identificationNo}" />
 							</p:column>
+
 							<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-								<h:outputText value="#{existcommitteeuser.designation}" />
+								<h:outputText value="#{existcommitteeuser.designation}"
+									style="white-space: normal;" />
 							</p:column>
+
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">
-								<h:outputText
-									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
+								<h:outputText value="#{existcommitteeuser.email}"
+									style="white-space: normal;" />
 							</p:column>
+
 							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
 								<h:outputText value="#{existcommitteeuser.grade}" />
 							</p:column>
+
 							<p:column headerText="#{lbl['lbl.so.bo.pp']}">
 								<h:outputText
 									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
+
 							<p:column headerText="#{lbl['lbl.so.role']}">
 								<ui:fragment rendered="#{existcommitteeuser.PMP == true}">
 									<h:outputText value="Chairperson" />
@@ -108,8 +115,13 @@
 									<p:selectOneMenu id="appaction"
 										value="#{existcommitteeuser.memberRole.parameterId}"
 										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItems
-											value="#{committeBackingBean.managedBean.roleTypes}" />
+										<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+										<f:selectItems var="role"
+											value="#{qTCommitteBackingBean.managedBean.roleTypes}"
+											itemLabel="#{role.codeName}"
+											itemValue="#{role.pmParameter.parameterId}" />
+
+										<p:ajax event="change" partialSubmit="true" />
 									</p:selectOneMenu>
 								</ui:fragment>
 							</p:column>

@@ -73,42 +73,42 @@
 	<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
 		<p:dataTable id="searchQTs"
 			value="#{committeBackingBean.managedBean.searchQTDataModel}"
-			var="scqtcommittee" rowIndexVar="index" lazy="true">
+			var="scqtcommittee" rowIndexVar="index" lazy="true" rows="10">
 
 			<ac:paginator for="searchQTs" />
 
 			<p:column
 				headerText="#{lbl['lbl.sc.committe.resulttable.qtntenderno']}"
-				style="width:15%;">
+				style="width:100px;">
 				<h:outputText value="#{scqtcommittee.scQt.qtNo}" />
 			</p:column>
-
+			
 			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.title']}">
-				<h:outputText value="#{scqtcommittee.scQt.qtTitle}" />
+				<h:outputText value="#{scqtcommittee.scQt.qtTitle}" style="white-space: normal;word-wrap: break-word;"/>
 			</p:column>
-
+			
 			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}"
-				style="width:15%;">
+				style="width:100px;">
 				<h:outputText
 					value="#{committeBackingBean.getParameterDesc(scqtcommittee.scCommittee.committeeType)}" />
 			</p:column>
-
+			
 			<p:column
 				headerText="#{lbl['lbl.sc.committe.resulttable.datecreated']}"
-				style="width:10%;">
+				style="width:80px;">
 				<h:outputText value="#{scqtcommittee.scQt.createdDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-
+			
 			<p:column
 				headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"
-				style="width:15%">
+				style="width:200px">
 				<h:outputText
 					value="#{committeBackingBean.getStatusDescById(scqtcommittee.scCommittee.committeStatus.statusId)}" />
 			</p:column>
-
+			
 			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}"
 				style="width:6%">
 				<p:commandLink
