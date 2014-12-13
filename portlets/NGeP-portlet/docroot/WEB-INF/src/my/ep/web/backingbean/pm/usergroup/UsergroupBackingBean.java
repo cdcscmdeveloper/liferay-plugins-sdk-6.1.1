@@ -103,7 +103,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserGroupSO.class);
 			ISearchResultBean<PmUserGroup> iSearchResultBean = groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
-			List<PmUserGroup> pmUserGroups = iSearchResultBean.getResultList();
 			return iSearchResultBean;
 		}
 
@@ -185,12 +184,17 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						SearchOperator.OPERATOR_EQUALS.value());
 				codesSearchBean
 						.setSearchField("recordStatusFlg");
-				codesSearchBean.setSearchValue(getManagedBean()
-						.getStatus());
+				codesSearchBean.setSearchValue(getManagedBean().getStatus());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
-
+			SearchFilterBean codesSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			codesSearchBean.setSearchField("roleCode");
+			codesSearchBean.setSearchValue("FL_APPROVER");
+			codesSearchBean.setCaseInsensitive(true);				
+			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}
+		
 
 	}
 

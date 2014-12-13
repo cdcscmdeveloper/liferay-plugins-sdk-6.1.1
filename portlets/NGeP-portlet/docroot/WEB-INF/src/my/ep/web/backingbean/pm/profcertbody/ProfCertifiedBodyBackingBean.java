@@ -46,7 +46,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 	public ProfCertifiedBodyBackingBean() {
 		log.info("inside constructor");
-		reset();
 	}
 
 	private void debugLogger(Object message) {
