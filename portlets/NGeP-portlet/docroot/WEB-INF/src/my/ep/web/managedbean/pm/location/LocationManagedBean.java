@@ -34,6 +34,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	private PmCity city;
 
 	private PmCountry country;
+	
+	private PmCountry pmCountry;
 
 	private List<PmCountry> countries;
 
@@ -240,6 +242,20 @@ public class LocationManagedBean extends BaseManagedBean {
 	 */
 	public void setDisabledVal(boolean disabledVal) {
 		this.disabledVal = disabledVal;
+	}
+
+	/**
+	 * @return the pmCountry
+	 */
+	public PmCountry getPmCountry() {
+		return pmCountry;
+	}
+
+	/**
+	 * @param pmCountry the pmCountry to set
+	 */
+	public void setPmCountry(PmCountry pmCountry) {
+		this.pmCountry = pmCountry;
 	}
 
 }

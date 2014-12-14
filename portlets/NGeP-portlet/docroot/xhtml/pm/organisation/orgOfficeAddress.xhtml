@@ -126,14 +126,13 @@
 				<td><p:message for="postCode" id="postCodeMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.email']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="email" required="true"
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.email']}" /></td>
+				<td><p:inputText id="email" 
 						styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.address.email']}"
 						maxlength="80"
 						value="#{organisationBackingBean.managedBean.officeAddress.email}"
 						size="35" /></td>
-				<td><p:message for="email" id="emailMsg" display="icon" /></td>
+				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="telNo" required="true"

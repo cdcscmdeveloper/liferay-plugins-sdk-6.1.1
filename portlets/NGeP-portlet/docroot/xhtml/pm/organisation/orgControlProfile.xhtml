@@ -12,7 +12,7 @@
 			<p:outputLabel value="#{lbl['lbl.pm.organisation.ptjGroup']}" />
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.ptjGroupId}" styleClass="ppDropDownWidthL"
-				style="margin-bottom: 5px;">
+				style="margin-bottom: 5px;" disabled="true">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 				<f:selectItems var="ptjLs"
 					value="#{organisationBackingBean.managedBean.ptjGroup}"
@@ -22,8 +22,8 @@
 
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.businessArea']}"></h:outputLabel>
 			<p:selectOneMenu
-				value="#{organisationBackingBean.managedBean.agOfficeId}" styleClass="ppDropDownWidthL"
-				required="true" style="margin-bottom: 5px;">
+				value="#{organisationBackingBean.managedBean.agOfficeId}" styleClass="ppDropDownWidthL" disabled="true"
+				 style="margin-bottom: 5px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 				<f:selectItems var="agOfficeLs"
 					value="#{organisationBackingBean.managedBean.agOffice}"
@@ -34,7 +34,7 @@
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.parent']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.parentOrgProfileId}" styleClass="ppDropDownWidthL"
-				 style="margin-bottom: 5px;">
+				 style="margin-bottom: 5px;" required="true">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 				<f:selectItems var="orgProfileLs"
 					value="#{organisationBackingBean.managedBean.orgProfileList}"

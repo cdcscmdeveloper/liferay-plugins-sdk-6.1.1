@@ -106,7 +106,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		pmAddressType = new PmAddressType();
 		
 		officeContactPerson = new PmContact();
-		
+		parentOrgProfile= new PmOrgProfile();
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
 		officeAddressTypeList = new ArrayList<PmAddressType>();

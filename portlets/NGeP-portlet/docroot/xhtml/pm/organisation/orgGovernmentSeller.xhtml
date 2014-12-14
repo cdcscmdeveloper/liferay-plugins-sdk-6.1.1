@@ -15,9 +15,9 @@
 
 			<ac:paginator for="financialacc" />
 			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
-				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
+				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn" 
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!financialacc.brandNew}" 
-					required="true" style="margin-bottom: 5px;">
+					required="true" style="margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="finorgLs"
 						value="#{organisationBackingBean.managedBean.pmFinancialOrg}"
