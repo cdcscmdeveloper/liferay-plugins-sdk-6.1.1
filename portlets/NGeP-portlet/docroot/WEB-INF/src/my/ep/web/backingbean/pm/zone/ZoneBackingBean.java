@@ -311,7 +311,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zoneState.setPmZone(getManagedBean().getPmZone());
 			this.getManagedBean().getZoneStateList().add(zoneState);
 		}
-		if (getManagedBean().getSelectedStates().isEmpty()) {
+		if (getManagedBean().getSelectedStates().isEmpty()&&getManagedBean().getZoneStateList().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
 		RequestContext.getCurrentInstance()
@@ -340,6 +340,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 						&& !zone.getPmZoneStates().isEmpty()) {
 					for (PmZoneState state : zone.getPmZoneStates()) {
 						stList.remove(state.getPmState());
+						//disable code
 						/*for (PmState pmState : stList) {
 							if (state.getPmState().getStateId() == pmState
 									.getStateId()) {
@@ -353,6 +354,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		List<PmZoneState> selectStates = getManagedBean().getZoneStateList();
 		for(PmZoneState zoneState : selectStates){
 			stList.remove(zoneState.getPmState());
+			//disable code
 			/*for(PmState pmState : stList){
 				if(zoneState.getPmState().getStateId().equals(pmState.getStateId())){
 					pmState.setExistingState(true);

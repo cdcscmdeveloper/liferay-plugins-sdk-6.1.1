@@ -86,63 +86,7 @@
 					</c:otherwise>
 				</c:choose>
 			</tr>
-			<ui:fragment
-				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FMI' }">
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.pm.organisation.effDate']}"/> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<c:choose>
-						<c:when
-							test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
-							<td><p:calendar
-									value="#{organisationBackingBean.managedBean.orgValidity.effDate}"
-									showOn="button" size="20" readonlyInput="true" disabled="true"
-									style="margin-bottom: 5px;"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-									<p:ajax event="dateSelect" update="expDate" />
-								</p:calendar></td>
-						</c:when>
-						<c:otherwise>
-
-							<td><p:calendar
-									value="#{organisationBackingBean.managedBean.orgValidity.effDate}"
-									id="effDate" showOn="button" size="20" readonlyInput="true"
-									mindate="#{organisationBackingBean.managedBean.currentDate}"
-									style="margin-bottom: 5px;"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-									<p:ajax event="dateSelect" update="expDate" />
-								</p:calendar></td>
-						</c:otherwise>
-					</c:choose>
-
-					<td><h:outputLabel
-							value="#{lbl['lbl.pm.organisation.expDate']}"></h:outputLabel></td>
-					<c:choose>
-						<c:when
-							test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
-							<td><p:calendar id="expDate"
-									value="#{organisationBackingBean.managedBean.orgValidity.expDate}"
-									showOn="button" size="20" style="width: 275px;margin-bottom: 5px;"
-									disabled="true" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-
-								</p:calendar></td>
-						</c:when>
-						<c:otherwise>
-
-							<td><p:calendar id="expDate"
-									value="#{organisationBackingBean.managedBean.orgValidity.expDate}"
-									showOn="button" size="20"
-									mindate="#{organisationBackingBean.managedBean.orgValidity.effDate}"
-									readonlyInput="true" style="width: 275px;margin-bottom: 5px;"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-
-								</p:calendar></td>
-						</c:otherwise>
-					</c:choose>
-				</tr>
-			</ui:fragment>
+			
 
 			<ui:fragment
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }">
@@ -161,8 +105,6 @@
 
 						</p:selectOneMenu></td>
 					<td><p:message id="zoneCodeMsg" for="zoneCode" display="icon" /></td>
-
-
 				</tr>
 			</ui:fragment>
 			<tr>
