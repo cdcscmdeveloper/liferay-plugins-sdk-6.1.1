@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -57,6 +58,9 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private boolean titleChecker = Boolean.TRUE;
 	private String action;
     private boolean autoUpdate = Boolean.TRUE;
+    
+    private	String conditionField;
+    private VCmSupplierItem vCmSupplierItem;
     
 	public PurchaseInDefaultManagedBean() {
 	}
@@ -322,5 +326,21 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	public VCmSupplierItem getvCmSupplierItem() {
+		return vCmSupplierItem;
+	}
+
+	public void setvCmSupplierItem(VCmSupplierItem vCmSupplierItem) {
+		this.vCmSupplierItem = vCmSupplierItem;
+	}
+
+	public String getConditionField() {
+		return conditionField;
+	}
+
+	public void setConditionField(String conditionField) {
+		this.conditionField = conditionField;
 	}
 }

@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -16,6 +18,9 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -61,13 +66,17 @@ import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -117,6 +126,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	  */
 		public String pidAction(VCmSupplierItem vCmSupplierItem){
 			debugLogger("pidAction");
+			ISearchBean<VCmSupplierItem> viewSearchBean = null;
 			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
@@ -173,7 +183,32 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					scPurchaseInDefault.setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
 				}
 			}
+			String extensionCode = vCmSupplierItem.getItemCode();
+			Long uomId = vCmSupplierItem.getUomId();
+			StringBuilder sb = new StringBuilder();
+			sb.append("itemCode^").append(extensionCode).append("|")//item Code
+			.append("catType^").append("XC").append("|")
+			.append("uomId^").append(uomId);
+			viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+			List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
 
+			for (BaseSearchFilterBean baseFilterBean : filterBeans) {
+		    	if (baseFilterBean instanceof SearchFilterBean) {
+		    		SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
+		    		sb.append("|")
+		    		.append(filterBean.getSearchField()).append("^");			    		
+		    		if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_IN.value()) {
+		    			sb.append(filterBean.getSearchValue().toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll("\\s","")).append("^");
+		    		} else {
+		    			sb.append(filterBean.getSearchValue()).append("^");
+		    		}
+		    		
+		    		sb.append(filterBean.getSearchOperator());
+		    	}
+		    }
+		    getManagedBean().setConditionField(sb.toString());
+			getManagedBean().setvCmSupplierItem(vCmSupplierItem);
+			
 			initialInformation(scPurchaseInDefault);
 			retrieveReasonDescListByCategory();
 			
@@ -245,19 +280,29 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 						}
 					}
 					
-					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
+					/*if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
 						if(scPurchaseInDefault.getContractedItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
 							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 						}
-					}
+					}*/
 				}
 				else if(scPurchaseInDefault.getPanelItem() != null) {
 					reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
+
+					int checkQty = Double.compare(scPurchaseInDefault.getQuantity().doubleValue() , scPurchaseInDefault.getPanelItem().getMinimumOrderQty());
+
 					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
-						if(scPurchaseInDefault.getPanelItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
+						if(checkQty < 0) {
 							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+						}
+					}
+					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_RI)){
+						if(checkQty > 0) {
+							throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 						}
@@ -742,5 +787,73 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
-	 
+	
+	
+	public void viewMarketResearch(ScPurchaseInDefault scPurchaseInDefault) throws IOException {
+		debugLogger("viewMarketResearch");
+		ScRequestItem requestItem = null;
+
+		if (scPurchaseInDefault != null) {
+			FacesScopes facesScopes = new FacesScopes();	
+			Map<String, String> paramMap = new HashMap<String, String>();
+			String reportName = ReportConst.SC_MARKET_RESEARCH_RPT_JSP;
+
+			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+
+			if(scPurchaseInDefault.isBrandNew()) {
+			
+				 VCmSupplierItem vCmSupplierItem = getManagedBean().getvCmSupplierItem();
+				 long  uomId = vCmSupplierItem.getUomId();
+				 String  itemCode   = vCmSupplierItem.getItemCode();
+				 String conditionField = getManagedBean().getConditionField();
+
+				for (String filter: conditionField.split("\\|")){
+					System.out.println(filter);
+					String searchField = null;
+					String searchValue = null;
+					int searchCondition = SearchOperator.OPERATOR_EQUALS.value();
+					String[] conditions = filter.split("\\^");
+					searchField = conditions[0];
+					searchValue = conditions[1];
+					if(conditions.length > 2) {
+						searchCondition = Integer.parseInt(conditions[2]);
+					}
+					if ("itemName".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_ITEM_NAME, searchValue);	
+					} else if ("companyName".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_SUPPLIER_NAME, searchValue);	
+					} else if ("epNo".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_EP_NO, searchValue);	
+					} else if ("bizRegNo".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_BIZ_REG_NO, searchValue);	
+					} else if ("stateId".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_STATE_ID, searchValue);	
+
+					} else if ("districtId".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_DISTRICT_ID, searchValue);	
+					} else if ("mofNo".equals(searchField)) {
+						paramMap.put(ReportConst.PARAM_MOF_NO, searchValue);	
+					} 
+					paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
+					paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
+					System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
+				}
+				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 0 + "");
+
+			}
+			else {
+				if(scPurchaseInDefault.getPanelItem() != null){
+				  requestItem =	scPurchaseInDefault.getPanelItem().getScRequestItem();
+				} else if(scPurchaseInDefault.getContractedItem() != null){
+				  requestItem = scPurchaseInDefault.getContractedItem().getScRequestItem();
+				}
+
+				paramMap.put(ReportConst.PARAM_REQUEST_ITEM_ID, requestItem.getRequestNoteItemId() + "");
+				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 1 + "");
+			}
+
+			generateReport(reportName, paramMap);
+		}
+	} 
+	
 }
