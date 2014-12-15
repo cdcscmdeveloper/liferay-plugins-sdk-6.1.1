@@ -3156,6 +3156,8 @@ public class SpecificationBackingBean extends
 
 					}
 				}
+			} else {
+				this.getManagedBean().setStateCode(null);
 			}
 			this.getManagedBean().setDistrictList(null);
 			this.getManagedBean().setDivisionList(null);
@@ -3200,6 +3202,8 @@ public class SpecificationBackingBean extends
 
 					}
 				}
+			} else {
+				this.getManagedBean().setDivisionCode(null);
 			}
 			this.getManagedBean().setDistrictList(null);
 			districtSo = BusinessDelegate.getInstance().getServiceObject(
@@ -3230,6 +3234,8 @@ public class SpecificationBackingBean extends
 
 				}
 
+			} else {
+				this.getManagedBean().setDistrictCode(null);
 			}
 
 		} finally {
@@ -9059,25 +9065,27 @@ public class SpecificationBackingBean extends
 					searchBean.getDataFilterBeans().add(districtSearchBean);
 				}
 
+				if (null != getManagedBean().getDivisionCode()
+						&& !"".equals(getManagedBean().getDivisionCode())) {
+					SearchFilterBean districtSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_EQUALS.value());
+					districtSearchBean
+							.setSearchField("pmAddress.pmDivision.divisionCode");
+					districtSearchBean.setSearchValue(getManagedBean()
+							.getDivisionCode());
+					searchBean.getDataFilterBeans().add(districtSearchBean);
+				}
+
 				if (null != getManagedBean().getMinistryId()) {
 					SearchFilterBean ministrySearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					ministrySearchBean
-							.setSearchField("pmOrgProfile.orgProfileId");
+							.setSearchField("pmOrgProfile.parentOrgProfile.orgProfileId");
 					ministrySearchBean.setSearchValue(getManagedBean()
 							.getMinistryId());
 					searchBean.getDataFilterBeans().add(ministrySearchBean);
 				}
 
-				if (null != getManagedBean().getDepartmentId()) {
-					SearchFilterBean departMentSearchBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_EQUALS.value());
-					departMentSearchBean
-							.setSearchField("pmOrgProfile.orgProfileId");
-					departMentSearchBean.setSearchValue(getManagedBean()
-							.getDepartmentId());
-					searchBean.getDataFilterBeans().add(departMentSearchBean);
-				}
 				if (null != getManagedBean().getPtjId()) {
 					SearchFilterBean ptjSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
@@ -9095,11 +9103,7 @@ public class SpecificationBackingBean extends
 				if (resDto != null
 						&& !resDto.getSearchAddressResultBean().getResultList()
 								.isEmpty()) {
-					/*
-					 * System.out.println("======display list size====" +
-					 * resDto.getSearchAddressResultBean()
-					 * .getResultList().size());
-					 */
+
 					return resDto.getSearchAddressResultBean();
 				}
 
