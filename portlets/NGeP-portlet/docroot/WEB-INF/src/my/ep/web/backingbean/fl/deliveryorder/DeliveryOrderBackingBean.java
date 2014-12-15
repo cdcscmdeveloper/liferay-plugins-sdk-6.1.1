@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.deliveryorder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -497,7 +498,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
 		} else if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			delAmtCal = unitPriceCal.multiply(delQtyCal);
-			itemAddress.setDeliveredAmt(delAmtCal);
+			itemAddress.setDeliveredAmt(delAmtCal.setScale(2, RoundingMode.HALF_UP));
 		}
 		
 	}

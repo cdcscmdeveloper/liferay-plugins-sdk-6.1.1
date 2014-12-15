@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.frn;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -327,7 +328,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Quantity","Delivery Quantity"});
 		}
 		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
-		item.setReceivedAmt(receivedAmt);
+		item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 	}
 	 
 	private void retrieveCriteriaList() {
