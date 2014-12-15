@@ -21,8 +21,8 @@
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}">
 					<h:outputText
-						value="#{equiBean.smAddress.address1},
-					#{equiBean.smAddress.address2},#{equiBean.smAddress.address3}" />
+						value="#{viewSmApplBackingBean.getFullAddress(equiBean.smAddress)}"
+						style="float : left" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
