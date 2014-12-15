@@ -21,16 +21,17 @@
 	<cc:attribute name="size" />
 	<cc:attribute name="postUpdateListener" default="" />
 	<cc:attribute name="selectionMode" default="single" />
+	<cc:attribute name="uiMode" default="" />
 	<cc:attribute name="buttonLabel" default="" />
 	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
-	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'single' ? 'lovLink' : 'lovBtn'}" />
+	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'multiple' ? 'lovBtn' : (cc.attrs.uiMode eq 'button' ? 'lovSingleBtn' : 'lovLink')}" />
 </cc:interface>
 
 <cc:implementation>
 
 <h:panelGroup id="#{cc.attrs.id}">
 
-	<h:panelGroup id="sMode" rendered="#{cc.attrs.selectionMode eq 'single'}">
+	<h:panelGroup id="sMode" rendered="#{cc.attrs.selectionMode eq 'single' and cc.attrs.uiMode ne 'button'}">
 		<p:inputText id="#{cc.attrs.id}lov" 
 			value="#{cc.attrs.value}"
 			size="#{cc.attrs.size}"
@@ -49,7 +50,7 @@
 		</p:inputText>
 	</h:panelGroup>
 	&#160;
-	<h:panelGroup id="linkpg" rendered="#{cc.attrs.selectionMode eq 'single'}">
+	<h:panelGroup id="linkpg" rendered="#{cc.attrs.selectionMode eq 'single' and cc.attrs.uiMode ne 'button'}">
 		<p:commandLink
 			id="#{cc.attrs.id}lovLink"
 			action="#{lovBackingBean.initLov}"
@@ -74,6 +75,35 @@
 					
 		</p:commandLink>
 	</h:panelGroup>
+	
+	<h:panelGroup id="btnSingle" rendered="#{cc.attrs.selectionMode eq 'single' and cc.attrs.uiMode eq 'button'}">
+		<p:commandButton
+			id="#{cc.attrs.id}lovSingleBtn"
+			icon="#{cc.attrs.buttonIcon}"
+			action="#{lovBackingBean.initLov}"
+			oncomplete="updateSearchDialog(); lovPopup.show();"
+			disabled="#{cc.attrs.disabled}"
+			readonly="#{cc.attrs.readonly}">
+			
+			<f:param name="lovId" 			value="#{cc.attrs.lovId}" />
+			<f:param name="componentId" 	value="#{cc.attrs.id}" />
+			<f:param name="headerText" 		value="#{cc.attrs.headerText}" />
+			<f:param name="saveObject" 		value="#{cc.attrs.saveObject}" />
+			<f:param name="conditionField" 	value="#{cc.attrs.conditionField}" />
+			<f:param name="clientId" 		value="#{p:component(cc.attrs.id)}" />
+			<f:param name="update" 			value="#{cc.attrs.update}" />
+			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
+			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			
+			<cc:insertChildren />
+			
+			<c:if test="#{cc.attrs.buttonLabel != ''}">
+				<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
+			</c:if>
+					
+		</p:commandButton>
+	</h:panelGroup>
+	
 	
 	<h:panelGroup id="btnpg" rendered="#{cc.attrs.selectionMode eq 'multiple'}">
 		<p:commandButton
