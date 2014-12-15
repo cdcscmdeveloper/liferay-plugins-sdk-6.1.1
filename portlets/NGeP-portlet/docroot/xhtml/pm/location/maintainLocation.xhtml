@@ -58,7 +58,8 @@
 							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextM"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
-							size="40" required="true" maxlength="10"></p:inputText></td>
+							size="40" required="true" maxlength="10" validatorMessage="#{lbl['lbl.pm.state.uppercase']}">
+							<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" /></p:inputText></td>
 					<td><p:message id="statecodeMsg" for="statecode"
 							display="icon" /></td>
 				</tr>
@@ -144,8 +145,8 @@
 							styleClass="ppDisplayTextM"
 							label="#{lbl['lbl.pm.division.code']}" size="40" maxlength="10"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
-							value="#{locationBackingBean.managedBean.division.divisionCode}"
-							required="true" /></td>
+							value="#{locationBackingBean.managedBean.division.divisionCode}" 
+							required="true" validatorMessage="#{lbl['lbl.pm.division.uppercase']}"><f:validateRegex pattern="^([A-Z0-9]{1,10})?$" /></p:inputText></td>
 					<td><p:message id="divisioncodeMsg" for="divisioncode"
 							display="icon" /></td>
 				</tr>
@@ -252,7 +253,9 @@
 							label="#{lbl['lbl.pm.district.code']}" maxlength="10"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
-							size="40" required="true" style="margin-bottom: 5px;" /></td>
+							size="40" required="true" validatorMessage="#{lbl['lbl.pm.district.uppercase']}" style="margin-bottom: 5px;" >
+							<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" />
+							</p:inputText></td>
 					<td><p:message id="districtcodeMsg" for="districtcode"
 							display="icon" /></td>
 				</tr>
@@ -362,7 +365,7 @@
 							maxlength="10"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
-							size="40" required="true" /></td>
+							size="40" required="true" validatorMessage="#{lbl['lbl.pm.city.uppercase']}"><f:validateRegex pattern="^([A-Z0-9]{1,10})?$" /></p:inputText></td>
 					<td><p:message id="citycodeMsg" for="citycode" display="icon" /></td>
 				</tr>
 
