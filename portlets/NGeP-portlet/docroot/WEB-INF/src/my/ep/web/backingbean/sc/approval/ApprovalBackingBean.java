@@ -433,22 +433,23 @@ public class ApprovalBackingBean extends
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}
 	}
-	
-	private void setDefaultDateTime(ScQt scQt){
-		//Publish/Closing/sample Date
+
+	private void setDefaultDateTime(ScQt scQt) {
+		// Publish/Closing/sample Date
 		Date publishDate = scQt.getPublishDate();
-		if(publishDate != null){
+		if (publishDate != null) {
 			scQt.setPublishDate(DateUtils.setDefaultDateTime(publishDate));
 		}
-		
+
 		Date closingDate = scQt.getClosingDate();
-		if(closingDate != null){
+		if (closingDate != null) {
 			scQt.setClosingDate(DateUtils.setDefaultDateTime(closingDate));
 		}
-		
+
 		Date sampleClosingDate = scQt.getSampleClosingDate();
-		if(sampleClosingDate != null){
-			scQt.setSampleClosingDate(DateUtils.setDefaultDateTime(sampleClosingDate));
+		if (sampleClosingDate != null) {
+			scQt.setSampleClosingDate(DateUtils
+					.setDefaultDateTime(sampleClosingDate));
 		}
 	}
 
@@ -580,9 +581,7 @@ public class ApprovalBackingBean extends
 				String approvalDocType = ParameterConst.DOCTYPE_QUOTATION;
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
-					approval.setApproverId(new FacesScopes()
-							.getUserSessionBean());
-					approval.setApproverActionDate(new Date());
+
 					if (ParameterConst.APPROVAL_CATEGORY_BPK
 							.equalsIgnoreCase(approval.getApprovalCategory()
 									.getParameterCode())) {
@@ -731,49 +730,6 @@ public class ApprovalBackingBean extends
 		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
 	}
 
-	/*
-	 * public void handleFileAttachment(FileUploadEvent event) throws
-	 * FileNotFoundException, IOException { FacesScopes facesScopes = new
-	 * FacesScopes(); if (event.getFile() != null) { ScQtApproval scQtApproval =
-	 * this.getManagedBean().getScQtApproval(); ScQtApprovalAttachment
-	 * attachment = getManagedBean()
-	 * .getScQtApproval().getScQtApprovalAttachment(); if (null == attachment) {
-	 * attachment = new ScQtApprovalAttachment();
-	 * attachment.setScQtApproval(scQtApproval);
-	 * attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-	 * attachment.setPrefixFileName(scQtApproval.getApprovalCategory()
-	 * .getParameterCode()); }
-	 * attachment.setUser(facesScopes.getUserSessionBean()); attachment
-	 * .setChangedDate(new Timestamp(System.currentTimeMillis()));
-	 * uploadAttachment(event.getFile(), attachment);
-	 * scQtApproval.setScQtApprovalAttachment(attachment); } }
-	 */
-
-	/**
-	 * @param qt
-	 */
-	private void removeEmptyRemarks(ScQt qt) {
-		List<ScQtApproval> qtApprovals = qt.getScQtApprovals();
-		for (ScQtApproval approval : qtApprovals) {
-			List<ScQtApprovalRemark> remarks = approval
-					.getScQtApprovalRemarks();
-			for (int i = 0; i < remarks.size(); i++) {
-				if (remarks.get(i).getRemark() == null
-						|| "".equals(remarks.get(i).getRemark())) {
-					remarks.remove(i);
-				}
-			}
-		}
-		/*
-		 * List<ScQtCommittee> qtcommittees = qt.getScQtCommittees(); for
-		 * (ScQtCommittee qtCommittee : qtcommittees) {
-		 * List<ScQtCommitteRemarks> remarks = qtCommittee
-		 * .getQtCommitteRemarks(); for (int i = 0; i < remarks.size(); i++) {
-		 * if (remarks.get(i).getRemark() == null ||
-		 * "".equals(remarks.get(i).getRemark())) { remarks.remove(i); } } }
-		 */
-	}
-
 	public void roleChangeListner(ScCommitteeMember member) {
 		List<ScCommitteeMember> members = this.getManagedBean()
 				.getSelectedTabBean().getScQtCommittee().getScCommittee()
@@ -918,12 +874,12 @@ public class ApprovalBackingBean extends
 		}
 		if (null != approvalRequests && !approvalRequests.isEmpty()) {
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-				if (!"SUBMIT".equalsIgnoreCase(outCome)) {
+				if (null != parameter) {
 					approvalRequest.setApproverAction(parameter);
+					approvalRequest.setApproverActionDate(new Date());
+					approvalRequest.setApproverId(new FacesScopes()
+							.getUserSessionBean());
 				}
-				approvalRequest.setApproverActionDate(new Date());
-				approvalRequest.setApproverId(new FacesScopes()
-						.getUserSessionBean());
 			}
 		}
 
