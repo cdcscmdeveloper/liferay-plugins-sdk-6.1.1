@@ -73,6 +73,10 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmAddressType> addressTypesList;
 	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
+	private List<PmAddress> pmAddressList;
+	private PmAddress selectedPmAddress;
+	private PmAddress pmAddress;
+	
 	//
 	private List<PmPtjGroup> ptjGroup;
 	private PmPtjGroup pmPtjGroup;
@@ -94,6 +98,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmProfileGroup> profileGroup;
 	private List<PmProfileGroup> selectedProfileGroups;
 	private PmProfileGroup selectedProfileGroup;
+	private PmOrgProfile authOrgProfile;
     private List<PmUser> supplierUserList;
 	private List<PmUser> supplierUsers;
 	private List<PmUser> selectedSupplierUsers;
@@ -908,6 +913,62 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
+	}
+
+	/**
+	 * @return the authOrgProfile
+	 */
+	public PmOrgProfile getAuthOrgProfile() {
+		return authOrgProfile;
+	}
+
+	/**
+	 * @param authOrgProfile the authOrgProfile to set
+	 */
+	public void setAuthOrgProfile(PmOrgProfile authOrgProfile) {
+		this.authOrgProfile = authOrgProfile;
+	}
+
+	/**
+	 * @return the pmAddressList
+	 */
+	public List<PmAddress> getPmAddressList() {
+		return pmAddressList;
+	}
+
+	/**
+	 * @param pmAddressList the pmAddressList to set
+	 */
+	public void setPmAddressList(List<PmAddress> pmAddressList) {
+		this.pmAddressList = pmAddressList;
+	}
+
+	/**
+	 * @return the selectedPmAddress
+	 */
+	public PmAddress getSelectedPmAddress() {
+		return selectedPmAddress;
+	}
+
+	/**
+	 * @param selectedPmAddress the selectedPmAddress to set
+	 */
+	public void setSelectedPmAddress(PmAddress selectedPmAddress) {
+		this.selectedPmAddress = selectedPmAddress;
+	}
+
+	/**
+	 * @return the pmAddress
+	 */
+	public PmAddress getPmAddress() {
+		return pmAddress;
+	}
+
+	/**
+	 * @param pmAddress the pmAddress to set
+	 */
+	public void setPmAddress(PmAddress pmAddress) {
+		this.pmAddress = pmAddress;
 	}
 
 	
