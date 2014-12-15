@@ -22,40 +22,73 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private PmZone zones;
+	private PmZone zone;
 	
 	private PmCertSignatory pmCertSignatory;
 	
-	private List<PmUser> signatoryUser;
-	
+	private List<PmUser> signatoryUsers;
+	private PmUser signatoryUser;
+	private List<PmCertSignatory> certSignatories;
+	private List<PmCertSignatory> deletedCertSignatories;
 	private int status;
 	
 
 	/**
-	 * @return the zones
-	 */	
-	public PmZone getZones() {
-		return zones;
+	 * @return the deletedCertSignatories
+	 */
+	public List<PmCertSignatory> getDeletedCertSignatories() {
+		return deletedCertSignatories;
 	}
 
 	/**
-	 * @param zones the zones to set
+	 * @param deletedCertSignatories the deletedCertSignatories to set
 	 */
-	public void setZones(PmZone zones) {
-		this.zones = zones;
+	public void setDeletedCertSignatories(
+			List<PmCertSignatory> deletedCertSignatories) {
+		this.deletedCertSignatories = deletedCertSignatories;
+	}
+
+	/**
+	 * @return the zone
+	 */	
+	public PmZone getZone() {
+		return zone;
+	}
+
+	/**
+	 * @param zone the zone to set
+	 */
+	public void setZone(PmZone zone) {
+		this.zone = zone;
+	}
+
+
+
+	/**
+	 * @return the signatoryUsers
+	 */
+	public List<PmUser> getSignatoryUsers() {
+		return signatoryUsers;
+	}
+
+	/**
+	 * @param signatoryUsers the signatoryUsers to set
+	 */
+	public void setSignatoryUsers(List<PmUser> signatoryUsers) {
+		this.signatoryUsers = signatoryUsers;
 	}
 
 	/**
 	 * @return the signatoryUser
-	 */	
-	public List<PmUser> getSignatoryUser() {
+	 */
+	public PmUser getSignatoryUser() {
 		return signatoryUser;
 	}
 
 	/**
 	 * @param signatoryUser the signatoryUser to set
 	 */
-	public void setSignatoryUser(List<PmUser> signatoryUser) {
+	public void setSignatoryUser(PmUser signatoryUser) {
 		this.signatoryUser = signatoryUser;
 	}
 
@@ -79,6 +112,20 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the certSignatories
+	 */
+	public List<PmCertSignatory> getCertSignatories() {
+		return certSignatories;
+	}
+
+	/**
+	 * @param certSignatories the certSignatories to set
+	 */
+	public void setCertSignatories(List<PmCertSignatory> certSignatories) {
+		this.certSignatories = certSignatories;
 	}	
 		
 }

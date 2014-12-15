@@ -1817,18 +1817,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 									endB = endLess;
 								}
 								
-								boolean isStartABeforeEndB = ((startA
-										.compareTo(endB)) < 0 || startA
-										.equals(endB));
-								boolean isEndAAfterStartB = ((endA
-										.compareTo(startB)) > 0 || endA
-										.equals(startB));
-
 								boolean isCurrentPairOverlap = false;
-
-								isCurrentPairOverlap = isStartABeforeEndB
-										&& isEndAAfterStartB;
-
+								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
+								
 								if (isCurrentPairOverlap) {
 									throw new EpException(
 											MessageConst.ERROR_770027);
