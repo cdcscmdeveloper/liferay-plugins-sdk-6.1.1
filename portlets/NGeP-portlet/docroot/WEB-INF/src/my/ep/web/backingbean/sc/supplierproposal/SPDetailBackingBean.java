@@ -213,17 +213,13 @@ public class SPDetailBackingBean extends
 					getManagedBean().setClosingTime("0");
 				}else{
 					Date today = new Date();
-					long days = DateUtils.getDaysDifference(today, getManagedBean()
-							.getQt().getClosingDate());
+					long days = DateUtils.getDaysDifference(today, getManagedBean().getQt().getClosingDate());
 					DecimalFormat df = new DecimalFormat("#00");
 					getManagedBean().setClosingTime(df.format(days) + " Days");
 					if (days == 0) {
-						Long durationInMills = DateUtils.getDateDiffInMillis(
-								DateUtils.getCurrentDate(), getManagedBean()
-										.getQt().getClosingDate());
+						Long durationInMills = DateUtils.getDateDiffInMillis(DateUtils.getCurrentDate(), getManagedBean().getQt().getClosingDate());
 						if (durationInMills > 0) {
-							getManagedBean().setClosingTime(
-									durationFormatter(durationInMills));
+							getManagedBean().setClosingTime(DateUtils.durationFormatter(durationInMills));
 						} else {
 							getManagedBean().setClosingTime("0");
 						}
@@ -3025,28 +3021,6 @@ public class SPDetailBackingBean extends
 
 		totalCreditFacilitiesSum();
 
-	}
-
-	private String durationFormatter(long durationInMills) {
-
-		long diffMinutes = durationInMills / (60 * 1000) % 60;
-		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
-		DecimalFormat durationFormat = new DecimalFormat("#00");
-		String duration = "";
-		if (diffHours <= 24 && diffHours >= 2) {
-			duration = durationFormat.format(diffHours) + " Hours  "
-					+ durationFormat.format(diffMinutes) + " Minutes";
-		}
-
-		if (diffHours < 2 && diffHours >= 1) {
-			duration = durationFormat.format(diffHours) + " Hour  "
-					+ durationFormat.format(diffMinutes) + " Minutes";
-		}
-		if (diffHours < 1) {
-			duration = durationFormat.format(diffMinutes) + " Minutes";
-		}
-
-		return duration;
 	}
 
 	private void validateContractNo() {

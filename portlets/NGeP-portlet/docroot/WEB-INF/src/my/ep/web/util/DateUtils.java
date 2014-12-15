@@ -1,6 +1,7 @@
 package my.ep.web.util;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -372,6 +373,28 @@ public class DateUtils {
 	    
 	    Date newDate = new Timestamp(calendar.getTime().getTime());
 		return newDate;
+	}
+	
+	public static String durationFormatter(long durationInMills) {
+
+		long diffMinutes = durationInMills / (60 * 1000) % 60;
+		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
+		DecimalFormat durationFormat = new DecimalFormat("#00");
+		String duration = "";
+		if (diffHours <= 24 && diffHours >= 2) {
+			duration = durationFormat.format(diffHours) + " Hours  "
+					+ durationFormat.format(diffMinutes) + " Minutes";
+		}
+
+		if (diffHours < 2 && diffHours >= 1) {
+			duration = durationFormat.format(diffHours) + " Hour  "
+					+ durationFormat.format(diffMinutes) + " Minutes";
+		}
+		if (diffHours < 1) {
+			duration = durationFormat.format(diffMinutes) + " Minutes";
+		}
+
+		return duration;
 	}
 
 }
