@@ -65,7 +65,7 @@
 					<h:outputText value="#{negoTerm.termDesc}" />
 				</c:if>
 
-				<c:if test="#{isEditableStatus and afterNegotiation}">
+				<c:if test="#{isEditableStatus and !afterNegotiation}">
 					<h:outputText value="#{negoTerm.termDesc}" rendered="#{!empty negoTerm.pmTerm}" />
 					
 					<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"
@@ -81,7 +81,7 @@
 					<h:outputText value="#{negoTerm.negoResult}" />
 				</c:if>
 
-				<c:if test="#{isEditableStatus and afterNegotiation}">
+				<c:if test="#{isEditableStatus and !afterNegotiation}">
 					<p:inputTextarea  cols="70" rows="2"
 						value="#{negoTerm.negoResult}" autoResize="false" >
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
