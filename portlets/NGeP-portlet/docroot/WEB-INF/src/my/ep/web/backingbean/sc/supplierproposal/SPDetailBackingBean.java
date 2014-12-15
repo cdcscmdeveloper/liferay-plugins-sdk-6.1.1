@@ -2566,16 +2566,22 @@ public class SPDetailBackingBean extends
 
 			if (MessageConst.ERROR_760195.equals(message)) {
 
-				Locale userLocale = new FacesScopes().getUserLocale();
-				message = MessageUtils.getMessage(e.getMessage(),
-						e.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
-						userLocale);
-				getManagedBean().setMessage(message);
+				if(FacesContext.getCurrentInstance().getMessageList() != null 
+						&& FacesContext.getCurrentInstance().getMessageList().size()> 0){
+					//no need to add the message again
+				}else{
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+							userLocale);
+					getManagedBean().setMessage(message);
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+				}
 				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								message));
 
 			} else {
 				handleException(e);
