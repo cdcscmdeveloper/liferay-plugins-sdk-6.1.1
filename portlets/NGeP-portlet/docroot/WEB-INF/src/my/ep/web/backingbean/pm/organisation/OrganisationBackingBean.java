@@ -67,7 +67,6 @@ import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -76,7 +75,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
@@ -125,10 +123,7 @@ public class OrganisationBackingBean extends
 
 	public String redirectToOrganisation(Long id) throws Exception {
 		retrieveCountryList();
-		retrieveAgOfficeList();
-		retrievePtjGroupList();
 		
-		retrieveFinancialOrgList();
 		if (id != null && id > 0) {
 			maintainOrganisation(id);
 
@@ -290,7 +285,7 @@ public class OrganisationBackingBean extends
 	public String maintainOrganisation(Long id) {
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		retrieveSupplierUserList(id);
-
+		
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(id);
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
@@ -313,11 +308,13 @@ public class OrganisationBackingBean extends
 			getManagedBean().setZoneId(orgProfile.getPmZone().getZoneId());
 
 		}
-		System.out.println("ORG TYPECODE" + getManagedBean().getOrgType());
-
-		if (getManagedBean().getOrgType().equalsIgnoreCase(
+		
+    if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
-			System.out.println("PTJ");
+			retrieveAgOfficeList();
+			retrievePtjGroupList();		
+			retrieveFinancialOrgList();
+		
 			retrieveOrgProfileList(orgProfile.getParentOrgProfile().getOrgProfileId());
 			if (orgProfile.getPmPtjGroup().getPtjGroupId() != null) {
 				getManagedBean().setPtjGroupId(
@@ -331,6 +328,15 @@ public class OrganisationBackingBean extends
 				getManagedBean().setParentOrgProfileId(
 						orgProfile.getParentOrgProfile().getOrgProfileId());
 			}
+			/*List<PmProfileGroup> profileGroup = orgProfile.getAuthorizedProfileGroups();
+			if(profileGroup!=null&& !profileGroup.isEmpty()){
+				for(PmProfileGroup profileGrp:profileGroup){
+					System.out.println("ProfileGroup"+profileGrp.getMainOrgProfile().getOrgCode());
+					
+				}
+				
+			}*/
+			
 
 		}
 
@@ -551,8 +557,7 @@ public class OrganisationBackingBean extends
 				if (!getManagedBean().getPmFinancialAcc().isEmpty()) {
 					for (PmFinancialAcc financialAcc : this.getManagedBean()
 							.getPmFinancialAcc()) {
-						financialAcc.setPmFinancialOrg(financialOrg);
-						// regReqDTO.setBank(financialAcc.getPmFinancialOrg());
+						financialAcc.setPmFinancialOrg(financialOrg);						
 						regReqDTO.setBankAccountNo(financialAcc.getAccountNo());
 
 					}
@@ -576,8 +581,7 @@ public class OrganisationBackingBean extends
 			
 			orgProfile.getParentOrgProfile().setOrgProfileId(getManagedBean().getParentOrgProfileId());
 			
-
-		}
+}
 
 		if (getManagedBean().getOrgProfile().isGroupOrg()) {
 
@@ -588,13 +592,10 @@ public class OrganisationBackingBean extends
 			for (PmProfileGroup proGroup : profileGrp) {
 				proGroup.setMainOrgProfile(orgProfile);
 				proGroup.setAuthorizedOrgProfile(pmorg);
-
 			}
 			profileGroup.addAll(profileGrp);
 			orgProfile.setMainProfileGroups(profileGroup);
-
-		}	
-		
+		}		
 		orgProfile.setPmOrgValidity(orgValidity);
 		reqDTO.setPmOrgProfile(orgProfile);
 

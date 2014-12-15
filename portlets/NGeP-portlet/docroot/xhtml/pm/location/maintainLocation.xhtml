@@ -228,14 +228,13 @@
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.district.pmDivision.divisionId}"
 							id="divisionval"
-							
-							label=" #{lbl['lbl.pm.state']}"
-							
+							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
+							label=" #{lbl['lbl.pm.state']}"							
 							styleClass="ppDropDownWidthL" 
 							style="width: 276px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-							<f:selectItems var="divisionLs,stateIdd"
+							<f:selectItems var="divisionLs"
 								value="#{locationBackingBean.managedBean.divisions}"
 								itemLabel="#{divisionLs.divisionName}"
 								itemValue="#{divisionLs.divisionId}" />
