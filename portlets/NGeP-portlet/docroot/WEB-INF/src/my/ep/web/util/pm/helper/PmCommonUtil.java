@@ -92,11 +92,50 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+/**
+ * CommonUtil for Profile Management
+ * 
+ * @author RAIN POH
+ * @since 8/7/2013
+ *
+ */
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
 	private static final String FILE_DATETIME_FORMAT = "ddMMyyyyHHmmss";
 	
-	
+	/**
+	 * Check date overlapping
+	 * @param startA
+	 * @param endA
+	 * @param startB
+	 * @param endB
+	 * @param allowedStartEndSameDate
+	 * @return boolean
+	 */
+	public static boolean dateOverlapping(Date startA, Date endA, Date startB , Date endB, boolean allowedStartEndSameDate){
+		
+		boolean isCurrentPairOverlap = false;
+		boolean isStartABeforeEndB = false;
+		boolean isEndAAfterStartB = false;
+		//cannot overlap
+		if(allowedStartEndSameDate){
+			isStartABeforeEndB = ((startA
+					.compareTo(endB)) < 0);
+			isEndAAfterStartB = ((endA
+					.compareTo(startB)) > 0);
+		}else{
+			isStartABeforeEndB = ((startA
+					.compareTo(endB)) < 0 || startA
+					.equals(endB));
+			isEndAAfterStartB = ((endA
+					.compareTo(startB)) > 0 || endA
+					.equals(startB));
+		}
+		isCurrentPairOverlap = isStartABeforeEndB
+				&& isEndAAfterStartB;
+		
+		return isCurrentPairOverlap;
+	}
 	
 
 	
