@@ -401,8 +401,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 			mofAccountSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 			MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
 			accountReqDTO.setSupplierId(supplierId);
+			accountReqDTO.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
 			
-			MofAccountResDTO mofAccountResDTO = mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
+			MofAccountResDTO mofAccountResDTO = mofAccountSO.retriveMOFAccountBySupplierIdAndType(accountReqDTO);
 			if (mofAccountResDTO.getMofAccount() != null) {
 				smMofAccount = mofAccountResDTO.getMofAccount();
 				if (scQtSupplier != null) {
