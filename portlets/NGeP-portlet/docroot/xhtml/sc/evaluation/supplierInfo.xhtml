@@ -14,6 +14,17 @@
 			value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 		<ui:param name="scoringPnlName"
 			value="#{lbl['lbl.sc.eva.cmpny.score.tot.contract.amount']}"></ui:param>
+
+		<table style="width: 30%">
+			<tr>
+				<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						rendered="#{checklistScoreType eq '2'}" /></td>
+				<td><p:inputText value="#{noOfContracts.userScore}"
+						maxlength="18" disabled="#{pageDisable}" style="text-align:right"
+						rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+			</tr>
+		</table>
+
 		<ui:include src="evaluationScoring.xhtml"></ui:include>
 	</h:panelGroup>
 
