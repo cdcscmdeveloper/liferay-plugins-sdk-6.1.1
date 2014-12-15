@@ -245,11 +245,14 @@
 										<p:ajax event="change" update="@([id$=reqDtlId])"
 											partialSubmit="true" process="@this"
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
-									</p:selectOneMenu> <p:commandLink style="text-align:left">
-									<p:spacer width="3px"></p:spacer>
-										<p:graphicImage library="ep/images/design" name="evaluate.png"
-											style="vertical-align:middle" />
-									</p:commandLink></td>
+									</p:selectOneMenu> 
+									<h:commandLink style="text-align:left"
+									   immediate="true" action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
+								     <p:spacer width="3px"></p:spacer>
+								     <p:graphicImage library="ep/images/design" name="evaluate.png"
+							                style="vertical-align:middle" />
+									</h:commandLink>
+									</td>
 								<td><p:message id="justIdMsg" for="justId" display="icon" /></td>
 							</tr>
 						</table>
