@@ -36,6 +36,8 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private PmOrgProfile orgProfile;
 
 	private String orgId;
+	
+	private Long orgProfileId;
 
 	public PmUserGroup getUserGroup() {
 		return userGroup;
@@ -155,6 +157,14 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
+	}
+
+	public Long getOrgProfileId() {
+		return orgProfileId;
+	}
+
+	public void setOrgProfileId(Long orgProfileId) {
+		this.orgProfileId = orgProfileId;
 	}
 
 }
