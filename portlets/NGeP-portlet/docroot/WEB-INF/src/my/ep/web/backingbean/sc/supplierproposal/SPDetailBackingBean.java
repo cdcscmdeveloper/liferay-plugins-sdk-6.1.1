@@ -2659,7 +2659,7 @@ public class SPDetailBackingBean extends
 
 		String integrityPact = DocumentGenerator
 				.getInstance()
-				.getHtmlFromVelocity(SourcingConstants.LOA_DECLARATION, context);
+				.getHtmlFromVelocity(SourcingConstants.SUPPLIER_PROPOSAL_DECLARATION, context);
 
 		getManagedBean().setIntegrityPact(integrityPact);
 
