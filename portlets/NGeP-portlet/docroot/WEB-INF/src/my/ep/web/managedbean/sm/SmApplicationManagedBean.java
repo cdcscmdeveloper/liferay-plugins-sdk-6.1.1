@@ -317,6 +317,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal rentPrevVal;
 	private BigDecimal purPricePrevVal;
 	private String ownerTypePrevVal;
+	private boolean hasSuppDocToDownload;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2416,5 +2417,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOwnerTypePrevVal(String ownerTypePrevVal) {
 		this.ownerTypePrevVal = ownerTypePrevVal;
+	}
+
+	public boolean isHasSuppDocToDownload() {
+		return hasSuppDocToDownload;
+	}
+
+	public void setHasSuppDocToDownload(boolean hasSuppDocToDownload) {
+		this.hasSuppDocToDownload = hasSuppDocToDownload;
 	}
 }
