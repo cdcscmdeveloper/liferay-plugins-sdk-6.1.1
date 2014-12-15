@@ -50,8 +50,8 @@
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
 							style="width:100px;"  label="#{lbl['lbl.sc.spec.freq.schedule.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"
-								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}" />
+							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />
 						</p:selectOneMenu>
 					</p:column>
 
