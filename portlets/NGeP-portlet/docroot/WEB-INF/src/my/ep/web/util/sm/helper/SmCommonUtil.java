@@ -714,6 +714,15 @@ public class SmCommonUtil {
 		} else {
 			compBasic.setLocalCompanyEquity(new BigDecimal(0));
 		}
+		if (llpOrRoc) {
+			compBasic.setCompaniesEquityTotal(compBasic.getLocalCompanyEquity()
+					.add(compBasic.getForeignCompanyEquity())
+					.add(compBasic.getGovtUnitrustEquity())
+					.add(compBasic.getGovtEquity())
+					.setScale(2, RoundingMode.HALF_UP));
+		} else {
+			compBasic.setCompaniesEquityTotal(new BigDecimal(0));
+		}
 		if (compBasic.getAuthorizedCapital() != null) {
 			compBasic.setAuthorizedCapital(compBasic.getAuthorizedCapital()
 					.setScale(2, RoundingMode.HALF_UP));

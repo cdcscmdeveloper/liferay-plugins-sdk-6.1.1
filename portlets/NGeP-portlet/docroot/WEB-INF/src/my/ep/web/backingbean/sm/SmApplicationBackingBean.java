@@ -1216,6 +1216,8 @@ public class SmApplicationBackingBean extends
 					getManagedBean(), currentTab);
 			validSave = SmApplicationUtil.validateEquityOwnerAmount(
 					getManagedBean(), currentTab);
+			validSave = SmApplicationUtil.validateEquityCompanyAmount(
+					getManagedBean(), currentTab);
 			validatePaidCaptialAmt(true);
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
@@ -2207,6 +2209,7 @@ public class SmApplicationBackingBean extends
 					"suppEquiCompDtWidVar.paginator.endLink.click()");
 		}
 		saveOrUpdateAppl();
+		calculateCapital();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.hide()");
 	}
@@ -5081,6 +5084,21 @@ public class SmApplicationBackingBean extends
 
 					}
 				}
+				if (getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+						|| getManagedBean()
+								.getSmAppl()
+								.getApplType()
+								.equalsIgnoreCase(
+										ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+					reqDTO.setBusinessRegNo(getManagedBean().getSmSupplier()
+							.getRegNo());
+					reqDTO.setCompanyName(getManagedBean().getSmSupplier()
+							.getCompanyName());
+					reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
+					reqDTO.setCategoryDescription(SmApplicationUtil
+							.retriveCategoryMessageForNotification(getManagedBean()));
+				}
 
 			}
 
@@ -6103,9 +6121,11 @@ public class SmApplicationBackingBean extends
 							.add(getManagedBean().getSelectedEquityCompany()
 									.getShareAmt())
 							.setScale(2, RoundingMode.HALF_UP));
-			if (getManagedBean().getEquiCompCapTotal().compareTo(
-					getManagedBean().getSmAppl().getSmCompanyBasic()
-							.getPaidUpCapital()) <= 0) {
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getCompaniesEquityTotal() != null
+					&& getManagedBean().getEquiCompCapTotal().compareTo(
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getCompaniesEquityTotal()) <= 0) {
 				BigDecimal mul = new BigDecimal(100);
 				if (getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
@@ -6128,8 +6148,7 @@ public class SmApplicationBackingBean extends
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				getManagedBean().getSelectedEquityCompany().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				throw new EpException(MessageConst.ERROR_722521, new String[] {
-						"Company", "companies" });
+				throw new EpException(MessageConst.ERROR_722521);
 			}
 		} catch (NumberFormatException ne) {
 			// ne.printStackTrace();
