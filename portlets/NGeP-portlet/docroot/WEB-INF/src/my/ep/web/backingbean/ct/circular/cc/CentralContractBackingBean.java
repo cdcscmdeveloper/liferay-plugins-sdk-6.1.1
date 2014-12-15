@@ -913,6 +913,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		List<CtCircularItem> activeItemList = new ArrayList<CtCircularItem>();
 		Date currentDate = new Date();
 		
+		if(getManagedBean().getSelectedCircularContract() != null && getManagedBean().getSelectedCircularContract().getCtCircularItems() != null) {
 		for(CtCircularItem circularItem : getManagedBean().getSelectedCircularContract().getCtCircularItems()) {
 			for(CtContractItem contractItem : getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
 				if (circularItem.getCtContractItem().getScRequestItem().getRequestNoteItemId().equals(contractItem.getScRequestItem().getRequestNoteItemId())) {
@@ -922,6 +923,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					break;
 				}
 			}
+		  }
 		}
 		return activeItemList;
 	}
