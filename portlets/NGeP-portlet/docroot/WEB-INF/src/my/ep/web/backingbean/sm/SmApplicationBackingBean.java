@@ -1251,6 +1251,10 @@ public class SmApplicationBackingBean extends
 
 	private void assignApplicationSupportingDocs() {
 		log.info(" ** For Suporting Docs ** ");
+
+		// default to false has suppdoc to download
+		getManagedBean().setHasSuppDocToDownload(false);
+
 		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
 			getManagedBean().getSmAppl().setSmApplSupportDocs(
 					new ArrayList<SmApplSupportDoc>());
@@ -1293,6 +1297,11 @@ public class SmApplicationBackingBean extends
 				for (PmDocument doc : rsDTO.getDocumentList()) {
 					docs.add(SmApplicationUtil.getDefaultSmApplSupportingDoc(
 							doc, getManagedBean().getSmAppl()));
+
+					// to display or hide download column
+					if (doc.isDownload()) {
+						getManagedBean().setHasSuppDocToDownload(true);
+					}
 				}
 			} else {
 				docs.addAll(getManagedBean().getSmAppl().getSmApplSupportDocs());
@@ -1300,6 +1309,7 @@ public class SmApplicationBackingBean extends
 					boolean recordExists = false;
 					for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
 							.getSmApplSupportDocs()) {
+
 						if (smDocu.getPmDocument().getDocumentId()
 								.equals(doc.getDocumentId())) {
 							// docs.add(smDocu);
@@ -1310,6 +1320,11 @@ public class SmApplicationBackingBean extends
 						docs.add(SmApplicationUtil
 								.getDefaultSmApplSupportingDoc(doc,
 										getManagedBean().getSmAppl()));
+					}
+
+					// to display or hide download column
+					if (doc.isDownload()) {
+						getManagedBean().setHasSuppDocToDownload(true);
 					}
 				}
 			}

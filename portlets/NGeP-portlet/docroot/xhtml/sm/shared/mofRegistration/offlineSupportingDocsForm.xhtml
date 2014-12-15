@@ -134,7 +134,7 @@
 						style="float: left;white-space: normal;" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.btn.download']}"
+				<p:column headerText="#{lbl['lbl.btn.download']}" rendered="#{backingBean.managedBean.hasSuppDocToDownload}"
 					style="width : 95%;">
 					<p:commandLink rendered="#{table.pmDocument.download}"
 						action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.filePath,table.pmDocument.filePath)}"
