@@ -13,7 +13,7 @@
 					    <h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
 				   </h:panelGrid>
 				   <h:panelGrid columns="2">
-				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="5"
+				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4"
 					 	required="true" maxlength="60"  disabled="#{panelBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
 					<p:message for="circularNoTxt" display="icon" />
@@ -24,7 +24,7 @@
 				        <h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
 				   </h:panelGrid>
 				    <h:panelGrid columns="2">
-				       <p:inputTextarea id="circularNameTxt" rows="5" style="width:230px;" maxlength="200" required="true" 
+				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:250px;" maxlength="200" required="true" 
 						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
 						   label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 				         	<p:message for="circularNameTxt" display="icon" />
