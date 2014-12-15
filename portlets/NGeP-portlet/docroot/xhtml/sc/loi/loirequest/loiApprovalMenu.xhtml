@@ -15,7 +15,7 @@
 						value="*" styleClass="mandatory" />
 				</td>
 				<td width="82%">
-					<c:if test="#{isEditableStatus and !afterNegotiation}">
+					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:selectOneMenu id="contractSigner" 
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 							style="width: 280px;margin-bottom: 5px;"
@@ -28,7 +28,7 @@
 						</p:selectOneMenu>
 						<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
 					</c:if>
-					<c:if test="#{!isEditableStatus or afterNegotiation}">
+					<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
 						<p:inputText size="40"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userName}"
 							disabled="true" />
@@ -44,14 +44,14 @@
 		<table style="width: 100%">
 			<tr>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
-				<td width="82%" colspan="3"><p:selectOneRadio  disabled="#{afterNegotiation or !isEditableStatus}"
+				<td width="82%" colspan="3"><p:selectOneRadio  disabled="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" update="approvalId" />
 					</p:selectOneRadio></td>
 			</tr>
-			<c:if test="#{isEditableStatus and !afterNegotiation}">
+			<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.approver']}" /></td>
