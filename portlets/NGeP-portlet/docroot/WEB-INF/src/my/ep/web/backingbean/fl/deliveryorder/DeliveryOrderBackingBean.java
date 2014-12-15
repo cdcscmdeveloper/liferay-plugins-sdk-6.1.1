@@ -467,26 +467,26 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	public void retrieveDelAmount(FlFulfilmentItemAddr itemAddress){
 		
-		BigDecimal unitPriceCal=new BigDecimal(0.0);
-		BigDecimal delQtyCal=new BigDecimal(0.0);
-		BigDecimal delAmtCal=new BigDecimal(0.0);
-		BigDecimal remainingQty=new BigDecimal(0.0);
+		BigDecimal unitPriceCal = BigDecimal.ZERO;
+		BigDecimal delQtyCal= BigDecimal.ZERO;
+		BigDecimal delAmtCal= BigDecimal.ZERO;
+		BigDecimal remainingQty = BigDecimal.ZERO;
 		
 		unitPriceCal=itemAddress.getUnitPrice();
 		delQtyCal= itemAddress.getDeliveredQty();
 		remainingQty = itemAddress.getOrderedQty().subtract(itemAddress.getSumDeliveredQty()).add(itemAddress.getRejectedQty());
 		if(delQtyCal == null){
-			delQtyCal = new BigDecimal(0);
+			delQtyCal = BigDecimal.ZERO;
 		}
 		if(delQtyCal.doubleValue()<0) {		
-			itemAddress.setDeliveredQty(new BigDecimal(0));
-			itemAddress.setDeliveredAmt(new BigDecimal(0));
+			itemAddress.setDeliveredQty(BigDecimal.ZERO);
+			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
 			throw new EpException(MessageConst.ERROR_100033, new String[]{"Delivery Quantity","0"});
 		}
 		
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
-			itemAddress.setDeliveredQty(new BigDecimal(0));
-			itemAddress.setDeliveredAmt(new BigDecimal(0));
+			itemAddress.setDeliveredQty(BigDecimal.ZERO);
+			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
 			throw new EpException(MessageConst.ERROR_100032, new String[]{
 					ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.fl.do.remaining.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});			
@@ -494,7 +494,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) 
 			&& itemAddress.getDeliveredQty().doubleValue() == 0) {
-			itemAddress.setDeliveredAmt(new BigDecimal(0));
+			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
 		} else if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			delAmtCal = unitPriceCal.multiply(delQtyCal);
 			itemAddress.setDeliveredAmt(delAmtCal);
