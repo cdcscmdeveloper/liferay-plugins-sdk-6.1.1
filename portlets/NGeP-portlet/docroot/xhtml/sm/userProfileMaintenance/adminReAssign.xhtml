@@ -18,21 +18,97 @@
 
 		<p:panel id="adminVerifySection" header="#{lbl['lbl.sm.userprofile.deactivate.admin']}"
 			styleClass="noBorders tr,noBorders td">
-			<table>
-				<tr>
-					<td style="width: 10%;"><p:outputLabel
-							value="#{lbl['lbl.sm.userprofile.search.username']}" /></td>
-					<td><p:selectOneMenu id="newAdminList"
-							value="#{smPersonnelBackingBean.managedBean.assignAdminPersonnelId}"
-							style="width: 207px; margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{smPersonnelBackingBean.managedBean.assignList}" />
-						</p:selectOneMenu></td>
-				</tr>
-			</table>
+			
+			<c:if test="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg}">
+				<br />
+				<table style="width: 100%">
+					<tr>
+						<td><h:outputText
+								value="** #{smPersonnelBackingBean.managedBean.noSupplierUserMsg}"
+								style="color: red;font-weight: bold;float:left;" /></td>
+					</tr>
+				</table>
+				<br />
+			</c:if>
+			
+			<p:dataTable id="smPersonnelAuthorizedNonAdminId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{smPersonnelBackingBean.managedBean.smPersonnelList}" selection="#{smPersonnelBackingBean.managedBean.selectedPersonnelToReassign}"
+				var="personnel" rowKey="#{personnel}" rowIndexVar="index">
+				<ac:paginator for="smPersonnelDataModelId" />
+				
+				<p:column selectionMode="single" disabledSelection="#{personnel.epRole eq 'CM_USER'}" />
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
+					<p:outputPanel rendered="#{personnel.epRole eq 'CM_USER'}">
+						<p:graphicImage id="uidti" value="/css/images/design/tooltips.png"  />
+						<p:tooltip id="uidtt" for="uidti">
+							<p:outputLabel escape="false"
+								value="#{lbl['tt.sm.deactivateadmin.catalogueuser.upgrade']}" />
+						</p:tooltip>
+					</p:outputPanel>
+					<h:outputText value="#{personnel.name}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}">
+					<h:outputText value="#{lbl['lbl.sm.person.dir']}" rendered="#{personnel.director}"/>
+					<h:outputText value="," rendered="#{personnel.higherManagement}"/>
+					<h:outputText value="#{lbl['lbl.sm.person.hghMngmt']}" rendered="#{personnel.higherManagement}"/>
+					<h:outputText value="," rendered="#{personnel.management}"/>
+					<h:outputText value="#{lbl['lbl.sm.person.mngmt']}" rendered="#{personnel.management}"/>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.detailsicno']}">
+					<h:outputText value="#{personnel.identificationNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}">
+					<h:outputText value="#{personnel.pmCountry.countryName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}">
+					<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{personnel.authorizedFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{personnel.authorizedFlg ne '1'}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
+					<h:outputText value="#{lbl['lbl.sm.userprofile.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.sm.userprofile.inactive']}" rendered="#{personnel.recordStatusFlg ne '1'}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
+						rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER' or personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+						rendered="#{personnel.epRole eq 'CM_USER'}" />
+					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+						rendered="#{personnel.contractSigner}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}">
+					<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{personnel.softcertFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{personnel.softcertFlg ne '1'}" />
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:outputPanel rendered="#{not empty smPersonnelBackingBean.managedBean.smPersonnelList and not empty smPersonnelBackingBean.managedBean.updateSmPersonnel}">
+				<table style="width: 100%">
+					<tr height="20"><td></td><td></td></tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.reason']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" id="reassignReasonId"
+								maxlength="200" required="true" label="#{lbl['lbl.sm.reason']}"
+								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.addnlPersonnelJustification}" />
+							<p:message id="reassignReasonMsg"
+							for="reassignReasonId" showSummary="true" showDetail="false"
+							display="icon" />
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" oncomplete="confirmDialog.show();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" action="#{smPersonnelBackingBean.confirmDeactivateAdmin}" update="@form"/>
 			</div>
 		</p:panel>
 

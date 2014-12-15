@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -71,6 +70,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -133,6 +133,56 @@ public class SmPersonnelBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "updateUserProfile.xhtml");
+	}
+
+	public void preRenderDeactivateSuppAdmin() {
+		boolean isHasSupplierUser = false;
+		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		SmPersonnel adminPersonnel = null;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
+		reqDTO.setApplId(smSupplier.getSmAppl().getApplId());
+		reqDTO.setHasActiveAppl(false);
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
+
+		PersonnelResDTO resDTO = smPersonnelSO
+				.retrieveAuthorizedPersonnelsBySuppIdAndApplId(reqDTO);
+
+		if (resDTO.getSmPersonnelList() != null
+				&& !resDTO.getSmPersonnelList().isEmpty()) {
+			List<SmPersonnel> authorizedPersonnelList = resDTO
+					.getSmPersonnelList();
+			for (SmPersonnel smPersonnelTemp : authorizedPersonnelList) {
+				if (smPersonnelTemp.getEpRole().equals(
+						RoleCode.BASIC_SUPPLIER_ADMIN.value())
+						|| smPersonnelTemp.getEpRole().equals(
+								RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+					adminPersonnel = smPersonnelTemp;
+				} else if (smPersonnelTemp.getEpRole().equals(
+						RoleCode.BASIC_SUPPLIER_USER.value())
+						|| smPersonnelTemp.getEpRole().equals(
+								RoleCode.MOF_SUPPLIER_USER.value())) {
+					isHasSupplierUser = true;
+				}
+			}
+			authorizedPersonnelList.remove(adminPersonnel);
+			getManagedBean().setSmPersonnelList(authorizedPersonnelList);
+			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
+			if (!isHasSupplierUser) {
+				constructNoSupplierUserToDeactivateMsg(smSupplier);
+			}
+		} else {
+			getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
+			constructNoSupplierUserToDeactivateMsg(smSupplier);
+		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "adminReAssign.xhtml");
+
 	}
 
 	public void resetSmPersonnelSearch() {
@@ -1521,17 +1571,17 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setAdminVerifyIdType(new PmParameter());
 		}
 	}
-
-	public void preRenderDeactivateSuppAdmin() {
-		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "adminVerify.xhtml");
-
+	
+	public void confirmDeactivateAdmin(){
+		if (getManagedBean().getSelectedPersonnelToReassign() == null) {
+			throw new EpException(MessageConst.ERROR_721111);
+		}else{
+			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
+		}
 	}
 
 	public void deactivateAdmin() {
-		if (getManagedBean().getAssignAdminPersonnelId() != null) {
+		/*if (getManagedBean().getAssignAdminPersonnelId() != null) {
 			ISupplierUserActivationSO suppUserActivationSO = (ISupplierUserActivationSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
@@ -1610,6 +1660,39 @@ public class SmPersonnelBackingBean extends
 			}
 		} else {
 			log.info("No option selected>>>>>");
+		}*/
+
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
+		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
+		
+		PersonnelResDTO resDTO = new PersonnelResDTO();
+		resDTO = smPersonnelSO.reassignNewSupplierAdmin(reqDTO);
+		
+		if (resDTO.isSuccessful()) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils
+									.getMessage(
+											MessageConst.INFO_721027,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+													.getUserLocale())));
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/userProfileMaintenance/outputMsg");
+		}else{
+			throw new EpException(MessageConst.ERROR_721112);
 		}
 	}
 
@@ -1622,9 +1705,26 @@ public class SmPersonnelBackingBean extends
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							IPersonnelSO.class);
-			return smPersonnelSO.retrieveActiveSmApplBySupplierId(reqDTO).getCurrActiveSmAppl();
+			return smPersonnelSO.retrieveActiveSmApplBySupplierId(reqDTO)
+					.getCurrActiveSmAppl();
 		} else {
 			return smSupplier.getSmAppl();
+		}
+	}
+
+	private void constructNoSupplierUserToDeactivateMsg(SmSupplier smSupplier) {
+		if (smSupplier.getSmAppl().getApplType()
+				.equals(ParameterConst.BASIC_ACCOUNT)) {
+			getManagedBean()
+					.setNoSupplierUserMsg(
+							SmCommonUtil
+									.getMessage(
+											"lbl.sm.deactivate.nosupplieruser.basic.msg",
+											null));
+		} else {
+			getManagedBean().setNoSupplierUserMsg(
+					SmCommonUtil.getMessage(
+							"lbl.sm.deactivate.nosupplieruser.mof.msg", null));
 		}
 	}
 
