@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -751,33 +753,6 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	public Long getClosingDays(String closingDate) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("getClosingDays");
-		}
-
-		Long closingDays = 0l;
-		Date clsDate = null;
-		if (!StringUtils.isEmpty(closingDate)) {
-			clsDate = DateUtils.convertStringToDate(
-					CommonConstants.DEFAULT_DATETIME_FORMAT,
-					closingDate.replace("-", "/"));
-
-			Date currentDate = new Date();
-
-			if (closingDate != null && clsDate.after(currentDate)) {
-				closingDays = DateUtils.getDaysDifference(currentDate, clsDate);
-			} else if (closingDate != null
-					&& (clsDate.equals(currentDate) || clsDate
-							.before(currentDate))) {
-				closingDays = DateUtils
-						.getHoursDifference(clsDate, currentDate);
-
-			}
-		}
-		return closingDays;
-	}
-
 	/**
 	 * notice board quotation/tender list paging class
 	 */
@@ -812,22 +787,21 @@ public class NoticeBoardBackingBean extends
 				// Filter By - Status
 				List<Long> statusIds = new ArrayList<Long>();
 				String selectedTab = getManagedBean().getSelectedTab();
-				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
-						.equals(selectedTab)) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("IS_CHANGED",
-									SearchOperator.OPERATOR_EQUALS.value(), 1));
+				
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_CHANGED",SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
-						.equals(selectedTab)) {
+				
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
 					statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
 					statusIds.add(QTStatusConst.QT_PENDING_LOI);
 					statusIds.add(QTStatusConst.QT_PENDING_LOA);
-				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
-						.equals(selectedTab)) {
+				
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
+				
 				} else {
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
@@ -1392,18 +1366,31 @@ public class NoticeBoardBackingBean extends
 		reset();
 		
 	}
-
-	public boolean isShowHours(String clsDate) throws Exception {
-		if (!StringUtils.isEmpty(clsDate)) {
-			Date closingDate = DateUtils.convertStringToDate(
-					CommonConstants.DEFAULT_DATETIME_FORMAT,
-					clsDate.replace("-", "/"));
-			return (DateUtils.getDaysDifference(
-					DateUtils.getCurrentDateWithoutTime(), closingDate) <= 0);
-		} else {
-			return false;
+	
+	public String getClosingDays(String clsDate) throws Exception {
+		if (log.isDebugEnabled()) {
+			log.debug("getClosingDays");
 		}
-
+		String closingDays = "0 Days";
+		
+		Date closingDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss.S", clsDate);
+		
+		if (new Date(System.currentTimeMillis()).after(closingDate)) {
+			//closed
+		}else{
+			Date today = new Date();
+			long days = DateUtils.getDaysDifference(today, closingDate);
+			DecimalFormat df = new DecimalFormat("#00");
+			closingDays = df.format(days) + " Days";
+			
+			if (days == 0) {
+				Long durationInMills = DateUtils.getDateDiffInMillis(DateUtils.getCurrentDate(),closingDate);
+				if (durationInMills > 0) {
+					closingDays = DateUtils.durationFormatter(durationInMills);
+				}
+			}
+		}
+		return closingDays;
 	}
 
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {

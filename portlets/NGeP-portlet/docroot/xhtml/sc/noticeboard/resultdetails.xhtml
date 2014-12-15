@@ -50,10 +50,7 @@
 			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
 				style="width:8%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}">
-				<h:outputText
-					value="#{noticeBoardBackingBean.getClosingDays(scqt[4])}" />
-				<h:outputLabel value=" Hours"
-					rendered="#{noticeBoardBackingBean.isShowHours(scqt[4])}" />
+				<h:outputText value="#{noticeBoardBackingBean.getClosingDays(scqt[4])}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
