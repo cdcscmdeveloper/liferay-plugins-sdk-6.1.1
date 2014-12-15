@@ -880,8 +880,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
 
-				if(ctPanelItem.getMinimumOrderQty() < tplSpecQuestion.getClQuantity().intValue()){
-					throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+				int checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+
+				if(checkQty < 0) {
+					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 				}
@@ -892,8 +894,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
 
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
-				if(ctPanelItem.getMinimumOrderQty() < tplSpecQuestion.getClQuantity().intValue()){
-					throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+				int checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+
+				if(checkQty < 0) {
+					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 				}
