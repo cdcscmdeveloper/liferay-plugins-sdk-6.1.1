@@ -880,9 +880,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			
-			if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
-				if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE) && 
-					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+			if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase() 
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+				if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
 					if(getManagedBean().getCtContract().getLatestContractVer() != null 
 							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
 							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds().size() > 0
@@ -896,8 +896,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					double bondAmount = 0.0;
 					for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
 						bondAmount = bondAmount + performanceBond.getBondAmount();
-						if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) && 
-							(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+						if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 							if(performanceBond.getBondAmount()==0) {
 								RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 								throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pb.amount", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),"0"});
