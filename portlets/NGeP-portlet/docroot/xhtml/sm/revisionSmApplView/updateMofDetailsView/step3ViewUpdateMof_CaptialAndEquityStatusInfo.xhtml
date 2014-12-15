@@ -20,10 +20,15 @@
 					<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include src="smViewUpdateMofApplnSideMenuItem.xhtml" /></td>
 					<td>
 						<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityStatusInfoFormViewOnly.xhtml" />
-						<c:if test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+						<c:if
+							test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHolderInfoFormViewOnly.xhtml" />
-						</c:if> 
-						<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHoldingCompanyInfoFormViewOnly.xhtml" />
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT or 
+									viewSmApplBackingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHoldingCompanyInfoFormViewOnly.xhtml" />
+							</c:if>
+						</c:if>
 					</td>
 				</tr>
 			</table>
