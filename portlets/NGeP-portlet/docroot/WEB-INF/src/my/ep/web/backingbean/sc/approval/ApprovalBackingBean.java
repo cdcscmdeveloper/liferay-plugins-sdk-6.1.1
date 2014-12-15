@@ -504,6 +504,8 @@ public class ApprovalBackingBean extends
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
+			this.setDefaultDateTime(qt);
+			
 			CommitteResDTO committeResDto = null;
 			// QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
