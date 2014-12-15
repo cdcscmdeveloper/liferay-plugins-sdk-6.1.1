@@ -73,6 +73,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean afterSaving;
 	private boolean upgradeMofDraftAppl;
 	private SmAppl currSmAppl;
+	private String noSupplierUserMsg;
+	private SmPersonnel selectedPersonnelToReassign;
 	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -490,6 +492,23 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setCurrSmAppl(SmAppl currSmAppl) {
 		this.currSmAppl = currSmAppl;
+	}
+
+	public String getNoSupplierUserMsg() {
+		return noSupplierUserMsg;
+	}
+
+	public void setNoSupplierUserMsg(String noSupplierUserMsg) {
+		this.noSupplierUserMsg = noSupplierUserMsg;
+	}
+
+	public SmPersonnel getSelectedPersonnelToReassign() {
+		return selectedPersonnelToReassign;
+	}
+
+	public void setSelectedPersonnelToReassign(
+			SmPersonnel selectedPersonnelToReassign) {
+		this.selectedPersonnelToReassign = selectedPersonnelToReassign;
 	}
 
 }
