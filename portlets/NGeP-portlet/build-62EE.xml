@@ -4,7 +4,12 @@
 <project name="6_1_to_6_2">
 
 	<property name="61PortletDir" location="." />
-	<property name="62PortletDir" location="C:/ePerolehanDemo/LiferayEE/plugins-jboss/portlets/NGeP-portlet" />
+	<property name="62PortletDir" location="D:/liferay-plugins-sdk-6.2/portlets/NGeP-portlet" />
+	
+	<!--<import file="D:/liferay-plugins-sdk-6.2/portlets/NGeP-portlet/build.xml" />-->
+	
+	<target name="build-NGeP-portlet-war2" depends="copyTo62EE, NGeP-portlet-deployment-assembly">
+	</target>
 	
 	<target name="clean">
 		
@@ -82,6 +87,36 @@
 		<replaceregexp file="${62PortletDir}/docroot/WEB-INF/liferay-display.xml" match="DTD Display 6.1.0" replace="DTD Display 6.2.0" flags="g" byline="true" />
 		<replaceregexp file="${62PortletDir}/docroot/WEB-INF/liferay-display.xml" match="liferay-display_6_1_0.dtd" replace="liferay-display_6_2_0.dtd" flags="g" byline="true" />
 		
+	</target>
+	
+  	<target name="NGeP-portlet-deployment-assembly">
+		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizBaseClient.jar" >
+			<fileset dir="../../../NGeP-bizBaseClient/bin" />                
+		</jar>		
+		
+		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizRemoteClient.jar" >
+			<fileset dir="../../../NGeP-bizRemoteClient/build/classes" />                
+		</jar>		
+		
+		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmBaseClient.jar" >
+			<fileset dir="../../../NGeP-bpmBaseClient/bin" />
+		</jar>
+				
+		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmRemoteClient.jar" >
+			<fileset dir="../../../NGeP-bpmRemoteClient/bin" />
+		</jar>
+		
+		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpm-schema.jar" >
+			<fileset dir="../../../NGeP-bpm-schema/bin" />
+		</jar>
+  	</target>
+  		
+	<target name="delete-ngep-jar-after-build">
+		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizBaseClient.jar" />
+		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizRemoteClient.jar" />
+		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmBaseClient.jar" />
+		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmRemoteClient.jar" />
+		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpm-schema.jar" />
 	</target>
 	
 </project>
