@@ -445,7 +445,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			 if(getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			    	getManagedBean().setDisableScheduleRadio(true);
 			    	getManagedBean().setFrequencySchedule("S");
-	  	    }
+	  	  
+			 } else if( getManagedBean().getCtContract().getLoa().getScQtSchedules()!= null && !getManagedBean().getCtContract().getLoa().getScQtSchedules().isEmpty()){
+		    	getManagedBean().setDisableScheduleRadio(true);
+		    	getManagedBean().setFrequencySchedule("S");
+  	     
+			 }  else if( getManagedBean().getCtContract().getLoa().getScQtProgPayments() != null && !getManagedBean().getCtContract().getLoa().getScQtProgPayments().isEmpty()){
+ 		    	getManagedBean().setDisableScheduleRadio(true);
+ 		    	getManagedBean().setFrequencySchedule("P");
+   	         }
 			
 			if(getManagedBean().getContractVer().getCtPerformanceBonds() != null && !getManagedBean().getContractVer().getCtPerformanceBonds().isEmpty()){
 				   for(CtPerformanceBond bond : getManagedBean().getContractVer().getCtPerformanceBonds()){
