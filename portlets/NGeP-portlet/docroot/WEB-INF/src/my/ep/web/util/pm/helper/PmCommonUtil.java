@@ -278,8 +278,12 @@ public class PmCommonUtil {
 	 */
 	public static SelectItem[] getYesNoOptions() {
 		SelectItem[] items =  new SelectItem[2];
-		items[0] = new SelectItem(1, "Yes");
-		items[1] = new SelectItem(0, "No");
+		items[0] = new SelectItem(1, ResourceBundleUtils.getMessage(
+				"lbl.txt.yes", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] =  new SelectItem(0, ResourceBundleUtils.getMessage(
+				"lbl.txt.yes", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
 	    return items;
 	}
 	
@@ -312,8 +316,12 @@ public class PmCommonUtil {
 	 */
 	public static SelectItem[] getYesNoBooleanOptions() {
 		SelectItem[] items =  new SelectItem[2];
-		items[0] = new SelectItem(true, "Yes");
-		items[1] = new SelectItem(false, "No");
+		items[0] =  new SelectItem(true, ResourceBundleUtils.getMessage(
+				"lbl.txt.yes", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] =  new SelectItem(false, ResourceBundleUtils.getMessage(
+				"lbl.txt.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
 	    return items;
 	}
 	
