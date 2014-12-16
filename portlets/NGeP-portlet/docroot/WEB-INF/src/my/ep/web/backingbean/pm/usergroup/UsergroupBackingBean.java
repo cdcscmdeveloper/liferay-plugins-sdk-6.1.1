@@ -22,6 +22,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -277,13 +278,17 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				.getSelectedUsrGrps();
 		
 		if(selectedUsrGrp.isEmpty()){
-			throw new EpException("Please select 1 record to delete.");
+			throw new EpException("Please select at least one record to delete.");
 		}
 		if(grpUsers.size()==selectedUsrGrp.size()){
 			throw new EpException("Group must contain atleast one record.");
 		}
 		
-		for (int i = 0; i < grpUsers.size(); i++) {
+		for(PmUserGroupUser pmUserGroupUser :selectedUsrGrp){
+			grpUsers.remove(pmUserGroupUser);
+		}
+		
+		/*for (int i = 0; i < grpUsers.size(); i++) {
 			System.out.println("grpUsers  available:"+grpUsers.get(i).getPmUser().getUserName());
 			for (int j = 0; j < selectedUsrGrp.size(); j++) {
 				if (grpUsers
@@ -298,7 +303,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					break;
 				}
 			}
-		}
+		}*/
 		this.getManagedBean().setUserGroups(grpUsers);
 	}
 
