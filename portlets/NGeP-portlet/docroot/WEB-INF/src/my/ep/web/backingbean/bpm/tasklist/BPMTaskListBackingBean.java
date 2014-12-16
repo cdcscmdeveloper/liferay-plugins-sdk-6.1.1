@@ -256,8 +256,11 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
 				+ SCProcessNameConst.VIEW_SCORING, "specpreparation");
 
-		// temp.put(SCProcessNameConst.BDG_APPROVAL_PROCESS
-		// +SCProcessNameConst.REVISE_BDG_APPROVAL , "qtdetails");
+		temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
+				+ SCProcessNameConst.APPROVE_PCB, "qtapprovals");
+		temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
+				+ SCProcessNameConst.REVISE_PCB, "qtdetails");
+
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.REVISE_BPK, "qtapprovals");
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
@@ -266,6 +269,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.APPROVE_COMMITTEE, "qtapprovals");
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.REVISE_COMMITTEE, "qtdetails");
+
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME
 				+ SCProcessNameConst.FINALIZE_ATTANDANCE,
 				"sitevisit-attendance");
@@ -399,7 +403,8 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_LOI, SourcingConstants.LOI_PTJ_PAGE);
+				+ SCProcessNameConst.APPROVE_LOI,
+				SourcingConstants.LOI_PTJ_PAGE);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.NEGOTIATE_LOI,
 				SourcingConstants.LOI_PTJ_PAGE);
