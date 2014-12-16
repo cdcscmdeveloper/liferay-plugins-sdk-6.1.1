@@ -100,7 +100,6 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		retrievePmDivisions();
 	}
-	
 
 	public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
@@ -145,7 +144,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (null != this.getManagedBean().getQtBriefing()) {
 			Long districtId = this.getManagedBean().getQtBriefing()
 					.getAddress().getPmDistrict().getDistrictId();
-			
+
 			if (null != districtId) {
 				CityReqDTO reqDTO = new CityReqDTO();
 				reqDTO.setDistrictId(districtId);
@@ -162,8 +161,10 @@ public class QTBriefingSiteVisitBackingBean extends
 		debugLogger("retrievePmDistrictList");
 		this.getManagedBean().setStateCode(false);
 		if (null != this.getManagedBean().getQtBriefing()) {
-			/*this.getManagedBean().getQtBriefing().getAddress()
-					.setPostcode(null);*/
+			/*
+			 * this.getManagedBean().getQtBriefing().getAddress()
+			 * .setPostcode(null);
+			 */
 			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
 					.getPmState().getStateId();
 			this.getManagedBean().setDivisionList(null);
@@ -178,14 +179,14 @@ public class QTBriefingSiteVisitBackingBean extends
 					this.getManagedBean().setDivisionList(
 							PmCommonUtil.retrievePmDivisionList(stateId));
 				} else {
-					PmDivision division = this.getManagedBean().getQtBriefing().getAddress()
-					.getPmDivision();
-					if(null != division){
-					this.getManagedBean().getQtBriefing().getAddress()
-							.getPmDivision().setDivisionId(null);
-					}else{
+					PmDivision division = this.getManagedBean().getQtBriefing()
+							.getAddress().getPmDivision();
+					if (null != division) {
 						this.getManagedBean().getQtBriefing().getAddress()
-						.setPmDivision(new PmDivision());
+								.getPmDivision().setDivisionId(null);
+					} else {
+						this.getManagedBean().getQtBriefing().getAddress()
+								.setPmDivision(new PmDivision());
 					}
 
 				}
@@ -247,17 +248,14 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 			bsvDetail.setScQtBsv(briefingBean.getScQtBsv());
 		}
-		/*if (null != bsvDetail) {
-			Date bsvDate = bsvDetail.getBsvDate();
-			if (null != bsvDate) {
-				Date publishDate = this.getManagedBean().getQt().getPublishDate();
-				if (null != publishDate) {
-					if (bsvDate.compareTo(publishDate) < 0 ) {
-						throw new EpException("Publish Date is more Than Briefing/Site Visit date.");
-					}
-				}
-			}
-		}*/
+		/*
+		 * if (null != bsvDetail) { Date bsvDate = bsvDetail.getBsvDate(); if
+		 * (null != bsvDate) { Date publishDate =
+		 * this.getManagedBean().getQt().getPublishDate(); if (null !=
+		 * publishDate) { if (bsvDate.compareTo(publishDate) < 0 ) { throw new
+		 * EpException("Publish Date is more Than Briefing/Site Visit date."); }
+		 * } } }
+		 */
 		if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
 			if (null == briefingDetails) {
@@ -265,10 +263,6 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 			if (!briefingDetails.contains(bsvDetail)) {
 				briefingDetails.add(bsvDetail);
-			} else {
-				briefingDetails.remove(this.getManagedBean().getBsvIndex());
-				briefingDetails.add(this.getManagedBean().getBsvIndex(),
-						bsvDetail);
 			}
 			briefingBean.setBriefingList(briefingDetails);
 		} else if (SourcingConstants.BSV_TYPE_SITEVISIT
@@ -279,10 +273,6 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 			if (!siteVisitDetails.contains(bsvDetail)) {
 				siteVisitDetails.add(bsvDetail);
-			} else {
-				siteVisitDetails.remove(this.getManagedBean().getBsvIndex());
-				siteVisitDetails.add(this.getManagedBean().getBsvIndex(),
-						bsvDetail);
 			}
 			briefingBean.setSitevisitList(siteVisitDetails);
 		}
@@ -301,12 +291,13 @@ public class QTBriefingSiteVisitBackingBean extends
 					break;
 				}
 			}
-			this.getManagedBean().setBsvDtlBean(briefingBean);
+
 		}
+		this.getManagedBean().setBsvDtlBean(briefingBean);
 		this.getManagedBean().setQtBriefing(null);
 		// facesmgs error hide..
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide()");
-		getManagedBean().setRequired(Boolean.FALSE);
+		this.getManagedBean().setRequired(Boolean.FALSE);
 	}
 
 	public void deleteBsvDetails(String bsvType) {
@@ -319,19 +310,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			List<ScQtBsvDtl> selectedBsvDetails = briefingDtlBean
 					.getSelectedBriefingDtls();
 			if (null == selectedBsvDetails || selectedBsvDetails.isEmpty()) {
-				throw new EpException("Please select details to remove");
+				throw new EpException(MessageConst.ERROR_760141);
 			}
-			for (int i = 0; i < briefingDetails.size(); i++) {
-				for (int j = 0; j < selectedBsvDetails.size(); j++) {
-					if (selectedBsvDetails
-							.get(j)
-							.getBsvDesc()
-							.equalsIgnoreCase(
-									briefingDetails.get(i).getBsvDesc())) {
-						briefingDetails.remove(i);
-					}
-				}
-			}
+			briefingDetails.removeAll(selectedBsvDetails);
 			briefingDtlBean.setSelectedBriefingDtls(null);
 		} else if (SourcingConstants.BSV_TYPE_SITEVISIT
 				.equalsIgnoreCase(bsvType)) {
@@ -340,19 +321,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			List<ScQtBsvDtl> selectedBsvDetails = briefingDtlBean
 					.getSelectedSiteVisitDtls();
 			if (null == selectedBsvDetails || selectedBsvDetails.isEmpty()) {
-				throw new EpException("Please select details to remove");
+				throw new EpException(MessageConst.ERROR_760141);
 			}
-			for (int i = 0; i < siteVisitDetails.size(); i++) {
-				for (int j = 0; j < selectedBsvDetails.size(); j++) {
-					if (selectedBsvDetails
-							.get(j)
-							.getBsvDesc()
-							.equalsIgnoreCase(
-									siteVisitDetails.get(i).getBsvDesc())) {
-						siteVisitDetails.remove(i);
-					}
-				}
-			}
+			siteVisitDetails.removeAll(selectedBsvDetails);
 			briefingDtlBean.setSelectedSiteVisitDtls(null);
 		}
 		this.getManagedBean().setBsvDtlBean(briefingDtlBean);
@@ -582,29 +553,41 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void addToSiteVisitDtl() {
 		BriefingZoneBean briefingZoneBean = this.getManagedBean()
 				.getBsvDtlBean();
-		if (briefingZoneBean.getBriefingList() != null && !briefingZoneBean.getBriefingList().isEmpty()) {
+		if (briefingZoneBean.getBriefingList() != null
+				&& !briefingZoneBean.getBriefingList().isEmpty()) {
 			List<ScQtBsvDtl> selectedBsvDtls = briefingZoneBean
 					.getSelectedBriefingDtls();
-			List<ScQtBsvDtl> siteVisitDetails = briefingZoneBean.getSitevisitList();
+			List<ScQtBsvDtl> siteVisitDetails = briefingZoneBean
+					.getSitevisitList();
 			if (null == siteVisitDetails) {
 				siteVisitDetails = new ArrayList<ScQtBsvDtl>();
 			}
 			if (selectedBsvDtls != null && !selectedBsvDtls.isEmpty()) {
-				for (ScQtBsvDtl bsvDtls : selectedBsvDtls) {
-					if (siteVisitDetails.contains(bsvDtls)) {
-						// briefingZoneBean.setSitevisitList(null);
-						throw new EpException(MessageConst.ERROR_760099);
-					}
-				}
+				/*
+				 * for (ScQtBsvDtl bsvDtls : selectedBsvDtls) { if
+				 * (siteVisitDetails.contains(bsvDtls)) { //
+				 * briefingZoneBean.setSitevisitList(null); throw new
+				 * EpException(MessageConst.ERROR_760099); } }
+				 */
 
 				for (ScQtBsvDtl bsvDtl : selectedBsvDtls) {
+					ScQtBsvDtl siteVisitDtl = null;
 					try {
-						ScQtBsvDtl siteVisitDtl = new ScQtBsvDtl();
+
 						siteVisitDtl = (ScQtBsvDtl) BeanUtils.cloneBean(bsvDtl);
+						siteVisitDtl.setChangedDate(null);
+						siteVisitDtl.setQtBsvDtlId(null);
 						siteVisitDtl
 								.setBsvType(SourcingConstants.BSV_TYPE_SITEVISIT);
-						siteVisitDetails.add(siteVisitDtl);
+						siteVisitDtl.setQtBsvRegistrations(null);
+
 					} catch (Exception e) {
+					}
+					if (siteVisitDetails.contains(siteVisitDtl)) {
+						// briefingZoneBean.setSitevisitList(null);
+						throw new EpException(MessageConst.ERROR_760099);
+					} else {
+						siteVisitDetails.add(siteVisitDtl);
 					}
 				}
 				briefingZoneBean.setSitevisitList(siteVisitDetails);

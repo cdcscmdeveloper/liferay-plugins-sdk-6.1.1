@@ -31,6 +31,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -159,7 +160,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
-			//Need to add sorting..
+			// Need to add sorting..
 			this.getManagedBean().setCategoryList(
 					resDTO.getCategoryResultBean().getResultList());
 
@@ -710,7 +711,10 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setQualified(true);
 				for (SupplierQualificationBean qualificationBean : resDTO
 						.getQualificationBean()) {
-					if (!qualificationBean.isSupplierStatus()) {
+					if ((!SourcingConstants.SOFT_CERTIFICATE
+							.equalsIgnoreCase(qualificationBean
+									.getQtRequirement()))
+							&& !qualificationBean.isSupplierStatus()) {
 						this.getManagedBean().setQualified(false);
 						break;
 					}
@@ -787,22 +791,22 @@ public class NoticeBoardBackingBean extends
 				// Filter By - Status
 				List<Long> statusIds = new ArrayList<Long>();
 				String selectedTab = getManagedBean().getSelectedTab();
-				
-				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_CHANGED",SearchOperator.OPERATOR_EQUALS.value(), 1));
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
+						.equals(selectedTab)) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("IS_CHANGED",
+									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-				
-				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED.equals(selectedTab)) {
-					statusIds.add(QTStatusConst.QT_CLOSED);
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
+						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
 					statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
 					statusIds.add(QTStatusConst.QT_PENDING_LOI);
 					statusIds.add(QTStatusConst.QT_PENDING_LOA);
-				
-				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED.equals(selectedTab)) {
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
+						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
-				
 				} else {
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
@@ -1531,4 +1535,18 @@ public class NoticeBoardBackingBean extends
 		return false;
 
 	}
+	
+	public boolean isShowHours(String clsDate) throws Exception {
+		if (!StringUtils.isEmpty(clsDate)) {
+			Date closingDate = DateUtils.convertStringToDate(
+					CommonConstants.DEFAULT_DATETIME_FORMAT,
+					clsDate.replace("-", "/"));
+			return (DateUtils.getDaysDifference(
+					DateUtils.getCurrentDateWithoutTime(), closingDate) <= 0);
+		} else {
+			return false;
+		}
+
+	}
+
 }
