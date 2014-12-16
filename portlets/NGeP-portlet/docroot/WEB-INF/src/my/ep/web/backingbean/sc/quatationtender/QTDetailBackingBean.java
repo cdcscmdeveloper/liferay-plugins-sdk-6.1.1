@@ -2964,6 +2964,7 @@ public class QTDetailBackingBean extends
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
+		Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		QuationTenderReqDTO reqDTO = null;
 		switch (activeIndex) {
 		case 0:
@@ -2995,6 +2996,7 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			retrieveSuppQualificationTabDtl();
 			break;
 		case 3:
@@ -3004,6 +3006,7 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			retrieveApprovalTabDtl();
 			break;
 		case 4:
@@ -3023,6 +3026,7 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				this.getManagedBean().setCurrentStatusId(currentStatus);
 				retrieveScheduleTabDtl();
 			}
 			break;
@@ -3033,6 +3037,7 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				this.getManagedBean().setCurrentStatusId(currentStatus);
 				retrieveDeductionPaymentTabDtl();
 			}
 			break;
@@ -3042,6 +3047,7 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				this.getManagedBean().setCurrentStatusId(currentStatus);
 				retrieveDocumentTabDtl();
 				break;
 			}
@@ -3055,6 +3061,7 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				this.getManagedBean().setCurrentStatusId(currentStatus);
 				retrievePublicationApprovalTabDtl();
 			}
 			break;
