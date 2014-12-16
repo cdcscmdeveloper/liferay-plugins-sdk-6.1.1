@@ -64,7 +64,8 @@
 				<p:commandLink value="#{bidItem.scRequestItem.itemName}"
 					oncomplete="participants.show();"
 					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}"
-					size="30" />
+					size="30"
+					update="@([id$=participants])" />
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}">
