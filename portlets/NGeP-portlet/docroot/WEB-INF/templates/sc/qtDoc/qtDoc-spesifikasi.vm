@@ -79,7 +79,23 @@
 								#end
 							</td>
 							<td>
-								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "09")
+								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03")
+									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+									#end
+								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "05")
+									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+									#end
+								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "07")
+									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+									#end
+								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "09")
+									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+									#end
+								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "10")
 									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
 										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
 									#end
@@ -97,6 +113,5 @@
     </tr>
 	#end
     </table>
-	
 </body>
 </html>
