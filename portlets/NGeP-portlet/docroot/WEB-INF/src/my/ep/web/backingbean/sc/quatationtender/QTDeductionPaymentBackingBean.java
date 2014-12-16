@@ -59,14 +59,16 @@ public class QTDeductionPaymentBackingBean extends
 		try {
 			Long parameterId = scQtDeduction.getDeductionType()
 					.getParameterId();
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			scQtDeduction.setDeductionType(resDTO.getPmParameter());
-			scQtDeduction.setScQtDeductionClauses(null);
-			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+			if (null != parameterId) {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(parameterId);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				scQtDeduction.setDeductionType(resDTO.getPmParameter());
+				scQtDeduction.setScQtDeductionClauses(null);
+				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+			}
 		} finally {
 			parameterSO = null;
 		}
