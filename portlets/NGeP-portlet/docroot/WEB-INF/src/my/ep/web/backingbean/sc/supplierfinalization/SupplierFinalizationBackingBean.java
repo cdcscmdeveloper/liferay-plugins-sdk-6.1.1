@@ -770,6 +770,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		scQtRecommendDtl.setSupplier(smSupplier);
 		scQtRecommendDtl.setAwardQty(scRequestItem.getQuantity());
+		scQtRecommendDtl.setScQtProposalAmount(scQtEvaluationResult.getScQtProposal().getProposalAmount());
 		scQtRecommendDtl.setScQtRecommend(scQtRecommend);
 		setUserDetails(scQtRecommendDtl);
 		
