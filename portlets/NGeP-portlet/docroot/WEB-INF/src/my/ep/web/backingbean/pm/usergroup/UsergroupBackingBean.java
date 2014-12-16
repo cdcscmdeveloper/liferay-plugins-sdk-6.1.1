@@ -246,10 +246,14 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	}
 
 	public void userGroupListner(List<PmUser> users) {
-		List<PmUserGroupUser> groupUsers = new ArrayList<PmUserGroupUser>();
+		List<PmUserGroupUser> groupUsers = this.getManagedBean().getUserGroups();
 		if (null != users) {
+			PmUserGroupUser groupUser = new PmUserGroupUser();
 			for (PmUser pmUser : users) {
-				PmUserGroupUser groupUser = new PmUserGroupUser();
+				for(PmUserGroupUser userGroupUser : groupUsers){
+					if(userGroupUser.getPmUser().getIdentificationNo().equalsIgnoreCase(pmUser.getIdentificationNo()))
+						throw new EpException("User already exists in the group ");
+				}
 				groupUser.setPmUser(pmUser);
 				groupUser.setPmUserGroup(this.getManagedBean().getUserGroup());
 				groupUsers.add(groupUser);
@@ -268,10 +272,19 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public void deleteUserGroup() {
 		
 		List<PmUserGroupUser> grpUsers = this.getManagedBean().getUserGroups();
+	
 		List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
 				.getSelectedUsrGrps();
 		
+		if(selectedUsrGrp.isEmpty()){
+			throw new EpException("Please select 1 record to delete.");
+		}
+		if(grpUsers.size()==selectedUsrGrp.size()){
+			throw new EpException("Group must contain atleast one record.");
+		}
+		
 		for (int i = 0; i < grpUsers.size(); i++) {
+			System.out.println("grpUsers  available:"+grpUsers.get(i).getPmUser().getUserName());
 			for (int j = 0; j < selectedUsrGrp.size(); j++) {
 				if (grpUsers
 						.get(i)
@@ -280,6 +293,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						.equalsIgnoreCase(
 								selectedUsrGrp.get(j).getPmUser()
 										.getIdentificationNo())) {
+					System.out.println("remove  :"+grpUsers.get(i));
 					grpUsers.remove(i);
 					break;
 				}
@@ -331,13 +345,16 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		debugLogger("saveUserGroup");
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
 		userGroup.setRoleCode("FL_APPROVER");
-		findDuplicateGroup(userGroup);
 		userGroup.setGroupCode(userGroup.getGroupCode().toUpperCase());
+		
 		userGroupValidationMsg(userGroup);
 		
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
 		
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers );
+		// check whether it is update or save method
+		if(userGroup.isBrandNew()){
+		findDuplicateGroup(userGroup);}
 		
 		UserGroupReqDTO reqDto = new UserGroupReqDTO();
 		reqDto.setUserGroup(userGroup);
@@ -379,7 +396,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			List<PmUserGroup> pmUserGroups = iSearchResultBean.getResultList();
 			for(PmUserGroup pmUserGroup:pmUserGroups){
 				if(pmUserGroup.getGroupCode().equalsIgnoreCase(userGroup.getGroupCode())&&(pmUserGroup.getPmOrgProfile().getOrgProfileId()==(userGroup.getPmOrgProfile().getOrgProfileId()))){
-					throw new EpException("Duplicate Group name please.");
+					throw new EpException("Duplicate group name please use another.");
 				}
 			}
 			System.out.println("findDuplicateGroup :"+pmUserGroups.size());
