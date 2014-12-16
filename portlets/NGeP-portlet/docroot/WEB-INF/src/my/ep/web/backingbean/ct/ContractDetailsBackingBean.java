@@ -684,13 +684,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if(getManagedBean().getCtCircularNo()!=null && getManagedBean().getCtCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
 													getManagedBean().getCtCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 				if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularname",SearchOperator.OPERATOR_LIKE.value(),
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.name",SearchOperator.OPERATOR_LIKE.value(),
 													getManagedBean().getCtCircularName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
