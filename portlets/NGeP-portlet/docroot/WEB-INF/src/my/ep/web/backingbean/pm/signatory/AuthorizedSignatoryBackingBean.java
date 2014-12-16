@@ -33,8 +33,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
-import weblogic.descriptor.descriptorgen.interfacegen;
-
 
 /**
  * Backing Bean for Authorized Singatory
