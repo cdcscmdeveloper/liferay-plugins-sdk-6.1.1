@@ -244,21 +244,24 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}" style="white-space:nowrap;">
-			<p:inputText id="estCost" style="min-width:0px !important;width:44px;" styleClass="ppNumericAlign"
-				value="#{question.tplSpecEstimations[0].estimatedCost}" 
-				required="#{!question.selected}" rendered="#{isPriceTypeStandard}" maxlength="19"
-				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
-			</p:inputText>
-			<p:message id="estCostMsg" for="estCost" display="icon" />
-			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-				action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
-				oncomplete="#{estimationPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
-				rendered="#{!isPriceTypeStandard and !empty question.clPriceTypeCode.parameterId}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-			</p:commandButton>
+			<c:if test="#{!isZonal}">
+				<p:inputText id="estCost" style="min-width:0px !important;width:44px;" styleClass="ppNumericAlign"
+					value="#{question.tplSpecEstimations[0].estimatedCost}" 
+					required="#{!question.selected}" maxlength="19"
+					label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
+				</p:inputText>
+				<p:message id="estCostMsg" for="estCost" display="icon" />
+			</c:if>
+			<c:if test="#{isZonal}">
+				<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+					action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
+					oncomplete="#{estimationPopup}.show();"
+					partialSubmit="true" process="@this" update="@([id$=estimationPopup])">
+					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+				</p:commandButton>
+			</c:if>
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:40px;" rendered="#{newable}">

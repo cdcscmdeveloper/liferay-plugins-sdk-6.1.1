@@ -405,9 +405,10 @@ public class TemplateSpecHelper {
 	}
 	
 	public void resetEstimations(TplSpecQuestion specQuestion) {
+		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
 		List<TplSpecEstimation> specEstimations = null;
-		if (specQuestion.getTplSpecMaster().isEstCostReq() && 
-				isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+		
+		if (specMaster.isEstCostReq() && specMaster.getTplSpecZone() == null) {
 			
 			specEstimations = new ArrayList<TplSpecEstimation>();
 			

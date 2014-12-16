@@ -459,15 +459,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public BigDecimal getEstimationCostByAnswer(TplSpecAnswer specAnswer) {
 		long specZoneId = specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() != null ? specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId().longValue() : 0;
-		long specTierQtyId = specAnswer.getTplSpecTierQty() != null ? specAnswer.getTplSpecTierQty().getSpecTierQtyId().longValue() : 0;
 		
 		BigDecimal estimatedCost = null;
 		
 		for (TplSpecEstimation tmpSpecEstimation : specAnswer.getTplSpecQuestion().getTplSpecEstimations()) {
 			long tmpSpecZoneId = tmpSpecEstimation.getTplSpecZoneDtl() != null ? tmpSpecEstimation.getTplSpecZoneDtl().getSpecZoneId().longValue() : 0;
-			long tmpSpecTierQtyId = tmpSpecEstimation.getTplSpecTierQty() != null ? tmpSpecEstimation.getTplSpecTierQty().getSpecTierQtyId().longValue() : 0;
 			
-			if (specZoneId == tmpSpecZoneId && specTierQtyId == tmpSpecTierQtyId) {
+			if (specZoneId == tmpSpecZoneId) {
 				estimatedCost = tmpSpecEstimation.getEstimatedCost();
 				
 				break;
@@ -819,29 +817,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			specEstimations = new ArrayList<TplSpecEstimation>();
 			
 			for (int zoneRow = 0; zoneRow < (specZoneDtls == null || specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
-				if (TemplateSpecHelper.getInstance().isPriceTypeTier(
-						tplSpecQuestion.getClPriceTypeCode().getParameterCode())) {
+				if (specZoneDtls != null && specZoneDtls.size() > 0) {
+					TplSpecEstimation specEstimation = new TplSpecEstimation();
+					specEstimation.setTplSpecQuestion(tplSpecQuestion);
+					specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
 					
-					if (tplSpecQuestion.getTplSpecTierQties() != null) {
-						for (TplSpecTierQty specTierQty : tplSpecQuestion.getTplSpecTierQties()) {
-							TplSpecEstimation specEstimation = new TplSpecEstimation();
-							
-							if (specZoneDtls != null && specZoneDtls.size() > 0) {
-								specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));	
-							}
-							specEstimation.setTplSpecQuestion(tplSpecQuestion);
-							specEstimation.setTplSpecTierQty(specTierQty);
-							specEstimations.add(specEstimation);
-						}	
-					}
-				} else {
-					if (specZoneDtls != null && specZoneDtls.size() > 0) {
-						TplSpecEstimation specEstimation = new TplSpecEstimation();
-						specEstimation.setTplSpecQuestion(tplSpecQuestion);
-						specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
-						
-						specEstimations.add(specEstimation);
-					}
+					specEstimations.add(specEstimation);
 				}
 			}
 			tplSpecQuestion.setTplSpecEstimations(specEstimations);
