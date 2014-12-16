@@ -67,6 +67,13 @@
 				<ui:include src="publicApproval.xhtml" />
 			</c:if>
 			
+			<c:if
+				test="${approvalBackingBean.managedBean.approvalType == 'Finalaization Committee Approval'}">
+				<ui:include src="requestPTJdetails.xhtml" />
+				<ui:include src="FinalaizationCommitteeApproval.xhtml" />
+				<ui:include src="approveremarksdetails.xhtml" />
+			</c:if>
+			
 			<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
 				header="Revice Confirmation" resizable="false" width="325"
 				height="82" closable="false">

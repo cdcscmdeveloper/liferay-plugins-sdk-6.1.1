@@ -387,6 +387,15 @@ public class ApprovalBackingBean extends
 					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
 							.getQtValidityPeriod()));
 
+		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL
+							.dispalyName());
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
+					ParameterConst.DOCTYPE_PCB_APPROVAL);
+			scQtApproval.setApproverSettings(null);
+
 		}
 
 		scQtApproval
