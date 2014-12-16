@@ -63,6 +63,7 @@
 				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
 				rows="10"
 				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{lovBackingBean.searchDataModel}" >
 				
 				<ac:paginator for="lovTb" />
@@ -95,6 +96,7 @@
 				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
 				rows="10"
 				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{lovBackingBean.searchDataModel}" >
 				
 				<ac:paginator for="lovTb2" />
