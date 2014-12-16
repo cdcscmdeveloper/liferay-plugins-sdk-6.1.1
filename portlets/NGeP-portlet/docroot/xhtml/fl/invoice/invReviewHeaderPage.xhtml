@@ -13,7 +13,7 @@
 					#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docNo}</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']} " /></td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.managedBean.invoice.invoiceNo == null ? '-- System Generated --':invoiceBackingBean.managedBean.invoice.invoiceNo}
+					#{invoiceBackingBean.managedBean.invoice.invoiceNo == null ? 'N/A':invoiceBackingBean.managedBean.invoice.invoiceNo}
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.inv.no']}"/>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
