@@ -11303,7 +11303,7 @@ public class SpecificationBackingBean extends
 	}
 
 	private void setTechnicalCheckList(ScQtCheckList localCheckList) {
-		this.getManagedBean().setCheckListTitle("");
+		//this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setScQtChecklist(localCheckList);
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -11506,15 +11506,17 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList();
 			List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
 			if (null != finanicalCheckList && !finanicalCheckList.isEmpty()) {
-				for (ScQtCheckList financialCheckList : finanicalCheckList) {
 					if (null != this.getManagedBean().getCheckListTitle()
 							&& !"".equals(this.getManagedBean()
 									.getCheckListTitle())) {
+						for (int i=0; i<finanicalCheckList.size();i++) {
+						ScQtCheckList localCheckList=	finanicalCheckList.get(i);
 						if (this.getManagedBean()
 								.getCheckListTitle()
-								.equalsIgnoreCase(financialCheckList.getTitle())) {
-							financialCheckList.setDeleted(true);
-							toBeRemoveList.add(financialCheckList);
+								.equalsIgnoreCase(localCheckList.getTitle())) {
+							localCheckList.setDeleted(true);
+							toBeRemoveList.add(localCheckList);
+							finanicalCheckList.remove(localCheckList);
 						}
 					}
 				}
