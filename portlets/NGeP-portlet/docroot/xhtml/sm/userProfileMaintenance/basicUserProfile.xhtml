@@ -47,8 +47,7 @@
 						<td><p:outputLabel rendered="#{smPersonnelBackingBean.managedBean.editMode}"
 								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
 						<td><p:selectOneRadio id="accountstatus" required="false"
-								value="#{smPersonnelBackingBean.managedBean.accountStatus}" disabled="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_ADMIN')
-								or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.pmUser}" 
+								value="#{smPersonnelBackingBean.managedBean.accountStatus}" disabled="true" 
 								rendered="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
