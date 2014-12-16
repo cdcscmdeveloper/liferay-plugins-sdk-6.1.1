@@ -9,8 +9,10 @@
 	
 	<ui:define name="contentSection">
 		<p:panel header="#{lbl['lbl.sm.virtual.cert']}">
-			<p:dataTable value="#{virtualCertBackingBean.managedBean.mofCertLs}"
-				var="mofCert">
+			<p:dataTable id="vcDt" 
+				value="#{virtualCertBackingBean.managedBean.mofCertLs}"
+				var="mofCert"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:column headerText="#{lbl['lbl.sm.mofno']}">
 					#{mofCert.smMofAccount.mofNo}
 				</p:column>
