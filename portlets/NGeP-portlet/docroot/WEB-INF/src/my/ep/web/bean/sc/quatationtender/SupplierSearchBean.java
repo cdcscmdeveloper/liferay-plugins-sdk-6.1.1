@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.type.aut.SearchOperator;
 
 /**
  * @author Viswanath
@@ -18,9 +19,17 @@ public class SupplierSearchBean implements Serializable {
 	private String supplierName;
 	private String mofAccountNo;
 	private BigDecimal minPaidUpCapital;
+	
+	private int searchOperator = SearchOperator.OPERATOR_EQUALS.value();
 
 	public SupplierSearchBean() {
 
+	}
+	
+	public SupplierSearchBean(int searchOperator, String searchField) {
+		this.searchOperator = searchOperator;
+		this.supplierName = searchField;
+		this.mofAccountNo = searchField;
 	}
 
 	public String getSupplierName() {
@@ -47,18 +56,20 @@ public class SupplierSearchBean implements Serializable {
 		this.minPaidUpCapital = minPaidUpCapital;
 	}
 
-	/**
-	 * @return the scQtCategoryList
-	 */
 	public List<ScQtCategory> getScQtCategoryList() {
 		return scQtCategoryList;
 	}
 
-	/**
-	 * @param scQtCategoryList the scQtCategoryList to set
-	 */
 	public void setScQtCategoryList(List<ScQtCategory> scQtCategoryList) {
 		this.scQtCategoryList = scQtCategoryList;
+	}
+
+	public int getSearchOperator() {
+		return searchOperator;
+	}
+
+	public void setSearchOperator(int searchOperator) {
+		this.searchOperator = searchOperator;
 	}
 
 }
