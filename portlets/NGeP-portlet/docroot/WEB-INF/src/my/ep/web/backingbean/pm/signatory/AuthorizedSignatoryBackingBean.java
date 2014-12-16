@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.common.signatory.ISignatorySO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
@@ -25,6 +26,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
@@ -80,12 +82,8 @@ public class AuthorizedSignatoryBackingBean extends
 	 * 
 	 */	
 	 public SelectItem[] getSignatoryStatusList() {
-		 
-			SelectItem[] items =  new SelectItem[2];
-			items[0] = new SelectItem(1, "Active");
-			items[1] = new SelectItem(0, "Inactive");
-		    return items;
-		}	
+		 return PmCommonUtil.getStatusOptionsDefault();
+	 }
 	
 	/**
 	 * get zone list for dropdown
@@ -162,7 +160,7 @@ public class AuthorizedSignatoryBackingBean extends
 			}
 			this.getManagedBean().getDeletedCertSignatories().clear();
 		}else{
-			throw new EpException("At least one signatory should be selected.");
+			throw new EpException(MessageConst.ERROR_770139);
 		}
 	}	
 	
@@ -172,11 +170,11 @@ public class AuthorizedSignatoryBackingBean extends
 	private void validation(){
 		debugLogger("validation");
 		if (null == this.getManagedBean().getZone().getZoneId()) {
-			throw new EpException("Zone is mandatory.");
+			throw new EpException(MessageConst.ERROR_770140);
 		}
 		
 		if (null == this.getManagedBean().getCertSignatories() || this.getManagedBean().getCertSignatories().isEmpty()) {
-			throw new EpException("Signatory is mandatory.");
+			throw new EpException(MessageConst.ERROR_770141);
 		}
 	}
 	
@@ -188,7 +186,7 @@ public class AuthorizedSignatoryBackingBean extends
 	private void validationDate(List<PmCertSignatory> certSignatories)throws Exception {
 		debugLogger("validationDate");
 		if(certSignatories==null || certSignatories.isEmpty()){
-			throw new EpException("At least one Signatory is required.");
+			throw new EpException(MessageConst.ERROR_770142);
 		}
 		
 		//date overlapping
@@ -219,7 +217,7 @@ public class AuthorizedSignatoryBackingBean extends
 							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, true);
 
 							if (isCurrentPairOverlap) {
-								throw new EpException("Signatory's Effective Date and Expiry Date must not overlapping.");
+								throw new EpException(MessageConst.ERROR_770143);
 							}
 						}
 					}
@@ -239,9 +237,9 @@ public class AuthorizedSignatoryBackingBean extends
 			}
 		}
 		if(activeNumber>1){
-			throw new EpException("Only one active Authorized Singatory is required.");
+			throw new EpException(MessageConst.ERROR_770144);
 		}else if(activeNumber==0){
-			throw new EpException("One active Authorized Singatory is required.");
+			throw new EpException(MessageConst.ERROR_770145);
 		}
 	}
 	
@@ -287,13 +285,11 @@ public class AuthorizedSignatoryBackingBean extends
 		reqDTO.setCertSignatorys(certSignatories);
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
-			FacesContext
-			.getCurrentInstance()
-			.addMessage(
-					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,"Saved SuccessFully"));
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+		     FacesMessage.SEVERITY_INFO,
+		     null,
+		     MessageUtils.getMessage(MessageConst.INFO_770146, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
 		}
 	}
 }
