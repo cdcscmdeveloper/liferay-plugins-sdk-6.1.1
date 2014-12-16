@@ -75,7 +75,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDo;
-import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -100,7 +99,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
-import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -1198,6 +1196,8 @@ public class QTDetailBackingBean extends
 				// getting Briefing Same As Site Visit value
 				ScQt scQt = resDTO.getScQt();
 				getManagedBean().setQt(scQt);
+				Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+				this.getManagedBean().setCurrentStatusId(currentStatus);
 				if (scQt.isZonal()) {
 					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
 					List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
@@ -1256,6 +1256,7 @@ public class QTDetailBackingBean extends
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
 		ScQt scQt = this.getManagedBean().getQt();
 		Long currentStatus = scQt.getQtStatus().getStatusId();
+		this.getManagedBean().setCurrentStatusId(currentStatus);
 		if (null == this.getManagedBean().getQt().getFinalizationCommitte()) {
 			this.getManagedBean().getQt()
 					.setFinalizationCommitte(new PmParameter());
@@ -2514,6 +2515,8 @@ public class QTDetailBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					getManagedBean().setQt(tenderResDTO.getQtDetail());
+					Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+					this.getManagedBean().setCurrentStatusId(currentStatus);
 					getManagedBean().getCtContract().setContractNo(
 							this.getManagedBean().getQt()
 									.getExistingContractNo());
@@ -3076,8 +3079,6 @@ public class QTDetailBackingBean extends
 				break;
 			case 1:
 				// retrieveCommitteeAppointmentTabDtl();
-				//this.getManagedBean().setSelectedTabIndex(0);
-				committeTabChangeAction(0);
 				break;
 
 			case 2:
