@@ -272,7 +272,7 @@ public class CommitteBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQt.qtTitle", SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 			String qtNumber = qtnTenderSearchBean.getQtNo();
 			if (!StringUtils.isBlank(qtNumber)) {
