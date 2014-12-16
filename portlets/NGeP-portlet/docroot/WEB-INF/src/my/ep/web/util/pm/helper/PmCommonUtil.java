@@ -644,8 +644,8 @@ public class PmCommonUtil {
 			}
 				
 		} catch (Exception e) {
-			throw new EpException("Unable to retrieve org. address: {0}.", new String[]{e.getMessage()}); 
-			
+			throw new EpException(MessageConst.ERROR_770147, new String[]{e.getMessage()});
+
 		}finally{
 			addressSO = null;
 		}	
