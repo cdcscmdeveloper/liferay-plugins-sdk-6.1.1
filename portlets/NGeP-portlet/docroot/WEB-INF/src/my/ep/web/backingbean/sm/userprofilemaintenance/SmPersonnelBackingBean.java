@@ -20,7 +20,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -42,8 +41,6 @@ import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
-import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -1036,8 +1033,7 @@ public class SmPersonnelBackingBean extends
 
 	public String save() throws Exception {
 		String returnValue = null;
-		getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
-				Integer.parseInt(ParameterConst.FLAG_YES));
+		setAuthorizedFlag();
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
 		} else {
@@ -1571,96 +1567,65 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setAdminVerifyIdType(new PmParameter());
 		}
 	}
-	
-	public void confirmDeactivateAdmin(){
+
+	public void confirmDeactivateAdmin() {
 		if (getManagedBean().getSelectedPersonnelToReassign() == null) {
 			throw new EpException(MessageConst.ERROR_721111);
-		}else{
+		} else {
 			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		}
 	}
 
 	public void deactivateAdmin() {
-		/*if (getManagedBean().getAssignAdminPersonnelId() != null) {
-			ISupplierUserActivationSO suppUserActivationSO = (ISupplierUserActivationSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierUserActivationSO.class);
-			SupplierUserActivationReqDTO userPmReqDTO = new SupplierUserActivationReqDTO();
-			SupplierUserActivationResDTO userPmResDTO = new SupplierUserActivationResDTO();
-			String languageCode = new FacesScopes().getUserLocale()
-					.getLanguage();
-			userPmReqDTO.setLanguageCode(languageCode);
-
-			try {
-				userPmReqDTO.setSmPersonnel(getManagedBean()
-						.getUpdateSmPersonnel());
-				suppUserActivationSO
-						.deActivatePmProfileForPersonnel(userPmReqDTO);
-				userPmReqDTO = new SupplierUserActivationReqDTO();
-				SmPersonnel smPersonnel = new SmPersonnel();
-				for (SmPersonnel personnel : getManagedBean()
-						.getPersonnelList()) {
-					if (getManagedBean().getAssignAdminPersonnelId().compareTo(
-							personnel.getPersonnelId()) == 0) {
-						smPersonnel = personnel;
-					}
-				}
-
-				if (smPersonnel.getPersonnelId() != null) {
-					IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_MANAGEMENT,
-									IPersonnelSO.class);
-					PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-					reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
-					PersonnelResDTO resDTO = smPersonnelSO
-							.retrievePersonnelById(reqDTO);
-					if (resDTO.getSmPersonnel() != null
-							&& resDTO.getSmPersonnel().getPersonnelId() != null) {
-						SmPersonnel retrievedPersonnel = resDTO
-								.getSmPersonnel();
-						if (retrievedPersonnel.getEpRole().equalsIgnoreCase(
-								RoleCode.MOF_SUPPLIER_USER.value())) {
-							retrievedPersonnel
-									.setEpRole(RoleCode.MOF_SUPPLIER_ADMIN
-											.value());
-						} else if (retrievedPersonnel.getEpRole()
-								.equalsIgnoreCase(
-										RoleCode.BASIC_SUPPLIER_USER.value())) {
-							retrievedPersonnel
-									.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN
-											.value());
-						}
-						userPmReqDTO.setSmPersonnel(retrievedPersonnel);
-						userPmResDTO = suppUserActivationSO
-								.updatePmProfileForPersonnel(userPmReqDTO);
-					}
-				}
-				if (userPmResDTO.isSuccessful()) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_721027,
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-					fc.getApplication()
-							.getNavigationHandler()
-							.handleNavigation(fc, null,
-									"/xhtml/sm/userProfileMaintenance/outputMsg");
-				}
-			} catch (Exception ex) {
-				throw new EpException(ex.getMessage());
-			}
-		} else {
-			log.info("No option selected>>>>>");
-		}*/
+		/*
+		 * if (getManagedBean().getAssignAdminPersonnelId() != null) {
+		 * ISupplierUserActivationSO suppUserActivationSO =
+		 * (ISupplierUserActivationSO) BusinessDelegate
+		 * .getInstance().getServiceObject( ModuleCodeConst.SUPPLIER_MANAGEMENT,
+		 * ISupplierUserActivationSO.class); SupplierUserActivationReqDTO
+		 * userPmReqDTO = new SupplierUserActivationReqDTO();
+		 * SupplierUserActivationResDTO userPmResDTO = new
+		 * SupplierUserActivationResDTO(); String languageCode = new
+		 * FacesScopes().getUserLocale() .getLanguage();
+		 * userPmReqDTO.setLanguageCode(languageCode);
+		 * 
+		 * try { userPmReqDTO.setSmPersonnel(getManagedBean()
+		 * .getUpdateSmPersonnel()); suppUserActivationSO
+		 * .deActivatePmProfileForPersonnel(userPmReqDTO); userPmReqDTO = new
+		 * SupplierUserActivationReqDTO(); SmPersonnel smPersonnel = new
+		 * SmPersonnel(); for (SmPersonnel personnel : getManagedBean()
+		 * .getPersonnelList()) { if
+		 * (getManagedBean().getAssignAdminPersonnelId().compareTo(
+		 * personnel.getPersonnelId()) == 0) { smPersonnel = personnel; } }
+		 * 
+		 * if (smPersonnel.getPersonnelId() != null) { IPersonnelSO
+		 * smPersonnelSO = (IPersonnelSO) BusinessDelegate
+		 * .getInstance().getServiceObject( ModuleCodeConst.SUPPLIER_MANAGEMENT,
+		 * IPersonnelSO.class); PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		 * reqDTO.setPersonnelId(smPersonnel.getPersonnelId()); PersonnelResDTO
+		 * resDTO = smPersonnelSO .retrievePersonnelById(reqDTO); if
+		 * (resDTO.getSmPersonnel() != null &&
+		 * resDTO.getSmPersonnel().getPersonnelId() != null) { SmPersonnel
+		 * retrievedPersonnel = resDTO .getSmPersonnel(); if
+		 * (retrievedPersonnel.getEpRole().equalsIgnoreCase(
+		 * RoleCode.MOF_SUPPLIER_USER.value())) { retrievedPersonnel
+		 * .setEpRole(RoleCode.MOF_SUPPLIER_ADMIN .value()); } else if
+		 * (retrievedPersonnel.getEpRole() .equalsIgnoreCase(
+		 * RoleCode.BASIC_SUPPLIER_USER.value())) { retrievedPersonnel
+		 * .setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN .value()); }
+		 * userPmReqDTO.setSmPersonnel(retrievedPersonnel); userPmResDTO =
+		 * suppUserActivationSO .updatePmProfileForPersonnel(userPmReqDTO); } }
+		 * if (userPmResDTO.isSuccessful()) { FacesContext fc =
+		 * FacesContext.getCurrentInstance(); fc.addMessage( null, new
+		 * FacesMessage( FacesMessage.SEVERITY_INFO, null, MessageUtils
+		 * .getMessage( MessageConst.INFO_721027,
+		 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+		 * .getUserLocale()))); fc.getApplication() .getNavigationHandler()
+		 * .handleNavigation(fc, null,
+		 * "/xhtml/sm/userProfileMaintenance/outputMsg"); } } catch (Exception
+		 * ex) { throw new EpException(ex.getMessage()); } } else {
+		 * log.info("No option selected>>>>>"); }
+		 */
 
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance()
@@ -1670,28 +1635,23 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
-		
+
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = smPersonnelSO.reassignNewSupplierAdmin(reqDTO);
-		
+
 		if (resDTO.isSuccessful()) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.addMessage(
 					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils
-									.getMessage(
-											MessageConst.INFO_721027,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes()
-													.getUserLocale())));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721027,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/userProfileMaintenance/outputMsg");
-		}else{
+		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
 	}
@@ -1725,6 +1685,17 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setNoSupplierUserMsg(
 					SmCommonUtil.getMessage(
 							"lbl.sm.deactivate.nosupplieruser.mof.msg", null));
+		}
+	}
+
+	private void setAuthorizedFlag() {
+		if (getManagedBean().getBasicSmPersonnel().getEpRole()
+				.equals(RoleCode.CM_USER.value())) {
+			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+					Integer.parseInt(ParameterConst.FLAG_NO));
+		} else {
+			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+					Integer.parseInt(ParameterConst.FLAG_YES));
 		}
 	}
 
