@@ -34,7 +34,6 @@ public class ViewSuppProfileBackingBean extends
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String redirectToAppl = SmApplicationUtil.getReviewApplicationErrorPage();
-		;
 
 		if (resDTO.getSmAppl() != null) {
 			String applNo = resDTO.getSmAppl().getApplNo();
