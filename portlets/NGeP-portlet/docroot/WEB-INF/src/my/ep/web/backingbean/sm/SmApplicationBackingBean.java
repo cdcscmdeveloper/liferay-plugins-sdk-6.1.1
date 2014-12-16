@@ -4433,7 +4433,7 @@ public class SmApplicationBackingBean extends
 												new String[] {
 														getParameterDesc(
 																ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																applType),
+																getManagedBean().getSmAppl().getApplType()),
 														getManagedBean()
 																.getSmAppl()
 																.getApplNo() },

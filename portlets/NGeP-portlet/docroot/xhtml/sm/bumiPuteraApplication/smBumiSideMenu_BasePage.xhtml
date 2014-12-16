@@ -35,46 +35,49 @@
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
-			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}" escape="false"
-				closable="true" />
+			<p:messages id="messages" showDetail="true" escape="false"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" showSummary="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
-				<ui:include src="step1BumiAppln_CompanyInfo.xhtml" />
+				<ui:include src="/xhtml/sm/updateMofDetails/step1UpdateMof_CompanyInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 1}">
-				<ui:include src="step4BumiAppln_PersonnelInfo.xhtml" />
+				<ui:include src="/xhtml/sm/updateMofDetails/step2UpdateMof_BranchCompanyInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 2}">
-				<ui:include src="step2BumiAppln_CaptialAndEquityStatusInfo.xhtml" />
+				<ui:include src="/xhtml/sm/updateMofDetails/step4UpdateMof_PersonnelInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
-				<ui:include src="step3BumiAppln_BankInfo.xhtml" />
+				<ui:include src="/xhtml/sm/updateMofDetails/step3UpdateMof_CaptialAndEquityStatusInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+				<ui:include src="/xhtml/sm/updateMofDetails/step5UpdateMof_BankInfo.xhtml" />
 			</c:if>
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.supplierUser}">
-					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
-						<ui:include src="step5BumiAppln_SupportingDocumentsInfo.xhtml" />
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include src="/xhtml/sm/updateMofDetails/step6UpdateMof_SupportingDocumentsInfo.xhtml" />
 					</c:if>
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poUser}">
-					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
 						<ui:include
 							src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
 					</c:if>
 					<c:choose>
 						<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 								<ui:include
 									src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
 							</c:if>
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 								<ui:include
 									src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 							</c:if>
 						</c:when>
 						<c:otherwise>
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 								<ui:include
 									src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 							</c:if>
@@ -83,11 +86,11 @@
 
 				</c:when>
 				<c:when test="#{backingBean.managedBean.approverUser}">
-					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
 						<ui:include
 							src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
 					</c:if>
-					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include
 							src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
 					</c:if>
