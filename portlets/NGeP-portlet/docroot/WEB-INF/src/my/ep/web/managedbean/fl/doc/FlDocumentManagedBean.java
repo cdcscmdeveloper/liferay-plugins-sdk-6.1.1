@@ -285,7 +285,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					FLOrderInfo orderInfo=null;
 					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
 						if(null != orderInfo){						
-							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
+							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId());
 							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId());
 							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
 							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
