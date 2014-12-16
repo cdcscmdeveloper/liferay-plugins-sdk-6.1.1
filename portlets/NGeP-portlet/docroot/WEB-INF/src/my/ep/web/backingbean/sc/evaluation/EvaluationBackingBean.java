@@ -671,9 +671,10 @@ public class EvaluationBackingBean extends
 			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
 				for (ScQtProposalChecklist proposalCheckList : technicalCompliance) {
 					if (proposalCheckList.getScQtProposal().isSubmitted()) {
-						/*if (null == proposalCheckList.getCompliance()) {
-							// throw new EpException(MessageConst.ERROR_760204);
-						}*/
+						/*
+						 * if (null == proposalCheckList.getCompliance()) { //
+						 * throw new EpException(MessageConst.ERROR_760204); }
+						 */
 						if (null != proposalCheckList.getCompliance()
 								&& !proposalCheckList.getCompliance()) {
 							if (null == proposalCheckList.getRemark()
@@ -983,9 +984,24 @@ public class EvaluationBackingBean extends
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
+			if (null != resDTO
+					&& null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
 
+				List<ScQtCheckList> proposalChecklistList = resDTO
+						.getCheckListResultBean().getResultList();
+				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+					if (proposalCheckList.isScoringReq()) {
+						localCheckList.add(proposalCheckList);
+					}
+
+				}
+
+			}
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(
-					resDTO.getCheckListResultBean().getResultList());
+					localCheckList);
 
 		} finally {
 			evaluationSO = null;
@@ -1017,9 +1033,24 @@ public class EvaluationBackingBean extends
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
+			if (null != resDTO
+					&& null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
 
+				List<ScQtCheckList> proposalChecklistList = resDTO
+						.getCheckListResultBean().getResultList();
+				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+					if (proposalCheckList.isScoringReq()) {
+						localCheckList.add(proposalCheckList);
+					}
+
+				}
+
+			}
 			this.getManagedBean().setEvaluationStgfinancialCheckList(
-					resDTO.getCheckListResultBean().getResultList());
+					localCheckList);
 
 		} finally {
 			evaluationSO = null;
