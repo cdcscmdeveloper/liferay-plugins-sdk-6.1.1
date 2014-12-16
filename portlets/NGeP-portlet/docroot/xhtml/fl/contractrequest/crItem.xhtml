@@ -425,7 +425,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="telNo"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="Tel No" maxlength="20"
+							label="#{lbl['lbl.fl.telno']}" maxlength="20"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
 							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" 
