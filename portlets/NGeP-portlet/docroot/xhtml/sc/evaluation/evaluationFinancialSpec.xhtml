@@ -35,12 +35,14 @@
 
 
 		<p:panel>
-			<p:tabView var="zones" orientation="left"
+			<p:tabView var="zones" orientation="left" id="tabview" cache="false"
 				activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 				value="#{evaluationBackingBean.managedBean.finSpecZoneBean}">
-				<p:ajax event="tabChange"
+				<p:ajax event="tabChange" 
+					update=":form:tabview:tab#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 					listener="#{evaluationBackingBean.specTabChange}" />
-				<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
+				<p:tab title="#{zones.tplSpecZoneDtl.zoneName}"
+					id="tab#{evaluationBackingBean.managedBean.specZoneTabIndex}">
 
 					<ui:param name="finSpecsupplierList"
 						value="#{zones.finSpecSupplierList}"></ui:param>
