@@ -113,7 +113,7 @@
 						value="#{lbl['lbl.fl.ap59.decision']}" />
 						 <p:outputLabel	value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{invoiceBackingBean.managedBean.statusId}" label="#{lbl['lbl.fl.ap59.decision']}" required="true">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="decision"
 							value="#{invoiceBackingBean.managedBean.decisionList}"
 							itemLabel="#{decision.statusName}"
