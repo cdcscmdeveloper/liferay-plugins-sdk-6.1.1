@@ -22,6 +22,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
@@ -197,13 +198,12 @@ public class ScheduleBiddingBackingBean extends
 			reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
 					.getFinalizationId());
 
-			// SuppFinalizationResDTO resDTO =
-			// suppFinalizationSO.retrieveRecommendDtlList(reqDTO);
+			SuppFinalizationResDTO resDTO =
+			suppFinalizationSO.retrieveRecommendDtlList(reqDTO);
 
-			// if (resDTO.isSuccessful()) {
-			// getManagedBean().setBidParticipants(
-			// resDTO.getScQtRecommendDtlList());
-			// }
+			if (resDTO.isSuccessful()) {
+				getManagedBean().setBidParticipants(resDTO.getScQtRecommendDtlList());
+			}
 		} finally {
 			suppFinalizationSO = null;
 		}

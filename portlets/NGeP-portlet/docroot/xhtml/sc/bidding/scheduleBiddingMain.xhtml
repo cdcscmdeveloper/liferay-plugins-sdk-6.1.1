@@ -59,17 +59,15 @@
 
 		</div>
 
-		<p:panel id="bidRecommendTypePanel">
-			<c:if test="#{isRecommendByPackage}">
-				<ui:include src="scheduleBiddingByPackage.xhtml"></ui:include>
-			</c:if>
-			<c:if test="#{isRecommendByItem}">
-				<ui:include src="scheduleBidByItem.xhtml"></ui:include>
-			</c:if>
-			<c:if test="#{isQtZonalAndRecommendTypeAny}">
-				<ui:include src="scheduleBidByZone.xhtml"></ui:include>
-			</c:if>
-		</p:panel>
+		<c:if test="#{isRecommendByPackage}">
+			<ui:include src="scheduleBiddingByPackage.xhtml"></ui:include>
+		</c:if>
+		<c:if test="#{isRecommendByItem}">
+			<ui:include src="scheduleBidByItem.xhtml"></ui:include>
+		</c:if>
+		<c:if test="#{isQtZonalAndRecommendTypeAny}">
+			<ui:include src="scheduleBidByZone.xhtml"></ui:include>
+		</c:if>
 		<p:spacer height="10"></p:spacer>
 
 		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
