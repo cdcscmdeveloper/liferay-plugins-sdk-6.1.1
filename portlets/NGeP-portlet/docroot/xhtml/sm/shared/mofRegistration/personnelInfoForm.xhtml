@@ -454,10 +454,12 @@
 								rendered="#{person.softcertFlg eq '0'}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
+							style="white-space: normal;"
 							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText value="#{person.roleName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
+							style="white-space: normal;"
 							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
