@@ -11490,6 +11490,7 @@ public class SpecificationBackingBean extends
 			qtCheckList.setPmStatus(financialstatus);
 			qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.getSpecName());
+			qtCheckList.setScoringReq(true);
 			qtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
@@ -11740,7 +11741,8 @@ public class SpecificationBackingBean extends
 		// status.setStatusId(1l);
 		// checkList.setPmStatus(status);
 		checkList.setScQtDoc(scqtDocDest);
-		checkList.setScoringReq(true);
+		checkList.setScoringReq(this.getManagedBean().getScQt()
+				.isTechEvaluationReq());
 		checkList.setAction(checkListactionresDTO.getPmParameter());
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setDefinationType(specTyperesDTO.getPmParameter());
@@ -11953,6 +11955,7 @@ public class SpecificationBackingBean extends
 
 		if (null != techCheckList) {
 			for (ScQtCheckList qtCheckList : techCheckList) {
+				qtCheckList.setScoringReq(isTechEvaluationReq);
 				qtCheckList.getScQtDoc().getTplSpecMaster()
 						.setScoringReq(isTechEvaluationReq);
 
