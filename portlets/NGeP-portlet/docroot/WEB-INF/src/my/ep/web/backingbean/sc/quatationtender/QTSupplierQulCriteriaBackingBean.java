@@ -372,7 +372,31 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 	
 	public void searchRestrictedSupplierAction() {
-		getManagedBean().getSearchSupplierDataModel().reloadData();
+		boolean hasSearchValue = false;
+		log.info("hasSearchValue: " + hasSearchValue);
+		String supplierName = getManagedBean().getSupplierSearchBean().getSupplierName();
+		SupplierSearchBean supplierNameFilterBean = new SupplierSearchBean(SearchOperator.OPERATOR_LIKE.value(), supplierName);
+		if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSupplierName())) {
+			hasSearchValue = true;
+		}
+		
+		String mofNumber = getManagedBean().getSupplierSearchBean().getMofAccountNo();
+		SupplierSearchBean mofNumberFilterBean = new SupplierSearchBean(SearchOperator.OPERATOR_LIKE.value(), mofNumber);
+		if (StringUtils.isNotBlank((String)mofNumberFilterBean.getMofAccountNo())) {
+			hasSearchValue = true;
+		}
+		log.info("hasSearchValue: " + hasSearchValue);
+		if(!hasSearchValue) {
+			throw new EpException(MessageConst.ERROR_716006);
+		} else {		
+			// enable or disable simple quote in search catalogue
+			//setSimpleQuoteFlag(Boolean.FALSE);
+			
+			//searchDataModel.reloadData();
+			getManagedBean().getSearchSupplierDataModel().reloadData();
+		}
+		
+		
 	}
 
 	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier, SmSupplier smSupplier) {
@@ -1033,14 +1057,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 		List<ScQtSupplier> list = getManagedBean().getQtSupplierList();
 		List<ScQtSupplier> selectedList = getManagedBean()
 				.getSelectedQtSupplierList();
-		if (list.size() == selectedList.size()) {
-			list.clear();
-			getManagedBean().setTotalSupplier(list.size());
-		} else {
-			for (ScQtSupplier scQtSupplier : selectedList) {
-				list.remove(scQtSupplier);
+		if (selectedList != null && !selectedList.isEmpty()) {
+			if (list.size() == selectedList.size()) {
+				list.clear();
 				getManagedBean().setTotalSupplier(list.size());
+			} else {
+				for (ScQtSupplier scQtSupplier : selectedList) {
+					list.remove(scQtSupplier);
+					getManagedBean().setTotalSupplier(list.size());
+				}
 			}
+		} else {
+			throw new EpException(MessageConst.ERROR_760121);
 		}
 	}
 
