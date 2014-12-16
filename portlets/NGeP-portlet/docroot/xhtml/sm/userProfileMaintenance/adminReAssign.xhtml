@@ -15,6 +15,10 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<p:panel id="adminVerifySection" header="#{lbl['lbl.sm.userprofile.deactivate.admin']}"
 			styleClass="noBorders tr,noBorders td">
@@ -122,7 +126,8 @@
 					<tr>
 						<td>
 							<div align="center">
-								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.deactivateAdmin()}"/>
+								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.deactivateAdmin()}" 
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 							</div>
 						</td>

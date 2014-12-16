@@ -73,6 +73,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean afterSaving;
 	private boolean upgradeMofDraftAppl;
 	private SmAppl currSmAppl;
+	private SmAppl basicSmAppl;
 	private String noSupplierUserMsg;
 	private SmPersonnel selectedPersonnelToReassign;
 	
@@ -509,6 +510,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setSelectedPersonnelToReassign(
 			SmPersonnel selectedPersonnelToReassign) {
 		this.selectedPersonnelToReassign = selectedPersonnelToReassign;
+	}
+
+	public SmAppl getBasicSmAppl() {
+		return basicSmAppl;
+	}
+
+	public void setBasicSmAppl(SmAppl basicSmAppl) {
+		this.basicSmAppl = basicSmAppl;
 	}
 
 }
