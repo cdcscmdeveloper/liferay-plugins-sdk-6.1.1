@@ -259,8 +259,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		}
 	}
 	public void filterSearchResults(List<VFlDocument> searchResultList){
-		IFulfilmentDocumentSO flDocumentSO  = null;
-			for(VFlDocument docsearchResult:searchResultList){
+		IFulfilmentDocumentSO flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		
+		for(VFlDocument docsearchResult:searchResultList){
 				docsearchResult.setUpdateAction(false);
 				docsearchResult.setViewAction(false);
 				docsearchResult.setCancelAction(false);
@@ -279,22 +284,37 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					boolean isRemoveFactoring=false;
 					FLOrderInfo orderInfo=null;
 					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-						if(null != orderInfo){
-							flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
+						if(null != orderInfo){						
 							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
 							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId());
 							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
 							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
 								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
 							}	
+							if(isUpdate || isCancel) {
+								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+									reqDTO.setFulfilmentNoteId(docsearchResult.getDocId());
+									resDTO = receivedNoteSO.isReceivingOfficerForDeliveryAddress(reqDTO);
+								}
+							}
 							if(isUpdate){
 								docsearchResult.setUpdateAction(true);
 								docsearchResult.setViewAction(true);
+								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+									if(!resDTO.isFlag()) {
+										docsearchResult.setUpdateAction(false);
+									}
+								}
 								//System.out.println("final action update ### :: "+docsearchResult.isUpdateAction());
 							}
 							if(isCancel){
 								docsearchResult.setCancelAction(true);
 								docsearchResult.setViewAction(true);
+								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+									if(!resDTO.isFlag()) {
+										docsearchResult.setCancelAction(false);
+									}
+								}								
 								//System.out.println("final action  cancel @@@@@@@:: "+docsearchResult.isCancelAction());
 							}
 							if(isStopFulfilment){
