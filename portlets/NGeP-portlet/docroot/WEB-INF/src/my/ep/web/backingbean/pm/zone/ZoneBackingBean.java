@@ -116,6 +116,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				throw new EpException(MessageConst.ERROR_770138);
 
 			}
+			zone.setZoneCode(zone.getZoneCode().toUpperCase());
 
 			List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
 

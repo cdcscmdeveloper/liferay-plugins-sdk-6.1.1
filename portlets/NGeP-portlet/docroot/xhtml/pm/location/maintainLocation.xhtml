@@ -56,10 +56,11 @@
 
 					<td class="TableFieldRight"><p:inputText id="statecode"
 							label="#{lbl['lbl.pm.state.code']}" styleClass="ppDisplayTextM"
+							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
-							size="40" required="true" maxlength="10" validatorMessage="#{lbl['lbl.pm.state.uppercase']}">
-							<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" /></p:inputText></td>
+							size="40" required="true" maxlength="10" >
+							</p:inputText></td>
 					<td><p:message id="statecodeMsg" for="statecode"
 							display="icon" /></td>
 				</tr>
@@ -69,7 +70,7 @@
 							styleClass="mandatory" /></td>
 					<td class="TableFieldRight"><p:inputText id="statename"
 							styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.state.name']}"
-							maxlength="50"
+							maxlength="50" 
 							value="#{locationBackingBean.managedBean.state.stateName}"
 							size="40" required="true"></p:inputText></td>
 					<td><p:message id="statenameMsg" for="statename"
@@ -142,11 +143,11 @@
 							value="*" styleClass="mandatory" /></td>
 
 					<td class="TableFieldRight"><p:inputText id="divisioncode"
-							styleClass="ppDisplayTextM"
+							styleClass="ppDisplayTextM" style="text-transform: uppercase"
 							label="#{lbl['lbl.pm.division.code']}" size="40" maxlength="10"
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							value="#{locationBackingBean.managedBean.division.divisionCode}" 
-							required="true" validatorMessage="#{lbl['lbl.pm.division.uppercase']}"><f:validateRegex pattern="^([A-Z0-9]{1,10})?$" /></p:inputText></td>
+							required="true" ></p:inputText></td>
 					<td><p:message id="divisioncodeMsg" for="divisioncode"
 							display="icon" /></td>
 				</tr>
@@ -249,12 +250,11 @@
 							value="*" styleClass="mandatory" /></td>
 
 					<td class="TableFieldRight"><p:inputText id="districtcode"
-							styleClass="ppDisplayTextM"
+							styleClass="ppDisplayTextM" style="text-transform: uppercase"
 							label="#{lbl['lbl.pm.district.code']}" maxlength="10"
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
-							size="40" required="true" validatorMessage="#{lbl['lbl.pm.district.uppercase']}" style="margin-bottom: 5px;" >
-							<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" />
+							size="40" required="true" >							
 							</p:inputText></td>
 					<td><p:message id="districtcodeMsg" for="districtcode"
 							display="icon" /></td>
@@ -362,10 +362,10 @@
 
 					<td class="TableFieldRight"><p:inputText id="citycode"
 							styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.city.code']}"
-							maxlength="10"
+							maxlength="10" style="text-transform: uppercase"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
-							size="40" required="true" validatorMessage="#{lbl['lbl.pm.city.uppercase']}"><f:validateRegex pattern="^([A-Z0-9]{1,10})?$" /></p:inputText></td>
+							size="40" required="true" ></p:inputText></td>
 					<td><p:message id="citycodeMsg" for="citycode" display="icon" /></td>
 				</tr>
 
