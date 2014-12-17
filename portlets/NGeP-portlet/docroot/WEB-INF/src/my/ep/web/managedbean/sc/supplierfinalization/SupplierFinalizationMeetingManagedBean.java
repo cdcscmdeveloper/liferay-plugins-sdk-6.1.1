@@ -58,6 +58,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
 	
+	private boolean selectAll;
+	
 	/**
 	 * @return the scQtMeetings
 	 */
@@ -401,6 +403,20 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
+	}
+	
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+	
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
 	}
 	
 }

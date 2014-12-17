@@ -12,21 +12,7 @@
 		<p:panel toggleable="true" styleClass="qtAddMember" id="addPanel">
 			<p:messages id="addMessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
-				
-				<p:selectOneRadio id="selection" value="#{suppFinalMeetingBackingBean.managedBean.committeMember.userSelection}">
-					<f:selectItems value="#{suppFinalMeetingBackingBean.managedBean.selections}" />
-					<p:ajax event="click"
-						listener="#{suppFinalMeetingBackingBean.userSelectionAction}"
-						update="newMemberPanel" process="@this">
-					</p:ajax>
-				</p:selectOneRadio>
-			</h:panelGrid>
-
-			<p:panel id="newMemberPanel" style="width:100%;margin-top:10px;">
-				<c:if test="#{suppFinalMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
+			<p:panel id="newMemberPanel" style="width:100%;margin-top:0px;">
 					<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
 						<table>
 							<tr>
@@ -126,118 +112,13 @@
 							</p:column>
 						</p:dataTable>
 					</p:panel>
-				</c:if>
-				
-				<c:if test="#{suppFinalMeetingBackingBean.managedBean.committeMember.userSelection eq 'N'}">
-					<p:panel header="#{lbl['lbl.sc.new.user']}" toggleable="true">
-						<table>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.name']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td colspan="3">
-									<p:inputText id="userName" required="true" size="30" 
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.memberName}"/>
-									<p:message id="userId" for="userName" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td style="width: 125px;">
-									<p:outputLabel value="#{lbl['lbl.sc.id.type']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:selectOneMenu id="identificationType" required="true"
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.idType}"
-										style="width: 178px;margin-bottom: 5px;">
-										<f:selectItems value="#{suppFinalMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
-									</p:selectOneMenu>
-									<p:message id="identificationTypeId" for="identificationType" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.id.no']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:inputText id="identificationNo" required="true" size="30" 
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.icPassport}" />
-									<p:message id="identificationNoId" for="identificationNo" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.grade']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:inputText id="grade" required="true" size="30" 
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.grade}" />
-									<p:message id="gradeId" for="grade" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.pnp']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:selectOneRadio id="pnp" required="true"
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.PNP}">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
-										<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
-									</p:selectOneRadio>
-									<p:message id="pnpId" for="pnp" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.designation']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:inputText id="designation" required="true" size="30" 
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.designation}"/>
-									<p:message id="designationId" for="designation" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.email']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:inputText id="email" required="true" size="30" 
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.email}"/>
-									<p:message id="emailId" for="email" display="icon"></p:message>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p:outputLabel value="#{lbl['lbl.sc.role']}" />
-									<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								</td>
-								<td>
-									<p:selectOneMenu id="memberRole" required="true"
-										value="#{suppFinalMeetingBackingBean.managedBean.committeMember.memberRole}"
-										style="width: 178px;margin-bottom: 5px;">
-										<f:selectItems value="#{suppFinalMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.committeeRole)}" />
-									</p:selectOneMenu>
-									<p:message id="memberRoleId" for="memberRole" display="icon"></p:message>
-								</td>
-							</tr>
-						</table>
-					</p:panel>
-				</c:if>
 			</p:panel>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					process="@this, newMemberPanel, addPanel"
 					action="#{suppFinalMeetingBackingBean.committeeOkAction}"
-					ajax="true" icon="ui-icon-check" 
-					update="memberListTbl, addPanel" />
+					icon="ui-icon-check" 
+					update=":form:memberListTbl"/>
 	
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" 
 					process="@this"
