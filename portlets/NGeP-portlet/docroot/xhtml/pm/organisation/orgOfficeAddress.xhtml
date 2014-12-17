@@ -126,13 +126,6 @@
 				<td><p:message for="postCode" id="postCodeMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.email']}" /></td>
-				<td><p:inputText id="email" 
-						styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.address.email']}"
-						maxlength="80"
-						value="#{organisationBackingBean.managedBean.officeAddress.email}"
-						size="35" /></td>
-				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="telNo" required="true"
@@ -141,17 +134,6 @@
 						value="#{organisationBackingBean.managedBean.officeAddress.phoneNo}"
 						size="35" /></td>
 				<td><p:message for="telNo" id="telNoMsg" display="icon" /></td>
-
-			</tr>
-
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.mobile']}" /></td>
-				<td><p:inputText maxlength="20" styleClass="ppDisplayTextL"
-						value="#{organisationBackingBean.managedBean.officeAddress.mobileNo}"
-						size="35" required="false" /></td>
-				<td></td>
-
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
 				<td><p:inputText maxlength="20" styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.faxNo}"

@@ -5,37 +5,48 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:panel styleClass="sampleDetails">
+
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.pmAddressList}"
+			value="#{organisationBackingBean.managedBean.orgProfile.pmAddressTypes}"
 			var="address" rowIndexVar="index" rowKey="#{address}"
-			selection="#{organisationBackingBean.managedBean.selectedPmAddress}">
+			selection="#{organisationBackingBean.managedBean.selectedDelAddressTypes}">
+
+			<!-- <p:ajax event="rowSelectRadio"
+				listener="#{organisationBackingBean.consolidateRowSelectRadio}" /> -->
 
 			<ac:paginator for="deliveryAddressId" />
 
 			<p:column headerText="#{lbl['lbl.pm.address.address']}">
-				<h:outputText value="#{address.address1}" />
+				<h:outputText value="#{address.pmAddress.address1}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.district']}"
 				style="width : 15%">
-				<h:outputText value="#{address.pmDistrict.districtName}" />
+				<h:outputText value="#{address.pmAddress.pmDistrict.districtName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.state']}"
 				style="width : 15%">
-				<h:outputText value="#{address.pmState.stateName}" />
+				<h:outputText value="#{address.pmAddress.pmState.stateName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.organisation.status']}"
 				style="width : 5%">
+
 			</p:column>
-			<p:column>
+			<p:column >
 				<p:commandLink oncomplete="addressPopup.show();"
 					action="#{organisationBackingBean.editDeliveryAddress(address)}"
 					update="deliveryAddressId" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
+
 			</p:column>
+
+
+
+
 		</p:dataTable>
 		<div align="right">
+
 
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
 				oncomplete="addressPopup.show();"
@@ -65,7 +76,6 @@
 							size="35" /></td>
 					<td><p:message for="addressname" id="addressnameMsg"
 							display="icon" /></td>
-
 					<td></td>
 
 				</tr>
@@ -224,11 +234,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryName"
-							label="#{lbl['lbl.pm.contact.name']}" required="true"
+					<td><p:inputText  id="deliveryName" label="#{lbl['lbl.pm.contact.name']}"
+							required="true"
 							value="#{organisationBackingBean.managedBean.deliveryContactPerson.contactName}"
 							size="50" /></td>
-					<td><p:message id="deliveryNameMsg" for="deliveryName"
+							<td><p:message id="deliveryNameMsg" for="deliveryName"
 							display="icon" /></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.phone']}" /></td>
@@ -239,11 +249,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryEmail"
-							label="#{lbl['lbl.pm.contact.email']}" required="true"
+					<td><p:inputText id="deliveryEmail" label="#{lbl['lbl.pm.contact.email']}"
+							required="true"
 							value="#{organisationBackingBean.managedBean.deliveryContactPerson.email}"
 							size="50" /></td>
-					<td><p:message id="deliveryEmailMsg" for="deliveryEmail"
+							<td><p:message id="deliveryEmailMsg" for="deliveryEmail"
 							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.mobile']}" /></td>
 					<td><p:inputText

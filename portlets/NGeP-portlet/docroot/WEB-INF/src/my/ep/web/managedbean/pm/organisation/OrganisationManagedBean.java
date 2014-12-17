@@ -98,6 +98,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmProfileGroup> profileGroup;
 	private List<PmProfileGroup> selectedProfileGroups;
 	private PmProfileGroup selectedProfileGroup;
+	private PmProfileGroup pmProfileGroup;
 	private PmOrgProfile authOrgProfile;
     private List<PmUser> supplierUserList;
 	private List<PmUser> supplierUsers;
@@ -969,6 +970,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setPmAddress(PmAddress pmAddress) {
 		this.pmAddress = pmAddress;
+	}
+
+	/**
+	 * @return the pmProfileGroup
+	 */
+	public PmProfileGroup getPmProfileGroup() {
+		return pmProfileGroup;
+	}
+
+	/**
+	 * @param pmProfileGroup the pmProfileGroup to set
+	 */
+	public void setPmProfileGroup(PmProfileGroup pmProfileGroup) {
+		this.pmProfileGroup = pmProfileGroup;
 	}
 
 	

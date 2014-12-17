@@ -18,8 +18,8 @@
 				<p:selectOneMenu value="#{financialsrv.serviceTypeCode.parameterCode}" disabled="#{!financialsrv.brandNew}"
 					style="width: 275px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 					<f:selectItems
-						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
-					<p:ajax event="change" update=":form:subTab,:form:factoringMenu" />
+						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />					
+						<p:ajax event="change" update="@form" />
 				</p:selectOneMenu>
 			</p:column>
 

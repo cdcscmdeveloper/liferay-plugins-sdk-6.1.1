@@ -123,6 +123,7 @@ public class OrganisationBackingBean extends
 
 	public String redirectToOrganisation(Long id) throws Exception {
 		retrieveCountryList();
+		retrieveFinancialOrgList();
 
 		if (id != null && id > 0) {
 			maintainOrganisation(id);
@@ -176,11 +177,10 @@ public class OrganisationBackingBean extends
 						IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStateList(resDTO.getStateList());
-		// getManagedBean().getOfficeAddress().setPmCountry(new PmCountry());
+		getManagedBean().getOfficeAddress().setPmCountry(new PmCountry());
 		getManagedBean().getOfficeAddress().setPmState(new PmState());
 		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
 		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
-
 		getManagedBean().setContactList(new ArrayList<PmContact>());
 		getManagedBean().setOfficeContactPerson(new PmContact());
 		getManagedBean().getOrgProfile().setPmZone(new PmZone());
@@ -313,8 +313,6 @@ public class OrganisationBackingBean extends
 				OrganizationType.DIVISION.value())) {
 			retrieveAgOfficeList();
 			retrievePtjGroupList();
-			retrieveFinancialOrgList();
-
 			retrieveOrgProfileList(orgProfile.getParentOrgProfile()
 					.getOrgProfileId());
 			if (orgProfile.getPmPtjGroup().getPtjGroupId() != null) {
@@ -329,14 +327,19 @@ public class OrganisationBackingBean extends
 				getManagedBean().setParentOrgProfileId(
 						orgProfile.getParentOrgProfile().getOrgProfileId());
 			}
+			
+		//	this.getManagedBean().setProfileGroup(orgProfile.getAuthorizedProfileGroups());
+		//	this.getManagedBean().setSelectedProfileGroup(orgProfile.getAuthorizedProfileGroups().get(0));
+			
 			// Org Responsble
-			/*List<PmProfileGroup> profileGroup = orgProfile
-					.getAuthorizedProfileGroups();
-			if (profileGroup != null && !profileGroup.isEmpty()) {
-				for (PmProfileGroup profileGrp : profileGroup) {
-					getManagedBean().setAuthOrgProfile(profileGrp.getAuthorizedOrgProfile());
-				}
-			}*/
+						/*List<PmProfileGroup> profileGroup = orgProfile
+								.getAuthorizedProfileGroups();
+						if (profileGroup != null && !profileGroup.isEmpty()) {
+							for (PmProfileGroup profileGrp : profileGroup) {
+								getManagedBean().setAuthOrgProfile(profileGrp.getAuthorizedOrgProfile());
+							}
+							
+						}*/
 		}
 		List<PmAddressType> pmAddressTypes = orgProfile.getPmAddressTypes();
 		boolean addrExist = false;
@@ -499,63 +502,54 @@ public class OrganisationBackingBean extends
 			addressType.setPmAddress(address);
 			addressType.setPmOrgProfile(orgProfile);
 			orgProfile.setPmAddressTypes(pmAddressTypes);
-			if (getManagedBean().getOrgProfile().isGovtSeller()) {
-				IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								IRegistrationSO.class);
-				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
-				PmFinancialOrg bank = new PmFinancialOrg();
-				bank.setFinancialOrgId(1L);
-				regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				PmFinancialOrg financialOrg = getManagedBean()
-						.getFinancialOrg();
-
-				if (!getManagedBean().getPmFinancialAcc().isEmpty()) {
-					for (PmFinancialAcc financialAcc : this.getManagedBean()
-							.getPmFinancialAcc()) {
-						financialAcc.setPmFinancialOrg(financialOrg);
-						regReqDTO.setBankAccountNo(financialAcc.getAccountNo());
-
-					}
-				}
-				RegistrationResDTO regResDTO = registrationSO
-						.createPTJSupplier(regReqDTO);
-				regResDTO.setSuccessful(true);
-
-			}
+			
 
 			orgValidity.setPmOrgProfile(orgProfile);
 		}
+		if (getManagedBean().getOrgProfile().isGovtSeller()) {
+			IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IRegistrationSO.class);
+			RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
+			PmFinancialOrg bank = new PmFinancialOrg();
+			bank.setFinancialOrgId(1L);
+			regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PmFinancialOrg financialOrg = getManagedBean()
+					.getFinancialOrg();
+
+			if (!getManagedBean().getPmFinancialAcc().isEmpty()) {
+				for (PmFinancialAcc financialAcc : this.getManagedBean()
+						.getPmFinancialAcc()) {
+					financialAcc.setPmFinancialOrg(financialOrg);
+					regReqDTO.setBankAccountNo(financialAcc.getAccountNo());
+
+				}
+			}
+			RegistrationResDTO regResDTO = registrationSO
+					.createPTJSupplier(regReqDTO);
+			regResDTO.setSuccessful(true);
+
+		}
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-
-			/*
-			 * PmOrgProfile parentProfile = getManagedBean()
-			 * .getParentOrgProfile();
-			 * 
-			 * parentProfile.getParentOrgProfile().setOrgProfileId(
-			 * getManagedBean().getParentOrgProfileId());
-			 */
-
 			orgProfile.getParentOrgProfile().setOrgProfileId(
 					getManagedBean().getParentOrgProfileId());
+			if (getManagedBean().getOrgProfile().isGroupOrg()) {
 
-		}
+				List<PmProfileGroup> profileGrp = getManagedBean()
+						.getProfileGroup();
+				PmOrgProfile pmorg = getManagedBean().getOrgProfile();
 
-		if (getManagedBean().getOrgProfile().isGroupOrg()) {
-
-			List<PmProfileGroup> profileGrp = getManagedBean()
-					.getProfileGroup();
-			PmOrgProfile pmorg = getManagedBean().getOrgProfile();
-
-			for (PmProfileGroup proGroup : profileGrp) {
-				proGroup.setMainOrgProfile(orgProfile);
-				proGroup.setAuthorizedOrgProfile(pmorg);
+				for (PmProfileGroup proGroup : profileGrp) {
+					proGroup.setMainOrgProfile(orgProfile);
+					proGroup.setAuthorizedOrgProfile(pmorg);
+				}
+				profileGroup.addAll(profileGrp);
+				orgProfile.setMainProfileGroups(profileGroup);
 			}
-			profileGroup.addAll(profileGrp);
-			orgProfile.setMainProfileGroups(profileGroup);
 		}
+		
 		orgProfile.setPmOrgValidity(orgValidity);
 		reqDTO.setPmOrgProfile(orgProfile);
 

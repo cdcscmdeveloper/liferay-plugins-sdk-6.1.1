@@ -27,9 +27,15 @@
 				</p:selectOneMenu>
 				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
+			<p:column >
+			<f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    	<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
+			    </f:facet>
 
-				<p:inputText value="#{financialacc.accountNo}" size="15" disabled="#{!financialacc.brandNew}"  />
+				<p:inputText id="finAccountNo" value="#{financialacc.accountNo}" label="#{lbl['lbl.pm.financialorg.acnumber']}"
+				maxlength="20" required="true" disabled="#{!financialacc.brandNew}"  />
+			<p:message id="finAccountNoMsg" for="finAccountNo" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
