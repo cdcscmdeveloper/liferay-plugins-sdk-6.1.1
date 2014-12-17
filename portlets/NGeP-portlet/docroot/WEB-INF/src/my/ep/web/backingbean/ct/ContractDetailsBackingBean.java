@@ -2156,6 +2156,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			trBB = new TerminationBackingBean();
+			trBB.getManagedBean().setViewContract(false);
 			trBB.setTerminationContractVer(resDTO);
 		}catch(Exception e) {
 				e.printStackTrace();
@@ -2293,7 +2294,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
     	ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
-    	
+		trBB.getManagedBean().setViewContract(true);
 		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		
