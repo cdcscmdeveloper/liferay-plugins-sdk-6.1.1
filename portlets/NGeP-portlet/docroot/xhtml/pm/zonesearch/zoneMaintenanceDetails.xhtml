@@ -16,13 +16,11 @@
 						value="#{lbl['lbl.pm.zone.code']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td class="TableFieldRight"><p:inputText styleClass="ppDisplayTextM"
-						label="#{lbl['lbl.pm.zone.code']}" 
+						label="#{lbl['lbl.pm.zone.code']}" style="text-transform: uppercase"
 						value="#{zoneBackingBean.managedBean.pmZone.zoneCode}"
 						disabled="#{!zoneBackingBean.managedBean.pmZone.brandNew}"
-						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"
-						validatorMessage="#{lbl['lbl.pm.zone.uppercase']}"
-						required="true" >
-						<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" />
+						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"						
+						required="true" >						
 						</p:inputText></td>
 				<td><p:message id="zonecodeMsg" for="zonecode" display="icon" /></td>
 			</tr>

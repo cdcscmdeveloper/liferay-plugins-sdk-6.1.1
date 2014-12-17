@@ -215,7 +215,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
 				PmState state = this.getManagedBean().getState();
-
+				state.setStateCode(state.getStateCode().toUpperCase());
 				reqDTO.setPmState(state);
 				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
 
@@ -241,7 +241,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								IDivisionSO.class);
 
 				PmDivision division = this.getManagedBean().getDivision();
-
+				division.setDivisionCode(division.getDivisionCode().toUpperCase());
 				reqDTO.setPmDivision(division);
 				try {
 					DivisionResDTO resDTO = divisionSO
@@ -278,7 +278,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								IDistrictSO.class);
 
 				PmDistrict district = this.getManagedBean().getDistrict();
-
+				district.setDistrictCode(district.getDistrictCode().toUpperCase());
 				reqDTO.setPmDistrict(district);
 				try {
 					DistrictResDTO resDTO = districtSO
@@ -313,7 +313,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								ICitySO.class);
 
 				PmCity city = this.getManagedBean().getCity();
-
+                city.setCityCode(city.getCityCode().toUpperCase());
 				reqDTO.setPmCity(city);
 				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 
