@@ -215,7 +215,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			
 			    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			    reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			    if (resDTO.getUserOrgList().size() > 0)
+			    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			
 			    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
 				     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
@@ -1003,12 +1004,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
 
-			}
-
-			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
-				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
-			}
+			}			
 
 			if(contractVer.getCtContractItems() != null){
 				for(CtContractItem item : contractVer.getCtContractItems()) {
@@ -1071,18 +1067,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					}
 				}
 			}
-		}
-		
-		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
-			    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-				throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
-			}
+		}		
 		
 		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
 				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
 				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement for AP201" });
+		}
+		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+		
+		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
+		    action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract update"});
 		}
 		
 		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
@@ -1839,11 +1840,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
     
     public boolean isContractAdmin() {
-    /*	if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
-			return true;
-    	else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()))
-			return true;*/
-    	return true;
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
 
 	private String getUserRole() {		
@@ -2191,6 +2188,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			
 			suspBB = new SuspensionBackingBean();
+			suspBB.getManagedBean().setViewOnly(false);
 			suspBB.setSuspensionContractVer(resDTO);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -2834,5 +2832,18 @@ public void removeAddRow(){
 		    		  bonds.setSelectedCheckBox(true);
 		    	  }
 		    }
+	}
+	
+	public boolean isApproverSetting() {
+		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)))
+			return true;
+		else 
+			return false;
 	}
 }

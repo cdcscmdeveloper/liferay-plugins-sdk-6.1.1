@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -49,6 +51,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -61,6 +65,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -86,6 +91,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -110,13 +116,59 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	
 	public TerminationBackingBean() {
 		if(this.getManagedBean().getAction() == null)
-			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		  
+			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
+		
+		 if(getManagedBean().getUserMap().size()==0) {
+			  initializeApproverList();
+	     }
 	}
 	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
     }
+	
+	private void initializeApproverList() {
+		if(getManagedBean().getApproverModel() == null) {
+		  	 List<String> source = new ArrayList<String>();
+			 List<String> target = new ArrayList<String>();
+			 getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}
+	}
+	
+	 private List<String> getAvailableApproverList() {
+		 IUserSO userSO = null;
+		 List<String> sourceList = new ArrayList<String>();
+	
+		 try {
+			    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			    UserReqDTO reqDTO = new UserReqDTO();
+			    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			
+			    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			    if (resDTO.getUserOrgList().size() > 0)
+			    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			
+			    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
+				     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			    else // Central Contract	
+				    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			    
+                resDTO = userSO.retrieveUserListByRole(reqDTO);
+			    List<PmUser> list = resDTO.getUserList();
+			
+			    for (PmUser user : list) {
+				    sourceList.add(user.getUserName());
+				    getManagedBean().getUserMap().put(user.getUserName(), user);
+			    }
+	   	  } catch (Exception e) {
+		     	e.printStackTrace();
+		    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		  } finally {
+			  userSO = null;
+		  }
+		 return sourceList;
+	}
 	
 	public void preRenderView(){
 		
@@ -190,6 +242,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
 		}
 		
+		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+	    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+		     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+		} 
+		
 		getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
@@ -205,6 +263,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	    }
 		
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		ctBB.getManagedBean().setViewContract(false);
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
 		flush();
@@ -256,7 +315,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(getManagedBean().getAttachmentList());
-		    
+		    reqDTO.setUserMap(getManagedBean().getUserMap());
+	        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+	        reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+	           
 			if(this.getManagedBean().getPmDigiSign() !=null){
 			   reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}    
@@ -310,17 +372,22 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
-		}
-		
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract termination"});
-		}
+		}		
 		
 		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_750014);
+		}
+		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract termination"});
 		}
 		
 		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
@@ -517,8 +584,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	}
 	 
 	 public boolean isContractAdmin() {
-			return getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
+		 return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 		}
+	 
+	 public boolean isPrintAndUpdateTask() {
+		 if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
+			 return true;
+		 }
+		 else
+			 return false;
+	 }
 	 
 	 public void addTerminateReason() {
 		CtTerminationReason terminateReason = new CtTerminationReason();
@@ -681,5 +756,15 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	
 	public void disableUpdate(){
 		getManagedBean().setAutoUpdate(false);
+	}
+	
+	public boolean isApproverSetting() {
+		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FT_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FT_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FT_HT_NAME)))
+			return true;
+		else 
+			return false;
 	}
 }

@@ -4,12 +4,15 @@
 package my.ep.web.managedbean.ct.amendment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
@@ -124,6 +127,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String textBeforeSign;
 	private String buttonAction;
 	private int attachFileIndex;
+	
+	private DualListModel<String> approverModel;
+	private Map<String, PmUser> userMap;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -754,5 +760,23 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
 	}
-	
+
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
+	}	
 }

@@ -11,6 +11,7 @@ public class AmendTabSideMenus {
 
 	FacesScopes face;
 	List<String> menuWithAmendFulfilment = null;
+	List<String> menuWithAmendSetting = null;
 	List<String> menuWithZone = null;
 	List<String> menuWithItem = null;
 	List<String> menuWithSpAprlAP201  = null;
@@ -27,6 +28,11 @@ public class AmendTabSideMenus {
 			   menuWithAmendFulfilment =  new ArrayList<String>(Arrays.asList(
 						ResourceBundleUtils.getMessage("lbl.ct.menu.fd", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 						ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		  }
+		   
+		   if(menuWithAmendSetting == null){
+			   menuWithAmendSetting =  new ArrayList<String>(Arrays.asList(
+						ResourceBundleUtils.getMessage("lbl.ct.menu.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		   
 		  if(menuWithZone == null){

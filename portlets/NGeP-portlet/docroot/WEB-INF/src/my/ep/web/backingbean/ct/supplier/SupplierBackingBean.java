@@ -1020,7 +1020,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				
 				    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-				    reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+				    if (resDTO.getUserOrgList().size() > 0)
+				    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 				
 				    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
 					     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());

@@ -10,8 +10,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -33,8 +36,11 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
@@ -42,6 +48,7 @@ import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -57,6 +64,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -78,6 +86,10 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    	if(this.getManagedBean().getAction() == null) 
 	    		this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
 	    	
+	    	if(getManagedBean().getUserMap().size()==0) {
+				  initializeApproverList();
+		     }
+	    	
 	    	HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 	        HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
 	    	if(originalServletRequest.getParameter(ContractConst.CONTRACT_VER_ID) != null)
@@ -88,6 +100,48 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		      FacesScopes facesScopes = new FacesScopes();
 		      return facesScopes;
 	   }
+	   
+	   private void initializeApproverList() {
+			if(getManagedBean().getApproverModel() == null) {
+			  	 List<String> source = new ArrayList<String>();
+				 List<String> target = new ArrayList<String>();
+				 getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			}
+		}
+		
+		 private List<String> getAvailableApproverList() {
+			 IUserSO userSO = null;
+			 List<String> sourceList = new ArrayList<String>();
+		
+			 try {
+				    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				    UserReqDTO reqDTO = new UserReqDTO();
+				    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				
+				    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+				    if (resDTO.getUserOrgList().size() > 0)
+				    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+				
+				    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
+					     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+				    else // Central Contract	
+					    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+				    
+	                resDTO = userSO.retrieveUserListByRole(reqDTO);
+				    List<PmUser> list = resDTO.getUserList();
+				
+				    for (PmUser user : list) {
+					    sourceList.add(user.getUserName());
+					    getManagedBean().getUserMap().put(user.getUserName(), user);
+				    }
+		   	  } catch (Exception e) {
+			     	e.printStackTrace();
+			    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			  } finally {
+				  userSO = null;
+			  }
+			 return sourceList;
+		}
 		
 	   public void preRenderView(){
 			
@@ -179,6 +233,12 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			 		 }			 		
 			 	 }
 		    }    
+		    
+		    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			} 
 			 
 		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
@@ -269,7 +329,10 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		         reqDTO.setUserRole(getUserRole());
 	             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 			     reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
-			     
+			     reqDTO.setUserMap(getManagedBean().getUserMap());
+		        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+		        reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			        
 				 if(this.getManagedBean().getPmDigiSign() !=null){
 					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 				 }
@@ -331,6 +394,11 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	      }
+		 
+		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
 		 
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
@@ -423,4 +491,19 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	public boolean isApprover() {
 		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
+	
+	public boolean isContractAdmin() {
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
+	}
+	
+	public boolean isApproverSetting() {
+		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FS_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FS_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FS_HT_NAME)))
+			return true;
+		else 
+			return false;
+	}
+
 }

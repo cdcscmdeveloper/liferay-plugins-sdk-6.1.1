@@ -149,7 +149,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			if(getManagedBean().getUserMap().size()==0) {
 				 initializeApproverList();
-				 getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    }
 	}
 	
@@ -800,7 +799,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			if (resDTO.getUserOrgList().size() > 0)
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
