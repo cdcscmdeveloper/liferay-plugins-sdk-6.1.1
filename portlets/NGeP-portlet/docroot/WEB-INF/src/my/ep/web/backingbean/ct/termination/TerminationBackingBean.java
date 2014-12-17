@@ -108,7 +108,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
-	//private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
+	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	
 	private ContractBackingBean ctBB = null;
 	private CtTerminationReason[] selectedTerminationReasonsList;
@@ -263,7 +263,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	    }
 		
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
 		flush();
@@ -685,6 +685,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+	    getManagedBean().setViewContract(true);
+	    getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
 	    setTerminationContractVer(resDTO);
 		
 		return PROCESS_TERMINATE_PAGE;

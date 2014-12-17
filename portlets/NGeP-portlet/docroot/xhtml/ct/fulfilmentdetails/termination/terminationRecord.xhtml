@@ -18,6 +18,7 @@
 		  	      </h:panelGrid>
 		  	      <h:panelGrid columns="5">
            		      <p:inputText id="receiverName" 	style="width:170px;" maxlength="50" required="true"  
+           		      	  disabled="#{terminationBackingBean.managedBean.viewContract}"
            		          value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" label="#{lbl['lbl.ct.receiver.name']}"/>
                       <p:spacer width="1"/>
 				      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.receiver.name']}" />
@@ -31,6 +32,7 @@
 		  	       </h:panelGrid>
 		  	       <h:panelGrid columns="5">
            		       <p:inputText id="icNo" style="width:170px;" maxlength="15" required="true" 
+           		       	  disabled="#{terminationBackingBean.managedBean.viewContract}"
            		          value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverIc}" label="#{lbl['lbl.ct.receiver.ic.no']}"/>
                        <p:spacer width="1"/>
 				       <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.record.receiver.ic.no']}" />
@@ -44,6 +46,7 @@
 		  	      </h:panelGrid>
                   <h:panelGrid columns="5">
              	      <p:calendar  id="dDate" readonlyInput="true" required="true" label="#{lbl['lbl.ct.delivery.date']}"
+             	         	disabled="#{terminationBackingBean.managedBean.viewContract}"
              	         	value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}" size="24" 
           		         	showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
           		       		<p:ajax event="dateSelect" update="rDate" />
@@ -60,6 +63,7 @@
 		  	      </h:panelGrid>
                   <h:panelGrid columns="5">
              	        <p:calendar id="nDate"   readonlyInput="true" required="true" label="#{lbl['lbl.ct.notice.date']}" navigator="true"
+             	            disabled="#{terminationBackingBean.managedBean.viewContract}"
              	            value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}"  size="24" 
           		            showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
           		        </p:calendar>
@@ -75,6 +79,7 @@
 		  	       </h:panelGrid>
           	       <h:panelGrid columns="5">
              	      <p:calendar id="rDate"  readonlyInput="true" required="true" label="#{lbl['lbl.ct.received.date']}"
+             	        disabled="#{terminationBackingBean.managedBean.viewContract}"
              	        value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
           		        mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"  size="24" 
                         showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -90,7 +95,7 @@
           <f:verbatim/><f:verbatim/>   
           <f:verbatim rendered="#{terminationBackingBean.managedBean.termination}" />
 		  <p:commandButton id="lodgeComplaintBtn" value="#{lbl['lbl.ct.lodge.complaint']}"
-		      onclick="confirmation.show()" rendered="#{terminationBackingBean.managedBean.termination}"
+		      onclick="confirmation.show()" rendered="#{terminationBackingBean.managedBean.termination or !terminationBackingBean.managedBean.viewContract}"
 		  	disabled="#{terminationBackingBean.managedBean.contractVer.ctTermination.complaintLodged}" />
 		</h:panelGrid>
 	    

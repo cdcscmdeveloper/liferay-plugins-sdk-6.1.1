@@ -13,7 +13,8 @@
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{terminationBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}"
-					showTargetControls="true" filterMatchMode="contains">
+					showTargetControls="true" filterMatchMode="contains"
+					disabled="#{terminationBackingBean.managedBean.viewContract}">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
 						<p:graphicImage id="sourceList"
