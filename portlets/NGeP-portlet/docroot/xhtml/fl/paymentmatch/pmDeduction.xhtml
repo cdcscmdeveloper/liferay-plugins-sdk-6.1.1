@@ -24,7 +24,9 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
-				<p:inputText id="descId" value="#{deduction.deductionDesc}" disabled="#{deduction.deductionType.parameterId == null}"/>
+				<p:inputText id="descId" value="#{deduction.deductionDesc}" disabled="#{deduction.deductionType.parameterId == null}">
+				<p:ajax process="@this" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 			<f:facet name="header" style="width:8%;">
