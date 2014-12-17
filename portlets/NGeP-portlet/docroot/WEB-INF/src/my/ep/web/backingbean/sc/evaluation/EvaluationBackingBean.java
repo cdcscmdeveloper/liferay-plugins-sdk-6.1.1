@@ -3107,8 +3107,7 @@ public class EvaluationBackingBean extends
 			if (outputTab == 1) {
 				retriveComplianceTechnical();
 				// retrives1Details();
-			}
-			if (outputTab == 2) {
+			} else if (outputTab == 2) {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -3151,14 +3150,12 @@ public class EvaluationBackingBean extends
 					retriveFinancialEvaluationStage();
 				}
 
-			}
-			if (outputTab == 3) {
+			} else if (outputTab == 3) {
 				// retrivePresetationDemoCheckList();
 
 				retrivePresentationDemo();
 
-			}
-			if (outputTab == 4) {
+			} else if (outputTab == 4) {
 				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -3185,6 +3182,64 @@ public class EvaluationBackingBean extends
 
 					}
 				}
+
+				else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						&& !this.getManagedBean().isReadOnly()) {
+					if (currentTab == 2) {
+
+						if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() < 2) {
+							retriveSummaryEvaluationStage();
+							// this.getManagedBean().setComplianceActiveIndex(2);
+							outputTab = 2;
+
+						}
+
+					}
+				}
+
+				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
+						&& !this.getManagedBean().isReadOnly()) {
+					if (currentTab == 2) {
+
+						if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() < 1) {
+							retriveSummaryEvaluationStage();
+							// this.getManagedBean().setComplianceActiveIndex(2);
+							outputTab = 2;
+
+						}
+
+					}
+				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						&& this.getManagedBean()
+								.getCurrentStatusId()
+								.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL)
+						&& !this.getManagedBean().isReadOnly()) {
+					if (currentTab == 2) {
+
+						if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() < 1) {
+							retriveSummaryEvaluationStage();
+							// this.getManagedBean().setComplianceActiveIndex(2);
+							outputTab = 2;
+
+						}
+
+					}
+				}
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -3198,14 +3253,11 @@ public class EvaluationBackingBean extends
 				}
 
 				retrieveReportTabDtl();
-			}
-			if (outputTab == 5) {
+			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
-			}
-			if (outputTab == 6) {
+			} else if (outputTab == 6) {
 
-			}
-			if (outputTab == 0) {
+			} else if (outputTab == 0) {
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
 						this.getManagedBean().getCommitteeType(), 0);
 			}
