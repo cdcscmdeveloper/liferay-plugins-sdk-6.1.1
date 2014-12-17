@@ -25,7 +25,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.faces.validator.DoubleRangeValidator;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -66,7 +65,6 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
@@ -174,7 +172,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
@@ -3489,9 +3486,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
 				}				
-				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750010);
-				}
 				validateOrderQuantity();
 				checkMinimumQtyItem(getManagedBean().getFlRequest());
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -3502,6 +3496,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					today.add(Calendar.DATE, days);
 					if(today.getTime().after(expDate)) {
 						throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+					}
+				} else {
+					if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
+						throw new EpException(MessageConst.ERROR_750010);
 					}
 				}
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
@@ -3562,15 +3560,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	public void chargeLineValidationBeforeApproverList(){
-		FlFulfilmentItemAddr itemAddress = null;
-		updateSelectedTreeNodes();
-		TreeNode[] selectedNodesCount=getManagedBean().getSelectedNodes();
-		if(null!=selectedNodesCount && selectedNodesCount.length>=1){
-			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
-				itemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
-				itemAddress.getCoaValue();
-				if("N".equalsIgnoreCase(itemAddress.getCoaValue())){
-					throw new EpException(MessageConst.ERROR_745063);
+		if(getManagedBean().getChargeLineItemRoot()!=null) {
+			FlFulfilmentItemAddr itemAddress = null;
+			updateSelectedTreeNodes();
+			TreeNode[] selectedNodesCount=getManagedBean().getSelectedNodes();
+			if(null!=selectedNodesCount && selectedNodesCount.length>=1){
+				for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+					itemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
+					itemAddress.getCoaValue();
+					if("N".equalsIgnoreCase(itemAddress.getCoaValue())){
+						throw new EpException(MessageConst.ERROR_745063);
+					}
 				}
 			}
 		}
