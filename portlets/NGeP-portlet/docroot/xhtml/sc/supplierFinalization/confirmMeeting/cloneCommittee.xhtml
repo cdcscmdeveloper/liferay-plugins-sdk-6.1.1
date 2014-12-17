@@ -49,7 +49,7 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.date.created']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.created.date']}" /></td>
 					<td>
 						<p:calendar
 							value="#{suppFinalMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
@@ -59,7 +59,7 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.date.created.to']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 					<td>
 						<p:calendar
 							value="#{suppFinalMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
@@ -192,7 +192,6 @@
 					process="@this,committeeDtlPanel" 
 					partialSubmit="true"
 					actionListener="#{suppFinalMeetingBackingBean.cloneAction}"
-					onclick="cloneMemberWidgetVar.hide();"
 					oncomplete="committeeMemberWidVar.paginator.endLink.click();"
 					icon="ui-icon-check" 
 					update="memberListTbl" />

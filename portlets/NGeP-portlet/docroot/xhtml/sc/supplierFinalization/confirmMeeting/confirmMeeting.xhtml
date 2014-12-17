@@ -14,7 +14,7 @@
 			<tr>
 				<td> 
 					<td width="100%" align="left" valign="top">
-						<p:messages id="confirmMeeting" showDetail="true" autoUpdate="true" closable="true" />
+						<p:messages id="confirmMeeting" showDetail="true" showSummary="false" autoUpdate="true" closable="true" />
 						
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.save']}" 
@@ -39,27 +39,45 @@
 						</div>
 						<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
-						<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+						<p:panel header="#{lbl['lbl.sc.meeting.details']}" id="meetingDetailPanel" toggleable="true">
 							<p:dataTable id="meetingTbl"
 								var="meeting" widgetVar="meetingDtls"
 								rowKey="#{meeting}" rowIndexVar="rowIndex"
 								editable="true" style="width:100%"
-								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}"
-								selection="#{suppFinalMeetingBackingBean.managedBean.meetingMultiSelect}">
+								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}">
 								<ac:paginator for="meetingTbl" />
 								
-								<p:column selectionMode="multiple" style="width:2%"></p:column>
+								<p:column style="width:20px;">
+									<f:facet name="header">
+										<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalMeetingBackingBean.managedBean.selectAll}">
+											<p:ajax partialSubmit="true" process="@this" update="meetingTbl"  listener="#{suppFinalMeetingBackingBean.selectAll(suppFinalMeetingBackingBean.managedBean.selectAll, suppFinalMeetingBackingBean.managedBean.scQtMeetings)}" />
+										</p:selectBooleanCheckbox>
+									</f:facet>
+									<p:selectBooleanCheckbox id="selectMeeting" value="#{meeting.selected}">
+										<p:ajax partialSubmit="true" process="@this" update="@this"/>
+									</p:selectBooleanCheckbox>
+								</p:column>								
 								
 								<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
-									style="width:30%">
-									<p:calendar value="#{meeting.meetingDate}" 
+									style="width:30%;" styleClass="mandatory">
+									<p:calendar value="#{meeting.meetingDate}" id="meetingDate"
 										showOn="button"
-										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" 
+										label="#{lbl['lbl.sc.meeting.date']}" 
+										required="true">
+									   <p:ajax process="@this" partialSubmit="true"
+												update="@this,mtgDate" />										
 									</p:calendar>
+									<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>									
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.location']}">
-									<p:inputTextarea value="#{meeting.meetingLocation}" rows="2" cols="100"></p:inputTextarea>
+									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" cols="100" 
+										label="#{lbl['lbl.sc.location']}" required="true">
+										<p:ajax process="@this" partialSubmit="true"
+												update="@this,mtgLoc" />
+									</p:inputTextarea>
+									<p:message id="mtgLoc" for="meetingLocation" display="icon" showDetail="false"></p:message>
 								</p:column>
 							</p:dataTable>
 							
@@ -74,20 +92,20 @@
 									icon="ui-icon-add" />
 									
 								<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-									icon="ui-icon-delete" process="@this,meetingTbl"
+									icon="ui-icon-delete" process="@this"
 									partialSubmit="true"
 									action="#{suppFinalMeetingBackingBean.meetingDeleteAction}"
-									update="meetingTbl" />
+									update="@([id$=meetingDetailPanel])"/>
 							</div>
 						</p:panel>
 
-						<p:panel header="#{lbl['lbl.sc.member.list']}" toggleable="true">
+						<p:panel header="#{lbl['lbl.sc.member.list']}" id="memberListPanel" toggleable="true">
 							<p:dataTable id="memberListTbl" 
 								var="committeeMember"
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
 								selection="#{suppFinalMeetingBackingBean.managedBean.selectedCommitteeMembersList}"
-								rowKey="#{committeeMember}">
+								rowKey="#{committeeMember}" update="@this">
 								<ac:paginator for="memberListTbl" />
 					
 								<p:column selectionMode="multiple" style="width:2%" 
@@ -122,6 +140,7 @@
 								
 									<p:selectOneMenu id="meetingRoleId" required="true" 
 										rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleChairperson}"
+										label="#{lbl['lbl.sc.role']}"
 										value="#{committeeMember.memberRole.parameterCode}" style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getMemberRoleTypeDropdownValues()}" />
 									</p:selectOneMenu>
@@ -130,6 +149,7 @@
 								
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
 									<p:selectOneMenu value="#{committeeMember.representativeType.parameterCode}" 
+										label="#{lbl['lbl.sc.representative.type']}"
 										style="width: 110px;margin-bottom: 5px;" required="true" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues()}" />
