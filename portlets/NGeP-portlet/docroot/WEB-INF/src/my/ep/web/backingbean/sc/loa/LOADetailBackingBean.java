@@ -386,13 +386,15 @@ public class LOADetailBackingBean extends
 		Date contractEffDate = effDate.getTime();  
 	   
 	    if(scQtSchedule.getStartYear() != null && scQtSchedule.getStartMonth() != null){
-	    	  startDate = Calendar.getInstance();
-	    	 startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0,0,0);
+	    	startDate = Calendar.getInstance();
+	    	startDate.clear();
+	    	startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0,0,0);
 	    }
 	   
 	    if(scQtSchedule.getEndYear() != null && scQtSchedule.getEndMonth() != null){
-	    	  EndDate = Calendar.getInstance();
-	    	  EndDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractExpDate())),0,0,0);
+	    	EndDate = Calendar.getInstance();
+	    	EndDate.clear();
+	    	EndDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractExpDate())),0,0,0);
 	    }
 	    
 	    if(startDate != null && EndDate != null){
