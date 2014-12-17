@@ -182,8 +182,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 			
 			BigDecimal paidUpCapital = supplierSearchBean.getMinPaidUpCapital();
-			if (paidUpCapital!= null && paidUpCapital.longValue() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppls.smCompanyBasic.paidUpCapital", SearchOperator.OPERATOR_LIKE.value(), paidUpCapital.toString(), true));
+			if (paidUpCapital != null && paidUpCapital.longValue() > 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppls.smCompanyBasic.paidUpCapital", SearchOperator.OPERATOR_GREATER_EQUAL.value(), paidUpCapital.toString(), true));
 			}
 		}
 	}
@@ -385,7 +385,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (StringUtils.isNotBlank((String)mofNumberFilterBean.getMofAccountNo())) {
 			hasSearchValue = true;
 		}
+		
+		BigDecimal paidUpCapital = getManagedBean().getSupplierSearchBean().getMinPaidUpCapital();
+		SupplierSearchBean capitalFilterBean = new SupplierSearchBean(SearchOperator.OPERATOR_GREATER_EQUAL.value(), paidUpCapital);
+		if (capitalFilterBean.getMinPaidUpCapital() != null && capitalFilterBean.getMinPaidUpCapital().longValue() > 0) {
+			hasSearchValue = true;
+		}
+		
 		log.info("hasSearchValue: " + hasSearchValue);
+		
 		if(!hasSearchValue) {
 			throw new EpException(MessageConst.ERROR_716006);
 		} else {		
@@ -1537,6 +1545,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 				}
 				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
+				if (null == tplSpecLocList) {
+					tplSpecLocList = new ArrayList<TplSpecLoc>();
+				}
 				List<TreeNode> rootZoneLocation = getManagedBean()
 						.getZoneGeneralTrees();
 				if (rootZoneLocation != null) {

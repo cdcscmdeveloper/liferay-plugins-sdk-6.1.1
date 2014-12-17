@@ -31,6 +31,11 @@ public class SupplierSearchBean implements Serializable {
 		this.supplierName = searchField;
 		this.mofAccountNo = searchField;
 	}
+	
+	public SupplierSearchBean(int searchOperator, BigDecimal searchField) {
+		this.searchOperator = searchOperator;
+		this.minPaidUpCapital = searchField;
+	}
 
 	public String getSupplierName() {
 		return supplierName;
