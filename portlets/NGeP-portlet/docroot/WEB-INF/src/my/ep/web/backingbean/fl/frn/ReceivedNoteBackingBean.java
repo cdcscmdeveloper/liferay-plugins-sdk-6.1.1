@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -129,7 +130,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(flBB.getManagedBean().getRemarkList().size()>1) {
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 			}
-			
+			reqDTO.setUserRole(getUserRole());			
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
@@ -458,6 +459,26 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		getManagedBean().setValidated(Boolean.TRUE);
 		log.info("######## FRN SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
+	}
+	
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		}else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())){
+			return RoleCode.GOVT_SELLER.value();
+		}else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
+			return RoleCode.FL_APPROVER.value();		
+		}else if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+			return RoleCode.REQUISITIONER.value();		
+		}
+		else 
+			return null;
 	}
 
 }
