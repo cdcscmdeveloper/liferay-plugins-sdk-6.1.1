@@ -166,6 +166,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -198,11 +199,57 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public AmendmentBackingBean(){
 		  if(this.getManagedBean().getAction() == null) 
 			   this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+		  
+		  if(getManagedBean().getUserMap().size()==0) {
+			  initializeApproverList();
+	     }
 	}
 	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+	
+	private void initializeApproverList() {
+		if(getManagedBean().getApproverModel() == null) {
+		  	 List<String> source = new ArrayList<String>();
+			 List<String> target = new ArrayList<String>();
+			 getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}
+	}
+	
+	 private List<String> getAvailableApproverList() {
+		 IUserSO userSO = null;
+		 List<String> sourceList = new ArrayList<String>();
+	
+		 try {
+			    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			    UserReqDTO reqDTO = new UserReqDTO();
+			    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			
+			    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			    if (resDTO.getUserOrgList().size() > 0)
+			    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			
+			    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
+				     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			    else // Central Contract	
+				    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			    
+                resDTO = userSO.retrieveUserListByRole(reqDTO);
+			    List<PmUser> list = resDTO.getUserList();
+			
+			    for (PmUser user : list) {
+				    sourceList.add(user.getUserName());
+				    getManagedBean().getUserMap().put(user.getUserName(), user);
+			    }
+	   	  } catch (Exception e) {
+		     	e.printStackTrace();
+		    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		  } finally {
+			  userSO = null;
+		  }
+		 return sourceList;
 	}
 	
 	public void preRenderView() throws UnsupportedEncodingException {
@@ -457,6 +504,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 			    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 			    }
+			    
+			    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+				     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+				} 
 				
 			  initializeRemarks();
 			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
@@ -465,6 +518,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
 			  ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
+			  ctBackingBean.getManagedBean().setViewContract(false);
 			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			  
 			  reqDTO = new ContractReqDTO();
@@ -493,6 +547,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  
 		       if(getManagedBean().getAckFA() == null) {
 			         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
+			         
+			         if(isApproverSetting()) {
+			        	 getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
+			         }
+			         
 			         if(getManagedBean().getContractVer().getCtAmendment() != null &&
 			        		  (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 			        	   if(getManagedBean().getCtContract().isZonalPricing())
@@ -587,6 +646,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        
 	               reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		           reqDTO.setAttachments(getManagedBean().getAttachmentList());
+		           reqDTO.setUserMap(getManagedBean().getUserMap());
+		           reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+				   reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 		           
 				   if(getManagedBean().getPmDigiSign() !=null){
 						reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -683,12 +745,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				   RequestContext.getCurrentInstance().addCallbackParam("epException",
 							true);
 			        throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Description"});
-		       }
-			   
-			   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-					 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
-				}
+		       } 
 			   
 			   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 				     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
@@ -743,6 +800,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    		}
 			    	}			    	
 			    }
+			    
+			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+				}
+			    
+			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+					 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
+				}
 			   
 			   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
@@ -795,6 +862,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      getManagedBean().setDecisionPbQcLOA(false);
 		      getManagedBean().setSignOffDecision(false);
 	     }
+	    
+	    public boolean isContractAdmin() {
+			return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
+		}
 	 
 	    private String getUserRole() {		
 			    if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
@@ -2752,5 +2823,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		this.getManagedBean().getContractVer().getAp201Attachements().add(attachment);
+	}
+	
+	public boolean isApproverSetting() {
+		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)))
+			return true;
+		else 
+			return false;
 	}
 }

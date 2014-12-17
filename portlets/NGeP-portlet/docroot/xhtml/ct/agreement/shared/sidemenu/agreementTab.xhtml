@@ -59,12 +59,12 @@
 					</p:menuitem>
 					
 					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@all"
-					    rendered="#{!agreementBackingBean.isApprover() and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
+					    rendered="#{agreementBackingBean.isApproverSetting() and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					 
 					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@all" 
-					    rendered="#{!agreementBackingBean.isApprover() and !agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
+					    rendered="#{agreementBackingBean.isApproverSetting() and !agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 				</p:tabMenu>
@@ -86,7 +86,7 @@
 			     </p:outputPanel>
 				
 				 <p:outputPanel rendered="#{(agreementBackingBean.managedBean.selectedTabIndex == 3 and agreementBackingBean.managedBean.uploadStampedAndSignedPage)
-				  or (agreementBackingBean.managedBean.selectedTabIndex == 2 and !agreementBackingBean.managedBean.uploadStampedAndSignedPage) and !agreementBackingBean.isApprover()}">
+				  or (agreementBackingBean.managedBean.selectedTabIndex == 2 and !agreementBackingBean.managedBean.uploadStampedAndSignedPage) and agreementBackingBean.isApproverSetting()}">
 					<ui:include src="/xhtml/ct/agreement/approverSetting.xhtml" />
 				</p:outputPanel>
 				

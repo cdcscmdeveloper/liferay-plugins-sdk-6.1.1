@@ -4,17 +4,22 @@
 package my.ep.web.managedbean.ct.termination;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import org.primefaces.model.DualListModel;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -57,7 +62,9 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate;
 	private String textBeforeSign;
-	private String buttonAction;
+	private String buttonAction;	
+	private DualListModel<String> approverModel;
+	private Map<String, PmUser> userMap;
 
 	public String getTaskName() {
 		return taskName;
@@ -245,5 +252,24 @@ public class TerminationManagedBean extends BaseManagedBean {
 
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+	
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
 	}
 }

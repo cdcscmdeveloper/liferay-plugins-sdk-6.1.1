@@ -83,9 +83,8 @@
 		</p:panel>
 		<ui:include src="suspendDetails.xhtml" />
 		<ui:include src="suspendItem.xhtml" />
-		<p:outputPanel rendered="#{suspensionBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
-			<ui:include src="suspendAgency.xhtml" />
-		</p:outputPanel>
+		<ui:include src="suspendAgency.xhtml" />
+		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	</ui:define>
 </ui:composition>

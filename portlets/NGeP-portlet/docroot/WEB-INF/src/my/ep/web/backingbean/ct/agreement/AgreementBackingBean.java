@@ -980,7 +980,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 
 	public boolean isContractAdmin() {
-		return getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
 
 	private String getUserRole() {
@@ -1041,7 +1041,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			if (resDTO.getUserOrgList().size() > 0)
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 
 			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
@@ -1538,5 +1539,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 	public void setSelectedSupplierSigner(CtAgreementParty[] selectedSupplierSigner) {
 		this.selectedSupplierSigner = selectedSupplierSigner;
+	}
+	
+	public boolean isApproverSetting() {
+		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_AC_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_DRAFT_AGREEMENT_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME) ||
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)))
+			return true;
+		else 
+			return false;
 	}
 }
