@@ -144,7 +144,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		private static final long serialVersionUID = 1L;
 
 		public CertBodyPagingDataModel() {
-			super("searchProfCertResult");
+			super("searchProfCertResult",false);
 		}
 
 		@Override
@@ -157,22 +157,20 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==1){
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("isCertifiedBody",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
+									SearchOperator.OPERATOR_EQUALS.value(),1));
 				}
 				if(getManagedBean().getProfCertifiedBodySearchBean().getCertType()==0){
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("isProfessionalBody",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
+									SearchOperator.OPERATOR_EQUALS.value(),1));
 				}
 				
-			} else if (getManagedBean().getProfCertifiedBodySearchBean().getCertType() == null ) {
+			}/* else if (getManagedBean().getProfCertifiedBodySearchBean().getCertType() == null ) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("isProfessionalBody",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getProfCertifiedBodySearchBean().getCertType()));
-			}			
+			}	*/		
 			if (getManagedBean().getProfCertifiedBodySearchBean().getBodyCode() != null
 					&& !"".equalsIgnoreCase(getManagedBean().getProfCertifiedBodySearchBean().getBodyCode())) { 
 				SearchFilterBean profCertSearchBean = new SearchFilterBean(
@@ -264,6 +262,10 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		validationMessage(certBody);
 		
 		certBody.setBodyCode(certBody.getBodyCode().toUpperCase());
+		
+		System.out.println("isCertifiedBody  :"+certBody.isCertifiedBody());
+		
+		System.out.println("isProfessionalBody  :"+certBody.isProfessionalBody());
 		
 		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 		

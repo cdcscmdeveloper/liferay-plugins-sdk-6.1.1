@@ -22,7 +22,6 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -200,8 +199,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			codesSearchBean.setCaseInsensitive(true);				
 			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}
-		
-
 	}
 
 	public IPagingDataModel<PmUserGroup> getUserGroupList() {
@@ -216,7 +213,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		List<PmUserGroupUser> userGroupUser = new ArrayList<PmUserGroupUser>();
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroupUser);
-		
+		 this.getManagedBean().setOrgProfileId(null);
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 
 	}
@@ -225,6 +222,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 *  reload back to user group search page
 	 */
 	public String backToMainPages() {
+		reset();
+		this.getManagedBean().setOrgProfileId(null);
 		debugLogger("backToMainPages");
 		return NAV_TO_MAIN;
 	}
@@ -249,8 +248,9 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public void userGroupListner(List<PmUser> users) {
 		List<PmUserGroupUser> groupUsers = this.getManagedBean().getUserGroups();
 		if (null != users) {
-			PmUserGroupUser groupUser = new PmUserGroupUser();
+			PmUserGroupUser groupUser = null;
 			for (PmUser pmUser : users) {
+				groupUser = new PmUserGroupUser();
 				for(PmUserGroupUser userGroupUser : groupUsers){
 					if(userGroupUser.getPmUser().getIdentificationNo().equalsIgnoreCase(pmUser.getIdentificationNo()))
 						throw new EpException("User already exists in the group ");
@@ -278,7 +278,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				.getSelectedUsrGrps();
 		
 		if(selectedUsrGrp.isEmpty()){
-			throw new EpException("Please select at least one record to delete.");
+			throw new EpException("Please select atleast one record to delete.");
 		}
 		if(grpUsers.size()==selectedUsrGrp.size()){
 			throw new EpException("Group must contain atleast one record.");
@@ -288,22 +288,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			grpUsers.remove(pmUserGroupUser);
 		}
 		
-		/*for (int i = 0; i < grpUsers.size(); i++) {
-			System.out.println("grpUsers  available:"+grpUsers.get(i).getPmUser().getUserName());
-			for (int j = 0; j < selectedUsrGrp.size(); j++) {
-				if (grpUsers
-						.get(i)
-						.getPmUser()
-						.getIdentificationNo()
-						.equalsIgnoreCase(
-								selectedUsrGrp.get(j).getPmUser()
-										.getIdentificationNo())) {
-					System.out.println("remove  :"+grpUsers.get(i));
-					grpUsers.remove(i);
-					break;
-				}
-			}
-		}*/
 		this.getManagedBean().setUserGroups(grpUsers);
 	}
 
@@ -313,6 +297,17 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public String gotoMaintanance(PmUserGroup userGroup) {
 		debugLogger("gotoMaintanance");
 		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
+       /* for(PmUserGroupUser userGroupUser:userGroup.getPmUserGroupUsers()){
+        	for(PmUserOrg userOrg:userGroupUser.getPmUser().getPmUserOrgs()){
+        		for(PmUserRole userRole:userOrg.getPmUserRoles()){
+        			if(null!=userRole.getApprovalLimit()){
+        			userRole.setApprovalLimit(userRole.getApprovalLimit());
+        			break;
+        			}
+        		}
+        	}
+        }*/
+		
 		this.getManagedBean().setOrgProfileId(orgProfileId);
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroup.getPmUserGroupUsers());
@@ -339,7 +334,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		
 		if(this.getManagedBean().getUserGroups().size()==0){
-			throw new EpException("Please select atleast one profile.");
+			throw new EpException("Please select atleast one record.");
 			}
 	}
 
@@ -377,7 +372,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						new FacesMessage(
 								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			}
-		
 		  return NAV_TO_MAIN;
 	 }
 	
