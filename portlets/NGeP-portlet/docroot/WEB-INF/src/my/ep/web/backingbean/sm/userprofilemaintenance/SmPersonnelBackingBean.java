@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -39,6 +40,7 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -146,7 +148,7 @@ public class SmPersonnelBackingBean extends
 						IPersonnelSO.class);
 
 		PersonnelResDTO resDTO = smPersonnelSO
-				.retrieveAuthorizedPersonnelsBySuppIdAndApplId(reqDTO);
+				.retrievePersonnelsBySuppIdAndApplId(reqDTO);
 
 		if (resDTO.getSmPersonnelList() != null
 				&& !resDTO.getSmPersonnelList().isEmpty()) {
@@ -321,6 +323,9 @@ public class SmPersonnelBackingBean extends
 
 		// set latest active smAppl
 		getManagedBean().setCurrSmAppl(getCurrActiveSmAppl(smSupplier));
+
+		// set basic SmAppl
+		getManagedBean().setBasicSmAppl(smSupplier.getSmAppl());
 
 		resDTO = smPersonnelSO
 				.retrieveAuthorizedPersonnelsForLatestActiveAppl(reqDTO);
@@ -1058,6 +1063,8 @@ public class SmPersonnelBackingBean extends
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
+		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
+		reqDTO.setBasicSmAppl(getManagedBean().getBasicSmAppl());
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
@@ -1112,6 +1119,7 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
 		reqDTO.setApplId(getManagedBean().getCurrSmAppl().getApplId());
+		reqDTO.setBasicSmAppl(getManagedBean().getBasicSmAppl());
 
 		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
 
@@ -1658,15 +1666,15 @@ public class SmPersonnelBackingBean extends
 
 	private SmAppl getCurrActiveSmAppl(SmSupplier smSupplier) {
 		if (getManagedBean().isUpgradeMofDraftAppl()) {
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setSmSupplierId(smSupplier.getSupplierId());
+			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+			mofRegistrationReqDTO.setSupplierId(smSupplier.getSupplierId());
 
-			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+			IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IPersonnelSO.class);
-			return smPersonnelSO.retrieveActiveSmApplBySupplierId(reqDTO)
-					.getCurrActiveSmAppl();
+							IMofRegistrationSO.class);
+			return reqSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
+					.getSmAppl();
 		} else {
 			return smSupplier.getSmAppl();
 		}
