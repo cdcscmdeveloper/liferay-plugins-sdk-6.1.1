@@ -606,6 +606,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 		      try{
 			   
+		    	    chkComplyAP201Rule();	
 		    	    validateContractAmendment(action);
 			        reqDTO = new ContractReqDTO();
 			        String token = getFacesScopes().getBPMAuthenticationCtxToken();	
@@ -621,8 +622,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	                       getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemList());
 	                       getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtServiceItemList());
 	      
-	                chkComplyAP201Rule();	
-	                getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+	                 getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	              
 	                if(getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
 	                		&& getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() == null){
@@ -781,24 +781,21 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 									// throw new Exception("Committee secretary not formed.");
 									throw new EpException(MessageConst.ERROR_750019);
 								}
-						}			    		
-			    	}
-			    	else {
-			    		if (getManagedBean().getContractVer().getCtContract().getQuotationTender() == null) {
-			    			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			    			//throw new Exception("Quotation Tender not found.");
-			    			throw new EpException(MessageConst.ERROR_750020); 
-			    		}
-			    		else {
-			    			conReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
-			    			conReqDTO.setIshigerCommitte(false);
-			    			committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(conReqDTO);
-			    			if (committeResDTO.getHigherCommitteSecratary() == null) {
-			    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			    				throw new EpException(MessageConst.ERROR_750019);
-			    			}
-			    		}
-			    	}			    	
+						}	else {
+			    		               if (getManagedBean().getContractVer().getCtContract().getQuotationTender() == null) {
+			    			                  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			    				               throw new EpException(MessageConst.ERROR_750020); 
+			    		               } else {
+			    			                        conReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
+			    			                        conReqDTO.setIshigerCommitte(false);
+			    			                        committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(conReqDTO);
+			    			                        if (committeResDTO.getHigherCommitteSecratary() == null) {
+			    				                           RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			    				                           throw new EpException(MessageConst.ERROR_750019);
+			    			                         }
+			    		                        }
+			    	                }			    	
+			              }
 			    }
 			    
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
