@@ -22,12 +22,19 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
+		<f:facet name="footer">
+			<h:outputText id="totalEstAmount" 
+				styleClass="calcEstAmount" 
+				value="#{templateSpecBackingBean.calcGrandTotalEstAmount(templateSpecBean)}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</f:facet>
 		<c:if test="#{!isZonal}">
 			<p:inputText id="estimatedCost" style="min-width:0px !important;width:71px;" styleClass="ppNumericAlign" 
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
 				required="true" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-				<p:ajax partialSubmit="true" process="@this" update="@this, estimatedCostMsg" />
+				<p:ajax partialSubmit="true" process="@this" update="@this, estimatedCostMsg, @(.calcEstAmount)" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			<p:message id="estimatedCostMsg" for="estimatedCost" display="icon" />
