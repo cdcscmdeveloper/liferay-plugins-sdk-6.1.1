@@ -171,7 +171,7 @@ public class SalutationBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public SalutationPagingDataModel() {
-			super("salutationSR");
+			super("salutationSR",false);
 		}
 
 		@Override
