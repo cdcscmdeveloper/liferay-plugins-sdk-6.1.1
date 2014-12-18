@@ -2941,6 +2941,8 @@ label>span.ui-button-text {
 	font-size: 12px !important;
 	padding-left: 10px;
 	float: left;
+	text-align: right;
+	white-space: nowrap;
 }
 
 .header-info-text {
