@@ -39,8 +39,8 @@
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}">
 							<f:selectItems value="#{lOIDetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"
-								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency)}" />
+							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
+								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency ,'true')}" />
 						</p:selectOneMenu>
 					</p:column>
 					<p:column
@@ -49,8 +49,8 @@
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
 							style="width:100px;" required="true">
 							<f:selectItems value="#{lOIDetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"
-								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency)}" />
+							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
+								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency ,'true')}" />
 						</p:selectOneMenu>
 					</p:column>
 
@@ -62,7 +62,7 @@
 							<f:selectItems value="#{lOIDetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
 								partialSubmit="true"
-								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
+								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency ,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -73,7 +73,7 @@
 							<f:selectItems value="#{lOIDetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
 								partialSubmit="true"
-								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
+								listener="#{lOIDetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
 					<p:column
