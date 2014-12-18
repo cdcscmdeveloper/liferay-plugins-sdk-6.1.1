@@ -482,7 +482,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 								
 				AddressReqDTO addressReqDTO = new AddressReqDTO();
-				addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+				addressReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
 				PmAddressType pmAddressType = null;
