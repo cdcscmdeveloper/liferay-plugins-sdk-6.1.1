@@ -271,6 +271,13 @@
 		<css-class-wrapper>flinv-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>flViewInvoice</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>flviewinv-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
 		<portlet-name>flDeliveryOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
