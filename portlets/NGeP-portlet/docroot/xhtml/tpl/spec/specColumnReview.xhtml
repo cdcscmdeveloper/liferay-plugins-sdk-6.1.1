@@ -37,7 +37,7 @@
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
-	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered1="#{isContentTypeReview}">
+	<p:column style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
 		<p:inputTextarea style="width:188px;" value="#{question.clReviewRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>
