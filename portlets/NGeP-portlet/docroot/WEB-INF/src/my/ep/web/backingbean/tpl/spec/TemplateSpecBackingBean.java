@@ -22,6 +22,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -34,6 +35,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -52,6 +55,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -105,7 +109,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
 				SmSupplier smSupplier = templateSpecBean.getSupplier();
 				
-				/*if (smSupplier == null) {
+				if (smSupplier == null) {
 					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 					OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
@@ -129,7 +133,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 						RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
 						smSupplier = registrationResDTO.getSmSupp();
 					}
-				}*/
+				}
 				
 				reqDTO.setSupplier(smSupplier);
 			}
@@ -978,6 +982,44 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());*/
 		
 		templateSpecBean.setSelectedSpecQuestion(null);
+	}
+	
+	public BigDecimal calcGrandTotalEstAmount(TemplateSpecBean templateSpecBean) {
+		BigDecimal totalEstAmount = new BigDecimal(0);
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
+		
+		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean.getContentType())) {
+			List<Long> specQuestionIds = new ArrayList<Long>();
+			
+			for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
+				TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+				
+				if (!specQuestionIds.contains(specQuestion.getSpecQuestionId()) && 
+						specQuestion.getTplSpecEstimations() != null) {
+					
+					specEstimations.addAll(specQuestion.getTplSpecEstimations());
+					
+					specQuestionIds.add(specQuestion.getSpecQuestionId());
+				}
+			}
+		} else {
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				if (specQuestion.getTplSpecEstimations() != null) {
+					specEstimations.addAll(specQuestion.getTplSpecEstimations());	
+				}
+			}
+		}
+		
+		for (TplSpecEstimation specEstimation : specEstimations) {
+			if (specEstimation.getEstimatedCost() != null) {
+				totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost());
+			}
+		}
+		
+		specMaster.setTotalEstAmount(totalEstAmount);
+		
+		return totalEstAmount;
 	}
 	
 	public BigDecimal calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
