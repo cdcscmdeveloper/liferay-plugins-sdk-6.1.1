@@ -179,7 +179,7 @@ public class EducationBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public EducationFieldPagingDataModel() {
-			super("educationSR");
+			super("educationSR",false);
 		}
 
 		@Override
