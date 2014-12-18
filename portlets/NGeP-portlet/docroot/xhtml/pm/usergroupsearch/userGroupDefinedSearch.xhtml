@@ -27,7 +27,7 @@
 			<p:inputText value="#{usergroupBackingBean.managedBean.ptjName}" size="30" />
 
 			<h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel>
-			<p:selectOneMenu style="width:203px" value="#{usergroupBackingBean.managedBean.status}" disabled="true">
+			<p:selectOneMenu style="width:203px" value="#{usergroupBackingBean.managedBean.status}" disabled="false">
 			 	 <f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}" />
 			</p:selectOneMenu>
 
