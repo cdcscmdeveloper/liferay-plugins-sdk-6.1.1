@@ -491,6 +491,44 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}
 	
+	public void viewInvoice() {
+		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String invoiceId = originalServletRequest.getParameter("invoiceId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		if(invoiceId!=null) {
+			reqDTO.setInvoiceId(Long.valueOf(invoiceId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			renewSesionObject();
+			try {
+				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			getManagedBean().setInvoiceId(resDTO.getInvoice().getInvoiceId());
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal("View");
+			getManagedBean().setInvoice(resDTO.getInvoice());
+			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+				getFactoringBranchDtl(); 
+			}			
+
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "invBasePage");
+		}
+	}	
+	
 	private void validateAdvancedPayment() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		boolean haveAdvancedPmyt = false;
