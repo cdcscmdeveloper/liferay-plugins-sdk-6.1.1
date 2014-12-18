@@ -17,9 +17,7 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		
 
-		<table style="width: 100%">
-			<tr>
-				<td><p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
+		<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
 						toggleable="true" id="searchTabId">
 
 						<table style="margin-top: 10px; width: 100%;">
@@ -57,13 +55,11 @@
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{cdTrackingDiaryBackingBean.reset}" update="cmUNSPSCsearchID">
 							</p:commandButton>
 						</div>
-						</p:panel></td>
-			</tr>
-		</table>
-	<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+						</p:panel>
+		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{cdTrackingDiaryBackingBean.searchDataModel}" var="unspscObj"
+				value="#{cdTrackingDiaryBackingBean.searchDataModel}" var="unspscObject"
 				width="100%" rows="10">
 
 
@@ -74,27 +70,27 @@
 					<f:facet name="header">
 					Creation Date
 					</f:facet>
-				#{unspscObj.createdDate}
+				#{unspscObject.createdDate}
 				</p:column>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
-				#{unspscObj.unspscCode}
+				#{unspscObject.unspscCode}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
 				</f:facet>
-				#{unspscObj.unspscTitle}
+				#{unspscObject.unspscTitle}
 			</p:column>
 			<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObject)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>
