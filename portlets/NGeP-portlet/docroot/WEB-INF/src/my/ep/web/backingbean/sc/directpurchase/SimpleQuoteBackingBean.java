@@ -391,6 +391,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		// to get ptj locality by default
 		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		
+		CatalogueBackingBean catalogueBackingBean =  new CatalogueBackingBean();
+		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+
 	   return "simpleQuote";
 	}
 	
@@ -3410,6 +3413,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		log.info("cancel");
 		// clear sq
 		super.renewSesionObject();
+		CatalogueBackingBean catalogueBackingBean =  new CatalogueBackingBean();
+		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
 		return "catalogueSearch";
 	}
 	
