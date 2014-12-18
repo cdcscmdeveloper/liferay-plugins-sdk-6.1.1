@@ -133,6 +133,7 @@
 			<portlet id="flContractOrder" />
 			<portlet id="flContractRequest" />
 			<portlet id="flInvoice" />
+			<portlet id="flViewInvoice" />
 			<portlet id="flDeliveryOrder" />
 			<portlet id="flFulfilmentReceivedNote" />
 			<portlet id="flPaymentMatch" />
