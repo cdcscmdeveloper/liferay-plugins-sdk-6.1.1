@@ -1427,17 +1427,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				//new
 				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
 				if(resDTO.getUserGroupList().size()>0) {
-					reqDTO.setGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
-					resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
-					List<String> source = new ArrayList<String>();
-					
-					for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
-							if(getManagedBean().getApproverModel().getSource().size()==0) {
-								getManagedBean().getApproverModel().setSource(source);
-							}
-							source.add(groupUser.getPmUser().getUserName());
+					List<PmUserGroupUser> firstPmUserGroup = null;
+					for(PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
+						reqDTO.setGroupId(pmUserGroup.getUserGroupId());
+						resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+						if(firstPmUserGroup==null) {
+							firstPmUserGroup = resDTO.getApproverGroupUserList();
 						}
+						for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
+							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
+						}
+					}
+					
+					List<String> source = new ArrayList<String>();
+					for(PmUserGroupUser groupUser : firstPmUserGroup) {
+						if(getManagedBean().getApproverModel().getSource().size()==0) {
+							getManagedBean().getApproverModel().setSource(source);
+						}
+						source.add(groupUser.getPmUser().getUserName());
+					}
 					getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 				}
 				
