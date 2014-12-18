@@ -5,36 +5,79 @@
          .footer {
          display: block; text-align: center;
          position: running(footer);
-         }
+         }		 
       </style>
    </head>
    <body>
-      <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $currentDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan inbois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap inbois yang terlibat akan dicopkan seperti berikut:-</div>
+	  <table style="border:1px solid black;" width="100%">
+		<tbody>
+		<tr>
+		<td width="10%">
+			<img src="$imgUrl" height="100" width="120"/>
+		</td>
+		<td>
+			<div>$supplierOfficerName</div>
+			<div>$supplierAddress</div>
+			<div>$telNo</div>
+			<div>$faxNo</div>
+		</td>
+		</tr>
+		</tbody>
+	  </table>
+	  <div><br/></div>
+	  <div><br/></div>
+	  <div style="text-align: center;"><strong>BORANG C1</strong></div>
+	  <div><br/></div>
+	  <div><br/></div>
+	  <div style="width:30%; float:right">
+		  <div>Rujukan<span class="Apple-tab-span" style="white-space:pre">	</span>: $refNo</div>
+		  <div>Tarikh<span class="Apple-tab-span" style="white-space:pre">	</span>: $currentDate</div>
+	  </div>
+	  <div><br/></div><div><br/></div>
+	  <div>Kepada:</div>
+	  <div>$ptjName</div>
+	  <div>$jabatanMinistry</div>
+	  <div>$ptjAddress</div>
+	  <div><br/></div>
+	  <div>Tuan,</div>
+	  <div><br/></div>
+	  <div><strong>Per: PEMBERITAHUAN MENGENAI URUSAN PEMFAKTORAN</strong></div>
+	  <div><br/></div>
+	  <div><strong>Tajuk Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractTitle</strong></div>
+	  <div><strong>No. Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractPhysicalNo</strong></div>
+	  <hr>
+	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $factoringStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap inbois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
       <div><br/></div>
-      <div>Inbois ini telah dijual dan pindahmilik kepada $factoringCompName.</div>
+      <div>Inbois ini telah dijual dan pindahmilik kepada</v>
+      <div>$factoringCompName.</div>
       <div><br/></div>
       <div>Sila bayar terus kepada:</div>
-      <div><br/></div>
       <div>$factoringCompName</div>
-      <div>$factoringBankName</div>
-      <div>$factoringBankAddress</div>
-      <div>$factoringAccountNo</div>
+      <div>$factoringBankAddress.</div>
       <div><br/></div>
-      <div>2.<span class="Apple-tab-span" style="white-space:pre">	</span>Maka dengan ini kami, tertakluk kepada syarat-syarat mengenai pembayaran di bawah kontrak tersebut, membuat arahan agar segala bayaran yang perlu dibuat terhadap inbois-inbois tersebut hendaklah terus dibayar kepada $factoringCompName, sehingga arahan ini dibatalkan oleh kami secara bertulis dengan persetujuan syarikat pemfaktoran.</div>
+      <div><strong>A/C No: $factoringAccountNo</strong></div>
       <div><br/></div>
-      <div>3.<span class="Apple-tab-span" style="white-space:pre">	</span>Apa-apa bayaran yang dibuat oleh Kerajaan kepada $factoringCompName di bawah arahan ini hendaklah dianggap di sisi undang-undang seolah-olah bayaran itu dibuat kepada kami di bawah kontrak tersebut adalah merupakan satu penyelesaian yang cukup dan sah bagi tanggungan Kerajaan terhadap bayaran di bawah kontrak itu.</div>
+      <div>(Satu salinan Perjanjian Pemfaktoran berkenaan dimuatnaik dan dilampirkan)</div>
+      <div><br/></div>
+      <div>2.<span class="Apple-tab-span" style="white-space:pre">	</span>Maka dengan ini kami, tertakluk kepada syarat-syarat mengenai pembayaran di bawah Kontrak tersebut, membuat arahan agar segala bayaran yang perlu dibuat terhadap invois-invois tersebut hendaklah terus dibayar kepada $factoringCompName, sehingga arahan ini dibatalkan oleh kami secara bertulis dengan persetujuan syarikat pemfaktoran.</div>
+      <div><br/></div>
+      <div>3.<span class="Apple-tab-span" style="white-space:pre">	</span>Apa-apa bayaran yang dibuat oleh Kerajaan kepada $factoringCompName di bawah arahan ini hendaklah dianggap disisi undang-undang seolah-olah bayaran itu dibuat kepada kami di bawah kontrak tersebut dan merupakan satu penyelesaian yang cukup dan sah bagi tanggungan Kerajaan terhadap bayaran di bawah kontrak itu.</div>
       <div><br/></div>
       <div>4.<span class="Apple-tab-span" style="white-space:pre">	</span>Arahan bayaran tersebut tidaklah dengan apa juga cara memudaratkan atau menyentuh apa-apa hak Kerajaan terhadap kami di bawah kontrak tersebut.</div>
       <div><br/></div>
-      <div>5.<span class="Apple-tab-span" style="white-space:pre">	</span>Kami dengan ini mengesahkan bahawa sebelum ini kami tidak pernah membuat arahan yang sama terhadap kontrak yang sama bagi faedah lain-lain syarikat pemfaktoran atau institusi-institusi kewangan yang lain.</div>
-      <div><br/></div>
+      <div>5.<span class="Apple-tab-span" style="white-space:pre">	</span>Kami dengan ini mengesahkan bahawa sebelum ini kami tidak pernah membuat arahan yang sama terhadap kontrak yang sama bagi faedah lain-lain syarikat pemfaktor atau institusi-institusi kewangan yang lain.</div>
       <div><br/></div>
       <div>Sekian. Terima kasih.</div>
       <div><br/></div>
+      <div><br/></div>
       <div>Yang benar,</div>
       <div><br/></div>
+      <div><br/></div>
       <div>.......................</div>
-      <div>Nama: $supplierOfficerName</div>
-      <div>b/p $supplierName</div>
+      <div>Nama Pembekal<span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierOfficerName</div>
+      <div>Nama Syarikat<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierName</div>
+      <div style="height:700px"><br/></div>
+      <hr>
+	  <div style="text-align: center; font-style: italic;">Ini adalah dokumen cetakan komputer. Tiada tandatangan diperlukan</div>
    </body>
 </html>

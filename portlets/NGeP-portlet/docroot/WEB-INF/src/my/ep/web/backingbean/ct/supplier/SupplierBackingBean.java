@@ -20,9 +20,11 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +33,7 @@ import my.ep.biz.service.ct.IContractSO;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 
@@ -52,6 +55,8 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -72,6 +77,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -81,6 +87,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -655,6 +662,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			}
 		}
 		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && getManagedBean().getApproverModel().getTarget().size()==0) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
@@ -927,9 +939,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		         }  
 		         return getManagedBean().getContractSupplierLoa();
 	   }
-
+	
 	public String getFactoringCompany() {
-		if(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()!=null) {
+		if(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
 			return getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 		} else {
 			return "Factoring Company Name";
@@ -941,49 +953,70 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		String vmFile = null;
 		String content = null;
 		String templateName = null;
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		
 		try {			
 			context = new VelocityContext();	
 			if(getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 				vmFile = "/ct/factoring/factoring-clause-supplier.vm";
 				templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER;
-			} else if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())) {
+			} else if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())
+					|| getUserRole().equalsIgnoreCase(RoleCode.CT_APPROVER.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_APPROVER.value())) {
 				vmFile = "/ct/factoring/factoring-clause-ca.vm";
 				templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_CA;	
 			}			
 	
 			setEditorValue("");
 			if(vmFile !=null && templateName != null) {
-				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);		
-				context.put("factoringCompName", getFactoringCompany());
-				context.put("factoringAccountNo", getManagedBean().getAccountNo());
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 				
-				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER.equalsIgnoreCase(templateName)) {
-					context.put("currentDate", df.format(new Date()));
-					context.put("factoringBankName", getManagedBean().getFactoringBankName());
-					context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress());
-					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
-					context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+				String imgUrl = getServerUrl()+ "css/images/eperolehan.png";
+				context.put("imgUrl", imgUrl);
+				if (getManagedBean().getFactoring().getCreatedBy() == null) {
+					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName()); 
+				}					
+				else {
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFactoring().getCreatedBy());
+					context.put("supplierOfficerName", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getUserName()); 
 				}
+				context.put("supplierAddress", AddressUtils.getFullAddress(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress()));
+				context.put("telNo", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierPhoneNo());
+				context.put("faxNo", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierFaxNo());				
+				context.put("refNo", getManagedBean().getFactoring().getAuthRefNo());
+				context.put("currentDate", df.format(new Date()));
+				context.put("ptjName",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
+					context.put("jabatanMinistry",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+					}
+					else {
+						context.put("jabatanMinistry", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+					}
+				AddressReqDTO addressReqDTO = new AddressReqDTO();
+				addressReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+				addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+				if(addressResDTO.getAddressTypeList().size()>0) {
+					context.put("ptjAddress", AddressUtils.getFullAddress(addressResDTO.getAddressTypeList().get(0).getPmAddress()));
+				}
+				
+				context.put("contractTitle", getManagedBean().getCtContract().getContractName());
+				if(getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo()==null) {
+					context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
+				} else {
+					context.put("contractPhysicalNo",getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo());
+				}
+				context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
+				context.put("factoringCompName", getFactoringCompany());
+				context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress());
+				context.put("factoringAccountNo", getManagedBean().getAccountNo());
+				context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 				
 				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
 					context.put("contractAdminName", getFacesScopes().getUserSessionBean().getUserName());
 					context.put("contractAdminDesignation", getFacesScopes().getUserSessionBean().getDesignation());
-					String jabatanMinistry = null;
-					if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
-					   jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
-					}
-					else {
-					   jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
-					}
-								
-					context.put("jabatanMinistry", jabatanMinistry);
-					if(getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo()==null) {
-						context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
-					} else {
-						context.put("contractPhycicalNo",getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo());
-					}
-					context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 				}
 				
 				if (vmFile != null && context != null) {
@@ -1083,5 +1116,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
 		}
 		return saveFactoringRequest(getManagedBean().getButtonAction());
+	}
+    
+    private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
+
+		return url;
 	}
 }

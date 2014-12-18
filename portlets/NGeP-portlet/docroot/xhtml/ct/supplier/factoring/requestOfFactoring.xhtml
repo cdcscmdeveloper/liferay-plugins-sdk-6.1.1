@@ -159,7 +159,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 
-				<p:outputLabel value="Ministry Name" />
+				<p:outputLabel value="#{lbl['lbl.ct.ministry.name']}" />
 				<p:inputText style="width:350px;" disabled="true"
 					value="#{supplierBackingBean.getMinistryAndPtjName(1)}" />
 					
@@ -182,7 +182,7 @@
 				
 			<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
-						<p:outputLabel value="PTJ Name" />
+						<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
@@ -379,29 +379,34 @@
 				</p:fileUpload>
 			</p:dialog>
 		</p:panel>
-		<ui:include src="approverSetting.xhtml" />
-		<p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.clause']}"
+		<p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.notification.factoring']}"
 			toggleable="true" toggleSpeed="500"
-			rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.approverRole}">
-			<p:spacer height="8" />
+			rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 18%; vertical-align: top; text-align: right"><p:selectBooleanCheckbox
+					<h:panelGroup rendered="#{!supplierBackingBean.approverRole}">
+					<td style="width: 18%; vertical-align: top; text-align: right">
+						<p:selectBooleanCheckbox
 							id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
 					</td>
-					<td><h:panelGrid columns="2">
+					<td>
+						<h:panelGrid columns="2">
 							<p:outputLabel value="#{lbl['lbl.ct.agree.factoring']}"> #{supplierBackingBean.getFactoringCompany()}</p:outputLabel>
-							<p:message for="checkBox" display="icon" /></h:panelGrid>
-				</td>
+							<p:message for="checkBox" display="icon" />
+						</h:panelGrid>
+					</td>
+					</h:panelGroup>
 				</tr>
 				<tr>
 					<td />
-					<td><p:commandButton
-							value="#{lbl['lbl.ct.view.factoring.clauses']}" process="@this"
+					<td>
+						<p:commandButton
+							value="#{lbl['lbl.ct.panel.notification.factoring']}" process="@this"
 							immediate="true" update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
-							oncomplete="factoringClauseDlg.show();" /></td>
-				</tr>
+							oncomplete="factoringClauseDlg.show();" />
+					</td>
+				</tr>				
 			</table>
 			<p:dialog id="factoringClauseDlg"
 				header="#{lbl['lbl.ct.factoring.clauses']}"
@@ -409,7 +414,8 @@
 				<p:editor controls="print" id="editorDisplay"
 					value="#{supplierBackingBean.editorValue}" width="800" height="430" />
 			</p:dialog>
-		</p:panel>
+		</p:panel>		
+		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	</ui:define>
 </ui:composition>
