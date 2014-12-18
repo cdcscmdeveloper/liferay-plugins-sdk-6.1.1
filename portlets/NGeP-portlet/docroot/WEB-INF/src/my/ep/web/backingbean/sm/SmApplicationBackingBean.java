@@ -834,7 +834,8 @@ public class SmApplicationBackingBean extends
 
 	public void updateSmApplBpmSubmit(String applType, String currentPageType,
 			String outputPageType, boolean isBpmSubmit) {
-		testUpdateSmAppl(applType, currentPageType, outputPageType, isBpmSubmit);
+		validateUpdateSmAppl(applType, currentPageType, outputPageType,
+				isBpmSubmit);
 	}
 
 	public void updateSmAppl(String applType, String currentPageType,
@@ -880,13 +881,13 @@ public class SmApplicationBackingBean extends
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateSupportingDocs();
 		}
-		testUpdateSmAppl(applType, currentPageType, outputPageType, false);
+		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		log.info("******* Current page AFTER in managed bean ********"
 				+ getManagedBean().getCurrentPageType());
 	}
 
-	public boolean testUpdateSmAppl(String applType, String currentPageType,
-			String outputPageType, Boolean isBpmSubmit) {
+	public boolean validateUpdateSmAppl(String applType,
+			String currentPageType, String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
 		// boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -3278,7 +3279,7 @@ public class SmApplicationBackingBean extends
 				&& (shareHolderBean.isEquityOwner() || shareHolderBean
 						.isDirector())
 				&& getManagedBean().isDisAllowOwnerEdit()) {
-			throw new EpException(MessageConst.ERROR_722573);
+			 throw new EpException(MessageConst.ERROR_722573);
 		}
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
@@ -4433,7 +4434,9 @@ public class SmApplicationBackingBean extends
 												new String[] {
 														getParameterDesc(
 																ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																getManagedBean().getSmAppl().getApplType()),
+																getManagedBean()
+																		.getSmAppl()
+																		.getApplType()),
 														getManagedBean()
 																.getSmAppl()
 																.getApplNo() },
@@ -5113,6 +5116,9 @@ public class SmApplicationBackingBean extends
 					reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
 					reqDTO.setCategoryDescription(SmApplicationUtil
 							.retriveCategoryMessageForNotification(getManagedBean()));
+					reqDTO.setNotifLink("<a href=https://www.google.com.my/>"
+							+ " Click Here " + " </a>");
+
 				}
 
 			}
@@ -6677,6 +6683,19 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().getSelectedShareHolder()
 					.setIdentificationNo(newPassportVal);
 		}
+	}
+
+	public String getMyIdentityStatusDescription(String identityResponseCode) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("lbl.sm.myIdentityCode.");
+		if (StringUtils.isNotBlank(identityResponseCode)) {
+			sb.append(identityResponseCode);
+		} else {
+			sb.append("emptyVal");
+		}
+		log.debug("*** Value from getMyIdentityStatusDescription output is ****** " + sb.toString());
+		return SmCommonUtil.getMessage(sb.toString(), null);
+
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {

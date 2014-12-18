@@ -8,6 +8,13 @@
 
 	<p:panel header="#{lbl['lbl.sm.person.panHdr']}" toggleable="true"
 		id="equiPerDtlPan">
+		<c:if
+			test="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}">
+			<p:outputLabel style="float : left" styleClass="ui-panel-title"
+				value="#{lbl['lbl.sm.person.myIdResp']} - " />
+			<p:outputLabel style="float : left" styleClass="ui-panel-title"
+				value="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}" />
+		</c:if>
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /> <p:outputLabel
@@ -220,7 +227,6 @@
 					</p:selectOneMenu> <p:message id="equiPerRaceMsg" for="equiPerRace"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
-
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true"
