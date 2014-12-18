@@ -42,7 +42,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -69,6 +68,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmClause;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -123,6 +123,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
@@ -143,6 +144,9 @@ public class LOIDetailBackingBean extends
 	public static final String LOI_NEGO_DETAIL_MENU = "/xhtml/sc/loi/loiNegotiationDetailsMenu.xhtml";
 	public static final String LOI_APPROVAL_MENU = "/xhtml/sc/loi/loiApprovalMenu.xhtml";
 
+	private PmDigiSign pmDigiSign;
+	private String textBeforeSign;
+	
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
 //		populateUserMinistryList();
@@ -557,6 +561,7 @@ public class LOIDetailBackingBean extends
 	public void backToPervious() {
 		log.info("backToPervious");
 		retrieveLOIList(getManagedBean().getSourceId());
+		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
@@ -998,6 +1003,7 @@ public class LOIDetailBackingBean extends
 		} catch (Exception ex) {
 			handleException(ex);
 		}
+		getManagedBean().setEditFlag(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
@@ -1720,13 +1726,15 @@ public class LOIDetailBackingBean extends
 			iqtAwardSO = null;
 		}
 	}
-
 	/**
-	 * Method to save the LOI details
+	 * @param action
+	 * @param object
+	 * @return AwardSupplierResDTO
 	 */
-	public void updateBpmTaskAction(String outcome) {
-		debugLogger("updateBpmTaskAction");
+	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
+		debugLogger("updateBPMTask");
 		IQTAwardSO iqtAwardSO = null;
+		AwardSupplierResDTO awardSupplierResDTO = null;
 		try {
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -1748,8 +1756,13 @@ public class LOIDetailBackingBean extends
 					.getBPMAuthenticationCtxToken());
 			awardSupplierReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			awardSupplierReqDTO.setPayLoad(awardDataType);
+			
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_INTENT, 
+						scLoi.getLoiId(), scLoi.getLoiNo());
+			}
 
-			AwardSupplierResDTO awardSupplierResDTO = iqtAwardSO
+			 awardSupplierResDTO = iqtAwardSO
 					.saveLOIDtl(awardSupplierReqDTO);
 
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
@@ -1788,8 +1801,37 @@ public class LOIDetailBackingBean extends
 		} finally {
 			iqtAwardSO = null;
 		}
+		return awardSupplierResDTO;
 	}
 
+	public void updateBpmTaskAction(String outcome) {
+		debugLogger("updateBpmTaskAction");
+		this.getManagedBean().setAction(outcome);
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+			} else if(isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+		} else {
+			updateBPMTask(outcome, null);
+		}	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -1901,10 +1943,21 @@ public class LOIDetailBackingBean extends
 			context.put("scNegoLocations", scLoi.getScNegoLocations());
 		}
 		
-		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+		 List<ScLoiTerm> selectedNegoTerms  = new ArrayList<ScLoiTerm>();
+		 if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+			 for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
+				 if(scLoiTerm.isSelected()){
+					 selectedNegoTerms.add(scLoiTerm);
+				 }
+			}
+		 }
+		
+		if(selectedNegoTerms != null && selectedNegoTerms.size()>0){
+			context.put("scNegoTerms", selectedNegoTerms);
+		}else if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
 			context.put("scNegoTerms", scLoi.getScNegoTerms());
 		}
-		
+
 		String ackDueDays = "14";
 		if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
 			ackDueDays = DateUtils.getDaysDifference(scLoi.getIssueDate(), scLoi.getAckDueDate()) + "";
@@ -2247,7 +2300,7 @@ public class LOIDetailBackingBean extends
 		return getManagedBean().getYearsDisplayList();
 	}
 
-	public void calculateScheduleMonths(ScQtSchedule schedule) {
+	public void calculateScheduleMonths(ScQtSchedule schedule , Boolean startMonthAndYearFlag) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoi()
 				.getScQtSchedules();
@@ -2264,6 +2317,13 @@ public class LOIDetailBackingBean extends
 				.getStartYear()) : null;
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
+
+		if (startMonthAndYearFlag && startMonth != null) {
+			endMonth = startMonth;
+			endYear = startYear;
+			schedule.setEndMonth(endMonth.toString());
+			schedule.setEndYear(endYear.toString());
+		}
 
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null && endYear >= startYear) {
@@ -2283,7 +2343,7 @@ public class LOIDetailBackingBean extends
 
 		this.getManagedBean().setScheduleList(freqSchedule);
 	}
-
+	
 	private void saveScheduleList() {
 		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoi()
 				.getScQtSchedules();
@@ -2800,5 +2860,29 @@ public class LOIDetailBackingBean extends
 		}
 		
 	}
+
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScLoi().getLoiNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}	
 
 }

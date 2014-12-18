@@ -136,6 +136,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtRecommend> recommendList;
 	private List<ScQtRecommend> selectedRecommendList;
 	
+	private String action;
+	private boolean editFlag;
+	
 	/**
 	 * @return the scQtEvaluationResult
 	 */
@@ -1096,5 +1099,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.selectedRecommendList = selectedRecommendList;
 	}
 
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public boolean isEditFlag() {
+		return editFlag;
+	}
+
+	public void setEditFlag(boolean editFlag) {
+		this.editFlag = editFlag;
+	}
 	
 }
