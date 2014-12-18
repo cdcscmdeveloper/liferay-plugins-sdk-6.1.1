@@ -328,6 +328,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			item.setReceivedQty(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Quantity","Delivery Quantity"});
 		}
+		if(null != item.getReceivedQty()){
+			BigDecimal formattedReceivedQty = item.getReceivedQty().setScale(
+					item.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
+			item.setReceivedQty(formattedReceivedQty);
+		}
 		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 		item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 	}
