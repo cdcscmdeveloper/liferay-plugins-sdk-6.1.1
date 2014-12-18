@@ -1481,11 +1481,11 @@ public class SmApplicationUtil {
 		reqDTO.setPostCode(postCode);
 		log.debug(" *** Req DTO Post Code ****" + reqDTO.getPostCode());
 		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
-//		StringBuffer sb = new StringBuffer();
-		if(resDTO.getStatusCode() != null){
+		// StringBuffer sb = new StringBuffer();
+		if (resDTO.getStatusCode() != null) {
 			per.setIdentityResponseCode(resDTO.getStatusCode());
 		}
-		log.info("**** My identiy output is *****"+resDTO.getStatusCode());
+		log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		// sb.append("MessageConst.ERROR_MYIDENTITY_");
 		// if (!resDTO.getStatusCode().equalsIgnoreCase(
 		// SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
@@ -3197,6 +3197,10 @@ public class SmApplicationUtil {
 							SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| param.getParameterCode().equalsIgnoreCase(
 							SupplierManagementConst.CAT_TYPE_MANUFACTURING)
+					|| param.getParameterCode().equalsIgnoreCase(
+							SupplierManagementConst.CAT_TYPE_PRINTING)
+					|| param.getParameterCode().equalsIgnoreCase(
+							SupplierManagementConst.CAT_TYPE_TRAVEL)
 					|| param.getParameterCode()
 							.equalsIgnoreCase(
 									SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA)) {
