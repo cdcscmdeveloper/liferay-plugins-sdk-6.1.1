@@ -168,6 +168,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setDeleteAppTypeRestrictions(null);
 		this.getManagedBean().setDeleteComTypeRestrictions(null);
 		this.getManagedBean().setDeleteSuppTypeRestrictions(null);
+		this.reasonCategoryChange(false, null);
 		log.info("initialRejectReason - End");
 	}
 	
@@ -177,11 +178,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void loadRejectReason(Long id){
 		log.info("loadRejectReason - Start");
 		try{
+			
 //			initialRejectReason();
 			PmReason pmReason = retrieveReasonObjById(id);
 			//set supplier type flag
 			this.getManagedBean().setSuppReason( 
-					(pmReason.isByAppType() || pmReason.isByRegType() || pmReason.isBySupplierType()) 
+					ParameterConst.REASON_CATEGORY_SUPPLIER.equals(pmReason.getReasonCategoryCode().getParameterCode())
 					? true : false);
 			//add all languages to description list
 			List <PmLanguage> languagues = PmCommonUtil.retrieveLanguageObjs();
