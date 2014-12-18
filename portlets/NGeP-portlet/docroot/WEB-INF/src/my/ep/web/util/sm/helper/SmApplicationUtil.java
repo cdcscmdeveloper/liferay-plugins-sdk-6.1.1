@@ -1323,7 +1323,7 @@ public class SmApplicationUtil {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
 				throw new EpException(MessageConst.ERROR_722523,
-						new String[] { "Authorized Capital" });
+						new String[] { SmCommonUtil.getMessage("lbl.sm.authorized.capital", null) });
 			}
 			if (managedBean
 					.getBusinessTypeVal()
