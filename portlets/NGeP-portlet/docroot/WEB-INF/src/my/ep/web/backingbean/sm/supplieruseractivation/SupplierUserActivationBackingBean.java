@@ -181,18 +181,22 @@ public class SupplierUserActivationBackingBean extends
 						reqDTO.setIdentificationNo(this.getManagedBean().getSmPersonnel().getIdentificationNo());
 						reqDTO.setSmSupplierId(Long.parseLong(supplierId));
 						reqDTO.setDraftApplId(draftApplId);
-						PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
-						if(resDTO.getSmPersonnel() != null) {
-							personnelList = resDTO.getSmPersonnelList();
-						}
+						
+						//syazwan: temp disabled because seems didn't do anything
+//						PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
+//						if(resDTO.getSmPersonnel() != null) {
+//							personnelList = resDTO.getSmPersonnelList();
+//						}
 					} finally {
 						personnelSO = null;
 					}
 					
 					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
 					
-					if(personnelList != null && personnelList.size() > 0)
-						reqDTO.setSmPersonnels(personnelList);
+					//syazwan: temp disabled because seems didn't do anything
+//					if(personnelList != null && personnelList.size() > 0)
+//						reqDTO.setSmPersonnels(personnelList);
+					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					
 					reqDTO.setPassword(password);
