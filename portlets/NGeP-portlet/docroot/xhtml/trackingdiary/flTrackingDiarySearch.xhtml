@@ -15,72 +15,152 @@
 	</script>
 
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-		
-		<table style="width: 100%">
-			<tr>
-				<td><p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
-						toggleable="true" id="searchTabId">
-
-						<table style="margin-top: 10px; width: 100%;">
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="Contract No." /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-								<td width="15%"><p:outputLabel
-										value="Document No." /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Date Created (From)" /></td>
-							<td width="35%">
-
-				<p:column>
-					<p:calendar showOn="button" readonlyInput="true" id="pubFromDt"
-						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10">
-						<p:ajax event="dateSelect" update="pubToDt" />
-					</p:calendar>
-
-					<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10"
-						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}"
-						mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
-					</p:calendar>
-				</p:column>	</td>						
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+	<table style="width: 100%">
+		<tr>
+			<td>				
+		<style>
+				.column-align-center {
+				text-align: center !important;
+				}
 				
-				</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Financial Year" /></td>
-								<td width="65%%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Status" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							
-						</table>
+				.highlight-mark:before {
+ 					color: red;
+ 					content: "*";
+				}
+		</style>
+		<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="searchPanel">
+			<table>	
+				<tr>
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
+						style="width: 314px;">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+						<p:ajax event="change" update="searchPanel"
+							listener="#{flDocumentBackingBean.selectedOrderType}" />
+					</p:selectOneMenu></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+				<td><p:inputText size="28" maxlength="17" 
+						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+			</tr>
+			<tr>
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
+						<p:ajax event="change"
+							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
+							listener="#{flDocumentBackingBean.selectedDoctype}" />
+					</p:selectOneMenu></td>
+			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
+			</tr>
+			
+			
+			<h:panelGroup id="docStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+					<p:selectOneMenu id="statusId"
+						value="#{flDocumentBackingBean.managedBean.statusDescId}"
+						style="width: 314px;">
+						<f:selectItems value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
+				<p:inputText size="45"
+					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
+			</h:panelGrid>
+			<h:panelGroup id="docDoStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docInvStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docTypeSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel
+						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
+					<p:calendar mode="popup" showOn="button"
+						readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
+					</p:calendar>
+					<p:spacer width="5" />
+					<p:calendar mode="popup" showOn="button"
+						readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
+					</p:calendar>
+				</h:panelGrid>
+			</h:panelGroup>
+		</table>
 
-						<div style="text-align: right;">
-							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{codificationBackingBean.unspscSearch}" >
-								<f:param name="unspscCode" value="aaaaaaaaaaa" />
-							</p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{cdTrackingDiaryBackingBean.reset}">
-							</p:commandButton>
-						</div>
-					</p:panel></td>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{codificationBackingBean.unspscSearch}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					icon="ui-icon-search" update="resultPanel" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{codificationBackingBean.reset}" icon="ui-icon-reset"
+					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+			</div>
+		</p:panel>
+
+						</td>
 			</tr>
 		</table>
 			
@@ -89,13 +169,13 @@
 
 	<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="unspscTableID" lazy="true"
+			<p:dataTable id="resultPanel" lazy="true"
 				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
 				width="100%" rows="10">
 
 
 
-				<ac:paginator for="unspscTableID"></ac:paginator>
+				<ac:paginator for="resultPanel"></ac:paginator>
 
 				<p:column width="15%">
 					<f:facet name="header">
