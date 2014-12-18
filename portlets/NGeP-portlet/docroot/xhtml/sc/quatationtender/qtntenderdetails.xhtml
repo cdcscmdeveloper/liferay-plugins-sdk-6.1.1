@@ -72,8 +72,11 @@
 				<td><p:inputMask id="publishperiod" mask="9?99" maxlength="3"
 						placeHolder="" label="#{lbl['lbl.so.publishing.period']}"
 						required="true" value="#{qTDetailBB.managedBean.qt.publishPeriod}"
-						size="30" style="text-align:right" /> <p:message
-						id="publishperiodMsg" for="publishperiod" display="icon" /></td>
+						size="30" style="text-align:right">
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
+					</p:inputMask> <p:message id="publishperiodMsg" for="publishperiod"
+						display="icon" /></td>
 				<td style="width: 210px;"><p:outputLabel
 						value="#{lbl['lbl.so.proposal.validity']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
