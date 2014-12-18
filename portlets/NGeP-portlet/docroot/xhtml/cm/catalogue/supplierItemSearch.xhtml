@@ -103,8 +103,8 @@
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search"
 								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-								update="searchViewId,catSrchMsg,btnId" id="searchButtonId"
-								>
+								update="searchViewId,catSrchMsg" id="searchButtonId"
+								oncomplete="updateCatButtons();">
 								<f:param name="unspscCode" value="#{unspscCode}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
