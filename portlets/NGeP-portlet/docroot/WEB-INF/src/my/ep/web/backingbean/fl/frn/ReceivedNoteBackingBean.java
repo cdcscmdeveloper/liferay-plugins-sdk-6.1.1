@@ -27,6 +27,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -222,6 +223,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -419,6 +421,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			item.setReceivedAmt(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Amount","Delivery Amount"});
 		}
+//		if(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+//			if(item.getReceivedAmt().doubleValue() == 0){
+//				throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount","Delivery Amount"});
+//			}
+//		}
 	}
 	
 	public String retrieveMofNo(SmSupplier smSupplier) {
