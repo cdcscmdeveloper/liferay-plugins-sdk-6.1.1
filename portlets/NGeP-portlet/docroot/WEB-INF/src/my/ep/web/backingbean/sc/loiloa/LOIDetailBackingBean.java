@@ -292,10 +292,13 @@ public class LOIDetailBackingBean extends
 	
 	public void preRenderMultipleLoiView() {
 		debugLogger("preRenderMultipleLoiView");
-		IQTAwardSO qtAwardSO = null;
-		IStatusSO statusSO = null;
+		
 		try {
-			Long sourceId = 3928L;
+			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			
+			Long sourceId = Long.valueOf(awardDataType.getSourceId());
+			getManagedBean().setPayLoadData(awardDataType);
+			
 			retrieveQTDetails(sourceId);
 			//TODO
 
@@ -303,10 +306,7 @@ public class LOIDetailBackingBean extends
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
 			handleException(e);
-		} finally {
-			qtAwardSO = null;
-			statusSO = null;
-		}
+		} 
 	}
 	
 	public void retrieveQTDetails(Long qtId) {
