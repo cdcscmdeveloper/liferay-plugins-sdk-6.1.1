@@ -1481,13 +1481,17 @@ public class SmApplicationUtil {
 		reqDTO.setPostCode(postCode);
 		log.debug(" *** Req DTO Post Code ****" + reqDTO.getPostCode());
 		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
-		StringBuffer sb = new StringBuffer();
-		sb.append("MessageConst.ERROR_MYIDENTITY_");
-		if (!resDTO.getStatusCode().equalsIgnoreCase(
-				SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
-			sb.append(resDTO.getStatusCode());
-			throw new EpException(sb.toString());
+//		StringBuffer sb = new StringBuffer();
+		if(resDTO.getStatusCode() != null){
+			per.setIdentityResponseCode(resDTO.getStatusCode());
 		}
+		log.info("**** My identiy output is *****"+resDTO.getStatusCode());
+		// sb.append("MessageConst.ERROR_MYIDENTITY_");
+		// if (!resDTO.getStatusCode().equalsIgnoreCase(
+		// SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
+		// sb.append(resDTO.getStatusCode());
+		// throw new EpException(sb.toString());
+		// }
 	}
 
 	public static boolean checkValidBank(SmSupplierBank bank, SmAppl appl) {
@@ -2119,6 +2123,11 @@ public class SmApplicationUtil {
 				bumiPerc = 99;
 			}
 		}
+		if (managedBean.getSmAppl().getApplCategoryType().equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
 		log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
@@ -2156,6 +2165,11 @@ public class SmApplicationUtil {
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			reqDTO.setPaidUpCapital(managedBean.getSmAppl().getSmCompanyBasic()
 					.getPaidUpCapital().intValue());
+		}
+		if (managedBean.getSmAppl().getApplCategoryType().equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
 		}
 		Integer bumiPerc = new Integer(0);
 		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
