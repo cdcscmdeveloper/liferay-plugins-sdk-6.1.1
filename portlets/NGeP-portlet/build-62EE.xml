@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
 
-<project name="6_1_to_6_2">
+<project name="6_1_to_6_2" default="copyTo62EE">
 
 	<property name="61PortletDir" location="." />
 	<property name="62PortletDir" location="D:/liferay-plugins-sdk-6.2/portlets/NGeP-portlet" />
 	
-	<!--<import file="D:/liferay-plugins-sdk-6.2/portlets/NGeP-portlet/build.xml" />-->
-	
-	<target name="build-NGeP-portlet-war2" depends="copyTo62EE, NGeP-portlet-deployment-assembly">
+	<target name="build-NGeP-portlet-war" depends="copyTo62EE, NGeP-portlet-deployment-assembly, war-62, delete-ngep-jar-after-war-62">
 	</target>
 	
 	<target name="clean">
@@ -72,13 +70,13 @@
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-util-3.1.1-ga2.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/primefaces-3.5.jar" />
 		
-		<copy file="${61PortletDir}/docroot/WEB-INF/portlet.xml" 			todir="${62PortletDir}/docroot/WEB-INF" />
-		<copy file="${61PortletDir}/docroot/WEB-INF/liferay-display.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
-		<copy file="${61PortletDir}/docroot/WEB-INF/liferay-portlet.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
-		<copy file="${61PortletDir}/docroot/WEB-INF/faces-config.xml" 		todir="${62PortletDir}/docroot/WEB-INF" />
-		<copy file="${61PortletDir}/docroot/WEB-INF/jboss-deployment-structure.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
-		<!--<copy file="${61PortletDir}/docroot/WEB-INF/liferay-plugin-package.properties" 	todir="${62PortletDir}/docroot/WEB-INF" />-->
-		<copy file="${61PortletDir}/docroot/WEB-INF/web.xml" 				todir="${62PortletDir}/docroot/WEB-INF" />
+		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/portlet.xml" 			todir="${62PortletDir}/docroot/WEB-INF" />
+		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-display.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
+		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-portlet.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
+		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/faces-config.xml" 		todir="${62PortletDir}/docroot/WEB-INF" />
+		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/jboss-deployment-structure.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
+		<!--<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-plugin-package.properties" 	todir="${62PortletDir}/docroot/WEB-INF" />-->
+		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/web.xml" 				todir="${62PortletDir}/docroot/WEB-INF" />
 		
 		<replaceregexp file="${62PortletDir}/docroot/WEB-INF/liferay-portlet.xml" match="DTD Portlet Application 6.1.0" replace="DTD Portlet Application 6.2.0" flags="g" byline="true" />
 		<replaceregexp file="${62PortletDir}/docroot/WEB-INF/liferay-portlet.xml" match="liferay-portlet-app_6_1_0.dtd" replace="liferay-portlet-app_6_2_0.dtd" flags="g" byline="true" />
@@ -89,34 +87,49 @@
 		
 	</target>
 	
-  	<target name="NGeP-portlet-deployment-assembly">
+	<target name="NGeP-bizBaseClient">
 		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizBaseClient.jar" >
 			<fileset dir="../../../NGeP-bizBaseClient/bin" />                
-		</jar>		
-		
+		</jar>
+  	</target>
+
+	<target name="NGeP-bizRemoteClient"> 
 		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizRemoteClient.jar" >
-			<fileset dir="../../../NGeP-bizRemoteClient/build/classes" />                
-		</jar>		
-		
+			<fileset dir="../../../NGeP-bizRemoteClient/bin" />                
+		</jar>
+  	</target>
+	
+	<target name="NGeP-bpmBaseClient">
 		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmBaseClient.jar" >
 			<fileset dir="../../../NGeP-bpmBaseClient/bin" />
 		</jar>
-				
+  	</target>
+
+	<target name="NGeP-bpmRemoteClient">
 		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmRemoteClient.jar" >
 			<fileset dir="../../../NGeP-bpmRemoteClient/bin" />
 		</jar>
-		
+  	</target>
+	
+	<target name="NGeP-bpm-schema">
 		<jar jarfile="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpm-schema.jar" >
 			<fileset dir="../../../NGeP-bpm-schema/bin" />
 		</jar>
   	</target>
+  	
+  	<target name="NGeP-portlet-deployment-assembly" 
+  		depends="NGeP-bizBaseClient, NGeP-bizRemoteClient, NGeP-bpmBaseClient, NGeP-bpmRemoteClient, NGeP-bpm-schema" />
   		
-	<target name="delete-ngep-jar-after-build">
+	<target name="delete-ngep-jar-after-war-62">
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizBaseClient.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bizRemoteClient.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmBaseClient.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpmRemoteClient.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/NGeP-bpm-schema.jar" />
+	</target>
+	 
+	<target name="war-62">
+		<ant antfile="build.xml" dir="${62PortletDir}" inheritAll="false" target="war"></ant>
 	</target>
 	
 </project>
