@@ -385,6 +385,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				setViewSupplierItemList(resDTO.getViewSuppItemResultBean().getResultList());
 				log.debug("*********after***********");
 				
+
+				// enable or disable simple quote in search catalogue
+				if(resDTO.getViewSuppItemResultBean().getResultList() != null && resDTO.getViewSuppItemResultBean().getResultList().size()>0){
+					setSimpleQuoteFlag(true);
+				} else {
+					setSimpleQuoteFlag(false);
+				}
+				
+				
 				return resDTO.getViewSuppItemResultBean();
 			}catch(Exception e){
 				e.printStackTrace();
@@ -447,8 +456,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		if(!hasSearchValue) {
 			throw new EpException(MessageConst.ERROR_716006);
 		} else {		
-			// enable or disable simple quote in search catalogue
-			setSimpleQuoteFlag(Boolean.FALSE);
+			
 			
 			searchDataModel.reloadData();
 		}
