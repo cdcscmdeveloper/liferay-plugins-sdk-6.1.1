@@ -25,7 +25,8 @@
 	
 <!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}">
-		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
+		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
 			<ui:param name="lblCategoryType" value="lbl.sm.sitevisit.category.categorycode_#{template.pmParameter.parameterCode}" />
 
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
