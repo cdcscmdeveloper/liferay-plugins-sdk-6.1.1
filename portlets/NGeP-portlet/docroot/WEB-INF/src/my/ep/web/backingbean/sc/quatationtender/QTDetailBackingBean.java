@@ -2988,6 +2988,7 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
+			this.getManagedBean().setActiveIndex(0);
 			retrieveCommitteeAppointmentTabDtl();
 			break;
 		case 2:
