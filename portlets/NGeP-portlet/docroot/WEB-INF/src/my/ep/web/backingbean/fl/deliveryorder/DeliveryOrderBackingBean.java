@@ -473,7 +473,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		BigDecimal delAmtCal= BigDecimal.ZERO;
 		BigDecimal remainingQty = BigDecimal.ZERO;
 		
-		unitPriceCal=itemAddress.getUnitPrice();
+		unitPriceCal=itemAddress.getUnitPrice();		
+		if(null != itemAddress.getDeliveredQty()){
+			BigDecimal formattedDeliveredQty = itemAddress.getDeliveredQty().setScale(
+					itemAddress.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
+			itemAddress.setDeliveredQty(formattedDeliveredQty);
+		}
 		delQtyCal= itemAddress.getDeliveredQty();
 		remainingQty = itemAddress.getOrderedQty().subtract(itemAddress.getSumDeliveredQty()).add(itemAddress.getRejectedQty());
 		if(delQtyCal == null){
