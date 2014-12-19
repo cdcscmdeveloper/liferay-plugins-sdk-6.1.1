@@ -9,14 +9,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
@@ -33,6 +29,9 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.educationfield.EducationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 /**
  * @author DK
  * 
@@ -41,6 +40,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class EducationBackingBean extends
 	BaseBackingBean<EducationManagedBean> {
+	
+	private String NAV_TO_MAIN =  "educationFieldMain";
 	
 	private static final Logger log = EpLogger
 			.getLogger(EducationBackingBean.class);	
@@ -65,8 +66,8 @@ public class EducationBackingBean extends
 	 */		
 	public String redirectEduSearch() {
 		debugLogger("redirectEduSearch");
-
-		return "/xhtml/pm/educationfield/educationFieldMain.xhtml";
+		this.getManagedBean().setLazy(true);
+		return NAV_TO_MAIN;
 
 	}		
 	
@@ -179,7 +180,7 @@ public class EducationBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public EducationFieldPagingDataModel() {
-			super("educationSR",false);
+			super("educationSR",getManagedBean().isLazy());
 		}
 
 		@Override
@@ -278,7 +279,7 @@ public class EducationBackingBean extends
 				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			 
 			}
-		  		return "/xhtml/pm/educationfield/educationFieldMain.xhtml";
+		  		return NAV_TO_MAIN;
 		  		
 		}  	
 	
@@ -334,5 +335,13 @@ public class EducationBackingBean extends
 		}
 	
 	}	
+	public void preLoadEducationFiled(){
+		System.out.println("preLoadgroupSearch ....");
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_MAIN);
+	}
+	
 	}
 	

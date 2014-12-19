@@ -6,10 +6,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -28,6 +24,9 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.salutation.SalutationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 /**
  * @author DK
  * 
@@ -36,6 +35,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class SalutationBackingBean extends
 		BaseBackingBean<SalutationManagedBean> { 
+	
+	private String NAV_TO_MAIN =  "salutationMain";
 	
 	private static final Logger log = EpLogger
 			.getLogger(SalutationManagedBean.class);	
@@ -60,8 +61,8 @@ public class SalutationBackingBean extends
 	 */		
 	public String redirectSalSearch() {
 		debugLogger("redirectSalSearch");
-
-		return "/xhtml/pm/salutation/salutationMain.xhtml";
+		this.getManagedBean().setLazy(true);
+		return NAV_TO_MAIN;
 
 	}	
 	
@@ -171,7 +172,7 @@ public class SalutationBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public SalutationPagingDataModel() {
-			super("salutationSR",false);
+			super("salutationSR",getManagedBean().isLazy());
 		}
 
 		@Override
@@ -248,8 +249,16 @@ public class SalutationBackingBean extends
 								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			}
 		
-		  return "/xhtml/pm/salutation/salutationMain.xhtml";
+		  return NAV_TO_MAIN;
 	 }
+	 
+	 public void preLoadSalutation(){
+			System.out.println("preLoadgroupSearch ....");
+			renewSesionObject();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_MAIN);
+		}
 	 
 	 
 }

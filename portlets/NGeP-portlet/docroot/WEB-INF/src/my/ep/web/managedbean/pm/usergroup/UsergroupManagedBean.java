@@ -29,15 +29,18 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private List<PmUserGroupUser> userGroups;
 	private List<PmUser> users;
 	private List<PmUserGroupUser> selectedUsrGrps;
+	private List<PmUserGroup> pmUserGroupList;
 	private String role;
-	private UsergroupSearchBean usergroupSearchBean;
+	private UsergroupSearchBean usergroupSearchBean = new UsergroupSearchBean();
 
 	private String orgConditionField;
 	private PmOrgProfile orgProfile;
 
 	private String orgId;
-	
+
 	private Long orgProfileId;
+
+	private boolean isLazy = false;
 
 	public PmUserGroup getUserGroup() {
 		return userGroup;
@@ -165,6 +168,22 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setOrgProfileId(Long orgProfileId) {
 		this.orgProfileId = orgProfileId;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
+	public List<PmUserGroup> getPmUserGroupList() {
+		return pmUserGroupList;
+	}
+
+	public void setPmUserGroupList(List<PmUserGroup> pmUserGroupList) {
+		this.pmUserGroupList = pmUserGroupList;
 	}
 
 }

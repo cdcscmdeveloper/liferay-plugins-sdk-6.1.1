@@ -30,6 +30,8 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 
 	private PmCertBody certBody;
 
+	private boolean islazy = false;
+
 	/**
 	 * @return the certBodyList
 	 */
@@ -61,8 +63,8 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	}
 
 	public ProfCertifiedBodySearchBean getProfCertifiedBodySearchBean() {
-		if(profCertifiedBodySearchBean== null){
-			profCertifiedBodySearchBean= new ProfCertifiedBodySearchBean();
+		if (profCertifiedBodySearchBean == null) {
+			profCertifiedBodySearchBean = new ProfCertifiedBodySearchBean();
 		}
 		return profCertifiedBodySearchBean;
 	}
@@ -70,6 +72,14 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	public void setProfCertifiedBodySearchBean(
 			ProfCertifiedBodySearchBean profCertifiedBodySearchBean) {
 		this.profCertifiedBodySearchBean = profCertifiedBodySearchBean;
+	}
+
+	public boolean isIslazy() {
+		return islazy;
+	}
+
+	public void setIslazy(boolean islazy) {
+		this.islazy = islazy;
 	}
 
 }
