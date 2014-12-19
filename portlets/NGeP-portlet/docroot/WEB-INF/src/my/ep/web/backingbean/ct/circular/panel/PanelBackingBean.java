@@ -157,7 +157,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    	}  
 	    	if(getManagedBean().getUserMap().size()==0) {
 			   initializeApproverList();
-	       
+			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			   
 	    	} if(getManagedBean().getCircularDocType()==null) {
 			      getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		
