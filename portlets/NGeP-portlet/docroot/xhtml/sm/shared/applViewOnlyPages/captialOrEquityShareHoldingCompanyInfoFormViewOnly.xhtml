@@ -10,7 +10,7 @@
 		
 		<p:panel id="equiInfPan">
 			
-			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar"
+			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smEquityCompanies}"
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />

@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true">
 		<p:panel id="manuInfPan">
 
-			<p:dataTable var="manBean" widgetVar="smManuDtWidVar"
+			<p:dataTable var="manBean" widgetVar="smManuDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smManufacturingDtls}" 
 				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
 				<ac:paginator for="manDt" />
