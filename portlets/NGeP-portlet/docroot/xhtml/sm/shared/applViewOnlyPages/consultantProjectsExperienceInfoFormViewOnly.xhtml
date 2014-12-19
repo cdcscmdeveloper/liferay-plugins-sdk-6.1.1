@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
 		<p:panel id="consInfPan">
-			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar"
+			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyExperiences}"
 				rowKey="#{consBean}" rowIndexVar="index" id="consDt">
 				<ac:paginator for="consDt" />

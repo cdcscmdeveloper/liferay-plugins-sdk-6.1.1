@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.panHdr.certInfo']}" toggleable="true"
 		id="certPanHead">
 		<p:panel id="certInfPan">
-			<p:dataTable var="certBean" editable="true"
+			<p:dataTable var="certBean" editable="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				widgetVar="suppCertDtWidVar"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCerts}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
