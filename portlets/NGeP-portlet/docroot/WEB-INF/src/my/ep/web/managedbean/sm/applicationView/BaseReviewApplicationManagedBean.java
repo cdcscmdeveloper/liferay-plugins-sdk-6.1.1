@@ -103,6 +103,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String applicationNoParam;
 	private String supplierBusinessTypeVal;
 	private String selectedMachineryPurchaseMethod;
+	private String selectedShareholderIdentificationType;
 	private String supplierRemarks;
 	private String currentStatus;
 
@@ -825,6 +826,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
 		this.activeCategoryList = activeCategoryList;
+	}
+
+	public String getSelectedShareholderIdentificationType() {
+		return selectedShareholderIdentificationType;
+	}
+
+	public void setSelectedShareholderIdentificationType(
+			String selectedShareholderIdentificationType) {
+		this.selectedShareholderIdentificationType = selectedShareholderIdentificationType;
 	}
 
 }
