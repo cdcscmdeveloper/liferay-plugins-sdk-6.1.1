@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -335,17 +336,27 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void handlePublishClosingDate() {
 		ScQt scQt = this.getManagedBean().getQt();
-		Date clsDate = null;
-		if (!scQt.isBsvRequired()) {
-			clsDate = DateUtils.addDays(scQt.getPublishDate(),
-					scQt.getPublishPeriod());
-		} else {
-			clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
-					scQt.getPublishPeriod());
+		Long statusId = scQt.getCurrentWorkFlowStatus().getPmStatus()
+				.getStatusId();
+		if (statusId >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+			Date clsDate = null;
+			if (!scQt.isBsvRequired()) {
+				if (null != scQt.getPublishDate()) {
+					clsDate = DateUtils.addDays(scQt.getPublishDate(),
+							scQt.getPublishPeriod());
+				}
+			} else {
+				if (null != scQt.getLatestBsvDate()) {
+					clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
+							scQt.getPublishPeriod());
+				}
+			}
+			if (null != clsDate) {
+				scQt.setClosingDate(clsDate);
+				getManagedBean().setProposalValidityUntil(
+						DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
+			}
 		}
-		scQt.setClosingDate(clsDate);
-		getManagedBean().setProposalValidityUntil(
-				DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
 
 	}
 
