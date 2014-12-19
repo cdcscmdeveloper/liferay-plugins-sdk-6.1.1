@@ -266,9 +266,12 @@ public class UnitOfMeasurementBackingBean extends
 			throw new EpException("UOM Name is Mandatory");
 		}
 		
-		uniqueUOMCode(uom.getUomCode());
+//		if(uom.isBrandNew()){
+			uniqueUOMCode(uom.getUomCode(), uom.getUomId());
+//		}
+		
 	}	
-	private void uniqueUOMCode(String uomCode){
+	private void uniqueUOMCode(String uomCode, Long uomId){
 
 		ISearchBean<PmUom> searchBean =  new SearchBean<PmUom>();
 		searchBean.getDataFilterBeans().add(
@@ -276,6 +279,13 @@ public class UnitOfMeasurementBackingBean extends
 						"uomCode",
 						SearchOperator.OPERATOR_LIKE.value(),
 						uomCode, true));
+		if(uomId!=null){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"uomId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							uomId));
+		}
 		
 		
 		UomReqDTO reqDTO = new UomReqDTO();
