@@ -277,9 +277,15 @@ public class UnitOfMeasurementBackingBean extends
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean(
 						"uomCode",
-						SearchOperator.OPERATOR_LIKE.value(),
+						SearchOperator.OPERATOR_EQUALS.value(),
 						uomCode, true));
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						1));
 		if(uomId!=null){
+			System.out.println("uomId: " +uomId);
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"uomId",
