@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
 		<p:panel id="machInfPan">
-			<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
+			<p:dataTable var="macBean" widgetVar="smMachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 				<ac:paginator for="macDt" />
