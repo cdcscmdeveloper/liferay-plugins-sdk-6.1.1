@@ -42,6 +42,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -62,6 +63,7 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -461,6 +463,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					   bond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 					   bond.setExpDate(getExactDate());
 				   }
+			}
+			
+			if(getManagedBean().getCtContract().getLatestContractVer() != null && getManagedBean().getCtContract().getLatestContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)) {
+				    IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+					ContractAmendmentResDTO resAmendDto = amendSO.getAmendmentByLastestContractVer(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+				    getManagedBean().setCtAmendment(resAmendDto.getAmendment());
 			}
 			
 			// Get performance bond rule amount
@@ -900,7 +908,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
 					}
 				}
-			 
+				double bondAmendAmount = 0.0;
+				if(getManagedBean().getCtAmendment() != null && getManagedBean().getCtAmendment().getAmendmentLoa() != null
+						&& getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()) {
+						bondAmendAmount = bondAmendAmount+ getManagedBean().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
+					}
+				
 				if(contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
 					double bondAmount = 0.0;
 					for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
@@ -935,7 +948,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 					} else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
+						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue() +bondAmendAmount);
 						if( retval >0 ){
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 							throw new EpException(MessageConst.ERROR_750015);
@@ -1747,7 +1760,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	
 		CtPerformanceBond newBond = new CtPerformanceBond();
 		newBond.setFinancialOrg(new PmFinancialOrg());
-		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		if(getManagedBean().getCtAmendment() != null && getManagedBean().getCtAmendment().getAmendmentLoa() != null
+				  && getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()){
+			newBond.setEffDate(new Date());  
+			newBond.setChckPerformaceBond(true);
+		} else {
+			newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		}
 	    Calendar cal = Calendar.getInstance();
         cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
         cal.add(Calendar.YEAR, 1); 
