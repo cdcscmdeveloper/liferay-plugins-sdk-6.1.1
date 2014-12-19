@@ -64,6 +64,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
         this.getManagedBean().setProfCertifiedBodySearchBean(new ProfCertifiedBodySearchBean());
         this.getManagedBean().getProfCertifiedBodySearchBean().setBodyCode(null);
         this.getManagedBean().getProfCertifiedBodySearchBean().setStatus(null);
+        this.getManagedBean().setIslazy(false);
         profCertBodyModel = new CertBodyPagingDataModel();
 	}
 
@@ -72,6 +73,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * 
 	 */
 	public String redirectProfSearch() {
+		this.getManagedBean().setIslazy(true);
 		debugLogger("redirectProfSearch");
 
 		return NAV_TO_MAIN;
@@ -144,7 +146,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		private static final long serialVersionUID = 1L;
 
 		public CertBodyPagingDataModel() {
-			super("searchProfCertResult",false);
+			super("searchProfCertResult",getManagedBean().isIslazy());
 		}
 
 		@Override
@@ -297,7 +299,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	}
 	
 	public void preLoadgroupSearch(){
-		this.reset();
+		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);

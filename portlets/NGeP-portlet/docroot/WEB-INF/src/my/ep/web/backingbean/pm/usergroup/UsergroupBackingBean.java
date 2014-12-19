@@ -11,7 +11,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.constant.ModuleCodeConst;
@@ -53,14 +52,17 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	
 	
 	public UsergroupBackingBean() {
+		System.out.println("inside constructor");
 	}
 	
 	/**
 	 *  reset search group detail
 	 */
 	public void reset() {
+		System.out.println("inside reset");
 		 this.getManagedBean().setUsergroupSearchBean(new UsergroupSearchBean());
 		 this.getManagedBean().setStatus(null);
+		 this.getManagedBean().setLazy(false);
 		 userGroupList = new UserGroupProfilePagingDataModel(); 
 	}
 
@@ -91,21 +93,22 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		private static final long serialVersionUID = 1L;
 
 		public UserGroupProfilePagingDataModel() {
-			super("searchGroupProfile",false);
+			super("searchGroupProfile",getManagedBean().isLazy());
 		}
 
 		@Override
 		protected ISearchResultBean<PmUserGroup> pageChangeListener(
 				ISearchBean<PmUserGroup> searchBean) {
 			populateSearchBean(searchBean);
-		
 			UserGroupReqDTO reqDTO = new UserGroupReqDTO();
 			reqDTO.setUserGroupSearchBean(searchBean);
 			IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserGroupSO.class);
-			ISearchResultBean<PmUserGroup> iSearchResultBean = groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
+			UserGroupResDTO resDTO = groupSO.retrieveUserGroups(reqDTO);
+			ISearchResultBean<PmUserGroup> iSearchResultBean = resDTO.getUserGroupResultBean();
 			return iSearchResultBean;
+			
 		}
 
 		/**
@@ -114,10 +117,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		 */
 		private void populateSearchBean(ISearchBean<PmUserGroup> searchBean) {
 			
-			if(null==searchBean ){
-				searchBean = new SearchBean<PmUserGroup>();
-			}
-
 			if (getManagedBean().getUserName() != null
 					&& !"".equalsIgnoreCase(getManagedBean().getUserName())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
@@ -222,7 +221,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 *  reload back to user group search page
 	 */
 	public String backToMainPages() {
-		reset();
+		this.getManagedBean().setLazy(true);
 		this.getManagedBean().setOrgProfileId(null);
 		debugLogger("backToMainPages");
 		return NAV_TO_MAIN;
@@ -352,7 +351,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
 		
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers );
-		// check whether it is update or save method
 		if(userGroup.isBrandNew()){
 		findDuplicateGroup(userGroup);}
 		
@@ -384,29 +382,26 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	}
 	
 	private void findDuplicateGroup(PmUserGroup userGroup){
+		System.out.println("inside findDuplicateGroup");
 		
-		ISearchBean<PmUserGroup> searchBean = null; 
-			UserGroupReqDTO reqDTO = new UserGroupReqDTO();
-			reqDTO.setUserGroupSearchBean(searchBean);
-			IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserGroupSO.class);
-			ISearchResultBean<PmUserGroup> iSearchResultBean = groupSO.retrieveUserGroups(reqDTO).getUserGroupResultBean();
-			List<PmUserGroup> pmUserGroups = iSearchResultBean.getResultList();
-			for(PmUserGroup pmUserGroup:pmUserGroups){
-				if(pmUserGroup.getGroupCode().equalsIgnoreCase(userGroup.getGroupCode())&&(pmUserGroup.getPmOrgProfile().getOrgProfileId()==(userGroup.getPmOrgProfile().getOrgProfileId()))){
+		UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+		reqDTO.setUserGroup(userGroup);
+		IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserGroupSO.class);
+		boolean response = groupSO.checkDuplicateGroup(reqDTO);
+		if(response){
 					throw new EpException("Duplicate group name please use another.");
-				}
-			}
-			System.out.println("findDuplicateGroup :"+pmUserGroups.size());
-
+		       }
      }
-	
+
 	public void preLoadgroupSearch(){
-		this.reset();
+		System.out.println("preLoadgroupSearch ....");
+		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
+	
 }
 

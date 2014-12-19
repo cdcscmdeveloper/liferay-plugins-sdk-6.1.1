@@ -18,15 +18,17 @@ public class SalutationManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private PmSalutation pmSalutation;
-	
+
 	private String salutationCodes;
-	
+
 	private String salutationNames;
-	
-	private Long status;	
-	
+
+	private Long status;
+
+	private boolean isLazy;
+
 	/**
 	 * @return the salutationCodes
 	 */
@@ -35,7 +37,8 @@ public class SalutationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param salutationCodes the salutationCodes to set
+	 * @param salutationCodes
+	 *            the salutationCodes to set
 	 */
 	public void setSalutationCodes(String salutationCodes) {
 		this.salutationCodes = salutationCodes;
@@ -49,7 +52,8 @@ public class SalutationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param salutationNames the salutationNames to set
+	 * @param salutationNames
+	 *            the salutationNames to set
 	 */
 	public void setSalutationNames(String salutationNames) {
 		this.salutationNames = salutationNames;
@@ -63,7 +67,8 @@ public class SalutationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmSalutation the pmSalutation to set
+	 * @param pmSalutation
+	 *            the pmSalutation to set
 	 */
 	public void setPmSalutation(PmSalutation pmSalutation) {
 		this.pmSalutation = pmSalutation;
@@ -77,12 +82,19 @@ public class SalutationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
 	}
-	
-		
-			
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
 }

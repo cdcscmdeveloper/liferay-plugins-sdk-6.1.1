@@ -22,27 +22,29 @@ public class EducationManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private PmEduField pmEduField;
-	
+
 	private List<PmEduField> eduField;
-	
+
 	private List<PmEduFieldRestr> pmEduFieldRestr;
-	
+
 	private String fieldCodes;
-	
+
 	private String fieldNames;
-	
+
 	private Long status;
-	
+
 	private PmEduFieldRestr eduFieldRetr;
-	
+
 	private List<PmEduFieldRestr> eduRestrList;
-	
-	private List <PmCategoryL3> eduRestrSelectList;
-	
+
+	private List<PmCategoryL3> eduRestrSelectList;
+
 	private List<PmEduFieldRestr> eduRestrDeleteList;
-	
+
+	private boolean isLazy = false;
+
 	/**
 	 * @return the pmEduField
 	 */
@@ -51,21 +53,23 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmEduField the pmEduField to set
+	 * @param pmEduField
+	 *            the pmEduField to set
 	 */
 	public void setPmEduField(PmEduField pmEduField) {
 		this.pmEduField = pmEduField;
 	}
-		
+
 	/**
 	 * @return the eduField
-	 */	
+	 */
 	public List<PmEduField> getEduField() {
 		return eduField;
 	}
-	
+
 	/**
-	 * @param eduField the eduField to set
+	 * @param eduField
+	 *            the eduField to set
 	 */
 	public void setEduField(List<PmEduField> eduField) {
 		this.eduField = eduField;
@@ -77,9 +81,10 @@ public class EducationManagedBean extends BaseManagedBean {
 	public List<PmEduFieldRestr> getPmEduFieldRestr() {
 		return pmEduFieldRestr;
 	}
-	
+
 	/**
-	 * @param pmEduFieldRestr the pmEduFieldRestr to set
+	 * @param pmEduFieldRestr
+	 *            the pmEduFieldRestr to set
 	 */
 	public void setPmEduFieldRestr(List<PmEduFieldRestr> pmEduFieldRestr) {
 		this.pmEduFieldRestr = pmEduFieldRestr;
@@ -93,7 +98,8 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmEduField the pmEduField to set
+	 * @param pmEduField
+	 *            the pmEduField to set
 	 */
 	public void setFieldCodes(String fieldCodes) {
 		this.fieldCodes = fieldCodes;
@@ -107,12 +113,13 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param fieldName the fieldName to set
+	 * @param fieldName
+	 *            the fieldName to set
 	 */
 	public void setFieldNames(String fieldNames) {
 		this.fieldNames = fieldNames;
 	}
-	
+
 	public PmEduFieldRestr getEduFieldRetr() {
 		return eduFieldRetr;
 	}
@@ -129,7 +136,8 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
@@ -158,6 +166,13 @@ public class EducationManagedBean extends BaseManagedBean {
 	public void setEduRestrDeleteList(List<PmEduFieldRestr> eduRestrDeleteList) {
 		this.eduRestrDeleteList = eduRestrDeleteList;
 	}
-	
-	
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
 }
