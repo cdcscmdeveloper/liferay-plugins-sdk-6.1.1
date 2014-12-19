@@ -231,7 +231,7 @@
 						value="#{supplierBackingBean.managedBean.factoring.authRefNo}"
 						maxlength="50" style="width:200px;"
 						label="#{lbl['lbl.ct.factoring.agreement.ref']}" id="authRefNo"
-						required="true" 
+						required="true" process="@this"
 						disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
 					<p:message for="authRefNo" display="icon" />
 				</h:panelGrid>
@@ -383,17 +383,15 @@
 			toggleable="true" toggleSpeed="500"
 			rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
 			<table style="width: 100%">
-				<tr>
+				<tr rowspan="2">
 					<h:panelGroup rendered="#{!supplierBackingBean.approverRole}">
-					<td style="width: 18%; vertical-align: top; text-align: right">
+					<td style="width: 10%; vertical-align: top; text-align: right">
 						<p:selectBooleanCheckbox
 							id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
 					</td>
 					<td>
-						<h:panelGrid columns="2">
-							<p:outputLabel value="#{lbl['lbl.ct.agree.factoring']}"> #{supplierBackingBean.getFactoringCompany()}</p:outputLabel>
-							<p:message for="checkBox" display="icon" />
-						</h:panelGrid>
+							<h:outputText value="#{lbl['lbl.ct.agree.factoring']}" />
+							<span> #{supplierBackingBean.getFactoringCompany()}</span>
 					</td>
 					</h:panelGroup>
 				</tr>

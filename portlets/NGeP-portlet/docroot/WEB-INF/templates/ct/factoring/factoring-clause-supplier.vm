@@ -5,7 +5,7 @@
          .footer {
          display: block; text-align: center;
          position: running(footer);
-         }		 
+         }
       </style>
    </head>
    <body>
@@ -76,7 +76,7 @@
       <div>.......................</div>
       <div>Nama Pembekal<span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierOfficerName</div>
       <div>Nama Syarikat<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierName</div>
-      <div style="height:700px"><br/></div>
+      <div style="height:750px"/>
       <hr>
 	  <div style="text-align: center; font-style: italic;">Ini adalah dokumen cetakan komputer. Tiada tandatangan diperlukan</div>
    </body>
