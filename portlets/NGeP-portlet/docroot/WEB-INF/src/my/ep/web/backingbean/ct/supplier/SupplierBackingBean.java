@@ -766,7 +766,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			   FinancialOrgResDTO resDTO = financialOrgSO.retriveFinAccDtlByBranchId(reqDTO);
 			   getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
 			   getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
-			 //  getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
+			   getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
 		   }
 	   }catch(Exception ex){
 		   ex.printStackTrace();
@@ -942,9 +942,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	public String getFactoringCompany() {
 		if(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
-			return getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
+			return " " + getManagedBean().getFactoringCompMap().get(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 		} else {
-			return "Factoring Company Name";
+			return " Factoring Company Name";
 		}
 	}
 	
