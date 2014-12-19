@@ -11,6 +11,10 @@
 		</p:blockUI>
 		
 	<div class="ppRightBtn">
+	<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" rendered="#{lOADetailBackingBean.managedBean.editFlag}"
+			icon="ui-icon-back" style="float:left;"
+			action="#{lOADetailBackingBean.backToPervious}" />
+	
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
 			action="#{lOADetailBackingBean.saveAction}" rendered="#{isEditableStatus}"
 			process="@form" update="@form" 
