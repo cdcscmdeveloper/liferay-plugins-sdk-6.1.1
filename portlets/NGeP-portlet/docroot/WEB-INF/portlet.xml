@@ -5014,7 +5014,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/salutation/salutationMain.xhtml</value>
+			<value>/xhtml/pm/salutation/preRenderSalutation.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -5139,7 +5139,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/educationfield/educationFieldMain.xhtml</value>
+			<value>/xhtml/pm/educationfield/preRenderEducationField.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
