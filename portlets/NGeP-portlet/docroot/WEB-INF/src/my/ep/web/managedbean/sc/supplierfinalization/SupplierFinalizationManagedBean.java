@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -129,6 +130,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String pinNo;
 	
 	private Object payLoad;
+	
+	private Date currentDate;
 
 	/**
 	 * @return the activeIndex
@@ -980,4 +983,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.payLoad = payLoad;
 	}
 
+	/**
+	 * @return the currentDate
+	 */
+	public Date getCurrentDate() {
+		currentDate = new Date();
+		return currentDate;
+	}
+
+	
 }
