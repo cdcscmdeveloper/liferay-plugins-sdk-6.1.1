@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true"
 		id="assocPanel">
 		<p:panel id="assocInfPan">
-			<p:dataTable var="assocBean" widgetVar="assocDtWidVar"
+			<p:dataTable var="assocBean" widgetVar="assocDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smAssociateCompanies}"
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
 				<ac:paginator for="asoc" />
