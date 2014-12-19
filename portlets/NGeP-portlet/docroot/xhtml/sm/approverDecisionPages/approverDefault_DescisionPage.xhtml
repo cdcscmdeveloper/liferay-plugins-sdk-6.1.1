@@ -40,14 +40,18 @@
 						process="@this"
 						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
-					<c:if
-						test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
-						<div>
-							<h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
-								escape="false" />
-						</div>
-					</c:if>
-				</div> <p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
+					
+				</div> 
+				
+				<c:if
+					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
+					<div>
+						<h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}" style="float :left;"
+							escape="false" />
+					</div>
+				</c:if>
+				
+				<p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
 					<table>
 						<!-- <tr>
 				<td colspan="3"><h4
