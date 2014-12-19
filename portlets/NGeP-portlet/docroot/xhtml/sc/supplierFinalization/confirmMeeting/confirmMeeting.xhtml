@@ -106,7 +106,7 @@
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
 								selection="#{suppFinalMeetingBackingBean.managedBean.selectedCommitteeMembersList}"
-								rowKey="#{committeeMember}" update="@this">
+								rowKey="#{committeeMember}" update="@this" selectionMode="multiple">
 								<ac:paginator for="memberListTbl" />
 					
 								<p:column selectionMode="multiple" style="width:2%" 
