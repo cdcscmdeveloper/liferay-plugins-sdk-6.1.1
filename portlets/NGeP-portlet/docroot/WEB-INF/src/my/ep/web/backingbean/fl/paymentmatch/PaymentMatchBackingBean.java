@@ -623,12 +623,28 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
 		getManagedBean().getPaymentAdvice().setFeeAmt(new BigDecimal(0));
 		getManagedBean().setDeductionAmt(new BigDecimal(0));
+		
+		BigDecimal serviceFee = new BigDecimal(0);
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
+			serviceFee = new BigDecimal(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getServiceFee());
+		}else{
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);;
+		}		
+		
+		if(getManagedBean().getPaymentAdvice().getFlRequest().getProcurementType()!=null && getManagedBean().getPaymentAdvice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			serviceFee = new BigDecimal(0);
+		}
+		
 		reqDTO.setOrgProfileId(getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId());
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 			reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 		}
 		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
-		if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
+		if(resDTO.getFeeExemptionResult()!=null && resDTO.getFeeExemptionResult().booleanValue()) {
+			serviceFee = new BigDecimal(0);
+		}
+		
+		if(serviceFee.doubleValue()>0){
 			for (FlPaymentItem data : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
 				//check item whther is exempted for this supplier.
 
@@ -647,12 +663,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		}
 
-		BigDecimal serviceFee = new BigDecimal(0);
-		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
-			serviceFee = new BigDecimal(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getServiceFee());
-		}else{
-			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);;
-		}		
 		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
 		
 		BigDecimal nonExemptedItemAmt = new BigDecimal(0);
