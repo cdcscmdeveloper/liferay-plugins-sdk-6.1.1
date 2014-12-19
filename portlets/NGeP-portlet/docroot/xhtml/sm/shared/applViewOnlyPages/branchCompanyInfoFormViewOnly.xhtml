@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.branch.panHdr']} " toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true"
 		id="sample" >
 		<p:panel id="brnInfPan">
-			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
+			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
 				rowKey="#{branchBean}" rowIndexVar="index">
 				<ac:paginator for="dt" />

@@ -59,7 +59,7 @@
 			<p:panel id="sfieldset"
 				header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']} 
 			#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
-				<p:dataTable id="signatory" var="auth"
+				<p:dataTable id="signatory" var="auth" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{viewSmApplBackingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
 					rowKey="#{auth}" rowIndexVar="index">
 					<ac:paginator for="signatory" />
