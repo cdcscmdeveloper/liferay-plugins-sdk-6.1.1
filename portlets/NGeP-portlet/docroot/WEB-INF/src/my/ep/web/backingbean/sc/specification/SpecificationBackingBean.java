@@ -4486,12 +4486,20 @@ public class SpecificationBackingBean extends
 				}
 			} else if (QTConstants.RESTRICTED_TYPE.equalsIgnoreCase(scQt
 					.getQtType())) {
-
+				scQt.setZonal(false);
 				scQt.setZoneLocationLevel(null);
 				if (null != scQt.getScQtSupplierCriteria()) {
 					scQt.getScQtSupplierCriteria().setLocationLevel(null);
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+					if (null != scQt.getScQtSupplierCriteria()
+							.getQtZoneCriterias()) {
+						qtSupplierCriteria.getQtZoneCriterias()
+								.setTplSpecZoneDtls(null);
+						qtSupplierCriteria.setQtZoneCriterias(null);
+					}
 
 				}
+
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getSuppCriteriaopenList();
 				if (null != openList && !openList.isEmpty()) {
@@ -11303,7 +11311,7 @@ public class SpecificationBackingBean extends
 	}
 
 	private void setTechnicalCheckList(ScQtCheckList localCheckList) {
-		//this.getManagedBean().setCheckListTitle("");
+		// this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setScQtChecklist(localCheckList);
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -11506,13 +11514,12 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList();
 			List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
 			if (null != finanicalCheckList && !finanicalCheckList.isEmpty()) {
-					if (null != this.getManagedBean().getCheckListTitle()
-							&& !"".equals(this.getManagedBean()
-									.getCheckListTitle())) {
-						for (int i=0; i<finanicalCheckList.size();i++) {
-						ScQtCheckList localCheckList=	finanicalCheckList.get(i);
-						if (this.getManagedBean()
-								.getCheckListTitle()
+				if (null != this.getManagedBean().getCheckListTitle()
+						&& !"".equals(this.getManagedBean().getCheckListTitle())) {
+					for (int i = 0; i < finanicalCheckList.size(); i++) {
+						ScQtCheckList localCheckList = finanicalCheckList
+								.get(i);
+						if (this.getManagedBean().getCheckListTitle()
 								.equalsIgnoreCase(localCheckList.getTitle())) {
 							localCheckList.setDeleted(true);
 							toBeRemoveList.add(localCheckList);
