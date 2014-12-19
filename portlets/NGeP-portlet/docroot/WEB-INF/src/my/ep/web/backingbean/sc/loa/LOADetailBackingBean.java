@@ -210,6 +210,7 @@ public class LOADetailBackingBean extends
 			}
 
 			populateLOADetails(resDTO);
+			getManagedBean().setEditFlag(true);
 
 		} finally {
 			qtAwardSO = null;
@@ -921,6 +922,7 @@ public class LOADetailBackingBean extends
 			ParameterResDTO resDTO = parameterSO
 					.retrieveParameterByTypeAndCode(reqDTO);
 			scLoaReport.setDefinationType(resDTO.getPmParameter());
+			scLoaReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); //AQ
 		} finally {
 			parameterSO = null;
 		}
@@ -946,6 +948,7 @@ public class LOADetailBackingBean extends
 				}
 
 				scLoaAttachment.setDocNo(scLoa.getLoaNo());
+				scLoaAttachment.setScLoa(scLoa);
 				scAttachment = scLoaAttachment;
 
 			} else {
@@ -963,6 +966,7 @@ public class LOADetailBackingBean extends
 
 				scLoaReportAttachment.setDocNo(selectedScLoaReport.getScLoa()
 						.getLoaNo());
+				scLoaReportAttachment.setScLoaReport(selectedScLoaReport);
 				scAttachment = scLoaReportAttachment;
 			}
 
@@ -3141,5 +3145,17 @@ public class LOADetailBackingBean extends
 
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
-	}	
+	}
+	
+	/**
+	 * Page navigation to loi loa list
+	 */
+	public void backToPervious() {
+		log.info("backToPervious");
+		getManagedBean().setEditFlag(false);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+
+	}
 }
