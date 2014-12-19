@@ -498,6 +498,7 @@ public class SpecificationBackingBean extends
 				ScQt techSpec = prepareSpecReq().getScQt();
 
 				specReqDTO.setScQt(techSpec);
+				specSO.validateCheckList(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
@@ -520,9 +521,9 @@ public class SpecificationBackingBean extends
 				}
 				break;
 			case 3:
-				ScQt finSpec = prepareSpecReq().getScQt();
-
+				ScQt finSpec = prepareSpecReq().getScQt();				
 				specReqDTO.setScQt(finSpec);
+				specSO.validateCheckList(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
@@ -9847,12 +9848,12 @@ public class SpecificationBackingBean extends
 			case 2:
 
 				ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
-
+				specReqDTO.setScQt(scQtTechChecklist);
+				specSO.validateCheckList(specReqDTO);
 				if (QTConstants.EVALUATION_ONE_TIER
 						.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
 						&& !scQtTechChecklist.isTechEvaluationReq()) {
-
-					specReqDTO.setScQt(scQtTechChecklist);
+				
 					specReqDTO.setTobeRemoveList(getToBeRemoveList());
 					resDTO = specSO.saveQTDtl(specReqDTO);
 
@@ -9870,7 +9871,7 @@ public class SpecificationBackingBean extends
 										.getEvaluationType()) && scQtTechChecklist
 								.isTechEvaluationReq())) {
 
-					specReqDTO.setScQt(scQtTechChecklist);
+					//specReqDTO.setScQt(scQtTechChecklist);
 					specReqDTO.setTobeRemoveList(getToBeRemoveList());
 					// specSO.validateCheckList(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -9884,8 +9885,8 @@ public class SpecificationBackingBean extends
 				break;
 			case 3:
 				ScQt finChecklist = constructSpecCommitteDtls().getScQt();
-
 				specReqDTO.setScQt(finChecklist);
+				specSO.validateCheckList(specReqDTO);
 				specReqDTO.setTobeRemoveList(getToBeRemoveList());
 
 				resDTO = specSO.saveQTDtl(specReqDTO);

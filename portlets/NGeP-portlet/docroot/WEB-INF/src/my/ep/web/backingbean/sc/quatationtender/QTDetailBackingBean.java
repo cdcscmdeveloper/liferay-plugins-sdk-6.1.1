@@ -2923,7 +2923,8 @@ public class QTDetailBackingBean extends
 			} else {
 				committe = previousTabBean.getScQtCommittee().getScCommittee();
 			}
-			if (committe.isApprovalReq()) {
+			//Commented validation calling for Bug #2802
+			/*if (committe.isApprovalReq()) {
 
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2933,7 +2934,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setScQt(this.getManagedBean().getQt());
 				reqDTO.setUser(new FacesScopes().getUserSessionBean());
 				committeSO.validateCommitteDtls(reqDTO);
-			}
+			}*/
 		}
 		this.getManagedBean().setSelectedTabIndex(selectedZoneTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
