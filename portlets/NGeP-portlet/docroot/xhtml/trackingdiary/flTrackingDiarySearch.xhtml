@@ -1,23 +1,21 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:define name="resourceSection">
+	</ui:define>
 
-	<h:panelGroup id="supplierItemViewID">
-	<script>
-	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
-	</script>
-
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>
+		</p:blockUI>		
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<style>
 				.column-align-center {
 				text-align: center !important;
@@ -28,39 +26,39 @@
  					content: "*";
 				}
 		</style>
-		<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="searchPanel">
-			<table>	
-				<tr>
-					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
-							value="#{flDocumentBackingBean.managedBean.searchOrderType}"
-							style="width: 314px;">
-							<f:selectItems
-								value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-							<p:ajax event="change" update="searchPanel"
-								listener="#{flDocumentBackingBean.selectedOrderType}" />
-						</p:selectOneMenu></td>
-					<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
-					<td><p:inputText size="28" maxlength="17" 
-							value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
-				</tr>
-				<tr>
-					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
-					<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
-								value="#{flDocumentBackingBean.managedBean.searchDocType}">
-								<f:selectItems
-									value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
-								<p:ajax event="change"
-									update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
-									listener="#{flDocumentBackingBean.selectedDoctype}" />
-							</p:selectOneMenu></td>
-					<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
-					<td><p:inputText size="28"
-							value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
-				</tr>
-			
-			
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+			<table>
+			<tr>
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
+						style="width: 314px;">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+						<p:ajax event="change" update="searchPanel"
+							listener="#{flDocumentBackingBean.selectedOrderType}" />
+					</p:selectOneMenu></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+				<td><p:inputText size="28" maxlength="17" 
+						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+			</tr>
+			<tr>
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
+						<p:ajax event="change"
+							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
+							listener="#{flDocumentBackingBean.selectedDoctype}" />
+					</p:selectOneMenu></td>
+			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
+						</tr>
+			</table>
 			<h:panelGroup id="docStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
@@ -85,94 +83,28 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
 				</h:panelGrid>
 			</h:panelGroup>
-			<h:panelGroup id="docInvStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGroup id="docTypeSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
-					<p:calendar mode="popup" showOn="button"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
-					</p:calendar>
-					<p:spacer width="5" />
-					<p:calendar mode="popup" showOn="button"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
-					</p:calendar>
-				</h:panelGrid>
-			</h:panelGroup>
-		</table>
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{codificationBackingBean.unspscSearch}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					icon="ui-icon-search" update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{codificationBackingBean.reset}" icon="ui-icon-reset"
+					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
 					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
-
-
-	<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
-
-			<p:dataTable id="resultPanel" lazy="true"
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<p:dataTable id="unspscTableID" lazy="true"
 				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
 				width="100%" rows="10">
 
-
-
-				<ac:paginator for="resultPanel"></ac:paginator>
+				<ac:paginator for="unspscTableID"></ac:paginator>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					Creation Date
 				</f:facet>
-							#{unspscObj.unspscCode}
+					#{unspscObj.unspscCode}
 
 				</p:column>
 
@@ -180,7 +112,7 @@
 					<f:facet name="header">
 					Document No.
 				</f:facet>
-					#{unspscObj.unspscCode}
+				#{unspscObj.unspscCode}
 
 				</p:column>
 				<p:column>
@@ -201,16 +133,12 @@
 				</f:facet>
 					<p:commandLink
 						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
-							<p:graphicImage library="ep/images/design" name="reset.png"
-								value="/resources/ep/images/design/reset.png" />
-					</p:commandLink>
+							<p:graphicImage library="ep/images/design" name="document.png"
+								value="/resources/ep/images/design/document.png" />
+						</p:commandLink>
+
 			</p:column>
 			</p:dataTable>
-
-
 		</p:panel>
-
-
-	</h:panelGroup>		
-
+	</ui:define>
 </ui:composition>
