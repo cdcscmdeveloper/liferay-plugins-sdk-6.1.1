@@ -2543,6 +2543,45 @@ public class SmApplicationUtil {
 		return s;
 	}
 
+	public static void setNavigationForApplTnCPage(String applType) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String s = "";
+
+		switch (applType) {
+		case "N":
+			s = SupplierManagementConst.PROCEED_MOF_REG_TNC_PAGE;
+			break;
+		case "A":
+			s = SupplierManagementConst.PROCEED_ADDTNLCAT_APPLN_TNC_PAGE;
+			// PROCEED_ADDTNLCAT_MOF_APPLN;
+			break;
+		case "B":
+			s = SupplierManagementConst.PROCEED_BUMI_APPLN_TNC_PAGE;
+			// PROCEED_BUMI_APPLN;
+			break;
+		case "U":
+			s = SupplierManagementConst.PROCEED_UPDATE_APPLN_TNC_PAGE;
+			// PROCEED_UPDATE_MOF_APPLN;
+			break;
+		case "R":
+			s = SupplierManagementConst.PROCEED_RENEW_APPLN_TNC_PAGE;
+			// PROCEED_RENEW_MOF_APPLN;
+			break;
+		case "C":
+			s = SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN_TNC_PAGE;
+			break;
+		case "DPA":
+			s = SupplierManagementConst.PROCEED_DELETE_PENDING_APPLN_TNC_PAGE;
+			break;
+		default:
+			log.debug("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
+					+ applType);
+			break;
+		}
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, s);
+	}
+
 	public static String setExceptionNavigationForAppl(String appType) {
 		String s = null;
 		switch (appType) {
