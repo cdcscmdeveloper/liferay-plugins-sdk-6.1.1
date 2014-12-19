@@ -149,6 +149,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			if(getManagedBean().getUserMap().size()==0) {
 				 initializeApproverList();
+				 getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    }
 	}
 	
