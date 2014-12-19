@@ -311,6 +311,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.CONTRACT_TYPE_CENTRAL));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(),null));
 			
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			if (userResDTO.getUserOrgList().size() > 0)
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ownerOrgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(), userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId()));
+			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));	
 			
