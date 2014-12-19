@@ -93,9 +93,10 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<ScQtProgressivePayment> progressivePaymentList;
 	private String bondAmountWord;
 	private Object payLoad;
-	
-	 private String action;
-	
+
+	private String action;
+	private boolean editFlag;
+
 	public LOADetailManagedBean() {
 	}
 
@@ -752,6 +753,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public boolean isEditFlag() {
+		return editFlag;
+	}
+
+	public void setEditFlag(boolean editFlag) {
+		this.editFlag = editFlag;
 	}
 
 }
