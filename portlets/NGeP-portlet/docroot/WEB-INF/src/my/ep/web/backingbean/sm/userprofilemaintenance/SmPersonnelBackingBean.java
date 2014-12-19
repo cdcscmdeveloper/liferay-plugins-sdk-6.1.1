@@ -150,37 +150,49 @@ public class SmPersonnelBackingBean extends
 		PersonnelResDTO resDTO = smPersonnelSO
 				.retrievePersonnelsBySuppIdAndApplId(reqDTO);
 
-		if (resDTO.getSmPersonnelList() != null
-				&& !resDTO.getSmPersonnelList().isEmpty()) {
-			List<SmPersonnel> authorizedPersonnelList = resDTO
-					.getSmPersonnelList();
-			for (SmPersonnel smPersonnelTemp : authorizedPersonnelList) {
-				if (smPersonnelTemp.getEpRole().equals(
-						RoleCode.BASIC_SUPPLIER_ADMIN.value())
-						|| smPersonnelTemp.getEpRole().equals(
-								RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-					adminPersonnel = smPersonnelTemp;
-				} else if (smPersonnelTemp.getEpRole().equals(
-						RoleCode.BASIC_SUPPLIER_USER.value())
-						|| smPersonnelTemp.getEpRole().equals(
-								RoleCode.MOF_SUPPLIER_USER.value())) {
-					isHasSupplierUser = true;
+		getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
+
+		String redirectPage = SmApplicationUtil.getApplicationErrorPage();
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		if (SmApplicationUtil.hasActiveTransactions(smSupplier)) {
+			setDisallowedDeactivateSuppAdminMsg(fc);
+		} else if (SmApplicationUtil.checkActiveSmApplForSupp(smSupplier)) {
+			setDisallowedDeactivateSuppAdminMsg(fc);
+		} else {
+			redirectPage = "adminReAssign.xhtml";
+			if (resDTO.getSmPersonnelList() != null
+					&& !resDTO.getSmPersonnelList().isEmpty()) {
+				List<SmPersonnel> authorizedPersonnelList = resDTO
+						.getSmPersonnelList();
+				for (SmPersonnel smPersonnelTemp : authorizedPersonnelList) {
+					if (smPersonnelTemp.getEpRole().equals(
+							RoleCode.BASIC_SUPPLIER_ADMIN.value())
+							|| smPersonnelTemp.getEpRole().equals(
+									RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+						adminPersonnel = smPersonnelTemp;
+					} else if (smPersonnelTemp.getEpRole().equals(
+							RoleCode.BASIC_SUPPLIER_USER.value())
+							|| smPersonnelTemp.getEpRole().equals(
+									RoleCode.MOF_SUPPLIER_USER.value())) {
+						isHasSupplierUser = true;
+					}
 				}
-			}
-			authorizedPersonnelList.remove(adminPersonnel);
-			getManagedBean().setSmPersonnelList(authorizedPersonnelList);
-			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
-			if (!isHasSupplierUser) {
+				authorizedPersonnelList.remove(adminPersonnel);
+				getManagedBean().setSmPersonnelList(authorizedPersonnelList);
+				getManagedBean().setUpdateSmPersonnel(adminPersonnel);
+				if (!isHasSupplierUser) {
+					constructNoSupplierUserToDeactivateMsg(smSupplier);
+				}
+			} else {
+				getManagedBean().setSmPersonnelList(
+						new ArrayList<SmPersonnel>());
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			}
-		} else {
-			getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
-			constructNoSupplierUserToDeactivateMsg(smSupplier);
 		}
 
-		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "adminReAssign.xhtml");
+				.handleNavigation(fc, null, redirectPage);
 
 	}
 
@@ -354,6 +366,7 @@ public class SmPersonnelBackingBean extends
 
 		getPersonnelInfoById(personnelId);
 		validateAccountStatus();
+		setDisabledActivateDeactivateRadioButton();
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(
 					getManagedBean().getBasicSmPersonnelMailingAddress()
@@ -1707,4 +1720,24 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	private void setDisallowedDeactivateSuppAdminMsg(FacesContext fc) {
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_721213,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+	}
+
+	private void setDisabledActivateDeactivateRadioButton() {
+		getManagedBean().setDisabledActivateAndDeactivate(false);
+		if (getManagedBean().getBasicSmPersonnel().getEpRole()
+				.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getManagedBean().getBasicSmPersonnel().getEpRole()
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getManagedBean().getBasicSmPersonnel().getPmUser() == null
+				|| getManagedBean().isUpgradeMofDraftAppl()) {
+			getManagedBean().setDisabledActivateAndDeactivate(true);
+		}
+	}
 }

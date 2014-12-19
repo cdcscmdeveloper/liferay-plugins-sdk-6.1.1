@@ -33,7 +33,7 @@ public class ViewSuppProfileBackingBean extends
 				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		String redirectToAppl = SmApplicationUtil.getReviewApplicationErrorPage();
+		String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
 
 		if (resDTO.getSmAppl() != null) {
 			String applNo = resDTO.getSmAppl().getApplNo();

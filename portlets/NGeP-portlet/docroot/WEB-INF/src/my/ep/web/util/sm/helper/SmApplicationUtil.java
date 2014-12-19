@@ -436,7 +436,7 @@ public class SmApplicationUtil {
 		return basePage;
 	}
 
-	public static String getReviewApplicationErrorPage() {
+	public static String getApplicationErrorPage() {
 		return "/xhtml/sm/userProfileMaintenance/outputMsg";
 	}
 

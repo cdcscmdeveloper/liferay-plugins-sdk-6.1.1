@@ -27,7 +27,7 @@ public class ViewPreRenderSmApplBackingBean {
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String redirectToAppl = SmApplicationUtil
-				.getReviewApplicationErrorPage();
+				.getApplicationErrorPage();
 
 		if (StringUtils.isNotBlank(applNo) && StringUtils.isNotBlank(applType)) {
 			redirectToAppl = applNo.substring(applNo.length() - 3,

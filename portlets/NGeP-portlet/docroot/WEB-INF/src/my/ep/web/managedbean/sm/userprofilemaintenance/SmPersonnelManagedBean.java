@@ -72,6 +72,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean fromUserMaintain;
 	private boolean afterSaving;
 	private boolean upgradeMofDraftAppl;
+	private boolean disabledActivateAndDeactivate;
 	private SmAppl currSmAppl;
 	private SmAppl basicSmAppl;
 	private String noSupplierUserMsg;
@@ -518,6 +519,15 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setBasicSmAppl(SmAppl basicSmAppl) {
 		this.basicSmAppl = basicSmAppl;
+	}
+
+	public boolean isDisabledActivateAndDeactivate() {
+		return disabledActivateAndDeactivate;
+	}
+
+	public void setDisabledActivateAndDeactivate(
+			boolean disabledActivateAndDeactivate) {
+		this.disabledActivateAndDeactivate = disabledActivateAndDeactivate;
 	}
 
 }
