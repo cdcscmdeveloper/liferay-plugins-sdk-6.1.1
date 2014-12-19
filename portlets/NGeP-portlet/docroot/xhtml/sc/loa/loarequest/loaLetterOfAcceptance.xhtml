@@ -22,7 +22,9 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoaReport.title}"
-					rendered="#{empty scLoaReport.pmDocument}" />
+					rendered="#{empty scLoaReport.pmDocument}" >
+					 <p:ajax event="keyup" />
+					</h:inputText>
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
 			</p:column>
