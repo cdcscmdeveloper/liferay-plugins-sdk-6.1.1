@@ -245,6 +245,7 @@ public class LOIDetailBackingBean extends
 				scLoi = awardSupplierResDTO.getScLoi();
 			}
 			editLOI(scLoi);
+			getManagedBean().setEditFlag(false);
 
 //			FacesContext fc = FacesContext.getCurrentInstance();
 //			fc.getApplication().getNavigationHandler()
@@ -988,7 +989,7 @@ public class LOIDetailBackingBean extends
 
 	public void editLOI(ScLoi scLoi) {
 		IQTAwardSO qtAwardSO = null;
-
+		 //getManagedBean().setScLoi(scLoi);
 		try {
 			renewSessionWithPreviousValues();
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2089,6 +2090,7 @@ public class LOIDetailBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
+		//ScLoi loi = getManagedBean().getScLoi();
 
 		this.renewSesionObject();
 
@@ -2097,6 +2099,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
+		//getManagedBean().setScLoi(loi);
 		if(awardDataType != null){
 			getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
 		}
