@@ -541,6 +541,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			PmUser pmUSer = new PmUser();
 			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
 			reqDTO.setCircularAdmin(pmUSer);
@@ -636,6 +637,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			PmUser pmUSer = new PmUser();
 			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
 			reqDTO.setCircularAdmin(pmUSer);

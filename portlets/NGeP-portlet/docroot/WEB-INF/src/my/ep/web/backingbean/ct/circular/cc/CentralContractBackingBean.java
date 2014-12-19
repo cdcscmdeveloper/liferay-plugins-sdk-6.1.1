@@ -559,6 +559,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			PmUser pmUSer = new PmUser();
 			pmUSer.setLoginId(this.getManagedBean().getCircularAdmin());
 			reqDTO.setCircularAdmin(pmUSer);
