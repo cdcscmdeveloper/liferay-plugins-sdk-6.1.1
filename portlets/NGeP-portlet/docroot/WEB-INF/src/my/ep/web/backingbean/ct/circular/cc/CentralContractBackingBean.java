@@ -927,7 +927,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		for(CtCircularItem circularItem : getManagedBean().getSelectedCircularContract().getCtCircularItems()) {
 			for(CtContractItem contractItem : getManagedBean().getSelectedCircularContract().getCtContract().getLatestContractVer().getCtContractItems()){
 				if (circularItem.getCtContractItem().getScRequestItem().getRequestNoteItemId().equals(contractItem.getScRequestItem().getRequestNoteItemId())) {
-					if(contractItem.isRecordStatus() || (!contractItem.isRecordStatus() && (currentDate.before(contractItem.getEffDate()) || currentDate.after(contractItem.getExpDate())))) {
+					if(contractItem.getRecordStatusFlg() == 1 || (contractItem.getRecordStatusFlg() == 0 && (currentDate.before(contractItem.getEffDate()) || currentDate.after(contractItem.getExpDate())))) {
 						activeItemList.add(circularItem);						
 					}
 					break;
