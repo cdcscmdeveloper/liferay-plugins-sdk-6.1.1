@@ -18,7 +18,7 @@
 			    <p:outputLabel value="#{lbl['lbl.ct.full.name']}" />
 		    </h:panelGrid>
 		    <h:panelGrid columns="2">
-			   <p:inputText id="fullName"  required="true" label="#{lbl['lbl.ct.full.name']}" style="width:170px;"
+			   <p:inputText id="fullName"  required="true" label="#{lbl['lbl.ct.full.name']}" style="width:200px;"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}" validator="#{webappBean.checkInputField}"  />
 			    <p:message for="fullName" display="icon"/>
 			</h:panelGrid>
@@ -28,7 +28,7 @@
 			    <p:outputLabel value="#{lbl['lbl.ct.ic.no']}" />
             </h:panelGrid>
             <h:panelGrid columns="2">
-			   <p:inputText id="icNo"  style="width:170px;" required="true" label="#{lbl['lbl.ct.ic.no']}"
+			   <p:inputText id="icNo"  style="width:200px;" required="true" label="#{lbl['lbl.ct.ic.no']}"
 			       value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}" />
 			   <p:message for="icNo"  display="icon"/>
 			</h:panelGrid>
@@ -38,7 +38,7 @@
 			    <p:outputLabel value="#{lbl['lbl.ct.designation']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-			    <p:inputText id="designation" style="width:170px;"  required="true"
+			    <p:inputText id="designation" style="width:200px;"  required="true"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"  label="#{lbl['lbl.ct.designation']}"/>
 			    <p:message for="designation" display="icon"/>
 			</h:panelGrid>
@@ -49,7 +49,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
 				   <h:panelGrid columns="2">
-				 	  <p:inputTextarea id="agencyAddress" rows="4" style="width:170px;" maxlength="200" required="true"
+				 	  <p:inputTextarea id="agencyAddress" rows="4" style="width:200px;" maxlength="200" required="true"
 				   		value="#{amendmentBackingBean.managedBean.scLoaWitness.address}" autoResize="false" />
 				   	  <p:message for="agencyAddress" display="icon"/>
 				   </h:panelGrid>
@@ -88,7 +88,7 @@
 			      <p:outputLabel value="#{lbl['lbl.ct.email']}" />
 			 </h:panelGrid>
 			 <h:panelGrid columns="5">
-			     <p:inputText  id="email" style="width:170px;" required="true"   label="#{lbl['lbl.ct.email']}"
+			     <p:inputText  id="email" style="width:200px;" required="true"   label="#{lbl['lbl.ct.email']}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}" validator="#{webappBean.checkEmail}"/>
 			     <p:spacer width="1"/>
 			     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.email']}" />
