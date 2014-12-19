@@ -352,7 +352,7 @@
 	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true"
 		id="equiShrHldrAcadPan">
 
-		<p:dataTable id="shrAqdt"
+		<p:dataTable id="shrAqdt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffAcademics}"
 			var="aq" widgetVar="suppPrsnAcadDtWidVar"
 			rowIndexVar="rowIndex" rowKey="#{aq}">
