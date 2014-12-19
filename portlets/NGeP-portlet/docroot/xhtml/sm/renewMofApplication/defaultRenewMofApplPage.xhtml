@@ -11,38 +11,8 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-
-		<p:messages id="renewMoFApplMsgs" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" />
-		<table style="width: 100%">
-			<tr>
-				<td style="padding-left: 4px;"><p:outputPanel>
-						<p>
-							<h:outputText value="#{lbl['lbl.sm.renewMof.descData']}"
-								escape="false" />
-						</p>
-					</p:outputPanel></td>
-			</tr>
-		</table>
-		<br />
-		<p:separator />
-		<table>
-			<tr>
-
-				<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
-						value="#{backingBean.managedBean.termsAccepted}">
-						<p:ajax event="change" update=":form:renCmdBtn" />
-					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
-			</tr>
-
-		</table>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="renCmdBtn"
-				action="#{backingBean.proceedToApplication('R')}"
-				update="renewMoFApplMsgs"
-				disabled="#{!backingBean.managedBean.termsAccepted}" />
-			<!-- <p:commandButton value="Cancel" /> -->
-		</div>
+		<f:event
+			listener="#{backingBean.renewSesionObjectByApplicationType('R')}"
+			type="preRenderView" />
 	</ui:define>
 </ui:composition>

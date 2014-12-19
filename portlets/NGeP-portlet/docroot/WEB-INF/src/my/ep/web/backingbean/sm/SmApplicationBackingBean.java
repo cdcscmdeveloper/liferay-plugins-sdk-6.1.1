@@ -162,6 +162,13 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public void renewSesionObjectByApplicationType(String applicationType) {
+		renewSesionObject();
+		log.info("*** renewSesionObjectByApplicationType *** "
+				+ applicationType);
+		SmApplicationUtil.setNavigationForApplTnCPage(applicationType);
+	}
+
 	public void prerenderResubmissionQuestionaire() {
 		log.info("**** Prerender Questions *************");
 
@@ -3279,7 +3286,7 @@ public class SmApplicationBackingBean extends
 				&& (shareHolderBean.isEquityOwner() || shareHolderBean
 						.isDirector())
 				&& getManagedBean().isDisAllowOwnerEdit()) {
-			 throw new EpException(MessageConst.ERROR_722573);
+			throw new EpException(MessageConst.ERROR_722573);
 		}
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
@@ -6693,7 +6700,8 @@ public class SmApplicationBackingBean extends
 		} else {
 			sb.append("emptyVal");
 		}
-		log.debug("*** Value from getMyIdentityStatusDescription output is ****** " + sb.toString());
+		log.debug("*** Value from getMyIdentityStatusDescription output is ****** "
+				+ sb.toString());
 		return SmCommonUtil.getMessage(sb.toString(), null);
 
 	}

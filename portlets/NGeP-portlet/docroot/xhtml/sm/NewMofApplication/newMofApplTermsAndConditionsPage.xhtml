@@ -1,0 +1,60 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<p:messages id="defNewMofApplMsgs" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<div>
+			<table style="width: 100%">
+				<tr>
+					<td style="padding-left: 4px;"><p:outputPanel>
+							<p>
+								<h:outputText value="#{lbl['lbl.sm.mofReg.descData']}"
+									escape="false" />
+							</p>
+							<h:outputText value="#{lbl['lbl.sm.mofReg.note']}" escape="false" />
+							<table style="width: 33%">
+								<tr>
+									<td><p:outputLabel
+											value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
+									<td><p:selectOneMenu
+											value="#{backingBean.managedBean.newSupplierType}">
+											<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
+											<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
+										</p:selectOneMenu></td>
+								</tr>
+							</table>
+						</p:outputPanel></td>
+
+				</tr>
+			</table>
+			<p:separator />
+			<table>
+				<tr>
+
+					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.termsAccepted}">
+							<p:ajax event="change" update=":form:basCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
+					action="#{backingBean.proceedToApplication('N')}"
+					disabled="#{!backingBean.managedBean.termsAccepted}" />
+				<!-- <p:commandButton value="Cancel" /> -->
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
