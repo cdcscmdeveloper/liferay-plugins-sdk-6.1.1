@@ -139,7 +139,8 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
+								update="@form"
+								listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
 
 						</p:selectOneRadio>
 						<p:message id="evalMsg" for="evalType" display="icon" />
@@ -203,7 +204,7 @@
 
 	<h:panelGroup id="generalLocationList">
 		<p:panel header="#{lbl['lbl.sc.spec.zone.location.list']}"
-			rendered="#{(specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
+			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 150px"><p:outputLabel
@@ -226,7 +227,7 @@
 		</p:panel>
 
 		<p:panel
-			rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
+			rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 			<h:panelGrid width="100%">
 				<p:dataTable id="zoneGeneralDataTable" rows="10"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
