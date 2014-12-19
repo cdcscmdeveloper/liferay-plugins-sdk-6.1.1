@@ -28,6 +28,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -147,6 +148,29 @@ public class SmCommonUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
 
 		return resDTO.getPmParameter();
+	}
+
+	public static String getParamDescriptionByLanguageAndPmParameter(
+			String language, PmParameter pmParameter) {
+		if(pmParameter!=null){
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			reqDTO.setPmParameter(pmParameter);
+			reqDTO.setLanguage(language);
+			ISmApplRevisionSO reqSO = (ISmApplRevisionSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmApplRevisionSO.class);
+			SmApplRevisionResDTO resDTO = reqSO
+					.retrieveParamDescByParameterIdAndLanguage(reqDTO);
+			if (resDTO.getParamDesc() != null) {
+				return resDTO.getParamDesc().getCodeName();
+			} else {
+				return "";
+			}
+		}else{
+			return "";
+		}
+		
 	}
 
 	public static PmBusinessNature retrieveBusinessNatureById(Long bizId) {

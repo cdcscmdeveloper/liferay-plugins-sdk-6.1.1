@@ -13,11 +13,14 @@ import java.util.Set;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -132,13 +135,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} finally {
 			applRevisionSO = null;
 		}
-		
-		//show message if supp profile not ready
-		if(!getManagedBean().isReviewApplicationExist()){
+
+		// show message if supp profile not ready
+		if (!getManagedBean().isReviewApplicationExist()) {
 			SmApplicationUtil.showSuppProfileNotReadyMsg(FacesContext
 					.getCurrentInstance());
 		}
-		
+
 	}
 
 	public boolean reloadApplication() {
@@ -413,6 +416,50 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
 			getManagedBean().getSmAppl().setSmPersonnels(
 					new ArrayList<SmPersonnel>());
+		} else {
+			for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (smPersonnel.getRoleName() != null
+						&& StringUtils.isNotBlank(smPersonnel.getRoleName())) {
+					// read value rolename from properties
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Director",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.director",
+															null)));
+					smPersonnel.setRoleName(smPersonnel.getRoleName()
+							.replaceAll(
+									"Staff",
+									SmCommonUtil.getMessage(
+											"lbl.sm.personnel.comprole.staff",
+											null)));
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Equity Owner",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.shareholder",
+															null)));
+					smPersonnel.setRoleName(smPersonnel.getRoleName()
+							.replaceAll(
+									"Higher",
+									SmCommonUtil.getMessage(
+											"lbl.sm.personnel.comprole.higher",
+											null)));
+					smPersonnel.setRoleName(smPersonnel.getRoleName()
+							.replaceAll(
+									"Management",
+									SmCommonUtil.getMessage(
+											"lbl.sm.personnel.comprole.mngmnt",
+											null)));
+				}
+			}
 		}
 		setPersonnelInfoCalculationSummary();
 	}
@@ -629,33 +676,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		Locale locale = new FacesScopes().getUserLocale();
 
-		switch (getManagedBean().getSelectedMachine().getPurchaseMethod()) {
-		case "A":
-			getManagedBean().setSelectedMachineryPurchaseMethod(
-					ResourceBundleUtils.getMessage("lbl.sm.machine.cash",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			break;
-		case "B":
-			getManagedBean().setSelectedMachineryPurchaseMethod(
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.machine.credit.card",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			break;
-		case "C":
-			getManagedBean().setSelectedMachineryPurchaseMethod(
-					ResourceBundleUtils.getMessage("lbl.sm.machine.debit.card",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			break;
-		case "D":
-			getManagedBean().setSelectedMachineryPurchaseMethod(
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.machine.online.banking",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			break;
-		default:
-			break;
-
-		}
+		PmParameter paymentMethod = SmCommonUtil
+				.retrieveParameterByTypeAndCode("BM",
+						macBean.getPurchaseMethod(), locale.getLanguage());
+		getManagedBean().setSelectedMachineryPurchaseMethod(
+				SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(
+						locale.getLanguage(), paymentMethod));
 	}
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
@@ -871,6 +897,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							.retrievePmParameterById(getManagedBean()
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
+			getManagedBean().setSelectedShareholderIdentificationType(
+					SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(
+							new FacesScopes().getUserLocale().getLanguage(),
+							getManagedBean().getSelectedShareHolder()
+									.getIdentificationType()));
+
 		}
 		if (getManagedBean().getSelectedShareHolder().getIdentificationType() == null) {
 			getManagedBean().getSelectedShareHolder().setIdentificationType(
