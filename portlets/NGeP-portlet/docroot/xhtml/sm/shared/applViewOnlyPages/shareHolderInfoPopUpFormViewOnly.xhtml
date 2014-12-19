@@ -150,7 +150,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true" id="equiShrHldrJbFnc">
-		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
+		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf"
 			rowIndexVar="rowIndex" rowKey="#{jf}">
