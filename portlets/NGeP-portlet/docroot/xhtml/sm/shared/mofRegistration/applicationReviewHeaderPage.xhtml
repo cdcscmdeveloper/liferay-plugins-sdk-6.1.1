@@ -35,7 +35,19 @@
 
 				<c:if test="#{backingBean.managedBean.approverUser}">
 					<td><h:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
-					<td class="header-info-text">#{backingBean.managedBean.poSecReview.recommendation}</td>
+					<td class="header-info-text">
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.poSecReview.recommendation eq 'APPROVE'}">
+								#{lbl['lbl.sm.decision.approve.uppercase']}
+							</c:when>
+							<c:when test="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT'}">
+								#{lbl['lbl.sm.decision.reject.uppercase']}
+							</c:when>
+							<c:otherwise>
+								#{backingBean.managedBean.poSecReview.recommendation}
+							</c:otherwise>
+						</c:choose>
+					</td>
 				</c:if>
 			</tr>
 		</table>
