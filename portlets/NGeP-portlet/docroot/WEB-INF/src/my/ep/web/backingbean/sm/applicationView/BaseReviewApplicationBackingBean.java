@@ -674,14 +674,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
 
-		Locale locale = new FacesScopes().getUserLocale();
+		if (macBean.getPurchaseMethod() != null
+				&& StringUtils.isNotBlank(macBean.getPurchaseMethod())) {
+			Locale locale = new FacesScopes().getUserLocale();
+			PmParameter paymentMethod = SmCommonUtil
+					.retrieveParameterByTypeAndCode("BM",
+							macBean.getPurchaseMethod(), locale.getLanguage());
+			getManagedBean().setSelectedMachineryPurchaseMethod(
+					SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(
+							locale.getLanguage(), paymentMethod));
+		}
 
-		PmParameter paymentMethod = SmCommonUtil
-				.retrieveParameterByTypeAndCode("BM",
-						macBean.getPurchaseMethod(), locale.getLanguage());
-		getManagedBean().setSelectedMachineryPurchaseMethod(
-				SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(
-						locale.getLanguage(), paymentMethod));
 	}
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
