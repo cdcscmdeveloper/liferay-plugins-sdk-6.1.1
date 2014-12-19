@@ -624,22 +624,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		getManagedBean().getInvoice().setInvoiceAmtOri(invoiceAmt);
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceAmt);
-		
-		BigDecimal serviceFee = null;
-		if(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
-		} else {
-			serviceFee = new BigDecimal(resDTO.getFlFulfilmentRequest().getCtContract().getServiceFee());
-		}
-		
-		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
-		BigDecimal percentage = new BigDecimal(100);
-		BigDecimal invMulty = new BigDecimal(0.0);
-		BigDecimal feeAmount = new BigDecimal(0.0);
-		invMulty = invoiceAmt.multiply(serviceFee);
-		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
-		getManagedBean().getInvoice().setFeeAmt(feeAmount);
-		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceAmt.subtract(feeAmount));
 	}
 	
 	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
@@ -676,15 +660,38 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		TreeNode root = getManagedBean().getChargeLineItemRoot();
 		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
 		BigDecimal orderTotalAmount = new BigDecimal(0);
+		
+		for (TreeNode childNode : root.getChildren()) {
+			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+			invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
+			orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
+		}
+		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
+		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
+		
+		BigDecimal serviceFee = new BigDecimal(0);
+		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
+		} else {
+			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
+		}
+		
+		if(getManagedBean().getInvoice().getFlRequest().getProcurementType()!=null && getManagedBean().getInvoice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			serviceFee = new BigDecimal(0);
+		}
+		
 		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
 		reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
 			reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
 		}
 		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
+		if(resDTO.getFeeExemptionResult()!=null && resDTO.getFeeExemptionResult().booleanValue()) {
+			serviceFee = new BigDecimal(0);
+		}
 		
 		//check item whther is exempted for this supplier.
-		if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
+		if(serviceFee.doubleValue()>0){
 			for (TreeNode childNode : root.getChildren()) {
 				FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
 
@@ -701,19 +708,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
 					nonExemptedItemList.add(data.getInvAmt());
 				}
-				invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
-				orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
 			}
-		}
-		
-		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
-		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
-		
-		BigDecimal serviceFee = new BigDecimal(0);
-		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
-		} else {
-			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
 		
 		BigDecimal nonExemptedItem = new BigDecimal(0);
