@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<style type="text/css">
-		.calendarDateField input {
-			width: 80px;
-		}
-	</style>
+.calendarDateField input {
+	width: 80px;
+}
+</style>
 	<p:panel id="bondId" header="#{lbl['lbl.ct.panel.performance.bond']}" toggleable="true" toggleSpeed="500"
 		rendered="#{contractDetailsBackingBean.managedBean.ctContract.bondReq and 
 		!contractDetailsBackingBean.managedBean.directPurchase}">
@@ -55,7 +55,7 @@
 			
 			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
-					showOn="button" readonlyInput="true" navigator="true" disabled="true"
+					showOn="button" readonlyInput="true" navigator="true" disabled="#{!varBond.chckPerformaceBond}"
 					mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >

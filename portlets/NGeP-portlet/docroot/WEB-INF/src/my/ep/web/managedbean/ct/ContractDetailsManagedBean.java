@@ -20,6 +20,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -171,6 +172,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtPerformanceBond> performanceBondList;
 	private int firstRowSelected;
 	private boolean selectAll;
+	
+	private CtAmendment ctAmendment;
 	
 	public String[] getAction() {
 		return action;
@@ -1065,5 +1068,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
+	}
+
+	public CtAmendment getCtAmendment() {
+		return ctAmendment;
+	}
+
+	public void setCtAmendment(CtAmendment ctAmendment) {
+		this.ctAmendment = ctAmendment;
 	}
 }
