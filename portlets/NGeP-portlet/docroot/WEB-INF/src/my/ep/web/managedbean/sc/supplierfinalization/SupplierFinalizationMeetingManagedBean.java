@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -59,6 +60,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
 	
 	private boolean selectAll;
+	
+	private Date currentDate;
 	
 	/**
 	 * @return the scQtMeetings
@@ -417,6 +420,14 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
+	}
+	
+	/**
+	 * @return the currentDate
+	 */
+	public Date getCurrentDate() {
+		currentDate = new Date();
+		return currentDate;
 	}
 	
 }
