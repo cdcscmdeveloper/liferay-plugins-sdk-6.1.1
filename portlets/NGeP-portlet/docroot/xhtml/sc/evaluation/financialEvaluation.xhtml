@@ -14,23 +14,21 @@
 		toggleable="true">
 
 		<p:dataTable var="financialEval" id="financialEvaluation"
-			style="white-space: normal;"
 			first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"
 			value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
-			rows="10" editable="true" rowIndexVar="index"
-			rowKey="#{financialEval}">
-			<ac:paginator for="financialEvaluation" />
+			editable="true" rowIndexVar="index" rowKey="#{financialEval}">
+		<!-- 	<ac:paginator for="financialEvaluation" /> -->
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-				style="width:70%">
+				style="width:70%;white-space: normal;">
 
 				<h:outputText value="#{financialEval.title}"></h:outputText>
 
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.type']}"
-				style="width:20%">
+				style="width:20%;white-space: normal;">
 
 
 				<h:outputText
