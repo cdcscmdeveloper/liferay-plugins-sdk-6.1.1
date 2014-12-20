@@ -498,7 +498,7 @@ public class SpecificationBackingBean extends
 				ScQt techSpec = prepareSpecReq().getScQt();
 
 				specReqDTO.setScQt(techSpec);
-				specSO.validateCheckList(specReqDTO);
+				// specSO.validateCheckList(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
@@ -521,9 +521,9 @@ public class SpecificationBackingBean extends
 				}
 				break;
 			case 3:
-				ScQt finSpec = prepareSpecReq().getScQt();				
+				ScQt finSpec = prepareSpecReq().getScQt();
 				specReqDTO.setScQt(finSpec);
-				specSO.validateCheckList(specReqDTO);
+				// specSO.validateCheckList(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
@@ -4890,14 +4890,40 @@ public class SpecificationBackingBean extends
 
 	public void technicalTitleChange(int index, List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
+		// checklist.remove(index);
+		List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
+		for (int i = 0; i < checklist.size() - 1; i++) {
+			ScQtCheckList anotherchecklist = checklist.get(i);
+			localCheckList.add(anotherchecklist);
+		}
+		if (localCheckList.contains(list)) {
+			list.setTitle(null);
+			/*
+			 * throw new EpException(MessageConst.ERROR_760207, new String[] {
+			 * list.getTitle() });
+			 */
 
+		}
 		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
 
 	}
 
 	public void financialTitleChange(int index, List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
+		// checklist.remove(index);
+		List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
+		for (int i = 0; i < checklist.size() - 1; i++) {
+			ScQtCheckList anotherchecklist = checklist.get(i);
+			localCheckList.add(anotherchecklist);
+		}
+		if (localCheckList.contains(list)) {
+			list.setTitle(null);
 
+			/*
+			 * throw new EpException(MessageConst.ERROR_760207, new String[] {
+			 * list.getTitle() });
+			 */
+		}
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
@@ -9849,11 +9875,11 @@ public class SpecificationBackingBean extends
 
 				ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 				specReqDTO.setScQt(scQtTechChecklist);
-				specSO.validateCheckList(specReqDTO);
+				// specSO.validateCheckList(specReqDTO);
 				if (QTConstants.EVALUATION_ONE_TIER
 						.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
 						&& !scQtTechChecklist.isTechEvaluationReq()) {
-				
+
 					specReqDTO.setTobeRemoveList(getToBeRemoveList());
 					resDTO = specSO.saveQTDtl(specReqDTO);
 
@@ -9871,7 +9897,7 @@ public class SpecificationBackingBean extends
 										.getEvaluationType()) && scQtTechChecklist
 								.isTechEvaluationReq())) {
 
-					//specReqDTO.setScQt(scQtTechChecklist);
+					// specReqDTO.setScQt(scQtTechChecklist);
 					specReqDTO.setTobeRemoveList(getToBeRemoveList());
 					// specSO.validateCheckList(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -9886,7 +9912,7 @@ public class SpecificationBackingBean extends
 			case 3:
 				ScQt finChecklist = constructSpecCommitteDtls().getScQt();
 				specReqDTO.setScQt(finChecklist);
-				specSO.validateCheckList(specReqDTO);
+				// specSO.validateCheckList(specReqDTO);
 				specReqDTO.setTobeRemoveList(getToBeRemoveList());
 
 				resDTO = specSO.saveQTDtl(specReqDTO);
@@ -11214,6 +11240,19 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> toBeRemoveList = null;
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 
+			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (this.getManagedBean().getIndex() == -1
+					&& null == scQtCheckList.getQtChecklistId()) {
+				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+
+					if (technicalCheckList.contains(scQtCheckList)) {
+						throw new EpException(MessageConst.ERROR_760207,
+								new String[] { scQtCheckList.getTitle() });
+					}
+				}
+			}
+
 			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
 			toBeRemoveList = new ArrayList<ScQtCheckList>();
@@ -11431,6 +11470,18 @@ public class SpecificationBackingBean extends
 					|| "".equalsIgnoreCase(scQtCheckList.getTitle())) {
 				scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 						.getTplSpecMaster().getSpecName());
+			}
+			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (this.getManagedBean().getIndex() == -1
+					&& null == scQtCheckList.getQtChecklistId()) {
+				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+
+					if (technicalCheckList.contains(scQtCheckList)) {
+						throw new EpException(MessageConst.ERROR_760207,
+								new String[] { scQtCheckList.getTitle() });
+					}
+				}
 			}
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 					.getTplSpecMaster().getSpecName());
