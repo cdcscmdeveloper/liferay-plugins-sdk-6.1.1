@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -16,13 +17,18 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinancialCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
+import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
+import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -194,6 +200,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal ContractScores;
 	private int techindex = -1;
 	private boolean statusOnly;
+	private ScAttachment scAttachment;
+	private List<ScRemark> scRemark;
+	private List<ScQtEvaluationCommitteeRemark>  evaluationCommitteeRemark;
+	private List<ScQtOpeningCommitteeRemark>  evaluationOpeningCommitteeRemark;
+	private List<ScQtTechnicalCommitteeRemark>  evaluationTechnicalCommitteeRemark;
+	private List<ScQtFinancialCommitteeRemark>  evaluationFinancialCommitteeRemark;
 
 	/**
 	 * @return the today
@@ -1891,10 +1903,103 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param statusOnly the statusOnly to set
+	 * @param statusOnly
+	 *            the statusOnly to set
 	 */
 	public void setStatusOnly(boolean statusOnly) {
 		this.statusOnly = statusOnly;
 	}
+
+	/**
+	 * @return the scAttachment
+	 */
+	public ScAttachment getScAttachment() {
+		return scAttachment;
+	}
+
+	/**
+	 * @param scAttachment
+	 *            the scAttachment to set
+	 */
+	public void setScAttachment(ScAttachment scAttachment) {
+		this.scAttachment = scAttachment;
+	}
+
+	/**
+	 * @return the scRemark
+	 */
+	public List<ScRemark> getScRemark() {
+		return scRemark;
+	}
+
+	/**
+	 * @param scRemark the scRemark to set
+	 */
+	public void setScRemark(List<ScRemark> scRemark) {
+		this.scRemark = scRemark;
+	}
+
+	/**
+	 * @return the evaluationCommitteeRemark
+	 */
+	public List<ScQtEvaluationCommitteeRemark> getEvaluationCommitteeRemark() {
+		return evaluationCommitteeRemark;
+	}
+
+	/**
+	 * @param evaluationCommitteeRemark the evaluationCommitteeRemark to set
+	 */
+	public void setEvaluationCommitteeRemark(
+			List<ScQtEvaluationCommitteeRemark> evaluationCommitteeRemark) {
+		this.evaluationCommitteeRemark = evaluationCommitteeRemark;
+	}
+
+	/**
+	 * @return the evaluationOpeningCommitteeRemark
+	 */
+	public List<ScQtOpeningCommitteeRemark> getEvaluationOpeningCommitteeRemark() {
+		return evaluationOpeningCommitteeRemark;
+	}
+
+	/**
+	 * @param evaluationOpeningCommitteeRemark the evaluationOpeningCommitteeRemark to set
+	 */
+	public void setEvaluationOpeningCommitteeRemark(
+			List<ScQtOpeningCommitteeRemark> evaluationOpeningCommitteeRemark) {
+		this.evaluationOpeningCommitteeRemark = evaluationOpeningCommitteeRemark;
+	}
+
+	/**
+	 * @return the evaluationTechnicalCommitteeRemark
+	 */
+	public List<ScQtTechnicalCommitteeRemark> getEvaluationTechnicalCommitteeRemark() {
+		return evaluationTechnicalCommitteeRemark;
+	}
+
+	/**
+	 * @param evaluationTechnicalCommitteeRemark the evaluationTechnicalCommitteeRemark to set
+	 */
+	public void setEvaluationTechnicalCommitteeRemark(
+			List<ScQtTechnicalCommitteeRemark> evaluationTechnicalCommitteeRemark) {
+		this.evaluationTechnicalCommitteeRemark = evaluationTechnicalCommitteeRemark;
+	}
+
+	/**
+	 * @return the evaluationFinancialCommitteeRemark
+	 */
+	public List<ScQtFinancialCommitteeRemark> getEvaluationFinancialCommitteeRemark() {
+		return evaluationFinancialCommitteeRemark;
+	}
+
+	/**
+	 * @param evaluationFinancialCommitteeRemark the evaluationFinancialCommitteeRemark to set
+	 */
+	public void setEvaluationFinancialCommitteeRemark(
+			List<ScQtFinancialCommitteeRemark> evaluationFinancialCommitteeRemark) {
+		this.evaluationFinancialCommitteeRemark = evaluationFinancialCommitteeRemark;
+	}
+
+	
+	
 
 }
