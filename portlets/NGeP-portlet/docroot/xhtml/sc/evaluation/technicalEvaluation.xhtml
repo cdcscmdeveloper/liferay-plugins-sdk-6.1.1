@@ -9,29 +9,30 @@
 
 
 
-<p:spacer height="40"></p:spacer>
+	<p:spacer height="40"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.tech.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="technicalEvaluate" id="technicalEvaluation" rows="10"
-			editable="true" rowIndexVar="index" style="white-space: normal;"
+		<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
+			editable="true" rowIndexVar="index"
 			first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
-			rowKey="#{technicalEvaluate}" value="#{evaluationBackingBean.managedBean.evaluationStgTechnicalCheckList}">
-			<ac:paginator for="technicalEvaluation" />
+			rowKey="#{technicalEvaluate}"
+			value="#{evaluationBackingBean.managedBean.evaluationStgTechnicalCheckList}">
+		<!-- 	<ac:paginator for="technicalEvaluation" /> -->
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-				style="width:55%">
+				style="width:55%;white-space: normal;">
 
 				<h:outputText value="#{technicalEvaluate.title}"></h:outputText>
 
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.type']}"
-				style="width:20%">
+				style="width:20%;white-space: normal;">
 
 
-			<h:outputText
+				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(technicalEvaluate.definationType)}"></h:outputText>
 
 
@@ -39,24 +40,27 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
-				style="width:15%">
+				style="width:15%;white-space: normal;">
 
 
-				<h:outputText value="#{evaluationBackingBean.getStatusDescById(technicalEvaluate.pmStatus.statusId)}"></h:outputText>
+				<h:outputText
+					value="#{evaluationBackingBean.getStatusDescById(technicalEvaluate.pmStatus.statusId)}"></h:outputText>
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
-           
+
 				<ui:fragment rendered="#{technicalEvaluate.scoringReq eq 'false'}">
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
-					process="@this" partialSubmit="true" action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate)}"/>
-					</ui:fragment>
-					<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false'}">
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate)}"
-					process="@this" partialSubmit="true" />
-					</ui:fragment>
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+						process="@this" partialSubmit="true"
+						action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate)}" />
+				</ui:fragment>
+				<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false'}">
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+						action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate)}"
+						process="@this" partialSubmit="true" />
+				</ui:fragment>
 
 			</p:column>
 

@@ -14,12 +14,12 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="complianceFinancial" rows="10"
+		<p:dataTable var="complianceFinancial" 
 			id="complianceFinancialProposal" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.compliancefinancialCheckList}"
 			first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"
 			rowKey="#{complianceFinancial}">
-			<ac:paginator for="complianceFinancialProposal" />
+		<!-- 	<ac:paginator for="complianceFinancialProposal" /> -->
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
