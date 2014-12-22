@@ -369,7 +369,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType("Publication Approval");
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
-					ParameterConst.DOCTYPE_PCB_APPROVAL);
+					ParameterConst.DOCTYPE_QUOTATION);
 			Date clsDate = null;
 			if (null != this.getManagedBean().getQt().getLatestBsvDate()) {
 
