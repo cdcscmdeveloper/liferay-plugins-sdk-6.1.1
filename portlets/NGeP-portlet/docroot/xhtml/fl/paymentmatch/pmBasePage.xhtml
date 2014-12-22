@@ -67,14 +67,14 @@
 							actionListener="#{paymentMatchBackingBean.onTabChange(3)}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
-								value="3" />
+								value="#{paymentMatchBackingBean.managedBean.showDeductionTab ? 3 : 2}" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.fl.advanced.payment.summary']}" update="@form" 
 						rendered="#{paymentMatchBackingBean.managedBean.haveAdvancedPymt}"
 							actionListener="#{paymentMatchBackingBean.onTabChange(4)}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
-								value="4" />
+								value="#{paymentMatchBackingBean.managedBean.showDeductionTab ? 4 : 3}" />
 						</p:menuitem>
 					</p:tabMenu></td>
 				<td width="80%"><p:outputPanel
@@ -87,11 +87,11 @@
 						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 2}">
 						<ui:include src="pmDeduction.xhtml" />
 					</p:outputPanel> <p:outputPanel
-						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 3}">
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == (paymentMatchBackingBean.managedBean.showDeductionTab ? 3 : 2)}">
 						<ui:include src="pmSummary.xhtml" />
 					</p:outputPanel>
 					 <p:outputPanel
-						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 4}">
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == (paymentMatchBackingBean.managedBean.showDeductionTab ? 4 : 3)}">
 						<ui:include src="pmAdvancedPaymentSumm.xhtml" />
 					</p:outputPanel></td>
 			</tr>
