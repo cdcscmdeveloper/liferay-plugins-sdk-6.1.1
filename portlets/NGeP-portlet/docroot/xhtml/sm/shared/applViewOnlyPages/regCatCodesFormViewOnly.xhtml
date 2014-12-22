@@ -35,54 +35,39 @@
 				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 				rendered="#{!(viewSmApplBackingBean.managedBean.smAppl.applType == 'R')}">
 				<ac:paginator for="catDt" />
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
-						<p:column headerText="#{lbl['lbl.sm.status']}"
-							rendered="#{!viewSmApplBackingBean.managedBean.poUser and !viewSmApplBackingBean.managedBean.approverUser}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
-							rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
-							rendered="#{viewSmApplBackingBean.managedBean.approverUser}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
-							rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}" />
-					</p:row>
-				</p:columnGroup>
-				<p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width : 50%;">
 					<p:outputPanel rendered="#{not empty catBean.pmCategoryL1}">
-						<h:outputText value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" /><br />
+						<h:outputText value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" style="float: left;white-space: normal;" /><br />
 					</p:outputPanel>
 					<p:outputPanel rendered="#{not empty catBean.pmCategoryL2}">
-						<h:outputText value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" /><br />
+						<h:outputText value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" style="float: left;white-space: normal;" /><br />
 					</p:outputPanel>
 					<p:outputPanel rendered="#{not empty catBean.pmCategoryL3}">
-						<h:outputText value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+						<h:outputText value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
 					</p:outputPanel>
 				</p:column>
-				<p:column>
-					<p:outputLabel value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" >
+					<p:outputLabel value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" style="float: left;white-space: normal;"/>
 				</p:column>
-				<p:column>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
-						rendered="#{!catBean.specialCategory}" />
+						rendered="#{!catBean.specialCategory}" style="float: left;white-space: normal;" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
-						rendered="#{catBean.specialCategory}" />
+						rendered="#{catBean.specialCategory}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column
+				<p:column headerText="#{lbl['lbl.sm.status']}"
 					rendered="#{!viewSmApplBackingBean.managedBean.poUser and !viewSmApplBackingBean.managedBean.approverUser}">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
-						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
+						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" style="float: left;white-space: normal;" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
-						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column
+				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 					rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}">
 
 					<p:selectOneRadio layout="pageDirection" id="catPoAppr"
@@ -102,10 +87,10 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0 and viewSmApplBackingBean.managedBean.approverUser}" />
 				</p:column>
-				<p:column rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-					<p:outputLabel value="#{catBean.poRemarks}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<p:outputLabel value="#{catBean.poRemarks}" style="float: left;white-space: normal;"/>
 				</p:column>
-				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 						value="#{catBean.apprvrDecFlg}" disabled="true"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
@@ -117,8 +102,8 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
-				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-					<p:outputLabel value="#{catBean.approverRemarks}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<p:outputLabel value="#{catBean.approverRemarks}" style="float: left;white-space: normal;"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -129,56 +114,40 @@
 				rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
 				rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R'}">
 				<ac:paginator for="catDtR" />
-				<p:columnGroup type="header">
-
-					<p:row>
-						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
-						<p:column headerText="#{lbl['lbl.sm.status']}"
-							rendered="#{!viewSmApplBackingBean.managedBean.poUser and !viewSmApplBackingBean.managedBean.approverUser}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
-							rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
-							rendered="#{viewSmApplBackingBean.managedBean.approverUser}" />
-						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
-							rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}" />
-					</p:row>
-				</p:columnGroup>
-				<p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width : 50%;">
 					<p:outputPanel rendered="#{not empty catBeanR.pmCategoryL1}">
-						<h:outputText value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" /><br />
+						<h:outputText value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" style="float: left;white-space: normal;"/><br />
 					</p:outputPanel>
 					<p:outputPanel rendered="#{not empty catBeanR.pmCategoryL2}">
-						<h:outputText value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" /><br />
+						<h:outputText value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" style="float: left;white-space: normal;"/><br />
 					</p:outputPanel>
 					<p:outputPanel rendered="#{not empty catBeanR.pmCategoryL3}">
-						<h:outputText value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+						<h:outputText value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" style="float: left;white-space: normal;"/>
 					</p:outputPanel>
 				</p:column>
-				<p:column>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}">
 					<p:outputLabel value="#{catBeanR.otherDesc}"
-						rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}" />
+						rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" >
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!catBeanR.specialCategory}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{catBeanR.specialCategory}" />
 				</p:column>
-				<p:column
+				<p:column headerText="#{lbl['lbl.sm.status']}"
 					rendered="#{!viewSmApplBackingBean.managedBean.poUser and !viewSmApplBackingBean.managedBean.approverUser}">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
-				<p:column
+				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 					rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catPoApprR"
 						value="#{catBeanR.poDecFlg}"
@@ -198,10 +167,10 @@
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0 and viewSmApplBackingBean.managedBean.approverUser}" />
 
 				</p:column>
-				<p:column rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-					<p:outputLabel value="#{catBeanR.poRemarks}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<p:outputLabel value="#{catBeanR.poRemarks}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 						value="#{catBeanR.apprvrDecFlg}" disabled="true"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
@@ -213,8 +182,8 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
-				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-					<p:outputLabel value="#{catBeanR.approverRemarks}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<p:outputLabel value="#{catBeanR.approverRemarks}" style="float: left;white-space: normal;" />
 				</p:column>
 			</p:dataTable>
 			
