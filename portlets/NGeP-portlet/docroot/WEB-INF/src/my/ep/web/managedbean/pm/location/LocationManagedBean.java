@@ -54,7 +54,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	
 
 	private VPmLocation location;
-	private boolean divisionFlag=true;
+	private boolean divisionFlag= false;
 
 	public LocationManagedBean() {
 		state = new PmState();
