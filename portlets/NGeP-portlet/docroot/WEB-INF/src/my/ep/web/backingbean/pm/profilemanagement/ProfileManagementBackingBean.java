@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -67,7 +68,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -1877,8 +1877,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(user.getPmUserOrgs()!=null){
 			for(PmUserOrg userOrg: user.getPmUserOrgs()){
 				for(PmUserRole userRole:userOrg.getPmUserRoles()){
-					//check if contains unique role
 					String roleCode = userRole.getPmRole().getRoleCode();
+					if(userRole.getPmRole().isLimitRequired()){
+						if(userRole.getApprovalLimit()==null || userRole.getApprovalLimit().compareTo(BigDecimal.ZERO)!=1){
+							throw new EpException(MessageConst.ERROR_770148, new String[]{getRoleDescByRoleCode(roleCode)});
+						}
+					}
+					
+					//check if contains unique role
 					if(uniqueRoles.contains(userRole.getPmRole().getRoleCode())){
 						String orgType = userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode();
 						if(checkUniqueRole(orgType, roleCode, true)){
