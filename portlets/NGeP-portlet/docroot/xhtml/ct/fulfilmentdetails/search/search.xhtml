@@ -74,10 +74,10 @@
 						<h:outputText value="#{data.contractName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:10%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText value="#{data.ctCircularVer.circularNo}" />
+						<h:outputText value="#{data.ctCircularVer.circularNo}"  rendered="#{data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.circular.status']}"  style="width:10%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" />
+						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" rendered="#{data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}"    />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.companyName}" />
