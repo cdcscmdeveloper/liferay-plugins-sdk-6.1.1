@@ -24,11 +24,15 @@
 	<div id="u15" class="u15"  >
 		<div id="u15_rtf" style="text-align:justify;">
 			<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya, <span class="underline"><b>$userName</b></span> nombor K.P. <span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam $title seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.</span></p>
-			<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2. Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain sebagai sogokan untuk dipilih dalam $title, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil:</p></span>
+			<ol start="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+				<li>Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain sebagai sogokan untuk dipilih dalam $title, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil:</li>
+			</ol>
 			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.1 penarikan balik tawaran kontrak bagi $title; atau</ol>
 			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.2 penamatan kontrak bagi $title; dan</ol>
-			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.3 lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.</ol>	
-			<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam $title, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran.</p></span>
+			<ol type="2" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2.3 lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.</ol>
+			<ol start="3" style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+				<li>Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam $title, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran.</li>
+			</ol>
 		</div>
 	</div>
 </body>
