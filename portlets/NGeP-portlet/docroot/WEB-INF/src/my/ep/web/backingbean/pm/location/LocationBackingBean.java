@@ -109,10 +109,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setState(new PmState());
 		getManagedBean().setDistrict(new PmDistrict());
 		getManagedBean().setDivision(new PmDivision());
-		getManagedBean().getState().setPmCountry(
-				defaultCountry != null ? defaultCountry : new PmCountry());
-		// getManagedBean().setPmCountry(defaultCountry!=null ? defaultCountry :
-		// new PmCountry());
+		getManagedBean().getState().setPmCountry(defaultCountry != null ? defaultCountry : new PmCountry());		
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(getManagedBean().getState().getPmCountry()
 				.getCountryId());
@@ -135,14 +132,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				.setPmCountry(
 						defaultCountry != null ? defaultCountry
 								: new PmCountry());
-		getManagedBean().setCity(new PmCity());
-		// getManagedBean().getCity().getPmDistrict().getPmState().setPmCountry(new
-		// PmCountry());
-
-		getManagedBean().getDistrict().setPmDivision(new PmDivision());
-		getManagedBean().getCity().setPmDistrict(new PmDistrict());
-		// getManagedBean().setStates(new ArrayList<PmState>());
-		// getManagedBean().setDivisions(new ArrayList<PmDivision>());
+		getManagedBean().setCity(new PmCity());		
+		getManagedBean().getDistrict().setPmDivision(new PmDivision());		
+		getManagedBean().getCity().setPmDistrict(new PmDistrict());		
 		getManagedBean().setDistricts(new ArrayList<PmDistrict>());
 	}
 
@@ -279,6 +271,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 				PmDistrict district = this.getManagedBean().getDistrict();
 				district.setDistrictCode(district.getDistrictCode().toUpperCase());
+				if(district.getPmDivision() != null && district.getPmDivision().getDivisionId()== null){
+					district.setPmDivision(null);
+				}
 				reqDTO.setPmDistrict(district);
 				try {
 					DistrictResDTO resDTO = districtSO
@@ -550,13 +545,21 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
-		System.out.println("DivStateId" + stateId);
+		
 		reqDTO.setStateId(stateId);
 		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDivisionSO.class);
 		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
-		getManagedBean().setDivisions(resDTO.getDivisionList());
+		getManagedBean().setDivisions(resDTO.getDivisionList());	
+		
+		if(resDTO.getDivisionList()!= null && !resDTO.getDivisionList().isEmpty()) {	
+			//getManagedBean().getDistrict().setPmDivision(new PmDivision());				
+		}
+		else{	
+			//getManagedBean().getDistrict().setPmDivision(null);
+			getManagedBean().getDistrict().getPmDivision().setDivisionId(null);
+		}
 
 	}
 
