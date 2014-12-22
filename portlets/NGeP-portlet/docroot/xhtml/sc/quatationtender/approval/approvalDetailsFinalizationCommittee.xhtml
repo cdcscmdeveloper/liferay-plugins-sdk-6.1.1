@@ -16,12 +16,6 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(fcrequestdetails.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
-				<h:outputText value="#{fcrequestdetails.originalValue}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
-				<h:outputText value="#{fcrequestdetails.changedValue}" />
-			</p:column>
 		</p:dataTable>
 	</p:panel>
 	<p:spacer height="3" />
