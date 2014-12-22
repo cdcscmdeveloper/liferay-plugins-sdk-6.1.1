@@ -897,8 +897,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			
-			if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase() 
-				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+			if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
 				if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
 					if(getManagedBean().getCtContract().getLatestContractVer() != null 
 							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
@@ -918,6 +917,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					double bondAmount = 0.0;
 					for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
 						bondAmount = bondAmount + performanceBond.getBondAmount();
+						if(performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage("lbl.ct.pb.ref.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), null});
+						} 
+						
+						if(performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
+							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.financial.org", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), null});
+						} 
+						
 						if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 							if(performanceBond.getBondAmount()==0) {
 								RequestContext.getCurrentInstance().addCallbackParam("epException", true);
@@ -925,23 +934,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 							}
 						} 
 						
-						if(performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
-							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance bond reference no" });
-						} 
-						
-						if(performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
-							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance bond financial institution" });
-						} 
-						
 						if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-							throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
+							throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.ref.letter", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), null});
 						} 
 					}
-				 
-					if(contractVer.getCtContract().getLoa().getBondAmt() == null 
+				 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				
+					 if(contractVer.getCtContract().getLoa().getBondAmt() == null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_750021);
@@ -956,8 +956,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						if(retval < 0){
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 							throw new EpException(MessageConst.ERROR_750017);  
-						}
-					}
+						}	
+					 }
+				  }
 				}	
 			}
 		 
