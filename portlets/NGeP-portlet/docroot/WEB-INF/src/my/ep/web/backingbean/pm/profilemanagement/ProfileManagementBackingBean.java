@@ -119,7 +119,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private IPagingDataModel<PmRoleDesc> roleDataModel = new RolePagingDataModel();	
 
 	//Mapper for DDL object
-	private static Map<Long, Object> identityTypeMapper;
+	private static Map<String, Object> identityTypeMapper;
 	private static Map<Long, Object> orgTypeMapper;
 
 	/**
@@ -299,13 +299,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		PmUser pmUser = new PmUser();
 		pmUser.setPmCountry(defaultCountry);
-		pmUser.setIdentificationCode(new PmParameter());
+		
+		PmParameter identityType = new PmParameter();
+		identityType.setParameterCode(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE);
+		pmUser.setIdentificationCode(identityType);
+		
 		pmUser.setSalutationCode(new PmSalutation());
 		pmUser.setPMP(false);
 		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
 		pmUser.setOrgTypeCode(new PmParameter());
-		
-		pmUser.setNotifyByEmail(true);
+		pmUser.setOrgAddress(ProfileManagementConst.DEFAULT_IS_SAME_ORG_ADDR);
+		pmUser.setNotifyByEmail(ProfileManagementConst.DEFAULT_IS_NOTIFY_BY_EMAIL);
 		
 		//initial preference
 		PmCommonUtil.loadPmUserPreference(pmUser);
@@ -489,7 +493,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] getIdentityTypeList() {
-		return getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		return getDropdownCodeValues(ParameterTypeConst.IDENTIFICATION_TYPES);
 	}
 
 
@@ -500,9 +504,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
 				.getParameterDescListBySearchBean(ParameterTypeConst.IDENTIFICATION_TYPES, null);
 		
-		identityTypeMapper = new HashMap<Long,Object>();
+		identityTypeMapper = new HashMap<String,Object>();
 		for(PmParameterDesc pmDesc: parameterDescs){
-			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+			identityTypeMapper.put(pmDesc.getPmParameter().getParameterCode(), pmDesc.getPmParameter());
 		}
 	}
 	
@@ -846,13 +850,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		// Check single role for all users
 		if(this.getManagedBean().getSelectedRole().getPmRole().isSingleRole()){
 			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
-				throw new EpException(MessageConst.ERROR_770134, new String[]{this.getManagedBean().getSelectedRole().getRoleName()});
+				throw new EpException(MessageConst.ERROR_770134);
 			}
 		}else{
 			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
 				for(PmUserRole pmUserRole:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
 					if(pmUserRole.getPmRole().isSingleRole()){
-						throw new EpException(MessageConst.ERROR_770134, new String[]{this.getManagedBean().getSelectedRole().getRoleName()});
+						throw new EpException(MessageConst.ERROR_770134);
 					}
 				}
 			}
@@ -1902,7 +1906,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(StringUtils.isBlank(user.getUserName())){
 			throw new EpException(MessageConst.ERROR_770032);
 		}
-		if(user.getIdentificationCode().getParameterId()==null){
+		if(StringUtils.isBlank(user.getIdentificationCode().getParameterCode())){
 			throw new EpException(MessageConst.ERROR_770033);
 		}
 		if(StringUtils.isBlank(user.getIdentificationNo())){
@@ -2042,7 +2046,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	/**
 	 * Method to update the user details
 	 */
-	public void saveUserProfile() throws Exception{
+	public String saveUserProfile() throws Exception{
 		logger.info("saveUserProfile");
 		
 		UserReqDTO reqDTO = null;
@@ -2109,8 +2113,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					uploadPortrait(resDTO.getPmUser());
 				}*/
 				
-				loadUserProfile(resDTO.getPmUser().getUserId());
-				
+//				loadUserProfile(resDTO.getPmUser().getUserId());
+
 				if(!StringUtils.isBlank(resDTO.getRemarks())) {
 					//OIM user creation successfully, problem with roles.
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, resDTO.getRemarks(), resDTO.getRemarks()));
@@ -2124,6 +2128,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						    		new FacesScopes().getUserLocale())
 					    		));
 				}
+				return redirectToMainPage();
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2132,6 +2138,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} finally {
 			userSO = null;
 		}
+		return null;
 	}
 	
 	/**
