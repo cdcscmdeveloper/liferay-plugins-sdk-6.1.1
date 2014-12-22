@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -61,7 +62,6 @@ import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.pm.authorization.PmRoleRestr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -503,7 +503,8 @@ public class PmCommonUtil {
 			bean.setSearchField("recordStatusFlg");
 			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(bean);
-			
+			searchBean.getSortColumns().add(new SearchOrderBean("salutationName"));
+		
 			reqDTO.setSalutationSearchBean(searchBean);
 			SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
 			resultList = resDTO.getSalutationList();
