@@ -40,9 +40,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							required="true" maxlength="10" 
 							disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}" 
-							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pp.uppercase']}"
+							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pm.uppercase']}"
 							label="#{lbl['lbl.pm.reason.code']}">
-							<f:validateRegex pattern="^([A-Z0-9]{1,10})?$" />
+						
 						</p:inputText>
 						<p:message id="itReasonCodeMsg" for="itReasonCode" display="icon" />							
 					</td>
