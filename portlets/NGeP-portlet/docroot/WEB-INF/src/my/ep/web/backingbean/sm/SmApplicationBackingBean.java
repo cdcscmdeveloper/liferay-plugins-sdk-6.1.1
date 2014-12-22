@@ -3086,7 +3086,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedMachineList().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Machine / Equipment" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.machine.or.equipment", null) });
 		}
 	}
 
