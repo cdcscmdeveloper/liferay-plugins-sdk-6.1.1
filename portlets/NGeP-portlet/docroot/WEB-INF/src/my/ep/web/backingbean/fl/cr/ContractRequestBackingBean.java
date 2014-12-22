@@ -345,9 +345,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 				flRequest.setCreatedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
 			}
-			if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
-				flRequest.setTitle(FulfilmentConst.CONTRACT_REQUEST);
-			}
 			
 			if(!getManagedBean().isValidated()){
 				validateContractRequest(action);
