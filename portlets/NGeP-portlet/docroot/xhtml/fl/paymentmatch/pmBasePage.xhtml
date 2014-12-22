@@ -84,7 +84,7 @@
 						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 1}">
 						<ui:include src="pmChargeLine.xhtml" />
 					</p:outputPanel> <p:outputPanel
-						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 2}">
+						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == 2 and paymentMatchBackingBean.managedBean.showDeductionTab}">
 						<ui:include src="pmDeduction.xhtml" />
 					</p:outputPanel> <p:outputPanel
 						rendered="#{paymentMatchBackingBean.managedBean.selectedTabIndex == (paymentMatchBackingBean.managedBean.showDeductionTab ? 3 : 2)}">
