@@ -582,6 +582,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		     }
 		
 		     for( String str : this.getManagedBean().getFinalListOfSideMenu()){
+		    	    if(str.equalsIgnoreCase("Performance Bond") && !getManagedBean().getCtContract().isBondReq() ||
+		    	    		getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)){
+		    	    	    continue;
+		    	    }
 	 	    	    MenuItem menuItem = new MenuItem();
 	 	    	    menuItem.setId("AmendMenuId"+zoneTabIndex);
 	 	    	    menuItem.setValue(str);
