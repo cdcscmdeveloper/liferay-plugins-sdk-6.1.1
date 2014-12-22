@@ -1142,7 +1142,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * save to Supporting Document
 	 * @return xhtml
 	 */
-	public void saveSupportDoc(){
+	public String saveSupportDoc(){
 		log.info("saveSupportDoc - Start");
 
 		DocumentReqDTO reqDTO = null;
@@ -1159,12 +1159,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
 			resDTO = reqSO.saveDocument(reqDTO);
 			if(resDTO.isSuccessful()){
-				loadSupportDoc(resDTO.getDocument().getDocumentId());
+//				loadSupportDoc(resDTO.getDocument().getDocumentId());
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 			    FacesMessage.SEVERITY_INFO,
 			    null,
 			    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				
+				return redirectToSearchSupportDoc();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1174,6 +1175,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 		
 		log.info("saveSupportDoc - End");
+		return null;
 		
 	
 	}

@@ -442,9 +442,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * save to Rejection Reason
 	 * @return xhtml
 	 */
-	public void saveRejectReason(){
+	public String saveRejectReason(){
 		log.info("saveRejectReason - Start");
 		boolean isSuccess = false;
+		String returnPage = null;
 		//unique reason code
 		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode()
 				, this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId()
@@ -461,12 +462,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		
 		
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
-			createRejectReason(this.getManagedBean().getSelectedReason());
+			returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
 		}else{
-			updateRejectReason(this.getManagedBean().getSelectedReason());
+			returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 		}
 		
 		log.info("saveRejectReason - End");
+		return returnPage;
 //		if(isSuccess){
 //			return this.redirectToSearchReason();
 //		}else{
@@ -480,7 +482,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * create new reject reason
 	 * @param rejectReason
 	 */
-	private void createRejectReason(PmReason rejectReason){
+	private String createRejectReason(PmReason rejectReason){
 		log.info("createRejectReason");
 		try{
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
@@ -488,7 +490,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
 			ReasonResDTO resDTO = reqSO.createReason(reqDTO);
 			if(resDTO.isSuccessful()){
-				loadRejectReason(resDTO.getPmReason().getReasonId());
+//				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("createRejectReason - successful"); //TODO 770015
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
@@ -496,20 +498,21 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 						MessageUtils.getMessage(MessageConst.INFO_770006, new String[]{rejectReason.getReasonCode()},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				
-
+				return redirectToSearchReason();
 			}
 		}catch (Exception e){
 			log.info("createRejectReason - fail");
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770004);
 		}
+		return null;
 	}
 	
 	/**
 	 * update reject reason
 	 * @param rejectReason
 	 */
-	private void updateRejectReason(PmReason rejectReason){
+	private String updateRejectReason(PmReason rejectReason){
 		log.info("updateRejectReason");
 		try{
 			
@@ -518,20 +521,22 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
 			ReasonResDTO resDTO = reqSO.updateReason(reqDTO);
 			if(resDTO.isSuccessful()){
-				loadRejectReason(resDTO.getPmReason().getReasonId());
+//				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("updateRejectReason - successful");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_770007, new String[]{rejectReason.getReasonCode()},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-
+				return redirectToSearchReason();
 			}
+			
 		}catch (Exception e){
 			log.info("updateRejectReason - fail"); //TODO
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770004);
 		}
+		return null;
 	}
 	
 	/**
