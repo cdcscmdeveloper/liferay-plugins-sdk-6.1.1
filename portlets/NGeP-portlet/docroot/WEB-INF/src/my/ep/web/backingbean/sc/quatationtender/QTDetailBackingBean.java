@@ -928,18 +928,24 @@ public class QTDetailBackingBean extends
 			List<ScQtDeduction> deductionList = getManagedBean()
 					.getScQtDeductionList();
 			if (null != deductionList && !deductionList.isEmpty()) {
-				for (ScQtDeduction deduction : deductionList) {
-					List<ScQtDeductionClause> deductionClauses = deduction
-							.getScQtDeductionClauses();
-					if (null != deductionClauses && !deductionClauses.isEmpty()) {
-						for (ScQtDeductionClause deductionClause : deductionClauses) {
-							deductionClause.setScQtDeduction(deduction);
-
+				for (int i = 0; i < deductionList.size(); i++) {
+					if (null == deductionList.get(i).getDeductionType()
+							.getParameterCode()) {
+						deductionList.remove(i);
+					} else {
+						List<ScQtDeductionClause> deductionClauses = deductionList
+								.get(i).getScQtDeductionClauses();
+						if (null != deductionClauses
+								&& !deductionClauses.isEmpty()) {
+							for (ScQtDeductionClause deductionClause : deductionClauses) {
+								deductionClause.setScQtDeduction(deductionList
+										.get(i));
+							}
+							deductionList.get(i).setScQtDeductionClauses(
+									deductionClauses);
 						}
-						deduction.setScQtDeductionClauses(deductionClauses);
 					}
 				}
-
 			}
 			scQt.setScQtDeductions(deductionList);
 

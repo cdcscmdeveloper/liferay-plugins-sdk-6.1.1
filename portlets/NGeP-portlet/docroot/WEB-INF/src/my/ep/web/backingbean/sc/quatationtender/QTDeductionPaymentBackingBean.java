@@ -53,7 +53,7 @@ public class QTDeductionPaymentBackingBean extends
 	public QTDeductionPaymentBackingBean() {
 	}
 
-	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
+	public void deductionTypeChange(int index, ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
 		IParameterSO parameterSO = null;
 		try {
@@ -68,7 +68,12 @@ public class QTDeductionPaymentBackingBean extends
 				scQtDeduction.setDeductionType(resDTO.getPmParameter());
 				scQtDeduction.setScQtDeductionClauses(null);
 				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+			} else {
+				ScQtDeduction deduction = new ScQtDeduction();
+				deduction.setDeductionType(new PmParameter());
+				getManagedBean().setSelectedScQtDeduction(deduction);
 			}
+			this.getManagedBean().getScQtDeductionList().add(index, this.getManagedBean().getSelectedScQtDeduction());
 		} finally {
 			parameterSO = null;
 		}
