@@ -68,7 +68,7 @@
 						maxlength="1000" required="true" id="finChecklistTitle"
 						label="#{lbl['lbl.sc.spec.stage.title']}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financialCheckListtitle,financeProposaltwo"
+							update="financialCheckListtitle"
 							listener="#{specificationBackingBean.financialTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 
 					</p:inputText>
