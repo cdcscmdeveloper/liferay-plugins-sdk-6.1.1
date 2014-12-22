@@ -34,7 +34,7 @@
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update=":form:clausePnl, deductionamountid"
-						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(scQtDeduction)}" />
+						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
 				</p:selectOneMenu>
 				<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 			</p:column>
