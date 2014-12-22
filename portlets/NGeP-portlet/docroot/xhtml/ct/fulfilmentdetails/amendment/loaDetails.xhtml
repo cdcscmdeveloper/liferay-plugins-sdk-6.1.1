@@ -39,7 +39,7 @@
 			<p:inputText style="width:200px;" disabled="true"
 				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType)}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.menu.agency']}" />
-			<p:inputText style="width:200px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
+			<p:inputTextarea rows="2"  autoResize="false" style="width:200px; margin-bottom: 5px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmOrgProfile.orgName}" />
 			<p:inputText style="width:200px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}"
 				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmParameter)}" />				
