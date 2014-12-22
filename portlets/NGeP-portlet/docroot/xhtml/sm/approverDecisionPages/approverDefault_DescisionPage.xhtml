@@ -45,10 +45,13 @@
 				
 				<c:if
 					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
-					<div>
-						<h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}" style="float :left;"
-							escape="false" />
-					</div>
+					<table style="width: 100%">
+						<tr>
+							<td><h:outputText
+									value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
+									style="float:left;" /></td>
+						</tr>
+					</table>
 				</c:if>
 				
 				<p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
