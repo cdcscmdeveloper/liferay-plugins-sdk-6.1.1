@@ -3072,6 +3072,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setRevNo(1);
 		getManagedBean().getSelectedMachine().setSmAppl(
 				getManagedBean().getSmAppl());
+		getManagedBean().getSelectedMachine().setValue(new BigDecimal(0.00));
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}
