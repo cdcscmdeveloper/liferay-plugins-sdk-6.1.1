@@ -76,6 +76,7 @@
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" />
 			    </f:facet>
 			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" 
+			  		disabled="#{!orgUnit.brandNew and !profileManagementBackingBean.editableOrg(orgUnit.effDate)}"
 			  		required="#{!empty param['disableValidation']}" navigator="true" 
 			  		mindate="#{profileManagementBackingBean.minDate}" 
 			  		maxdate="#{ProfileManagementConst.maxDate}"

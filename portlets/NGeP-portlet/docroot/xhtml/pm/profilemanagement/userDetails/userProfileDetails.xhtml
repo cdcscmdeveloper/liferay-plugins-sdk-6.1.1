@@ -94,10 +94,9 @@
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterId}">
+								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode}">
 								<f:selectItems value="#{profileManagementBackingBean.getIdentityTypeList()}"/>
-								<p:ajax event="change" update="itIdentityNo"
-									listener="#{profileManagementBackingBean.identityTypeChange}" />
+								<p:ajax event="change" update="itIdentityNo" />
 							</p:selectOneMenu>
 							<p:message id="somIdTypeMsg" for="somIdType" display="icon" />
 						</td>

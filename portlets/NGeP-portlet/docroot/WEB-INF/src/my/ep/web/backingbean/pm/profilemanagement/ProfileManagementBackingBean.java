@@ -75,6 +75,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -564,6 +565,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	/**
 	 * TAB Authorization - START
 	 */
+	/**
+	 * Enabled/disabled eff date 
+	 * @param orgEffDate
+	 * @return boolean
+	 */
+	public boolean editableOrg(Timestamp orgEffDate){
+		logger.info("editableOrg");
+		Date today = new Date();
+    	Date orgDate = new Date(orgEffDate.getTime()); //DateUtils.convertStringToDate("dd/MM/yyyy", argValue);
+    	if(today.compareTo(orgDate)>0){
+    		//today > orgDate
+    		return false;
+    	}else if(today.compareTo(orgDate)==0){
+    		return false;
+		}else{
+    		return true;
+    	}
+	}
+	
+	/**
+	 * generate min date 
+	 * @return String (date in string)
+	 */
+	public String getMinDate(){
+		logger.info("getMinDate");
+		String dateStr = "";
+		Date today = new Date();
+		dateStr = DateUtils.dateToString("dd/MM/yyyy", today);
+		return dateStr;
+	}
 	
 	/**
 	 * Retrieve Org. Type from PM
