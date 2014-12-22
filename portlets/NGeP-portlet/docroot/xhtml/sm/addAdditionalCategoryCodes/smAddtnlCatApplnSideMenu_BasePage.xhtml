@@ -23,6 +23,14 @@
 						"#{lbl['lbl.sm.review.resubmitApplication']}");
 			</script>
 		</h:panelGroup>
+		<h:panelGroup
+			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and !backingBean.managedBean.smAppl.resubmit}">
+			<script>
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.review.application']}");
+			</script>
+		</h:panelGroup>
 
 	</ui:define>
 
