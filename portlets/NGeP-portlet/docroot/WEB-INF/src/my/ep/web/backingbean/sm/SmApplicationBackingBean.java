@@ -3705,7 +3705,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedShrHldrJobFunctions().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Personnel - Job Function" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.personnel.dash.jobfunction", null) });
 		}
 
 	}
@@ -3752,7 +3753,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedShrHldrRelatedCompanies().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Personnel - Related Company" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.personnel.dash.relatedcompany", null) });
 		}
 
 	}
@@ -3791,7 +3793,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedShrHldrAcademics().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Personnel - Academics" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.personnel.dash.academics", null) });
 		}
 
 	}
@@ -3925,7 +3928,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedShrHldrProfBodies().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Personnel - Professional Body" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.personnel.dash.profbody", null) });
 		}
 	}
 
@@ -4271,7 +4275,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Supplier Bank" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.supplier.bank", null) });
 		}
 	}
 
@@ -4551,7 +4556,8 @@ public class SmApplicationBackingBean extends
 					msg = MessageConst.INFO_700057;
 				}
 			} else {
-				msg = "Application with no status is submitted";
+				msg = SmCommonUtil.getMessage(
+						"lbl.sm.appl.no.status.submitted.msg", null);
 			}
 			FacesContext.getCurrentInstance().addMessage(
 					null,
