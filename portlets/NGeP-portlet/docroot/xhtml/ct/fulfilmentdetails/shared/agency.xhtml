@@ -80,13 +80,13 @@
        	<div class="ppRightBtn" style="padding-top:8px;">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
        	        icon="ui-icon-add" partialSubmit="true" process="@this"	action="#{contractDetailsBackingBean.resetAgencyDetails}" 
-       	        update=":form:agencyies" rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
+       	        update=":form:agencyies" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton> 
 			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"
-				rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}" >
+				rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" >
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
 				</p:tooltip>
