@@ -40,8 +40,9 @@
 
 			<p:column headerText="#{lbl['lbl.so.status']}" style="width : 10%;">
 				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg}" />
+						value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).recordStatusFlg)}" />
 			</p:column>
+
 		</p:dataTable>
 		<br />
 		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
