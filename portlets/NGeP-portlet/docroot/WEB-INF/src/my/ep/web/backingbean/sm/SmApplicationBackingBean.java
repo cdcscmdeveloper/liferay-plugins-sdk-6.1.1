@@ -3630,7 +3630,8 @@ public class SmApplicationBackingBean extends
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Personnel" });
+					new String[] { SmCommonUtil.getMessage("lbl.sm.personnel",
+							null) });
 		}
 
 	}
