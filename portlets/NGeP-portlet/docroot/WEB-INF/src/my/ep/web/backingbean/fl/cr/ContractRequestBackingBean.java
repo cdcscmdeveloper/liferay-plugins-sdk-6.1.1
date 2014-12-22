@@ -3054,6 +3054,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setZonalTierPrice(false);
 			getManagedBean().setTariffPrice(false);
 			getManagedBean().setServiceItem(false);
+			
+			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
+			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+			ContractItemResDTO ciItemResDTO = null;
+			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+			
 			if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
 				getManagedBean().setServiceItem(true);
 				if(flItemAddr.getScRequestItem().getTplSpecQuestion()!=null) {
@@ -3061,6 +3068,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					getManagedBean().setUomPerYear(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerYear());
 					getManagedBean().setUomPerMonth(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerMonth());
 					getManagedBean().setUomPerDay(flItemAddr.getScRequestItem().getTplSpecQuestion().getClUomPerDay());
+				}
+				if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
+					ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
+					getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
 				}
 			}
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
@@ -3073,11 +3084,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(ParameterConst.PRICE_TYPE_TARIFF.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())) {
 				getManagedBean().setTariffPrice(true);
 			}
-			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
-			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
-			ContractItemResDTO ciItemResDTO = contractItemSO.retrieveItemPriceAndZone(reqDTO);
+
+			ciItemResDTO = contractItemSO.retrieveItemPriceAndZone(reqDTO);
 			getManagedBean().setReqItemInfoList(ciItemResDTO.getCtItemPriceList());
 			List<FLCtSupplierItemVO> supplierItems=new ArrayList<FLCtSupplierItemVO>();
 			if(ciItemResDTO.getCtItemPriceList() != null && ciItemResDTO.getCtItemPriceList().size() >0){
