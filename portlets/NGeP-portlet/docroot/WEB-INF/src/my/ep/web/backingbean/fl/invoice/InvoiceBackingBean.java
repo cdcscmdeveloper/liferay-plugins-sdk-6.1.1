@@ -6,7 +6,6 @@ package my.ep.web.backingbean.fl.invoice;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,8 +15,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -106,7 +103,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.axis.encoding.Base64;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -309,9 +305,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		
 		String taskId = originalServletRequest.getParameter("taskId");
-		String invoiceId = originalServletRequest.getParameter("invoiceId");
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -457,38 +451,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}	
 			}
 			validateAdvancedPayment();
-		} else if(invoiceId!=null) {
-			try {
-				String key = invoiceId.substring(0,16);
-				String encoded = invoiceId.substring(16);
-				
-				// Create key and cipher
-				Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
-				Cipher cipher = Cipher.getInstance("AES");
-				// decrypt the text
-				cipher.init(Cipher.DECRYPT_MODE, aesKey);
-				String decrypted = new String(cipher.doFinal(Base64.decode(new String(encoded))));
-				reqDTO.setInvoiceId(Long.valueOf(decrypted));
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-			  
-			renewSesionObject();
-			resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
-			
-			getManagedBean().setInvoiceId(resDTO.getInvoice().getInvoiceId());
-			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal("View");
-			getManagedBean().setInvoice(resDTO.getInvoice());
-			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
-			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-				getFactoringBranchDtl(); 
-			}			
-			
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.getManagedBean().setHideRemarks(true);
-			flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
-		}
+		} 
 	}
 	
 	public void viewInvoice() {
@@ -525,7 +488,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "invBasePage");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "invBasePage?faces-redirect=true");
 		}
 	}	
 	
