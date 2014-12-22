@@ -6,20 +6,20 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel header="#{lbl['lbl.sm.officeloc.operation.stage']}">
-		<p:inputTextarea  rows="5" cols="175" disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.operationStage}">
+	<p:panel header="#{lbl['lbl.sm.officeloc.operation.stage']}" toggleable="true">
+		<p:inputTextarea  rows="8"  disabled="#{viewFlag}" style="width:80%;"  maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.operationStage}">
 		
 		</p:inputTextarea>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sm.officeloc.prod.capability']}">
-		<p:inputTextarea  rows="5" cols="175"  disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.productionCapacity}">
+	<p:panel header="#{lbl['lbl.sm.officeloc.prod.capability']}" toggleable="true">
+		<p:inputTextarea  rows="8"   disabled="#{viewFlag}" style="width:80%;" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.productionCapacity}">
 		
 		</p:inputTextarea>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sm.manufacturing.factrymchne.ownrshp.method']}">
-		<p:inputTextarea rows="5" cols="175"  disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.fmOwnershipMethod}">
+	<p:panel header="#{lbl['lbl.sm.manufacturing.factrymchne.ownrshp.method']}" toggleable="true">
+		<p:inputTextarea rows="8"   disabled="#{viewFlag}" style="width:80%;" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.fmOwnershipMethod}">
 		
 		</p:inputTextarea>
 	</p:panel>
