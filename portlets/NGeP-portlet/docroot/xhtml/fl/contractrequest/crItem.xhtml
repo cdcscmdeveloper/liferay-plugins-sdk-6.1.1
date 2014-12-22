@@ -523,6 +523,15 @@
 							</p:inputText></td>					
 			</tr>
 			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.price.per.uom']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice and contractRequestBackingBean.managedBean.serviceItem}"/></td>
+				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.standardPrice and contractRequestBackingBean.managedBean.serviceItem}"
+						value="#{contractRequestBackingBean.managedBean.pricePerUom}" 
+						size="35" >
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>					
+			</tr>			
+			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.frequency.per.uom']}" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"/></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.serviceItem}"
 						value="#{contractRequestBackingBean.managedBean.uomFrequency}" 

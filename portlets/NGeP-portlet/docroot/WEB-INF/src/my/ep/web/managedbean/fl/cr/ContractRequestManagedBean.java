@@ -244,6 +244,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private BigDecimal UomPerYear ; 
 	private BigDecimal UomPerMonth ; 
 	private BigDecimal UomPerDay ; 
+	private BigDecimal pricePerUom;
 	
 	private boolean emailValidate = false;
 	private boolean queryDisplay=false;
@@ -2466,5 +2467,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setUomPerDay(BigDecimal uomPerDay) {
 		UomPerDay = uomPerDay;
+	}
+
+	public BigDecimal getPricePerUom() {
+		return pricePerUom;
+	}
+
+	public void setPricePerUom(BigDecimal pricePerUom) {
+		this.pricePerUom = pricePerUom;
 	}
 }
