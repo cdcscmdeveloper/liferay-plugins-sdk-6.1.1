@@ -936,22 +936,21 @@ public class SmApplicationBackingBean extends
 
 		finally {
 			mofRegistrationSO = null;
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+					&& !valid) {
+				saveOrUpdateAppl();
+			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+					&& !valid) {
+				saveOrUpdateAppl();
+				calculateCapital();
+			} else {
+				valid = retriveLatestApplAfterUpdate(currentPageType,
+						outputPageType);
+			}
 			if (getManagedBean().getCurrentPageType() != null) {
-				if (currentPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
-						&& !valid) {
-					saveOrUpdateAppl();
-				} else if (currentPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
-						&& !valid) {
-					saveOrUpdateAppl();
-					calculateCapital();
-				} else {
-					valid = retriveLatestApplAfterUpdate(currentPageType,
-							outputPageType);
-				}
-
-				switch (currentPageType) {
+				switch (getManagedBean().getCurrentPageType()) {
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
 					if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
 						SmApplicationUtil
