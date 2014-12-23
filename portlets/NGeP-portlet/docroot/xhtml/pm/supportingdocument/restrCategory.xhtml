@@ -41,9 +41,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<tr>
 				<td>
 					<!--  Popup Category Details -->
-					<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3_LITE" styleClass="ppDisplayCalS" 
+					<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3_ALL" styleClass="ppDisplayCalS" 
 		            	readonly="true" selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
-						headerText="#{lbl['lbl.pm.search.category']}" update=":form:dtCat"
+						headerText="#{lbl['lbl.pm.search.category']}" update=":form:tvDocRestriction:dtCat"
 						saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
 						postUpdateListener="supportDocBackingBean.updateCategoryL3(supportDocBackingBean.managedBean.selectedCategoryL3s)"
 						conditionField="recordStatus^1" 

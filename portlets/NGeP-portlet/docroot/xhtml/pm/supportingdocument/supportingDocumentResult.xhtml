@@ -15,7 +15,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"  style="width:50%; white-space:normal;">
 	            #{document.docName}
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.supplier.zone']}"  style="width:15%; white-space:normal;"> 
+	        <p:column headerText="#{lbl['lbl.pm.display.sequence']}"  style="width:15%; white-space:normal;"> 
+		    	#{document.displaySeq}
+	        </p:column>  
+           <p:column headerText="#{lbl['lbl.pm.supplier.zone']}" > 
 		    	#{document.pmZone.zoneName}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.restriction']}">  
