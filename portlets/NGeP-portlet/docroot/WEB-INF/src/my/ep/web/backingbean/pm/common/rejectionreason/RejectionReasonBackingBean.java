@@ -553,17 +553,32 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		SearchFilterBean beanReason = new SearchFilterBean();
 		
 		//add reason code
+		log.info("reasonCode: " + reasonCode);
 		beanReason.setSearchField("pmReason.reasonCode");
-		beanReason.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+		beanReason.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 		beanReason.setSearchValue(reasonCode);
+		beanReason.setCaseInsensitive(true);
 		searchBean.getDataFilterBeans().add(beanReason);
 		
 		//add reason category
+		log.info("reasonCategoryCode: " + reasonCategory);
 		SearchFilterBean beanCategory = new SearchFilterBean();
 		beanCategory.setSearchField("pmReason.reasonCategoryCode.parameterId");
 		beanCategory.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 		beanCategory.setSearchValue(reasonCategory);
 		searchBean.getDataFilterBeans().add(beanCategory);
+		
+		if(id!=null){
+			//excluded the current id
+			log.info("reasonId: " + id);
+			SearchFilterBean idReason = new SearchFilterBean();
+			idReason.setSearchField("pmReason.reasonId");
+			idReason.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+			idReason.setSearchValue(id);
+			searchBean.getDataFilterBeans().add(idReason);
+		}
+		
+				
 		
 		//Filter by search bean
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
@@ -572,12 +587,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
 		ReasonResDTO resDTO = reqSO.retrieveReasonDescBySearchBean(reqDTO);
 		if(resDTO.isSuccessful()&& resDTO.getReasonDescList()!=null && !resDTO.getReasonDescList().isEmpty()){ //&& resDTO.getPmReason().isRecordStatus()
-			if(id!=null){
-				isUnique = id.equals(resDTO.getReasonDescList().get(0).getPmReason().getReasonId());
-			}else{
-				isUnique = false;
-			}
-			
+			isUnique = false;
 		}
 		return isUnique;
 		
