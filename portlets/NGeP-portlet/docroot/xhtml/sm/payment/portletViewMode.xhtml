@@ -17,7 +17,7 @@
 		<p:panel header="#{lbl['lbl.sm.payment.item']}" rendered="#{paymentBackingBean.managedBean.applicationPayment != null}">
 			<p:dataTable value="#{paymentBackingBean.managedBean.applicationPayment}" var="billItem">
 				<p:column headerText="#{lbl['lbl.sm.payment.application']}">
-					#{billItem.itemDesc}
+					<h:outputText value="#{paymentBackingBean.getBillItemDescByLanguage(billItem.pmParameter)}" />
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.price']}">
