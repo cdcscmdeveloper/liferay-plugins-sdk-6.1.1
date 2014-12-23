@@ -301,7 +301,7 @@ public class BSVAttendanceBackingBean extends
 				retrieveBriefingSiteVisitList(qtId);
 				url = previousPage + ".xhtml?faces-redirect=true";
 			}
-			if (resDTO.isSuccessful()) {
+			if (resDTO.isSuccessful() && !"complete".equalsIgnoreCase(status)) {
 				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);
 				String previousPage = this.getManagedBean().getPreviousPage();
 				ScQt scQt = this.getManagedBean().getScQt();
