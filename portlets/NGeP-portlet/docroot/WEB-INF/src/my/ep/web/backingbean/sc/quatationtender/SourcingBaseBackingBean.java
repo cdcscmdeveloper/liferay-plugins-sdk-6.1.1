@@ -774,7 +774,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
-	 * To update digisign data
+	 * To update digisign data for gpki
 	 * 
 	 * @param pmDigiSign
 	 * @param docType
@@ -787,6 +787,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
 	}
+	
+	/**
+	 * To update digisign data for spki
+	 * 
+	 * @param pmDigiSign
+	 * @param docType
+	 * @param docId
+	 * @param docNumber
+	 * @param textBeforeSign
+	 */
+	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+			Long docId, String docNumber , String textBeforeSign) {
+		FacesScopes facesScope = new FacesScopes();
+		Long userId = facesScope.getUserSessionBean().getUserId();
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		pmDigiSign.setDocId(new BigDecimal(docId));
+		pmDigiSign.setDocNo(docNumber);
+		pmDigiSign.setDocType(docType);
+		pmDigiSign.setCreatedBy(userId);
+        pmDigiSign.setCreatedDate(date);
+        pmDigiSign.setOrginalData(textBeforeSign);
+	}
+
+	
+	 FacesScopes facesScope = new FacesScopes();
+	    Long userId = facesScope.getUserSessionBean().getUserId();
+//	    Long userId = (Long) MDC.get(LogKey.USER_ID);
+		Timestamp date = new Timestamp(System.currentTimeMillis());
 
 	protected boolean isDigiSigningRequired(String roleCode) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
