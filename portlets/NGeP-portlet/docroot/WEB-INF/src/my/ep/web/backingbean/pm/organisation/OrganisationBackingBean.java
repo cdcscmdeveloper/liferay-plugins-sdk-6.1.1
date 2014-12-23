@@ -915,10 +915,12 @@ public class OrganisationBackingBean extends
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(id);
-		OrgProfileResDTO resDTO = orgProfileSO
-				.retrieveOrgProfileListByMinistry(reqDTO);
+		// Get Ministry
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
 
 		this.getManagedBean().setOrgProfileList(resDTO.getOrgProfileList());
 	}
@@ -1119,8 +1121,8 @@ public class OrganisationBackingBean extends
 	 */
 	public void resetOrganisationSearchBean() {
 		log.info("resetOrgSearchBean");
-		this.getManagedBean().setOrganisationSearchBean(
-				new OrganisationSearchBean());
+		this.getManagedBean().setOrganisationSearchBean(null);
+		log.info(".......after reset search panel ...this.getManagedBean().getOrganisationSearchBean().getOrgName()="+this.getManagedBean().getOrganisationSearchBean().getOrgName());
 		searchOrganisation = new SearchOrgPagingDataModel();
 	}
 
