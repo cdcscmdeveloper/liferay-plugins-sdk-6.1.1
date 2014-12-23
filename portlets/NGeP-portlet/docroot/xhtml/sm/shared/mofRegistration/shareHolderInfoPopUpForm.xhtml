@@ -688,8 +688,24 @@
 								value="#{backingBean.managedBean.profBodyLs}"
 								itemValue="#{shrProfBody.certBodyId}"
 								itemLabel="#{shrProfBody.bodyName}" />
+							<p:ajax event="change" process="@this"
+								update="shrProfBodyOthersAssoc, shrProfBodyOthersAssocMand" />
 						</p:selectOneMenu> <p:message id="equiStfPrdBdyLblMsg" for="equiStfPrdBdyLbl"
 							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.others']}" />
+						<p:outputLabel value="*" styleClass="mandatory"
+							id="shrProfBodyOthersAssocMand"
+							rendered="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId eq 10}" /></td>
+					<td><p:inputText size="35" id="shrProfBodyOthersAssoc"
+							label="#{lbl['lbl.sm.profBody.others']}"
+							required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId eq 10}"
+							value="#{backingBean.managedBean.selectedStfPrfBdy.otherAssociation}"
+							disabled="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId ne 10}" />
+						<p:message id="shrProfBodyOthersAssocMsg"
+							for="shrProfBodyOthersAssoc" showSummary="true"
+							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']}" />
