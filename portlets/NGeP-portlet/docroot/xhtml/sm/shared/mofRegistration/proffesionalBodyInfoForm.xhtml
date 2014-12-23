@@ -134,16 +134,25 @@
 							value="#{backingBean.managedBean.profBodyLs}"
 							itemValue="#{profBody.certBodyId}"
 							itemLabel="#{profBody.bodyName}" />
-							
-						<p:ajax event="change" process="@this" update="profBodyOthersAssoc" />
+
+						<p:ajax event="change" process="@this"
+							update="profBodyOthersAssoc, profBodyOthersAssocMand" />
 					</p:selectOneMenu> <p:message id="profBodyBdyMsg" for="profBodyBdy"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.others']}" /></td>
-				<td><p:inputText size="35"
-						id="profBodyOthersAssoc" value="#{backingBean.managedBean.selectedAssocBody.otherAssociation}" disabled="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId ne 10}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.others']}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						id="profBodyOthersAssocMand"
+						rendered="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId eq 10}" /></td>
+				<td><p:inputText size="35" id="profBodyOthersAssoc"
+						label="#{lbl['lbl.sm.profBody.others']}"
+						required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId eq 10}"
+						value="#{backingBean.managedBean.selectedAssocBody.otherAssociation}"
+						disabled="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId ne 10}" />
+					<p:message id="profBodyOthersAssocMsg" for="profBodyOthersAssoc"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
