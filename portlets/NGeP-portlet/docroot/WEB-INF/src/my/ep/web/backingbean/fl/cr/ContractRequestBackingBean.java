@@ -120,6 +120,8 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
+import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
+import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
@@ -1103,6 +1105,30 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlRequest().setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
 			}
 			getSupplierBranchesList(getManagedBean().getFlRequest().getSmSupplier());
+			
+			// No schedule no is defined if this is coming from Search Catalogue. Need to assign available scheduleNo for it.
+			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			if(scheduleNo==null && contractResDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+				if(contractResDTO.getContract().isFrequencySchedule() && contractResDTO.getContract().getLatestContractVer().getCtSchedules()!=null) {
+					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
+						scheduleNo = ctSchedule.getScheduleNo().toString();
+						reqDTO.setScheduleNo(scheduleNo);
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+							break;
+						}
+					}
+				} else if(contractResDTO.getContract().getLatestContractVer().getCtProgressivePayments()!=null) {
+					for(CtProgressivePayment ctProgressivePayment : contractResDTO.getContract().getLatestContractVer().getCtProgressivePayments()) {
+						scheduleNo = ctProgressivePayment.getPhaseNo().toString();
+						reqDTO.setScheduleNo(scheduleNo);
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+							break;
+						}						
+					}
+				}
+				getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
+			}
 		}
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
