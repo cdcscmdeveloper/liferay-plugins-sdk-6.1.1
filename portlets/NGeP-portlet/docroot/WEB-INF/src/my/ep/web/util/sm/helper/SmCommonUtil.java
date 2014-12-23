@@ -51,6 +51,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
@@ -151,26 +152,25 @@ public class SmCommonUtil {
 	}
 
 	public static String getParamDescriptionByLanguageAndPmParameter(
-			String language, PmParameter pmParameter) {
-		if(pmParameter!=null){
-			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setPmParameter(pmParameter);
-			reqDTO.setLanguage(language);
-			ISmApplRevisionSO reqSO = (ISmApplRevisionSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISmApplRevisionSO.class);
-			SmApplRevisionResDTO resDTO = reqSO
-					.retrieveParamDescByParameterIdAndLanguage(reqDTO);
-			if (resDTO.getParamDesc() != null) {
-				return resDTO.getParamDesc().getCodeName();
-			} else {
-				return "";
+			PmParameter pmParameter) {
+		String desc = "";
+		if (pmParameter != null) {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescList(
+							pmParameter.getParameterType());
+			if (parameterDescs != null) {
+				for (PmParameterDesc paramDesc : parameterDescs) {
+					if (paramDesc.getPmParameter() != null
+							&& paramDesc.getPmParameter().getParameterId()
+									.compareTo(pmParameter.getParameterId()) == 0) {
+						desc = paramDesc.getCodeName();
+						break;
+					}
+				}
 			}
-		}else{
-			return "";
 		}
-		
+		return desc;
+
 	}
 
 	public static PmBusinessNature retrieveBusinessNatureById(Long bizId) {

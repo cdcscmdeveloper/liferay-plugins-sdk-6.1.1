@@ -680,15 +680,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			PmParameter paymentMethod = SmCommonUtil
 					.retrieveParameterByTypeAndCode("BM",
 							macBean.getPurchaseMethod(), locale.getLanguage());
-			getManagedBean().setSelectedMachineryPurchaseMethod(
-					SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(
-							locale.getLanguage(), paymentMethod));
+			getManagedBean()
+					.setSelectedMachineryPurchaseMethod(
+							SmCommonUtil
+									.getParamDescriptionByLanguageAndPmParameter(paymentMethod));
 		}
 
 	}
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
+		if (getManagedBean().getSelectedCompanyExperience()
+				.getProcurementModeId() != null) {
+			PmParameter procurementMode = SmApplicationUtil
+					.retrievePmParameterById(getManagedBean()
+							.getSelectedCompanyExperience()
+							.getProcurementModeId().longValue());
+			getManagedBean()
+					.setSelectedCompanyExperienceProcurementMode(
+							SmCommonUtil
+									.getParamDescriptionByLanguageAndPmParameter(procurementMode));
+		}
 	}
 
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
@@ -900,11 +912,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							.retrievePmParameterById(getManagedBean()
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
-			getManagedBean().setSelectedShareholderIdentificationType(
-					SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(
-							new FacesScopes().getUserLocale().getLanguage(),
-							getManagedBean().getSelectedShareHolder()
-									.getIdentificationType()));
+			getManagedBean()
+					.setSelectedShareholderIdentificationType(
+							SmCommonUtil
+									.getParamDescriptionByLanguageAndPmParameter(getManagedBean()
+											.getSelectedShareHolder()
+											.getIdentificationType()));
 
 		}
 		if (getManagedBean().getSelectedShareHolder().getIdentificationType() == null) {

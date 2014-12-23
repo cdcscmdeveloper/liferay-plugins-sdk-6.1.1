@@ -110,7 +110,6 @@
 
 		<p:dataTable var="table" id="offSdList"
 			value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" rowIndexVar="index">
-			<ac:paginator for="offSdList" />
 			
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;">
 				<p:outputLabel value="#{index + 1}"
@@ -130,11 +129,11 @@
 
 	</p:panel>
 	</div>
-	<!-- <p:outputPanel>
+	<p:outputPanel>
 		<div align="right">
 			<h:commandButton value="#{lbl['lbl.sm.printList']}"
 				onclick="printDiv();" type="button" styleClass="ui-button">
 			</h:commandButton>
 		</div>
-	</p:outputPanel> -->
+	</p:outputPanel>
 </ui:composition>
