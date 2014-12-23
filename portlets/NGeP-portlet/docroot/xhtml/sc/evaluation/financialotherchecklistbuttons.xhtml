@@ -7,12 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<!-- <ui:param name="docDefinationKey"
-		value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
+		value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param> -->
 
-	<c:if test="#{'TS' ne docDefinationKey}"> -->
+
+
 	<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+		rendered="#{checklistScoreType eq '2' or companyScoreType eq '2'}"
 		disabled="#{evaluationBackingBean.managedBean.readOnly}"
 		style="float:right;" icon="ui-icon-save" update="@all"
 		action="#{evaluationBackingBean.saveProposalScoreDtls}" />
-	<!-- </c:if> -->
+
 </ui:composition>
