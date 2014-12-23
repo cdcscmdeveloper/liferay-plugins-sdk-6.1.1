@@ -781,7 +781,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 							}
 						}
 					}
-				}else if(RESTR_APP == restrictType && pmDocument.isByCategory()){
+				}else if(RESTR_CATEGORY == restrictType && pmDocument.isByCategory()){
 					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
 						isNotEmpty = false;
 					}else{
