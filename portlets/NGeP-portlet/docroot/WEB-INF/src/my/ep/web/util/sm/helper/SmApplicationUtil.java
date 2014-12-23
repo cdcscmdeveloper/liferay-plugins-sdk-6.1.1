@@ -2085,7 +2085,7 @@ public class SmApplicationUtil {
 				.getBusinessType());
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1List();
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 		if (resDTO != null) {
 			return resDTO.getCategoryL1List();
 		} else {
