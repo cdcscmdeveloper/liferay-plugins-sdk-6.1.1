@@ -85,7 +85,7 @@
 		</p:outputPanel>
 	</table>
 	<p:outputPanel
-		rendered="#{((backingBean.managedBean.poUser and backingBean.managedBean.smAppl.applType eq 'R') or backingBean.managedBean.approverUser) and !backingBean.managedBean.redirectToPersonPage and !(backingBean.managedBean.smAppl.applType eq 'N')}">
+		rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and !backingBean.managedBean.redirectToPersonPage and !(backingBean.managedBean.smAppl.applType eq 'N')}">
 		<table style="width: 100%;">
 			<tr>
 				<td></td>
@@ -101,7 +101,7 @@
 		</table>	
 	</p:outputPanel>
 	<p:outputPanel
-		rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
+		rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and !backingBean.managedBean.redirectToPersonPage}">
 		<table style="width: 100%;">
 			<tr>
 				<td style="padding-right: 2px; text-align: center;">
