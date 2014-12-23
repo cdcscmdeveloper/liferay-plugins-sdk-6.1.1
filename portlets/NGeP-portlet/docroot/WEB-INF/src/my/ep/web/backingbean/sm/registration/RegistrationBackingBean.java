@@ -1607,6 +1607,29 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		return retVal;
 	}
+	
+	public String getBusinessNatureSection(SmSupplierBusiness suppBusinessNat){
+		String sectionLvl1Code = "";
+		PmBusinessNature pmBizNat = suppBusinessNat.getPmBusinessNature();
+		PmBusinessNature pmBizObjL4 = null;
+		if(pmBizNat!=null && pmBizNat.getParentBusinessNature()!=null && pmBizNat.getParentBusinessNature().getBusinessNatureId()!=null){
+			pmBizObjL4 = SmCommonUtil.retrieveBusinessNatureById(pmBizNat.getParentBusinessNature().getBusinessNatureId());
+		}
+		PmBusinessNature pmBizObjL3 = null;
+		if(pmBizObjL4!=null && pmBizObjL4.getParentBusinessNature()!=null && pmBizObjL4.getParentBusinessNature().getBusinessNatureId()!=null){
+			pmBizObjL3 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL4.getParentBusinessNature().getBusinessNatureId());
+		}
+		PmBusinessNature pmBizObjL2 = null;
+		if(pmBizObjL3!=null && pmBizObjL3.getParentBusinessNature()!=null && pmBizObjL3.getParentBusinessNature().getBusinessNatureId()!=null){
+			pmBizObjL2 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL3.getParentBusinessNature().getBusinessNatureId());
+		}
+		PmBusinessNature pmBizObjL1 = null;
+		if(pmBizObjL2!=null && pmBizObjL2.getParentBusinessNature()!=null && pmBizObjL2.getParentBusinessNature().getBusinessNatureId()!=null){
+			pmBizObjL1 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL2.getParentBusinessNature().getBusinessNatureId());
+		}
+		sectionLvl1Code =  pmBizObjL1==null?"":pmBizObjL1.getLevelCode();
+		return sectionLvl1Code;
+	}
 }
 
 
