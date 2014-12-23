@@ -1813,8 +1813,8 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setTechnicalGovNoOfYears(
 						new ArrayList<ScQtCheckListScore>());
 				// this.getManagedBean().setNoOfContractsProposalScore(null);
-				// this.getManagedBean().setCompanyScoreType(null);
-
+				this.getManagedBean().setCompanyScoreType(null);
+				this.getManagedBean().setChecklistScoreType(null);
 				if (QTConstants.TECHNICAL_GOV_CODE
 						.equalsIgnoreCase(docDefinationKey)) {
 					this.getManagedBean().setQtProposalChecklist(
@@ -2371,7 +2371,8 @@ public class EvaluationBackingBean extends
 						new ArrayList<ScQtProposalScore>());
 				this.getManagedBean().setTechnicalGovNoOfContracts(
 						new ArrayList<ScQtCheckListScore>());
-
+				this.getManagedBean().setCompanyScoreType(null);
+				this.getManagedBean().setChecklistScoreType(null);
 				// this.getManagedBean().setNoOfContractsProposalScore(null);
 
 				if (QTConstants.FINANCIAL_GOV_CODE
