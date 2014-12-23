@@ -47,11 +47,11 @@
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
 		<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
-				<p:inputText value="#{interviewee.name}" id="intName"  maxlength="50"  />
+				<p:inputText value="#{interviewee.name}" id="intName"  maxlength="50" size="55" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.userprofile.designation']}">
-				<p:inputText value="#{interviewee.designation}" id="intDesignation"  maxlength="50"  />
+				<p:inputText value="#{interviewee.designation}" id="intDesignation"  maxlength="50" size="55" />
 			</p:column>
 		</p:dataTable>
 
