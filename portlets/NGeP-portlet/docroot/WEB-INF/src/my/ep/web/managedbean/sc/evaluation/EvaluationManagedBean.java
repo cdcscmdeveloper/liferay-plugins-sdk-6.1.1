@@ -206,7 +206,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtOpeningCommitteeRemark>  evaluationOpeningCommitteeRemark;
 	private List<ScQtTechnicalCommitteeRemark>  evaluationTechnicalCommitteeRemark;
 	private List<ScQtFinancialCommitteeRemark>  evaluationFinancialCommitteeRemark;
-
+  
 	/**
 	 * @return the today
 	 */
@@ -1998,6 +1998,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 			List<ScQtFinancialCommitteeRemark> evaluationFinancialCommitteeRemark) {
 		this.evaluationFinancialCommitteeRemark = evaluationFinancialCommitteeRemark;
 	}
+
+	
 
 	
 	
