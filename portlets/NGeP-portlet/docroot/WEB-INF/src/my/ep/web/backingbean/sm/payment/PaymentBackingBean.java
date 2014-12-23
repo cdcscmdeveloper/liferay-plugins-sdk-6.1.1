@@ -49,6 +49,7 @@ import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -849,6 +850,26 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 	
 		return null;*/
+	}
+	
+	public String getBillItemDescByLanguage(PmParameter pmParameter){
+		String desc = "";
+		
+		if(pmParameter!=null){
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(pmParameter.getParameterType());
+			if(parameterDescs!=null){
+				for(PmParameterDesc paramDesc:parameterDescs){
+					if(paramDesc.getPmParameter()!=null && 
+							paramDesc.getPmParameter().getParameterId().compareTo(pmParameter.getParameterId())==0){
+						desc =  paramDesc.getCodeName();
+						break;
+					}
+				}
+			}
+		}
+		
+		return desc;
 	}
 
 	public PaymentBean getPaymentBean() {
