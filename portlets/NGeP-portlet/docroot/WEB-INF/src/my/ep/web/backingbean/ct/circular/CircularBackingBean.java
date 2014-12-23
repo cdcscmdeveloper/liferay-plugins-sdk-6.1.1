@@ -77,7 +77,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				reqDTO.setCircularVerSearchBean(searchBean);
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
+				CircularResDTO resDTO = circularSO.searchLatestCircularVer(reqDTO);
 				if(resDTO.isSuccessful()) {
 					return resDTO.getCircularVerResultBean();
 				}
