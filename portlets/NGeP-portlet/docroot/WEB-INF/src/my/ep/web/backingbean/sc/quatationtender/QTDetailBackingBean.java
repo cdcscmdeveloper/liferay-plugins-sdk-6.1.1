@@ -1202,7 +1202,8 @@ public class QTDetailBackingBean extends
 				// getting Briefing Same As Site Visit value
 				ScQt scQt = resDTO.getScQt();
 				getManagedBean().setQt(scQt);
-				Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+				Long currentStatus = this.getManagedBean().getQt()
+						.getQtStatus().getStatusId();
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				if (scQt.isZonal()) {
 					List<TplSpecZoneDtl> zones = resDTO.getZonesList();
@@ -1670,10 +1671,12 @@ public class QTDetailBackingBean extends
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			List<TabBean> existingApprovalTabs = this.getManagedBean()
 					.getTabList();
+
 			/*
 			 * this.getManagedBean().setToBeRemoveList(
 			 * getToBeRemoveApprovals(requiredApproval));
 			 */
+
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
@@ -2521,7 +2524,8 @@ public class QTDetailBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					getManagedBean().setQt(tenderResDTO.getQtDetail());
-					Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+					Long currentStatus = this.getManagedBean().getQt()
+							.getQtStatus().getStatusId();
 					this.getManagedBean().setCurrentStatusId(currentStatus);
 					getManagedBean().getCtContract().setContractNo(
 							this.getManagedBean().getQt()
@@ -2723,6 +2727,7 @@ public class QTDetailBackingBean extends
 							.getApproverSettings()) {
 						if (scQtApproverSettings.getApprover().getUserId()
 								.equals(pmUser.getUserId())) {
+							scQtApproverSettings.setQtApproval(approval);
 							isApproverExists = true;
 							break;
 						}
@@ -2929,18 +2934,18 @@ public class QTDetailBackingBean extends
 			} else {
 				committe = previousTabBean.getScQtCommittee().getScCommittee();
 			}
-			//Commented validation calling for Bug #2802
-			/*if (committe.isApprovalReq()) {
-
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								ICommitteSO.class);
-				CommitteReqDTO reqDTO = new CommitteReqDTO();
-				reqDTO.setScCommittee(committe);
-				reqDTO.setScQt(this.getManagedBean().getQt());
-				reqDTO.setUser(new FacesScopes().getUserSessionBean());
-				committeSO.validateCommitteDtls(reqDTO);
-			}*/
+			// Commented validation calling for Bug #2802
+			/*
+			 * if (committe.isApprovalReq()) {
+			 * 
+			 * ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+			 * ICommitteSO.class); CommitteReqDTO reqDTO = new CommitteReqDTO();
+			 * reqDTO.setScCommittee(committe);
+			 * reqDTO.setScQt(this.getManagedBean().getQt()); reqDTO.setUser(new
+			 * FacesScopes().getUserSessionBean());
+			 * committeSO.validateCommitteDtls(reqDTO); }
+			 */
 		}
 		this.getManagedBean().setSelectedTabIndex(selectedZoneTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
@@ -2971,7 +2976,8 @@ public class QTDetailBackingBean extends
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
-		Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+				.getStatusId();
 		QuationTenderReqDTO reqDTO = null;
 		switch (activeIndex) {
 		case 0:
@@ -3208,9 +3214,9 @@ public class QTDetailBackingBean extends
 								approvalTab.getScQtApproval()
 										.getApprovalCategory()
 										.getParameterCode())) {
-					approvalTab.getScQtApproval().setScQtApprovalDtls(
-							qtApproval.getScQtApprovalDtls());
-					return approvalTab.getScQtApproval();
+					qtApproval.setApproverSettings(approvalTab
+							.getScQtApproval().getApproverSettings());
+					return qtApproval;
 				}
 			}
 		}
