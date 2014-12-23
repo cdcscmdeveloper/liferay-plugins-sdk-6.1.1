@@ -104,6 +104,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String supplierBusinessTypeVal;
 	private String selectedMachineryPurchaseMethod;
 	private String selectedShareholderIdentificationType;
+	private String selectedCompanyExperienceProcurementMode;
 	private String supplierRemarks;
 	private String currentStatus;
 
@@ -835,6 +836,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedShareholderIdentificationType(
 			String selectedShareholderIdentificationType) {
 		this.selectedShareholderIdentificationType = selectedShareholderIdentificationType;
+	}
+
+	public String getSelectedCompanyExperienceProcurementMode() {
+		return selectedCompanyExperienceProcurementMode;
+	}
+
+	public void setSelectedCompanyExperienceProcurementMode(
+			String selectedCompanyExperienceProcurementMode) {
+		this.selectedCompanyExperienceProcurementMode = selectedCompanyExperienceProcurementMode;
 	}
 
 }
