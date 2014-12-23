@@ -19,7 +19,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu id="somDocCate" label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
 						<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions(false)}"/>
-						<p:ajax event="change" update="pSupportDocSearch"/>
+						<p:ajax event="change" update="pSupportDocSearch" listener="#{supportDocBackingBean.docCategorySearchChange()}"/>
 					</p:selectOneMenu>
 				</td>
 				<th>

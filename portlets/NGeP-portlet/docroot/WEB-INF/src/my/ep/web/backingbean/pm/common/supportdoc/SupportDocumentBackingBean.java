@@ -151,6 +151,25 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	}
 	
 	/**
+	 * reset doc search fields
+	 */
+	public void docCategorySearchChange(){
+		log.info("docCategorySearchChange");
+		if(this.getManagedBean().getSupportDocSearchBean()!=null){
+			if(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
+				this.getManagedBean().getSupportDocSearchBean().setProcureCatParam(null);
+			}else if(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())
+					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
+				this.getManagedBean().getSupportDocSearchBean().setAppTypeParam(null);
+				this.getManagedBean().getSupportDocSearchBean().setBusinessCategory(null);
+				this.getManagedBean().getSupportDocSearchBean().setComTypeParam(null);
+				this.getManagedBean().getSupportDocSearchBean().setPmZone(null);
+				this.getManagedBean().getSupportDocSearchBean().setSuppTypeParam(null);
+			}
+		}
+	}
+	
+	/**
 	 * set document category
 	 */
 	public void docCategoryChange(){
