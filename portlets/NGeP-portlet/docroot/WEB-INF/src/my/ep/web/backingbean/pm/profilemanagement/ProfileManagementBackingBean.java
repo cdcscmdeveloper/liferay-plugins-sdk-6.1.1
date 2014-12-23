@@ -122,7 +122,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	//Mapper for DDL object
 	private static Map<String, Object> identityTypeMapper;
 	private static Map<Long, Object> orgTypeMapper;
+	
+	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
+	
+	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
+		if (this.orgTypeSearchBean == null) {
+			this.orgTypeSearchBean = super.createSearchBean(
+					PmParameterDesc.class, "somOrgType");
+		}
 
+		return this.orgTypeSearchBean;
+	}
+	
 	/**
 	 * @return the tabUserProfile
 	 */
@@ -215,6 +226,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public String redirectToMaintainUser(Long id) throws Exception{
 		logger.info("redirectToMaintainUser");
 		this.retrieveIdentityTypeMap();
+		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		if(id!=null && id>0){
 			loadUserProfile(id);
@@ -510,6 +522,23 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			identityTypeMapper.put(pmDesc.getPmParameter().getParameterCode(), pmDesc.getPmParameter());
 		}
 	}
+
+	/**
+	 * retrieve all org type into mapper
+	 */
+	private void retrieveOrgTypeMap(){
+		
+		List<PmParameterDesc> parameterDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
+				, new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
+				, null);
+		
+		orgTypeMapper = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+
+	}
+	
 	
 	/**
 	 * set user identity type
@@ -595,24 +624,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		dateStr = DateUtils.dateToString("dd/MM/yyyy", today);
 		return dateStr;
 	}
-	
-	/**
-	 * Retrieve Org. Type from PM
-	 * @return List<PmParameterDesc> 
-	 */
-	public List<PmParameterDesc> getOrgTypeList() {
-		logger.info("getOrgTypeList");
-		List<PmParameterDesc> parameterDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
-				, new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
-				, null);
-		
-		orgTypeMapper = new HashMap<Long,Object>();
-		for(PmParameterDesc pmDesc: parameterDescs){
-			orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
-		}
-
-		return parameterDescs;
-	}
+//	
+//	/**
+//	 * Retrieve Org. Type from PM
+//	 * @return List<PmParameterDesc> 
+//	 */
+//	public List<PmParameterDesc> getOrgTypeList() {
+//		logger.info("getOrgTypeList");
+//		List<PmParameterDesc> parameterDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
+//				, new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
+//				, null);
+//		
+//		orgTypeMapper = new HashMap<Long,Object>();
+//		for(PmParameterDesc pmDesc: parameterDescs){
+//			orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+//		}
+//
+//		return parameterDescs;
+//	}
 	
 	/**
 	 * To add new item to Responsible Org. Unit list
