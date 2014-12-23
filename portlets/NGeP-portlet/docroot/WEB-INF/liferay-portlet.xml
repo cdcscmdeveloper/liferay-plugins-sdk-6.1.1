@@ -115,6 +115,14 @@
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>ctCircularListing</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
 		<portlet-name>ctCancelCircular</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
