@@ -561,12 +561,18 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPervious() {
 		log.info("backToPervious");
-		retrieveLOIList(getManagedBean().getSourceId());
+		//retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
 
+		if(getManagedBean().isQtLoaEditFlag()){
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+
+		} else{
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
+		}
 	}
 
 	/*
@@ -996,7 +1002,7 @@ public class LOIDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
-			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
+			reqDTO.setRecommendDtlIdList(null);
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
 
 			populateLOIDetails(resDTO);
@@ -1820,19 +1826,6 @@ public class LOIDetailBackingBean extends
 		}	
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -1840,16 +1833,15 @@ public class LOIDetailBackingBean extends
 		log.info(message);
 	}
 
-	public StreamedContent getLoiLetterStreamContent() throws Exception {
+	public void getLoiLetterStreamContent() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
 		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(), (ScAttachment) pbAttachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-
-		return pbStreamContent;
-
+		getManagedBean().setStreamedContent(pbStreamContent);
+		RequestContext.getCurrentInstance().execute("loiLetterDlg.show();");
 	}
 
 	public void addMeetingAttendance() {
@@ -2090,7 +2082,7 @@ public class LOIDetailBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
-		//ScLoi loi = getManagedBean().getScLoi();
+		boolean  qtLoaEditFlag = getManagedBean().isQtLoaEditFlag();
 
 		this.renewSesionObject();
 
@@ -2099,7 +2091,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
-		//getManagedBean().setScLoi(loi);
+		getManagedBean().setQtLoaEditFlag(qtLoaEditFlag);
 		if(awardDataType != null){
 			getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
 		}
@@ -2155,7 +2147,7 @@ public class LOIDetailBackingBean extends
 							.getResultList();
 					for (PmClause pmClause : pmClauseList) {
 						deductionClause = new ScQtDeductionClause();
-						deductionClause.setClauseDesc(pmClause.getClauseDesc());
+						deductionClause.setPmClause(pmClause);
 						deductionClause.setScQtDeduction(scQtDeduction);
 						deductionClauseList.add(deductionClause);
 					}
@@ -2325,7 +2317,9 @@ public class LOIDetailBackingBean extends
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			schedule.setEndYear(endYear.toString());
+			if(endYear != null){
+				schedule.setEndYear(endYear.toString());
+			}
 		}
 
 		if (startMonth != null && endMonth != null && startYear != null

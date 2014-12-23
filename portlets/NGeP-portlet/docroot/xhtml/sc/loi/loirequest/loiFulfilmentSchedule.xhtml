@@ -37,6 +37,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:10%">
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
+						    label="#{lbl['lbl.sc.spec.start.month']}"
 							value="#{frequency.startMonth}">
 							<f:selectItems value="#{lOIDetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
@@ -47,6 +48,7 @@
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
+						    label="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 							style="width:100px;" required="true">
 							<f:selectItems value="#{lOIDetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
@@ -57,7 +59,8 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 						style="width:25%">
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
-							value="#{frequency.endMonth}">
+						    label="#{lbl['lbl.sc.spec.end.month']}"
+						    value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{lOIDetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
@@ -69,6 +72,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" 
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" disabled="#{!isEditableStatus}"
+						    label="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 							required="true">
 							<f:selectItems value="#{lOIDetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"

@@ -7,6 +7,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.StreamedContent;
+
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -138,6 +140,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private String action;
 	private boolean editFlag;
+	private boolean qtLoaEditFlag;
+	private StreamedContent streamedContent;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1113,6 +1117,22 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setEditFlag(boolean editFlag) {
 		this.editFlag = editFlag;
+	}
+
+	public boolean isQtLoaEditFlag() {
+		return qtLoaEditFlag;
+	}
+
+	public void setQtLoaEditFlag(boolean qtLoaEditFlag) {
+		this.qtLoaEditFlag = qtLoaEditFlag;
+	}
+
+	public StreamedContent getStreamedContent() {
+		return streamedContent;
+	}
+
+	public void setStreamedContent(StreamedContent streamedContent) {
+		this.streamedContent = streamedContent;
 	}
 	
 }

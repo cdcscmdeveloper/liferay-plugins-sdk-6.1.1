@@ -22,6 +22,7 @@ import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.loa.QtLOAManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -55,9 +56,17 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			//Long sourceId = 3762L; // no LOA record
 			
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			LOIDetailBackingBean lOIDetailBackingBean = new LOIDetailBackingBean();
 			loaDetailBackingBean.renewSesionObject();
+			lOIDetailBackingBean.renewSesionObject();
+			
 			loaDetailBackingBean.getManagedBean().setSourceId(sourceId);
 			loaDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
+			
+			lOIDetailBackingBean.getManagedBean().setSourceId(sourceId);
+			lOIDetailBackingBean.getManagedBean().setPayLoadData(dpDataType);
+			lOIDetailBackingBean.getManagedBean().setQtLoaEditFlag(Boolean.TRUE);
+			
 			retrieveLOAList(sourceId);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
