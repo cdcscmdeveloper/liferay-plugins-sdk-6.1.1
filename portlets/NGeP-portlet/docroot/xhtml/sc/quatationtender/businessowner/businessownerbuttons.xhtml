@@ -5,8 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
-		<div align="right">
+	<table width="100%">
+	<tr>
+		<td align="right">
 			<p:commandButton immediate="true"
 				value="#{lbl['lbl.sc.notice.board.backbtn']}" icon="ui-icon-back"
 				action="#{qTDetailBB.gotoQtSearchPage}" update="@all"
@@ -27,7 +28,10 @@
 					rendered="#{!qTDetailBB.managedBean.qt.brandNew}"
 					onclick="cancelBODlg.show()" />
 			</c:if>
-		</div>
+		</td>
+	</tr>
+	</table>
+	
 		<p:dialog id="cancelBODlg" widgetVar="cancelBODlg"
 			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false" width="325"
 			height="77" closable="false">
@@ -46,5 +50,4 @@
 					onclick="cancelBODlg.hide();" type="button" />
 			</div>
 		</p:dialog>
-	</p:panel>
 </ui:composition>
