@@ -126,9 +126,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 	
 	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
+		System.out.println("getOrgTypeSearchBean");
 		if (this.orgTypeSearchBean == null) {
 			this.orgTypeSearchBean = super.createSearchBean(
 					PmParameterDesc.class, "somOrgType");
+			
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)));
+			orgTypeSearchBean.getDataFilterBeans().add(bean);
 		}
 
 		return this.orgTypeSearchBean;
@@ -652,10 +659,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
 		}
 		if(!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
-			int size = this.getManagedBean().getSelectedUser().getPmUserOrgs().size();
-			PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUser().getPmUserOrgs().get(size-1);
-			if(pmUserOrg.getExpDate()==null){
-				throw new EpException(MessageConst.ERROR_770018); 
+			for(PmUserOrg pmUserOrg: this.getManagedBean().getSelectedUser().getPmUserOrgs()){
+				if(pmUserOrg.getExpDate()==null){
+					throw new EpException(MessageConst.ERROR_770018); 
+				}
 			}
 		}
 		
