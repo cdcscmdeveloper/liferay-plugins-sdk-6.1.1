@@ -12,6 +12,7 @@
 				<portlet id="ctCcCircularMaintenance" />
 				<portlet id="ctPanelCircular" />
 				<portlet id="ctPanelCircularMaintenance" />
+				<portlet id="ctCircularListing" />
 				<portlet id="ctCancelCircular" />
 			</category>		
 			<portlet id="ctReviewAmendment" />			
