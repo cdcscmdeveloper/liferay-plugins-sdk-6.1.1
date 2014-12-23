@@ -886,16 +886,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
 					}
 				}
-			}		
-		
-			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
-					|| contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
-				if(getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
-						&& contractVer.getCtAgencies().size() == 0){
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
-				}
+			}
 		}
+		
+		if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
+				|| contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
+			if(getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
+					&& contractVer.getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
+			}
+			
 			if(getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
 				if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
 					if(getManagedBean().getCtContract().getLatestContractVer() != null 
@@ -2692,16 +2693,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
         return new Date();
     }
     
-//    public boolean isAddAgencyButtonFlg() {
-//    	if(getManagedBean().isViewContract()) {
-//    		return false;
-//    	} else if(getManagedBean().getContractVer().getCtAgencies().size()>0) {
-//    		if(getManagedBean().getContractVer().getCtAgencies().get(0).getCtAgencyAddresses().size()>0) {
-//    			return false;
-//    		}
-//    	}
-//    	return true;
-//    }
+    public boolean isAddAgencyButtonFlg() {
+    	if(getManagedBean().isViewContract()) {
+    		return false;
+    	} else if(getManagedBean().getContractVer().getCtAgencies().size()>0) {
+    		if(getManagedBean().getContractVer().getCtAgencies().get(0).getCtAgencyAddresses().size()>0) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
     
     public Date getExactDate(){
     	
