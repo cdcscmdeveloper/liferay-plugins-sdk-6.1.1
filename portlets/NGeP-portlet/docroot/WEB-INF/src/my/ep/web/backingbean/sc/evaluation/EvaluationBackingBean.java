@@ -17,6 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -59,8 +59,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -78,10 +76,7 @@ import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -119,7 +114,6 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.type.pm.AddressType;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -4716,51 +4710,40 @@ public class EvaluationBackingBean extends
 		backingBean.goToMaint(docMaster);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
+		
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		
+		StringBuilder openType = new StringBuilder();
+    	if (openType != null) {
+    		openType.append(getParameterDesc(ParameterTypeConst.QUOTATION_TENDER_TYPE, scQt.getQtType()));
+    	}
+    	
+    	String estimatedPrice = "";
+    	if (scQt.getEstimatedAmount() != null) {
+    		estimatedPrice = amountDF.format(scQt.getEstimatedAmount());	
+    	}
+    	
+    	String publishDate = "";
+    	if (scQt.getPublishDate() != null) {
+    		publishDate = dateSDF.format(scQt.getPublishDate());	
+    	}
+    	
+    	String closingDate = "";
+    	if (scQt.getClosingDate() != null) {
+    		closingDate = dateSDF.format(scQt.getClosingDate());	
+    	}
+    	String totalSuppliers = "";
+    	if (scQt.getScQtSuppliers() != null) {
+    		totalSuppliers = String.valueOf(scQt.getScQtSuppliers().size());
+    	}
 
-		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
-
-		IAddressSO addressSO = null;
-		PmAddressType pmAddressType = null;
-		try {
-			addressSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if (resDTO.getAddressTypeList().size() > 0) {
-				pmAddressType = resDTO.getAddressTypeList().get(0);
-			}
-		} finally {
-			addressSO = null;
-		}
-
-		String agencyAddress = "";
-		String agencyPhoneNo = "";
-		String agencyFaxNo = "";
-		if (pmAddressType != null) {
-			PmAddress pmAddress = pmAddressType.getPmAddress();
-			agencyAddress = getFullAddress(pmAddress);
-			agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
-			agencyPhoneNo = pmAddress.getPhoneNo();
-			agencyFaxNo = pmAddress.getFaxNo();
-		}
-
-		FacesScopes facesScopes = new FacesScopes();
-		String officerName = facesScopes.getUserSessionBean().getUserName();
-
-		html = html.replaceAll("&lt;&lt;Agency Name&gt;&gt;",
-				pmOrgProfile.getOrgName());
-		html = html.replaceAll("&lt;&lt;Agency name&gt;&gt;",
-				pmOrgProfile.getOrgName());
-		html = html.replaceAll("&lt;&lt;Department Name&gt;&gt;",
-				pmOrgProfile.getOrgName());
-		html = html.replaceAll("&lt;&lt;Agency Address&gt;&gt;", agencyAddress);
-		html = html.replaceAll("&lt;&lt;Officer Name&gt;&gt;", officerName);
-		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
-		html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;", agencyFaxNo);
-		html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
-				Integer.toString(scQt.getQtValidityPeriod()));
+    	html = html.replaceAll("&lt;&lt;QT_TYPE&gt;&gt;", openType.toString());
+		html = html.replaceAll("&lt;&lt;ESTIMATED_PRICE&gt;&gt;", estimatedPrice);
+		html = html.replaceAll("&lt;&lt;PUBLISH_DATE&gt;&gt;", publishDate);
+		html = html.replaceAll("&lt;&lt;CLOSING_DATE&gt;&gt;", closingDate);
+		html = html.replaceAll("&lt;&lt;NO_OF_SUPPLIER&gt;&gt;", totalSuppliers);
 		return html;
 	}
 
@@ -5324,8 +5307,9 @@ public class EvaluationBackingBean extends
 		}
 
 		// Procurement Category
-		PmParameter procurementCategory = scQtEvaluationReport.getScQt()
-				.getPmProcurementCategory();
+		PmParameter procurementCategory = getPmParameter(
+				ParameterTypeConst.PROCUREMENT_CATEGORY,
+				ParameterConst.PROCUREMENT_CATEGORY_OTHERS);
 		tplDocMaster.setProcurementCategory(procurementCategory);
 
 		// Process Type
@@ -5411,13 +5395,25 @@ public class EvaluationBackingBean extends
 							ITemplateDocSO.class);
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 
-			reqDTO.setCategoryId(scQt.getPmProcurementCategory()
-					.getParameterId());
+			PmParameter categoryType = getPmParameter(
+					ParameterTypeConst.PROCUREMENT_CATEGORY,
+					ParameterConst.PROCUREMENT_CATEGORY_OTHERS);
+			reqDTO.setCategoryId(categoryType.getParameterId());
+			
 			PmParameter processType = getPmParameter(
 					ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
 					ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 			reqDTO.setProcessTypeId(processType.getParameterId());
-			reqDTO.setTitle(SourcingConstants.DOCTITLE_QT);
+			
+			if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
+				reqDTO.setTitle(SourcingConstants.DOCTITLE_EVALUATION);
+			} else if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+				reqDTO.setTitle(SourcingConstants.DOCTITLE_OC_EVALUATION);
+			} else if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+				reqDTO.setTitle(SourcingConstants.DOCTITLE_TEC_EVALUATION);
+			} else if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+				reqDTO.setTitle(SourcingConstants.DOCTITLE_FEC_EVALUATION);
+			}
 
 			TemplateDocResDTO resDTO = templateDocSO
 					.getTemplateMasterList(reqDTO);
