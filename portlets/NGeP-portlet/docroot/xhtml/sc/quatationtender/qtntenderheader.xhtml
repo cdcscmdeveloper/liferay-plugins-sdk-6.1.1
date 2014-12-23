@@ -5,33 +5,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
-		<div align="left" class="header-info">
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.so.qtnno']}" /></td>
+	<div align="left" class="header-info">
+		<table width="100%">
+			<tr>
+				<td width="15%"><h:outputLabel value="#{lbl['lbl.so.qtnno']}" /></td>
+				<td class="header-info-text">
+					#{qTDetailBB.managedBean.qt.qtNo}</td>
+					
+				<ui:fragment
+					rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
+					<td><h:outputLabel value="#{lbl['lbl.so.planno']}" /></td>
 					<td class="header-info-text">
-						#{qTDetailBB.managedBean.qt.qtNo}</td>
-					<td style="width: 12px;"></td>
-
-					<ui:fragment
-						rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
-						<td><h:outputLabel value="#{lbl['lbl.so.planno']}" /></td>
-						<td class="header-info-text">
-							#{qTDetailBB.managedBean.qt.ppPlan.planNo}</td>
-						<td style="width: 12px;"></td>
-					</ui:fragment>
-					<td><h:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
-					<td class="header-info-text">
-						#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}</td>
-					<td style="width: 12px;"></td>
-
-					<td><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
-					<td class="header-info-text">
-						#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.currentStatusId)}
-					</td>
-				</tr>
-			</table>
-		</div>
-	</p:panel>
+						#{qTDetailBB.managedBean.qt.ppPlan.planNo}</td>
+				</ui:fragment>
+				<td width="10%"><h:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
+				<td class="header-info-text">
+					#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}</td>
+				
+				<td width="10%"><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
+				<td class="header-info-text">
+					#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.currentStatusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
 </ui:composition>
