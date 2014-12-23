@@ -13,18 +13,15 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.head.present.qt.num']}" /></td>
 				<td  class="header-info-text">#{specificationBackingBean.managedBean.scQt.qtNo}</td>
-				<td style="width : 12px;"></td>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
 					<td><h:outputLabel
 							value="#{lbl['lbl.so.planno']}" /></td>
 					<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.ppPlan.planNo}</td>
-					<td style="width : 12px;"></td>
 				</ui:fragment>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.head.present.ptj.name']}" /></td>
 				<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.pmOrgProfile.orgName}</td>
-				<td style="width : 12px;"></td>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.head.present.status']}" /></td>
 				<td class="header-info-text">
