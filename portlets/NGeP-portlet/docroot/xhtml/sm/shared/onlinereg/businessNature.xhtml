@@ -25,7 +25,7 @@
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.biz.nature.code']}" />
 					</p:tooltip>
 				</f:facet>
-				#{suppBizNature.pmBusinessNature.levelCode}
+				<h:outputText value="#{registrationBackingBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
 			</p:column>
 			
 			<p:column>
