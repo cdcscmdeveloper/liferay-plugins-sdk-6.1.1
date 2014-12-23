@@ -570,11 +570,12 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setSupplierCancellationRemarks(applicationType,
 							getManagedBean().getSmAppl().getApplId());
-					getManagedBean()
-							.setBasicInfo(
-									SmApplicationUtil
-											.getSmSupplierBasicInfoVO(getManagedBean()));
 				}
+				
+				//currently is display for ApplType C/DPA
+				getManagedBean().setBasicInfo(
+						SmApplicationUtil
+								.getSmSupplierBasicInfoVO(getManagedBean()));
 			}
 
 			// calcPersonnelListCount();
