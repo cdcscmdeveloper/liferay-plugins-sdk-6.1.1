@@ -21,6 +21,8 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.bouncycastle.crypto.tls.Certificate;
+import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.encoders.Base64Encoder;
 
 import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -53,6 +55,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 
 /**
  * @author Alvin
@@ -158,7 +161,7 @@ public class SpkiBackingBean {
 		return tok;
 	}
 	
-	public void spkiSignTransaction() {
+	public String spkiSignTransaction(String originalText) {
 		try{
 			// Create property file
 			File f = new File("kmc.properties");
@@ -214,11 +217,11 @@ public class SpkiBackingBean {
 				fos.flush();
 				fos.close();
 				System.out.println("Data signing successful. Signature saved to sign.bin");
-				break;
+//				break;
 
 			default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				return;
+				return "SIGNEDTEXT";
 			}
 			
 			
@@ -226,18 +229,18 @@ public class SpkiBackingBean {
 		{
 			ex.printStackTrace();
 		}
+		return "SIGNEDTEXT";
 
 	}
 	public void spkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
         String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("inputTextBeforeSign");
 	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
 	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
-	    spkiSignTransaction();
+//	    spkiSignTransaction();
 	    Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		
 		pmDigiSign.setCreatedBy(userId);
-//        pmDigiSign.setCertificate("111111");
         pmDigiSign.setCreatedDate(date);
         pmDigiSign.setOrginalData(textBeforeSign);
         pmDigiSign.setSignedData(signedText);
@@ -250,8 +253,8 @@ public class SpkiBackingBean {
 
 		    DigiSignReqDTO reqDTO = new DigiSignReqDTO();
 	        IDigiSignSO digiSignSO = (IDigiSignSO) EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDigiSignSO.class);
-	        reqDTO.setPmDigiSign(pmDigiSign);    
-	        digiSignSO.saveOrUpdateDigiSign(reqDTO);      
+	        reqDTO.setPmDigiSign(pmDigiSign);
+	        digiSignSO.saveOrUpdateDigiSign(reqDTO);
 
 	    debugLogger("========================: "+pmDigiSign.getSignedData());
 
@@ -261,12 +264,57 @@ public class SpkiBackingBean {
 //	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
 
 //        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
+	    FacesScopes facesScope = new FacesScopes();
+	    Long userId = facesScope.getUserSessionBean().getUserId();
+	    byte[] token = generateSecurityToken().getBytes(); 
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		externalContext.redirect("https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx");
-		generateSecurityToken();
-        }
+//	    Long userId = (Long) MDC.get(LogKey.USER_ID);
+		byte[] encoded = Base64.encode(token);
+        
 	
+	}
 	
+//	public static void main(String[] args) {
+//		try{
+//			// Create property file
+//			File f = new File("kmc.properties");
+//			// Create KMCClient with the property file
+//			KMCClient client = KMCClientFactory.getInstance(f);
+//
+//			// Request service for user selected question for authentication
+//			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+////			List<String> challs = null;
+//			switch(res.getStatusCode())
+//			{
+//			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+//				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+//				// show to the user to allow user answer the challenge
+////				setChallengeQues1(challs.get(0));
+//				for(int i = 0 ; i < challs.size() ; i ++)
+//				{
+//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+//				}
+//				
+//				break;
+//
+//				default:
+//				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+//				return;
+//			}
+//
+//			if(challs.size() == 0)
+//			{
+//				System.err.println("No challanges found for the user! Data signing failed!");
+//				return;
+//			}
+//				
+//		} catch (Exception ex)
+//		{
+//			ex.printStackTrace();
+//		}
+//	}
+
 	public String getChallengeQues1() {
 		return challengeQues1;
 	}
