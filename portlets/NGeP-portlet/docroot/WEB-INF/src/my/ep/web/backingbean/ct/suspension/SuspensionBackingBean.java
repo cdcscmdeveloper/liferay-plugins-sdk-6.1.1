@@ -160,6 +160,18 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			        	  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			        	  reqDTO.setUpdateAction(false);
 			        	  ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			        	  //Restrict If login user not the contract admin
+			        	  if (!getFacesScopes().getUserSessionBean().getUserId().equals(resDTO.getCtContractVer().getContractAdmin().getUserId())) {
+							   FacesContext fc = FacesContext.getCurrentInstance();
+								fc.addMessage(null, new FacesMessage(
+										FacesMessage.SEVERITY_ERROR,
+										"", MessageUtils.getMessage(MessageConst.ERROR_700116,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+								fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+								return;
+						   }
+			        	  
 			        	  getManagedBean().setViewOnly(true);
 			        	  setSuspensionContractVer(resDTO);
 			        	  return;

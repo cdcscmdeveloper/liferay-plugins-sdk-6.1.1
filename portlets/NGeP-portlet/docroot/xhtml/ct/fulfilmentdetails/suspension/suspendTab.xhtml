@@ -36,7 +36,7 @@
 			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{suspensionBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" rendered="#{suspensionBackingBean.managedBean.taskId==null and !suspensionBackingBean.managedBean.viewOnly}" action="#{suspensionBackingBean.backAction}"/></td>
+					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" rendered="#{suspensionBackingBean.managedBean.taskId==null}" action="#{suspensionBackingBean.backAction}"/></td>
 					<td class="ppRightBtn">
 						<c:if test="#{!suspensionBackingBean.managedBean.viewOnly}">	
 						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
