@@ -4,25 +4,38 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel>		
-			<table class="ppOneTable">
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.pm.organisation.orgType']}"/> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
-							disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
-							label="#{lbl['lbl.pm.organisation.orgType']}"
-							value="#{organisationBackingBean.managedBean.orgTypeId}"
-							style="width: 275px;margin-bottom: 5px;" required="true">
-							<f:selectItems
-								value="#{organisationBackingBean.getNewOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
-							<p:ajax event="change" update="@form"
-								listener="#{organisationBackingBean.resetOrgProfile}" />
-						</p:selectOneMenu></td>
-					<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
-				</tr>
-			</table>		
+	<p:panel>
+		<table class="ppOneTable">
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><c:choose>
+						<c:when
+							test="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
+							<p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
+								disabled="true" label="#{lbl['lbl.pm.organisation.orgType']}"
+								value="#{organisationBackingBean.managedBean.orgTypeId}"
+								style="width: 275px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{organisationBackingBean.getAllOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
+							</p:selectOneMenu>
+						</c:when>
+						<c:otherwise>
+							<p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
+								label="#{lbl['lbl.pm.organisation.orgType']}"
+								value="#{organisationBackingBean.managedBean.orgTypeId}"
+								style="width: 275px;margin-bottom: 5px;" required="true">
+								<f:selectItems
+									value="#{organisationBackingBean.getNewOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
+								<p:ajax event="change" update="@form"
+									listener="#{organisationBackingBean.resetOrgProfile}" />
+							</p:selectOneMenu>
+						</c:otherwise>
+					</c:choose></td>
+				<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
+			</tr>
+		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.pm.header.general.org.profile']}"
 		id="orgproflieId" styleClass="sampleDetails" toggleable="true">
@@ -30,19 +43,21 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+						value="*" styleClass="mandatory" /></td>
 				<c:choose>
 					<c:when
 						test="#{!organisationBackingBean.managedBean.orgValidity.brandNew}">
 						<td><p:inputText
 								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}"
-								size="40" disabled="true" maxlength="20" styleClass="ppDisplayTextL" /></td>
+								size="40" disabled="true" maxlength="20"
+								styleClass="ppDisplayTextL" /></td>
 					</c:when>
 					<c:otherwise>
 						<td><p:inputText id="orgCode"
-								label="#{lbl['lbl.pm.organisation.orgCode']}" size="40" styleClass="ppDisplayTextL"
-								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}" maxlength="20"
-								required="true" /></td>
+								label="#{lbl['lbl.pm.organisation.orgCode']}" size="40"
+								styleClass="ppDisplayTextL"
+								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}"
+								maxlength="20" required="true" /></td>
 						<td><p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>
 					</c:otherwise>
 				</c:choose>
@@ -50,8 +65,7 @@
 					rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.organisation.groupOrg']}" /></td>
-					<td><p:selectBooleanCheckbox 
-					
+					<td><p:selectBooleanCheckbox
 							value="#{organisationBackingBean.managedBean.orgProfile.groupOrg}">
 							<p:ajax update="@form" />
 						</p:selectBooleanCheckbox></td>
@@ -60,7 +74,8 @@
 					rendered="#{organisationBackingBean.managedBean.orgType eq 'STG' or organisationBackingBean.managedBean.orgType eq 'GLC' or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'STB' or organisationBackingBean.managedBean.orgType eq 'LAT'}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.organisation.govSeller']}" /></td>
-					<td><p:selectBooleanCheckbox disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
+					<td><p:selectBooleanCheckbox
+							disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
 							value="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 							<p:ajax update="@form" />
 						</p:selectBooleanCheckbox></td>
@@ -69,37 +84,40 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.pm.organisation.orgName']}"/> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+						value="#{lbl['lbl.pm.organisation.orgName']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<c:choose>
 					<c:when
 						test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 						<td><p:inputText
 								value="#{organisationBackingBean.managedBean.orgValidity.orgName}"
-								size="40" styleClass="ppDisplayTextL" disabled="true" maxlength="99" /></td>
+								size="40" styleClass="ppDisplayTextL" disabled="true"
+								maxlength="99" /></td>
 					</c:when>
 					<c:otherwise>
 						<td><p:inputText id="orgName"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgValidity.orgName}"
-								required="true" size="40" styleClass="ppDisplayTextL" maxlength="99"/></td>
+								required="true" size="40" styleClass="ppDisplayTextL"
+								maxlength="99" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>
 					</c:otherwise>
 				</c:choose>
 			</tr>
-			
+
 
 			<ui:fragment
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }">
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.pm.zone.name']}"/> <p:outputLabel
+					<td><h:outputLabel value="#{lbl['lbl.pm.zone.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="zoneCode"
 							label="#{lbl['lbl.pm.zone.name']}" styleClass="ppDropDownWidthM"
 							value="#{organisationBackingBean.managedBean.zoneId}"
 							required="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }"
 							style="width: 275px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
 							<f:selectItems var="zoneLs"
 								value="#{organisationBackingBean.managedBean.zoneList}"
 								itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}" />
@@ -109,10 +127,12 @@
 				</tr>
 			</ui:fragment>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}"/> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="orgStatus" styleClass="ppDropDownWidthM"
-						label="#{lbl['lbl.pm.organisation.status']}" disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}" 
+				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="orgStatus"
+						styleClass="ppDropDownWidthM"
+						label="#{lbl['lbl.pm.organisation.status']}"
+						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
 						required="true" style="margin-bottom: 5px;">
 						<f:selectItems
@@ -122,10 +142,10 @@
 			</tr>
 		</table>
 	</p:panel>
-	 <ui:fragment
+	<ui:fragment
 		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
-	</ui:fragment>  
+	</ui:fragment>
 
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
@@ -137,7 +157,7 @@
 			</p:tab>
 
 
-		<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+			<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
 			</p:tab>  -->
