@@ -698,7 +698,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			if(totalDeductionAmt != null && totalDeductionAmt.doubleValue() > 0){
 				
 				newInvoiceAmt = nonExemptedItemAmt.subtract(totalDeductionAmt);
-				if(newInvoiceAmt.doubleValue() < 0){
+				if(newInvoiceAmt.doubleValue() <= 0){
 					getManagedBean().getPaymentAdvice().setFeeAmt(new BigDecimal(0));
 				}else{
 					newInvoiceAmt = newInvoiceAmt.multiply(serviceFee);
