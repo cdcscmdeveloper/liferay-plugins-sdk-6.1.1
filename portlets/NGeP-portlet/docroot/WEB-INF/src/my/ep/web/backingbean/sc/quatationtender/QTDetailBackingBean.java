@@ -1401,7 +1401,8 @@ public class QTDetailBackingBean extends
 			}
 			this.getManagedBean().setMenuModel(menuModel);
 			if (committeTabs.size() > 0) {
-				this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
+				//this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
+				this.getManagedBean().setSelectedTabBean(committeTabs.get(this.getManagedBean().getSelectedTabIndex()));
 			}
 		}
 	}
@@ -3001,7 +3002,8 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
-			this.getManagedBean().setActiveIndex(0);
+			this.getManagedBean().setSelectedTabIndex(subTabIndex);
+			//this.getManagedBean().setActiveIndex(0);
 			retrieveCommitteeAppointmentTabDtl();
 			break;
 		case 2:
@@ -3084,7 +3086,6 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
-		this.getManagedBean().setSelectedTabIndex(subTabIndex);
 	}
 
 	public void qtDetailsTabChange(Integer activeIndex) {
