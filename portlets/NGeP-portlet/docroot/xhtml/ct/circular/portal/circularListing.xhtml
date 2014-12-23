@@ -1,0 +1,48 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<ui:define name="contentSection">
+	    <p:blockUI widgetVar="blkPanelSearchTable"  block=":form" trigger="panelSearchId">  
+			  <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		 </p:blockUI> 	
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
+		<p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true">
+			<h:panelGrid columns="4" style="width:100%">
+				<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="17" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="200" />
+				<h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchPhysicalCircularNo}" style="width:170px;" maxlength="60" />
+			</h:panelGrid>		
+			<div class="ppRightBtn"> 
+				<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}" action="#{panelBackingBean.searchCircularVer}"
+				    onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();"  icon="ui-icon-search" update="circularVerDt" />
+				<p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{panelBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
+			</div>		
+		</p:panel>
+		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
+			<p:dataTable id="circularVerDt" value="#{panelBackingBean.circularVerPagingDataModel}"
+				var="data" lazy="true" rowIndexVar="index" >
+				<ac:paginator for="circularVerDt" />
+				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:15%;white-space:normal;">
+					<h:outputText value="#{data.ctCircular.circularNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:15%;white-space:normal;">
+					<h:outputText value="#{data.circularNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:25%;white-space:normal;">
+					<p:commandLink>
+						<h:outputText value="#{data.name}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>		
+		</p:panel>
+	</ui:define>
+</ui:composition>
