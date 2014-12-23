@@ -1887,14 +1887,19 @@ public class QTDetailBackingBean extends
 						this.getManagedBean().setSupplierCriteria(
 								scQt.getScQtSupplierCriteria());
 					}
-					if (null != scQt.getScQtSuppliers()) {
-						this.getManagedBean().setQtSupplierList(
-								scQt.getScQtSuppliers());
-						this.getManagedBean().setTotalSupplier(
-								scQt.getScQtSuppliers().size());
-					} else {
-						this.getManagedBean().setQtSupplierList(
-								new ArrayList<ScQtSupplier>());
+					
+					if (scQt.isPanel()
+							|| SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+									.equalsIgnoreCase(scQt.getQtType())) {
+						if (null != scQt.getScQtSuppliers()) {
+							this.getManagedBean().setQtSupplierList(
+									scQt.getScQtSuppliers());
+							this.getManagedBean().setTotalSupplier(
+									scQt.getScQtSuppliers().size());
+						} else {
+							this.getManagedBean().setQtSupplierList(
+									new ArrayList<ScQtSupplier>());
+						}	
 					}
 
 					if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
