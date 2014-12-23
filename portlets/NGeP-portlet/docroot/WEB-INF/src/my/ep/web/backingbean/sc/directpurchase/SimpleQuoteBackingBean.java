@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
@@ -50,6 +51,7 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
@@ -69,6 +71,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -102,6 +105,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -140,6 +144,8 @@ import com.liferay.portal.util.PortalUtil;
 public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteManagedBean> {
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
 
+	private String textBeforeSign;
+	
 	public SimpleQuoteBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -3214,24 +3220,39 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	/**
 	 * supplierSubmit method to submit suppler info in SQ
 	 */
-	public String supplierSubmit() {
+	public String supplierSubmit(PmDigiSign  pmDigiSign) {
 		debugLogger("supplierSubmit");
+		IDigiSignSO digiSignSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IDigiSignSO.class);
 		try {
-			
+
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
-			
+
 			// tpl spec - product
 			List<TplSpecAnswer> specAnswers  = new ArrayList<TplSpecAnswer>();
 			if(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
 			}
-			
+
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
-			
+
+			if (null != pmDigiSign) {
+				updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
+						quote.getQuoteId(), quote.getQuoteNo() , getTextBeforeSign());
+			}
+
+			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			String signedData =  spkiBackingBean.spkiSignTransaction(getTextBeforeSign());
+
+			DigiSignReqDTO digiSignReqDTO = new DigiSignReqDTO();
+
+			pmDigiSign.setSignedData(signedData);
+			digiSignReqDTO.setPmDigiSign(pmDigiSign);
+			digiSignSO.saveOrUpdateDigiSign(digiSignReqDTO);
+
 			// remarks
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
@@ -3239,7 +3260,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
-				
+
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -3247,17 +3268,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
-				
+
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if(scQuote.getMultipleQuote().equals(Boolean.TRUE)){
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
 				} else{
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
-					 // clear SQ data
-					 super.renewSesionObject();
+					// clear SQ data
+					super.renewSesionObject();
 				}
-				
+
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -3747,4 +3768,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private IQuoteSO getQuoteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 	}
+
+
+	public String getTextBeforeSign() {
+		 StringBuilder sb = new StringBuilder();
+		 sb.append(getManagedBean().getScQuote().getQuoteNo());
+		 sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		 textBeforeSign = sb.toString();
+		 return textBeforeSign;
+	 }
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+	
 }
