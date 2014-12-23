@@ -1274,6 +1274,18 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				searchBean.getDataFilterBeans().add(bean);
 				isEmpty = false;
 			}
+			
+			//Pm Zone
+			if(sdSearchBean.getPmZone()!=null && sdSearchBean.getPmZone()>0L){
+				log.info("+ pmZone "  +sdSearchBean.getPmZone());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmZone.zoneId");
+				bean.setSearchValue(sdSearchBean.getPmZone());
+				searchBean.getDataFilterBeans().add(bean);
+				isEmpty = false;
+			}
+			
 		}else{
 			// Procurement Category
 			if(sdSearchBean.getProcureCatParam()!=null && sdSearchBean.getProcureCatParam()>0L){
