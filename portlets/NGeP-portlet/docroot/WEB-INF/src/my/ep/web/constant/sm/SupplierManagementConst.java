@@ -377,6 +377,17 @@ public class SupplierManagementConst {
 	// PM Cert body
 	public static final String PM_CERT_BODY_OTHERS = "LL";
 
+	// Pm category facility types
+	public static final long CATEGORY_TYPE_ID_TRANSPORTATION = 203;
+	public static final long CATEGORY_TYPE_ID_WORKSHOP = 204;
+	public static final long CATEGORY_TYPE_ID_INSURANCE = 205;
+	public static final long CATEGORY_TYPE_ID_DOCKYARD = 206;
+	public static final long CATEGORY_TYPE_ID_MANUFACTURING = 207;
+	public static final long CATEGORY_TYPE_ID_NORMAL = 208;
+	public static final long CATEGORY_TYPE_ID_PRINTING = 209;
+	public static final long CATEGORY_TYPE_ID_TRAVEL = 210;
+	public static final long CATEGORY_TYPE_ID_READING = 1261;
+
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
 		return SM_BASIC_INFO_PANEL;

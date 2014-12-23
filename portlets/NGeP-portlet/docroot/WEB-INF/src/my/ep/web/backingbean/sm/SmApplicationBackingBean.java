@@ -935,32 +935,30 @@ public class SmApplicationBackingBean extends
 		}
 
 		finally {
-			if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
-					&& !valid) {
-				saveOrUpdateAppl();
-			} else if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
-					&& !valid) {
-				saveOrUpdateAppl();
-				calculateCapital();
-			} else {
-				valid = retriveLatestApplAfterUpdate(currentPageType,
-						outputPageType);
-			}
-
 			mofRegistrationSO = null;
 			if (getManagedBean().getCurrentPageType() != null) {
-				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-						SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
+				if (currentPageType
+						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+						&& !valid) {
+					saveOrUpdateAppl();
+				} else if (currentPageType
+						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+						&& !valid) {
+					saveOrUpdateAppl();
+					calculateCapital();
+				} else {
+					valid = retriveLatestApplAfterUpdate(currentPageType,
+							outputPageType);
+				}
+
+				switch (currentPageType) {
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
 					if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
 						SmApplicationUtil
 								.assignNonPersonnelProfBodyList(getManagedBean());
 					}
-				} else if (getManagedBean()
-						.getCurrentPageType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
 					if (getManagedBean().isSupplierUser()) {
 						assignApplicationSupportingDocs();
 					}
@@ -970,15 +968,11 @@ public class SmApplicationBackingBean extends
 					}
 					// calcPersonnelListCount();
 					displayBumiRecommendNote();
-				} else if (getManagedBean()
-						.getCurrentPageType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 					calcPersonnelListCount();
-				} else if (getManagedBean()
-						.getCurrentPageType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 					SmApplicationUtil
 							.assignActiveCategoryList(getManagedBean());
 					if (getManagedBean().getSmAppl().getApplCategoryType()
@@ -1001,35 +995,42 @@ public class SmApplicationBackingBean extends
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
 							.checkOverLappingCategories(getManagedBean());
-				} else if (getManagedBean()
-						.getCurrentPageType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
-						&& valid) {
-					log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
-					calculateCapital();
-				} else if (getManagedBean()
-						.getCurrentPageType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
-						|| getManagedBean()
-								.getCurrentPageType()
-								.equalsIgnoreCase(
-										SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
-					if (getManagedBean().isPoUser()
-							|| getManagedBean().isApproverUser()) {
-						SmApplicationUtil
-								.checkAllowedToApprove(getManagedBean());
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
+					if (valid) {
+						log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
+						calculateCapital();
+						break;
 					}
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
+					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					// calcPersonnelListCount();
 					displayBumiRecommendNote();
-				} else if (getManagedBean()
-						.getCurrentPageType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)) {
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
+					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
+					// calcPersonnelListCount();
+					displayBumiRecommendNote();
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
 					assignViewSiteVisitReport();
+					break;
+				case SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY:
+					log.info("******* This is facility for special category page ********");
+					SmApplicationUtil
+							.handleShowOrHideFacilityPanels(getManagedBean());
+					break;
+				default:
+					break;
 				}
+
+				// to init page whether normal or special category type is
+				// allowed
+				initApplCategoryType();
+
+				// init business premise whether show or hide home office
+				initBusinessPremise();
 
 				// to init page whether normal or special category type is
 				// allowed

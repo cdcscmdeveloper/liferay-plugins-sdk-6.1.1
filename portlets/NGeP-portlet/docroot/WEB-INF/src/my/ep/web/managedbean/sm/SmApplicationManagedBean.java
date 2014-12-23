@@ -318,6 +318,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal purPricePrevVal;
 	private String ownerTypePrevVal;
 	private boolean hasSuppDocToDownload;
+	private boolean showFactoryPanel;
+	private boolean showStorePanel;
+	private boolean showDockyardPanel;
+	private boolean showWorkShopPanel;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2425,5 +2429,37 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setHasSuppDocToDownload(boolean hasSuppDocToDownload) {
 		this.hasSuppDocToDownload = hasSuppDocToDownload;
+	}
+
+	public boolean isShowFactoryPanel() {
+		return showFactoryPanel;
+	}
+
+	public void setShowFactoryPanel(boolean showFactoryPanel) {
+		this.showFactoryPanel = showFactoryPanel;
+	}
+
+	public boolean isShowStorePanel() {
+		return showStorePanel;
+	}
+
+	public void setShowStorePanel(boolean showStorePanel) {
+		this.showStorePanel = showStorePanel;
+	}
+
+	public boolean isShowDockyardPanel() {
+		return showDockyardPanel;
+	}
+
+	public void setShowDockyardPanel(boolean showDockyardPanel) {
+		this.showDockyardPanel = showDockyardPanel;
+	}
+
+	public boolean isShowWorkShopPanel() {
+		return showWorkShopPanel;
+	}
+
+	public void setShowWorkShopPanel(boolean showWorkShopPanel) {
+		this.showWorkShopPanel = showWorkShopPanel;
 	}
 }
