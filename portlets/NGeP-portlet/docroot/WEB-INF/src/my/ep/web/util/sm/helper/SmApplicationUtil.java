@@ -3365,4 +3365,33 @@ public class SmApplicationUtil {
 		return finalMsg.toString();
 	}
 
+	public static void handleShowOrHideFacilityPanels(
+			SmApplicationManagedBean managedBean) {
+		managedBean.setShowDockyardPanel(false);
+		managedBean.setShowStorePanel(false);
+		managedBean.setShowFactoryPanel(false);
+		managedBean.setShowWorkShopPanel(false);
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.isSpecialCategory()
+					&& cat.getPmCategoryL3() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+					&& cat.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterId() != null) {
+				Long catTypeId = cat.getPmCategoryL3().getCategoryTypeCode()
+						.getParameterId();
+				if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_MANUFACTURING
+						|| catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_PRINTING) {
+					managedBean.setShowFactoryPanel(true);
+				} else if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_TRANSPORTATION) {
+					managedBean.setShowStorePanel(true);
+				} else if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_WORKSHOP) {
+					managedBean.setShowWorkShopPanel(true);
+				} else if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_DOCKYARD
+						|| catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_READING) {
+					managedBean.setShowDockyardPanel(true);
+				}
+			}
+		}
+	}
 }
