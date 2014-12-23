@@ -1210,7 +1210,7 @@ public class SpecificationBackingBean extends
 
 		case 2:
 			ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
-			specSo.validateCheckList(specReqDTO);
+			specSo.validateCheckList(constructSpecCommitteDtls());
 			checktemplateSpecStatus(scQtTechChecklist);
 			if (QTConstants.EVALUATION_ONE_TIER
 					.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
