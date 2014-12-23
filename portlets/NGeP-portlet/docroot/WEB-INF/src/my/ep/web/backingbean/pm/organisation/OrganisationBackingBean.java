@@ -122,6 +122,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public String redirectToOrganisation(Long id) throws Exception {
+		log.info("..............redirectToOrganisation.......id="+id);
 		retrieveCountryList();
 		retrieveFinancialOrgList();
 
@@ -155,7 +156,7 @@ public class OrganisationBackingBean extends
 
 	public void initialOrganisation() {
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
-		getManagedBean().setOrgProfile(new PmOrgProfile());
+//		getManagedBean().setOrgProfile(new PmOrgProfile());
 
 		retrievePmZoneList();
 		getManagedBean().setOrgProfile(new PmOrgProfile());
@@ -283,6 +284,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public String maintainOrganisation(Long id) {
+		log.info(".......maintainOrganisation......");
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		retrieveSupplierUserList(id);
 
@@ -299,6 +301,10 @@ public class OrganisationBackingBean extends
 
 		getManagedBean().setOrgType(
 				orgProfile.getOrgTypeCode().getParameterCode());
+		
+		getManagedBean().setOrgTypeId(
+				orgProfile.getOrgTypeCode().getParameterId());
+		log.info("orgProfile.getOrgTypeCode().getParameterCode()="+orgProfile.getOrgTypeCode().getParameterCode());
 		// BPK Sabah sarawak
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
@@ -313,6 +319,8 @@ public class OrganisationBackingBean extends
 				OrganizationType.DIVISION.value())) {
 			retrieveAgOfficeList();
 			retrievePtjGroupList();
+			log.info("..................orgProfile.getParentOrgProfile().getOrgProfileId()="+orgProfile.getParentOrgProfile().getOrgProfileId());
+			log.info("..................orgProfile.getOrgProfileId()="+orgProfile.getOrgProfileId());
 			retrieveOrgProfileList(orgProfile.getParentOrgProfile()
 					.getOrgProfileId());
 			if (orgProfile.getPmPtjGroup().getPtjGroupId() != null) {
@@ -866,6 +874,17 @@ public class OrganisationBackingBean extends
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		searchBean.getSortColumns();
+
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		return items;
+	}
+	
+	public SelectItem[] getAllOrgTypeDropdownValues(String itemType) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		
 		searchBean.getSortColumns();
 
 		SelectItem[] items = getDropdownValuesBySearchBean(
