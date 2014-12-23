@@ -314,7 +314,7 @@ public class LOADetailBackingBean extends
 				scLoa = resDTO.getScLoa();
 			}
 			editLOAAction(scLoa);
-
+			getManagedBean().setEditFlag(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -2450,7 +2450,10 @@ public class LOADetailBackingBean extends
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
-			schedule.setEndYear(endYear.toString());
+			if(endYear != null){
+				schedule.setEndYear(endYear.toString());
+			}
+			
 		}
 
 		if (startMonth != null && endMonth != null && startYear != null
