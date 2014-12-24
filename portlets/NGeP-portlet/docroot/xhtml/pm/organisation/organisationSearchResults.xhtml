@@ -40,7 +40,7 @@
 	</p:panel>
 	<div class="ppRightBtn">
 
-		<p:commandButton id="addLocation" immediate="true"
+		<p:commandButton id="addLocation" partialSubmit="true" process="@this"
 			value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"
 			action="#{organisationBackingBean.redirectToOrganisation(null)}" />
 	</div>

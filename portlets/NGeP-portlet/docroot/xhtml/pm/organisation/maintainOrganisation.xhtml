@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="#{organisationBackingBean.managedBean.showParentMsg}"
+		<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="#{organisationBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages>
 		<table style="width: 100%;">
 			<tr>
@@ -43,7 +43,7 @@
 								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
 								value="#{organisationBackingBean.profileDetails}" />
 						</p:menuitem>
-						<p:menuitem
+						<p:menuitem partialSubmit="true" process="@this"
 							value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
@@ -51,7 +51,7 @@
 								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
 								value="#{organisationBackingBean.governmentSeller}" />
 						</p:menuitem>
-						<p:menuitem
+						<p:menuitem partialSubmit="true" process="@this"
 							value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" rendered="#{organisationBackingBean.managedBean.orgProfile.groupOrg}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
