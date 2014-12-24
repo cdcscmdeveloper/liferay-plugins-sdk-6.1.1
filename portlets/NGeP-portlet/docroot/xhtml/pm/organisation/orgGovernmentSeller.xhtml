@@ -6,17 +6,14 @@
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.paymentBank']}"
 		toggleable="true">
-		<p:dataTable id="govorgid" var="financialacc"
-			value="#{organisationBackingBean.managedBean.pmFinancialAcc}"
-			rowKey="#{financialacc}" rowIndexVar="rowIndex"
-			selection="#{organisationBackingBean.managedBean.selectedPmFinancialAcc}">
+		<p:dataTable id="govorgid" var="supplierBank"
+			value="#{organisationBackingBean.managedBean.smSupplierBanks}"
+			rowKey="#{supplierBank}" rowIndexVar="rowIndex">
 
-			<p:column selectionMode="multiple" style="width:2%" />
-
-			<ac:paginator for="financialacc" />
+			<ac:paginator for="govorgid" />
 			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
-				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn" 
-					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!financialacc.brandNew}" 
+				<p:selectOneMenu value="#{supplierBank.pmFinancialOrg.financialOrgId}" id="finorgn" 
+					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" disabled="#{!supplierBank.brandNew}" 
 					required="true" style="margin-bottom: 5px;" styleClass="ppDropDownWidthL">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="finorgLs"
@@ -33,14 +30,14 @@
 			    	<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
 			    </f:facet>
 
-				<p:inputText id="finAccountNo" value="#{financialacc.accountNo}" label="#{lbl['lbl.pm.financialorg.acnumber']}"
-				maxlength="20" required="true" disabled="#{!financialacc.brandNew}"  />
+				<p:inputText id="finAccountNo" value="#{supplierBank.accountNo}" label="#{lbl['lbl.pm.financialorg.acnumber']}"
+				maxlength="20" required="true" disabled="#{!supplierBank.brandNew}"  />
 			<p:message id="finAccountNoMsg" for="finAccountNo" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
-					required="true" disabled="#{financialacc.brandNew}" style="margin-bottom: 5px;">
+				<p:selectOneMenu value="#{supplierBank.recordStatusFlg}"
+					required="true" disabled="#{supplierBank.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
@@ -51,13 +48,13 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,govorgid" partialSubmit="true"
-				action="#{organisationBackingBean.addFinancialAcc}"
+				action="#{organisationBackingBean.addSupplierBank}"
 				update="govorgid" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				 update="govorgid" process="@this,govorgid"
 				partialSubmit="true"
-				action="#{organisationBackingBean.deleteFinancialAcc}" />
+				action="#{organisationBackingBean.deleteSupplierBank}" />
 
 		</div>
 
@@ -71,17 +68,16 @@
 			<h:outputText value="#{lbl['lbl.pm.header.general.org.supplierusr']}" />
 		</f:facet>
 		<p:dataTable id="supplierUsers"
-			value="#{organisationBackingBean.managedBean.supplierUsers}" var="supUser"
-			rowIndexVar="index" rowKey="#{supUser}"
-			selection="#{organisationBackingBean.managedBean.selectedUsers}">
+			value="#{organisationBackingBean.managedBean.smPersonnels}" var="personnel"
+			rowIndexVar="index" rowKey="#{personnel}"
+			>
 			<ac:paginator for="supplierUsers"></ac:paginator>
 
-			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.loginid']}" style="width :15%">
-				<h:outputText value="#{supUser.loginId}" />
+				<h:outputText value="#{personnel.pmUser.loginId}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}" style="width :40%">
-				<h:outputText value="#{supUser.userName}" />
+				<h:outputText value="#{personnel.pmUser.userName}" />
 			</p:column>
 
 		</p:dataTable>
@@ -90,12 +86,12 @@
 		<div align="right">
 
 			<p:commandButton value="Add" process="@this"
-				action="#{organisationBackingBean.addUser}" immediate="true" update="userSearch"
+				action="#{organisationBackingBean.addPersonnel}" immediate="true" update="userSearch"
 				oncomplete="userlistpopup.show();" icon="ui-icon-add" />
 
 			<p:commandButton value="Delete" icon="ui-icon-delete"
 				process="@this,supplierUsers" partialSubmit="true"
-				action="#{organisationBackingBean.deleteUser}" update="supplierUsers" />
+				action="#{organisationBackingBean.deletePersonnel}" update="supplierUsers" />
 		</div>		
 	</p:panel>
 	<p:dialog id="userSearch" header="USER LIST"
