@@ -68,6 +68,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -126,7 +127,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 	
 	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
-		System.out.println("getOrgTypeSearchBean");
+		logger.info("getOrgTypeSearchBean");
 		if (this.orgTypeSearchBean == null) {
 			this.orgTypeSearchBean = super.createSearchBean(
 					PmParameterDesc.class, "somOrgType");
@@ -136,9 +137,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			bean.setSearchField("pmParameter.parameterCode");
 			bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)));
 			orgTypeSearchBean.getDataFilterBeans().add(bean);
+			
+			if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+				if(this.getManagedBean().getCurrentActiveOrg()!=null){
+					SearchFilterBean orgTypeBean = new SearchFilterBean();
+					orgTypeBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					orgTypeBean.setSearchField("pmParameter.parameterCode");
+					orgTypeBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgCode());
+					orgTypeSearchBean.getDataFilterBeans().add(orgTypeBean);
+				}
+			}
+			
 		}
 
 		return this.orgTypeSearchBean;
+	}
+	
+	private void generateAddtionalFilter(){
+		logger.info("generateAddtionalFilter");
+		this.getManagedBean().setAdditionalOrgFilter("");
+		//generate additional filter
+		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
+					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}
+		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}
+		if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())){
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^" + this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}
 	}
 	
 	/**
@@ -206,6 +234,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void preLoadingUserProfile(){
 		logger.info("preLoadingUserProfile");
+		this.setCurrentActiveOrg();
 		this.resetUserProfileSearchBean();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		FacesContext fc = FacesContext.getCurrentInstance(); 
@@ -226,12 +255,32 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	
 	/**
+	 * retrieve and set the current active org
+	 */
+	private void setCurrentActiveOrg(){
+		logger.info("setCurrentActiveOrg");
+		if(getFacesScopes().getUserSessionBean().getUserId()==null){
+			throw new EpException("No active Org. found with the login user.");//TODO
+		}
+		List <PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId());
+		
+		if(userOrgList==null || userOrgList.isEmpty()){
+			throw new EpException("No active Org. found with the login user.");//TODO 
+		}
+		
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+	}
+	
+	/**
 	 * redirect to user details
 	 * @param pmUser
 	 * @return
 	 */
 	public String redirectToMaintainUser(Long id) throws Exception{
 		logger.info("redirectToMaintainUser");
+		this.setCurrentActiveOrg();
+		this.generateAddtionalFilter();
 		this.retrieveIdentityTypeMap();
 		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
@@ -1488,6 +1537,40 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
 		UserProfilesSearchBean upSearchBean = this.getManagedBean().getUserProfileSearchBean();
+		if(!getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile.orgProfileId", 
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()),
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId", 
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										this.getManagedBean().getCurrentActiveOrg().getOrgProfileId(), 
+										SearchCondition.CONDITION_OR.value())));
+//			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+//				SearchFilterBean orgSearchBean = new SearchFilterBean(
+//						SearchOperator.OPERATOR_EQUALS.value());
+//				orgSearchBean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+//				orgSearchBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+//				searchBean.getDataFilterBeans().add(orgSearchBean);
+//			}else if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())){
+//				SearchFilterBean orgSearchBean = new SearchFilterBean(
+//						SearchOperator.OPERATOR_EQUALS.value());
+//				orgSearchBean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+//				orgSearchBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+//				searchBean.getDataFilterBeans().add(orgSearchBean);
+			}else{
+				SearchFilterBean orgSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				orgSearchBean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+				orgSearchBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+				searchBean.getDataFilterBeans().add(orgSearchBean);
+			}
+		}
+		
 		//Login Id
 		if (upSearchBean.getLoginId() != null && !"".equalsIgnoreCase(upSearchBean.getLoginId())) {
 			logger.info("+ loginId "  +upSearchBean.getLoginId());

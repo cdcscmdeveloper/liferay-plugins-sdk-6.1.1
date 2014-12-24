@@ -50,6 +50,7 @@
 						postUpdateListener="profileManagementBackingBean.updateOrgCode
 						(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, #{index})"
 						saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
+						conditionField="#{profileManagementBackingBean.managedBean.additionalOrgFilter}" 
 						/>
 				</p:outputPanel>
 				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne orgUnit.pmOrgProfile.orgTypeCode.parameterCode}">
@@ -61,7 +62,7 @@
 						postUpdateListener="profileManagementBackingBean.updateOrgCode
 						(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, #{index})"
 						saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
-						conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
+						conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}" 
 						/>
 				</p:outputPanel>
 				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
