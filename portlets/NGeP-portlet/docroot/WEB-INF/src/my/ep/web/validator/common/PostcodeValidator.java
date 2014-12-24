@@ -12,16 +12,18 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 
 @FacesValidator("postcodeValidator")
-public class PostcodeValidator implements Validator{
+public class PostcodeValidator implements Validator {
 	@Override
-	  public void validate(FacesContext context, UIComponent component, Object value) 
-	        throws ValidatorException {
-	    String myValue = value.toString();
-	    
-	    if(myValue != null && !myValue.isEmpty() && (!StringUtils.isNumeric(myValue) || myValue.length() !=5)){
-	    	throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-	  	          "Postcode Error", 
-	  	          SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null)));
-	    }
-	  }
+	public void validate(FacesContext context, UIComponent component,
+			Object value) throws ValidatorException {
+		String myValue = value.toString();
+
+		if (myValue != null && !myValue.isEmpty()
+				&& (!StringUtils.isNumeric(myValue) || myValue.length() != 5)) {
+			throw new ValidatorException(new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Postcode Error",
+					SmCommonUtil.getMessage(
+							"lbl.sm.postcode.numberformat.errmsg", null)));
+		}
+	}
 }
