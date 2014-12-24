@@ -197,7 +197,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteRemarks> evaluationSignOffRemarks;
 	private Date today = new Date();
 	private BigDecimal userScores;
-	private BigDecimal ContractScores;
+	private BigDecimal contractScores;
 	private int techindex = -1;
 	private boolean statusOnly;
 	private ScAttachment scAttachment;
@@ -1769,20 +1769,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.userScores = userScores;
 	}
 
-	/**
-	 * @return the contractScores
-	 */
-	public BigDecimal getContractScores() {
-		return ContractScores;
-	}
-
-	/**
-	 * @param contractScores
-	 *            the contractScores to set
-	 */
-	public void setContractScores(BigDecimal contractScores) {
-		ContractScores = contractScores;
-	}
+	
 
 	/**
 	 * @return the techindex
@@ -1997,6 +1984,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationFinancialCommitteeRemark(
 			List<ScQtFinancialCommitteeRemark> evaluationFinancialCommitteeRemark) {
 		this.evaluationFinancialCommitteeRemark = evaluationFinancialCommitteeRemark;
+	}
+
+	/**
+	 * @return the contractScores
+	 */
+	public BigDecimal getContractScores() {
+		return contractScores;
+	}
+
+	/**
+	 * @param contractScores the contractScores to set
+	 */
+	public void setContractScores(BigDecimal contractScores) {
+		this.contractScores = contractScores;
 	}
 
 	
