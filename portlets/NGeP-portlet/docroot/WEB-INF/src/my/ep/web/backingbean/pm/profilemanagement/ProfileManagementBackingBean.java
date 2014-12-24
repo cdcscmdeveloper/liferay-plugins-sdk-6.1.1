@@ -160,12 +160,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
 					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		}
-		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+		}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
 			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		}
-		if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())){
+		}else if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
 			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^" + this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}else if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())){
+			this.getManagedBean().setAdditionalOrgFilter("orgProfileId^" + this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}
 	}
 	
@@ -254,15 +254,27 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * USER PROFILE - START
 	 */
 	
+	public String getParameterDescNullable(PmParameter parameter){
+		logger.info("getParameterDescNullable");
+		if(parameter!=null){
+			return getParameterDesc(parameter);
+		}else{
+			return "";
+		}
+	}
 	/**
 	 * retrieve and set the current active org
 	 */
 	private void setCurrentActiveOrg(){
 		logger.info("setCurrentActiveOrg");
+		boolean isFactoring = false;
 		if(getFacesScopes().getUserSessionBean().getUserId()==null){
-			throw new EpException("No active Org. found with the login user.");//TODO
+			throw new EpException("User Id is null.");//TODO
 		}
-		List <PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId());
+		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())){
+			isFactoring = true;
+		}
+		List <PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
 		
 		if(userOrgList==null || userOrgList.isEmpty()){
 			throw new EpException("No active Org. found with the login user.");//TODO 

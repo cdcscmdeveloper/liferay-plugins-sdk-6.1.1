@@ -17,13 +17,12 @@
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.loginid']}" width="15%">
 				#{userprofile.loginId}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.salutation']}" width="15%">
-				#{userprofile.userName}
-			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" width="15%">
 				#{userprofile.userName}
 			</p:column>
-
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" width="15%">
+				#{userprofile.designation}
+			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.cityname']}" width="15%">
 				#{userprofile.addressTypeC.pmAddress.pmCity!=null ? userprofile.addressTypeC.pmAddress.pmCity.cityName : ''}
 			</p:column>
