@@ -827,7 +827,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			
 			for (ScCommitteeMember members : cloneCommitteeList) {
 				if (itemIds.size() > 0 && !itemIds.contains(members.getIcPassport())) {
-					members.setCommitteeMemberId(null);
+//					members.setCommitteeMemberId(null); 
 					PmParameter respresentativeType = members.getRepresentativeType();
 					members.setRepresentativeType(respresentativeType != null ? respresentativeType : new PmParameter());
 					members.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
