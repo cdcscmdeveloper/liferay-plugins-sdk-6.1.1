@@ -632,9 +632,6 @@ public class SmApplicationBackingBean extends
 						.assignNonPersonnelProfBodyList(getManagedBean());
 			}
 
-			// syazwan added for testing
-			getManagedBean().setDisAllowOwnerEdit(true);
-
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
 			// mofRegistrationSO = null;
@@ -3288,13 +3285,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
-		if (!getManagedBean().getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& (shareHolderBean.isEquityOwner() || shareHolderBean
-						.isDirector())
-				&& getManagedBean().isDisAllowOwnerEdit()) {
-			throw new EpException(MessageConst.ERROR_722573);
-		}
+//		if (!getManagedBean().getSmAppl().getApplType()
+//				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+//				&& (shareHolderBean.isEquityOwner() || shareHolderBean
+//						.isDirector())
+//				&& getManagedBean().isDisAllowOwnerEdit()) {
+//			throw new EpException(MessageConst.ERROR_722573);
+//		}
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false);
@@ -6741,8 +6738,8 @@ public class SmApplicationBackingBean extends
 
 	public boolean isPersonnelViewOnly(SmPersonnel smPersonnel) {
 		boolean retVal = false;
-		if (getManagedBean().isDisAllowOwnerEdit()
-				&& smPersonnel.isEquityOwner()) {
+		if ((smPersonnel.isEquityOwner() || smPersonnel.isDirector())
+				&& getManagedBean().isDisAllowOwnerEdit()) {
 			retVal = true;
 		} else if (smPersonnel.getEpRole() != null
 				&& (smPersonnel.getEpRole().equals(
