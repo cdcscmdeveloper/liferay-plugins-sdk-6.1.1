@@ -603,16 +603,17 @@ public class PmCommonUtil {
 	/**
 	 * retrieve active PmUserOrgs without role
 	 * @param id
-	 * @param isDetail
+	 * @param isFactoring
 	 * @return List<PmUserOrg> 
 	 */
-	public static List<PmUserOrg> retrieveActiveOrgWithoutRole(Long id){
+	public static List<PmUserOrg> retrieveActiveOrgWithoutRole(Long id, boolean isFactoring){
 		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
 		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = null;
 			reqDTO.setUserId(id);
+			reqDTO.setFactoringUser(isFactoring);
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			
 			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
