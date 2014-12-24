@@ -18,7 +18,7 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
 			rowKey="#{financenongovt}" rowIndexVar="rowIndex">
 
-			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}" 
+			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}"
 				style="white-space : normal ; width : 15%;">
 					#{financenongovt.clientName}
 				</p:column>
@@ -28,18 +28,21 @@
 					#{financenongovt.contractTitle}
 				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}" style=" width : 10%;">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}"
+				style=" width : 10%;">
 					#{financenongovt.contractNo}
 				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}" style=" width : 10%;">
+			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}"
+				style=" width : 10%;">
 				<h:outputText value="#{financenongovt.effectiveDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}" style=" width : 10%;">
+			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}"
+				style=" width : 10%;">
 				<h:outputText value="#{financenongovt.expiryDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -56,7 +59,9 @@
 
 			<p:column style=" width : 10%;">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.sp.contract.amt']}" />
 				</f:facet>
 				<p:inputText id="contractAmt" value="#{financenongovt.contractAmt}"
@@ -101,7 +106,9 @@
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							value="#{noOfContracts.userScore}" maxlength="18"
 							disabled="#{pageDisable}" style="text-align:right"
-							rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+							rendered="#{ checklistScoreType eq '2'}"></p:inputText> <p:spacer
+							width="5"></p:spacer> <h:outputText value="/#{contractUserScore}"
+							rendered="#{ checklistScoreType eq '2'}" /></td>
 				</tr>
 			</table>
 		</h:panelGroup>
