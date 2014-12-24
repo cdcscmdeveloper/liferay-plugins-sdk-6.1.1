@@ -3394,19 +3394,4 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-
-	public static boolean isSelectedShareholderViewOnly(
-			SmPersonnel smPersonnel, boolean mofRegLessSixMonths) {
-		boolean retVal = false;
-		if (mofRegLessSixMonths && smPersonnel.isEquityOwner()) {
-			retVal = true;
-		} else if (smPersonnel.getEpRole() != null
-				&& (smPersonnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel
-						.getEpRole().equals(
-								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
-			retVal = true;
-		}
-		return retVal;
-	}
 }
