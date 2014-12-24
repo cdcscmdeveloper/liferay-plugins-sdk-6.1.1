@@ -3594,6 +3594,9 @@ public class SmApplicationBackingBean extends
 		// enabled justification if disabled
 		// disableJustification(null);
 
+		// reset personnel view only to false for add new
+		getManagedBean().setShowPersonnelViewOnly(false);
+
 	}
 
 	public void deleteSelectedShareHolders(String personType) {
