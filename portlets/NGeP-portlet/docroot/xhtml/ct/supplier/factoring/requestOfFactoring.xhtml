@@ -42,7 +42,7 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 							immediate="true" icon="ui-icon-back"
-							oncomplete="window.history.back();" rendered="false" /></td>
+							oncomplete="window.history.back();" rendered="#{supplierBackingBean.managedBean.viewOnly}" /></td>
 					<td class="ppRightBtn"><ui:repeat var="outcome"
 							value="#{supplierBackingBean.managedBean.action}">
 							<ui:param name="buttonLabel"
@@ -104,7 +104,7 @@
 					<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				</h:panelGrid>
 				<h:panelGrid columns="5"
-					rendered="#{supplierBackingBean.managedBean.taskId==null}">
+					rendered="#{supplierBackingBean.managedBean.taskId==null and !supplierBackingBean.managedBean.viewOnly}">
 					<p:selectOneMenu id="menuLoaId" style="width:210px;"
 						value="#{supplierBackingBean.managedBean.loaId}" required="true"
 						label="#{lbl['lbl.ct.loa.no']}">
@@ -121,7 +121,7 @@
 					<p:message for="menuLoaId" display="icon" />
 				</h:panelGrid>
 				<p:inputText
-					rendered="#{supplierBackingBean.managedBean.taskId != null}"
+					rendered="#{supplierBackingBean.managedBean.taskId != null or supplierBackingBean.managedBean.viewOnly}"
 					disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}" />
 
@@ -208,7 +208,7 @@
 				<h:panelGrid columns="2">
 					<p:selectOneMenu id="factoringId"
 						label="#{lbl['lbl.ct.factoring.company']}" required="true"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
 						style="width:360px;"
 						value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
 						<f:selectItems
@@ -232,13 +232,14 @@
 						maxlength="50" style="width:200px;"
 						label="#{lbl['lbl.ct.factoring.agreement.ref']}" id="authRefNo"
 						required="true" process="@this"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}" />
 					<p:message for="authRefNo" display="icon" />
 				</h:panelGrid>
 
 				<p:outputLabel value="#{lbl['lbl.ct.factoring.branch']}" />
 				<p:selectOneMenu id="branchId" style="width:210px;"
-					disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.financialBankBranch == null}"
+					disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.financialBankBranch == null
+								or supplierBackingBean.managedBean.viewOnly}"
 					value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
 					<f:selectItems
 						value="#{supplierBackingBean.managedBean.financialBankBranch}" />
@@ -256,7 +257,7 @@
 						value="#{supplierBackingBean.managedBean.factoring.effDate}"
 						mindate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}"
 						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
 						readonlyInput="true" navigator="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect" update="expdateCal" />
@@ -283,7 +284,7 @@
 					<p:calendar id="expdateCal" size="25" required="true"
 						showOn="button" label="#{lbl['lbl.ct.end.date']}"
 						value="#{supplierBackingBean.managedBean.factoring.expDate}"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
 						readonlyInput="true" navigator="true"
 						mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
 						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
@@ -320,7 +321,8 @@
 							oncomplete="uploadFactoringDlg.show();return false;"
 							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"
 							update="factoringPanel, uploadFactoringDlg"
-							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() }" />
+							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() 
+										or supplierBackingBean.managedBean.viewOnly}" />
 						<p:spacer width="1" />
 						<h:commandLink
 							value="#{supplierBackingBean.managedBean.factoring.fileName}"
@@ -342,7 +344,7 @@
 							oncomplete="uploadRemoveFactoringDlg.show();return false;"
 							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"
 							update="factoringPanel, uploadRemoveFactoringDlg"
-							disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() }" />
+							disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />
 						<p:spacer width="1" />
 						<h:commandLink
 							value="#{supplierBackingBean.managedBean.factoring.fileName}"
@@ -386,7 +388,7 @@
 				<tr rowspan="2">
 					<h:panelGroup rendered="#{!supplierBackingBean.approverRole}">
 					<td style="width: 10%; vertical-align: top; text-align: right">
-						<p:selectBooleanCheckbox
+						<p:selectBooleanCheckbox disabled="#{supplierBackingBean.managedBean.viewOnly}"
 							id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
 					</td>
 					<td>

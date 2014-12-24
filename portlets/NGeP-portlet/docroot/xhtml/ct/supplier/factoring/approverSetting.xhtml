@@ -14,7 +14,8 @@
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{supplierBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
-					showTargetControls="true" filterMatchMode="contains">
+					showTargetControls="true" filterMatchMode="contains"
+					disabled="#{supplierBackingBean.managedBean.viewOnly}">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.available.approver']}"/>

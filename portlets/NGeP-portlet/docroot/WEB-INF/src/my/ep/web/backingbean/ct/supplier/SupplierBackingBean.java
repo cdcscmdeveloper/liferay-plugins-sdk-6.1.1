@@ -126,6 +126,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 		if(getManagedBean().getFactoring() == null) 
 			initializeFactoring();
+		
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+        HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
+    	if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
+    		getManagedBean().setViewOnly(true);
 	}
 	
 	private void initializeApproverList() {
@@ -184,6 +189,31 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			    HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			    HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			    String taskId = originalServletRequest.getParameter("taskId");
+			    String factoringId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+			    
+			    if(factoringId!=null) {
+			    	ContractSupplierReqDTO csReqDTO = new ContractSupplierReqDTO();
+		     	 	csReqDTO.setFactoringId(Long.parseLong(factoringId));
+		     	 	contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+		     	 	csResDTO = contractSupplierSO.retrieveFactoringRequest(csReqDTO);
+			           
+			         //Restrict If login user not the contract admin
+		     	 	if (!getFacesScopes().getUserSessionBean().getUserId().equals(csResDTO.getFactoring().getLoa().getContractAdmin().getUserId())) {
+						   FacesContext fc = FacesContext.getCurrentInstance();
+							fc.addMessage(null, new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"", MessageUtils.getMessage(MessageConst.ERROR_700116,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+							return;
+					   }
+		     	 	
+			           getManagedBean().setViewOnly(true);
+			           setFactoringField(csResDTO);
+			           return;
+	        	}
+	        	  
 			    if(taskId == null) 
 				return;
 			    
@@ -237,45 +267,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					   ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 					   ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 				
-			    } else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {
-			            
+			    } else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {			            
 			    	       ContractSupplierReqDTO csReqDTO = new ContractSupplierReqDTO();
 			    	       CTFactoringDataType dataType = (CTFactoringDataType) obj;
 			     	       csReqDTO.setFactoringId(new Long(dataType.getDocId()));
-			     	       docType = ParameterConst.DOCTYPE_REQUEST_FACTORING;
 			     	       contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 				           csResDTO = contractSupplierSO.retrieveFactoringRequest(csReqDTO);
-				          
-				           getManagedBean().setFactoring(csResDTO.getFactoring());
-				           getManagedBean().setCtContract(csResDTO.getFactoring().getCtContract());
-				           getManagedBean().setRemarkList(csResDTO.getCtRemarks());
-				           getManagedBean().setAttachmentList(csResDTO.getCtAttachments());
-				
-				           getManagedBean().setLoaDate(getManagedBean().getCtContract().getLoa().getAckDate());
-				           getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
-				           getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
-				           getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
-				           getManagedBean().setExpDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate());
-				           reset();
-				           if (getManagedBean().getFactoring().getPmFinancialBranch() == null) 
-					             getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
-				           else 
-					           resetBranch();
-				         
-				           if(getManagedBean().getFactoring().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED) 
-					           getManagedBean().setRemoveFactoring(true);
-				         
-				           getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-						   if(csResDTO.getApproverList() != null && csResDTO.getApproverList().size() != 0) {
-							      getManagedBean().getApproverModel().setTarget(csResDTO.getApproverList());
-							      getManagedBean().getApproverModel().getSource().removeAll(csResDTO.getApproverList());
-						   } 
-						   
-						   getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath
-						    		  (ModuleCodeConst.CONTRACT_MANAGEMENT, docType, getManagedBean().getCtContract().getContractNo()));
-						   ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-						   ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-					 }
+				           setFactoringField(csResDTO);	
+			    }
 		    } finally {
 		    	contractSupplierSO = null;
 			    contractSO = null;
@@ -285,6 +284,39 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			    userResDTO = null;
 		   }
 	 }
+		    
+    private void setFactoringField(ContractSupplierResDTO csResDTO) {
+    	getManagedBean().setFactoring(csResDTO.getFactoring());
+        getManagedBean().setCtContract(csResDTO.getFactoring().getCtContract());
+        getManagedBean().setRemarkList(csResDTO.getCtRemarks());
+        getManagedBean().setAttachmentList(csResDTO.getCtAttachments());
+
+        getManagedBean().setLoaDate(getManagedBean().getCtContract().getLoa().getAckDate());
+        getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
+        getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
+        getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
+        getManagedBean().setExpDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate());
+        reset();
+        if (getManagedBean().getFactoring().getPmFinancialBranch() == null) 
+	             getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
+        else 
+	           resetBranch();
+      
+        if(getManagedBean().getFactoring().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED) 
+	           getManagedBean().setRemoveFactoring(true);
+      
+        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		   if(csResDTO.getApproverList() != null && csResDTO.getApproverList().size() != 0) {
+			      getManagedBean().getApproverModel().setTarget(csResDTO.getApproverList());
+			      getManagedBean().getApproverModel().getSource().removeAll(csResDTO.getApproverList());
+		   } 
+		   
+		   getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath
+		    		  (ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
+		   ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		   ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
+		   ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+    }
     
 	public SelectItem[] getPopulateContractList() {
 		
