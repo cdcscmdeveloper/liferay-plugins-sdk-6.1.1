@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
@@ -52,8 +53,36 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean deletePortrait;
 	private List<PmUserNotification> notifications;
 	private boolean addressEntered;
+	private PmOrgProfile currentActiveOrg;
+	private String additionalOrgFilter;
+	
 	
 
+
+	/**
+	 * @return the additionalOrgFilter
+	 */
+	public String getAdditionalOrgFilter() {
+		return additionalOrgFilter;
+	}
+	/**
+	 * @param additionalOrgFilter the additionalOrgFilter to set
+	 */
+	public void setAdditionalOrgFilter(String additionalOrgFilter) {
+		this.additionalOrgFilter = additionalOrgFilter;
+	}
+	/**
+	 * @return the currentActiveOrg
+	 */
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
+	}
+	/**
+	 * @param currentActiveOrg the currentActiveOrg to set
+	 */
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
+	}
 	/**
 	 * @return the addressEntered
 	 */
