@@ -549,7 +549,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        	 getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
 			         }
 			         
-			         if(getManagedBean().getContractVer().getCtAmendment() != null &&
+			         if(getManagedBean().getContractVer() != null && getManagedBean().getContractVer().getCtAmendment() != null &&
 			        		  (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 			        	   if(getManagedBean().getCtContract().isZonalPricing())
 				    	         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
@@ -2797,6 +2797,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void deleteAttachmentAction(int index) {
 		getManagedBean().getContractVer().getAp201Attachements().remove(index);
+	}
+	
+	public String calculateMonthsAndYear(int months) {
+		        int year = months / 12;
+		        int month = months % 12;
+		        return String.valueOf(year +"."+month);
 	}
 	
 	public void ap201FileUpload(FileUploadEvent event) throws Exception {

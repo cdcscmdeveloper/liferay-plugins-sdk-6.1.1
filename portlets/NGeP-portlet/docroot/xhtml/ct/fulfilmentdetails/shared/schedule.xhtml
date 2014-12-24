@@ -37,7 +37,6 @@
 		               </p:column> 
 		      
 		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
-		               #{payScheduleObj.startYear} 
 		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" disabled="#{payScheduleObj.useInFulfilment or contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
                                <f:selectItems value="#{contractDetailsBackingBean.retrieveStartMonthList(payScheduleObj.startYear)}"/>  
                                <p:ajax event="change" update=":form:payScheduleTableId,:form:addScheduleBtn, :form:messages"  process="@form" 

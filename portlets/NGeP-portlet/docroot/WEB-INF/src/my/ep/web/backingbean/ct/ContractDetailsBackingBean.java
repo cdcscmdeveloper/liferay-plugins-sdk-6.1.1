@@ -907,11 +907,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond" });
 					}
 				}
-				double bondAmendAmount = 0.0;
-				if(getManagedBean().getCtAmendment() != null && getManagedBean().getCtAmendment().getAmendmentLoa() != null
-						&& getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()) {
-						bondAmendAmount = bondAmendAmount+ getManagedBean().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
-					}
 				
 				if(contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
 					double bondAmount = 0.0;
@@ -940,6 +935,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						} 
 					}
 				 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					 
+					 double bondAmendAmount = 0.0;
+						if(getManagedBean().getCtAmendment() != null && getManagedBean().getCtAmendment().getAmendmentLoa() != null
+								&& getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()) {
+								bondAmendAmount = bondAmendAmount+ getManagedBean().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
+							}
 				
 					 if(contractVer.getCtContract().getLoa().getBondAmt() == null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
@@ -2722,6 +2723,29 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	}
     	return null;
     }
+    
+    public Date chkMimiumDate(boolean maxDate){
+    	
+   	     SimpleDateFormat dateFormat = null;
+   	     String expDate ="";
+   	     try {
+   	            dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+   	            if(maxDate) 
+   	                  expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+   	            else 
+   	             expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+   	       
+   	            int startDay = Integer.valueOf(expDate.substring(0, 2));
+		        int startMonth = Integer.valueOf(expDate.substring(3, 5));
+		        int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
+		        String toDate = startDay + "/" + startMonth + "/"+ startYear;
+		        return (Date)dateFormat.parse(toDate);
+   
+      	} catch(ParseException ex) {
+   		     ex.printStackTrace();
+   	    }
+   	return null;
+   }
     
     public boolean getConditionalValue(){
     	if(getManagedBean().isViewContract()) {
