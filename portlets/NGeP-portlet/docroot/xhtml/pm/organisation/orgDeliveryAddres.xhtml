@@ -51,10 +51,10 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
 				oncomplete="addressPopup.show();"
 				action="#{organisationBackingBean.assignNewAddress}"
-				icon="ui-icon-add" />
+				 />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete"
+				
 				action="#{organisationBackingBean.deleteSelectedAdddress}"
 				update="deliveryAddressId" process="@this,deliveryAddressId"
 				partialSubmit="true" />
@@ -72,7 +72,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="addressname" required="true"
 							label="#{lbl['lbl.pm.address.name']}" maxlength="80"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.addressName}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
 							size="35" /></td>
 					<td><p:message for="addressname" id="addressnameMsg"
 							display="icon" /></td>
@@ -85,7 +85,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="deliveryCountry"
 							required="true" label="#{lbl['lbl.pm.address.country']}"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.pmCountry.countryId}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="countryList"
@@ -103,7 +103,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="deliveryState"
 							required="true" label="#{lbl['lbl.pm.address.state']}"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.pmState.stateId}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="stateList"
@@ -124,7 +124,7 @@
 					<td><p:inputText id="deliveryAddres"
 							label="#{lbl['lbl.pm.address.address']}" maxlength="255"
 							required="true"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.address1}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address1}"
 							size="35" /></td>
 					<td><p:message for="deliveryAddres" id="deliveryAddresMsg"
 							display="icon" /></td>
@@ -133,7 +133,7 @@
 				<tr>
 					<td><p:outputLabel value="Line 2" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.address2}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address2}"
 							size="35" /></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
@@ -158,14 +158,14 @@
 				<tr>
 					<td><p:outputLabel value="Line 3" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.address3}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address3}"
 							size="35" /></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="deliveryCity" required="true"
 							label="#{lbl['lbl.pm.address.city']}"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.pmCity.cityId}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="cityList"
@@ -179,14 +179,14 @@
 				<tr>
 					<td><p:outputLabel value="Line 4" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.address4}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address4}"
 							size="35" /></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="deliveryPostCode" required="true"
 							label="#{lbl['lbl.pm.address.postcode']}" maxlength="10"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.postcode}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.postcode}"
 							size="34" /></td>
 					<td><p:message for="deliveryPostCode" id="deliveryPostCodeMsg"
 							display="icon" /></td>
@@ -196,7 +196,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="condeliveryEmail" required="true"
 							label="#{lbl['lbl.pm.address.email']}" maxlength="80"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.email}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.email}"
 							size="35" /></td>
 					<td><p:message for="condeliveryEmail" id="condeliveryEmailMsg"
 							display="icon" /></td>
@@ -204,7 +204,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="deliveryTelNo" required="true"
 							label="#{lbl['lbl.pm.address.tel']}" maxlength="20"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.phoneNo}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.phoneNo}"
 							size="35" /></td>
 					<td><p:message for="deliveryTelNo" id="deliveryTelNoMsg"
 							display="icon" /></td>
@@ -215,13 +215,13 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.mobile']}" /></td>
 					<td><p:inputText maxlength="20"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.mobileNo}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.mobileNo}"
 							size="35" required="false" /></td>
 					<td></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
 					<td><p:inputText maxlength="20"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.faxNo}"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.faxNo}"
 							size="35" /></td>
 				</tr>
 
