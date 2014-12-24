@@ -2009,23 +2009,35 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param user
 	 */
 	private void oneActiveResponsibleOrg(PmUser user){
-		int activeNumber = 0;
+		int activeOrgNumber = 0;
+		int activeRoleNumber = 0;
 		if(user.getPmUserOrgs()!=null){
 			for(PmUserOrg userOrg: user.getPmUserOrgs()){
 				if(userOrg.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE){
 					if(checkEffDate(userOrg)){
 						userOrg.setCurrentActive(true);
-						activeNumber++;
+						activeOrgNumber++;
+						if(userOrg.getPmUserRoles()==null || userOrg.getPmUserRoles().isEmpty()){
+							
+						}
+						for(PmUserRole userRole:userOrg.getPmUserRoles()){
+							if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()){
+								activeRoleNumber++;
+							}
+						}
 					}else{
 						userOrg.setCurrentActive(false);
 					}
 				}
 			}
 		}
-		if(activeNumber>1){
+		if(activeOrgNumber>1){
 			throw new EpException(MessageConst.ERROR_770028);
-		}else if(activeNumber==0){
+		}else if(activeOrgNumber==0){
 			throw new EpException(MessageConst.ERROR_770029);
+		}
+		if(activeRoleNumber==0){
+			throw new EpException("At least one role is required.");
 		}
 	}
 	
