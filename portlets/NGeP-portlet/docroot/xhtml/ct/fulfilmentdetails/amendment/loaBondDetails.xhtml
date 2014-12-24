@@ -23,7 +23,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
 			<h:panelGrid columns="5">
 				<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod / 12}" />
+					value="#{amendmentBackingBean.calculateMonthsAndYear(amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod)}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="(#{lbl['lbl.ct.years']})" />
 				<p:spacer width="1" />
