@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -105,6 +106,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -154,6 +157,7 @@ import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -206,6 +210,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	private static Logger log =  Logger.getLogger(ContractRequestBackingBean.class);
 	private final static long MILLIS_PER_DAY = 24 * 3600 * 1000;
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
+	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	
 	private boolean checkFlg = false;
 	private String className="@(.myCrClassName)";
@@ -3615,6 +3620,82 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 		}
+	}
+	
+	private class UnitOfMeasurementPagingDataModel extends PagingDataModel<PmUom> {
+		private static final long serialVersionUID = 1L;
+
+		public UnitOfMeasurementPagingDataModel() {
+			super("measurementSR");
+		}
+
+		@Override
+		public ISearchResultBean<PmUom> pageChangeListener(ISearchBean<PmUom> searchBean) {
+			try {	
+				ISearchBean<PmUom> searchBeanData = getMeasurementSearchBeanData(searchBean);
+				UomReqDTO reqDTO = new UomReqDTO();
+				reqDTO.setMeasurementSearchBean(searchBeanData);				
+				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+				UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getMeasurementSearchResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
+		
+		if (getManagedBean().getMeasurementCodes() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
+			SearchFilterBean uomSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			uomSearchBean
+					.setSearchField("uomCode");
+			uomSearchBean
+					.setCaseInsensitive(true);
+			uomSearchBean.setSearchValue(getManagedBean()
+					.getMeasurementCodes());
+			searchBean.getDataFilterBeans().add(uomSearchBean);
+		}
+
+		if (getManagedBean().getMeasurementNames() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementNames())) {
+			SearchFilterBean uomSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			uomSearchBean
+					.setSearchField("uomName");
+			uomSearchBean
+					.setCaseInsensitive(true);
+			uomSearchBean.setSearchValue(getManagedBean()
+					.getMeasurementNames());
+			searchBean.getDataFilterBeans().add(uomSearchBean);
+		}
+		return searchBean;
+	}
+
+	public IPagingDataModel<PmUom> getUnitOfMeasurementDataModel() {
+		return unitOfMeasurementDataModel;
+	}
+
+	public void setUnitOfMeasurementDataModel(
+			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
+		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
+	}	
+	
+	public void retrieveMeasurement(){		
+		unitOfMeasurementDataModel.reloadData();		
+	}
+	
+	public void resetMeasurementSearch() {		
+		this.getManagedBean().setMeasurementCodes(null);
+		this.getManagedBean().setMeasurementNames(null);
+		getUnitOfMeasurementDataModel().resetData();
+		unitOfMeasurementDataModel.reloadData();		
 	}
 	
 }

@@ -208,6 +208,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private boolean validated = false;
 	
+	//uom
+	private String measurementCodes;	
+	private String measurementNames;
+	
 	public ContractRequestManagedBean(){
 
 	}
@@ -2475,5 +2479,21 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setPricePerUom(BigDecimal pricePerUom) {
 		this.pricePerUom = pricePerUom;
+	}
+
+	public String getMeasurementCodes() {
+		return measurementCodes;
+	}
+
+	public void setMeasurementCodes(String measurementCodes) {
+		this.measurementCodes = measurementCodes;
+	}
+
+	public String getMeasurementNames() {
+		return measurementNames;
+	}
+
+	public void setMeasurementNames(String measurementNames) {
+		this.measurementNames = measurementNames;
 	}
 }
