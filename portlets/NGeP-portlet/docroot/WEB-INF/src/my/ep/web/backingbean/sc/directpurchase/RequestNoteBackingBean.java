@@ -270,6 +270,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    setUserDetails(requestNote);
 	    requestNoteReqDTO.setRequestNote(requestNote);
 	    FacesScopes face = new FacesScopes();
+	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
 		String token = face.getBPMAuthenticationCtxToken();
 	    if(outcome.isEmpty()){
 	    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
@@ -401,6 +402,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
 			FacesScopes facesScopes = new FacesScopes();
+			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
@@ -692,6 +694,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
