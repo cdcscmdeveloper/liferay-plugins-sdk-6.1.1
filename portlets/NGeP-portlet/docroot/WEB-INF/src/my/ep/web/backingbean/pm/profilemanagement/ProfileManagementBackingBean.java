@@ -269,7 +269,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("setCurrentActiveOrg");
 		boolean isFactoring = false;
 		if(getFacesScopes().getUserSessionBean().getUserId()==null){
-			throw new EpException("User Id is null.");//TODO
+			throw new EpException(MessageConst.ERROR_770149);
 		}
 		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())){
 			isFactoring = true;
@@ -277,7 +277,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		List <PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
 		
 		if(userOrgList==null || userOrgList.isEmpty()){
-			throw new EpException("No active Org. found with the login user.");//TODO 
+			throw new EpException(MessageConst.ERROR_770105);
 		}
 		
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
