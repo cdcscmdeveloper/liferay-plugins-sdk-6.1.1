@@ -123,6 +123,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -146,6 +147,7 @@ public class LOIDetailBackingBean extends
 
 	private PmDigiSign pmDigiSign;
 	private String textBeforeSign;
+	private boolean flag;
 	
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
@@ -620,6 +622,7 @@ public class LOIDetailBackingBean extends
 		negoTerm.setPmTerm(null);
 		negoTerm.setSelected(Boolean.TRUE);
 		negoTerm.setScLoi(getManagedBean().getScLoi());
+		negoTerm.setModified(true);
 		scNegoTerms.add(negoTerm);
 
 		getManagedBean().getScLoi().setScNegoTerms(scNegoTerms);
@@ -678,28 +681,29 @@ public class LOIDetailBackingBean extends
 	}
 
 	public void deleteNegoTerm() {
-		List<ScLoiTerm> selectedNegoTermsList = getManagedBean()
-				.getSelectedNegoTermsList();
-		if (selectedNegoTermsList != null) {
+		List<ScLoiTerm> negoTermsList = new ArrayList<ScLoiTerm>();
+		boolean flag = true;
+		List<ScLoiTerm> scLoiTerms = getManagedBean().getScLoi().getScNegoTerms();
+		if (scLoiTerms != null && scLoiTerms.size()>0) {
 
-			for (ScLoiTerm scLoiTerm : selectedNegoTermsList) {
-				if (scLoiTerm.isBrandNew()) {
-					getManagedBean().getScLoi().getScNegoTerms()
-							.remove(scLoiTerm);
-				} else {
-					// throw new EpException("can't delete "+
-					// scLoiTerm.getPmTerm().getTermDesc());
+			for (ScLoiTerm scLoiTerm : scLoiTerms) {
+				if (!scLoiTerm.isDeleted()) {
+					negoTermsList.add(scLoiTerm);
+				} else{
+					flag = false;
 				}
 			}
-		} else {
+		}
+		if(flag){
 			throw new EpException("Please select At least one Item");
 		}
+		getManagedBean().getScLoi().setScNegoTerms(negoTermsList);
 	}
 
 	public void deleteNegoLocations() {
 		List<ScLoiNegoLocation> selectedNegoLocs = getManagedBean()
 				.getSelectedNegoLocationList();
-		if (selectedNegoLocs != null) {
+		if (selectedNegoLocs != null && selectedNegoLocs.size()>0) {
 
 			for (ScLoiNegoLocation scLoiNegoLocation : selectedNegoLocs) {
 				getManagedBean().getScLoi().getScNegoLocations()
@@ -2857,6 +2861,20 @@ public class LOIDetailBackingBean extends
 		}
 		
 	}
+	
+	public void selectAll(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<ScLoiTerm> scLoiTerms = getManagedBean().getScLoi().getScNegoTerms();
+		if (scLoiTerms != null) {
+			for (ScLoiTerm scLoiTerm : scLoiTerms) {
+				if (flag && scLoiTerm.isModified()) {
+					scLoiTerm.setDeleted(true);
+				} else {
+					scLoiTerm.setDeleted(false);
+				}
+			}
+		}
+	}
 
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
@@ -2880,6 +2898,13 @@ public class LOIDetailBackingBean extends
 
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
-	}	
+	}
 
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
 }
