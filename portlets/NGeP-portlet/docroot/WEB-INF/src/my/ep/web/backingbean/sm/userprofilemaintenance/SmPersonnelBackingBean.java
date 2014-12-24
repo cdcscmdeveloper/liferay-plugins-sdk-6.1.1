@@ -1740,7 +1740,7 @@ public class SmPersonnelBackingBean extends
 		if (getManagedBean().getBasicSmPersonnel().getEpRole()
 				.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				|| getManagedBean().getBasicSmPersonnel().getEpRole()
-						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+						.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getManagedBean().getBasicSmPersonnel().getPmUser() == null
 				|| getManagedBean().isUpgradeMofDraftAppl()) {
 			getManagedBean().setDisabledActivateAndDeactivate(true);
