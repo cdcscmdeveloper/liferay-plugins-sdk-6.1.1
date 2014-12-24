@@ -129,6 +129,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
+	ContractBackingBean ctBB = null;
 	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
 	public CentralContractBackingBean(){
@@ -139,11 +140,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				PmStatus status = new PmStatus();
 				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 				getManagedBean().getCircularVer().setStatus(status);
-				ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-				initializeRemarks();
 			}
-		
+			
+			if(ctBB == null) {
+			     ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			     initializeRemarks();
+			}
+			
 			if(isCentralContractAdmin()) 
 				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
 			
@@ -258,7 +262,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	}
