@@ -14,7 +14,7 @@
 				immediate="true" />
 		</div>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{locationBackingBean.managedBean.state.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"  update="@([id$=Msg])"
+			<p:commandButton value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"  update="@([id$=Msg])"
 				 action="#{locationBackingBean.saveLocation}" />
 		</div>
 		<ui:include src="/xhtml/pm/location/maintainLocation.xhtml" />

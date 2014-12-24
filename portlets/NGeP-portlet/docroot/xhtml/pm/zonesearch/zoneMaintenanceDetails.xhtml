@@ -77,9 +77,9 @@
 
 			<p:commandButton value="Add" process="@this"
 				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"
-				 icon="ui-icon-add" />
+				/>
 
-			<p:commandButton value="Delete" icon="ui-icon-delete"
+			<p:commandButton value="Delete"
 				process="@this,selectedStateId" partialSubmit="true"
 				action="#{zoneBackingBean.deleteState}" update="selectedStateId" />
 
@@ -112,11 +112,11 @@
 		<p:spacer height="15"></p:spacer>
 		<div align="right">
 			<p:commandButton value="OK" action="#{zoneBackingBean.okZoneAction}"
-				ajax="true" icon="ui-icon-check"
+				ajax="true" 
 				update="selectedStateId,searchStateId"
 				process="@this, stateSearch"  />
 
-			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+			<p:commandButton value="Cancel"  process="@this"
 				action="#{zoneBackingBean.cancleZone}" />
 		</div>
 	</p:dialog>

@@ -33,10 +33,10 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,financialbranchid" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialBranch}"
-				update="financialbranchid" icon="ui-icon-add" />
+				update="financialbranchid" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="financialbranchid"
+				update="financialbranchid"
 				process="@this,financialbranchid" partialSubmit="true"
 				action="#{financialOrgBackingBean.deleteFinancialBranch}" />
 

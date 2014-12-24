@@ -68,10 +68,10 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,financialBranchAccId" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialBranchAcc}"
-				update="financialBranchAccId" icon="ui-icon-add" />
+				update="financialBranchAccId"  />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="financialBranchAccId"
+				update="financialBranchAccId"
 				process="@this,financialBranchAccId" partialSubmit="true"
 				action="#{financialOrgBackingBean.deleteFinancialBranchAcc}" />
 

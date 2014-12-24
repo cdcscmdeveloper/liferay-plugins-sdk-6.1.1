@@ -11,10 +11,12 @@
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.location.type']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
+				<td><p:selectOneMenu id="locationSearchType" styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
+				required="true" label="#{lbl['lbl.pm.location.type']}"
 						value="#{locationBackingBean.managedBean.locationSearchBean.locationType}" >
 						<f:selectItems value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
 					</p:selectOneMenu></td>
+					<td><p:message id="locationSearchTypeMsg" for="locationSearchType" display="icon" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
@@ -54,10 +56,10 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							update="searchLocations" process="locationSearchPanel"
-							icon="ui-icon-search" action="#{locationBackingBean.searchLocation}" />
+							 action="#{locationBackingBean.searchLocation}" />
 						&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							update=":form:locationSearchPanel,:form:searchLocations" icon="ui-icon-reset"
+							update=":form:locationSearchPanel,:form:searchLocations" process="@this"
 							action="#{locationBackingBean.resetLocationSearchBean}" />
 					</div>
 				</td>

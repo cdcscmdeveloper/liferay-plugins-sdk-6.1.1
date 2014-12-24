@@ -48,7 +48,7 @@
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.create']}" process="@this"
 				action="#{locationBackingBean.redirectToLocation(null,null)}" />
 		</div>
 	</p:panel>

@@ -16,7 +16,8 @@
 						required="true" label="#{lbl['lbl.pm.address.country']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCountry.countryId}"
 						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems var="countryList"
 							value="#{financialOrgBackingBean.managedBean.countryList}"
 							itemLabel="#{countryList.countryName}"
@@ -34,7 +35,8 @@
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
 						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems var="stateList"
 							value="#{financialOrgBackingBean.managedBean.stateList}"
 							itemLabel="#{stateList.stateName}"
@@ -59,7 +61,7 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Line 2" /></td>
+				<td></td>
 				<td><p:inputText
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address2}"
 						size="40" maxlength="255" /></td>
@@ -70,7 +72,8 @@
 						label="#{lbl['lbl.pm.address.district']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
 						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems var="districtList"
 							value="#{financialOrgBackingBean.managedBean.districtList}"
 							itemValue="#{districtList.districtId}"
@@ -84,7 +87,7 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Line 3" /></td>
+				<td></td>
 				<td><p:inputText maxlength="255"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address3}"
 						size="40" /></td>
@@ -95,7 +98,8 @@
 						label="#{lbl['lbl.pm.address.city']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
 						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems var="cityList"
 							value="#{financialOrgBackingBean.managedBean.cityList}"
 							itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
@@ -104,7 +108,7 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Line 4" /></td>
+				<td></td>
 				<td><p:inputText maxlength="255"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.address4}"
 						size="40" /></td>
