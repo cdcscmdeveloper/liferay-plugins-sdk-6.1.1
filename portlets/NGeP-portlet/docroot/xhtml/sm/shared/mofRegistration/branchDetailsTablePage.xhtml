@@ -135,7 +135,7 @@
 					label="#{lbl['lbl.sm.postcode']}" 
 					validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="35" maxlength="5" > 
+					size="35" maxlength="10" > 
 					<f:validator validatorId="postcodeValidator"/>
 					</p:inputText>
 					<p:message id="branchPostCodeMsg"
