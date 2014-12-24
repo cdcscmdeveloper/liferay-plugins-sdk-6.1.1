@@ -553,22 +553,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		
 		try{
+			System.out.println(111111111);
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			System.out.println(222222222);
 			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
-
+			System.out.println(333333333);
 			if (resDTO.isSuccessful()) {
+				System.out.println(444444444);
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				System.out.println(555555555);
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				System.out.println(6666666);
 				return "/xhtml/sm/onlinereg/outputMsg";
 			} else {
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				throw new EpException(MessageConst.ERROR_721006);
 			}
-		}catch(Exception ex){
+		} catch(Exception ex){
 			throw new EpException(ex.getMessage());
 		}finally{
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
