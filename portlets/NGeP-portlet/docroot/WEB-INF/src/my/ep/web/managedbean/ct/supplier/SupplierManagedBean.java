@@ -82,10 +82,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
-
+	private boolean viewOnly = false;
 	private SelectItem[] contractSupplierLoa;
 	private SelectItem[] listOfFinancialOrg;
-
 	private SelectItem[] populateContractList;
 
 	private PmDigiSign pmDigiSign;
@@ -468,6 +467,12 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setContractAdmin(PmUser contractAdmin) {
 		this.contractAdmin = contractAdmin;
 	}
-	
-	
+
+	public boolean isViewOnly() {
+		return viewOnly;
+	}
+
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
+	}	
 }

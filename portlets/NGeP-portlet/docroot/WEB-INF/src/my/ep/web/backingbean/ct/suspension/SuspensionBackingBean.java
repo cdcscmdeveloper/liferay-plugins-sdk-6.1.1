@@ -92,7 +92,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    	
 	    	HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 	        HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
-	    	if(originalServletRequest.getParameter(ContractConst.CONTRACT_VER_ID) != null)
+	    	if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
 	    		getManagedBean().setViewOnly(true);
 	    }
 	 
@@ -151,7 +151,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			          HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			          HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			          String taskId = originalServletRequest.getParameter("taskId");
-			          String contractVerId = originalServletRequest.getParameter(ContractConst.CONTRACT_VER_ID);
+			          String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
 			          IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			          
 			          if(contractVerId!=null) {
