@@ -12,86 +12,93 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages id="financialCashOnandEvaluationmsgId" autoUpdate="true"
-			closable="true" showDetail="true" showSummary="false"
-			severity="error,info"></p:messages>
-		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back"
-				action="#{evaluationBackingBean.financialBackaction}" />
-	<ui:param name="checklistScoreType"
-			value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
-			<ui:param name="companyScoreType"
-			value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
-			<ui:include src="financialotherchecklistbuttons.xhtml"></ui:include>
-
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
 		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"
-							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
-					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true"
-							style="width:90%"
-							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
-				</tr>
-			</table>
+			<p:messages id="financialEvaluationmsgId" autoUpdate="true"
+				closable="true" showDetail="true" showSummary="false"></p:messages>
+			<h:panelGroup>
+				<div>
+					<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+						style="float:left;" icon="ui-icon-back"
+						action="#{evaluationBackingBean.financialBackaction}" />
+					<ui:param name="checklistScoreType"
+						value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+					<ui:param name="companyScoreType"
+						value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
+					<ui:include src="financialotherchecklistbuttons.xhtml"></ui:include>
+
+				</div>
+			</h:panelGroup>
+			<p:spacer height="25" />
+			<br />
+			<br />
+
+			<h:panelGroup>
+				<table>
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+						<td><p:inputText disabled="true"
+								value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
+						<td style="width: 100px;"><h:outputLabel
+								value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+						<td><p:inputTextarea rows="2" cols="100" disabled="true"
+								style="width:90%"
+								value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
+					</tr>
+				</table>
+
+			</h:panelGroup>
+
+
+
+			<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
+				toggleable="true" collapsed="true">
+				<p:dataTable var="cashHand" id="cashHandId" rows="10"
+					value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
+					rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">
+					<ac:paginator for="cashHandId" />
+
+
+					<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
+						style="width:90%">
+						<h:outputText value="#{cashHand.scQtCheckList.title}"></h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+						style="width:10%">
+						<p:commandLink ajax="false"
+							actionListener="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}"
+							process="@this" partialSubmit="true">
+							<p:graphicImage library="ep/images/design"
+								value="/resources/ep/images/design/icon_txt.png" />
+
+						</p:commandLink>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+			<p:spacer height="25"></p:spacer>
+			<h:panelGroup>
+				<ui:param name="statusHide"
+					value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
+				<ui:param name="checklistScoreType"
+					value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+				<ui:param name="noOfContracts"
+					value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore}"></ui:param>
+				<ui:param name="docDefinationKey"
+					value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
+				<ui:param name="pageDisable"
+					value="#{evaluationBackingBean.managedBean.readOnly}"></ui:param>
+				<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
+				<p:spacer height="25"></p:spacer>
+				<c:if test="#{'SD' ne docDefinationKey}">
+
+					<ui:include
+						src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
+				</c:if>
+
+			</h:panelGroup>
 		</p:panel>
-
-
-
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
-			toggleable="true" collapsed="true">
-			<p:dataTable var="cashHand" id="cashHandId" rows="10"
-				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
-				rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">
-				<ac:paginator for="cashHandId" />
-
-
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
-					style="width:90%">
-					<h:outputText value="#{cashHand.scQtCheckList.title}"></h:outputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
-					style="width:10%">
-					<p:commandLink ajax="false"
-						actionListener="#{evaluationBackingBean.downloadEncryptedFile(cashHand.scQtProposalChecklistAttachment)}"
-						process="@this" partialSubmit="true">
-						<p:graphicImage library="ep/images/design"
-							value="/resources/ep/images/design/icon_txt.png" />
-
-					</p:commandLink>
-
-				</p:column>
-
-			</p:dataTable>
-
-		</p:panel>
-		<p:spacer height="25"></p:spacer>
-		<ui:param name="statusHide"
-			value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
-		<ui:param name="checklistScoreType"
-			value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
-		<ui:param name="noOfContracts"
-			value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore}"></ui:param>
-		<ui:param name="docDefinationKey"
-			value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
-		<ui:param name="pageDisable"
-			value="#{evaluationBackingBean.managedBean.readOnly}"></ui:param>
-		<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
-		<p:spacer height="25"></p:spacer>
-		<c:if test="#{'SD' ne docDefinationKey}">
-
-			<ui:include src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
-		</c:if>
-
-
 	</ui:define>
 </ui:composition>
