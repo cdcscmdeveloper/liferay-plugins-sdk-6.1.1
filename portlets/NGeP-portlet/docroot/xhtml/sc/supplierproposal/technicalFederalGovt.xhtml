@@ -21,33 +21,39 @@
 
 			<ac:paginator for="techgovtid" />
 
-			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}" style="white-space : normal; width : 22%; ">
+			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}"
+				style="white-space : normal; width : 22%; ">
 				<h:outputText value="#{techgovt.scLoiLoa.pmOrgProfile.orgName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}" style="white-space : normal; width : 30%; ">
+			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}"
+				style="white-space : normal; width : 30%; ">
 				<h:outputText value="#{techgovt.scLoiLoa.title}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}" style="width : 12%; ">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}"
+				style="width : 12%; ">
 				<h:outputText value="#{techgovt.loaNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}" style="width : 12%; ">
+			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}"
+				style="width : 12%; ">
 				<h:outputText value="#{techgovt.contractEffDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}" style="width : 12%; ">
+			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}"
+				style="width : 12%; ">
 				<h:outputText value="#{techgovt.contractExpDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}" style=" width : 12%; ">
+			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}"
+				style=" width : 12%; ">
 				<h:outputText style="float : right"
 					value="#{techgovt.contractDuration.intValue()/12}">
 					<f:convertNumber
@@ -73,7 +79,9 @@
 						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						disabled="#{pageDisable}" value="#{noOfContracts.userScore}"
 						maxlength="18" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+						rendered="#{ checklistScoreType eq '2'}"></p:inputText> <p:spacer
+						width="5"></p:spacer> <h:outputText value="/#{contractUserScore}"
+						rendered="#{ checklistScoreType eq '2'}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
@@ -92,7 +100,9 @@
 						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
 						maxlength="18" style="text-align:right" disabled="#{pageDisable}"
 						value="#{noOfYears.userScore}"
-						rendered="#{companyScoreType eq '2'}"></p:inputText></td>
+						rendered="#{companyScoreType eq '2'}"></p:inputText> <p:spacer
+						width="5"></p:spacer> <h:outputText value="/#{yearsUserScore} "
+						rendered="#{companyScoreType eq '2'}" /></td>
 			</tr>
 		</table>
 

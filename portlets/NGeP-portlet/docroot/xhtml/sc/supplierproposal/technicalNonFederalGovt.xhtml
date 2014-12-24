@@ -208,7 +208,9 @@
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							value="#{noOfContracts.userScore}" maxlength="18"
 							disabled="#{pageDisable}" style="text-align:right"
-							rendered="#{checklistScoreType eq '2'}"></p:inputText></td>
+							rendered="#{checklistScoreType eq '2'}"></p:inputText> <p:spacer
+							width="5"></p:spacer> <h:outputText value="/#{contractUserScore}"
+							rendered="#{ checklistScoreType eq '2'}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
@@ -227,7 +229,9 @@
 							rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
 							maxlength="18" style="text-align:right"
 							value="#{noOfYears.userScore}" disabled="#{pageDisable}"
-							rendered="#{companyScoreType eq '2'}"></p:inputText></td>
+							rendered="#{companyScoreType eq '2'}"></p:inputText> <p:spacer
+							width="5"></p:spacer> <h:outputText value="/#{yearsUserScore} "
+							rendered="#{companyScoreType eq '2'}" /></td>
 				</tr>
 			</table>
 		</h:panelGroup>

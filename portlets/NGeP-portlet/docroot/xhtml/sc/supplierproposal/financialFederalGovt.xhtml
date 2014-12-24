@@ -90,7 +90,9 @@
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						value="#{noOfContracts.userScore}" maxlength="18"
 						disabled="#{pageDisable}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
+						rendered="#{ checklistScoreType eq '2'}"></p:inputText> <p:spacer
+						width="5"></p:spacer> <h:outputText value="/#{contractUserScore}"
+						rendered="#{ checklistScoreType eq '2'}" /></td>
 			</tr>
 		</table>
 	</p:panel>
