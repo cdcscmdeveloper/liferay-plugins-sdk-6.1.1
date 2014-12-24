@@ -88,6 +88,10 @@
 					value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore}"></ui:param>
 				<ui:param name="noOfYears"
 					value="#{evaluationBackingBean.managedBean.noOfyearsProposalScore}"></ui:param>
+				<ui:param name="contractUserScore"
+					value="#{evaluationBackingBean.managedBean.userScores}"></ui:param>
+				<ui:param name="yearsUserScore"
+					value="#{evaluationBackingBean.managedBean.contractScores}"></ui:param>
 				<ui:param name="pageDisable"
 					value="#{evaluationBackingBean.managedBean.readOnly}"></ui:param>
 				<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
