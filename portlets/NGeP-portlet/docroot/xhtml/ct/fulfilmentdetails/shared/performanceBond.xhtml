@@ -33,13 +33,13 @@
 		      </p:column>
 			
 			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}">
-				<p:inputText value="#{varBond.refNo}" maxlength="50"  label="#{lbl['lbl.ct.ref.no']}"
+				<p:inputText value="#{varBond.refNo}" maxlength="50" 
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:85px;" />
 			</p:column>
 		
 			<p:column style="width:30%;" headerText="#{lbl['lbl.ct.financial.inst']}">
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:230px;" label="#{lbl['lbl.ct.financial.inst']}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+				    style="width:230px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 					   <f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
 				</p:selectOneMenu>
 			</p:column>
@@ -57,7 +57,7 @@
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					showOn="button" readonlyInput="true" navigator="true" disabled="#{!varBond.chckPerformaceBond}"
 					mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
-					maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+					maxdate="#{contractDetailsBackingBean.chkMimiumDate(varBond.chckPerformaceBond)}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
 				</p:calendar>
