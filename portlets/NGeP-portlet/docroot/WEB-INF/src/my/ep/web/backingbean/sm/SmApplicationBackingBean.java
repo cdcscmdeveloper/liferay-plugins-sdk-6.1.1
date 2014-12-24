@@ -6741,13 +6741,14 @@ public class SmApplicationBackingBean extends
 		if ((smPersonnel.isEquityOwner() || smPersonnel.isDirector())
 				&& getManagedBean().isDisAllowOwnerEdit()) {
 			retVal = true;
-		} else if (smPersonnel.getEpRole() != null
-				&& (smPersonnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel
-						.getEpRole().equals(
-								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
-			retVal = true;
-		}
+		} 
+//		else if (smPersonnel.getEpRole() != null
+//				&& (smPersonnel.getEpRole().equals(
+//						RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel
+//						.getEpRole().equals(
+//								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+//			retVal = true;
+//		}
 		return retVal;
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
