@@ -29,7 +29,7 @@
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
 			<p:dataTable id="circularVerDt" value="#{circularBackingBean.circularListingPagingDataModel}"
-				var="data" lazy="true" rowIndexVar="index" >
+				var="data" lazy="true" rows="10" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
 				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:15%;white-space:normal;">
 					<h:outputText value="#{data.ctCircular.circularNo}" />
@@ -38,9 +38,9 @@
 					<h:outputText value="#{data.circularNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:70%;white-space:normal;">
-					<p:commandLink>
-						<h:outputText value="#{data.name}" />
-					</p:commandLink>
+					<h:commandLink value="#{data.name}"
+						styleClass="blue_font"
+						action="#{circularBackingBean.downloadFile(data.circularFilePath, data.circularFileName)}" />
 				</p:column>
 			</p:dataTable>		
 		</p:panel>
