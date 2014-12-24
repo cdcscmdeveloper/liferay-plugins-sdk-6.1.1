@@ -281,16 +281,17 @@
 
 	<p:dialog id="rejectionDialog" header="#{lbl['lbl.fl.do.rejection.history']}" 
 		widgetVar="rejectionDialog" showEffect="fade" hideEffect="fade"
-		modal="true" width="800" resizable="false">
+		modal="true" width="900px" resizable="false">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
-				<td><p:inputText disabled="true"
+				<td width="100px"><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
+				<td width="200px"><p:inputText disabled="true"
 						value="#{createDOBackingBean.managedBean.selectedItemRow.itemCode}" />
-				</td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
-				<td width="10"></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
-				<td><p:inputText disabled="true" style="width: 400px;"
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
+				</td>
+				<td width="10px"></td>
+				<td width="100px"><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<td width="300px"><p:inputText disabled="true" style="width: 400px;"
 						value="#{createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName}" />
 				</td>
 			</tr>

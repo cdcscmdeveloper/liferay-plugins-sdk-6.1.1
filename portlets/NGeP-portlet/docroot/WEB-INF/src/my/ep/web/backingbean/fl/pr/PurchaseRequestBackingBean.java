@@ -132,6 +132,7 @@ import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -1800,14 +1801,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	private void chargeLineValidation() {
 		if(getManagedBean().getVotFundId()==null) {
-			throw new EpException(MessageConst.ERROR_100022, new String[]{"VOT Code"});
+			throw new EpException(MessageConst.ERROR_100022, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.charge.vot.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		if(getManagedBean().getAssetIndId() == null ){
-			throw new EpException(MessageConst.ERROR_100022, new String[]{"Asset Ind"});
+			throw new EpException(MessageConst.ERROR_100022, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.asset.ind",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		if(getManagedBean().getGlAccountId() == null ){
-			throw new EpException(MessageConst.ERROR_100022, new String[]{"GOSODO"});
-		}		
+			throw new EpException(MessageConst.ERROR_100022, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.gosodo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
 		
 		List<String> selectedItemAddressList = new ArrayList<String>();
 		updateSelectedTreeNodes();
