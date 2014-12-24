@@ -2037,7 +2037,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			throw new EpException(MessageConst.ERROR_770029);
 		}
 		if(activeRoleNumber==0){
-			throw new EpException("At least one role is required.");
+			throw new EpException(MessageConst.ERROR_770150);
 		}
 	}
 	
