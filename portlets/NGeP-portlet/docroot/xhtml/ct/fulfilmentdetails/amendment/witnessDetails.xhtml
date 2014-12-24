@@ -50,7 +50,8 @@
 			<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
 				   <h:panelGrid columns="2">
 				 	  <p:inputTextarea id="agencyAddress" rows="4" style="width:200px;" maxlength="200" required="true"
-				   		value="#{amendmentBackingBean.managedBean.scLoaWitness.address}" autoResize="false" />
+				   		value="#{amendmentBackingBean.managedBean.scLoaWitness.address}" autoResize="false" 
+				   		label="#{lbl['lbl.ct.address']}" />
 				   	  <p:message for="agencyAddress" display="icon"/>
 				   </h:panelGrid>
 				   <h:panelGrid columns="2" columnClasses="columnWidth30,columnWidth30">

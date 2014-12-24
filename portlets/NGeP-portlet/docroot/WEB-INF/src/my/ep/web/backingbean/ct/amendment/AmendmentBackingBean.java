@@ -146,7 +146,6 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -255,7 +254,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void preRenderView() throws UnsupportedEncodingException {
 
 		IContractSO contractSO = null;
-		IContractTemplateSO contractTemplateSO = null;
 		 ContractResDTO resDTO = null;
 	
 		try {
@@ -346,29 +344,26 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 	             } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 				   
-	            	      this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
+	            	 	  this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
 				          this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.supplier.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				          this.getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.supplier.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-				            
-				          contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-				          ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
-				          templateReqDTO.setTemplateName(ContractConst.TEMPLATE_INTEGRITY_PACT);
-				          ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);
-				          getManagedBean().setEditorValue("");
-				          if(templateResDTO.getCtTemplate()!=null) {
-				         	
-				        	  String content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
-					          Map<String, String> valuesMap = new HashMap<String, String>();
-					          valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-					          valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
-					          valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
-					          valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					          valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-					          valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-					
-					          StrSubstitutor sub = new StrSubstitutor(valuesMap);
-					          getManagedBean().setEditorValue(sub.replace(content));
-				     }
+				          
+				          VelocityContext context = new VelocityContext();
+				          String vmFile = "/ct/loaContent/integrity-pact.vm";
+					  	  String content = null;
+					  	  
+					  	  getManagedBean().setEditorValue("");
+				  		  context.put("supplierUserName", getFacesScopes().getUserScreenName());
+				  		  context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+				  		  context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+				  		  context.put("supplierMofRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+				  		  context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				  		  context.put("loaTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
+						
+					  	  if (vmFile != null && context != null) {
+							content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
+						}
+						getManagedBean().setEditorValue(content);
 		
 	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 				       this.getManagedBean().setAction(res.getAction());
@@ -398,9 +393,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    ConstructTabSideMenu();
 		/*    FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);*/
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			contractSO = null;
-			contractTemplateSO = null;
 		}
 	}
 	
