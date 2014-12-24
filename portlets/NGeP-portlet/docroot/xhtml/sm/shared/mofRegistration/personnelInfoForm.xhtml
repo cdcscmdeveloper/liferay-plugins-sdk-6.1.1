@@ -478,10 +478,9 @@
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form"
 								style="padding-right:5px;">
-								<p:graphicImage library="ep/images/design" name="edit.png"
-									value="/resources/ep/images/design/edit.png" />
+								<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" rendered="#{backingBean.isPersonnelViewOnly(person)}"/>
+								<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" rendered="#{!backingBean.isPersonnelViewOnly(person)}"/>
 							</p:commandLink>
-
 						</p:column>
 
 					</p:dataTable>

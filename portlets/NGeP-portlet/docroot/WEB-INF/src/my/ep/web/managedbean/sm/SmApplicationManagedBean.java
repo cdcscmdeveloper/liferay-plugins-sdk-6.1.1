@@ -322,6 +322,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showStorePanel;
 	private boolean showDockyardPanel;
 	private boolean showWorkShopPanel;
+	private boolean showPersonnelViewOnly;
+	private String selectedShareholderIdentificationType;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2461,5 +2463,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setShowWorkShopPanel(boolean showWorkShopPanel) {
 		this.showWorkShopPanel = showWorkShopPanel;
+	}
+
+	public String getSelectedShareholderIdentificationType() {
+		return selectedShareholderIdentificationType;
+	}
+
+	public void setSelectedShareholderIdentificationType(
+			String selectedShareholderIdentificationType) {
+		this.selectedShareholderIdentificationType = selectedShareholderIdentificationType;
+	}
+
+	public boolean isShowPersonnelViewOnly() {
+		return showPersonnelViewOnly;
+	}
+
+	public void setShowPersonnelViewOnly(boolean showPersonnelViewOnly) {
+		this.showPersonnelViewOnly = showPersonnelViewOnly;
 	}
 }

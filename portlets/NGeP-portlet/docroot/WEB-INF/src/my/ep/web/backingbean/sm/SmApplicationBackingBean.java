@@ -571,8 +571,8 @@ public class SmApplicationBackingBean extends
 					setSupplierCancellationRemarks(applicationType,
 							getManagedBean().getSmAppl().getApplId());
 				}
-				
-				//currently is display for ApplType C/DPA
+
+				// currently is display for ApplType C/DPA
 				getManagedBean().setBasicInfo(
 						SmApplicationUtil
 								.getSmSupplierBasicInfoVO(getManagedBean()));
@@ -631,6 +631,10 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil
 						.assignNonPersonnelProfBodyList(getManagedBean());
 			}
+
+			// syazwan added for testing
+			getManagedBean().setDisAllowOwnerEdit(true);
+
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
 			// mofRegistrationSO = null;
@@ -3393,6 +3397,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedShareHolder().setEpRole(
 					RoleCode.MOF_SUPPLIER_USER.value());
 		}
+
+		// to determine whether shareholder for viewonly or edit
+		setShareHolderForViewOnly(shareHolderBean);
 
 		// disabled justification
 		// disableJustification(shareHolderBean);
@@ -6714,6 +6721,34 @@ public class SmApplicationBackingBean extends
 				+ sb.toString());
 		return SmCommonUtil.getMessage(sb.toString(), null);
 
+	}
+
+	private void setShareHolderForViewOnly(SmPersonnel smPersonnel) {
+		getManagedBean().setShowPersonnelViewOnly(
+				isPersonnelViewOnly(smPersonnel));
+		if (getManagedBean().isShowPersonnelViewOnly()) {
+			getManagedBean()
+					.setSelectedShareholderIdentificationType(
+							SmCommonUtil
+									.getParamDescriptionByLanguageAndPmParameter(getManagedBean()
+											.getSelectedShareHolder()
+											.getIdentificationType()));
+		}
+	}
+
+	public boolean isPersonnelViewOnly(SmPersonnel smPersonnel) {
+		boolean retVal = false;
+		if (getManagedBean().isDisAllowOwnerEdit()
+				&& smPersonnel.isEquityOwner()) {
+			retVal = true;
+		} else if (smPersonnel.getEpRole() != null
+				&& (smPersonnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel
+						.getEpRole().equals(
+								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+			retVal = true;
+		}
+		return retVal;
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {

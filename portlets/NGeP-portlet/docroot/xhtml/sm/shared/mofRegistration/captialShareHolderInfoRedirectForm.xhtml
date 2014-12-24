@@ -14,13 +14,20 @@
 					update=":form" process="@this"
 					actionListener="#{backingBean.backFromPersonnelPage}" />
 			</div>
-			<ui:include
-				src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
-			<div align="right" style="padding-top: 10px;">
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-					action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
-					update=":form" />
-			</div>
+			<c:choose>
+				<c:when test="#{backingBean.managedBean.showPersonnelViewOnly}">
+					<ui:param name="viewSmApplBackingBean" value="#{backingBean}" />
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/shareHolderInfoPopUpFormViewOnly.xhtml" />
+				</c:when>
+				<c:otherwise>
+					<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
+					<div align="right" style="padding-top: 10px;">
+						<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+							action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
+							update=":form" />
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</p:panel>
 	</h:panelGroup>
 
