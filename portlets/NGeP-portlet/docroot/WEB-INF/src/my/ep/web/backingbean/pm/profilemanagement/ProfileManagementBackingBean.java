@@ -153,8 +153,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return this.orgTypeSearchBean;
 	}
 	
-	private void generateAddtionalFilter(){
-		logger.info("generateAddtionalFilter");
+	private void generateAdditionalFilter(){
+		logger.info("generateAdditionalFilter");
 		this.getManagedBean().setAdditionalOrgFilter("");
 		//generate additional filter
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
@@ -292,7 +292,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public String redirectToMaintainUser(Long id) throws Exception{
 		logger.info("redirectToMaintainUser");
 		this.setCurrentActiveOrg();
-		this.generateAddtionalFilter();
+		this.generateAdditionalFilter();
 		this.retrieveIdentityTypeMap();
 		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
