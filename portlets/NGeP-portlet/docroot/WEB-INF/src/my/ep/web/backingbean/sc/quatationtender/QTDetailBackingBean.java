@@ -1401,8 +1401,10 @@ public class QTDetailBackingBean extends
 			}
 			this.getManagedBean().setMenuModel(menuModel);
 			if (committeTabs.size() > 0) {
-				//this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
-				this.getManagedBean().setSelectedTabBean(committeTabs.get(this.getManagedBean().getSelectedTabIndex()));
+				// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
+				this.getManagedBean().setSelectedTabBean(
+						committeTabs.get(this.getManagedBean()
+								.getSelectedTabIndex()));
 			}
 		}
 	}
@@ -1750,6 +1752,10 @@ public class QTDetailBackingBean extends
 								approvalSettings.add(approverSettings);
 								qtApproval
 										.setApproverSettings(approvalSettings);
+							} else {
+								for (ScQtApproverSettings approverSettings : approvalSettings) {
+									approverSettings.setQtApproval(qtApproval);
+								}
 							}
 							tabBeans.add(new TabBean(
 									qtApproval.getApprovalType(),
@@ -1887,7 +1893,7 @@ public class QTDetailBackingBean extends
 						this.getManagedBean().setSupplierCriteria(
 								scQt.getScQtSupplierCriteria());
 					}
-					
+
 					if (scQt.isPanel()
 							|| SourcingConstants.QT_TYPE_RESTRICTED_TENDER
 									.equalsIgnoreCase(scQt.getQtType())) {
@@ -1899,7 +1905,7 @@ public class QTDetailBackingBean extends
 						} else {
 							this.getManagedBean().setQtSupplierList(
 									new ArrayList<ScQtSupplier>());
-						}	
+						}
 					}
 
 					if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
@@ -3008,7 +3014,7 @@ public class QTDetailBackingBean extends
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setSelectedTabIndex(subTabIndex);
-			//this.getManagedBean().setActiveIndex(0);
+			// this.getManagedBean().setActiveIndex(0);
 			retrieveCommitteeAppointmentTabDtl();
 			break;
 		case 2:
