@@ -448,9 +448,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 															null)));
 					smPersonnel.setRoleName(smPersonnel.getRoleName()
 							.replaceAll(
-									"Higher",
+									"Higher Management",
 									SmCommonUtil.getMessage(
-											"lbl.sm.personnel.comprole.higher",
+											"lbl.sm.personnel.comprole.higher.mngmnt",
 											null)));
 					smPersonnel.setRoleName(smPersonnel.getRoleName()
 							.replaceAll(
