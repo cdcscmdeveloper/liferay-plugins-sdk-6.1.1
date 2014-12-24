@@ -373,7 +373,7 @@
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-								<td ><p:inputText size="10" maxlength="5" id="basicPermAddPostCode" label="#{lbl['lbl.sm.postcode']}" required="true"
+								<td ><p:inputText size="10" maxlength="10" id="basicPermAddPostCode" label="#{lbl['lbl.sm.postcode']}" required="true"
 										value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}" 
 										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
 										<f:validator validatorId="postcodeValidator"/>
@@ -538,7 +538,7 @@
 									<td><p:outputLabel
 											value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-									<td ><p:inputText size="10" maxlength="5" id="basicMailAddPostCode" label="#{lbl['lbl.sm.postcode']}"
+									<td ><p:inputText size="10" maxlength="10" id="basicMailAddPostCode" label="#{lbl['lbl.sm.postcode']}"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
