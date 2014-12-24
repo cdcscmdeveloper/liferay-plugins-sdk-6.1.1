@@ -9,7 +9,6 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages>
@@ -45,7 +44,7 @@
 								value="#{financialOrgBackingBean.generalInfoTab}" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringMenu"
-							rendered="#{financialOrgBackingBean.managedBean.pmFinancialSvc[0].serviceTypeCode.parameterCode eq 'FC'}"
+							rendered="#{financialOrgBackingBean.managedBean.serviceType eq 'FC'}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener

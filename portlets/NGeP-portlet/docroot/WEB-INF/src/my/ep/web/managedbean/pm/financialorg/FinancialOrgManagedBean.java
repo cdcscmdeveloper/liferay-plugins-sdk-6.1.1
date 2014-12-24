@@ -86,6 +86,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 
 	private List<PmOrgProfile> orgProfileList;
 	private boolean showParentMsg;
+	private String serviceType;
 
 	private Date currentDate = new Date();
 
@@ -613,6 +614,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
+	}
+
+	/**
+	 * @return the serviceType
+	 */
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	/**
+	 * @param serviceType the serviceType to set
+	 */
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
 	}
 
 
