@@ -12,56 +12,57 @@
 
 
 	<ui:define name="contentSection">
-
-		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
-
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
 		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea style="width:100%"
-							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
-							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
-				</tr>
-			</table>
+			<h:panelGroup>
+				<div>
+					<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+						style="float:left;" icon="ui-icon-back"
+						action="#{evaluationBackingBean.evaluationBackaction}" />
+
+				</div>
+			</h:panelGroup>
+			<p:spacer height="25" />
+			<br />
+			<br />
+			<h:panelGroup>
+				<table>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+						<td><p:inputTextarea style="width:100%"
+								value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+								rows="2" cols="150" disabled="true"></p:inputTextarea></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<p:panel styleClass="specZones">
+					<p:tabView var="zones" orientation="left" id="tabview"
+						cache="false"
+						activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
+						value="#{evaluationBackingBean.managedBean.specZoneDtls}">
+						<p:ajax event="tabChange" update="@(.finSpecsupplierList)"
+							listener="#{evaluationBackingBean.specTabChange}" />
+						<p:tab title="#{zones.zoneName}"
+							id="tab#{evaluationBackingBean.managedBean.specZoneTabIndex}">
+							<h:panelGroup styleClass="finSpecsupplierList">
+								<ui:param name="finSpecsupplierList"
+									value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
+								<ui:param name="finSpecofferPrice"
+									value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
+
+								<ui:param name="finSpecSupplierId"
+									value="withZone#{zones.zoneName}"></ui:param>
+
+								<ui:include
+									src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+							</h:panelGroup>
+						</p:tab>
+
+					</p:tabView>
+
+				</p:panel>
 		</p:panel>
-
-
-		<p:panel styleClass="specZones">
-			<p:tabView var="zones" orientation="left" id="tabview" cache="false"
-				activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
-				value="#{evaluationBackingBean.managedBean.specZoneDtls}">
-				<p:ajax event="tabChange"
-					update="@(.finSpecsupplierList)"
-					listener="#{evaluationBackingBean.specTabChange}" />
-				<p:tab title="#{zones.zoneName}"
-					id="tab#{evaluationBackingBean.managedBean.specZoneTabIndex}" >
-					<h:panelGroup styleClass="finSpecsupplierList">
-					<ui:param name="finSpecsupplierList"
-						value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
-					<ui:param name="finSpecofferPrice"
-						value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
-
-					<ui:param name="finSpecSupplierId"
-						value="withZone#{zones.zoneName}"></ui:param>
-
-					<ui:include
-						src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
-					</h:panelGroup>
-				</p:tab>
-
-			</p:tabView>
-
-		</p:panel>
-
-
-
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>

@@ -7,86 +7,86 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+	<h:panelGroup>
+		<h:panelGroup id="noOfPrivateContracts">
+			<ui:param name="scoringPnlId" value="privateContractorListId" />
+			<ui:param name="scoringList"
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
+			<ui:param name="scoringPnlName"
+				value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
+			<p:panel header="#{scoringPnlName}" toggleable="true">
 
-	<h:panelGroup id="noOfPrivateContracts">
-		<ui:param name="scoringPnlId" value="privateContractorListId" />
-		<ui:param name="scoringList"
-			value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
-		<ui:param name="scoringPnlName"
-			value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
-		<p:panel header="#{scoringPnlName}" toggleable="true">
-
-			<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
-				value="#{scoringList}" var="checkListScoring"
-				rowKey="#{checkListScoring}">
-				<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-				<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
-					style="width:40%"
-					rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
-					<h:outputLabel value="#{checkListScoring.rangeFrom}"
-						style="text-align:right"></h:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
-					style="width:30%"
-					rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
-					<h:outputLabel value="#{checkListScoring.rangeTo}"
-						style="text-align:right"></h:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
-					style="width:30%">
-					<h:outputLabel value="#{checkListScoring.score}"
-						style="text-align:right"></h:outputLabel>
-				</p:column>
-				<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
+				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
+					value="#{scoringList}" var="checkListScoring"
+					rowKey="#{checkListScoring}">
+					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
+					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+						style="width:40%"
+						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
+						<h:outputLabel value="#{checkListScoring.rangeFrom}"
+							style="text-align:right"></h:outputLabel>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+						style="width:30%"
+						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
+						<h:outputLabel value="#{checkListScoring.rangeTo}"
+							style="text-align:right"></h:outputLabel>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+						style="width:30%">
+						<h:outputLabel value="#{checkListScoring.score}"
+							style="text-align:right"></h:outputLabel>
+					</p:column>
+					<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
 					<p:commandLink>
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
 				</p:column> -->
-			</p:dataTable>
-		</p:panel>
-	</h:panelGroup>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
 
-	<p:spacer height="25"></p:spacer>
-	<h:panelGroup id="noOfPrivateYears">
-		<ui:param name="scoringPnlId" value="noOfPrivateyearsId" />
-		<ui:param name="scoringList"
-			value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
-		<ui:param name="scoringPnlName"
-			value="#{lbl['lbl.sc.eva.cmp.tot.num.yrs']}"></ui:param>
-		<p:panel header="#{scoringPnlName}" toggleable="true">
-			<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
-				value="#{scoringList}" var="checkListScoring"
-				rowKey="#{checkListScoring}">
-				<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-				<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
-					style="width:40%"
-					rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-					<h:outputLabel value="#{checkListScoring.rangeFrom}"
-						style="text-align:right"></h:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
-					style="width:30%"
-					rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-					<h:outputLabel value="#{checkListScoring.rangeTo}"
-						style="text-align:right"></h:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
-					style="width:30%">
-					<h:outputLabel value="#{checkListScoring.score}"
-						style="text-align:right"></h:outputLabel>
-				</p:column>
-				<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
+		<p:spacer height="25"></p:spacer>
+		<h:panelGroup id="noOfPrivateYears">
+			<ui:param name="scoringPnlId" value="noOfPrivateyearsId" />
+			<ui:param name="scoringList"
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
+			<ui:param name="scoringPnlName"
+				value="#{lbl['lbl.sc.eva.cmp.tot.num.yrs']}"></ui:param>
+			<p:panel header="#{scoringPnlName}" toggleable="true">
+				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
+					value="#{scoringList}" var="checkListScoring"
+					rowKey="#{checkListScoring}">
+					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
+					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+						style="width:40%"
+						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
+						<h:outputLabel value="#{checkListScoring.rangeFrom}"
+							style="text-align:right"></h:outputLabel>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+						style="width:30%"
+						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
+						<h:outputLabel value="#{checkListScoring.rangeTo}"
+							style="text-align:right"></h:outputLabel>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+						style="width:30%">
+						<h:outputLabel value="#{checkListScoring.score}"
+							style="text-align:right"></h:outputLabel>
+					</p:column>
+					<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
 					<p:commandLink>
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
 				</p:column> -->
-			</p:dataTable>
-		</p:panel>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+
 	</h:panelGroup>
-
-
 </ui:composition>
