@@ -1084,15 +1084,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 		}		
 		
-		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
-				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
-				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement for AP201" });
-		}
-		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+		}
+		
+		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
+				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
+				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement for AP201" });
 		}
 		
 		if((getManagedBean().isUpdateContract() || getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FU_PENDING_SUBMISSION.longValue()) && 
