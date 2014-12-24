@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.pm.header.general.finance']}" 
-		styleClass="sampleDetails" toggleable="true" >
+		toggleable="true" >
 		<table>			
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
@@ -67,7 +67,7 @@
 				</p:tab>
 				<p:tab title="FACTORING BANK DETAIL"
 					activeIndex="#{financialOrgBackingBean.managedBean.byFactoring}"
-					rendered="#{financialOrgBackingBean.managedBean.pmFinancialSvc[0].serviceTypeCode.parameterCode eq 'FC'}">
+					rendered="#{financialOrgBackingBean.managedBean.serviceType.contains('FC')}">
 					<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
 				</p:tab>
 			</p:tabView>
