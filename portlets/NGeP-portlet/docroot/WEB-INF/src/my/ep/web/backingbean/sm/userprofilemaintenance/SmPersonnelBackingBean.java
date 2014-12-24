@@ -234,10 +234,16 @@ public class SmPersonnelBackingBean extends
 				&& smSupplier.getBusinessType().equalsIgnoreCase("A")) {
 			validPerCount = true;
 		} else {
-			// disabled add button if authorized personnel already 3
-			if (getManagedBean().getSmPersonnelList() != null
-					&& getManagedBean().getSmPersonnelList().size() >= 3) {
-				validPerCount = true;
+			// disabled if no authorized personnel means application not in
+			// Basic or Draft MOF
+			if (getManagedBean().getSmPersonnelList() == null
+					|| getManagedBean().getSmPersonnelList().isEmpty()) {
+
+			} else {
+				// disabled add button if authorized personnel already 3
+				if (getManagedBean().getSmPersonnelList().size() >= 3) {
+					validPerCount = true;
+				}
 			}
 
 		}

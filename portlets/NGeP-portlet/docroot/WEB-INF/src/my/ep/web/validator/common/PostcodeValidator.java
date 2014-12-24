@@ -18,7 +18,7 @@ public class PostcodeValidator implements Validator{
 	        throws ValidatorException {
 	    String myValue = value.toString();
 	    
-	    if(myValue != null && !myValue.isEmpty() && (!StringUtils.isNumeric(myValue) || myValue.length() < 5)){
+	    if(myValue != null && !myValue.isEmpty() && (!StringUtils.isNumeric(myValue) || myValue.length() !=5)){
 	    	throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	  	          "Postcode Error", 
 	  	          SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null)));
