@@ -199,9 +199,14 @@
 							value="#{supplierProposalDetailBackingBean.managedBean.totalContracts}"
 							readonly="true" disabled="true" size="10">
 						</p:inputText></td>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
-							rendered="#{checklistScoreType eq '1'}" /> <h:outputText
-							value="#{lbl['lbl.sc.eva.s1.user.score']}"
+					<td style="width: 80px;"><h:outputText
+							value="#{lbl['lbl.sc.eva.auto.score']}"
+							rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
+							rendered="#{checklistScoreType eq '2' and !pageDisable}">
+							<h:outputText value="* " styleClass="mandatory" />
+
+
+						</ui:fragment> <h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 							rendered="#{ checklistScoreType eq '2'}" /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
@@ -220,9 +225,14 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 						</p:inputText></td>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
-							rendered="#{companyScoreType eq '1'}" /> <h:outputText
-							value="#{lbl['lbl.sc.eva.s1.user.score']}"
+					<td style="width: 80px;"><h:outputText
+							value="#{lbl['lbl.sc.eva.auto.score']}"
+							rendered="#{companyScoreType eq '1'}" /> <ui:fragment
+							rendered="#{companyScoreType eq '2' and !pageDisable}">
+							<h:outputText value="* " styleClass="mandatory" />
+
+
+						</ui:fragment> <h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 							rendered="#{companyScoreType eq '2'}" /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfYears.autoScore}" style="text-align:right"
