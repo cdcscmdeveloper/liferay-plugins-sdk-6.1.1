@@ -206,6 +206,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtOpeningCommitteeRemark>  evaluationOpeningCommitteeRemark;
 	private List<ScQtTechnicalCommitteeRemark>  evaluationTechnicalCommitteeRemark;
 	private List<ScQtFinancialCommitteeRemark>  evaluationFinancialCommitteeRemark;
+	private BigDecimal withInVarieance;
   
 	/**
 	 * @return the today
@@ -1998,6 +1999,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setContractScores(BigDecimal contractScores) {
 		this.contractScores = contractScores;
+	}
+
+	/**
+	 * @return the withInVarieance
+	 */
+	public BigDecimal getWithInVarieance() {
+		return withInVarieance;
+	}
+
+	/**
+	 * @param withInVarieance the withInVarieance to set
+	 */
+	public void setWithInVarieance(BigDecimal withInVarieance) {
+		this.withInVarieance = withInVarieance;
 	}
 
 	
