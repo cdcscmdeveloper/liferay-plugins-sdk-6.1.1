@@ -1401,6 +1401,9 @@ public class EvaluationBackingBean extends
 					if (null != speczone.getScoreOfferPrices()) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
+						this.getManagedBean().setWithInVarieance(
+								speczone.getWithinVarieancePackage());
+
 					}
 					return "evaluationFinSpecWithOutzone.xhtml";
 				}
@@ -1493,6 +1496,8 @@ public class EvaluationBackingBean extends
 													.getZoneName())) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
+						this.getManagedBean().setWithInVarieance(
+								speczone.getWithinVarieancePackage());
 						/*
 						 * finSpecZone = new SummaryZoneBaen(speczone.getZones()
 						 * .get(i), zoneResDTO.getComplianceResultBean()
@@ -1594,6 +1599,8 @@ public class EvaluationBackingBean extends
 					if (null != speczone.getScoreOfferPrices()) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
+						this.getManagedBean().setWithInVarieance(
+								speczone.getWithinVarieancePackage());
 					}
 					return "evaluationFinSpecWithOutzone.xhtml";
 				}
@@ -2344,9 +2351,11 @@ public class EvaluationBackingBean extends
 					this.getManagedBean()
 							.setSpecItemList(resDTO.getSpecItems());
 				}
-				if (null != resDTO.getScoreOfferPrices()) {
+				if (null != resDTO.getScoreOfferPricesItem()) {
 					this.getManagedBean().setOfferPriceItem(
-							resDTO.getScoreOfferPrices());
+							resDTO.getScoreOfferPricesItem());
+					this.getManagedBean().setWithInVarieance(
+							resDTO.getWithinVarieanceItem());
 				}
 
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
@@ -4871,40 +4880,47 @@ public class EvaluationBackingBean extends
 		backingBean.goToMaint(docMaster);
 		backingBean.previewAction();
 		String html = backingBean.getManagedBean().getPreviewValue();
-		
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		
-		StringBuilder openType = new StringBuilder();
-    	if (openType != null) {
-    		openType.append(getParameterDesc(ParameterTypeConst.QUOTATION_TENDER_TYPE, scQt.getQtType()));
-    	}
-    	
-    	String estimatedPrice = "";
-    	if (scQt.getEstimatedAmount() != null) {
-    		estimatedPrice = amountDF.format(scQt.getEstimatedAmount());	
-    	}
-    	
-    	String publishDate = "";
-    	if (scQt.getPublishDate() != null) {
-    		publishDate = dateSDF.format(scQt.getPublishDate());	
-    	}
-    	
-    	String closingDate = "";
-    	if (scQt.getClosingDate() != null) {
-    		closingDate = dateSDF.format(scQt.getClosingDate());	
-    	}
-    	String totalSuppliers = "";
-    	if (scQt.getScQtSuppliers() != null) {
-    		totalSuppliers = String.valueOf(scQt.getScQtSuppliers().size());
-    	}
 
-    	html = html.replaceAll("&lt;&lt;QT_TYPE&gt;&gt;", openType.toString());
-		html = html.replaceAll("&lt;&lt;ESTIMATED_PRICE&gt;&gt;", estimatedPrice);
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+
+		StringBuilder openType = new StringBuilder();
+		if (openType != null) {
+			openType.append(getParameterDesc(
+					ParameterTypeConst.QUOTATION_TENDER_TYPE, scQt.getQtType()));
+		}
+
+		String estimatedPrice = "";
+		if (scQt.getEstimatedAmount() != null) {
+			estimatedPrice = amountDF.format(scQt.getEstimatedAmount());
+		}
+
+		String publishDate = "";
+		if (scQt.getPublishDate() != null) {
+			publishDate = dateSDF.format(scQt.getPublishDate());
+		}
+
+		String closingDate = "";
+		if (scQt.getClosingDate() != null) {
+			closingDate = dateSDF.format(scQt.getClosingDate());
+		}
+		String totalSuppliers = "";
+		if (scQt.getScQtSuppliers() != null) {
+			totalSuppliers = String.valueOf(scQt.getScQtSuppliers().size());
+		}
+
+		html = html.replaceAll("&lt;&lt;QT_TYPE&gt;&gt;", openType.toString());
+		html = html.replaceAll("&lt;&lt;ESTIMATED_PRICE&gt;&gt;",
+				estimatedPrice);
 		html = html.replaceAll("&lt;&lt;PUBLISH_DATE&gt;&gt;", publishDate);
 		html = html.replaceAll("&lt;&lt;CLOSING_DATE&gt;&gt;", closingDate);
-		html = html.replaceAll("&lt;&lt;NO_OF_SUPPLIER&gt;&gt;", totalSuppliers);
+		html = html
+				.replaceAll("&lt;&lt;NO_OF_SUPPLIER&gt;&gt;", totalSuppliers);
 		return html;
 	}
 
@@ -5560,19 +5576,27 @@ public class EvaluationBackingBean extends
 					ParameterTypeConst.PROCUREMENT_CATEGORY,
 					ParameterConst.PROCUREMENT_CATEGORY_OTHERS);
 			reqDTO.setCategoryId(categoryType.getParameterId());
-			
+
 			PmParameter processType = getPmParameter(
 					ParameterTypeConst.TPL_DOC_PROCESS_TYPE,
 					ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 			reqDTO.setProcessTypeId(processType.getParameterId());
-			
-			if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
+
+			if (this.getManagedBean().getCommitteeType()
+					.equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
 				reqDTO.setTitle(SourcingConstants.DOCTITLE_EVALUATION);
-			} else if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+			} else if (this.getManagedBean().getCommitteeType()
+					.equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
 				reqDTO.setTitle(SourcingConstants.DOCTITLE_OC_EVALUATION);
-			} else if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+			} else if (this
+					.getManagedBean()
+					.getCommitteeType()
+					.equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
 				reqDTO.setTitle(SourcingConstants.DOCTITLE_TEC_EVALUATION);
-			} else if (this.getManagedBean().getCommitteeType().equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+			} else if (this
+					.getManagedBean()
+					.getCommitteeType()
+					.equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
 				reqDTO.setTitle(SourcingConstants.DOCTITLE_FEC_EVALUATION);
 			}
 
