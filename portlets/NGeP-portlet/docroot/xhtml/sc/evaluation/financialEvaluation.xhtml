@@ -8,56 +8,56 @@
 
 
 
+	<h:panelGroup>
+		<p:spacer height="40"></p:spacer>
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
+			toggleable="true">
 
-	<p:spacer height="40"></p:spacer>
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
-		toggleable="true">
-
-		<p:dataTable var="financialEval" id="financialEvaluation"
-			first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"
-			value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
-			editable="true" rowIndexVar="index" rowKey="#{financialEval}">
-		<!-- 	<ac:paginator for="financialEvaluation" /> -->
-
-
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-				style="width:70%;white-space: normal;">
-
-				<h:outputText value="#{financialEval.title}"></h:outputText>
+			<p:dataTable var="financialEval" id="financialEvaluation"
+				first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"
+				value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
+				editable="true" rowIndexVar="index" rowKey="#{financialEval}">
+				<!-- 	<ac:paginator for="financialEvaluation" /> -->
 
 
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.type']}"
-				style="width:20%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
+					style="width:70%;white-space: normal;">
+
+					<h:outputText value="#{financialEval.title}"></h:outputText>
 
 
-				<h:outputText
-					value="#{evaluationBackingBean.getParameterDesc(financialEval.definationType)}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.type']}"
+					style="width:20%;white-space: normal;">
 
 
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
-				style="width:10%">
-				<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
-						process="@this" partialSubmit="true"
-						action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval)}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
-						process="@this" partialSubmit="true"
-						action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval)}" />
-				</ui:fragment>
+					<h:outputText
+						value="#{evaluationBackingBean.getParameterDesc(financialEval.definationType)}"></h:outputText>
 
 
-			</p:column>
+				</p:column>
 
-		</p:dataTable>
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+					style="width:10%">
+					<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
+						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+							process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval)}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
+						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+							process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval)}" />
+					</ui:fragment>
 
 
-	</p:panel>
+				</p:column>
 
+			</p:dataTable>
+
+
+		</p:panel>
+	</h:panelGroup>
 
 
 </ui:composition>
