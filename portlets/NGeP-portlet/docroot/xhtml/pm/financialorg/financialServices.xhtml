@@ -21,7 +21,7 @@
 						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" /> -->
 						<f:selectItems
 									value="#{financialOrgBackingBean.getServieTypeDropdownValues(ParameterTypeConst.bankServices)}" />					
-						<p:ajax event="change" listener="#{financialOrgBackingBean.updateService}" update="@form"  />
+						<p:ajax event="change" listener="#{financialOrgBackingBean.updateService}" update="@form"  process="@all" />
 				</p:selectOneMenu>
 			</p:column>
 
