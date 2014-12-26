@@ -11,7 +11,7 @@
 		<p:panel id="shareHolderDialog">
 			<div align="left">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-					update=":form" process="@this"
+					update=":form" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 					actionListener="#{backingBean.backFromPersonnelPage}" />
 			</div>
 			<c:choose>
@@ -22,7 +22,7 @@
 				<c:otherwise>
 					<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 					<div align="right" style="padding-top: 10px;">
-						<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+						<p:commandButton value="#{lbl['lbl.sm.button.save']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 							action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
 							update=":form" />
 					</div>

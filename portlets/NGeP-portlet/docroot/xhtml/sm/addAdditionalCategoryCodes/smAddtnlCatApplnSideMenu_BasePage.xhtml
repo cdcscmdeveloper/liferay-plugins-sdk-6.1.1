@@ -36,6 +36,11 @@
 
 
 	<ui:define name="contentSection">
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:outputPanel
 			rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
 			id="revPanHdr">

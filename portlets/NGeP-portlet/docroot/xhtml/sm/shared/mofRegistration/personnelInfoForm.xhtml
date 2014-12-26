@@ -474,7 +474,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
 							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or ((person.equityOwner or person.director) and backingBean.managedBean.disAllowOwnerEdit)}">
-							<p:commandLink
+							<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form"
 								style="padding-right:5px;">
@@ -488,11 +488,11 @@
 					<p:spacer height="2px;" />
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-							process="@this" partialSubmit="true"
+							process="@this" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form" />
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-							process="persInfoDtPanel" partialSubmit="true"
+							process="persInfoDtPanel" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form:tt:personDt , :form:tt:stfSummaryPan " />
 					</div>
