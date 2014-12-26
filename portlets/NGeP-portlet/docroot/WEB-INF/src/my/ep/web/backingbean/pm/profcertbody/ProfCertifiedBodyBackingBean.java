@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.pm.profcertbody;
 
+import java.sql.Timestamp;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,19 +13,24 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodyManagedBean;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -265,9 +272,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		certBody.setBodyCode(certBody.getBodyCode().toUpperCase());
 		
-		System.out.println("isCertifiedBody  :"+certBody.isCertifiedBody());
-		
-		System.out.println("isProfessionalBody  :"+certBody.isProfessionalBody());
+		if(certBody.isBrandNew()){
+		setUserDetails(certBody);}
 		
 		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 		
@@ -277,13 +283,29 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		this.getManagedBean().setCertBody(resDTO.getCertBody());
 		if(resDTO.isSuccessful()){
-			FacesContext
-			.getCurrentInstance()
-			.addMessage(
-					null,
-					new FacesMessage(
-							FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
-			
+			if (certBody.isBrandNew()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770091, new String[] {
+												resDTO.getCertBody().getBodyCode(),
+												resDTO.getCertBody().getBodyCode()
+														 },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770092, new String[] {
+												resDTO.getCertBody().getBodyCode(),
+												resDTO.getCertBody().getBodyCode() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+
 		}
 	
 			return NAV_TO_MAIN;
@@ -303,5 +325,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);
+	}
+	
+	public void setUserDetails(BaseEntity baseObject) {
+		if (baseObject.isBrandNew()) {
+			baseObject.setCreatedBy(1L);
+			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
+		baseObject.setChangedBy(1L);
 	}
 }
