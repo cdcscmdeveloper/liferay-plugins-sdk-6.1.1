@@ -96,7 +96,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		pmAddress = new PmAddress();
 		pmAddressType = new PmAddressType();
 		contactPerson = new PmContact();
-		contactPerson.setPmAddressType(pmAddressType);
+		//contactPerson.setPmAddressType(pmAddressType);
 		pmAddress.setPmCity(new PmCity());
 		pmAddress.setPmDistrict(new PmDistrict());
 		pmAddress.setPmCountry(new PmCountry());
