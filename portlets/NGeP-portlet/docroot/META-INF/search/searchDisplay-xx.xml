@@ -552,10 +552,10 @@
 					<property name="columnName" value="designation" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.profiles.designation" />
+					<property name="bundleKey" value="lbl.pm.profiles.userdetails.designation" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
-			</list>
+				</list>
 		</property>
 	</bean>
 
