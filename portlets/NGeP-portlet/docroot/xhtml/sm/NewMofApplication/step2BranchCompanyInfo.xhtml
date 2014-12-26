@@ -19,13 +19,13 @@
 						<table style="width: 100%">
 							<tr>
 								<td><div align="left" style="width: 99%">
-										<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('1','0')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
 											update=":form" />
 									</div></td>
 								<td><div align="right" style="width: 99%">
-										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('1','2')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 											update=":form" />
@@ -48,13 +48,13 @@
 			<table style="width: 100%">
 				<tr>
 					<td><div align="left" style="width: 99%">
-							<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+							<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{backingBean.setTabValue('1','0')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
 								update=":form" />
 						</div></td>
 					<td><div align="right" style="width: 99%">
-							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+							<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{backingBean.setTabValue('1','2')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 								update=":form" />
