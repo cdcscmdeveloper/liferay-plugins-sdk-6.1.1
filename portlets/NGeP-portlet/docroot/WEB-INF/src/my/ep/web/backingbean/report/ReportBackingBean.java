@@ -198,7 +198,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String scPrcRptGroup;
 	private String scPIDtlsPrcRptGroup;
 	private String scProcurementType;
-	private String scProcessRptQuotationNo;	
+	private String scProcessRptQuotationNo;
+	
+	private String scCommonStatus;
+	private String scLAPRNPURCHDEFAULTGroup;
+	private String scREQUESTNOTESUMMARYGroup;
+	private String scPIDNo;
+	private String scContractOrPKPType;
+	private String scContractOrPKPNo;
+	private String scContractOrPKPName;
+	private String scRequestQuoteNo;
 	//cm
 	private String cmItemType;
 	private String cmItemStatus;
@@ -331,6 +340,54 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctContrMontrStatus;
 	private String ctComplete;	
 	
+	public String getScRequestQuoteNo() {
+		return scRequestQuoteNo;
+	}
+	public void setScRequestQuoteNo(String scRequestQuoteNo) {
+		this.scRequestQuoteNo = scRequestQuoteNo;
+	}
+	public String getScPIDNo() {
+		return scPIDNo;
+	}
+	public void setScPIDNo(String scPIDNo) {
+		this.scPIDNo = scPIDNo;
+	}
+	public String getScContractOrPKPType() {
+		return scContractOrPKPType;
+	}
+	public void setScContractOrPKPType(String scContractOrPKPType) {
+		this.scContractOrPKPType = scContractOrPKPType;
+	}
+	public String getScContractOrPKPNo() {
+		return scContractOrPKPNo;
+	}
+	public void setScContractOrPKPNo(String scContractOrPKPNo) {
+		this.scContractOrPKPNo = scContractOrPKPNo;
+	}
+	public String getScContractOrPKPName() {
+		return scContractOrPKPName;
+	}
+	public void setScContractOrPKPName(String scContractOrPKPName) {
+		this.scContractOrPKPName = scContractOrPKPName;
+	}
+	public String getScLAPRNPURCHDEFAULTGroup() {
+		return scLAPRNPURCHDEFAULTGroup;
+	}
+	public void setScLAPRNPURCHDEFAULTGroup(String scLAPRNPURCHDEFAULTGroup) {
+		this.scLAPRNPURCHDEFAULTGroup = scLAPRNPURCHDEFAULTGroup;
+	}
+	public String getScREQUESTNOTESUMMARYGroup() {
+		return scREQUESTNOTESUMMARYGroup;
+	}
+	public void setScREQUESTNOTESUMMARYGroup(String scREQUESTNOTESUMMARYGroup) {
+		this.scREQUESTNOTESUMMARYGroup = scREQUESTNOTESUMMARYGroup;
+	}
+	public String getScCommonStatus() {
+		return scCommonStatus;
+	}
+	public void setScCommonStatus(String scCommonStatus) {
+		this.scCommonStatus = scCommonStatus;
+	}
 	public String getFlGroupOne() {
 		return flGroupOne;
 	}
@@ -2094,15 +2151,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate SC module report  
 	 */
 	public void generateSCReport(){
-		if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.PDW_EC_RPT_VAL))){
+		if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
 			rptGenBean.setUrlReportJSPName(reportFileNameJSP);	
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{				
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}	
 		}else if(((getScQuotationNo()!=null)&&(getScQuotationNo()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))||((getScSoneCrtdFromDate()!=null)&&(getScSoneCrtdFromDate().toString()!=ReportConst.EMPTY_VAL))||((getScSoneCrtdToDate()!=null)&&(getScSoneCrtdToDate().toString()!=ReportConst.EMPTY_VAL))||((getScPIno()!=null)&&(getScPIno()!=ReportConst.EMPTY_VAL))||((getScRequisenerId()!=null)&&(getScRequisenerId()!=ReportConst.EMPTY_VAL))||((getScSupplier()!=null)&&(getScSupplier()!=ReportConst.EMPTY_VAL))||((getScSoneStatus()!=null)&&(getScSoneStatus()!=ReportConst.EMPTY_VAL))||(this.getScProcureAllList().size()>0)||(this.getScQuotationList().size()>0)||(this.getScTenderList().size()>0)||(this.getScRstrctdTndrList().size()>0)||
-				((getScCreatedToMonth()!=null)&&(getScCreatedToMonth().toString()!=ReportConst.EMPTY_VAL))||((getScCreatedFromMonth()!=null)&&(getScCreatedFromMonth().toString()!=ReportConst.EMPTY_VAL))||((getScDeskOfficer()!=null)&&(getScDeskOfficer().toString()!=ReportConst.EMPTY_VAL))||((getScPtj()!=null)&&(getScPtj().toString()!=ReportConst.EMPTY_VAL))||((getScStatus()!=null)&&(getScStatus().toString()!=ReportConst.EMPTY_VAL))||((getScPublishFromDate()!=null)&&(getScPublishFromDate().toString()!=ReportConst.EMPTY_VAL))||((getScPublishToDate()!=null)&&(getScPublishToDate().toString()!=ReportConst.EMPTY_VAL))||((getScPrcRptGroup()!=null)&&(getScPrcRptGroup()!=ReportConst.EMPTY_VAL))||((getScPIDtlsPrcRptGroup()!=null)&&(getScPIDtlsPrcRptGroup()!=ReportConst.EMPTY_VAL))||((getScProcurementType()!=null)&&(getScProcurementType()!=ReportConst.EMPTY_VAL))||((getScProcessRptQuotationNo()!=null)&&(getScProcessRptQuotationNo()!=ReportConst.EMPTY_VAL))){			
+				((getScCreatedToMonth()!=null)&&(getScCreatedToMonth().toString()!=ReportConst.EMPTY_VAL))||((getScCreatedFromMonth()!=null)&&(getScCreatedFromMonth().toString()!=ReportConst.EMPTY_VAL))||((getScDeskOfficer()!=null)&&(getScDeskOfficer().toString()!=ReportConst.EMPTY_VAL))||((getScPtj()!=null)&&(getScPtj().toString()!=ReportConst.EMPTY_VAL))||((getScStatus()!=null)&&(getScStatus().toString()!=ReportConst.EMPTY_VAL))||((getScPublishFromDate()!=null)&&(getScPublishFromDate().toString()!=ReportConst.EMPTY_VAL))||((getScPublishToDate()!=null)&&(getScPublishToDate().toString()!=ReportConst.EMPTY_VAL))||((getScPrcRptGroup()!=null)&&(getScPrcRptGroup()!=ReportConst.EMPTY_VAL))||((getScPIDtlsPrcRptGroup()!=null)&&(getScPIDtlsPrcRptGroup()!=ReportConst.EMPTY_VAL))||((getScProcurementType()!=null)&&(getScProcurementType()!=ReportConst.EMPTY_VAL))
+				||((getScProcessRptQuotationNo()!=null)&&(getScProcessRptQuotationNo()!=ReportConst.EMPTY_VAL))||((getScCommonStatus()!=null)&&(getScCommonStatus()!=ReportConst.EMPTY_VAL))||((getScLAPRNPURCHDEFAULTGroup()!=null)&&(getScLAPRNPURCHDEFAULTGroup()!=ReportConst.EMPTY_VAL))||((getScREQUESTNOTESUMMARYGroup()!=null)&&(getScREQUESTNOTESUMMARYGroup()!=ReportConst.EMPTY_VAL))||((getScPIDNo()!=null)&&(getScPIDNo()!=ReportConst.EMPTY_VAL))||((getScContractOrPKPType()!=null)&&(getScContractOrPKPType()!=ReportConst.EMPTY_VAL))||((getScContractOrPKPNo()!=null)&&(getScContractOrPKPNo()!=ReportConst.EMPTY_VAL))||((getScContractOrPKPName()!=null)&&(getScContractOrPKPName()!=ReportConst.EMPTY_VAL))||((getScRequestQuoteNo()!=null)&&(getScRequestQuoteNo()!=ReportConst.EMPTY_VAL))){			
 			if((this.getScCreatedToMonth()==null)&&(this.getScCreatedFromMonth()!=null)||(this.getScCreatedToMonth()!=null)&&(this.getScCreatedFromMonth()==null)){				 
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 			}
@@ -2118,6 +2176,30 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					rptGenBean.setScCreatedFromDtVar(ReportConst.AMP_CREAT_FRM_DT_EQ+this.getScCreatedFromMonth()+this.getScCreatedFromYear());
 					rptGenBean.setScCreatedToDtVar(ReportConst.AMP_CREAT_TO_DT_EQ+this.getScCreatedToMonth()+this.getScCreatedToYear());
 				}
+			}
+			if((this.getScRequestQuoteNo()!=null)&&(this.getScRequestQuoteNo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScRequestQuoteNoVar(ReportConst.SC_AMP_RQ_NO_EQ+this.getScRequestQuoteNo());
+			}
+			if((this.getScContractOrPKPName()!=null)&&(this.getScContractOrPKPName()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScContractOrPKPNameVar(ReportConst.SC_AMP_CON_M_EQ+this.getScContractOrPKPName());
+			}
+			if((this.getScContractOrPKPNo()!=null)&&(this.getScContractOrPKPNo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScContractOrPKPNoVar(ReportConst.SC_AMP_CON_NO_EQ+this.getScContractOrPKPNo());
+			}
+			if((this.getScContractOrPKPType()!=null)&&(this.getScContractOrPKPType()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScContractOrPKPTypeVar(ReportConst.SC_AMP_CON_TYPE_EQ+this.getScContractOrPKPType());
+			}
+			if((this.getScPIDNo()!=null)&&(this.getScPIDNo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScPIDNoVar(ReportConst.SC_AMP_PID_NO_EQ+this.getScPIDNo());
+			}
+			if((this.getScREQUESTNOTESUMMARYGroup()!=null)&&(this.getScREQUESTNOTESUMMARYGroup()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScREQUESTNOTESUMMARYGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ+this.getScREQUESTNOTESUMMARYGroup());
+			}
+			if((this.getScLAPRNPURCHDEFAULTGroup()!=null)&&(this.getScLAPRNPURCHDEFAULTGroup()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScLAPRNPURCHDEFAULTGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ+this.getScLAPRNPURCHDEFAULTGroup());
+			}
+			if((this.getScCommonStatus()!=null)&&(this.getScCommonStatus()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setScCommonStatusVar(ReportConst.SC_AMP_STATUS_EQ+this.getScCommonStatus());
 			}
 			if((this.getScQuotationNo()!=null)&&(this.getScQuotationNo()!=ReportConst.EMPTY_VAL)){
 				quotationNumberValidation();
@@ -2194,13 +2276,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				userRoleLogin = ReportConst.APPROVER;
 			}else if(authoriztionList.contains(ReportConst.DESK_OFFICER)){
 				userRoleLogin = ReportConst.DESKOFFR;
+			}else if(authoriztionList.contains(ReportConst.REQUISITIONER)){
+				userRoleLogin = ReportConst.REQUISITIONER;
 			}			
 			if((userRoleLogin!=null)&&(userRoleLogin!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScUserAccessRoleVar(ReportConst.AMP_USER_ACCESS_ROLE_EQ+userRoleLogin);
 			}
 			rptGenBean.setUrlReportJSPName(reportFileNameJSP);
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getScProcureMethodChkVar()+rptGenBean.getScDeskOfficerVar()+rptGenBean.getScPtjVar()+rptGenBean.getScSupplierVar()+rptGenBean.getScRequisenerIdVar()+rptGenBean.getScSoneStatusVar()+rptGenBean.getScProcessRptQuotationNoVar()+rptGenBean.getScProcurementTypeVar()+rptGenBean.getScPInoVar()+rptGenBean.getScPIDtlsPrcRptGroupVar()+rptGenBean.getScPrcRptGroupVar()+rptGenBean.getScSoneCrtdFromDateVar()+rptGenBean.getScSoneCrtdToDateVar()+rptGenBean.getScUserAccessRoleVar()+rptGenBean.getScCreatedFromDtVar()+rptGenBean.getScCreatedToDtVar()+rptGenBean.getScPublishFromDateVar()+rptGenBean.getScPublishToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getScProcureMethodChkVar()+rptGenBean.getScDeskOfficerVar()+rptGenBean.getScPtjVar()+rptGenBean.getScSupplierVar()+rptGenBean.getScRequisenerIdVar()+rptGenBean.getScSoneStatusVar()+rptGenBean.getScProcessRptQuotationNoVar()+rptGenBean.getScProcurementTypeVar()+rptGenBean.getScPInoVar()+rptGenBean.getScPIDtlsPrcRptGroupVar()+rptGenBean.getScPrcRptGroupVar()+rptGenBean.getScSoneCrtdFromDateVar()+rptGenBean.getScSoneCrtdToDateVar()+rptGenBean.getScUserAccessRoleVar()+rptGenBean.getScCreatedFromDtVar()+rptGenBean.getScCreatedToDtVar()+rptGenBean.getScPublishFromDateVar()+rptGenBean.getScPublishToDateVar()+rptGenBean.getScCommonStatusVar()+rptGenBean.getScLAPRNPURCHDEFAULTGroupVar()+rptGenBean.getScREQUESTNOTESUMMARYGroupVar()+rptGenBean.getScPIDNoVar()+rptGenBean.getScContractOrPKPTypeVar()+rptGenBean.getScContractOrPKPNoVar()+rptGenBean.getScContractOrPKPNameVar()+rptGenBean.getScRequestQuoteNoVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
@@ -2623,7 +2707,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setScPrcRptGroup(null);
 		this.setScPIDtlsPrcRptGroup(null);
 		this.setScProcurementType(null);
-		this.setScProcessRptQuotationNo(null);		
+		this.setScProcessRptQuotationNo(null);
+		this.setScCommonStatus(null);
+		this.setScLAPRNPURCHDEFAULTGroup(null);
+		this.setScREQUESTNOTESUMMARYGroup(null);
+		this.setScPIDNo(null);
+		this.setScContractOrPKPType(null);
+		this.setScContractOrPKPNo(null);
+		this.setScContractOrPKPName(null);
+		this.setScRequestQuoteNo(null);
 		scProcureAllList = new ArrayList<SelectItem>();	
 		scQuotationList = new ArrayList<SelectItem>();	
 		scTenderList = new ArrayList<SelectItem>();	

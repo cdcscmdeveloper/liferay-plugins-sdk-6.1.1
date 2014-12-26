@@ -54,6 +54,7 @@ public class ReportConst {
 	public static final String OVRL_TECRS_WITH_WEI_EC_RPT_VAL = "SC_035";	
 	public static final String OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL = "SC_034";	
 	public static final String OVRL_FINRS_EC_RPT_VAL = "SC_036";
+	public static final String ANLSIS_EVALUATION_FC_RPT_VAL = "SC_037";
 	public static final String SC_QUOT_TENDER_OR_RPT_VAL = "SC_038";
 	public static final String SC_SUMMRY_SRC_OR_RPT_VAL = "SC_039";
 	public static final String SC_BRIF_SITE_VISIT_OR_RPT_VAL = "SC_040";
@@ -62,14 +63,23 @@ public class ReportConst {
 	public static final String SC_PRICE_SCHEDULE_OR_RPT_VAL = "SC_043";
 	public static final String SC_LETTER_OF_ACCPT_OR_RPT_VAL = "SC_044";
 	public static final String SC_COMMITTEE_DTLS_TD_RPT_VAL = "SC_045";
-
+	
+	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
+	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
+	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_SUPPLIER_S1_RPT_VAL = "SC_052";
+	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_REQUISITIONER_S1_RPT_VAL = "SC_053";
+	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_PINO_S1_RPT_VAL = "SC_054";
+	public static final String SC_LAPORAN_PURCHASE_DEFAULT_S1_RPT_VAL = "SC_055";
+	public static final String SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL = "SC_056";
+	public static final String SC_REQUEST_NOTE_PROCUREMENT_S1_RPT_VAL = "SC_057";	
+	public static final String SC_REQUEST_NOTE_COMPLETE_S1_RPT_VAL = "SC_058";
+	public static final String SC_PURCHASE_INQ_DTL_S1_RPT_VAL = "SC_059";
+	public static final String SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL = "SC_060";
+	public static final String SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL = "SC_061";
+	public static final String SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL = "SC_062";
+	public static final String SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL = "SC_063";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
-	public static final String SC_PURCHASE_INQ_DTL_S1_RPT_VAL = "SC_058";
-	public static final String SC_SIMPLE_QUOTE_DTL_WITH_STS_CMPLTD_S1_RPT_VAL = "SC_059";
-	public static final String SC_SIMPLE_QUOTE_SMRY_BY_RECMND_SUPLR_S1_RPT_VAL = "SC_061";
-	public static final String SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL = "SC_063";
-	
 	//S1 Report
 	//JSP
 		public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "SC_OC_SHLIST_1A.jsp";
@@ -460,21 +470,29 @@ public class ReportConst {
 	public static final String AMP_PROCURE_PTJ_EQ = "&ORGPROFILEID=";
 	public static final String AMP_LOGIN_EQ = "&LOGIN=";
 	public static final String AMP_PUB_FRM_DT_EQ = "&PUBFRDT=";
-	public static final String AMP_PUB_TO_DT_EQ = "&PUBTODT=";	
+	public static final String AMP_PUB_TO_DT_EQ = "&PUBTODT=";
+	public static final String AMP_PREPORT_ID_EQ = "&PREPORTID=";
+	public static final String AMP_PUSER_ID_EQ = "&PUSER=";
 	//sc
-	public static final String SC_AMP_REQUISENER_EQ = "&REQUSRID=";
+	public static final String SC_AMP_REQUISENER_EQ = "&REQUIUSRID=";
 	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";
 	public static final String SC_AMP_STATUS_EQ = "&STATUS=";
 	public static final String SC_AMP_PI_NO_EQ = "&PINO=";
 	public static final String SC_AMP_PRCESS_RPT_GROUP_EQ = "&PGROUP=";
 	public static final String SC_AMP_QT_NO_EQ = "&QUOTENO=";
 	public static final String SC_AMP_PROC_TYPE_EQ = "&PROTYPE=";
+	public static final String SC_AMP_PID_NO_EQ = "&PIDNO=";
+	public static final String SC_AMP_CON_TYPE_EQ = "&CONTYPE=";
+	public static final String SC_AMP_CON_NO_EQ = "&CONNO=";
+	public static final String SC_AMP_CON_M_EQ = "&CONM=";
+	public static final String SC_AMP_RQ_NO_EQ = "&RQNO=";
 	public static final String SC_AMP_APPROVER_NAIK_TARAF_EQ = "&APPROVER_NAIK_TARAF=";
 	public static final String SC_AMP_APPROVERNT_EQ = "&APPROVERNT=";
 	public static final String SC_AMP_APPROVER_EQ = "&APPROVER=";
 	public static final String SC_AMP_DESK_OFFICER_EQ = "&DESK_OFFICER=";
 	public static final String DESKOFFR = "DESKOFFR";
 	public static final String APPROVERNT="APPROVERNT";
+	public static final String REQUISITIONER = "REQUISITIONER";
 	//fl
 	public static final String FL_AMP_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String FL_AMP_TO_DATE_EQ = "&PTODATE=";
