@@ -59,7 +59,15 @@ public class ReportsGenerateBean {
 		private boolean scPrcRptGroupView = false;
 		private boolean scPIDtlsPrcRptGroupView = false;
 		private boolean scProcurementTypeView = false;
-		private boolean scProcessRptQuotationNoView = false;	
+		private boolean scProcessRptQuotationNoView = false;
+		private boolean scCommonStatusView = false;
+		private boolean scLAPRNPURCHDEFAULTGroupView = false;
+		private boolean scREQUESTNOTESUMMARYGroupView = false;
+		private boolean scPIDNoView = false;
+		private boolean scContractOrPKPTypeView = false;
+		private boolean scContractOrPKPNoView = false;
+		private boolean scContractOrPKPNameView = false;
+		private boolean scRequestQuoteNoView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -319,6 +327,14 @@ public class ReportsGenerateBean {
 		private String scPIDtlsPrcRptGroupVar=ReportConst.EMPTY_VAL;
 		private String scProcurementTypeVar=ReportConst.EMPTY_VAL;
 		private String scProcessRptQuotationNoVar=ReportConst.EMPTY_VAL;
+		private String scCommonStatusVar=ReportConst.EMPTY_VAL;
+		private String scLAPRNPURCHDEFAULTGroupVar=ReportConst.EMPTY_VAL;
+		private String scREQUESTNOTESUMMARYGroupVar=ReportConst.EMPTY_VAL;
+		private String scPIDNoVar=ReportConst.EMPTY_VAL;
+		private String scContractOrPKPTypeVar=ReportConst.EMPTY_VAL;
+		private String scContractOrPKPNoVar=ReportConst.EMPTY_VAL;
+		private String scContractOrPKPNameVar=ReportConst.EMPTY_VAL;
+		private String scRequestQuoteNoVar=ReportConst.EMPTY_VAL;
 		//CT
 		private String ctContractNoVar=ReportConst.EMPTY_VAL;
 		private String ctAgreementVar=ReportConst.EMPTY_VAL;
@@ -343,7 +359,105 @@ public class ReportsGenerateBean {
 		private String flGroupFourteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
+		
 	
+		public boolean isScRequestQuoteNoView() {
+			return scRequestQuoteNoView;
+		}
+		public void setScRequestQuoteNoView(boolean scRequestQuoteNoView) {
+			this.scRequestQuoteNoView = scRequestQuoteNoView;
+		}
+		public String getScRequestQuoteNoVar() {
+			return scRequestQuoteNoVar;
+		}
+		public void setScRequestQuoteNoVar(String scRequestQuoteNoVar) {
+			this.scRequestQuoteNoVar = scRequestQuoteNoVar;
+		}
+		public boolean isScPIDNoView() {
+			return scPIDNoView;
+		}
+		public void setScPIDNoView(boolean scPIDNoView) {
+			this.scPIDNoView = scPIDNoView;
+		}
+		public boolean isScContractOrPKPTypeView() {
+			return scContractOrPKPTypeView;
+		}
+		public void setScContractOrPKPTypeView(boolean scContractOrPKPTypeView) {
+			this.scContractOrPKPTypeView = scContractOrPKPTypeView;
+		}
+		public boolean isScContractOrPKPNoView() {
+			return scContractOrPKPNoView;
+		}
+		public void setScContractOrPKPNoView(boolean scContractOrPKPNoView) {
+			this.scContractOrPKPNoView = scContractOrPKPNoView;
+		}
+		public boolean isScContractOrPKPNameView() {
+			return scContractOrPKPNameView;
+		}
+		public void setScContractOrPKPNameView(boolean scContractOrPKPNameView) {
+			this.scContractOrPKPNameView = scContractOrPKPNameView;
+		}
+		public String getScPIDNoVar() {
+			return scPIDNoVar;
+		}
+		public void setScPIDNoVar(String scPIDNoVar) {
+			this.scPIDNoVar = scPIDNoVar;
+		}
+		public String getScContractOrPKPTypeVar() {
+			return scContractOrPKPTypeVar;
+		}
+		public void setScContractOrPKPTypeVar(String scContractOrPKPTypeVar) {
+			this.scContractOrPKPTypeVar = scContractOrPKPTypeVar;
+		}
+		public String getScContractOrPKPNoVar() {
+			return scContractOrPKPNoVar;
+		}
+		public void setScContractOrPKPNoVar(String scContractOrPKPNoVar) {
+			this.scContractOrPKPNoVar = scContractOrPKPNoVar;
+		}
+		public String getScContractOrPKPNameVar() {
+			return scContractOrPKPNameVar;
+		}
+		public void setScContractOrPKPNameVar(String scContractOrPKPNameVar) {
+			this.scContractOrPKPNameVar = scContractOrPKPNameVar;
+		}
+		public boolean isScLAPRNPURCHDEFAULTGroupView() {
+			return scLAPRNPURCHDEFAULTGroupView;
+		}
+		public void setScLAPRNPURCHDEFAULTGroupView(boolean scLAPRNPURCHDEFAULTGroupView) {
+			this.scLAPRNPURCHDEFAULTGroupView = scLAPRNPURCHDEFAULTGroupView;
+		}
+		public boolean isScREQUESTNOTESUMMARYGroupView() {
+			return scREQUESTNOTESUMMARYGroupView;
+		}
+		public void setScREQUESTNOTESUMMARYGroupView(
+				boolean scREQUESTNOTESUMMARYGroupView) {
+			this.scREQUESTNOTESUMMARYGroupView = scREQUESTNOTESUMMARYGroupView;
+		}
+		public String getScLAPRNPURCHDEFAULTGroupVar() {
+			return scLAPRNPURCHDEFAULTGroupVar;
+		}
+		public void setScLAPRNPURCHDEFAULTGroupVar(String scLAPRNPURCHDEFAULTGroupVar) {
+			this.scLAPRNPURCHDEFAULTGroupVar = scLAPRNPURCHDEFAULTGroupVar;
+		}
+		public String getScREQUESTNOTESUMMARYGroupVar() {
+			return scREQUESTNOTESUMMARYGroupVar;
+		}
+		public void setScREQUESTNOTESUMMARYGroupVar(String scREQUESTNOTESUMMARYGroupVar) {
+			this.scREQUESTNOTESUMMARYGroupVar = scREQUESTNOTESUMMARYGroupVar;
+		}
+		public boolean isScCommonStatusView() {
+			return scCommonStatusView;
+		}
+		public void setScCommonStatusView(boolean scCommonStatusView) {
+			this.scCommonStatusView = scCommonStatusView;
+		}
+		public String getScCommonStatusVar() {
+			return scCommonStatusVar;
+		}
+		public void setScCommonStatusVar(String scCommonStatusVar) {
+			this.scCommonStatusVar = scCommonStatusVar;
+		}
 		public boolean isFlGroupOneView() {
 			return flGroupOneView;
 		}

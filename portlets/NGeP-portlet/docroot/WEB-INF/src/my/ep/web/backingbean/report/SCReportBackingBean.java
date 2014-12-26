@@ -106,7 +106,9 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL:	        	
 	            break;
-	        case ReportConst.PDW_EC_RPT_VAL:	        	
+	        case ReportConst.PDW_EC_RPT_VAL:
+	        	rptGenBean.setScQuotationNoView(true);	
+	        	rptGenBean.setExtraTwoColumnView(true);
 	            break;
 	        case ReportConst.SPPSAP2_EC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);	
@@ -159,7 +161,12 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.OVRL_FINRS_EC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;	        	 
+	            break;
+	        case ReportConst.ANLSIS_EVALUATION_FC_RPT_VAL:
+	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setExtraTwoColumnView(true);
+	            break;
+	            
 	        case ReportConst.PSDAK_TEC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
@@ -305,40 +312,157 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        		rptGenBean.setScPtjView(true);
 	        	}        	
 	            break;
+	        case ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScPInoView(true);
+	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScPIDtlsPrcRptGroupView(true);
+	            break;
+	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScPInoView(true);
+	    		rptGenBean.setScCommonStatusView(true);	    		
+	            break;  
+	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_SUPPLIER_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScPInoView(true);
+	    		rptGenBean.setScCommonStatusView(true);	    		
+	            break;
+	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_REQUISITIONER_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScPInoView(true);
+	    		rptGenBean.setScCommonStatusView(true);	    		
+	            break;
+	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_PINO_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScPInoView(true);
+	    		rptGenBean.setScCommonStatusView(true);	    		
+	            break;
+	        case ReportConst.SC_LAPORAN_PURCHASE_DEFAULT_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);	    		
+	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScLAPRNPURCHDEFAULTGroupView(true);
+	    		rptGenBean.setScPIDNoView(true);
+	    		rptGenBean.setScContractOrPKPTypeView(true);
+	    		rptGenBean.setScContractOrPKPNoView(true);
+	    		rptGenBean.setScContractOrPKPNameView(true);
+	            break;
+	        case ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);	    		
+	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScREQUESTNOTESUMMARYGroupView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScRequestQuoteNoView(true);
+	            break;
+	        case ReportConst.SC_REQUEST_NOTE_PROCUREMENT_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);	    		
+	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScRequestQuoteNoView(true);
+	            break;
+	        case ReportConst.SC_REQUEST_NOTE_COMPLETE_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);	    		
+	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScRequestQuoteNoView(true);
+	            break;
 	        case ReportConst.SC_PURCHASE_INQ_DTL_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
 	    		rptGenBean.setScSupplierView(true);
 	    		rptGenBean.setScPInoView(true);
-	    		rptGenBean.setScSoneStatusView(true);
-	    		rptGenBean.setScPIDtlsPrcRptGroupView(true);
-	            break;
-	        case ReportConst.SC_SIMPLE_QUOTE_DTL_WITH_STS_CMPLTD_S1_RPT_VAL:
+	    		rptGenBean.setScCommonStatusView(true);	    		
+	            break;  
+	        case ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
 	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScSoneStatusView(true);
-	    		rptGenBean.setScPrcRptGroupView(true);
-	            break;
-	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_RECMND_SUPLR_S1_RPT_VAL:
+	    		rptGenBean.setScCommonStatusView(true);	
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	            break; 
+	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	    		rptGenBean.setScRequisenerIdView(true);
-	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
 	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScSoneStatusView(true);
-	    		rptGenBean.setScPrcRptGroupView(true);
+	    		rptGenBean.setScCommonStatusView(true);	
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	            break;
+	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);
+	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScCommonStatusView(true);	
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
 	        case ReportConst.SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
 	    		rptGenBean.setScRequisenerIdView(true);
+	    		if((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF))){
+	        		rptGenBean.setScPtjView(true);
+	        	}
 	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScSoneStatusView(true);
-	    		rptGenBean.setScPrcRptGroupView(true);
+	    		rptGenBean.setScCommonStatusView(true);	
+	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
