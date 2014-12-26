@@ -4429,12 +4429,23 @@ public class EvaluationBackingBean extends
 			evalResDTO = evaluationSO.saveSpecDetails(evalReqDTO);
 			this.getManagedBean().setQtProposalChecklist(
 					evalResDTO.getProposalChecklist());
-			if (index >= 0 && getManagedBean().getCheckListType().equalsIgnoreCase("T")) {
+			if (index >= 0
+					&& getManagedBean().getCheckListType()
+							.equalsIgnoreCase("T")) {
 				this.getManagedBean().getComplianceTechnicalProposalCheckList()
 						.remove(index);
-			
+
 				this.getManagedBean()
 						.getComplianceTechnicalProposalCheckList()
+						.add(index,
+								this.getManagedBean().getQtProposalChecklist());
+			}
+			if (index >= 0
+					&& getManagedBean().getCheckListType()
+							.equalsIgnoreCase("F")) {
+				this.getManagedBean().getFinSpecSupplierList().remove(index);
+				this.getManagedBean()
+						.getFinSpecSupplierList()
 						.add(index,
 								this.getManagedBean().getQtProposalChecklist());
 			}
