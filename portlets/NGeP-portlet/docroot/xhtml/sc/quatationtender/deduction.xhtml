@@ -12,7 +12,7 @@
 			widgetVar="deductPaymentTblWidget" var="scQtDeduction"
 			value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionList}"
 			selection="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
-			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
+			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex" rows="10"
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
@@ -33,7 +33,7 @@
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						update=":form:clausePnl, deductionamountid"
+						update=":form:clausePnl, deductionamountid, deductPaymentTblId"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
 				</p:selectOneMenu>
 				<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
@@ -49,6 +49,7 @@
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, deductPaymentTblId" partialSubmit="true"

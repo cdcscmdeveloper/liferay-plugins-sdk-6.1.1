@@ -925,24 +925,20 @@ public class QTDetailBackingBean extends
 			}
 
 			// Setting the Deductions to qtdetails.
-			List<ScQtDeduction> deductionList = getManagedBean()
-					.getScQtDeductionList();
+			List<ScQtDeduction> deductionList = this.getManagedBean().getScQtDeductionList();
 			if (null != deductionList && !deductionList.isEmpty()) {
-				for (int i = 0; i < deductionList.size(); i++) {
-					if (null == deductionList.get(i).getDeductionType()
-							.getParameterCode()) {
-						deductionList.remove(i);
+				for (ScQtDeduction deduction : deductionList) {
+					deduction.setScQt(this.getManagedBean().getQt());
+					if (null == deduction.getDeductionType().getParameterCode()) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] { "Deduction Type" });
 					} else {
-						List<ScQtDeductionClause> deductionClauses = deductionList
-								.get(i).getScQtDeductionClauses();
-						if (null != deductionClauses
-								&& !deductionClauses.isEmpty()) {
+						List<ScQtDeductionClause> deductionClauses = deduction
+								.getScQtDeductionClauses();
+						if (null != deductionClauses && !deductionClauses.isEmpty()) {
 							for (ScQtDeductionClause deductionClause : deductionClauses) {
-								deductionClause.setScQtDeduction(deductionList
-										.get(i));
+								deductionClause.setScQtDeduction(deduction);
 							}
-							deductionList.get(i).setScQtDeductionClauses(
-									deductionClauses);
+							deduction.setScQtDeductionClauses(deductionClauses);
 						}
 					}
 				}
