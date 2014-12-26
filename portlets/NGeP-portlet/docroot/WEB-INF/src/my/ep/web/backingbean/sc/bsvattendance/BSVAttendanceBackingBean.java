@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.bsvattendance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -31,6 +32,7 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -194,12 +196,17 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void submitBsvDetails() {
 		List<ScQtBsv> bsvs = new ArrayList<ScQtBsv>();
+		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
+		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
+			throw new EpException(MessageConst.ERROR_760209,
+					new String[] { closeDate.toString() });
+		}
 		if (this.getManagedBean().getScQt().isZonal()) {
 			List<BriefingZoneBean> zoneBean = this.getManagedBean()
 					.getZoneBean();
 			for (BriefingZoneBean briefingZoneBean : zoneBean) {
 				if (!isAllBsvsComplete(briefingZoneBean)) {
-					throw new EpException("All Bsv Status should be Complate");
+					throw new EpException(MessageConst.ERROR_760210);
 				}
 			}
 
@@ -222,7 +229,7 @@ public class BSVAttendanceBackingBean extends
 					.getNormalBsvBean();
 			boolean flag = isAllBsvsComplete(normalBsv);
 			if (!flag) {
-				throw new EpException("");
+				throw new EpException(MessageConst.ERROR_760210);
 			}
 			ScQtBsv scQtBsv = normalBsv.getScQtBsv();
 			scQtBsv.setTplSpecZoneDtl(normalBsv.getTplSpecZoneDtl());

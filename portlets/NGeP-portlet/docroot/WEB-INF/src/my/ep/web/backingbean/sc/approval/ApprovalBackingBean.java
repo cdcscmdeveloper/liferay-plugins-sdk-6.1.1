@@ -514,7 +514,7 @@ public class ApprovalBackingBean extends
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
 			this.setDefaultDateTime(qt);
-			
+
 			CommitteResDTO committeResDto = null;
 			// QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
@@ -887,10 +887,10 @@ public class ApprovalBackingBean extends
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 				if (null != parameter) {
 					approvalRequest.setApproverAction(parameter);
-					approvalRequest.setApproverActionDate(new Date());
-					approvalRequest.setApproverId(new FacesScopes()
-							.getUserSessionBean());
 				}
+				approvalRequest.setApproverActionDate(new Date());
+				approvalRequest.setApproverId(new FacesScopes()
+						.getUserSessionBean());
 			}
 		}
 
