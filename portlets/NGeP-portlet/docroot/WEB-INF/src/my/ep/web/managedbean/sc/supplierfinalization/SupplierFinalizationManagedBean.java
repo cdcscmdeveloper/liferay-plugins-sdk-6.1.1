@@ -57,6 +57,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private List<ScQtMeeting> meetingList;
 	private List<ScQtMeeting> selectedMeetingList;
+	private List<ScQtMeeting> deletedMeetingList;	
 	private List<ScQtCommitteeActivity> committeeList;
 	private List<ScQtCommitteRemarks> committeeRemarkList;
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
@@ -215,6 +216,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedMeetingList(List<ScQtMeeting> selectedMeetingList) {
 		this.selectedMeetingList = selectedMeetingList;
+	}
+
+	/**
+	 * @return the deletedMeetingList
+	 */
+	public List<ScQtMeeting> getDeletedMeetingList() {
+		return deletedMeetingList;
+	}
+
+	/**
+	 * @param deletedMeetingList the deletedMeetingList to set
+	 */
+	public void setDeletedMeetingList(List<ScQtMeeting> deletedMeetingList) {
+		this.deletedMeetingList = deletedMeetingList;
 	}
 
 	/**
