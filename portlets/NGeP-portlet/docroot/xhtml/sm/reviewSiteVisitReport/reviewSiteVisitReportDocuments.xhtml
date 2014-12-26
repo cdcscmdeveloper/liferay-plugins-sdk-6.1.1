@@ -38,14 +38,14 @@
 				<table style="width: 100%">
 					<tr>
 						<td><div align="left" style="width: 100%">
-								<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+								<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
 									icon="ui-icon-prev"
 									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 									update=":form" />
 							</div></td>
 						<td><div align="right" style="width: 100%">
-								<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+								<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									icon="ui-icon-next" iconPos="right"
 									actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"

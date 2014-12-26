@@ -11,7 +11,7 @@
 				<td></td>
 				<td>
 					<div align="right" style="width: 99%" class="button-wrapper">
-						<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
+						<p:commandButton value="#{lbl['lbl.sm.submitPayment']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 							action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 							style="margin-bottom:5px;" />
 					</div>
@@ -31,7 +31,7 @@
 					<table>
 						<tr>
 							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 										actionListener="#{backingBean.setTabValue('9','8')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 										update=":form" />
@@ -46,7 +46,7 @@
 					<table>
 						<tr>
 							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 										actionListener="#{backingBean.setTabValue('7','6')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 										update=":form" />

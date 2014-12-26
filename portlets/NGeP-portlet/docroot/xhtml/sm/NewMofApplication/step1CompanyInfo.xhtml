@@ -28,13 +28,14 @@
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
 					</ui:fragment>
+					<ui:include src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
 								<td></td>
 								<td>
 									<div align="right" style="width: 99%" class="button-wrapper">
-										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(0,1)}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 											update=":form" />
@@ -66,13 +67,14 @@
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
 		</ui:fragment>
+		<ui:include src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
 		<div class="nav-wrapper">
 			<table style="width: 100%">
 				<tr>
 					<td></td>
 					<td>
 						<div align="right" style="width: 99%" class="button-wrapper">
-							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+							<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{backingBean.setTabValue(0,1)}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 								update=":form" />
