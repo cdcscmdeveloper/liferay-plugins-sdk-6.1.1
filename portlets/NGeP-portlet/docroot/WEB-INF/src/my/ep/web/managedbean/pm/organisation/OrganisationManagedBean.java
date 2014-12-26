@@ -26,6 +26,8 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -88,7 +90,12 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
 	private List<PmFinancialAcc> pmFinancialAcc = new ArrayList<PmFinancialAcc>();
 	private List<PmFinancialAcc> selectedPmFinancialAcc;
-
+	
+	private List<SmSupplierBank> smSupplierBanks = new ArrayList<SmSupplierBank>();
+	private List<SmSupplierBank> deletedSupplierBankList = new ArrayList<SmSupplierBank>();
+	private List<SmPersonnel> smPersonnels = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> deletedSmPersonnelList = new ArrayList<SmPersonnel>();
+	
 	private List<PmOrgProfile> selectedPmOrgProfile;
 
 	private List<PmPtjGroup> ptjGroupList;
@@ -984,6 +991,39 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setPmProfileGroup(PmProfileGroup pmProfileGroup) {
 		this.pmProfileGroup = pmProfileGroup;
+	}
+
+	public List<SmSupplierBank> getSmSupplierBanks() {
+		return smSupplierBanks;
+	}
+
+	public void setSmSupplierBanks(List<SmSupplierBank> smSupplierBanks) {
+		this.smSupplierBanks = smSupplierBanks;
+	}
+
+	public List<SmPersonnel> getSmPersonnels() {
+		return smPersonnels;
+	}
+
+	public void setSmPersonnels(List<SmPersonnel> smPersonnels) {
+		this.smPersonnels = smPersonnels;
+	}
+
+	public List<SmSupplierBank> getDeletedSupplierBankList() {
+		return deletedSupplierBankList;
+	}
+
+	public void setDeletedSupplierBankList(
+			List<SmSupplierBank> deletedSupplierBankList) {
+		this.deletedSupplierBankList = deletedSupplierBankList;
+	}
+
+	public List<SmPersonnel> getDeletedSmPersonnelList() {
+		return deletedSmPersonnelList;
+	}
+
+	public void setDeletedSmPersonnelList(List<SmPersonnel> deletedSmPersonnelList) {
+		this.deletedSmPersonnelList = deletedSmPersonnelList;
 	}
 
 	

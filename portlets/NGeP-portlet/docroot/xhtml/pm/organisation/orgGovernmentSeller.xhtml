@@ -43,7 +43,13 @@
 				</p:selectOneMenu>
 
 			</p:column>
-
+	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+             <p:commandLink partialSubmit="true" disabled="#{!supplierBank.brandNew}"
+				process="@this" action="#{organisationBackingBean.deleteSupplierBank(rowIndex)}"
+				update="govorgid" >
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+			</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
@@ -51,10 +57,6 @@
 				action="#{organisationBackingBean.addSupplierBank}"
 				update="govorgid" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				 update="govorgid" process="@this,govorgid"
-				partialSubmit="true"
-				action="#{organisationBackingBean.deleteSupplierBank}" />
 
 		</div>
 
@@ -79,7 +81,13 @@
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}" style="width :40%">
 				<h:outputText value="#{personnel.pmUser.userName}" />
 			</p:column>
-
+			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+             <p:commandLink partialSubmit="true"
+				process="@this" disabled="#{!personnel.brandNew}"
+				action="#{organisationBackingBean.deletePersonnel(index)}" update="supplierUsers">
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+			</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<br />
 		
@@ -89,9 +97,6 @@
 				action="#{organisationBackingBean.addPersonnel}" immediate="true" update="userSearch"
 				oncomplete="userlistpopup.show();" icon="ui-icon-add" />
 
-			<p:commandButton value="Delete" icon="ui-icon-delete"
-				process="@this,supplierUsers" partialSubmit="true"
-				action="#{organisationBackingBean.deletePersonnel}" update="supplierUsers" />
 		</div>		
 	</p:panel>
 	<p:dialog id="userSearch" header="USER LIST"
