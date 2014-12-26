@@ -1057,23 +1057,31 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public String cancelQTDetails() {
 		ScQt qt = prepareBOInfo();
-		ScQtStatus qtStatus = new ScQtStatus();
-		qtStatus.setScQt(qt);
-		PmStatus status = new PmStatus();
-		status.setStatusId(QTStatusConst.QT_CANCELLED);
-		qtStatus.setPmStatus(status);
-		qtStatus.setCurrent(true);
-		qtStatus.setDocType(QTConstants.DOCTYPE_QT);
-		List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
-		qtStatuses.add(qtStatus);
-		qt.setScQtStatus(qtStatuses);
-		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-		quationTenderReqDTO.setQtdetail(qt);
-
+		PmStatus currStatus = qt.getQtStatus();
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
-		QuationTenderResDTO resDTO = detailSO.saveQTDtl(quationTenderReqDTO);
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		QuationTenderResDTO resDTO = null;
+		if (currStatus.getStatusId() > QTStatusConst.QT_PENDING_APPOINT_BO) {
+			quationTenderReqDTO.setQtdetail(qt);
+			resDTO = detailSO.cancleQT(quationTenderReqDTO);
+		} else {
+			ScQtStatus qtStatus = new ScQtStatus();
+			qtStatus.setScQt(qt);
+			PmStatus status = new PmStatus();
+			status.setStatusId(QTStatusConst.QT_CANCELLED);
+			qtStatus.setPmStatus(status);
+			qtStatus.setCurrent(true);
+			qtStatus.setDocType(QTConstants.DOCTYPE_QT);
+			List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+			qtStatuses.add(qtStatus);
+			qt.setScQtStatus(qtStatuses);
+
+			quationTenderReqDTO.setQtdetail(qt);
+
+			resDTO = detailSO.saveQTDtl(quationTenderReqDTO);
+		}
 		if (resDTO.isSuccessful()) {
 			renewSesionObject();
 			getMinistrySpecificationSecretaryList();
