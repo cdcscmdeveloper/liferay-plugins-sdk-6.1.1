@@ -207,6 +207,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtTechnicalCommitteeRemark>  evaluationTechnicalCommitteeRemark;
 	private List<ScQtFinancialCommitteeRemark>  evaluationFinancialCommitteeRemark;
 	private BigDecimal withInVarieance;
+	private String checkListType;
   
 	/**
 	 * @return the today
@@ -2013,6 +2014,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setWithInVarieance(BigDecimal withInVarieance) {
 		this.withInVarieance = withInVarieance;
+	}
+
+	/**
+	 * @return the checkListType
+	 */
+	public String getCheckListType() {
+		return checkListType;
+	}
+
+	/**
+	 * @param checkListType the checkListType to set
+	 */
+	public void setCheckListType(String checkListType) {
+		this.checkListType = checkListType;
 	}
 
 	

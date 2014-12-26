@@ -1696,10 +1696,12 @@ public class EvaluationBackingBean extends
 	}
 
 	public String othersTechnicalEvaluate(
-			ScQtProposalChecklist proposalCheckList, int index) {
+			ScQtProposalChecklist proposalCheckList, int index,
+			String checkListType) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		this.getManagedBean().setQtProposalChecklist(proposalCheckList);
+		this.getManagedBean().setCheckListType(checkListType);
 		String proposalPage = null;
 		String evaluationPage = null;
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
@@ -2308,10 +2310,12 @@ public class EvaluationBackingBean extends
 	}
 
 	public String othersFinancialEvaluate(
-			ScQtProposalChecklist proposalCheckList, int index) {
+			ScQtProposalChecklist proposalCheckList, int index,
+			String checkListType) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		this.getManagedBean().setQtProposalChecklist(proposalCheckList);
+		this.getManagedBean().setCheckListType(checkListType);
 		String proposalPage = null;
 		String evaluationPage = null;
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
@@ -4408,7 +4412,7 @@ public class EvaluationBackingBean extends
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-
+			int index = this.getManagedBean().getTechindex();
 			List<TplSpecAnswer> answers = getManagedBean()
 					.getTemplateSpecBean().getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answers) {
@@ -4419,9 +4423,21 @@ public class EvaluationBackingBean extends
 						getManagedBean().getSelectedZone());
 
 			}
-
+			evalReqDTO.setProposalChecklist(this.getManagedBean()
+					.getQtProposalChecklist());
 			evalReqDTO.setAnswersList(answers);
 			evalResDTO = evaluationSO.saveSpecDetails(evalReqDTO);
+			this.getManagedBean().setQtProposalChecklist(
+					evalResDTO.getProposalChecklist());
+			if (index >= 0 && getManagedBean().getCheckListType().equalsIgnoreCase("T")) {
+				this.getManagedBean().getComplianceTechnicalProposalCheckList()
+						.remove(index);
+			
+				this.getManagedBean()
+						.getComplianceTechnicalProposalCheckList()
+						.add(index,
+								this.getManagedBean().getQtProposalChecklist());
+			}
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
