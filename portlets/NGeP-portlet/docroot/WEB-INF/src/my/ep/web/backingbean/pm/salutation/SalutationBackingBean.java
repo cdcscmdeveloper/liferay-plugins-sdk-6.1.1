@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.pm.salutation;
 
+import java.sql.Timestamp;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,18 +12,22 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.salutation.SalutationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -234,6 +240,9 @@ public class SalutationBackingBean extends
 		 log.info("............salutation.getSalutationCode()="+salutation.getSalutationCode());
 		 validationMessage(salutation);
 		 
+		 if(salutation.isBrandNew()){
+		 setUserDetails(salutation);}
+		 
 		 SalutationReqDTO reqDTO = new SalutationReqDTO();
 		 reqDTO.setSalutation(salutation);
 		 ISalutationSO iSalutationSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
@@ -241,12 +250,27 @@ public class SalutationBackingBean extends
 		 SalutationResDTO resDTO= iSalutationSO.saveOrUpdateSaluationDtls(reqDTO);
 		 this.getManagedBean().setPmSalutation(resDTO.getSalutation());
 		 if(resDTO.isSuccessful()){
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
+			 if (salutation.isBrandNew()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_770091, new String[] {
+													resDTO.getSalutation().getSalutationCode(),
+													resDTO.getSalutation().getSalutationCode()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_770092, new String[] {
+													resDTO.getSalutation().getSalutationCode(),
+													resDTO.getSalutation().getSalutationCode()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
 			}
 		
 		  return NAV_TO_MAIN;
@@ -258,6 +282,15 @@ public class SalutationBackingBean extends
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, NAV_TO_MAIN);
+		}
+	 
+	 public void setUserDetails(BaseEntity baseObject) {
+			if (baseObject.isBrandNew()) {
+				baseObject.setCreatedBy(1L);
+				baseObject
+						.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			}
+			baseObject.setChangedBy(1L);
 		}
 	 
 	 
