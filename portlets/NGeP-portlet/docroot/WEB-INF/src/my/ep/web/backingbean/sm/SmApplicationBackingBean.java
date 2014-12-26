@@ -3598,6 +3598,10 @@ public class SmApplicationBackingBean extends
 		// reset personnel view only to false for add new
 		getManagedBean().setShowPersonnelViewOnly(false);
 
+		// reset personnel name and nationality to false for add new
+		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
+				false);
+
 	}
 
 	public void deleteSelectedShareHolders(String personType) {
@@ -6749,7 +6753,8 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 
-	private void setDisabledShareholderNameAndNationality(SmPersonnel smPersonnel) {
+	private void setDisabledShareholderNameAndNationality(
+			SmPersonnel smPersonnel) {
 		boolean retVal = false;
 		try {
 			if (smPersonnel.getPmUser() != null
