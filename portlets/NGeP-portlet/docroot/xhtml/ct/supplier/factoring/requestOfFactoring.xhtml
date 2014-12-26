@@ -51,7 +51,7 @@
 								styleClass="ui-button" process="@form"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}"
 								action="#{supplierBackingBean.saveFactoringRequest(outcome)}"
-								rendered="#{outcome != 'ACKNOWLEDGE'}" />
+								rendered="#{outcome != 'ACKNOWLEDGE' and !supplierBackingBean.managedBean.viewOnly}" />
 
 							<p:commandButton value="#{outcome}" styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form"
@@ -386,9 +386,9 @@
 			rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
 			<table style="width: 100%">
 				<tr rowspan="2">
-					<h:panelGroup rendered="#{!supplierBackingBean.approverRole}">
+					<h:panelGroup rendered="#{!supplierBackingBean.approverRole and !supplierBackingBean.managedBean.viewOnly}">
 					<td style="width: 10%; vertical-align: top; text-align: right">
-						<p:selectBooleanCheckbox disabled="#{supplierBackingBean.managedBean.viewOnly}"
+						<p:selectBooleanCheckbox
 							id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
 					</td>
 					<td>
