@@ -92,6 +92,12 @@ public class RuleCatalogueBackingBean extends
 		req.setFeeExemption(list.get(1));
 		feeSO.deleteFeeExemption(req);
 		// IRuleSO ruleSO = null;
+//        FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+//		 reqDTO.setOrgProfileId(594L);
+//        reqDTO.setRequestItemId(2274L);
+//        reqDTO.setContractId(4592L);
+//		
+//		FeeExemptionResDTO resDTO = feeSO.checkForFeeException(reqDTO);
 		// try {
 		// boolean result = false;
 		// // ruleSO = (IRuleSO)
@@ -239,8 +245,8 @@ public class RuleCatalogueBackingBean extends
 							String categoryL1Code = categoryL3
 									.getPmCategoryL2().getPmCategoryL1()
 									.getCategoryL1Code();
-							cRule.setCategoryDisplayValue(categoryL3Code
-									+ categoryL2Code + categoryL1Code);
+							cRule.setCategoryDisplayValue(categoryL1Code
+									+ categoryL2Code + categoryL3Code);
 						}
 					}
 				}
@@ -362,8 +368,8 @@ public class RuleCatalogueBackingBean extends
 			// log.info(".............categoryL3Code=" + categoryL3Code);
 			// log.info(".............categoryL2Code=" + categoryL2Code);
 			// log.info(".............categoryL1Code=" + categoryL1Code);
-			ruleValue.setCategoryDisplayValue(categoryL3Code + categoryL2Code
-					+ categoryL1Code);
+			ruleValue.setCategoryDisplayValue(categoryL1Code + categoryL2Code
+					+ categoryL3Code);
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 					.remove(index);
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
@@ -768,10 +774,10 @@ public class RuleCatalogueBackingBean extends
 			for (PmConfigRuleValue ruleTypeValue : ruleType
 					.getConfigRuleValues()) {
 
-				if (ruleTypeValue.isBrandNew()
-						&& ruleTypeValue.getExpDate() == null) {
-					ruleTypeValue.setExpDate(currentDate);
-				}
+//				if (ruleTypeValue.isBrandNew()
+//						&& ruleTypeValue.getExpDate() == null) {
+//					ruleTypeValue.setExpDate(currentDate);
+//				}
 				// if (!isValidDateRange(ruleTypeValue.getEffDate(),
 				// ruleTypeValue.getExpDate())) {
 				// throw new EpException(MessageConst.ERROR_770111,
@@ -885,10 +891,12 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
 			// retrive updated list
-			this.getManagedBean().setConfigRuleList(resDTO.getRuleTypeList());
-			this.getManagedBean().setSelectedRuleType(
-					resDTO.getRuleTypeList().get(0));
+			
 			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
+			this.getManagedBean().setConfigRuleList(
+					RuleConfigHelper.getInstance().getRuleTypeList());
+			this.getManagedBean().setSelectedRuleType(
+					RuleConfigHelper.getInstance().getRuleTypeList().get(0));
 			// fill up ruleType's ruleValueList
 			for (PmConfigRule cRule : this.getManagedBean().getConfigRuleList()) {
 				cRule.setConfigRuleValues(RuleConfigHelper.getInstance()
@@ -908,8 +916,8 @@ public class RuleCatalogueBackingBean extends
 							String categoryL1Code = categoryL3
 									.getPmCategoryL2().getPmCategoryL1()
 									.getCategoryL1Code();
-							cRule.setCategoryDisplayValue(categoryL3Code
-									+ categoryL2Code + categoryL1Code);
+							cRule.setCategoryDisplayValue(categoryL1Code
+									+ categoryL2Code + categoryL3Code);
 						}
 					}
 				}

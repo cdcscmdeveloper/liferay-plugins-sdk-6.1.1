@@ -29,6 +29,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -56,6 +57,8 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -73,6 +76,10 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -281,6 +288,9 @@ public class OrganisationBackingBean extends
 
 	public String maintainOrganisation(Long id) {
 		log.info(".......maintainOrganisation......");
+		//clear list's previous value
+		this.getManagedBean().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+	    this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		retrieveSupplierUserList(id);
 
@@ -316,12 +326,45 @@ public class OrganisationBackingBean extends
 			retrieveOrgProfileList();	
 			log.info("..................orgProfile.getParentOrgProfile().getOrgProfileId()="+orgProfile.getParentOrgProfile().getOrgProfileId());
 			log.info("..................orgProfile.getOrgProfileId()="+orgProfile.getOrgProfileId());
+			log.info("..................orgProfile.getMainProfileGroups()="+orgProfile.getMainProfileGroups());
 			
-			
-		//	this.getManagedBean().setProfileGroup(orgProfile.getAuthorizedProfileGroups());
+			this.getManagedBean().setProfileGroup(orgProfile.getMainProfileGroups());
 		
 			
 		
+		}
+		// PTJ, GLC, LAT, STG and STB
+	
+		if (getManagedBean().getOrgType().equalsIgnoreCase(
+				OrganizationType.DIVISION.value()) || 
+				getManagedBean().getOrgType().equalsIgnoreCase(
+						OrganizationType.GOVERNMENT_LINK_COMPANIES.value()) || 
+						getManagedBean().getOrgType().equalsIgnoreCase(
+								OrganizationType.STATUTORY_BODIES.value()) || 
+								getManagedBean().getOrgType().equalsIgnoreCase(
+										OrganizationType.STATE_GOVERNMENT.value()) || 
+										getManagedBean().getOrgType().equalsIgnoreCase(
+												OrganizationType.LOCAL_AUTHORITY.value())) {
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierSearchSO.class);
+			SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
+			SupplierSearchResDTO supResDTO;
+			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
+			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
+			if(supResDTO.getSmSupplier() != null){
+			
+			//just for test NullpointerExcemtion
+//			supReqDTO.setSupplierId(277546L);
+			
+			 supResDTO = supplierSearchSO.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);
+			 SmSupplier supplier = supResDTO.getSmSupplier();
+		      if(supplier != null){
+		      	this.getManagedBean().setSmSupplierBanks(supplier.getSmAppl().getSmSupplierBanks());
+			    this.getManagedBean().setSmPersonnels(supplier.getSmAppl().getSmPersonnels());
+		      }	
+			}
 		}
 		List<PmAddressType> pmAddressTypes = orgProfile.getPmAddressTypes();
 		boolean addrExist = false;
@@ -430,6 +473,45 @@ public class OrganisationBackingBean extends
 	}
 
 	public String saveOrganization() throws Exception {
+		//check govSeller
+		if(this.getManagedBean().getOrgProfile().isGovtSeller()){
+			if(this.getManagedBean().getSmSupplierBanks() == null ){
+				throw new EpException(MessageConst.ERROR_775101);
+			}else{
+				//filter list for active records and check again
+				List<SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>();
+				for(SmSupplierBank supplierBank :this.getManagedBean().getSmSupplierBanks()){
+					if(supplierBank.isRecordStatus()){
+				     	tempSupplierBankList.add(supplierBank);
+					}
+				}
+				if(tempSupplierBankList.isEmpty()){
+					throw new EpException(MessageConst.ERROR_775101);
+				}
+				
+			}
+			if(this.getManagedBean().getSmPersonnels() == null){
+				throw new EpException(MessageConst.ERROR_775102);
+			}else {
+				//filter list for active records and check again
+				List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
+				for(SmPersonnel personnel : this.getManagedBean().getSmPersonnels()){
+					if(personnel.isRecordStatus()){
+						tempPersonnelList.add(personnel);
+					}
+				}
+				if(tempPersonnelList.isEmpty()){
+					throw new EpException(MessageConst.ERROR_775102);
+				}
+			}
+		}
+		//check group org
+		if(this.getManagedBean().getOrgProfile().isGroupOrg()){
+			if(this.getManagedBean().getProfileGroup() == null || this.getManagedBean().getProfileGroup().isEmpty()){
+				throw new EpException(MessageConst.ERROR_775103);
+			}
+		}
+		
 		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -892,40 +974,32 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setPmFinancialOrg(resDTO.getFinancialOrgList());
 	}
 
-	public void addFinancialAcc() {
-
-		PmFinancialAcc pmFinancialAcc = new PmFinancialAcc();
+	public void addSupplierBank() {
 
 		try {
-			List<PmFinancialAcc> pmFinancialList = this.getManagedBean()
-					.getPmFinancialAcc();
-			if (null == pmFinancialList) {
-				pmFinancialList = new ArrayList<PmFinancialAcc>();
+			
+			if (this.getManagedBean().getSmSupplierBanks() == null) {
+				this.getManagedBean().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			}
-
-			for (PmFinancialAcc financialAcc : pmFinancialList) {
-				financialAcc.setBrandNew(false);
-			}
-			pmFinancialList.add(pmFinancialAcc);
-			this.getManagedBean().setPmFinancialAcc(pmFinancialList);
+			SmSupplierBank newSupplierBank = new SmSupplierBank();
+			newSupplierBank.setPmFinancialOrg(new PmFinancialOrg());
+			int index = this.getManagedBean().getSmSupplierBanks().size();
+			this.getManagedBean().getSmSupplierBanks().add(index, newSupplierBank);
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	public void deleteFinancialAcc() {
+	public void deleteSupplierBank(int index) {
 
-		List<PmFinancialAcc> financialAccList = this.getManagedBean()
-				.getPmFinancialAcc();
-		List<PmFinancialAcc> selectedFinancialActList = this.getManagedBean()
-				.getSelectedPmFinancialAcc();
-		if (financialAccList.size() == selectedFinancialActList.size()) {
-			financialAccList.clear();
-		} else {
-			for (PmFinancialAcc financialAcc : selectedFinancialActList) {
-				financialAccList.remove(financialAcc);
-			}
-		}
+		SmSupplierBank smSupplierBank =  this.getManagedBean().getSmSupplierBanks().get(index);
+		smSupplierBank.setDeleted(true);
+		this.getManagedBean().getDeletedSupplierBankList()
+				.add(smSupplierBank);// should added to original list before
+										// save
+		this.getManagedBean().getSmSupplierBanks()
+				.remove(smSupplierBank);
+		
 	}
 	private void retrieveOrgProfileList() {
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
@@ -982,7 +1056,7 @@ public class OrganisationBackingBean extends
 
 	public void addOrgUnit() {
 
-		PmProfileGroup pmPtjGroupList = new PmProfileGroup();
+//		PmProfileGroup pmPtjGroupList = new PmProfileGroup();
 
 		try {
 			List<PmProfileGroup> ptjList = this.getManagedBean()
@@ -991,11 +1065,8 @@ public class OrganisationBackingBean extends
 				ptjList = new ArrayList<PmProfileGroup>();
 			}
 
-			for (PmProfileGroup pmPtj : ptjList) {
-				pmPtj.setBrandNew(false);
-			}
-			ptjList.add(pmPtjGroupList);
-			this.getManagedBean().setProfileGroup(ptjList);
+//			ptjList.add(pmPtjGroupList);
+			this.getManagedBean().getProfileGroup().add(new PmProfileGroup());
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -1025,41 +1096,54 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setSupplierUserList(resDTO.getUserList());
 	}
 
-	public void addUser() {
-
-		if (getManagedBean().getUser() == null) {
-			this.getManagedBean().setUser(new PmUser());
-		}
-		if (this.getManagedBean().getSupplierUsers() != null
-				&& !this.getManagedBean().getSupplierUsers().isEmpty()) {
-			this.getManagedBean().setSupplierUsers(null);
-		}
+	public void addPersonnel() {
+		
+		 if(this.getManagedBean().getSmPersonnels() == null){
+			 this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
+		 }
+		 if(this.getManagedBean()
+					.getSelectedSupplierUsers() != null){
+			this.getManagedBean()
+					.getSelectedSupplierUsers().clear();
+		 }
+//		int index = this.getManagedBean().getSmPersonnels().size();
+//		this.getManagedBean().getSmPersonnels().add(index , new SmPersonnel());
 
 	}
 
-	public void deleteUser() {
+	public void deletePersonnel(int index) {
 
-		List<PmUser> userList = getManagedBean().getSelectedSupplierUsers();
-		List<PmUser> selectedUserList = getManagedBean().getSelectedUsers();
-		for (PmUser usrList : userList) {
-			if (usrList.isSelected()) {
-				selectedUserList.add(usrList);
-			}
-		}
-		if (userList.size() == selectedUserList.size()) {
-			userList.clear();
-		} else {
-			for (PmUser user : selectedUserList) {
-				userList.remove(user);
-			}
-		}
+		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnels().get(index);
+		smPersonnel.setDeleted(true);
+//		this.getManagedBean().getDeletedSmPersonnels()
+//				.add(smPersonnel);// should added to original list before
+//										// save
+		this.getManagedBean().getSmPersonnels()
+				.remove(smPersonnel);
 	}
 
 	public void conformUsers() {
-
+       
 		List<PmUser> selectedUserList = getManagedBean()
 				.getSelectedSupplierUsers();
-		this.getManagedBean().setSupplierUsers(selectedUserList);
+		List<SmPersonnel> addedPersonnelList = new ArrayList<SmPersonnel>();
+		boolean redaundant;
+		  for(PmUser selectedUser:selectedUserList){
+			  redaundant = false;
+			  for(SmPersonnel smPersonnel : this.getManagedBean().getSmPersonnels()){
+				if(smPersonnel.getPmUser().getUserId().equals(selectedUser.getUserId())){
+					redaundant = true;
+					break;
+				}
+		   	}
+			  if(!redaundant){
+				  SmPersonnel newSmPersonnel = new SmPersonnel();
+				  newSmPersonnel.setPmUser(selectedUser);
+				  addedPersonnelList.add(newSmPersonnel);
+				}
+		}
+		this.getManagedBean().getSmPersonnels().addAll(addedPersonnelList);
+//		this.getManagedBean().setSupplierUsers(selectedUserList);	
 
 	}
 
@@ -1085,7 +1169,6 @@ public class OrganisationBackingBean extends
 	public void resetOrganisationSearchBean() {
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setOrganisationSearchBean(null);
-		log.info(".......after reset search panel ...this.getManagedBean().getOrganisationSearchBean().getOrgName()="+this.getManagedBean().getOrganisationSearchBean().getOrgName());
 		searchOrganisation = new SearchOrgPagingDataModel();
 	}
 

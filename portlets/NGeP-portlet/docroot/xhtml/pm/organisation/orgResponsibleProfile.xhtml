@@ -43,8 +43,8 @@
 	       
 	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
       		    <p:commandLink action="#{organisationBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
-      		    	immediate="true" update="dtOrgUnit">
-					<p:graphicImage value="/css/images/design/delete.png"/>
+      		    	partialSubmit="true" process="@this" update="dtOrgUnit">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 	        </p:column>  
 		</p:dataTable>
