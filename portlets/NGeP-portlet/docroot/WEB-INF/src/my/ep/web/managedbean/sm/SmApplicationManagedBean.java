@@ -323,6 +323,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDockyardPanel;
 	private boolean showWorkShopPanel;
 	private boolean showPersonnelViewOnly;
+	private boolean disabledShareholderPersonnelNameAndNationality;
 	private String selectedShareholderIdentificationType;
 	
 	public List<String> getSupplierToPOList() {
@@ -2480,5 +2481,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setShowPersonnelViewOnly(boolean showPersonnelViewOnly) {
 		this.showPersonnelViewOnly = showPersonnelViewOnly;
+	}
+
+	public boolean isDisabledShareholderPersonnelNameAndNationality() {
+		return disabledShareholderPersonnelNameAndNationality;
+	}
+
+	public void setDisabledShareholderPersonnelNameAndNationality(
+			boolean disabledShareholderPersonnelNameAndNationality) {
+		this.disabledShareholderPersonnelNameAndNationality = disabledShareholderPersonnelNameAndNationality;
 	}
 }

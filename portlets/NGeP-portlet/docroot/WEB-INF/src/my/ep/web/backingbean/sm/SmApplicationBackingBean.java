@@ -3285,13 +3285,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
-//		if (!getManagedBean().getSmAppl().getApplType()
-//				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-//				&& (shareHolderBean.isEquityOwner() || shareHolderBean
-//						.isDirector())
-//				&& getManagedBean().isDisAllowOwnerEdit()) {
-//			throw new EpException(MessageConst.ERROR_722573);
-//		}
+		// if (!getManagedBean().getSmAppl().getApplType()
+		// .equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+		// && (shareHolderBean.isEquityOwner() || shareHolderBean
+		// .isDirector())
+		// && getManagedBean().isDisAllowOwnerEdit()) {
+		// throw new EpException(MessageConst.ERROR_722573);
+		// }
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false);
@@ -3397,6 +3397,10 @@ public class SmApplicationBackingBean extends
 
 		// to determine whether shareholder for viewonly or edit
 		setShareHolderForViewOnly(shareHolderBean);
+
+		// disable shareholder/personnel name and nationality if already
+		// activate (have login id) or created in basic
+		setDisabledShareholderNameAndNationality(shareHolderBean);
 
 		// disabled justification
 		// disableJustification(shareHolderBean);
@@ -6741,15 +6745,27 @@ public class SmApplicationBackingBean extends
 		if ((smPersonnel.isEquityOwner() || smPersonnel.isDirector())
 				&& getManagedBean().isDisAllowOwnerEdit()) {
 			retVal = true;
-		} 
-//		else if (smPersonnel.getEpRole() != null
-//				&& (smPersonnel.getEpRole().equals(
-//						RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel
-//						.getEpRole().equals(
-//								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
-//			retVal = true;
-//		}
+		}
 		return retVal;
+	}
+
+	private void setDisabledShareholderNameAndNationality(SmPersonnel smPersonnel) {
+		boolean retVal = false;
+		try {
+			if (smPersonnel.getPmUser() != null
+					&& smPersonnel.getPmUser().getRecordStatusFlg() == 1) {
+				retVal = true;
+			} else if (SmApplicationUtil.isPersonnelCreatedInBasic(smPersonnel,
+					getManagedBean().getSmAppl().getSmSupplier()
+							.getSupplierId())) {
+				retVal = true;
+			}
+		} catch (Exception ex) {
+			log.info(ex.getMessage());
+		}
+
+		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
+				retVal);
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {

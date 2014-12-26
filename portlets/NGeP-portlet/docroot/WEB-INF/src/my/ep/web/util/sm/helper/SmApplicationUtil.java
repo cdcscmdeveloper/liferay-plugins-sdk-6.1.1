@@ -3394,4 +3394,16 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+
+	public static boolean isPersonnelCreatedInBasic(SmPersonnel smPersonnel,
+			Long supplierId) {
+		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmPersonnel(smPersonnel);
+		reqDTO.setSmSupplierId(supplierId);
+		return personnelSO.isPersonnelCreatedDuringBasicAccount(reqDTO);
+	}
 }
