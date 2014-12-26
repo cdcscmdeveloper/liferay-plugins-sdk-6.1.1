@@ -215,7 +215,7 @@
 							value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
 						<p:ajax event="change" process="@this"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="branchId,bankName,accNo,clausePanel"
+							update="branchId,bankName,accNo,clausePanel, notificationBtn"
 							listener="#{supplierBackingBean.reset}" />
 					</p:selectOneMenu>
 					<p:message for="factoringId" display="icon"></p:message>
@@ -231,8 +231,10 @@
 						value="#{supplierBackingBean.managedBean.factoring.authRefNo}"
 						maxlength="50" style="width:200px;"
 						label="#{lbl['lbl.ct.factoring.agreement.ref']}" id="authRefNo"
-						required="true" process="@this"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}" />
+						required="true"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}">
+						<p:ajax event="change" process="@this" update="notificationBtn" />
+					</p:inputText>
 					<p:message for="authRefNo" display="icon" />
 				</h:panelGrid>
 
@@ -243,7 +245,7 @@
 					value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
 					<f:selectItems
 						value="#{supplierBackingBean.managedBean.financialBankBranch}" />
-					<p:ajax event="change" process="@this" update="bankName,accNo"
+					<p:ajax event="change" process="@this" update="bankName,accNo, notificationBtn"
 						listener="#{supplierBackingBean.resetBranch}" />
 				</p:selectOneMenu>
 
@@ -260,7 +262,7 @@
 						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
 						readonlyInput="true" navigator="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						<p:ajax event="dateSelect" update="expdateCal" />
+						<p:ajax event="dateSelect" update="expdateCal, notificationBtn" />
 					</p:calendar>
 					<p:message for="effdateCal" display="icon" />
 				</h:panelGrid>
@@ -292,6 +294,7 @@
 						<f:attribute name="startDate"
 							value="#{supplierBackingBean.managedBean.factoring.effDate}" />
 						<f:validator validatorId="primeDateRangeValidator" />
+						<p:ajax event="dateSelect" update="notificationBtn" />
 					</p:calendar>
 					<p:message for="expdateCal" display="icon" />
 				</h:panelGrid>
@@ -400,7 +403,7 @@
 				<tr>
 					<td />
 					<td>
-						<p:commandButton
+						<p:commandButton id="notificationBtn" disabled="#{!supplierBackingBean.isLetterGenerated()}"
 							value="#{lbl['lbl.ct.panel.notification.factoring']}" process="@this"
 							immediate="true" update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
