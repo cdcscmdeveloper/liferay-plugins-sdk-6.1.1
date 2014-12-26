@@ -42,6 +42,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
@@ -227,7 +228,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-				
+				for(FlFulfilmentNote fulfilmentNote : resDTO.getFlDeliveryOrder().getFlFulfilmentNote()){
+					if(fulfilmentNote.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						getManagedBean().setFulfilmentNote(fulfilmentNote);
+					}
+				}
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
@@ -253,7 +258,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				//Add noteItemList to Managed Bean List.
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				getManagedBean().setFrnCancellationProcess(true);
+				getManagedBean().setFrnCancellationProcess(true);//what is this for ?
+				getManagedBean().setDocMaintainRemarks(true);//kklim
 			}else{
 				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
 				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
