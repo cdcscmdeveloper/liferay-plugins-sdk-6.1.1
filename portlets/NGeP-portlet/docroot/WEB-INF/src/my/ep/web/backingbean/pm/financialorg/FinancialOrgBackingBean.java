@@ -284,9 +284,15 @@ public class FinancialOrgBackingBean extends
 					parameterReqDTO.setParameterId(financialSvc
 							.getServiceTypeCode().getParameterId());
 					ParameterResDTO parameterResDTO = parameterSO
-							.retrieveParameterById(parameterReqDTO);
+							.retrieveParameterById(parameterReqDTO);					
 					financialSvc.setServiceTypeCode(parameterResDTO
 							.getPmParameter());	
+					if(parameterResDTO
+							.getPmParameter().getParameterCode().toString().trim().contains("FC")){
+						System.out.println("FACTORY COMPAMY");
+						this.getManagedBean().setServiceType("FC");
+						
+					}
 
 				financialSvc.setPmFinancialOrg(financialOrg);
 			}		
@@ -305,10 +311,10 @@ public class FinancialOrgBackingBean extends
 			addressType.setPmAddress(address);
 			addressType.setPmFinancialOrg(financialOrg);
 			financialOrg.setPmAddressTypes(pmAddressTypes);
-
-
+			
 		}
-	
+		
+		
 
 		financialOrg.setPmFinancialSvcs(this.getManagedBean()
 				.getPmFinancialSvc());
@@ -343,6 +349,23 @@ public class FinancialOrgBackingBean extends
 
 		getManagedBean().setFinancialOrg(financialOrg);
 		getManagedBean().setPmFinancialSvc(financialOrg.getPmFinancialSvcs());
+		
+		for (PmFinancialSvc financialSvc : getManagedBean()
+				.getPmFinancialSvc()) {			
+			
+				parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
+				parameterReqDTO.setParameterId(financialSvc
+						.getServiceTypeCode().getParameterId());
+				ParameterResDTO parameterResDTO = parameterSO
+						.retrieveParameterById(parameterReqDTO);					
+				financialSvc.setServiceTypeCode(parameterResDTO
+						.getPmParameter());	
+				if(parameterResDTO
+						.getPmParameter().getParameterCode().toString().trim().contains("FC")){
+					getManagedBean().setServiceType(financialSvc.getServiceTypeCode().getParameterCode());
+									
+				}			
+		}
 		// financial org Address
 		List<PmAddressType> finAddressTypes = resDTO.getPmFinancialOrg()
 				.getPmAddressTypes();
@@ -454,11 +477,7 @@ public class FinancialOrgBackingBean extends
 			if (null == pmFinancialList) {
 				pmFinancialList = new ArrayList<PmFinancialSvc>();
 			}
-			pmFinancialSvc.setServiceTypeCode(new PmParameter());
-			/*
-			 * for (PmFinancialSvc finsvc : pmFinancialList) {
-			 * finsvc.setBrandNew(false); }
-			 */
+			pmFinancialSvc.setServiceTypeCode(new PmParameter());			
 			pmFinancialList.add(pmFinancialSvc);
 			this.getManagedBean().setPmFinancialSvc(pmFinancialList);
 		} catch (Exception e) {
@@ -715,12 +734,26 @@ public class FinancialOrgBackingBean extends
 				.execute("contactPersonPopup.hide()");
 		getManagedBean().setShowParentMsg(true);
 	}
+	public void addBranchContacePerson() {
+
+		RequestContext.getCurrentInstance()
+				.execute("branchContactPersonPopup.show()");
+		getManagedBean().setShowParentMsg(false);
+	}
 
 	public void okBranchContacePersonAction() {
 
 		RequestContext.getCurrentInstance().execute(
 				"branchContactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(false);
 	}
+	public void closeBranchContacePerson() {
+
+		RequestContext.getCurrentInstance().execute(
+				"branchContactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+	}
+	
 
 	public IPagingDataModel<PmFinancialOrg> getSearchFinancialOrg() {
 		return searchFinancialOrg;
