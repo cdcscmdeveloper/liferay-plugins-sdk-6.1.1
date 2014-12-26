@@ -19,11 +19,11 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems var="countryList"
-							value="#{financialOrgBackingBean.managedBean.countryList}"
+							value="#{financialOrgBackingBean.managedBean.branchCountryList}"
 							itemLabel="#{countryList.countryName}"
 							itemValue="#{countryList.countryId}" />
 						<p:ajax event="change"
-							listener="#{financialOrgBackingBean.retrieveStateList}"
+							listener="#{financialOrgBackingBean.retrieveBranchStateList}"
 							update="manState" />
 					</p:selectOneMenu></td>
 				<td><p:message for="manCountry" id="manCountryMsg"
@@ -38,11 +38,11 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems var="stateList"
-							value="#{financialOrgBackingBean.managedBean.stateList}"
+							value="#{financialOrgBackingBean.managedBean.branchStateList}"
 							itemLabel="#{stateList.stateName}"
 							itemValue="#{stateList.stateId}" />
 						<p:ajax event="change"
-							listener="#{financialOrgBackingBean.retrieveDivisionList}"
+							listener="#{financialOrgBackingBean.retrieveBranchDivisionList}"
 							update="manDistrict" />
 					</p:selectOneMenu></td>
 				<td><p:message for="manState" id="manStateMsg" display="icon" /></td>
@@ -75,11 +75,11 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems var="districtList"
-							value="#{financialOrgBackingBean.managedBean.districtList}"
+							value="#{financialOrgBackingBean.managedBean.branchDistrictList}"
 							itemValue="#{districtList.districtId}"
 							itemLabel="#{districtList.districtName}" />
 						<p:ajax event="change"
-							listener="#{financialOrgBackingBean.retrieveCityList}"
+							listener="#{financialOrgBackingBean.retrieveBranchCityList}"
 							update="manCity" />
 
 					</p:selectOneMenu></td>
@@ -101,7 +101,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems var="cityList"
-							value="#{financialOrgBackingBean.managedBean.cityList}"
+							value="#{financialOrgBackingBean.managedBean.branchCityList}"
 							itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
 					</p:selectOneMenu></td>
 				<td><p:message id="manCityMsg" for="manCity" display="icon" /></td>

@@ -73,6 +73,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private List<PmDivision> divisionList;
 
 	// Financial Branch Address
+	private List<PmState> branchStateList;
+	private List<PmCountry> branchCountryList;
+	private List<PmDistrict> branchDistrictList;
+	private List<PmCity> branchCityList;
+	private List<PmDivision> branchDivisionList;
 	private PmAddressType branchAddressType;;
 	private List<PmAddressType> branchAddressList;
 	private PmAddress branchAddress;
@@ -628,6 +633,76 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
+	}
+
+	/**
+	 * @return the branchStateList
+	 */
+	public List<PmState> getBranchStateList() {
+		return branchStateList;
+	}
+
+	/**
+	 * @param branchStateList the branchStateList to set
+	 */
+	public void setBranchStateList(List<PmState> branchStateList) {
+		this.branchStateList = branchStateList;
+	}
+
+	/**
+	 * @return the branchCountryList
+	 */
+	public List<PmCountry> getBranchCountryList() {
+		return branchCountryList;
+	}
+
+	/**
+	 * @param branchCountryList the branchCountryList to set
+	 */
+	public void setBranchCountryList(List<PmCountry> branchCountryList) {
+		this.branchCountryList = branchCountryList;
+	}
+
+	/**
+	 * @return the branchDistrictList
+	 */
+	public List<PmDistrict> getBranchDistrictList() {
+		return branchDistrictList;
+	}
+
+	/**
+	 * @param branchDistrictList the branchDistrictList to set
+	 */
+	public void setBranchDistrictList(List<PmDistrict> branchDistrictList) {
+		this.branchDistrictList = branchDistrictList;
+	}
+
+	/**
+	 * @return the branchCityList
+	 */
+	public List<PmCity> getBranchCityList() {
+		return branchCityList;
+	}
+
+	/**
+	 * @param branchCityList the branchCityList to set
+	 */
+	public void setBranchCityList(List<PmCity> branchCityList) {
+		this.branchCityList = branchCityList;
+	}
+
+	/**
+	 * @return the branchDivisionList
+	 */
+	public List<PmDivision> getBranchDivisionList() {
+		return branchDivisionList;
+	}
+
+	/**
+	 * @param branchDivisionList the branchDivisionList to set
+	 */
+	public void setBranchDivisionList(List<PmDivision> branchDivisionList) {
+		this.branchDivisionList = branchDivisionList;
 	}
 
 
