@@ -66,12 +66,14 @@
 						conditionField="#{qTDetailBB.constuctConditionFields()}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
+			<p:outputLabel value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publishing.period']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputMask id="publishperiod" mask="9?99" maxlength="3"
 						placeHolder="" label="#{lbl['lbl.so.publishing.period']}"
 						required="true" value="#{qTDetailBB.managedBean.qt.publishPeriod}"
+						disabled="#{qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"
 						size="30" style="text-align:right">
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
@@ -84,6 +86,7 @@
 						maxlength="5" placeHolder=""
 						label="#{lbl['lbl.so.publishing.period']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
+						disabled="#{qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"
 						style="text-align:right" /> <p:message id="proposalvalidityMsg"
 						for="proposalvalidity" display="icon" /></td>
 			</tr>
