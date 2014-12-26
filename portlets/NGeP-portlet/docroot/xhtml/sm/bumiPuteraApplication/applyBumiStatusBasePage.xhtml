@@ -12,6 +12,11 @@
 
 
 	<ui:define name="contentSection">
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"/>
 		<c:if test="#{backingBean.managedBean.supplierUser}">

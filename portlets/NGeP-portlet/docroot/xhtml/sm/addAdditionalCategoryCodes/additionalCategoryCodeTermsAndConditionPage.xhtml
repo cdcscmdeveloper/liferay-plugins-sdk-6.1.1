@@ -9,13 +9,13 @@
 	
 	<ui:define name="resourceSection">
 	</ui:define>
-	
-	<p:blockUI block=":form" widgetVar="blockWidget">
-		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-	</p:blockUI>
 
 	<ui:define name="contentSection">
-
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:messages id="addnlCatCodesMsgs" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
 
