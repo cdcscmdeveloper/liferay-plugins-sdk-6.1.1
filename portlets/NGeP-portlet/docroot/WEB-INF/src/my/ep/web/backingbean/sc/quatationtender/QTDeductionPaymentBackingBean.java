@@ -67,12 +67,13 @@ public class QTDeductionPaymentBackingBean extends
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scQtDeduction.setDeductionType(resDTO.getPmParameter());
 				scQtDeduction.setScQtDeductionClauses(null);
-				getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			} else {
 				ScQtDeduction deduction = new ScQtDeduction();
 				deduction.setDeductionType(new PmParameter());
-				getManagedBean().setSelectedScQtDeduction(deduction);
+				this.getManagedBean().setSelectedScQtDeduction(deduction);
 			}
+			this.getManagedBean().getScQtDeductionList().remove(index);
 			this.getManagedBean().getScQtDeductionList().add(index, this.getManagedBean().getSelectedScQtDeduction());
 		} finally {
 			parameterSO = null;
@@ -81,16 +82,15 @@ public class QTDeductionPaymentBackingBean extends
 
 	public void addDeductionPaymentAction() {
 		debugLogger("addDeductionPaymentAction");
-		List<ScQtDeduction> scQtDeductions = getManagedBean()
-				.getScQtDeductionList();
+		List<ScQtDeduction> scQtDeductions = this.getManagedBean().getScQtDeductionList();
 		if (scQtDeductions == null) {
 			scQtDeductions = new ArrayList<ScQtDeduction>();
 		}
 		ScQtDeduction scQtDeduction = new ScQtDeduction();
 		scQtDeduction.setDeductionType(new PmParameter());
-		scQtDeduction.setScQt(this.getManagedBean().getQt());
-		scQtDeductions.add(scQtDeduction);
-		getManagedBean().setScQtDeductionList(scQtDeductions);
+		//scQtDeduction.setScQt(this.getManagedBean().getQt());
+		//scQtDeductions.add(scQtDeduction);
+		this.getManagedBean().getScQtDeductionList().add(scQtDeduction);
 	}
 
 	public void deleteDeductionPaymentAction() {
@@ -104,7 +104,13 @@ public class QTDeductionPaymentBackingBean extends
 			removeDeductionList = new ArrayList<ScQtDeduction>();
 		}
 		removeDeductionList.addAll(selectedList);
-		if (deductionList.size() == selectedList.size()) {
+		if (null != selectedList && !selectedList.isEmpty()) {
+			for (ScQtDeduction qtDeduction : selectedList){
+				qtDeduction.setDeleted(true);
+				deductionList.remove(qtDeduction);
+			}
+		}
+		/*if (deductionList.size() == selectedList.size()) {
 			deductionList.clear();
 		} else {
 			for (ScQtDeduction qtDeduction : selectedList){
@@ -112,7 +118,7 @@ public class QTDeductionPaymentBackingBean extends
 				deductionList.remove(qtDeduction);
 				
 			}
-		}
+		}*/
 		/*if (null != selectedList && !selectedList.isEmpty()) {
 			for (int i = 0; i < selectedList.size(); i++) {
 				deductionList.remove(i);
