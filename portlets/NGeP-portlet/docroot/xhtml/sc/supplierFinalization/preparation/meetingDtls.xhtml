@@ -23,7 +23,7 @@
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 							</f:facet>
-							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
+							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
 								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"/>
 						</p:column>
 
@@ -63,7 +63,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							process="@this, meetingDtlTbl" partialSubmit="true"
 							icon="ui-icon-delete"
-							action="#{suppFinalizationBackingBean.deleteRowsAction(suppFinalizationBackingBean.managedBean.meetingList, suppFinalizationBackingBean.managedBean.selectedMeetingList)}"
+							action="#{suppFinalizationBackingBean.deleteMeetingDetails(suppFinalizationBackingBean.managedBean.selectedMeetingList)}"
 							update="meetingDtlTbl" />
 	
 					</div>
@@ -72,15 +72,3 @@
 		</tr>
 	</table>
 </ui:composition>
-
-
-
-
-
-
-
-
-
-
-
-

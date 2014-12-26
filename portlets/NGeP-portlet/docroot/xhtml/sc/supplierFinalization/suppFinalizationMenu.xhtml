@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 	
-		<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info"/>
+		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error,info"/>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
 				process="@all"
@@ -34,35 +34,54 @@
 		
 		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 		
-		<p:tabView id="tab" dynamic="true" cache="true" orientation="top" 
-			activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
-			<p:ajax event="tabChange" listener="#{suppFinalizationBackingBean.onTabMenuChangeAction}" immediate="true" />
-		
-			<p:tab title="#{lbl['lbl.sc.preparation']}">
-				<p:spacer height="10px"></p:spacer>
+		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}" >
+			<p:menuitem value="#{lbl['lbl.sc.preparation']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}" 
+						process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(1)}" 
+						process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.supplier.finalization']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(2)}" 
+						process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.committee.endorsement']}" actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(3)}" 
+						process="@form" update="@form" partialSubmit="true" style="width:150px;" >
+			</p:menuitem>
+		</p:tabMenu>
+
+		<p:panel id="contentPanel">
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq '0'}">
 				<ui:include src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
-			</p:tab>
-		
-			<p:tab title="#{lbl['lbl.sc.briefing.paper']}">
-				<p:spacer height="10px"></p:spacer>
+			</c:if>
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq '1'}">
 				<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
-			</p:tab>
-			
-			<p:tab title="#{lbl['lbl.sc.supplier.finalization']}" >
-				<p:spacer height="10px"></p:spacer>
+			</c:if>
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq '2'}">
 				<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
-			</p:tab>
-			
-			<p:tab title="#{lbl['lbl.sc.committee.endorsement']}">
-				<p:spacer height="10px"></p:spacer>
+			</c:if>
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq '3'}">
 				<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/committeeEndorsement.xhtml" />
-			</p:tab>
-		
-		</p:tabView>
+			</c:if>
+		</p:panel>
 		
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierDetailsPopUp.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/reminder.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
+		
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
+			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
+			header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{suppFinalizationBackingBean.handleFileUpload}"
+				mode="advanced" id="uploadattachment"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted" 
+				update="contentPanel" oncomplete="attachmentPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>	
+			
 	</ui:define>
 	
 </ui:composition>
