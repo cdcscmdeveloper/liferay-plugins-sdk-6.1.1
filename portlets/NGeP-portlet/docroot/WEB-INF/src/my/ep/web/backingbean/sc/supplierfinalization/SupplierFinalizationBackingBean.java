@@ -546,6 +546,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						}
 					}
 				}
+				reqDTO.setScQtFinalization(scQtFinalization);
 				qtSuppFinalizationSO.validateSupplierFinalization(reqDTO);
 				break;
 				
