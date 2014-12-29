@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.financialorg;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -264,6 +266,7 @@ public class FinancialOrgBackingBean extends
 	public String saveFinancialOrg() {
 		log.info("Save Method");
 		PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
+		
 		if (financialOrg.isBrandNew()) {
 			
 			if(this.getManagedBean().getPmFinancialSvc()!=null&& this.getManagedBean().getPmFinancialSvc().isEmpty()){
@@ -272,6 +275,7 @@ public class FinancialOrgBackingBean extends
 
 			for (PmFinancialSvc financialSvc : this.getManagedBean()
 					.getPmFinancialSvc()) {
+				setUserDetails(financialSvc);
 
 				parameterReqDTO
 						.setParameterType(ParameterTypeConst.BANK_SERVICES);
@@ -286,7 +290,6 @@ public class FinancialOrgBackingBean extends
 						.trim().contains(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)) {
 					
 					saveFactoringDetails(financialOrg);
-
 				}
 			}
 			
@@ -294,11 +297,13 @@ public class FinancialOrgBackingBean extends
 			PmAddressType addressType = this.getManagedBean()
 					.getPmAddressType();
 			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-			List<PmAddressType> pmAddressTypes = this.getManagedBean()
-					.getAddressType();
+			setUserDetails(addressType);
+			List<PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();
 			pmAddressTypes.add(addressType);
 			PmAddress address = this.getManagedBean().getPmAddress();
+			setUserDetails(address);
 			PmContact contact = this.getManagedBean().getContactPerson();
+			setUserDetails(contact);
 			contact.setPmAddressType(addressType);
 			List<PmContact> contactLst = this.getManagedBean().getPmContact();
 			contactLst.add(contact);
@@ -311,6 +316,9 @@ public class FinancialOrgBackingBean extends
 
 		financialOrg.setPmFinancialSvcs(this.getManagedBean()
 				.getPmFinancialSvc());
+		setUserDetails(financialOrg);
+		System.out.println("financialOrg :"+financialOrg.getCreatedBy());
+		
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setPmFinancialOrg(financialOrg);
 		try{	
@@ -748,16 +756,8 @@ public class FinancialOrgBackingBean extends
 			}
 			PmFinancialBranch finBranch = new PmFinancialBranch();
 			finBranch.setPmFinancialOrg(getManagedBean().getFinancialOrg());			
-			finBranch.setPmAddressTypes(new ArrayList<PmAddressType>());
-			int index = this.getManagedBean().getPmFinancialAcc().size();
-			this.getManagedBean().getPmFinancialBranch().add(index, finBranch);
-			///
-			/*List<PmFinancialBranch> branchLisst = this.getManagedBean().getPmFinancialBranch();
-			if (null == branchLisst) {
-				branchLisst = new ArrayList<PmFinancialBranch>();
-			}
-
-			this.getManagedBean().getPmFinancialBranch().add(new PmFinancialBranch());*/
+			this.getManagedBean().getPmFinancialBranch().add(finBranch);
+			
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -975,6 +975,10 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public void okContacePerson() {
+		
+		System.out.println("okBranchContacePersonAction ");
+		System.out.println("getContactName  :"+getManagedBean().getContactPerson().getContactName());
+		System.out.println("getEmail  :"+getManagedBean().getContactPerson().getEmail());
 
 		RequestContext.getCurrentInstance()
 				.execute("contactPersonPopup.hide()");
@@ -996,7 +1000,8 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public void okBranchContacePersonAction() {
-
+		
+		
 		RequestContext.getCurrentInstance().execute(
 				"branchContactPersonPopup.hide()");
 		getManagedBean().setShowParentMsg(false);
@@ -1078,7 +1083,8 @@ public class FinancialOrgBackingBean extends
 		//factoring Account Details
 		for (PmFinancialAcc financialAcc : this.getManagedBean()
 				.getPmFinancialAcc()) {
-			
+
+			setUserDetails(financialAcc);
 			financialAcc.setPmPaymentBankOrg(financialAcc.getPmPaymentBankOrg());
 			financialAcc.setPmFinancialOrg(financialOrg);
 			log.info("Financial Account no"+financialAcc.getAccountNo());
@@ -1086,9 +1092,11 @@ public class FinancialOrgBackingBean extends
 		//Factoring Bank Detials
           for (PmFinancialBranch financialBranchs : this.getManagedBean()
 				.getPmFinancialBranch()) {
+        	  setUserDetails(financialBranchs);
             //Factoring Branch Account Detials
 			for (PmFinancialAcc financialBranchAcc : this.getManagedBean()
 					.getPmFinancialBranchAcc()) {
+				 setUserDetails(financialBranchAcc);
 				financialBranchAcc.setPmFinancialBranch(financialBranchs);
 				financialBranchAcc.setPmPaymentBankOrg(financialBranchAcc.getPmPaymentBankOrg());
 				log.info("Financial Branch Account no"+financialBranchAcc.getAccountNo());
@@ -1101,9 +1109,9 @@ public class FinancialOrgBackingBean extends
 			financialBranchs.setPmFinancialOrg(financialOrg);
 			// Factoring Branch Address
 			PmAddressType brachAddress = getManagedBean()
-					.getBranchAddressType();			
-			brachAddress
-					.setAddressType(AddressType.BILLING_ADDRESS
+					.getBranchAddressType();	
+			setUserDetails(brachAddress);
+			brachAddress.setAddressType(AddressType.BILLING_ADDRESS
 							.value());
 
 			List<PmAddressType> branchAddressTypes = getManagedBean()
@@ -1111,11 +1119,12 @@ public class FinancialOrgBackingBean extends
 			branchAddressTypes.add(brachAddress);
 			PmAddress branchAddress = getManagedBean()
 					.getBranchAddress();
+			setUserDetails(branchAddress);
 			PmContact contact = getManagedBean()
 					.getBranchContactPerson();
+			setUserDetails(contact);
 			contact.setPmAddressType(brachAddress);
-			List<PmContact> branchcontactLst = getManagedBean()
-					.getBranchContact();
+			List<PmContact> branchcontactLst = getManagedBean().getBranchContact();
 			branchcontactLst.add(contact);
 			brachAddress.setPmAddress(branchAddress);
 			brachAddress.setPmContacts(branchcontactLst);
@@ -1145,6 +1154,17 @@ public class FinancialOrgBackingBean extends
 		SelectItem[] items = getDropdownValuesBySearchBean(
 				ParameterTypeConst.BANK_SERVICES, searchBean);
 		return items;
+	}
+	
+	public void setUserDetails(BaseEntity baseObject) {
+		
+		//PmUser user = new FacesScopes().getUserSessionBean();
+		  if (baseObject.isBrandNew()) {
+		   baseObject.setCreatedBy(1L);
+		   baseObject
+		     .setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		  }
+		  baseObject.setChangedBy(1L);
 	}
 
 }
