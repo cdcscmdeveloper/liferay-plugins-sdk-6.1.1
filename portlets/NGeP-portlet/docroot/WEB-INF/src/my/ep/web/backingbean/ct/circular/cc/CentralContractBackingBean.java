@@ -145,7 +145,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(ctBB == null) {
 			     ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			     initializeRemarks();
 			}
 			
 			if(isCentralContractAdmin()) 
