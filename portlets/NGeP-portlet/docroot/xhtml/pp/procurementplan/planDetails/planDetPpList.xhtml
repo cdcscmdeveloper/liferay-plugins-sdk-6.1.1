@@ -163,7 +163,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}"
-	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}">  
+	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.brandNew}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
 	        </p:column>
