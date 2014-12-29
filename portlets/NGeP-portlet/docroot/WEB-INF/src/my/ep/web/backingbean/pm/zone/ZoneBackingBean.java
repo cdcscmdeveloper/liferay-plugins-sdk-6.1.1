@@ -214,14 +214,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
 									.getStateName(), true));
 			isEmpty = false;
-		}
-
-		if (isEmpty && !isSearchable) {
+		}	
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getZoneSearchBean().getStatus()));
-		}
+							getManagedBean().getZoneSearchBean().getStatus()));		
 		return searchBean;
 	}
 
