@@ -169,18 +169,17 @@
 					<td><p:message id="branchContactNameMsg"
 							for="branchContactName" display="icon" /></td>
 				</tr>
+				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td> 
-					<td><p:inputText id="branchContactEmail" styleClass="ppDisplayTextL" maxlength="80"
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="branchContactEmail" styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.contact.email']}" required="#{financialOrgBackingBean.managedBean.branchAddressreq}" maxlength="80"
 							value="#{financialOrgBackingBean.managedBean.branchContactPerson.email}"
-							label="#{lbl['lbl.pm.contact.email']}"
-							required="#{financialOrgBackingBean.managedBean.branchAddressreq}"
-							size="50" validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}" >
-							<f:validateRegex 
+							 validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}" ><f:validateRegex 
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" /></p:inputText></td>
-					<td><p:message id="branchContactEmailMsg"
-							for="branchContactEmail" display="icon" /></td>
+					<td><p:message id="branchContactEmailMsg" for="branchContactEmail"
+							display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.phone']}" /></td>
