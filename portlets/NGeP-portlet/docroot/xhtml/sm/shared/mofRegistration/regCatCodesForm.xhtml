@@ -30,10 +30,11 @@
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-										itemValue="S" 
+										itemValue="S"
 										itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
 									<p:ajax event="change" oncomplete="typeConfirmation.show()"
-										listener="#{backingBean.applicationCategorySelected}" update="@([id$=typeConfirmationId])"/>
+										listener="#{backingBean.applicationCategorySelected}"
+										update="@([id$=typeConfirmationId])" />
 								</p:selectOneRadio></td>
 						</tr>
 					</table>
@@ -117,6 +118,9 @@
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 						<p:column rendered="#{backingBean.managedBean.approverUser}"
 							headerText="#{lbl['lbl.sm.catCodes.remark']}"
+							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+						<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+							headerText="#{lbl['lbl.sm.catCodes.prevDecision']}"
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 					</p:row>
 				</p:columnGroup>
@@ -226,6 +230,80 @@
 					<p:message id="apprvCatDecisionRmrkMsg" for="apprvrCatDecisionRmrk"
 						showSummary="true" showDetail="false" display="icon" />
 				</p:column>
+				<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+						<p:outputPanel
+							rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+							<p:outputPanel rendered="#{not empty catBean.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByApr']}"
+									rendered="#{catBean.prevApprDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByApr']}"
+									rendered="#{catBean.prevApprDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBean.prevApproverRemarks}"
+									rendered="#{not empty catBean.prevApproverRemarks}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty catBean.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+						</p:outputPanel>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+						<p:outputPanel
+							rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+							<p:outputPanel rendered="#{not empty catBean.prevPoDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByPO']}"
+									rendered="#{catBean.prevPoDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByPO']}"
+									rendered="#{catBean.prevPoDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBean.prevPoRemarks}"
+									rendered="#{not empty catBean.prevPoRemarks}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty catBean.prevPoDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+						</p:outputPanel>
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{!backingBean.managedBean.approverUser  and !backingBean.managedBean.poUser}">
+						<p:outputPanel
+							rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+							<p:outputPanel rendered="#{not empty catBean.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByApr']}"
+									rendered="#{catBean.prevApprDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByApr']}"
+									rendered="#{catBean.prevApprDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBean.prevApproverRemarks}"
+									rendered="#{not empty catBean.prevApproverRemarks}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty catBean.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByPO']}"
+									rendered="#{catBean.prevPoDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByPO']}"
+									rendered="#{catBean.prevPoDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBean.prevPoRemarks}"
+									rendered="#{not empty catBean.prevPoRemarks}" />
+							</p:outputPanel>
+
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+							<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
@@ -252,6 +330,8 @@
 							rendered="#{backingBean.managedBean.approverUser}" />
 						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
 							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
+						<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+							headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column selectionMode="multiple" style="width:2%"
@@ -353,6 +433,79 @@
 					<p:message id="apprvrCatRDecisionRmrkMsg"
 						for="apprvrCatRDecisionRmrk" showSummary="true" showDetail="false"
 						display="icon" />
+				</p:column>
+				<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}">
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+						<p:outputPanel
+							rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+							<p:outputPanel rendered="#{not empty catBeanR.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByApr']}"
+									rendered="#{catBeanR.prevApprDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByApr']}"
+									rendered="#{catBeanR.prevApprDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBeanR.prevApproverRemarks}"
+									rendered="#{not empty catBeanR.prevApproverRemarks}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty catBeanR.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+						</p:outputPanel>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+						<p:outputPanel
+							rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+							<p:outputPanel rendered="#{not empty catBeanR.prevPoDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByPO']}"
+									rendered="#{catBeanR.prevPoDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByPO']}"
+									rendered="#{catBeanR.prevPoDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBeanR.prevPoRemarks}"
+									rendered="#{not empty catBeanR.prevPoRemarks}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty catBeanR.prevPoDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" />
+						</p:outputPanel>
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{!backingBean.managedBean.approverUser  and !backingBean.managedBean.poUser}">
+						<p:outputPanel
+							rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+							<p:outputPanel rendered="#{not empty catBeanR.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByApr']}"
+									rendered="#{catBeanR.prevApprDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByApr']}"
+									rendered="#{catBeanR.prevApprDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBeanR.prevApproverRemarks}"
+									rendered="#{not empty catBeanR.prevApproverRemarks}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty catBeanR.prevApprDecFlg}">
+								<h:outputText value="#{lbl['lbl.sm.catCodes.apprByPO']}"
+									rendered="#{catBeanR.prevPoDecFlg eq 1}" />
+								<h:outputText value="#{lbl['lbl.sm.catCodes.rejByPO']}"
+									rendered="#{catBeanR.prevPoDecFlg eq 0}" />
+								<br />
+								<h:outputText value="#{catBeanR.prevPoRemarks}"
+									rendered="#{not empty catBeanR.prevPoRemarks}" />
+							</p:outputPanel>
+
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{catBeanR.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS}">
+							<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" />
+						</p:outputPanel>
+					</p:outputPanel>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -481,7 +634,7 @@
 		<br />
 
 	</p:dialog>
-	
+
 	<p:confirmDialog id="typeConfirmationId"
 		message="#{backingBean.managedBean.regCatCodeConfirmMsg}"
 		header="#{backingBean.managedBean.regCatCodeConfirmHeader}"
