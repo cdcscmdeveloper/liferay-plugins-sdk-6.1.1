@@ -55,7 +55,7 @@
 								action="#{supplierBackingBean.saveChangeBankRequest(outcome)}"
 								rendered="#{outcome != 'ACKNOWLEDGE'}" />
 
-							<p:commandButton value="#{outcome}" styleClass="ui-button"
+							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form"
 								update="@form,@([id$=messages])"
 								actionListener="#{supplierBackingBean.validateChangeBankRequest(outcome)}"

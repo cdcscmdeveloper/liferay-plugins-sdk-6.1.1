@@ -40,11 +40,12 @@
 					<td class="ppRightBtn">
 						<c:if test="#{!suspensionBackingBean.managedBean.viewOnly}">	
 						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" process="@form"
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />		
+							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 								styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
 								action="#{suspensionBackingBean.saveContractSuspension(outcome)}" 
 								rendered="#{outcome != 'SUBMIT' and outcome != 'REJECT' and outcome != 'APPROVE'}" />
-							<p:commandButton value="#{outcome}" styleClass="ui-button"
+							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form" update="@form,@([id$=messages])"
 								actionListener="#{suspensionBackingBean.validateSuspensionDetails(outcome)}" action="#{suspensionBackingBean.disableUpdate}"
 								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "

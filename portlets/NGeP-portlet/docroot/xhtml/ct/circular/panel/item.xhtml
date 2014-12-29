@@ -74,7 +74,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  
 			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
 			  	<f:facet name="header">
-					<h:outputText value="DN"/>
+					<h:outputText value="#{lbl['lbl.ct.dn']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.nego']}"/>
                	</f:facet>
 			    <p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
@@ -82,15 +82,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  	
 			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
 			  	<f:facet name="header">
-					<h:outputText value="DP"/>
+					<h:outputText value="#{lbl['lbl.ct.dp']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.purchase']}"/>
                	</f:facet>
 			  	<p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			  </p:column>	
 			  
-			  <p:column headerText="QT" styleClass="column-align-center"  style="white-space:normal;width:2%;">
+			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
 			    <f:facet name="header">
-					<h:outputText value="QT"/>
+					<h:outputText value="#{lbl['lbl.ct.qt']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.quotation.tender']}"/>
                	</f:facet>   
 			  	<p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
