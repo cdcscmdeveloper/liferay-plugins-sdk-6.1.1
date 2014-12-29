@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
+		<p:messages id="messages" showDetail="true"  showSummary="false" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages>
 		<table style="width: 100%;">
 			<tr>
@@ -37,7 +37,7 @@
 						activeIndex="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
 						style="display : table-caption;">
 						<p:menuitem value="#{lbl['lbl.pm.menu.general.finance']}"
-							update="@form">
+							update="@form" partialSubmit="true" process="@this">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener
 								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
@@ -45,7 +45,7 @@
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringMenu"
 							rendered="#{financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}"
-							update="@form">
+							partialSubmit="true" process="@this" update="@form">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener
 								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"

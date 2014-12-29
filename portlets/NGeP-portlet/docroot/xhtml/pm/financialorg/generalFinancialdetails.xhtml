@@ -13,10 +13,9 @@
 				</td>
 				<td><p:inputText id="bizRegNo" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.financialorg.regNo']}"
-						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"
-						 validatorMessage="#{lbl['lbl.pm.financialorg.regNo']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
 						size="40" maxlength="20" >
-						 <f:validateRegex pattern="^([a-zA-Z0-9]+[\sa-zA-Z0-9]{1,50})?$" />
+						
 						</p:inputText></td>
 				<td><p:message id="bizRegNoMsg" for="bizRegNo" display="icon" /></td>
 			</tr>
