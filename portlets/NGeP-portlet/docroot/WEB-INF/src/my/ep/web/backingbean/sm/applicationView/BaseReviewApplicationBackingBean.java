@@ -19,6 +19,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -104,6 +105,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void initMain() {
 		if (reloadApplication()) {
 			initApplication(null);
+			getManagedBean().setMaxTab(
+					getManagedBean().getSmAppl() == null ? 0
+							: getMaxTabByApplType(getManagedBean().getSmAppl()
+									.getApplType()));
 		}
 		setTabParam();
 	}
@@ -275,7 +280,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String tabParam = originalServletRequest.getParameter("currentTab");
 		try {
 			if (tabParam != null) {
-				setTabValue(Integer.parseInt(tabParam), "");
+				if(Integer.parseInt(tabParam)<=getManagedBean().getMaxTab()){
+					setTabValue(Integer.parseInt(tabParam), "");
+				}else{
+					setTabValue(0, "");
+				}
 			}
 		} catch (NumberFormatException ne) {
 			setTabValue(0, "");
@@ -446,12 +455,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 													.getMessage(
 															"lbl.sm.personnel.comprole.shareholder",
 															null)));
-					smPersonnel.setRoleName(smPersonnel.getRoleName()
-							.replaceAll(
-									"Higher Management",
-									SmCommonUtil.getMessage(
-											"lbl.sm.personnel.comprole.higher.mngmnt",
-											null)));
+					smPersonnel
+							.setRoleName(smPersonnel
+									.getRoleName()
+									.replaceAll(
+											"Higher Management",
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.personnel.comprole.higher.mngmnt",
+															null)));
 					smPersonnel.setRoleName(smPersonnel.getRoleName()
 							.replaceAll(
 									"Management",
@@ -1148,6 +1160,30 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			getManagedBean().setReviewApplicationExist(false);
 		}
+	}
+
+	private int getMaxTabByApplType(String applType) {
+		int maxTab = 0;
+		switch (applType) {
+		case ParameterConst.NEW_SM_APPLN_FOR_MOF:
+			maxTab = 9;
+			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+			maxTab = 8;
+			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+			maxTab = 5;
+			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+			maxTab = 6;
+			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+			maxTab = 9;
+			break;
+		default:
+			break;
+		}
+		return maxTab;
 	}
 
 	public StreamedContent getFile() {

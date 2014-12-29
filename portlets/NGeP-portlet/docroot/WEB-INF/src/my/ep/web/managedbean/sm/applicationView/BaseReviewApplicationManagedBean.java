@@ -133,6 +133,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String bumiRecommendationNote;
 
 	private String revTypeParam;
+	private int maxTab;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -845,6 +846,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedCompanyExperienceProcurementMode(
 			String selectedCompanyExperienceProcurementMode) {
 		this.selectedCompanyExperienceProcurementMode = selectedCompanyExperienceProcurementMode;
+	}
+
+	public int getMaxTab() {
+		return maxTab;
+	}
+
+	public void setMaxTab(int maxTab) {
+		this.maxTab = maxTab;
 	}
 
 }
