@@ -1,0 +1,57 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<p:dialog id="dlItemJustification" header="#{lbl['lbl.pp.justification']}" 
+		widgetVar="dlItemJustificationWv" dynamic="true" width="700" height="200">
+		<p:ajax event="close" listener="#{pPlanBackingBean.closeJustification}" update="opItemJustification"/>
+		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmJustificationCloseDialog}" update="opItemJustification" oncomplete="dlItemJustificationWv.hide()" />
+		<p:remoteCommand name="cancelCmd"  update="opItemJustification"  oncomplete="dlItemJustificationWv.hide()" />
+		
+		<p:outputPanel id="opItemJustification">
+			<p:dataGrid value="#{pPlanBackingBean.managedBean.selectedJustifications}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<table class="ppRmkTable">
+					<tr>
+						<td rowspan="2" valign="top">
+							<h:graphicImage styleClass="smallUserImage"  value="#{pPlanBackingBean.userImagePathWithDefaultImage(remarkVar.userId)}"  />
+						</td>
+						<td width="5"></td>
+						<td>
+							<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
+							<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+						<!-- for phase 1 -->
+						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"/> 
+							
+						<!-- enable this for phase 2 and disable phase 1 section
+						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+							rendered="#{remarkVar.brandNew and pPlanBackingBean.managedBean.modeEditable}" maxlength="1000">
+							<h:outputText value="#{remarkVar.remark}" rendered="#{!remarkVar.brandNew}" style="display: inline-block; width:220px;word-wrap: break-word;" /> 
+						 -->
+						</td>
+					</tr>
+				</table>
+			</p:dataGrid>
+			<br/>
+			<br/>  
+	 		<div class="ppRightBtn">
+			  <p:commandButton id="cmdJustificationOk" value="#{lbl['lbl.btn.ok']}" immediate="true" oncomplete="confirmCmd();" />
+			  <p:commandButton id="cmdJustificationCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true"  oncomplete="cancelCmd();" />		
+			</div>      
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

@@ -10,9 +10,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	
 	<p:dialog id="dlItemRemark" header="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure ? lbl['lbl.pp.item.remark'] : lbl['lbl.pp.reason.for.update']}" 
 		widgetVar="dlItemRemarkWv" dynamic="true" width="700" height="200">
-		<p:ajax event="close" listener="#{pPlanBackingBean.closeRejectReason}" update="opRejectReason"/>
+		
+		<p:ajax event="close" listener="#{pPlanBackingBean.closeItemRemark}" update="opItemRemark"/>
+		<p:remoteCommand name="confirmRmkCmd" action="#{pPlanBackingBean.confirmRemarkCloseDialog}" update="opItemRemark" oncomplete="dlItemRemarkWv.hide()" />
+		<p:remoteCommand name="cancelRmkCmd"  update="opItemRemark"  oncomplete="dlItemRemarkWv.hide()" />
+		
 		<p:outputPanel id="opItemRemark">
-			<p:dataGrid value="#{pPlanBackingBean.managedBean.selectedItemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+			<p:dataGrid id="dgItemRemark" value="#{pPlanBackingBean.managedBean.selectedItemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 				<table class="ppRmkTable">
 					<tr>
 						<td rowspan="2" valign="top">
@@ -46,8 +50,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<br/>
 			<br/>  
 	 		<div class="ppRightBtn">
-			  <p:commandButton id="cmdRemarkOk" value="#{lbl['lbl.btn.ok']}"  oncomplete="dlItemRemarkWv.hide()" />
-			  <p:commandButton id="cmdRemarkCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true"  oncomplete="dlItemRemarkWv.hide()" />		
+			  <p:commandButton id="cmdItemRemarkOk" value="#{lbl['lbl.btn.ok']}" immediate="true" oncomplete="confirmRmkCmd();" />
+			  <p:commandButton id="cmdItemRemarkCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true"  oncomplete="cancelRmkCmd();" />		
 			</div>      
 		</p:outputPanel>
 	</p:dialog>

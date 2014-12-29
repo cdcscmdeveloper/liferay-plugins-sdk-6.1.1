@@ -1126,4 +1126,51 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="PM_ORG_PROFILE_ALL" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfileDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="parentOrgProfile.pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ministryCode" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="parentOrgProfile.pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ministryName" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmPtjGroup.groupCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ug.result.groupcode" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmPtjGroup.groupName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ug.result.groupname" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptjName" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptjCode" />
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>

@@ -28,13 +28,14 @@
 			<p:panel id="pPlanDet" header="#{lbl['lbl.pp.plan.detail']}" toggleable="true">
 				<c:choose>
 					<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">
-						<ui:include src="planDetails/planDetEpList.xhtml"/> 
+						<ui:include src="planDetails/planDetEpList.xhtml"/>
+						<ui:include src="planDetails/itemJustification.xhtml"/> 
 					</c:when>
 					<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement}">
 						<ui:include src="planDetails/planDetPpList.xhtml"/> 
 					</c:when>
 					<c:otherwise>
-						<p>#{lbl['lbl.pp.select.plan.type']}</p>	 
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.pp.select.plan.type']}" />
 					</c:otherwise>
 				</c:choose>
 				<ui:include src="planDetails/planRejectReason.xhtml"/> 

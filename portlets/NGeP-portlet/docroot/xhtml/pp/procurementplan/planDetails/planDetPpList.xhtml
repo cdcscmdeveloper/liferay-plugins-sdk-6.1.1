@@ -63,12 +63,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
 					    </f:facet>
 				    </p:column>
-			      	<p:column width="12%">
+			      	<p:column width="5%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.plan.officer.remarks']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="6%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+				    <p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.status']}" />
+					    </f:facet>
+				    </p:column>
+				    <p:column width="5%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.last.updated']}" />
 					    </f:facet>
@@ -86,7 +91,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
 	        </p:column>	 
 	        <p:column>
-       			<p:selectOneMenu style="width:90%" id="somCategory" 
+       			<p:selectOneMenu id="somCategory" 
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -97,7 +102,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
 	        <p:column>
-       			<p:selectOneMenu style="width:90%" id="somProcurementMethod" 
+       			<p:selectOneMenu id="somProcurementMethod" 
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
 					label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -149,14 +154,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrievePpItemRemark(ppItem)}"
-			    	immediate="true" rendered="false">
+	        	<p:commandLink oncomplete="dlItemRemarkWv.show();" 
+	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+	        		action="#{pPlanBackingBean.retrievePpItemRemark(ppItem)}"
+			    	immediate="true" update=":form:dlItemRemark">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
-       			<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" 
-       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
-					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-			 		style="width: 90%;" maxlength="1000"/>
+	        </p:column>
+	        <p:column>
+	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}"
+	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}">  
+	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	          	</p:selectOneMenu> 
 	        </p:column>
 	        <p:column  rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{ppItem.changedDate}" >
@@ -177,6 +186,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					    </f:facet>
 					</p:column>
 					<p:column rendered="#{pPlanBackingBean.managedBean.modeReview}" footerText="&#160;"/>
+					<p:column footerText="&#160;"/>
 					<p:column footerText="&#160;"/>
 					<p:column footerText="&#160;"/>
 					<p:column footerText="&#160;"/>

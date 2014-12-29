@@ -25,29 +25,29 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					    </f:facet>
 				    </p:column>
 			     	<p:column width="15%" headerText="#{lbl['lbl.pp.type.of.expenses']}" />
-				    <p:column width="8%">
+				    <p:column width="7%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
 					    </f:facet>
 				    </p:column>
-			        <p:column width="8%">
+			        <p:column width="7%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
 					    </f:facet>
 				    </p:column>
-			     	<p:column width="8%">
+			     	<p:column width="7%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="8%">
+				    <p:column width="7%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="8%"  rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+				    <p:column width="7%"  rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.ep.usage.target']}" />
 					    </f:facet>
@@ -57,7 +57,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="15%">
+				    <p:column width="5%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.justification']}" />
 					    </f:facet>
@@ -67,7 +67,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
 					    </f:facet>
 				    </p:column>
-			        <p:column width="6%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" >
+				    <p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="#{lbl['lbl.pp.status']}" />
+					    </f:facet>
+				    </p:column>
+			        <p:column width="5%" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" >
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.last.updated']}" />
 					    </f:facet>
@@ -129,8 +134,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-   			 	<p:inputTextarea id="itaRemark" value="#{epItem.remark}" 
-   			 		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}" 
+	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
+			    	 id="clEpJustification" update=":form:dlItemJustification" immediate="true">
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+				</p:commandLink>
+   			 	<p:inputTextarea id="itaRemark" value="#{epItem.remark}" required="#{epItem.nonEpAmt>0}" rendered="false"
+   			 		
 					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
 			 		style="width:90%" maxlength="1000">
 			 		<p:ajax event="change"  process="@this"/>
@@ -138,9 +147,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.updatable}">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
-			    	immediate="true">
+			    	immediate="true" update=":form:dlItemRemark">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
+	        </p:column>
+	        <p:column>
+	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" 
+	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">  
+	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	          	</p:selectOneMenu> 
 	        </p:column>
 	        <p:column rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{epItem.changedDate}">
@@ -183,6 +198,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeReview}"/>
 					<p:column footerText="&#160;" />
 				 	<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeEditable  and pPlanBackingBean.managedBean.selectedPlan.updatable}"/>
+				 	<p:column footerText="&#160;" />
 					<p:column footerText="&#160;" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" />
 				</p:row>
 			</p:columnGroup>
