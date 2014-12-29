@@ -1365,6 +1365,41 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	context.put("closingDate", closingDate);
     	context.put("validityPeriod", qt.getQtValidityPeriod());
     	
+    	String locationLevel = null;
+    	boolean isLocLevel = false;
+    	if (qt.getZoneLocationLevel() != null) {
+	    	if (ParameterConst.LOCATION_LEVEL_STATE.equals(qt.getZoneLocationLevel().getParameterCode())) {
+	    		isLocLevel = true;
+	    		locationLevel = "State";
+			} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(qt.getZoneLocationLevel().getParameterCode())) {
+				isLocLevel = true;
+				locationLevel = "Division";
+			} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(qt.getZoneLocationLevel().getParameterCode())) {
+				isLocLevel = true;
+				locationLevel = "District";
+			}
+	    	context.put("locLevel", isLocLevel);
+    	} else {
+    		context.put("locLevel", isLocLevel);
+    	}
+    	context.put("locationLevel", locationLevel);
+     	
+    	IQTDetailSO qtDtlSO;
+ 		try {
+ 			qtDtlSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+			qtReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			qtReqDTO.setBdgDtlsReq(true);
+			QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
+			qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
+			if (this.getManagedBean().getQt().isZonal()) {
+				context.put("locality", qtResDTO.getZoneDetails());
+			}
+ 		} finally {
+			QtDetailsSO = null;
+		}
+    	
     	boolean isZone = false;
        	IQTBriefingSO qTBriefingSO = null;
     	ScQtBsv qtBsv = null;
