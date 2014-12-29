@@ -18,15 +18,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
 				</td>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
+					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
 				</th>
 				<td>
-				 	<ac:lov id="lovSearchMinistry" lovId="PM_ORG_PROFILE" size="50" disabled="#{!pPlanBackingBean.isRoleBPK()}"
-		            	readonly="true" update=":form:lovSearchMinistry:lovSearchMinistry, :form:lovSearchPtj:lovSearchPtj"
-						headerText="#{lbl['lbl.pp.ministry']}"
-						value="#{pPlanBackingBean.managedBean.planSearchBean.ministry.pmOrgValidity.orgName}" 
-						saveObject="pPlanBackingBean.managedBean.planSearchBean.ministry"
-						conditionField="#{pPlanBackingBean.managedBean.filterOrgCondition}" 
+				 	<ac:lov id="lovSearchAll" lovId="PM_ORG_PROFILE_ALL" size="50" 
+		            	readonly="true" update=":form:lovSearchAll:lovSearchAll"
+						headerText="#{lbl['lbl.pp.ptj']}"
+						value="#{pPlanBackingBean.managedBean.planSearchBean.ptj.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.planSearchBean.ptj"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatus^1#{pPlanBackingBean.managedBean.filterOrgCondition}" 
+						
 					/>
 				</td>
 			</tr>
@@ -42,17 +43,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:selectOneMenu>
 				</td>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
+					
 				</th>
 				<td>
-					<ac:lov id="lovSearchPtj" lovId="PM_ORG_PROFILE" size="50" disabled="#{pPlanBackingBean.isRolePlanner() or pPlanBackingBean.managedBean.planSearchBean.ministry.orgProfileId == null}"
-		            	readonly="true" update=":form:lovSearchPtj:lovSearchPtj"
-						headerText="#{lbl['lbl.pp.ptj']}"
-						value="#{pPlanBackingBean.managedBean.planSearchBean.ptj.pmOrgValidity.orgName}" 
-						saveObject="pPlanBackingBean.managedBean.planSearchBean.ptj"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|parentOrgProfile.orgProfileId^#{pPlanBackingBean.managedBean.planSearchBean.ministry.orgProfileId}" 
-					/>
-
+					
 				</td>
 			</tr>
 			<tr>
@@ -71,7 +65,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</th>
 				<td>
-					
+
 				</td>
 			</tr>
 

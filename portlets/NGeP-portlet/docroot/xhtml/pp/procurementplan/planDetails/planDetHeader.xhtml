@@ -24,7 +24,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					>
 					<f:selectItems value="#{pPlanBackingBean.getPlanTypeOptions()}"/>
 					<p:ajax event="change" listener="#{pPlanBackingBean.changePlanType(pPlanBackingBean.managedBean.selectedPlan.planType.parameterId)}" 
-						update=":form:pPlanDet, :form:pPlanActor, somVotType"/>
+						update=":form:pPlanDet, :form:pPlanActor, somVotType, somPlanYear"/>
 				</p:selectOneMenu>
 				<p:message id="somPlanTypeMsg" for="somPlanType" display="icon" />
 			</td>
@@ -41,13 +41,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</th>
 			<td>
-				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}"
+				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" 
+					disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew 
+					or pPlanBackingBean.managedBean.selectedPlan.planType.parameterId == null}"
 					required="#{!empty param['disableValidation']}"
 					label="#{lbl['lbl.pp.plan.year']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
 					>
 					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions()}"/>
+					<p:ajax event="change"  update="somVotType"/>
 				</p:selectOneMenu>
+				&#160;&#160;   
+                <p:graphicImage id="giPlanYear" value="/css/images/design/tooltips.png" />
+				<p:tooltip for="giPlanYear" value="#{lbl['lbl.pp.plan.year.tooltip']}" showEffect="fade" hideEffect="fade" />
 				<p:message id="somPlanYearMsg" for="somPlanYear" display="icon" />
 			</td>
 			<th>
@@ -65,13 +71,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotType" 
 					required="#{!empty param['disableValidation'] and pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
-					disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
+					disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew 
+						or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure
+						or pPlanBackingBean.managedBean.selectedPlan.planYear == null}"
 					label="#{lbl['lbl.pp.vot.amanah.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
 				>
-					<f:selectItems value="#{pPlanBackingBean.getVotTypeOptions()}"/>
+					<f:selectItems value="#{pPlanBackingBean.getPlanVotTypeOptions()}"/>
 					<p:ajax event="change" listener="#{pPlanBackingBean.changeVotType(pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId)}" />
 				</p:selectOneMenu>
+				&#160;&#160;  
+				<p:graphicImage id="giVotType" value="/css/images/design/tooltips.png" />
+				<p:tooltip for="giVotType" value="#{lbl['lbl.pp.vottype.tooltip']}" showEffect="fade" hideEffect="fade" />
 				<p:message id="somVotTypeMsg" for="somVotType" display="icon" />
 			</td>
 			<th>
