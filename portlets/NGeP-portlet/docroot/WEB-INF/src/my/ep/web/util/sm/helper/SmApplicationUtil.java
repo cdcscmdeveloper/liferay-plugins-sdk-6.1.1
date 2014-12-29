@@ -1169,8 +1169,10 @@ public class SmApplicationUtil {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722583);
 			} else if (managedBean.getSmAppl().getSmCompanyBasic()
-					.getCompaniesEquityTotal()
-					.compareTo(managedBean.getEquiCompCapTotal()) != 0) {
+					.getCompaniesEquityTotal() != null
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getCompaniesEquityTotal()
+							.compareTo(managedBean.getEquiCompCapTotal()) != 0) {
 				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722584);

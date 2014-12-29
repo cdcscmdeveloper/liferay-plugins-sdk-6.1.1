@@ -289,6 +289,7 @@ public class SmApplicationBackingBean extends
 				appl.getSmApplSupportDocs().clear();
 				appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
 			}
+
 			appl.setSdoReceivedDate(null);
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
 					supplierProfile);
@@ -308,6 +309,36 @@ public class SmApplicationBackingBean extends
 			}
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
+			}
+			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
+					&& !getManagedBean().getSmAppl().getSmSupplierCategories()
+							.isEmpty()) {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						if (cat.getPoDecFlg() != null) {
+							cat.setPrevApprovedByPo(cat.isApprovedByPo());
+							cat.setPrevPoDecFlg(cat.getPoDecFlg());
+							cat.setPoDecFlg(null);
+						}
+						if (!StringUtils.isEmpty(cat.getPoRemarks())) {
+							cat.setPrevPoRemarks(cat.getPoRemarks());
+							cat.setPoRemarks(null);
+						}
+						if (cat.getApprvrDecFlg() != null) {
+							cat.setPrevApprovedByAp(cat.isApprovedByAp());
+							cat.setPrevApprDecFlg(cat.getApprvrDecFlg());
+							cat.setApprvrDecFlg(null);
+						}
+						if (!StringUtils.isEmpty(cat.getApproverRemarks())) {
+							cat.setPrevApproverRemarks(cat.getApproverRemarks());
+							cat.setApproverRemarks(null);
+						}
+
+					}
+
+				}
 			}
 
 			setNavigationForResubmitAppln(appl.getApplType());
@@ -6771,6 +6802,17 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
 				retVal);
+	}
+
+	public boolean checkIfPendingCategoryStatus(Integer recordStatusFlg) {
+		System.out.println("****** checkIfPendingCategoryStatus *********"
+				+ recordStatusFlg);
+		if (recordStatusFlg != null && recordStatusFlg.compareTo(8) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
