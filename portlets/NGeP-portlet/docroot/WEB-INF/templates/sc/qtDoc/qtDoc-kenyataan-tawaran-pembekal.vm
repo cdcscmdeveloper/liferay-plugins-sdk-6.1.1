@@ -123,7 +123,45 @@
 				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
 			</tr>
 			<tr>
-				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> <br />
+				<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">LOKALITI :</span> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					#if ($locLevel == "true")
+						<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
+						
+						<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
+						<table width='100%' class="table2">
+		            		<tr>
+		            			<td>Zone</td>
+								<td>State</td>
+								#if ($locationLevel == "District")
+									<td>District</td>
+								#end
+		            		</tr>
+							#foreach($location in $locality)
+								#foreach($locCriteria in $location.tplSpecZoneLocs)
+								<tr>
+									<td>$location.zoneName</td>
+									<td>
+										$locCriteria.pmState.stateName
+									</td>
+									#if ($locationLevel == "District")
+										<td>
+											$locCriteria.pmDistrict.districtName
+										</td>
+									#end
+									
+								</tr>
+								#end
+							#end
+						</table>
+					</span>
+					#end
+					#if ($locLevel == "false")
+						
+					#end
 				</td>
 			</tr>
 			<tr>
