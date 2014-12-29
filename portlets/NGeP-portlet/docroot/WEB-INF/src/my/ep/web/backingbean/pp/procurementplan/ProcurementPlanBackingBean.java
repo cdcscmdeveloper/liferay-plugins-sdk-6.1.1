@@ -386,7 +386,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
 		if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-			throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+			throw new EpException(MessageConst.ERROR_730000);
 		}
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 	}
@@ -448,7 +448,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if(ppPlan!=null){
 					PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
 					if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-						throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+						throw new EpException(MessageConst.ERROR_730000);
 					}
 					if(ppPlan.getVotFundType()==null){
 						ppPlan.setVotFundType(new PmParameter());
@@ -481,7 +481,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					
 					
 				}else{
-					throw new EpException("Unable to retrieve plan."); //TODO
+					throw new EpException(MessageConst.ERROR_730001);
 				}
 			}
 			
@@ -558,11 +558,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private void initialPlanDetails(){
 		log.info("initialPlanDetails - Start");
 		if(getFacesScopes().getUserSessionBean().getUserId()==null){
-			throw new EpException("Unable to get UserId from session. Please login.");//TODO 
+			throw new EpException(MessageConst.ERROR_730002);
 		}
 		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
 		if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-			throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+			throw new EpException(MessageConst.ERROR_730000);
 		}
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		PpPlan ppPlan = new PpPlan();
@@ -610,7 +610,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmUser> sourceApprover = new ArrayList<PmUser>(); 
         List<PmUser> targetApprover = new ArrayList<PmUser>();  
         this.getManagedBean().setApproverModel(new DualListModel<PmUser>(sourceApprover, targetApprover));
-        generateSourceApprovers(orgProfile.getParentOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); //getParentOrgProfile().TODO
+        generateSourceApprovers(orgProfile.getParentOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
 
 		log.info("loadPlanActors - End");
 	}
@@ -697,7 +697,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 		if(ppItem.getPpRemarks()==null){
-			System.out.println(1);
 			ppItem.setPpRemarks(new ArrayList<PpRemark>());
 		}
 		/* enable for phase 2
@@ -710,7 +709,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		// if reason is empty
 		if (ppItem.getPpRemarks().isEmpty() || ppItem.getPpRemarks().size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
-			System.out.println(2);
 			newRemark = true;
 		}
 		
@@ -1135,22 +1133,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			PpExpenditureItem epItem = this.getManagedBean().getSelectedPlan().getPpExpenditureItems().get(size-1);
 			for(PpExpenditureItem epItem: this.getManagedBean().getSelectedPlan().getPpExpenditureItems()){
 				if(epItem.getPmSo().getSoId()==null){
-					throw new EpException("Object is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730003);
 				}
 				if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
-					throw new EpException("Total Approved Budget must be greater than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730004);
 				}
 				if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
-					throw new EpException("Budget to spend through eP must be greater than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730005);
 				}
 				if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
-					throw new EpException("Non eP Allocation must not be lesser than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730006);
 				}
 				if(epItem.getNonEpAmt().intValue()>0){
 					if(epItem.getJustifications()==null 
 							|| epItem.getJustifications().get(0)==null 
 							|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())){
-						throw new EpException("Justification for not using eP is mandatory."); //TODO
+						throw new EpException(MessageConst.ERROR_730007);
 					}
 				}
 				soIds.add(epItem.getPmSo().getSoId());
@@ -1158,7 +1156,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(!soIds.isEmpty()){
 				Set<Long> soIdSet = new HashSet<Long>(soIds);
 				if(soIdSet.size()!=soIds.size()){
-					throw new EpException("Object must be unique."); //TODO
+					throw new EpException(MessageConst.ERROR_730008);
 				}
 			}
 			
@@ -1188,7 +1186,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			this.getManagedBean().getDeleteEpItems().clear();
 			calculateEpGrandTotal();
 		}else{
-			throw new EpException("At least one expenditure item must be selected."); //TODO
+			throw new EpException(MessageConst.ERROR_730009);
 		}
 	}
 	
@@ -1250,19 +1248,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpProcurementItem ppItem = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(size-1);
 //			for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
 				if(StringUtils.isBlank(ppItem.getProcurementTitle())){
-					throw new EpException("Procurement Title is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730010);
 				}
 				if(ppItem.getProcurementCat().getParameterId()==null){
-					throw new EpException("Procurement Category is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730011);
 				}
 				if(ppItem.getProcurementType().getParameterId()==null){
-					throw new EpException("Procurement Method is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730013);
 				}
 				if(ppItem.getInvitationDate()==null){
-					throw new EpException("Invitation Date is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730012);
 				}
 				if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
-					throw new EpException("Est. Amt. must be greater than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730014);
 				}
 //			}
 		}
@@ -1292,7 +1290,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			this.getManagedBean().getDeletePpItems().clear();
 			calculatePpGrandTotal();
 		}else{
-			throw new EpException("At least one procurement item must be selected."); //TODO
+			throw new EpException(MessageConst.ERROR_730015);
 		}
 	}
 	
@@ -1360,7 +1358,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PmOrgProfile pmOrgProfile = 
 					PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
 			if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
-				throw new EpException("Unable to retrieve Org. Profile.");//TODO 
+				throw new EpException(MessageConst.ERROR_730000);
 			}
 			this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		}
@@ -1374,22 +1372,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanYearOptions() {
 		log.info("getPlanYearOptions");
 		//TODO REMOVE RAIN
-		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
-			return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
-			return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-		}else{
-			SelectItem[] items = new SelectItem[1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			return items;
-		}
-//		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
-//		Integer nextYear = currentYear + 1;
-//		SelectItem[] items = new SelectItem[3];
-//		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-//		items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
-//		items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
-//		return items;
+//		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
+//			return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
+//		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
+//			return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
+//		}else{
+//			SelectItem[] items = new SelectItem[1];
+//			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+//			return items;
+//		}
+		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		Integer nextYear = currentYear + 1;
+		SelectItem[] items = new SelectItem[3];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
+		items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
+		return items;
 	}
 	
 	/**
@@ -1398,43 +1396,42 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public SelectItem[] getPlanVotTypeOptions() {
 		log.info("getPlanVotTypeOptions");
-		List<Long> votTypeIds = null;
-		List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
-		
-		if(this.getManagedBean().getSelectedPlan().getPlanType().getParameterId()!=null 
-				&& this.getManagedBean().getSelectedPlan().getPlanYear()!=null){
-			votTypeIds = PpCommonUtil.existingPlannedVotTypes(
-					this.getCurrentActiveOrg().getOrgProfileId(), 
-					this.getManagedBean().getSelectedPlan().getPlanYear());
-
-			SearchBean<PmParameterDesc> searchBean = null;
-			if(votTypeIds!=null && !votTypeIds.isEmpty()){
-				log.info("filter VOT: ");
-				searchBean = new SearchBean<PmParameterDesc>();
-				//not included parameterId
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
-				bean.setSearchField("pmParameter.parameterId");
-				bean.setSearchValue(votTypeIds);
-				searchBean.getDataFilterBeans().add(bean);
-			}
-			parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, searchBean);
-		}
-	
-			
-		SelectItem[] items = null;
-		items = new SelectItem[parameterDescs.size() + 1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				getFacesScopes().getUserLocale()));
-		int i = 1;
-		for (PmParameterDesc parameterDesc : parameterDescs) {
-			items[i++] = new SelectItem(parameterDesc.getPmParameter()
-					.getParameterId(), parameterDesc.getCodeName());
-		}
-		return items;
-		// TODO REMOVE RAIN
-//		return getVotTypeOptions();
+//		List<Long> votTypeIds = null;
+//		List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
+//		
+//		if(this.getManagedBean().getSelectedPlan().getPlanType().getParameterId()!=null 
+//				&& this.getManagedBean().getSelectedPlan().getPlanYear()!=null){
+//			votTypeIds = PpCommonUtil.existingPlannedVotTypes(
+//					this.getCurrentActiveOrg().getOrgProfileId(), 
+//					this.getManagedBean().getSelectedPlan().getPlanYear());
+//
+//			SearchBean<PmParameterDesc> searchBean = null;
+//			if(votTypeIds!=null && !votTypeIds.isEmpty()){
+//				log.info("filter VOT: ");
+//				searchBean = new SearchBean<PmParameterDesc>();
+//				//not included parameterId
+//				SearchFilterBean bean = new SearchFilterBean();
+//				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+//				bean.setSearchField("pmParameter.parameterId");
+//				bean.setSearchValue(votTypeIds);
+//				searchBean.getDataFilterBeans().add(bean);
+//			}
+//			parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, searchBean);
+//		}
+//	
+//			
+//		SelectItem[] items = null;
+//		items = new SelectItem[parameterDescs.size() + 1];
+//		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+//				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//				getFacesScopes().getUserLocale()));
+//		int i = 1;
+//		for (PmParameterDesc parameterDesc : parameterDescs) {
+//			items[i++] = new SelectItem(parameterDesc.getPmParameter()
+//					.getParameterId(), parameterDesc.getCodeName());
+//		}
+//		return items; TODO REMOVE RAIN
+		return getVotTypeOptions();
 	}
 
 	/**
@@ -1866,79 +1863,79 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// basic validation TODO
 		
 		if(ppPlan.getPlanType().getParameterId()==null){
-			throw new EpException("Plan Type is mandatory."); //TODO
+			throw new EpException(MessageConst.ERROR_730016);
 		}
 		
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 			
 			for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
 				if(StringUtils.isBlank(ppItem.getProcurementTitle())){
-					throw new EpException("Procurement Title is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730010);
 				}
 				if(ppItem.getProcurementCat().getParameterId()==null){
-					throw new EpException("Procurement Category is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730011);
 				}
 				if(ppItem.getProcurementType().getParameterId()==null){
-					throw new EpException("Procurement Method is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730012);
 				}
 				if(ppItem.getInvitationDate()==null){
-					throw new EpException("Invitation Date is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730013);
 				}
 				if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
-					throw new EpException("Est. Amt. must be greater than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730014);
 				}
 			}
 			
 			if(this.getManagedBean().getVerifierModel().getTarget()==null || this.getManagedBean().getVerifierModel().getTarget().isEmpty()){
-				throw new EpException("At least one Plan Verification Officer is required."); //TODO
+				throw new EpException(MessageConst.ERROR_730017);
 			}
 			if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
-				throw new EpException("At least one Plan Approver is required."); //TODO
+				throw new EpException(MessageConst.ERROR_730018);
 			}
 		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 			if(ppPlan.getVotFundType().getParameterId()==null){
-				throw new EpException("Amanah/ VOT Type Type is mandatory."); //TODO
+				throw new EpException(MessageConst.ERROR_730019);
 			}
 			for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 				if(epItem.getPmSo().getSoId()==null){
-					throw new EpException("Object is mandatory."); //TODO
+					throw new EpException(MessageConst.ERROR_730003);
 				}
 				if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
-					throw new EpException("Total Approved Budget must be greater than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730004);
 				}
 				if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
-					throw new EpException("Budget to spend through eP must be greater than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730005);
 				}
 				if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
-					throw new EpException("Non eP Allocation must not be lesser than 0."); //TODO
+					throw new EpException(MessageConst.ERROR_730006);
 				}
 				if(epItem.getNonEpAmt().intValue()>0){
 					if(epItem.getJustifications()==null 
 							|| epItem.getJustifications().get(0)==null 
 							|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())){
-						throw new EpException("Justification for not using eP is mandatory."); //TODO
+						throw new EpException(MessageConst.ERROR_730007);
 					}
 				}
 			}
 			if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
-				throw new EpException("At least one Plan Approver is required."); //TODO
+				throw new EpException(MessageConst.ERROR_730018);
 			}
 		}
 
 		
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) 
-				||BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(action) ){ //TODO
+				||BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(action) ){ 
 			// no rejected item checked
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
 					if(ppItem.isRejected()){
-						throw new EpException("Procurement plan contains rejected items."); //TODO
+						throw new EpException(MessageConst.ERROR_730020);
 					}
 				}
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 					if(epItem.isRejected()){
-						throw new EpException("Procurement plan contains rejected items."); //TODO
+						throw new EpException(MessageConst.ERROR_730021);
 					}
 				}
 			}
@@ -1952,11 +1949,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(ppItem.getPpRejectReasons()!=null && !ppItem.getPpRejectReasons().isEmpty()){
 							if(ppItem.getPpRejectReasons().get(0).isBrandNew()){
 								if(StringUtils.isBlank(ppItem.getPpRejectReasons().get(0).getReasonDesc())){
-									throw new EpException("Reject Reason is required for rejected item."); //TODO
+									throw new EpException(MessageConst.ERROR_730022);
 								}
 							}
 						}else{
-							throw new EpException("Reject Reason is required for rejected item."); //TODO
+							throw new EpException(MessageConst.ERROR_730022);
 						}
 					}
 
@@ -1968,11 +1965,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
 							if(epItem.getPpRejectReasons().get(0).isBrandNew()){
 								if(StringUtils.isBlank(epItem.getPpRejectReasons().get(0).getReasonDesc())){
-									throw new EpException("Reject Reason is required for rejected item."); //TODO
+									throw new EpException(MessageConst.ERROR_730022);
 								}
 							}
 						}else{
-							throw new EpException("Reject Reason is required for rejected item."); //TODO
+							throw new EpException(MessageConst.ERROR_730022);
 						}
 					}
 				}
@@ -1993,7 +1990,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("remarkIsRequired");
 		if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
 			if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
-				throw new EpException("Plan Remark is required"); //TODO
+				throw new EpException(MessageConst.ERROR_730023);
 			}
 		}
 	}
@@ -2048,11 +2045,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		existingPlans = PpCommonUtil.retrievePlanBySearchBean(searchBean);
 		if(existingPlans!=null && !existingPlans.isEmpty()){
-			//TODO
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(planType)){
-				throw new EpException("Procurement Plan with similar plan year is existed.");
+				throw new EpException(MessageConst.ERROR_730024);
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(planType)){
-				throw new EpException("Expenditure Plan with similar plan year and vot type is existed.");
+				throw new EpException(MessageConst.ERROR_730025);
 			}
 			
 		}
@@ -2083,7 +2079,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//Validation
 			validationPlanSubmit(action, ppPlan);
 			if(ppPlan.isBrandNew()){
-				validationPlanAvailability(ppPlan); //TODO rain remove
+//				validationPlanAvailability(ppPlan); TODO rain remove
 			}
 			
 			//Get All Values
