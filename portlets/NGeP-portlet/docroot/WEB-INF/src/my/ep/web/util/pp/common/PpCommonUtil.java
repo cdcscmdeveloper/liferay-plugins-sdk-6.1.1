@@ -21,6 +21,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -97,8 +98,7 @@ public class PpCommonUtil {
 			if (resDTO.isSuccessful()) {
 				ppPlans = resDTO.getPlanList();
 			}
-		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
+
 		}finally{
 			reqSO = null;
 		}
@@ -131,8 +131,6 @@ public class PpCommonUtil {
 			if (resDTO.isSuccessful()) {
 				remarks = resDTO.getRemarkList();
 			}
-		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
 		}
@@ -162,8 +160,6 @@ public class PpCommonUtil {
 			if (resDTO.isSuccessful()) {
 				remarks = resDTO.getRemarkList();
 			}
-		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
 		}
@@ -193,8 +189,6 @@ public class PpCommonUtil {
 			if (resDTO.isSuccessful()) {
 				rejectReasons = resDTO.getRejectReasonList();
 			}
-		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
 		}
@@ -224,8 +218,6 @@ public class PpCommonUtil {
 			if (resDTO.isSuccessful()) {
 				ppPlan = resDTO.getPlan();
 			}
-		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
 		}finally{
 			reqSO = null;
 		}
@@ -259,7 +251,7 @@ public class PpCommonUtil {
 					
 				}
 			}
-
+	
 		}finally{
 			userSO = null;
 		}
@@ -417,8 +409,7 @@ public class PpCommonUtil {
 			if (resDTO.isSuccessful()) {
 				existingVotTypeIds = resDTO.getVotTypeIds();
 			}
-		}catch(Exception e){
-			throw new EpException(e.toString()); //TODO
+
 		}finally{
 			reqSO = null;
 		}
@@ -544,7 +535,7 @@ public class PpCommonUtil {
 		String locale = "";
 		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
 		if(procurementCatId==null){
-			throw new EpException("procurementCatId is required."); //TODO
+			throw new EpException(MessageConst.ERROR_730026);
 		}
 		if(langugageCode==null){
 			locale =  new FacesScopes().getUserLocale().getLanguage();
