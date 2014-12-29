@@ -13,11 +13,12 @@
 					action="#{amendmentBackingBean.backAction}" /></td>
 			<td class="ppRightBtn"><ui:repeat var="outcome"
 					value="#{amendmentBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" ajax="false"
+					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" ajax="false"
 						styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
 						action="#{amendmentBackingBean.saveContractAmendment(outcome)}"
 						rendered="#{!amendmentBackingBean.managedBean.memberSignOff and outcome != 'SUBMIT' and outcome != 'REJECT' and outcome != 'APPROVE'}" />
-					<p:commandButton value="#{outcome}" styleClass="ui-button"
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form"
 						update="@form,@([id$=messages])"
 						actionListener="#{amendmentBackingBean.validateContractAmendment(outcome)}"

@@ -15,11 +15,12 @@
 					listener="#{panelBackingBean.preRenderView}" type="preRenderView" />
 				<ui:repeat var="action"
 					value="#{panelBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" styleClass="ui-button"
+					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						icon="ui-icon-#{fn:toLowerCase(action)}" update="@form"
 						action="#{panelBackingBean.savePanelCircular(action)}"
 						rendered="#{action != 'SUBMIT' and action != 'REJECT' and action != 'APPROVE'}" />
-					<p:commandButton value="#{action}" styleClass="ui-button"
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						icon="ui-icon-#{fn:toLowerCase(action)}" process="@form"
 						update="@form,@([id$=messages])"
 						actionListener="#{panelBackingBean.validateCircular(action)}"

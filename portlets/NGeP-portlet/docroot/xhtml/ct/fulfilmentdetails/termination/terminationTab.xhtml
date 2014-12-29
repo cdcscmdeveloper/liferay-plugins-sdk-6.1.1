@@ -60,13 +60,14 @@
 					<td class="ppRightBtn">
 						<c:if test="#{!terminationBackingBean.managedBean.viewContract}">
 						<ui:repeat var="outcome"
-							value="#{terminationBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" process="@form"
+							value="#{terminationBackingBean.managedBean.action}">							
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 								styleClass="ui-button" ajax="false" validateClient="true"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}"
 								action="#{terminationBackingBean.saveContractTermination(outcome)}"
 								rendered="#{outcome != 'ENDORSE' and outcome != 'SUBMIT'}" />
-							<p:commandButton value="#{outcome}" styleClass="ui-button"
+							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form"
 								update="@form,@([id$=messages])"
 								actionListener="#{terminationBackingBean.validateContractTermination(outcome)}"
