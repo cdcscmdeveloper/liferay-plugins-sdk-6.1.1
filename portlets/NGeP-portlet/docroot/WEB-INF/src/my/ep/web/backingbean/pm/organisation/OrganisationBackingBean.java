@@ -474,17 +474,22 @@ public class OrganisationBackingBean extends
 
 	public String saveOrganization() throws Exception {
 		//check govSeller
+		log.info("................this.getManagedBean().getSmSupplierBanks()="+this.getManagedBean().getSmSupplierBanks());
 		if(this.getManagedBean().getOrgProfile().isGovtSeller()){
+			List<SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>();
 			if(this.getManagedBean().getSmSupplierBanks() == null ){
 				throw new EpException(MessageConst.ERROR_775101);
 			}else{
 				//filter list for active records and check again
-				List<SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>();
+				
 				for(SmSupplierBank supplierBank :this.getManagedBean().getSmSupplierBanks()){
-					if(supplierBank.isRecordStatus()){
+					log.info("..............supplierBank.getRecordStatusFlg="+supplierBank.getRecordStatusFlg());
+					log.info("..............supplierBank.isRecordStatus="+supplierBank.isRecordStatus());
+					if(supplierBank.getRecordStatusFlg() == 1){
 				     	tempSupplierBankList.add(supplierBank);
 					}
 				}
+				log.info(".................tempSupplierBankList.size="+tempSupplierBankList.size());
 				if(tempSupplierBankList.isEmpty()){
 					throw new EpException(MessageConst.ERROR_775101);
 				}
@@ -496,7 +501,7 @@ public class OrganisationBackingBean extends
 				//filter list for active records and check again
 				List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
 				for(SmPersonnel personnel : this.getManagedBean().getSmPersonnels()){
-					if(personnel.isRecordStatus()){
+					if(personnel.getRecordStatusFlg() == 1){
 						tempPersonnelList.add(personnel);
 					}
 				}
