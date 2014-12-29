@@ -336,28 +336,16 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			for (PmZone zone : getManagedBean().getPmZonesList()) {
 				if (zone.getPmZoneStates() != null
 						&& !zone.getPmZoneStates().isEmpty()) {
-					for (PmZoneState state : zone.getPmZoneStates()) {
-						stList.remove(state.getPmState());
-						//disable code
-						/*for (PmState pmState : stList) {
-							if (state.getPmState().getStateId() == pmState
-									.getStateId()) {
-								pmState.setExistingState(true);
-							}
-
-						}*/
+					for (PmZoneState zoneState : zone.getPmZoneStates()) {						
+						stList.remove(zoneState.getPmState());
+						
 					}
 				}
 			}
 		List<PmZoneState> selectStates = getManagedBean().getZoneStateList();
 		for(PmZoneState zoneState : selectStates){
 			stList.remove(zoneState.getPmState());
-			//disable code
-			/*for(PmState pmState : stList){
-				if(zoneState.getPmState().getStateId().equals(pmState.getStateId())){
-					pmState.setExistingState(true);
-				}
-			}*/
+			
 		}
 		this.getManagedBean().setStates(stList);
 	}
