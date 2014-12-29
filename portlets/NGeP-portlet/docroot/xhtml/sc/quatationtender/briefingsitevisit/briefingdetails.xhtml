@@ -73,11 +73,14 @@
 							</p:selectOneMenu> <p:message id="briefstateMsg" for="briefstate" display="icon" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /></td>
-						<td><p:inputText
+						<td><p:outputLabel value="#{lbl['lbl.so.add1']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="add1"
+								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+								label="#{lbl['lbl.so.add1']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address1}"
-								size="30" maxlength="255" /></td>
-
+								style="margin-top:5px;" size="30" maxlength="255" /> <p:message
+								id="add1Msg" for="add1" display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 						<td><p:selectOneMenu id="manDivison"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDivision.divisionId}"
