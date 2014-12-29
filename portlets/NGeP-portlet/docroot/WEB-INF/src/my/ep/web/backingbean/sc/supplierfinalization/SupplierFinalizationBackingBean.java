@@ -300,6 +300,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			if (resDTO.isSuccessful()) {
 				//Meeting Details
 				List<ScQtMeeting> meetingList = resDTO.getMeetingDtls();
+				if (CollectionUtils.isNotEmpty(meetingList)) {
+					for (ScQtMeeting scQtMeeting : meetingList) {
+						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting.getMeetingStatus().getStatusId() : null;
+						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+					}
+				}
+				
 				this.getManagedBean().setMeetingList(meetingList);
 				
 				ScQtCommittee scQtCommittee = new ScQtCommittee();
@@ -427,6 +434,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			deleteRowsAction(meetingList, tempDeletedList);
 		} finally {
 		}		
+	}
+	
+	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(scQtMeeting.getMeetingStatusStr());
+		
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
 	}
 	
 	public void retrieveCommitteeDtls() {

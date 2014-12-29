@@ -24,7 +24,9 @@
 								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 							</f:facet>
 							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
-								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"/>
+								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+								<p:ajax partialSubmit="true" process="@this" update="@this"/>
+							</p:calendar>
 						</p:column>
 
 						<p:column style="width:30%">
@@ -33,7 +35,9 @@
 								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
 							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" 
-								value="#{meetingDtl.meetingLocation}"/>
+								value="#{meetingDtl.meetingLocation}">
+								<p:ajax partialSubmit="true" process="@this" update="@this"/>
+							</p:inputTextarea>
 						</p:column>
 						
 						<p:column style="width:20%">
@@ -41,13 +45,16 @@
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.status']}" />
 							</f:facet>
-							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatus.statusId}">
+							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatusStr}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}"/>
+								<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.changeMeetingStatus(meetingDtl)}"/>
 							</p:selectOneMenu>
 						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
-							<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30"/>
+							<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30">
+								<p:ajax partialSubmit="true" process="@this" update="@this"/>
+							</p:inputTextarea>
 						</p:column>
 					</p:dataTable>
 					
