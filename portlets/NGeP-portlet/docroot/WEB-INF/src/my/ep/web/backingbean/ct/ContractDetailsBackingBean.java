@@ -1090,8 +1090,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 		
 		if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && 
-				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) &&
-				getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				&& (getManagedBean().getContractVer().getCtContractValue().getAp201FileName() == null ||getManagedBean().getContractVer().getCtContractValue().getAp201FileName().equalsIgnoreCase("")) 
+				&& getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachement for AP201" });
 		}
