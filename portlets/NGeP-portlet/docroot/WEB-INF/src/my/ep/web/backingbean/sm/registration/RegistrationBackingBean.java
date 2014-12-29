@@ -878,14 +878,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private void retrieveProfBody() {
 		// PmCertBodyReqDTO = new PmCertBodyReqDTO();
 		log.info("*********retrieveCertBody************");
-
-		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICertBodySO.class);
-		CertBodyResDTO resDTO = reqSO.retrieveProfessionalBodyList();
-
-		log.info("*****certbody count" + resDTO.getCertBodyList().size());
-		this.getManagedBean().setProfCertBodyLs(new ArrayList<PmCertBody>());
-		this.getManagedBean().setProfCertBodyLs(resDTO.getCertBodyList());
+		this.getManagedBean().setProfCertBodyLs(SmApplicationUtil.retrievePmProfBodyList());
+		
+		if(this.getManagedBean().getProfCertBodyLs()==null){
+			this.getManagedBean().setProfCertBodyLs(new ArrayList<PmCertBody>());
+		}
 		
 		if(this.getManagedBean().getProfCertBodyLs().size() > 0){
 			profCertBodyMap = new HashMap<Long, PmCertBody>();
