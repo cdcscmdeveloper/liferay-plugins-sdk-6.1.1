@@ -9,20 +9,24 @@
 			value="#{financialOrgBackingBean.managedBean.pmFinancialSvc}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialSvc}">
-
-			<p:column selectionMode="multiple" style="width:2%" />
-
+			<p:column selectionMode="multiple" disabledSelection="#{!financialsrv.brandNew}" style="width:2%" />
 			<ac:paginator for="financialsrv" />
-			<p:column headerText="#{lbl['lbl.pm.financialorg.servicetype']}">
+			
+			<p:column >
+			<f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
+			    </f:facet>
 
-				<p:selectOneMenu value="#{financialsrv.serviceTypeCode.parameterId}" disabled="#{!financialsrv.brandNew}"
-					style="width: 275px;margin-bottom: 5px;" styleClass="ppDropDownWidthL">
-					<!-- <f:selectItems
-						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" /> -->
+				<p:selectOneMenu id ="svcType" value="#{financialsrv.serviceTypeCode.parameterId}" disabled="#{!financialsrv.brandNew}"
+					style="width: 275px;margin-bottom: 5px;" label="#{lbl['lbl.pm.financialorg.servicetype']}"  required="true" 
+					styleClass="ppDropDownWidthL">
+					
 						<f:selectItems
 									value="#{financialOrgBackingBean.getServieTypeDropdownValues(ParameterTypeConst.bankServices)}" />					
 						<p:ajax event="change" listener="#{financialOrgBackingBean.updateService}" update="@form"  process="@all" />
-				</p:selectOneMenu>
+				</p:selectOneMenu><p:message for="svcType" id="svcTypeMsg"
+						display="icon" />
 			</p:column>
 
 
