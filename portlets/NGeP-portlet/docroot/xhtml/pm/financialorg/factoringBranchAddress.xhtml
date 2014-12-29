@@ -13,7 +13,7 @@
 						value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td width="220"><p:selectOneMenu id="manCountry" styleClass="ppDropDownWidthL"
-						required="true" label="#{lbl['lbl.pm.address.country']}"
+						required="#{financialOrgBackingBean.managedBean.branchAddressreq}" label="#{lbl['lbl.pm.address.country']}"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.pmCountry.countryId}"
 						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -31,7 +31,7 @@
 				<td width="150"><p:outputLabel
 						value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td width="220"><p:selectOneMenu id="manState" required="true" styleClass="ppDropDownWidthL"
+				<td width="220"><p:selectOneMenu id="manState" required="#{financialOrgBackingBean.managedBean.branchAddressreq}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.pmState.stateId}"
 						style="width: 275px;margin-bottom: 5px;">
@@ -53,7 +53,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="address1" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
-						required="true"
+						required="#{financialOrgBackingBean.managedBean.branchAddressreq}"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.address1}"
 						size="40" /></td>
 				<td><p:message for="address1" id="address1Msg" display="icon" /></td>
@@ -68,7 +68,7 @@
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="manDistrict" required="true"
+				<td><p:selectOneMenu id="manDistrict" required="#{financialOrgBackingBean.managedBean.branchAddressreq}"
 						label="#{lbl['lbl.pm.address.district']}" styleClass="ppDropDownWidthL"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.pmDistrict.districtId}"
 						style="width: 275px;margin-bottom: 5px;">
@@ -94,8 +94,9 @@
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="manCity" required="true"
+				<td><p:selectOneMenu id="manCity" 
 						label="#{lbl['lbl.pm.address.city']}" styleClass="ppDropDownWidthL"
+						required="#{financialOrgBackingBean.managedBean.branchAddressreq}"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.pmCity.cityId}"
 						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -115,7 +116,7 @@
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="postCode" required="true" styleClass="ppDisplayTextL"
+				<td><p:inputText id="postCode" required="#{financialOrgBackingBean.managedBean.branchAddressreq}" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="10"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.postcode}"
 						size="40" validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}"> <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
@@ -125,16 +126,18 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="telNo" required="true" styleClass="ppDisplayTextL"
+				<td><p:inputText id="telNo" required="#{financialOrgBackingBean.managedBean.branchAddressreq}" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.address.tel']}" maxlength="12"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.phoneNo}"
 						size="40"  validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}"><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 				<td><p:message for="telNo" id="telNoMsg" display="icon" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
-				<td><p:inputText maxlength="12" styleClass="ppDisplayTextL"
+				<td><p:inputText id="faxNo" maxlength="12" styleClass="ppDisplayTextL"
 						value="#{financialOrgBackingBean.managedBean.branchAddress.faxNo}"
-						size="40"  validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}"><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+						size="40"  validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+						<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Contact Person" />
@@ -160,7 +163,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="branchContactName" styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.contact.name']}" required="true"
+							label="#{lbl['lbl.pm.contact.name']}" required="#{financialOrgBackingBean.managedBean.branchAddressreq}"
 							value="#{financialOrgBackingBean.managedBean.branchContactPerson.contactName}"
 							size="50" maxlength="100"/></td>
 					<td><p:message id="branchContactNameMsg"
@@ -171,6 +174,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td> 
 					<td><p:inputText id="branchContactEmail" styleClass="ppDisplayTextL" maxlength="80"
 							value="#{financialOrgBackingBean.managedBean.branchContactPerson.email}"
+							required="#{financialOrgBackingBean.managedBean.branchAddressreq}"
 							size="50" validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}" >
 							<f:validateRegex 
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" /></p:inputText></td>

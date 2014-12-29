@@ -59,7 +59,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	// Financial Branch
 	private PmFinancialBranch financialBranch;
 	private List<PmFinancialBranch> pmFinancialBranch;
-	private List<PmFinancialBranch> selectedPmFinancialBranch;
+	private PmFinancialBranch selectedPmFinancialBranch;
 	// Financial Org address
 	private PmAddressType pmAddressType;;
 	private List<PmAddressType> addressType;
@@ -83,6 +83,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private PmAddress branchAddress;
 	private PmContact branchContactPerson;
 	private List<PmContact> branchContact;
+	private boolean branchAddressreq = false;
 
 	// Financial Branch Acc
 	private PmFinancialAcc financialBranchAcc;
@@ -92,10 +93,12 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private List<PmOrgProfile> orgProfileList;
 	private boolean showParentMsg;
 	private String serviceType;
+	private List<String> serviceTypes;
 
 	private Date currentDate = new Date();
 
 	public FinancialOrgManagedBean() {
+		financialSvc= new PmFinancialSvc();
 		addressType = new ArrayList<PmAddressType>();
 		pmContact = new ArrayList<PmContact>();
 		pmAddress = new PmAddress();
@@ -429,14 +432,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.pmFinancialBranch = pmFinancialBranch;
 	}
 
-	public List<PmFinancialBranch> getSelectedPmFinancialBranch() {
-		return selectedPmFinancialBranch;
-	}
-
-	public void setSelectedPmFinancialBranch(
-			List<PmFinancialBranch> selectedPmFinancialBranch) {
-		this.selectedPmFinancialBranch = selectedPmFinancialBranch;
-	}
+	
 
 	/**
 	 * @return the byFactoring
@@ -703,6 +699,48 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setBranchDivisionList(List<PmDivision> branchDivisionList) {
 		this.branchDivisionList = branchDivisionList;
+	}
+
+	/**
+	 * @return the selectedPmFinancialBranch
+	 */
+	public PmFinancialBranch getSelectedPmFinancialBranch() {
+		return selectedPmFinancialBranch;
+	}
+
+	/**
+	 * @param selectedPmFinancialBranch the selectedPmFinancialBranch to set
+	 */
+	public void setSelectedPmFinancialBranch(PmFinancialBranch selectedPmFinancialBranch) {
+		this.selectedPmFinancialBranch = selectedPmFinancialBranch;
+	}
+
+	/**
+	 * @return the serviceTypes
+	 */
+	public List<String> getServiceTypes() {
+		return serviceTypes;
+	}
+
+	/**
+	 * @param serviceTypes the serviceTypes to set
+	 */
+	public void setServiceTypes(List<String> serviceTypes) {
+		this.serviceTypes = serviceTypes;
+	}
+
+	/**
+	 * @return the branchAddressreq
+	 */
+	public boolean isBranchAddressreq() {
+		return branchAddressreq;
+	}
+
+	/**
+	 * @param branchAddressreq the branchAddressreq to set
+	 */
+	public void setBranchAddressreq(boolean branchAddressreq) {
+		this.branchAddressreq = branchAddressreq;
 	}
 
 

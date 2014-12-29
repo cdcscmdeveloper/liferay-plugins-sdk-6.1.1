@@ -14,11 +14,16 @@
 
 			<ac:paginator for="financialacc" />
 
-			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
-				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.financialorg.paymentbankname']}" />
+				</f:facet>
+				<p:selectOneMenu value="#{financialacc.pmPaymentBankOrg.financialOrgId}" id="finorgn"
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
 					required="true" style="width: 275px;margin-bottom: 5px;">
-					<f:selectItem itemValue=" " itemLabel="---Select---" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
 					<f:selectItems var="finorgLs"
 						value="#{financialOrgBackingBean.managedBean.pmFinancialOrg}"
 						itemLabel="#{finorgLs.finOrgName}"
@@ -27,21 +32,27 @@
 				</p:selectOneMenu>
 				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
-
-				<p:inputText value="#{financialacc.accountNo}" size="20"
-					maxlength="20" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
+				</f:facet>
+				<p:inputText id="finActNo" value="#{financialacc.accountNo}"  label="#{lbl['lbl.pm.financialorg.acnumber']}" required="true"
+					size="15" styleClass="ppDisplayTextS" maxlength="20"  />
+					<p:message id="finActNoMsg" for="finActNo" display="icon" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.effdate']}">
-
-				<p:calendar value="#{financialacc.effDate}" showOn="button"
-					size="10" readonlyInput="true"
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.financialorg.effdate']}" />
+				</f:facet>
+				<p:calendar value="#{financialacc.effDate}" showOn="button" id="feffDte"
+					size="10" readonlyInput="true" required="true" label="#{lbl['lbl.pm.financialorg.effdate']}"
 					mindate="#{financialOrgBackingBean.managedBean.currentDate}"
-					
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" update="branchexpDate" />
 				</p:calendar>
+				<p:message for="feffDte" id="feffDteMsg" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.expdate']}">
@@ -57,7 +68,8 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
 					required="true" style="width: 135px;margin-bottom: 5px;">
-					<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
+					<f:selectItems
+						value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 
 
@@ -68,11 +80,11 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,financialBranchAccId" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialBranchAcc}"
-				update="financialBranchAccId"  />
+				update="financialBranchAccId" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				update="financialBranchAccId"
-				process="@this,financialBranchAccId" partialSubmit="true"
+				update="financialBranchAccId" process="@this,financialBranchAccId"
+				partialSubmit="true"
 				action="#{financialOrgBackingBean.deleteFinancialBranchAcc}" />
 
 		</div>
