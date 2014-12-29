@@ -2071,7 +2071,21 @@ public class SmApplicationUtil {
 				.getServiceObject("pm", ICertBodySO.class);
 		CertBodyResDTO resDTO = reqSO.retrieveProfessionalBodyList();
 		if (resDTO != null) {
-			return resDTO.getCertBodyList();
+			List<PmCertBody> pmCertBodyList = new ArrayList<PmCertBody>();
+			PmCertBody otherTypeCertBody = null;
+			for (PmCertBody certBody : resDTO.getCertBodyList()) {
+				if (certBody.getBodyName() != null
+						&& (certBody.getBodyName().contains("LAIN-LAIN") || certBody
+								.getBodyName().contains("OTHERS"))) {
+					otherTypeCertBody = certBody;
+				} else {
+					pmCertBodyList.add(certBody);
+				}
+			}
+			if (otherTypeCertBody != null) {
+				pmCertBodyList.add(otherTypeCertBody);
+			}
+			return pmCertBodyList;
 		} else {
 			return null;
 		}
