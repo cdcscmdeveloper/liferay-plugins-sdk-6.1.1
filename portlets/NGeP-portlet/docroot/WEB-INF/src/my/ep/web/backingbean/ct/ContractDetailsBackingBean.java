@@ -1271,6 +1271,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	   return items;
 	}
+	
+	 public void uploadAp201File(FileUploadEvent event) throws Exception {
+	    	UploadedFile item = event.getFile();
+			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+			
+			String filePath = getManagedBean().getFileDirectory();
+			File file = new File(filePath);
+			file.mkdirs();
+			filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		    fileOuputStream.write(item.getContents());
+		    fileOuputStream.close();
+		    
+		    getManagedBean().getContractVer().getCtContractValue().setAp201FileName(item.getFileName());
+		    getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+	}
     
     public void fileUpload(FileUploadEvent event) throws Exception {
     	UploadedFile item = event.getFile();
@@ -1291,6 +1307,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	 }
 	     }
 	}
+    
+    
     
 	public void downloadFile(String filePath, String fileName) throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
