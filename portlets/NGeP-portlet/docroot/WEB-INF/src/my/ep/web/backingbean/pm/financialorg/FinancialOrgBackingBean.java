@@ -132,14 +132,13 @@ public class FinancialOrgBackingBean extends
 							getManagedBean().getFinancialOrgSearchBean()
 									.getServiceType()));
 			isEmpty = false;
-		}
-		if (isEmpty && !isSearchable) {
+		}		
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getOrgStatus()));
-		}
+		
 		if (fSearchBean.getRegNumber() != null
 				&& fSearchBean.getRegNumber().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
