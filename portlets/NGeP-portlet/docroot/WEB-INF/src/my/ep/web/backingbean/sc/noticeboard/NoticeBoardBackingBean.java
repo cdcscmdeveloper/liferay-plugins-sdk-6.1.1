@@ -1518,12 +1518,13 @@ public class NoticeBoardBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode("en");
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
 		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
 		List<String> roleCodes = new ArrayList<String>();
-		roleCodes.add(RoleCode.SUPPLIER_ADMIN.toString());
-		roleCodes.add(RoleCode.SUPPLIER_USER.toString());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.toString());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.toString());
+		
 		if (null != roleDesc) {
 			for (PmRoleDesc pmRoleDesc : roleDesc) {
 				if (roleCodes.contains(pmRoleDesc.getPmRole().getRoleCode())) {
