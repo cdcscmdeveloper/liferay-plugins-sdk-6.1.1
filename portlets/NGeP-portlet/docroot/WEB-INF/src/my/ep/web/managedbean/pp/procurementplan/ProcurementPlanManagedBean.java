@@ -44,12 +44,16 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<PpProcurementItem> deletePpItems;
 	private DualListModel<PmUser> approverModel;
 	private DualListModel<PmUser> verifierModel;
-	private List<PpRejectReason> selectedRejectReasons;
-	private boolean confirm;
+	private boolean confirmJustification;
+	private boolean confirmReason;
+	private boolean confirmRemark;
 	private String selectedReasonDesc;
 	private String selectedRemarkDesc;
+	private String selectedItemRemarkDesc;
+	private String selectedJustificationDesc;
+	private List<PpRejectReason> selectedRejectReasons;
 	private List<PpRemark> selectedRemarks;
-//	private List<PpJustificaton> selectedJustification;
+	private List<PpRemark> selectedJustifications;
 	private List<PpRemark> selectedItemRemarks;
 	private BigDecimal epTotalBudget;
 	private BigDecimal epTotalPlan;
@@ -102,18 +106,48 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.selectedItemRemarks = selectedItemRemarks;
 	}
 
+
+
 	/**
-	 * @return the confirm
+	 * @return the confirmJustification
 	 */
-	public boolean isConfirm() {
-		return confirm;
+	public boolean isConfirmJustification() {
+		return confirmJustification;
 	}
 
 	/**
-	 * @param confirm the confirm to set
+	 * @param confirmJustification the confirmJustification to set
 	 */
-	public void setConfirm(boolean confirm) {
-		this.confirm = confirm;
+	public void setConfirmJustification(boolean confirmJustification) {
+		this.confirmJustification = confirmJustification;
+	}
+
+	/**
+	 * @return the confirmReason
+	 */
+	public boolean isConfirmReason() {
+		return confirmReason;
+	}
+
+	/**
+	 * @param confirmReason the confirmReason to set
+	 */
+	public void setConfirmReason(boolean confirmReason) {
+		this.confirmReason = confirmReason;
+	}
+
+	/**
+	 * @return the confirmRemark
+	 */
+	public boolean isConfirmRemark() {
+		return confirmRemark;
+	}
+
+	/**
+	 * @param confirmRemark the confirmRemark to set
+	 */
+	public void setConfirmRemark(boolean confirmRemark) {
+		this.confirmRemark = confirmRemark;
 	}
 
 	/**
@@ -410,6 +444,49 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.ppTotalEst = ppTotalEst;
 	}
 
+	/**
+	 * @return the selectedJustifications
+	 */
+	public List<PpRemark> getSelectedJustifications() {
+		return selectedJustifications;
+	}
+
+	/**
+	 * @param selectedJustifications the selectedJustifications to set
+	 */
+	public void setSelectedJustifications(List<PpRemark> selectedJustifications) {
+		this.selectedJustifications = selectedJustifications;
+	}
+
+	/**
+	 * @return the selectedItemRemarkDesc
+	 */
+	public String getSelectedItemRemarkDesc() {
+		return selectedItemRemarkDesc;
+	}
+
+	/**
+	 * @param selectedItemRemarkDesc the selectedItemRemarkDesc to set
+	 */
+	public void setSelectedItemRemarkDesc(String selectedItemRemarkDesc) {
+		this.selectedItemRemarkDesc = selectedItemRemarkDesc;
+	}
+
+	/**
+	 * @return the selectedJustificationDesc
+	 */
+	public String getSelectedJustificationDesc() {
+		return selectedJustificationDesc;
+	}
+
+	/**
+	 * @param selectedJustificationDesc the selectedJustificationDesc to set
+	 */
+	public void setSelectedJustificationDesc(String selectedJustificationDesc) {
+		this.selectedJustificationDesc = selectedJustificationDesc;
+	}
+
+	
 
 
 

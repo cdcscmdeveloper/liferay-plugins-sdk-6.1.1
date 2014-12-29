@@ -15,6 +15,8 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
@@ -32,13 +34,16 @@ import my.ep.dto.pm.common.procurementcattype.ProcurementCatTypeResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -54,6 +59,22 @@ import org.apache.log4j.Logger;
  */
 public class PpCommonUtil {
 	private static Logger log = Logger.getLogger(PpCommonUtil.class);
+	
+	/**
+	 * get record status options 
+	 * @return SelectItem[] 
+	 */
+	public static SelectItem[] getStatusOptionsDefault() {
+		SelectItem[] items =  new SelectItem[2];
+		items[0] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
+				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_DELETED, ResourceBundleUtils.getMessage(
+				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+	    return items;
+	}
+	
 	
 	/**
 	 * Retrieve ppPlan by searchbean
@@ -116,6 +137,37 @@ public class PpCommonUtil {
 			reqSO = null;
 		}
 		log.info("retrieveRemark - End");
+		return remarks;
+	}
+	/**
+	 * Retrieve justification list by docId and docType
+	 * @param docId
+	 * @param docType
+	 * @return List<PpRemark>
+	 */
+	public static List<PpRemark> retrieveJustification(Long docId, String docType){
+		log.info("retrieveJustification - Start");
+		List<PpRemark> remarks = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setDocId(docId);
+			reqDTO.setDocType(docType);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrieveJustification(reqDTO);
+			if (resDTO.isSuccessful()) {
+				remarks = resDTO.getRemarkList();
+			}
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
+		}
+		log.info("retrieveJustification - End");
 		return remarks;
 	}
 	/**
@@ -187,6 +239,7 @@ public class PpCommonUtil {
 	 * @return PmOrgProfile
 	 */
 	public static PmOrgProfile retrieveUserOrgListByUserId(Long userId, boolean isDetails){
+		log.info("retrieveUserOrgListByUserId - Start");
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		IUserSO userSO  = null;
 		try{
@@ -210,6 +263,7 @@ public class PpCommonUtil {
 		}finally{
 			userSO = null;
 		}
+		log.info("retrieveUserOrgListByUserId - End");
 		return pmOrgProfile;
 	}
 	
@@ -221,6 +275,7 @@ public class PpCommonUtil {
 	 * @return @return List<PmUser>
 	 */
 	public static List<PmUser> retrieveUserListByRole(Long orgProfileId, String roleCode, List<PmUser> excludedUsers){
+		log.info("retrieveUserListByRole - Start");
 		List<PmUser> pmUsers = new ArrayList<PmUser>();
 		List<Long> userIds = null;
 		IUserSO userSO  = null;
@@ -249,6 +304,7 @@ public class PpCommonUtil {
 		}finally{
 			userSO = null;
 		}
+		log.info("retrieveUserListByRole - End");
 		return pmUsers;
 	}
 	
@@ -260,7 +316,7 @@ public class PpCommonUtil {
 	 * @return PmOrgProfile
 	 */
 	public static PmOrgProfile retrievePmOrgProfileDtl(Long id){
-		
+		log.info("retrievePmOrgProfileDtl - Start");
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		IOrgProfileSO orgProfileSO   = null;
 		try{
@@ -275,27 +331,184 @@ public class PpCommonUtil {
 		}finally{
 			orgProfileSO = null;
 		}	
-			
+		log.info("retrievePmOrgProfileDtl - End");
 		return pmOrgProfile;
 	}
 	
+	public static List<Long> getExistingPlanYear(Long userId, Long orgProfileId) {
+		log.info("getExistingPlanYear");
+		
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		List <Long> planYears = null;
+		try{
+			//get from DB
+			if(userId!=null){
+				reqDTO = new ProcurementPlanReqDTO();
+				resDTO = new ProcurementPlanResDTO();
+				reqDTO.setOrgProfileId(orgProfileId);
+				reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+				resDTO = reqSO.retrieveExistingPlanYears(reqDTO);
+				if (resDTO.isSuccessful() && resDTO.getPlanYears()!=null) {
+					planYears = resDTO.getPlanYears();
+					
+				}
+			}
+		}finally{
+			reqSO = null;
+		}
+		return planYears;
+	}
+	
+	/**
+	 * retrieve existing planned plan years
+	 * @param userId
+	 * @param orgProfileId
+	 * @return List<Long> 
+	 */
+	private static List<Long> getEpExistingPlanYear(Long userId, Long orgProfileId) {
+		log.info("getEpExistingPlanYear");
+		
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		List <Long> planYears = null;
+		try{
+			//get from DB
+			if(userId!=null){
+				reqDTO = new ProcurementPlanReqDTO();
+				resDTO = new ProcurementPlanResDTO();
+				reqDTO.setEP(true);
+				reqDTO.setOrgProfileId(orgProfileId);
+				reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+				resDTO = reqSO.retrieveExistingPlanYears(reqDTO);
+				if (resDTO.isSuccessful() && resDTO.getPlanYears()!=null) {
+					planYears = resDTO.getPlanYears();					
+				}
+			}
+		}finally{
+			reqSO = null;
+		}
+		return planYears;
+	}
+	
+
+	/**
+	 * retrieve existing planned vot type ids
+	 * @param orgId
+	 * @param planYear
+	 * @return List<Long> 
+	 */
+	public static List<Long> existingPlannedVotTypes(Long orgId, Long planYear){
+		log.info("existingPlannedVotTypes");
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		List <Long> existingVotTypeIds = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setPlanYear(planYear);
+			reqDTO.setOrgProfileId(orgId);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrieveExistingVotTypesIds(reqDTO);
+			if (resDTO.isSuccessful()) {
+				existingVotTypeIds = resDTO.getVotTypeIds();
+			}
+		}catch(Exception e){
+			throw new EpException(e.toString()); //TODO
+		}finally{
+			reqSO = null;
+		}
+
+		
+		return existingVotTypeIds;
+	}
 	
 	/**
 	 * retrieve plan year options for current year & current year +1
 	 * @return plan year options
 	 */
-	public static SelectItem[] getPlanYearOptions() {
+	public static SelectItem[] getPlanYearOptions(Long userId, Long orgProfileId) {
 		log.info("getPlanYearOptions - Start");
+		SelectItem[] items = new SelectItem[1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		
+		
+		List<Long> planYears = getExistingPlanYear(userId, orgProfileId);
+		List<Long> years = new ArrayList<Long>();
 		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		Integer nextYear = currentYear + 1;
-		SelectItem[] items = new SelectItem[3];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
-		items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
+		years.add(currentYear.longValue());
+		years.add(nextYear.longValue());
+		if(planYears!=null && !planYears.isEmpty()){
+			if(planYears.contains(currentYear.longValue())){
+				years.remove(currentYear.longValue());
+			}
+			if(planYears.contains(nextYear.longValue())){
+				years.remove(nextYear.longValue());
+				
+			}
+		}
+		
+		if(years!=null && !years.isEmpty()){
+			items = new SelectItem[years.size()+1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			int i = 1;
+			for (Long year : years) {
+				items[i++] = new SelectItem(year, year.toString());
+			}
+		}
 		log.info("getPlanYearOptions - End");
 		return items;
 	} 
 		
+	
+	/**
+	 * retrieve plan year options for current year & current year +1
+	 * @return plan year options
+	 */
+	public static SelectItem[] getEpPlanYearOptions(Long userId, Long orgProfileId) {
+		log.info("getEpPlanYearOptions - Start");
+		SelectItem[] items = new SelectItem[1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		
+		
+		List<Long> planYears = getEpExistingPlanYear(userId, orgProfileId);
+		List<Long> years = new ArrayList<Long>();
+		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		Integer nextYear = currentYear + 1;
+		years.add(currentYear.longValue());
+		years.add(nextYear.longValue());
+		if(planYears!=null && !planYears.isEmpty()){
+			System.out.println(planYears.size());
+			if(planYears.contains(currentYear.longValue())){
+				years.remove(currentYear.longValue());
+			}
+			if(planYears.contains(nextYear.longValue())){
+				years.remove(nextYear.longValue());
+				
+			}
+		}
+		
+		if(years!=null && !years.isEmpty()){
+			items = new SelectItem[years.size()+1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			int i = 1;
+			for (Long year : years) {
+				items[i++] = new SelectItem(year, year.toString());
+			}
+		}
+		
+	
+		
+		
+		
+		log.info("getEpPlanYearOptions - End");
+		return items;
+	} 
 	
 
 	public static List<PmProcurementCatType> retrieveProcurementCatTypeList(String langugageCode){
