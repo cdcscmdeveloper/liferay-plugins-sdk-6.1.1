@@ -36,22 +36,9 @@
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
 								<ui:include src="step5ViewBumiAppln_SupportingDocumentsInfo.xhtml" />
 							</c:if>
-							<c:choose>
-								<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
-									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
-									</c:if>
-									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-										<ui:include src="step6ViewBumiPoDecision.xhtml" />
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-										<ui:include src="step6ViewBumiPoDecision.xhtml" />
-									</c:if>
-								</c:otherwise>
-							</c:choose>
-		
+							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+								<ui:include src="step6ViewBumiPoDecision.xhtml" />
+							</c:if>
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
