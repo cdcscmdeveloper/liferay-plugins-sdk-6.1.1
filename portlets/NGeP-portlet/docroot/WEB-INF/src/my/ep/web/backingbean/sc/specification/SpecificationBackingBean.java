@@ -1954,6 +1954,9 @@ public class SpecificationBackingBean extends
 
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			PmStatus evalStatus = new PmStatus();
+			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			checkList.setPmEvalStatus(evalStatus);
 			checkList.setTitle(panelItem.getItemName());
 			checkList.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			checkList
@@ -2364,6 +2367,9 @@ public class SpecificationBackingBean extends
 				status.setStatusId(1L);
 				checkList.setPmStatus(status);
 				checkList.setChecklistSeq(pmDoc.getDisplaySeq());
+				PmStatus evalStatus = new PmStatus();
+				evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				checkList.setPmEvalStatus(evalStatus);
 				checkListList.add(checkList);
 			}
 
@@ -6677,6 +6683,9 @@ public class SpecificationBackingBean extends
 
 			st2financeproposalList2.setPmStatus(statusres.getPmStatus());
 			// st2financeproposalList2.setEvaluationStage("2");
+			PmStatus evalStatus = new PmStatus();
+			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			st2financeproposalList2.setPmEvalStatus(evalStatus);
 			st2financeproposalList.add(st2financeproposalList2);
 
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
@@ -6741,6 +6750,9 @@ public class SpecificationBackingBean extends
 							.retrieveStatusByStatusId(statusreq);
 
 					scqtlist.setPmStatus(statusres.getPmStatus());
+					PmStatus evalStatus = new PmStatus();
+					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+					scqtlist.setPmEvalStatus(evalStatus);
 					compilance.add(scqtlist);
 				}
 
@@ -6788,6 +6800,9 @@ public class SpecificationBackingBean extends
 					.retrieveStatusByStatusId(statusreq);
 
 			st2technicalproposalList1.setPmStatus(statusres.getPmStatus());
+			PmStatus evalStatus = new PmStatus();
+			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			st2technicalproposalList1.setPmEvalStatus(evalStatus);
 
 			st2technicalproposalList.add(st2technicalproposalList1);
 
@@ -6858,6 +6873,9 @@ public class SpecificationBackingBean extends
 							.retrieveStatusByStatusId(statusreq);
 
 					scqtlist.setPmStatus(statusres.getPmStatus());
+					PmStatus evalStatus = new PmStatus();
+					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+					scqtlist.setPmEvalStatus(evalStatus);
 					compilance.add(scqtlist);
 				}
 			}
@@ -9377,8 +9395,8 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> technicalScoring = this.getManagedBean()
 				.getTechnicalScoring();
 		if (technicalScoring != null && !technicalScoring.isEmpty()) {
-			//List<ScQtCheckList> localTechScoring=techCheckList;
-			//techCheckList=null;
+			// List<ScQtCheckList> localTechScoring=techCheckList;
+			// techCheckList=null;
 			for (ScQtCheckList scoringCheckList : technicalScoring) {
 				for (ScQtCheckList technicalCheckList : techCheckList) {
 					if (technicalCheckList.getTitle().equalsIgnoreCase(
@@ -9934,7 +9952,7 @@ public class SpecificationBackingBean extends
 
 				ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 				specReqDTO.setScQt(scQtTechChecklist);
-				 specSO.validateCheckList(specReqDTO);
+				specSO.validateCheckList(specReqDTO);
 				if (QTConstants.EVALUATION_ONE_TIER
 						.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
 						&& !scQtTechChecklist.isTechEvaluationReq()) {
@@ -9945,6 +9963,7 @@ public class SpecificationBackingBean extends
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
+					retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 					retriveTechnicalSpecification();
 
 				}
@@ -9964,6 +9983,7 @@ public class SpecificationBackingBean extends
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
+					retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 					retriveTechnicalCheckList();
 
 				}
@@ -9971,7 +9991,7 @@ public class SpecificationBackingBean extends
 			case 3:
 				ScQt finChecklist = constructSpecCommitteDtls().getScQt();
 				specReqDTO.setScQt(finChecklist);
-				 specSO.validateCheckList(specReqDTO);
+				specSO.validateCheckList(specReqDTO);
 				specReqDTO.setTobeRemoveList(getToBeRemoveList());
 
 				resDTO = specSO.saveQTDtl(specReqDTO);
@@ -9991,6 +10011,7 @@ public class SpecificationBackingBean extends
 				 * resDTO .getScQt().isTechEvaluationReq())) {
 				 * retriveTechnicalCheckList(); }
 				 */
+				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 				retriveFinancialCheckList();
 				break;
 			case 4:
@@ -11275,6 +11296,9 @@ public class SpecificationBackingBean extends
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			scQtCheckList.setPmStatus(status);
+			PmStatus evalStatus = new PmStatus();
+			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			scQtCheckList.setPmEvalStatus(evalStatus);
 			if (getManagedBean().getScQt().isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = getManagedBean()
 						.getScQt().getScQtSupplierCriteria();
@@ -11295,6 +11319,9 @@ public class SpecificationBackingBean extends
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			scQtCheckList.setPmStatus(status);
+			PmStatus evalStatus = new PmStatus();
+			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			scQtCheckList.setPmEvalStatus(evalStatus);
 		}
 		List<ScQtCheckList> toBeRemoveList = null;
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
@@ -11644,6 +11671,9 @@ public class SpecificationBackingBean extends
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.TS_COMPLETED);
 			scQtCheckList.setPmStatus(status);
+			PmStatus evalStatus = new PmStatus();
+			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			scQtCheckList.setPmEvalStatus(evalStatus);
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			updatedCheckLists.add(scQtCheckList);
@@ -11869,6 +11899,9 @@ public class SpecificationBackingBean extends
 		PmStatus checklistStatus = new PmStatus();
 		checklistStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 		checkList.setPmStatus(checklistStatus);
+		PmStatus evalStatus = new PmStatus();
+		evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+		checkList.setPmEvalStatus(evalStatus);
 		setUserDetails(checkList);
 		scqtDocDest.setScQtCheckList(checkList);
 
