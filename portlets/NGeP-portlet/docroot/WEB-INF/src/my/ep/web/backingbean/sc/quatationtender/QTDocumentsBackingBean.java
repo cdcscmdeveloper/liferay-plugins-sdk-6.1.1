@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -1335,6 +1336,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
 			QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
 			categoryResults = tenderResDTO.getCategoryResultBean().getResultList();
+			if (null != tenderResDTO.getLocationDetails()) {
+				context.put("locality", tenderResDTO.getLocationDetails());
+			}
 		} finally {
 			QtDetailsSO = null;
 		}
@@ -1394,7 +1398,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
 			qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
 			if (this.getManagedBean().getQt().isZonal()) {
-				context.put("locality", qtResDTO.getZoneDetails());
+				context.put("zoneLocality", qtResDTO.getZoneDetails());
 			}
  		} finally {
 			QtDetailsSO = null;

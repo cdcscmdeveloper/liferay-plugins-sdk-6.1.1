@@ -140,7 +140,7 @@
 									<td>District</td>
 								#end
 		            		</tr>
-							#foreach($location in $locality)
+							#foreach($location in $zoneLocality)
 								#foreach($locCriteria in $location.tplSpecZoneLocs)
 								<tr>
 									<td>$location.zoneName</td>
@@ -160,7 +160,28 @@
 					</span>
 					#end
 					#if ($locLevel == "false")
-						
+						<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
+						<table width='100%' class="table2">
+		            		<tr>
+								<td>State</td>
+								#if ($locationLevel == "District")
+									<td>District</td>
+								#end
+		            		</tr>
+							#foreach($tplSpecLoc in $locality)
+								<tr>
+									<td>
+										$tplSpecLoc.pmState.stateName
+									</td>
+									#if ($locationLevel == "District")
+										<td>
+											$tplSpecLoc.pmDistrict.districtName
+										</td>
+									#end
+								</tr>
+							#end
+						</table>
+						</span>
 					#end
 				</td>
 			</tr>
