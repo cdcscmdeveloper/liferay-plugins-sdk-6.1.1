@@ -67,7 +67,7 @@
 					<h:outputText value="#{lbl['lbl.sc.recommend.by']}" />
 				</f:facet>
 				<h:column>
-					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" required="true" label="#{lbl['lbl.sc.recommend.by']}">
+					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" required="false" label="#{lbl['lbl.sc.recommend.by']}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 						<p:ajax event="change" 
 							update="@([id$=itemListTbl],[id$=supplierPanel])"
