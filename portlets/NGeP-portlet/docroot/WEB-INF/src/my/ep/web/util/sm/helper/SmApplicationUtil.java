@@ -2151,9 +2151,9 @@ public class SmApplicationUtil {
 					.getPaidUpCapital().intValue());
 		}
 		Integer bumiPerc = new Integer(0);
-		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
+		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercentage() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
-					.getBumiPercent().intValue();
+					.getBumiPercentage().intValue();
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -2207,9 +2207,9 @@ public class SmApplicationUtil {
 			reqDTO.setIsSpecialCategory(true);
 		}
 		Integer bumiPerc = new Integer(0);
-		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
+		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercentage() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
-					.getBumiPercent().intValue();
+					.getBumiPercentage().intValue();
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -2266,9 +2266,9 @@ public class SmApplicationUtil {
 					.getPaidUpCapital().intValue());
 		}
 		Integer bumiPerc = new Integer(0);
-		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercent() != null) {
+		if (managedBean.getSmAppl().getSmCompanyBasic().getBumiPercentage() != null) {
 			bumiPerc = managedBean.getSmAppl().getSmCompanyBasic()
-					.getBumiPercent().intValue();
+					.getBumiPercentage().intValue();
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
