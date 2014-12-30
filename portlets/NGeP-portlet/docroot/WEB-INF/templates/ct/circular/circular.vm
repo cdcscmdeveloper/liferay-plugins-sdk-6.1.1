@@ -32,7 +32,7 @@
 <table>
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Circular No.</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>1PP No.</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
@@ -41,7 +41,7 @@
 	</tr>
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Physical Circular No.</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Physical 1PP No.</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
@@ -50,7 +50,7 @@
 	</tr>	
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Circular Name</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>1PP Name</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
