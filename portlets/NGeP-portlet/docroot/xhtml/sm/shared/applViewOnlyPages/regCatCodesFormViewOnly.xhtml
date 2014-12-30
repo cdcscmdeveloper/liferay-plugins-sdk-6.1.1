@@ -67,7 +67,8 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
+				
+				<!-- <p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 					rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}">
 
 					<p:selectOneRadio layout="pageDirection" id="catPoAppr"
@@ -86,7 +87,8 @@
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 1 and viewSmApplBackingBean.managedBean.approverUser}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0 and viewSmApplBackingBean.managedBean.approverUser}" />
-				</p:column>
+				</p:column> -->
+				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 					<p:outputLabel value="#{catBean.poRemarks}" style="float: left;white-space: normal;"/>
 				</p:column>
@@ -147,7 +149,8 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
+				
+				<!-- <p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 					rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catPoApprR"
 						value="#{catBeanR.poDecFlg}"
@@ -166,7 +169,8 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0 and viewSmApplBackingBean.managedBean.approverUser}" />
 
-				</p:column>
+				</p:column> -->
+				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 					<p:outputLabel value="#{catBeanR.poRemarks}" style="float: left;white-space: normal;" />
 				</p:column>

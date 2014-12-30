@@ -1166,19 +1166,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		int maxTab = 0;
 		switch (applType) {
 		case ParameterConst.NEW_SM_APPLN_FOR_MOF:
-			maxTab = 9;
-			break;
-		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
 			maxTab = 8;
 			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+			maxTab = 7;
+			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-			maxTab = 5;
+			maxTab = 4;
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
-			maxTab = 6;
+			maxTab = 5;
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
-			maxTab = 9;
+			maxTab = 8;
 			break;
 		default:
 			break;

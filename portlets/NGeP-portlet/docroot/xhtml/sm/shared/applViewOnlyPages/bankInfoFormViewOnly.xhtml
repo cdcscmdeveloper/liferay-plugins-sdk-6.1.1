@@ -155,13 +155,14 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.postcode}" /></td>
 					</tr>
 	
-					<tr>
+					<!-- <tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.isDesBank']}" /></td>
 						<td>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.defaultAccount}"/>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.selectedBank.defaultAccount}"/>
 						</td>
-					</tr>
+					</tr> -->
+					
 					<c:if test="#{viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'P' or viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'B'}">
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchLbl" /></td>
