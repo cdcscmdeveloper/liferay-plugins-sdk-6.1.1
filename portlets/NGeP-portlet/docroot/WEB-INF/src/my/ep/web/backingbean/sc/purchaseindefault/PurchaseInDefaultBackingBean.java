@@ -55,6 +55,7 @@ import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
 import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -142,15 +143,23 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
 					getManagedBean().setCheckContractItem(Boolean.TRUE);
 				}
-			}else if(vCmSupplierItem.getCircularNo() !=null){
+				 retrieveReasonDescListByCategory(true);
+			}else if(vCmSupplierItem.getCircularNo() != null){
 				// panel item 
-				PurchaseInDefaultReqDTO pidReqDTO = new PurchaseInDefaultReqDTO();
-				pidReqDTO.setPanelItemId(vCmSupplierItem.getDocId());
-				pidReqDTO.setFetchSubEntity(true);
-				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getPanelSupplierByPanelItem(pidReqDTO);
-				if(resDTO.getCtPanelItem()!=null) {
-					scPurchaseInDefault.setPanelItem(resDTO.getCtPanelItem());
+				PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+				FacesScopes facesScope = new FacesScopes();
+				Long userId = facesScope.getUserSessionBean().getUserId();
+				purchaseInDefaultReqDTO.setPanelItemId(vCmSupplierItem.getDocId());
+				purchaseInDefaultReqDTO.setFetchSubEntity(true);
+				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getPanelSupplierByPanelItem(purchaseInDefaultReqDTO);
+				CtPanelItem ctPanelItem = resDTO.getCtPanelItem();
+				if(ctPanelItem != null) {
+					scPurchaseInDefault.setPanelItem(ctPanelItem);
 					getManagedBean().setCheckContractItem(Boolean.FALSE);
+					purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
+					purchaseInDefaultReqDTO.setUserId(userId);
+					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getIsExceedMaxProcurementAmount(purchaseInDefaultReqDTO);
+				    retrieveReasonDescListByCategory(defaultResDTO.isExceedProcurementAmt());
 				}
 			}
 			scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
@@ -210,7 +219,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			getManagedBean().setvCmSupplierItem(vCmSupplierItem);
 			
 			initialInformation(scPurchaseInDefault);
-			retrieveReasonDescListByCategory();
 			
 			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 			// by default value as cheaper price
@@ -290,16 +298,19 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 				else if(scPurchaseInDefault.getPanelItem() != null) {
 					reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
-
-					int checkQty = Double.compare(scPurchaseInDefault.getQuantity().doubleValue() , scPurchaseInDefault.getPanelItem().getMinimumOrderQty());
-
+					int checkQty = 0;
+					
+					if(scPurchaseInDefault.getQuantity() != null){
+						checkQty = Double.compare(scPurchaseInDefault.getQuantity().doubleValue() , scPurchaseInDefault.getPanelItem().getMinimumOrderQty());
+					}
+                  /*
 					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
 						if(checkQty < 0) {
 							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
 						}
-					}
+					}*/
 					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_RI)){
 						if(checkQty > 0) {
 							throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
@@ -565,13 +576,34 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   return imageFileName;
    }
 
-   public void retrieveReasonDescListByCategory () {
+   public void retrieveReasonDescListByCategory (boolean isExceedProcAmt) {
 	   ReasonReqDTO reqDTO = new ReasonReqDTO();
 	   reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
 	   reqDTO.setLanguage("BM");
 	   IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	   ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
-	   getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
+
+	   List<PmReasonDesc>  pmReasonDescs = new ArrayList<PmReasonDesc>();
+	   if(resDTO.getReasonDescList() != null && resDTO.getReasonDescList().size()>0){
+
+		   if(isExceedProcAmt){
+			   getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
+		   } else {
+			   for (PmReasonDesc pmReasonDesc : resDTO.getReasonDescList()) {
+					   if(pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_OT)){
+						   pmReasonDescs.add(pmReasonDesc);   
+					   }
+
+					   if(pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_QR)){
+						   pmReasonDescs.add(pmReasonDesc);   
+					   }
+			   }
+		   }
+
+		   if(pmReasonDescs.size()>0){
+			   getManagedBean().setJustifications(getDropdownCodeValues(pmReasonDescs));  
+		   }
+	   }
 	   getManagedBean().setPmReason(resDTO.getReasonDescList().get(0).getPmReason());
    }
 
@@ -726,7 +758,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 						ScPIDRemark.class));
 
 		   initialInformation(purchaseInDefault);
-		   retrieveReasonDescListByCategory();
+		   retrieveReasonDescListByCategory(true);
 		   justificationTypeEvent();
 		   // title checker
 		   getManagedBean().setTitleChecker(Boolean.FALSE);

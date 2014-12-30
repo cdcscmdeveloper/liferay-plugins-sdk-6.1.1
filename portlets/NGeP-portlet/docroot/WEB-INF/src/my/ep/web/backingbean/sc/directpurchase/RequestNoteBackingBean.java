@@ -2006,7 +2006,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
-				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
+				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory(true);
 				purchaseInDefaultBackingBean.justificationTypeEvent();
 				
 				try {
