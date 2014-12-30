@@ -981,7 +981,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	public boolean isLetterGenerated() {
-		if (getManagedBean().getLoaId() != null && getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()  != null && 
+		if ((getManagedBean().getLoaId() != null || (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) && getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()  != null && 
 				getManagedBean().getAccountNo() != null && getManagedBean().getFactoring().getAuthRefNo() != null && 
 				getManagedBean().getFactoring().getEffDate() != null && getManagedBean().getFactoring().getExpDate() != null)
 			return true;

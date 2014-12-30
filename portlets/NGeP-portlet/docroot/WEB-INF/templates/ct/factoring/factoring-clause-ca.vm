@@ -16,7 +16,7 @@
 			<img src="$imgUrl" height="100" width="120"/>
 		</td>
 		<td>
-			<div>$supplierOfficerName</div>
+			<div>$supplierName</div>
 			<div>$supplierAddress</div>
 			<div>$telNo</div>
 			<div>$faxNo</div>
