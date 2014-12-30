@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchBean;
@@ -37,7 +37,7 @@ import org.primefaces.event.UnselectEvent;
  * 
  */
 @ManagedBean(name = "qTDeductionPaymentBackingBean")
-@ViewScoped
+@RequestScoped
 public class QTDeductionPaymentBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 	private static final Logger log = EpLogger
@@ -69,9 +69,9 @@ public class QTDeductionPaymentBackingBean extends
 				scQtDeduction.setScQtDeductionClauses(null);
 				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			} else {
-				ScQtDeduction deduction = new ScQtDeduction();
-				deduction.setDeductionType(new PmParameter());
-				this.getManagedBean().setSelectedScQtDeduction(deduction);
+				//ScQtDeduction deduction = new ScQtDeduction();
+				scQtDeduction.setDeductionType(new PmParameter());
+				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			}
 			this.getManagedBean().getScQtDeductionList().remove(index);
 			this.getManagedBean().getScQtDeductionList().add(index, this.getManagedBean().getSelectedScQtDeduction());

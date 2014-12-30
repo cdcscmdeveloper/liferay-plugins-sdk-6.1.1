@@ -39,13 +39,14 @@
 				<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 			</p:column>
 
-			<p:column headerText="Deduction Amount">
+			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}">
 				<h:panelGroup id="deductionamountid">
-					<p:inputText size="30" maxlength="18"
+					<p:inputText id="amtid" size="30" maxlength="18" required="true"
+						label="#{lbl['lbl.sc.deduction.amount']}"
 						value="#{scQtDeduction.deductionAmount}"
 						style="margin-right:5px;text-align:right;"
-						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
-					</p:inputText>
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" />
+					<p:message id="amtidMsg" for="amtid" display="icon" />
 				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
