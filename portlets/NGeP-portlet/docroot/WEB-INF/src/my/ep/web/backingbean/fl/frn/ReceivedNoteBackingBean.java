@@ -27,7 +27,6 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -345,6 +344,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			item.setReceivedQty(formattedReceivedQty);
 		}
 		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+		if(item.getReceivedQty().doubleValue() == item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+			receivedAmt = item.getFlDelOrderItem().getDeliveredAmt();
+		}
 		item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 	}
 	 

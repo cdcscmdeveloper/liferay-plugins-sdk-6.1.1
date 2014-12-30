@@ -503,6 +503,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
 		} else if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			delAmtCal = unitPriceCal.multiply(delQtyCal);
+			if(delQtyCal.doubleValue()==remainingQty.doubleValue()) { 
+				delAmtCal = itemAddress.getOrderedAmt().subtract(itemAddress.getSumDeliveredAmt()).add(itemAddress.getRejectedAmt());
+			}
 			itemAddress.setDeliveredAmt(delAmtCal.setScale(2, RoundingMode.HALF_UP));
 		}
 		
