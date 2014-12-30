@@ -457,14 +457,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			setClassName("@(.pmSummaryPnlClass)");
 		}
 		if(selectedTabIndex==3){
-			validateDuplicateDeduction();
+			validateDuplicateDeduction("");
 			validateDeductionAmt();
 			calPmSummary();
 			setClassName("@(.pmSummaryPnlClass)");
 		}
 		if(selectedTabIndex==4){
 			getNumberOfContractOrder();
-			validateDuplicateDeduction();
+			validateDuplicateDeduction("");
 			validateDeductionAmt();
 			recalculateAdvancePayment();
 		}
@@ -954,11 +954,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return getManagedBean().getPopulateDeductionList();
 	}
 	
-	public void validateDuplicateDeduction(){
+	public void validateDuplicateDeduction(String outcome){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		List<String> deductionList = new ArrayList<>();
 		deductionList.clear();
-
+		
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
 				ParameterReqDTO reqType = new ParameterReqDTO();
@@ -967,8 +967,24 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				reqType.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 				reqType.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				
+				List<FlPaymentDeduction> emptyDeductionList = new ArrayList<FlPaymentDeduction>();
 				for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
-					if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
+
+					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){//save function
+						if(deduction.getDeductionType().getParameterCode() == null && 
+								(deduction.getPmVotFund() == null || deduction.getPmVotFund().getVotFundCode() == null) &&
+								(deduction.getPmGlAccount() == null || deduction.getPmGlAccount().getGlAccCode() == null)){
+							emptyDeductionList.add(deduction);
+						}else if(deduction.getDeductionType().getParameterCode() == null){
+							throw new EpException(MessageConst.ERROR_740035);
+						}
+						if(deduction.getDeductionAmt() == null){
+							deduction.setDeductionAmt(new BigDecimal(0));
+						}
+					}else{
+						if(deduction.getDeductionType().getParameterCode() == null){
+							throw new EpException(MessageConst.ERROR_740035);
+						}
 
 						if(deduction.getDeductionType().getParameterId() == null){
 							throw new EpException(MessageConst.ERROR_740035);
@@ -1024,6 +1040,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 						}
 					}
 				}
+				getManagedBean().getPaymentAdvice().getFlPaymentDeduction().removeAll(emptyDeductionList);
+				emptyDeductionList.clear();
 			}
 		}
 	}
@@ -1071,7 +1089,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			validateDuplicateDeduction();
+			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
 				calPmSummary();
