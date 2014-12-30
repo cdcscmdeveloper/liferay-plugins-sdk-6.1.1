@@ -111,11 +111,21 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		List<PmZoneState> zones = new ArrayList<PmZoneState>();
 		PmZone zone = this.getManagedBean().getPmZone();
 		
+		log.info(".................zone.getRecordStatusFlg()="+zone.getRecordStatusFlg());
+		if (zone.getRecordStatusFlg() == 1) {//if changed to active	
+			
+				if (!checkZoneStateAvailability()){
+					this.getManagedBean().getPmZone().setRecordStatusFlg(0);//revert back to inactive
+					throw new EpException(MessageConst.ERROR_770151);
+
+				}
+	     	}
 		if (zone.isBrandNew()) {			
 			if (isExistZoneCode(getManagedBean().getPmZone().getZoneCode())) {
 				throw new EpException(MessageConst.ERROR_770138);
 
 			}
+		
 			zone.setZoneCode(zone.getZoneCode().toUpperCase());
 
 			List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
@@ -124,7 +134,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 				zoneSta.setPmZone(zone);
 
-			}
+		    }
+			
 			zones.addAll(stateZones);
 			zone.setPmZoneStates(zones);
 		}
@@ -334,9 +345,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		if (getManagedBean().getPmZonesList() != null
 				&& !getManagedBean().getPmZonesList().isEmpty())
 			for (PmZone zone : getManagedBean().getPmZonesList()) {
-				if (zone.getPmZoneStates() != null
+				if (zone.getRecordStatusFlg() ==1 && zone.getPmZoneStates() != null
 						&& !zone.getPmZoneStates().isEmpty()) {
-					for (PmZoneState zoneState : zone.getPmZoneStates()) {						
+					for (PmZoneState zoneState : zone.getPmZoneStates()) {	
 						stList.remove(zoneState.getPmState());
 						
 					}
@@ -399,4 +410,33 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			}
 		}
 	}
+	
+	public boolean checkZoneStateAvailability(){
+		log.info(".................checkZoneStateAvailability..............");
+		zoneList();
+		PmZone currentZone = getManagedBean().getPmZone();
+		List<PmState> assignedStates = new ArrayList<PmState>(); 
+		for (PmZone zone : getManagedBean().getPmZonesList()) {
+			if (zone.getZoneCode() != currentZone.getZoneCode() && zone.getRecordStatusFlg() ==1 && zone.getPmZoneStates() != null
+					&& !zone.getPmZoneStates().isEmpty()) {
+				for (PmZoneState zoneState : zone.getPmZoneStates()) {	
+					assignedStates.add(zoneState.getPmState());
+					
+				}
+			}
+	     }
+		for(PmState state:assignedStates){
+			log.info(".................state.getStateCode()="+state.getStateCode());
+		}
+		for(PmZoneState currentZoneState : getManagedBean().getZoneStateList()){
+			log.info(".................currentZoneState.getPmState()="+currentZoneState.getPmState());
+			log.info(".................assignedStates.contains(currentZoneState.getPmState()="+assignedStates.contains(currentZoneState.getPmState()));
+			if(assignedStates.contains(currentZoneState.getPmState())){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	
 }
