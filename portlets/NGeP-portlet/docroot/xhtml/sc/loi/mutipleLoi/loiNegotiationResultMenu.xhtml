@@ -10,7 +10,8 @@
 
 	<ui:define name="contentSection">
 	
-		<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info"/>
+		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
 				process="@all"

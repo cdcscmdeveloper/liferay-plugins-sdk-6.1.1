@@ -143,6 +143,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private boolean qtLoaEditFlag;
 	private StreamedContent streamedContent;
 	
+	private Long awardSupplierId;
+	
 	/**
 	 * @return the scQtEvaluationResult
 	 */
@@ -1133,6 +1135,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setStreamedContent(StreamedContent streamedContent) {
 		this.streamedContent = streamedContent;
+	}
+
+	/**
+	 * @return the awardSupplierId
+	 */
+	public Long getAwardSupplierId() {
+		return awardSupplierId;
+	}
+
+	/**
+	 * @param awardSupplierId the awardSupplierId to set
+	 */
+	public void setAwardSupplierId(Long awardSupplierId) {
+		this.awardSupplierId = awardSupplierId;
 	}
 	
 }
