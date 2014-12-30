@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.usergroup;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -12,21 +13,29 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -35,6 +44,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
 import my.ep.web.managedbean.pm.usergroup.UsergroupSearchBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -254,19 +264,91 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						throw new EpException(
 								"User already exists in the group ");
 				}
+
 				groupUser.setPmUser(pmUser);
 				groupUser.setPmUserGroup(this.getManagedBean().getUserGroup());
+				//retrieve pm user roles
+				groupUser.setPmUserRole(retrieveUserGroup(pmUser.getUserId()));
 				groupUsers.add(groupUser);
 			}
 		}
 		this.getManagedBean().setUserGroups(groupUsers);
 	}
 
+	private PmUserRole retrieveUserGroup(Long userId){
+		System.out.println("userId: " + userId);
+		IUserSO reqSO = null;
+		PmUserRole pmUserRole = null;
+		Date currentDate = new Date();
+		try{
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			SearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
+
+			// Filter By - user org info
+			searchBean
+					.getDataFilterBeans()
+					.add(new SearchFilterBean("pmUserOrg.effDate",
+							SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"pmUserOrg.expDate", 
+									SearchOperator.OPERATOR_GREATER_EQUAL.value(), 
+									currentDate),
+							new SearchFilterBean(
+									"pmUserOrg.expDate", 
+									SearchOperator.OPERATOR_IS_NULL.value(), 
+									null, 
+									SearchCondition.CONDITION_OR.value())));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmOrgProfile.orgProfileId", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							this.getManagedBean().getOrgProfileId()));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			//User id
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmUser.userId", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							userId));
+			
+			//Role Code
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmRole.roleCode", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							RoleCode.FL_APPROVER.value()));
+
+			
+			reqDTO.setUserRoleSearchBean(searchBean);
+			UserResDTO resDTO = reqSO.retrieveUserRoleBySearchBean(reqDTO);
+			if(resDTO.isSuccessful() && resDTO.getUserRoleList()!=null && !resDTO.getUserRoleList().isEmpty()){
+				System.out.println("not null");
+				System.out.println("pmUserOrg" +resDTO.getUserRoleList().size());
+				pmUserRole = resDTO.getUserRoleList().get(0);
+			}
+			
+		}finally{
+			reqSO = null;
+		}
+		return pmUserRole;
+	}
 	public void userListner() {
 		orgProfileId = this.getManagedBean().getUserGroup().getPmOrgProfile()
 				.getOrgProfileId();
 		this.getManagedBean().setOrgProfileId(orgProfileId);
-		System.out.println("orgProfileId :" + orgProfileId);
 		RequestContext.getCurrentInstance().update("usergrouping");
 	}
 
@@ -410,7 +492,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		orgProfileId = this.getManagedBean().getOrgProfileId();
 		if (null != orgProfileId) {
 			return "pmUserOrgs.pmOrgProfile.orgProfileId^" + orgProfileId + "|"
-					+ "pmUserOrgs.pmUserRoles.pmRole.roleCode^" + "FL_APPROVER";
+					+ "pmUserOrgs.pmUserRoles.pmRole.roleCode^" + RoleCode.FL_APPROVER.value();
 		}
 		return "";
 	}
