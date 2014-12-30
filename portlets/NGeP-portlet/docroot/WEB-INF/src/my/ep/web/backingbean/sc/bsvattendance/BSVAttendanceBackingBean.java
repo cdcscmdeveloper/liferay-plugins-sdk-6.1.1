@@ -13,6 +13,8 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
@@ -31,6 +33,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -194,7 +197,7 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * Method To call to save Briefing Site Visit Details
 	 */
-	public void submitBsvDetails() {
+	public String submitBsvDetails() {
 		List<ScQtBsv> bsvs = new ArrayList<ScQtBsv>();
 		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
 		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
@@ -245,6 +248,7 @@ public class BSVAttendanceBackingBean extends
 		}
 		// Code to check the whether need to submit or not..
 		IQTBriefingSO qTBriefingSO = null;
+		BriefingResDTO resDTO = null;
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
@@ -256,11 +260,28 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBsvDetails(bsvs);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
+			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700026,
+														new String[] { "Briefing and Site Visit" },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+
+			}
 		} finally {
 
 		}
-
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
 	/**
