@@ -188,53 +188,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				, null
 				, new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
 	}
-	
-	public void roleCheckLocal(){
-		log.info("roleCheckLocal");
-		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
-//			String tempRole = this.getManagedBean().getTempRole(); //TODO
-			if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
-				this.getManagedBean().setFilterOrg(false);
-			}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){ 
-				this.getManagedBean().setFilterOrg(true);
-				StringBuilder sb = new StringBuilder();
-				//parentId = orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
-					int count = 1;
-					for(PmUserOrg pmUserOrg: pmUserOrgs){
-						sb.append(pmUserOrg.getPmOrgProfile().getOrgProfileId());
-						if(count<pmUserOrgs.size()){
-							sb.append(",");
-						}
-						count++;
-					}
-				}
-				this.getManagedBean().setUserActiveOrgs(sb.toString());
-			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){ 
-				this.getManagedBean().setFilterOrg(true);
-				StringBuilder sb = new StringBuilder();
-				//parentId = parentOrg.orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
-					int count = 1;
-					for(PmUserOrg pmUserOrg: pmUserOrgs){
-						if(pmUserOrg.getPmOrgProfile().getParentOrgProfile()!=null){
-							sb.append(pmUserOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
-							if(count<pmUserOrgs.size()){
-								sb.append(",");
-							}
-						}
-						count++;
-					}
-				}
-				this.getManagedBean().setUserActiveOrgs(sb.toString());
-				
-			}
-		}
-		log.info("UserActiveOrgs: " + this.getManagedBean().getUserActiveOrgs());
-		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
-	}
+
 	
 	public void roleCheck(){
 		log.info("roleCheck");
