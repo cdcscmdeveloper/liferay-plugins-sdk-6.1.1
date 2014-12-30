@@ -42,15 +42,20 @@ public class EpViewHandlerWrapper extends ViewHandlerWrapper {
 	@Override
 	public void renderView(FacesContext context, UIViewRoot viewToRender)
 			throws IOException, FacesException {
+		
+		Long userId = null;
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			debugLogger("userId: " + pmUser.getUserId());
-
-			new LogKey(pmUser.getUserId());
-			// apply security filters.
-			SecurityFilterUtil.applyScreenFilters(viewToRender,
-					pmUser.getUserId(), EpPortletUtil.getDisplayPortletId());
+			userId = pmUser.getUserId();
+			
+			debugLogger("userId: " + userId);
+			
+			new LogKey(userId);
 		}
+		
+		// apply security filters.
+		SecurityFilterUtil.applyScreenFilters(viewToRender,
+				userId, EpPortletUtil.getDisplayPortletId());
 
 		super.renderView(context, viewToRender);
 	}
