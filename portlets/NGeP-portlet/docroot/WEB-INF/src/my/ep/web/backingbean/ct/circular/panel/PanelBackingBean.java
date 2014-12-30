@@ -112,6 +112,7 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
@@ -1746,5 +1747,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		else {
 			return getStatusDescById(circularVer.getStatus().getStatusId());
 		}
+	}
+	
+	public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}
+	
+	public String getCancelPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cancel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}
+	
+	public String getMaintenancePortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
 	}
 }

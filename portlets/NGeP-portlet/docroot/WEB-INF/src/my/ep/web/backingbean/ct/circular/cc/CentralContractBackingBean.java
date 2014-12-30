@@ -105,6 +105,7 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.cc.CentralContractManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -1181,4 +1182,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return getStatusDescById(circularVer.getStatus().getStatusId());
 		}
 	}
+	
+	public String getPortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}
+	
+	public String getMaintenancePortletTitle() {
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return portletTitle;
+	}	
 }

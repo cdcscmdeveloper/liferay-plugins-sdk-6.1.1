@@ -9,6 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<ui:define name="contentSection">
+		<script> $('#portlet_ctCcCircularMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('#{centralContractBackingBean.getMaintenancePortletTitle()}'); </script>
 	      <p:blockUI widgetVar="blkCentralSearchTable"  block=":form"   trigger="centralSearchId">  
 			      <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
 	      </p:blockUI> 	
