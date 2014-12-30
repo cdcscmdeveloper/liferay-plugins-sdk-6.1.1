@@ -996,8 +996,15 @@ public class EvaluationBackingBean extends
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
-					if (proposalCheckList.isScoringReq()) {
+					if (proposalCheckList
+							.getDefinationType()
+							.getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
 						localCheckList.add(proposalCheckList);
+					} else {
+						if (proposalCheckList.isScoringReq()) {
+							localCheckList.add(proposalCheckList);
+						}
 					}
 
 				}
