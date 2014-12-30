@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sc.supplierfinalization;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -844,6 +845,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			if (CollectionUtils.isEmpty(scQtRecommend.getAwardSupplierList())) {
 				scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
 			}
+			validateAwardOfItem(scQtRecommend);
 			
 			for(ScQtEvaluationResult evalResult : scQtRecommend.getAwardSupplierList()){
 				SmSupplier smSupplier = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier();
@@ -2667,7 +2669,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				if(scQtRecommend.getAwardSupplierList() == null){
 					scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
 				}
-				if(!scQtRecommend.getAwardSupplierList().contains(awardSupplier)){
+				if (!scQtRecommend.getAwardSupplierList().contains(awardSupplier)) {
 					if (scQtRecommend.getRecommendBy() == null) {
 						throw new EpException(MessageConst.ERROR_760211);
 					}
@@ -2677,7 +2679,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 							ParameterConst.RECOMMEND_BY_SINGLE_AWARD) &&
 							CollectionUtils.isNotEmpty(scQtRecommend.getAwardSupplierList())) {
 						throw new EpException(MessageConst.ERROR_760213);
-					}
+					}	
 					scQtRecommend.getAwardSupplierList().add(awardSupplier);
 					
 					List<ScQtEvaluationResult> shortlistedSupplierList = getManagedBean().getShortlistedSupplierList();
@@ -2721,8 +2723,30 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					}
 				}
 			}
-//			getManagedBean().getScQtFinalization().getScQtRecommends().addAll(selectedItemList);
 		}
+	}
+	
+	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
+		if (scQtRecommend.getRecommendBy() == null) {
+			throw new EpException(MessageConst.ERROR_760211);
+		}
+		if (StringUtils.equals(scQtRecommend.getRecommendByStr(), 
+				ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD) &&
+				CollectionUtils.isNotEmpty(scQtRecommend.getAwardSupplierList())) {
+			BigDecimal totalQuantity = scQtRecommend.getRequestItem().getQuantity();
+			BigDecimal tempQuantity = new BigDecimal(0.0);
+			for (ScQtEvaluationResult evalResult : scQtRecommend.getAwardSupplierList()) {
+				BigDecimal quantityAwarded = evalResult.getQtyAward();
+				if (quantityAwarded == null 
+						|| quantityAwarded.compareTo(totalQuantity) >= 0) {
+					throw new EpException(MessageConst.ERROR_760214);
+				}
+				tempQuantity = tempQuantity.add(quantityAwarded);
+			}
+			if (totalQuantity.compareTo(tempQuantity) != 0) {
+				throw new EpException(MessageConst.ERROR_760214);
+			}
+		}	
 	}
 	
 	public void selectSupplierDropDownEvent() {
