@@ -98,7 +98,7 @@
 				</p:outputPanel>	
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+			<p:column headerText="#{lbl['lbl.sc.quantity']}" style="text-align: right;">
 				<p:outputPanel id="quantityListTbl"  rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
 								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 					<div class="datalist-quantity">
@@ -106,13 +106,18 @@
 							var="qty"
 							value="#{item.awardSupplierList}">
 							<p:column>
-								<h:inputText value="#{qty.qtyAward}" maxlength="6" size="10"/>
+								<h:inputText value="#{qty.qtyAward}" maxlength="6" size="10" required="true" 
+											 style="text-align: right;" label="#{lbl['lbl.sc.quantity']}">
+									<p:ajax partialSubmit="true" process="@this" update="@this" />
+									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
+										maxIntegerDigits="10" max="#{item.requestItem.quantity}" />								
+								</h:inputText>
 							</p:column>
 						</p:dataList>
 					</div>
 				</p:outputPanel>
 				
-				<h:outputText value="#{item.requestItem.quantity}" 
+				<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;"
 					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
 							and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
 			</p:column>
