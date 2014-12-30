@@ -99,44 +99,42 @@ public class SecurityFilterUtil {
 		FacesScopes facesScope = new FacesScopes();
 		SecurityFiltersBean securityFiltersBean = getSecurityFiltersBean(facesScope);
 
-		if (userId != null) {
-			if (!StringUtils.isBlank(screenCode)) {
-				HashMap<String, Map<String, String>> authScreenFilters = securityFiltersBean
-						.getAuthScreenFilters();
-				if (!authScreenFilters.containsKey(screenCode)) {
-					IScreenRestrSO screenRestrictionSO = null;
-					try {
-						screenRestrictionSO = (IScreenRestrSO) BusinessDelegate
-								.getInstance().getServiceObject(
-										ModuleCodeConst.PROFILE_MANAGEMENT,
-										IScreenRestrSO.class);
-						ScreenRestrReqDTO requestDTO = new ScreenRestrReqDTO();
-						requestDTO.setScreenCode(screenCode);
-						requestDTO.setUserId(userId);
-						ScreenRestrResDTO screenRestrictionResDTO = screenRestrictionSO
-								.getFieldRestrValueData(requestDTO);
+		if (!StringUtils.isBlank(screenCode)) {
+			HashMap<String, Map<String, String>> authScreenFilters = securityFiltersBean
+					.getAuthScreenFilters();
+			if (!authScreenFilters.containsKey(screenCode)) {
+				IScreenRestrSO screenRestrictionSO = null;
+				try {
+					screenRestrictionSO = (IScreenRestrSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IScreenRestrSO.class);
+					ScreenRestrReqDTO requestDTO = new ScreenRestrReqDTO();
+					requestDTO.setScreenCode(screenCode);
+					requestDTO.setUserId(userId);
+					ScreenRestrResDTO screenRestrictionResDTO = screenRestrictionSO
+							.getFieldRestrValueData(requestDTO);
 
-						List<PmFieldRestrValue> fieldRestrValues = screenRestrictionResDTO
-								.getFieldRestrValues();
-						PmScreenRestr screenRestr;
-						HashMap<String, String> compMap = new HashMap<String, String>();
-						if (fieldRestrValues != null) {
-							for (PmFieldRestrValue fieldRestrData : fieldRestrValues) {
-								screenRestr = fieldRestrData.getPmScreenRestr();						
+					List<PmFieldRestrValue> fieldRestrValues = screenRestrictionResDTO
+							.getFieldRestrValues();
+					PmScreenRestr screenRestr;
+					HashMap<String, String> compMap = new HashMap<String, String>();
+					if (fieldRestrValues != null) {
+						for (PmFieldRestrValue fieldRestrData : fieldRestrValues) {
+							screenRestr = fieldRestrData.getPmScreenRestr();						
 
-								if (screenRestr != null) {
+							if (screenRestr != null) {
 
-									compMap.put(screenRestr.getComponentId(),
-											fieldRestrData.getAuthorisationType());
-								}
+								compMap.put(screenRestr.getComponentId(),
+										fieldRestrData.getAuthorisationType());
 							}
 						}
-
-						authScreenFilters.put(screenCode, compMap);
-
-					} finally {
-						screenRestrictionSO = null;
 					}
+
+					authScreenFilters.put(screenCode, compMap);
+
+				} finally {
+					screenRestrictionSO = null;
 				}
 			}
 		}
