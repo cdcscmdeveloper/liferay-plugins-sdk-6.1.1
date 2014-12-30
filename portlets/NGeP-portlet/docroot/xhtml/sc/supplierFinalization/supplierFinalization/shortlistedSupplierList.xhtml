@@ -149,7 +149,7 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.proposal.id']}" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
@@ -167,7 +167,7 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalNo}" />
+					<h:outputText value="#{shortlistedSupp.scQtProposal.supplierNo}" />
 				</p:column>
 				
 				<p:column>
@@ -180,15 +180,15 @@
 				</p:column>
 	
 				<p:column>
-					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi)}" />
+					<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}" />
 				</p:column>
 				
-				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}" />
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}"/>
 				</p:column>
 	
-				<p:column>
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" />
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}"/>
 				</p:column>
 	
 				<p:column>
