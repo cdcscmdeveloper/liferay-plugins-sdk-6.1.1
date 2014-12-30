@@ -84,7 +84,7 @@
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
 				style="width:15%">
-				<h:outputText value="#{panelItem.pmUom.uomId}" />
+				<h:outputText value="#{panelItem.pmUom.uomName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
@@ -94,9 +94,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
 				style="width:20%">
-
+				<h:outputText value="#{panelItem.maxProcureAmt}">
+				</h:outputText>
 			</p:column>
-          
+
 
 
 		</p:dataTable>
