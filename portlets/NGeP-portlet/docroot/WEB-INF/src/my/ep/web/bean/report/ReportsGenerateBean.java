@@ -4,20 +4,28 @@ package my.ep.web.bean.report;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.model.SelectItem;
+
+import my.ep.biz.dto.rpt.PMReportReqDTO;
+import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.rpt.PMReport;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -32,6 +40,8 @@ public class ReportsGenerateBean {
 	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();	
 	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
 	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
+	private List<String> stsLst = new ArrayList<String>();
+	private Object[] statusLst;
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
 				
@@ -2304,6 +2314,13 @@ public class ReportsGenerateBean {
 			this.levThreeCatLst = levThreeCatLst;
 		}
 		
+		/*public List<String> getStatusLst() {
+			return statusLst;
+		}
+		public void setStatusLst(List<String> statusLst) {
+			this.statusLst = statusLst;
+		}*/
+		
 		public void retrieveState(){
 			stateLst = new ArrayList<SelectItem>();		
 			IStateSO stateSO	=	(IStateSO)BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
@@ -2316,6 +2333,18 @@ public class ReportsGenerateBean {
 				selectItem.setValue(state.getStateId());
 				stateLst.add(selectItem);			
 			}
+		}
+		public List<String> getStsLst() {
+			return stsLst;
+		}
+		public void setStsLst(List<String> stsLst) {
+			this.stsLst = stsLst;
+		}
+		public Object[] getStatusLst() {
+			return statusLst;
+		}
+		public void setStatusLst(Object[] statusLst) {
+			this.statusLst = statusLst;
 		}
 		public void retrieveDistrict(String state){		
 			districtLst = new ArrayList<SelectItem>();		
@@ -2374,5 +2403,17 @@ public class ReportsGenerateBean {
 					levThreeCatLst.add(selectItem);			
 				}
 			}
+		}
+		public List<String> retriveStatus(){					
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+			StatusResDTO statusResDTO= reportSO.retriveStatus();
+			List<PmStatusDesc> stasLst = statusResDTO.getStatusDescList();
+			if (null != stasLst) {
+				statusLst=stasLst.toArray();
+				/*for (int i = 0; i < stasLst.size(); i++) {					
+					stsLst.add(stasLst.get(i)+"");				
+				}*/
+			}		
+			return stsLst;
 		}
 }

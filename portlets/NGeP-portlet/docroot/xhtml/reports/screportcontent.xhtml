@@ -53,7 +53,8 @@
 								   	<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scCommonStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scCommonStatus}" style="margin-top:5px;width:300px;">
-									<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>																									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+									<f:selectItems value="#{scReportBackingBean.managedBean.rptGenBean.statusLst}"></f:selectItems>																									
 									</p:selectOneMenu>
 								  </c:if>		
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scStatusView}">
@@ -95,8 +96,8 @@
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequisenerIdView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scRequisenerId}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.authoriztionList}"></f:selectItems>																																	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.userListbyprofileRole}"></f:selectItems>																																	
 									</p:selectOneMenu>
 								  </c:if>
 								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSoneStatusView}">
@@ -232,12 +233,12 @@
 								<TD>
 									<p:selectOneMenu value="#{reportBackingBean.scCreatedToMonth}" style="margin-top:5px;width:90px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>																																	
+										<f:selectItems value="#{reportBackingBean.scMonthList}" ></f:selectItems>																																	
 									</p:selectOneMenu>
 								</TD>				
 								<TD>
-									<p:selectOneMenu id="createDt" value="#{reportBackingBean.scCreatedToYear}" style="margin-top:5px;width:80px;">										
-										<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>																																
+									<p:selectOneMenu id="createDt" value="#{reportBackingBean.scCreatedToYear}"  disabled="true" style="margin-top:5px;width:80px;">										
+										<f:selectItems value="#{reportBackingBean.scYearList}"  ></f:selectItems>																																
 									</p:selectOneMenu>
 								</TD>
 							</TR>
