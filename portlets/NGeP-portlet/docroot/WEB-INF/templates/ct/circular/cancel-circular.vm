@@ -1,3 +1,8 @@
+<?xml version="1.0"?>
+
+<root available-locales="ms_MY" default-locale="ms_MY">
+ <static-content language-id="ms_MY"><![CDATA[<!--?xml version="1.0"?-->
+
 <html>
 
 <head>
@@ -32,7 +37,7 @@
 <table>
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Cancel Circular Req No.</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Cancel 1PP Req No.</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
@@ -49,12 +54,12 @@
 <table width='100%' style='font-size:11px;font-family: Albertus Medium;'>
 	#foreach( $cancelCircular in $cancelCircularList )
 	<tr>
-		<td style='width:100px;font-size:11px;font-family: Albertus Medium;'>Physical Circular No.</td>
+		<td style='width:100px;font-size:11px;font-family: Albertus Medium;'>Physical 1PP No.</td>
 		<td style='width:5px;'>:</td>
 		<td style='font-size:11px;font-family: Times New Roman;'>$cancelCircular.circularVer.circularNo</td>
 	</tr>
 	<tr>
-		<td style='width:100px;font-size:11px;font-family: Albertus Medium;'>Circular Name</td>
+		<td style='width:100px;font-size:11px;font-family: Albertus Medium;'>1PP Name</td>
 		<td style='width:5px;'>:</td>
 		<td style='font-size:11px;font-family: Times New Roman;'>$cancelCircular.circularVer.name<br/></td>
 	</tr>	
@@ -63,3 +68,6 @@
 
 </body>
 </html>
+
+]]></static-content>
+</root>

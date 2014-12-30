@@ -1,3 +1,8 @@
+<?xml version="1.0"?>
+
+<root available-locales="ms_MY" default-locale="ms_MY">
+ <static-content language-id="ms_MY"><![CDATA[<!--?xml version="1.0"?-->
+ 
 <html>
 
 <head>
@@ -61,3 +66,6 @@
 
 </body>
 </html>
+
+]]></static-content>
+</root>
