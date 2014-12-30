@@ -237,12 +237,24 @@ public class SmApplicationUtil {
 	public static boolean valiateNewCategoryAdded(
 			SmApplicationManagedBean managedBean) {
 		boolean addedNewCode = false;
-		for (SmSupplierCategory cat : managedBean.getSmAppl()
-				.getSmSupplierCategories()) {
-			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-				addedNewCode = true;
-				break;
+		if (managedBean.isSupplierUser()) {
+			if (managedBean.getSmAppl().getSmSupplierCategories() == null
+					|| managedBean.getSmAppl().getSmSupplierCategories()
+							.isEmpty()) {
+				addedNewCode = false;
+				throw new EpException(MessageConst.ERROR_722516);
+			}
+
+		}
+		if (!managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			for (SmSupplierCategory cat : managedBean.getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					addedNewCode = true;
+					break;
+				}
 			}
 		}
 
@@ -860,7 +872,7 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
-	public static boolean validateCategoriesBeforeSave(boolean validSave,
+	public static boolean validateCategoryOtherDesc(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
 		if (appl.getSmSupplierCategories() != null
@@ -877,6 +889,13 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+		return validSave;
+	}
+
+	public static boolean validateCategoriesBeforeSave(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab) {
+		SmAppl appl = managedBean.getSmAppl();
+		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 
 		if (managedBean.isSupplierUser()) {
 			if (appl.getSmSupplierCategories() == null
