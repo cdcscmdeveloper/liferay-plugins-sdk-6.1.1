@@ -24,7 +24,7 @@
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
-						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForUpdate,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
@@ -41,7 +41,7 @@
 						<div class="nav-wrapper">
 							<table>
 								<tr>
-									<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('5','4')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 											update=":form" /></td>
@@ -56,7 +56,7 @@
 						<div class="nav-wrapper">
 							<table>
 								<tr>
-									<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('5','4')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 											update=":form" /></td>

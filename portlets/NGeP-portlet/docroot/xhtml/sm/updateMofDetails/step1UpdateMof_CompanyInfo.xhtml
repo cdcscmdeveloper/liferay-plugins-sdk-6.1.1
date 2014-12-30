@@ -50,7 +50,7 @@
 						<tr>
 							<td></td>
 							<td><div align="right" style="width: 100%">
-									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{backingBean.setTabValue('0','1')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 										update=":form" />
