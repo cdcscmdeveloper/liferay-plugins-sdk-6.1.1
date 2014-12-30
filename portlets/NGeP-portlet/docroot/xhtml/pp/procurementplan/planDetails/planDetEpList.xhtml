@@ -82,19 +82,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  
 			<p:column selectionMode="multiple"  style="width:2%" />
 	        <p:column style="white-space:nowrap;">
-   				<ac:lov id="lovGOSO" lovId="PM_GOSO" size="10" update=":form:dtExpenditurePlan" 
+	        
+	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" update=":form:dtExpenditurePlan" 
    					disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
 			    	required="#{!empty param['disableValidation']}"
 	            	readonly="true" 
 					headerText="#{lbl['lbl.pp.goso.code']}"
-					value="#{epItem.pmSo.soCode}" 
-					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
+					value="#{epItem.pmGlAccount.glAccCode}" 
+					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmGlAccount"
 					conditionField="recordStatus^1" 
 				/>
-				<p:message id="lovGOSOMsg" for="lovGOSO" display="icon" />	 
+   		
+				<p:message id="lovGOSOMsg" for="lovGlAccount" display="icon" />	 
 	        </p:column>	 
 	        <p:column>
-		  		#{epItem.pmSo.soName}
+		  		#{epItem.pmGlAccount.description}
 	        </p:column>
 	        <p:column>
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
