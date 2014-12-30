@@ -20,11 +20,11 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		
+
 		<ui:param name="mandatoryflg" value="true" />
 		<ac:smPanel id="tt">
 			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
@@ -36,7 +36,8 @@
 										<!-- <h:outputText
 										value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab eq 0}" /> -->
-										<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
 											update=":form"
@@ -47,7 +48,8 @@
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 1}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.branchStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 											update=":form"
@@ -58,7 +60,8 @@
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.personStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 2}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 											update=":form"
@@ -68,7 +71,8 @@
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 3}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 											update=":form"
@@ -78,7 +82,8 @@
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 4}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.bankStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 											update=":form"
@@ -88,8 +93,9 @@
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5',SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME)}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
@@ -101,7 +107,9 @@
 											<li><h:outputText
 													value="#{lbl['lbl.sm.factoryStepLbl']}"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
-												<p:commandLink value="#{lbl['lbl.sm.factoryStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												<p:commandLink value="#{lbl['lbl.sm.factoryStepLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 													update=":form"
@@ -110,7 +118,9 @@
 											<li><h:outputText
 													value="#{lbl['lbl.sm.equipmentStepLbl']}"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
-												<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												<p:commandLink value="#{lbl['lbl.sm.equipmentStepLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 													update=":form"
@@ -119,7 +129,9 @@
 											<li><h:outputText
 													value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
-												<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 													update=":form"
@@ -131,7 +143,9 @@
 											<li><h:outputText
 													value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
-												<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 													update=":form"
@@ -205,12 +219,15 @@
 											<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
 												update=":form" onclick="mofApplDelConfirm.show()"
 												type="button" style="margin-bottom:5px;" />
-											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" style="margin-bottom:5px;" />
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-												<p:commandButton value="#{lbl['lbl.sm.submitForPay']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
 													action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 													style="margin-bottom:5px;" />
 											</c:if>
@@ -233,12 +250,16 @@
 												<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
 													update=":form" onclick="mofApplDelConfirm.show()"
 													type="button" style="margin-bottom:5px;" />
-												<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" style="margin-bottom:5px;" />
 												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-													<p:commandButton value="#{lbl['lbl.sm.submitPayment']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+													<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
+														onstart="blockWidget.show()"
+														oncomplete="blockWidget.hide()"
 														action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 														style="margin-bottom:5px;" />
 

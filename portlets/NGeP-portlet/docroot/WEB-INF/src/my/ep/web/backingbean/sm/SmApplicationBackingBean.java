@@ -153,6 +153,7 @@ public class SmApplicationBackingBean extends
 
 	private int currentTab;
 	private int outputTab;
+	private String buttonType = "";
 	private StreamedContent file;
 	NumberFormat formatter = new DecimalFormat("#0.00");
 
@@ -946,7 +947,18 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
-			valid = validateBeforeSave(applType, currentPageType);
+			log.info("****** Button type value ******** " + buttonType);
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)
+					&& (buttonType
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_PREV) || buttonType
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME))) {
+				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
+						getManagedBean(), currentTab);
+			} else {
+				valid = validateBeforeSave(applType, currentPageType);
+			}
+
 			// valid = true;
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
@@ -1377,7 +1389,14 @@ public class SmApplicationBackingBean extends
 		log.info(" ** For Suporting Docs END ** ");
 	}
 
+	public void setTabValue(int currentTab, int outputTab, String buttonType) {
+		log.info(" ***** Button type ***** " + buttonType);
+		this.buttonType = buttonType;
+		setTabValue(currentTab, outputTab);
+	}
+
 	public void setTabValue(int currentTab, int outputTab) {
+		System.out.println("**** SET TAB CALLED *******");
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
 
@@ -4466,7 +4485,13 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		if (getManagedBean().getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean()
+						.getSmAppl()
+						.getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			boolean validNewCatAdded = SmApplicationUtil
 					.valiateNewCategoryAdded(getManagedBean());
 			if (!validNewCatAdded) {
@@ -4668,7 +4693,14 @@ public class SmApplicationBackingBean extends
 				+ currentTab);
 		boolean valid = false;
 		try {
-			valid = validateBeforeSave(applType, currentPageType);
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
+						getManagedBean(), currentTab);
+			} else {
+				valid = validateBeforeSave(applType, currentPageType);
+			}
+
 			if (valid) {
 				valid = intializeSaveDraftBpm(currentPageType);
 			}

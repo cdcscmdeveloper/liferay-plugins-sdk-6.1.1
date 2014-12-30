@@ -335,6 +335,9 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
 	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
+	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
+	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
+	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
 
 	public static final String SM_MOF_CERT_SERIAL_SEQ = "SM_MOF_CERT_SERIAL_SEQ";
 	public static final String SM_MOF_465_SEQ = "SM_MOF_465_SEQ";
@@ -772,6 +775,18 @@ public class SupplierManagementConst {
 
 	public double getMAX_AMT_RANGE() {
 		return MAX_AMT_RANGE;
+	}
+
+	public String getSM_APPL_BUTTON_TYPE_PREV() {
+		return SM_APPL_BUTTON_TYPE_PREV;
+	}
+
+	public String getSM_APPL_BUTTON_TYPE_NEXT() {
+		return SM_APPL_BUTTON_TYPE_NEXT;
+	}
+
+	public String getSM_APPL_BUTTON_TYPE_SAME() {
+		return SM_APPL_BUTTON_TYPE_SAME;
 	}
 
 }
