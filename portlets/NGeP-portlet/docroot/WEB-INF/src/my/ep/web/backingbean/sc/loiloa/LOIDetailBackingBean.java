@@ -1873,7 +1873,18 @@ public class LOIDetailBackingBean extends
 		log.info(message);
 	}
 
-	public void getLoiLetterStreamContent() throws Exception {
+	public StreamedContent getLoiLetterStreamContent() throws Exception {
+
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
+		generateLoiLetterFromVelocityToPdf(getManagedBean().getScLoi(), (ScAttachment) pbAttachment);
+		StreamedContent pbStreamContent = getAttachmentStreamContent(
+				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+
+		return pbStreamContent;
+	}
+
+	public void previewLetter() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoi().getLoiNo());
