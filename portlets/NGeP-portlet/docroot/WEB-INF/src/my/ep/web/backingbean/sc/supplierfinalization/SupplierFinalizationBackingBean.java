@@ -113,6 +113,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
@@ -2372,12 +2373,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			itemize = true;
 			selectionMode = QTConstants.SF_MULTIPLE;
 			
-			List<ScQtRecommend> scQtRecommendList = scQtFinalization.getScQtRecommends();
+/*			List<ScQtRecommend> scQtRecommendList = scQtFinalization.getScQtRecommends();
 			if(scQtRecommendList != null && scQtRecommendList.size() > 0){
 				for(ScQtRecommend scQtRecommend : scQtRecommendList){
+					//scQtRecommend.setRecommendByStr(scQtRecommend.getRecommendBy().getParameterCode());
+					//log.info("Recommend By :: " + scQtRecommend.getRecommendBy().getParameterCode());
+					
 					scQtRecommend.setRecommendBy(null);
 				}
-			}
+			}*/
 		}else{
 			if(getManagedBean().getRecommendBy() == null){
 				getManagedBean().setRecommendBy("");
@@ -2432,6 +2436,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		debugLogger("itemRecommendByEvent");
 		
 		String recommendBy = scQtRecommend.getRecommendByStr();
+		if (StringUtils.isBlank(recommendBy)) {
+			return;
+		}
 		if(recommendBy.equals(ParameterConst.RECOMMEND_BY_AWARD) || recommendBy.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)){
 			//clear the list if more than 1
 			if(scQtRecommend.getAwardSupplierList() != null){
@@ -2647,7 +2654,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		//get the SmSupplier object by the dropdown selection
 		for(ScQtEvaluationResult evalResult : getManagedBean().getShortlistedSupplierList()){
 			String suppId = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId().toString();
-			if( suppId.equalsIgnoreCase(awardSupplierStr)){
+			if (suppId.equalsIgnoreCase(awardSupplierStr)) {
 				awardSupplier = evalResult;
 				break;
 			}
@@ -2655,12 +2662,22 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		//add the SmSupplier to the item selected
 		List<ScQtRecommend> selectedItemList = getManagedBean().getSelectedRecommendList();
-		if(selectedItemList != null){
+		if (CollectionUtils.isNotEmpty(selectedItemList)) {
 			for(ScQtRecommend scQtRecommend : selectedItemList){
 				if(scQtRecommend.getAwardSupplierList() == null){
 					scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
 				}
 				if(!scQtRecommend.getAwardSupplierList().contains(awardSupplier)){
+					if (scQtRecommend.getRecommendBy() == null) {
+						throw new EpException(MessageConst.ERROR_760211);
+					}
+					
+					// duplicate supplier validation for award type single
+					if (StringUtils.equals(scQtRecommend.getRecommendByStr(),
+							ParameterConst.RECOMMEND_BY_SINGLE_AWARD) &&
+							CollectionUtils.isNotEmpty(scQtRecommend.getAwardSupplierList())) {
+						throw new EpException(MessageConst.ERROR_760213);
+					}
 					scQtRecommend.getAwardSupplierList().add(awardSupplier);
 					
 					List<ScQtEvaluationResult> shortlistedSupplierList = getManagedBean().getShortlistedSupplierList();
@@ -2704,7 +2721,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					}
 				}
 			}
-			getManagedBean().getScQtFinalization().getScQtRecommends().addAll(selectedItemList);
+//			getManagedBean().getScQtFinalization().getScQtRecommends().addAll(selectedItemList);
 		}
 	}
 	
