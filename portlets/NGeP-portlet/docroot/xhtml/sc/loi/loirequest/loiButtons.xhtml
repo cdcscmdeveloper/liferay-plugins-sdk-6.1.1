@@ -14,7 +14,7 @@
 
 		<p:commandButton value="Preview Letter" icon="ui-icon-search" rendered="#{isPendingSubmissionStatus || isPendingNegotiation}"
 			process="@form" update="@all" partialSubmit = "true"
-			action="#{lOIDetailBackingBean.getLoiLetterStreamContent}"/>
+			action="#{lOIDetailBackingBean.previewLetter}"/>
 			
 					
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
