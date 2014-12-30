@@ -33,72 +33,72 @@
 				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
-						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
+						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderType}"
 						style="width: 314px;">
 						<f:selectItems
-							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+							value="#{flTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
 						<p:ajax event="change" update="searchPanel"
-							listener="#{flDocumentBackingBean.selectedOrderType}" />
+							listener="#{flTrackingDiaryBackingBean.selectedOrderType}" />
 					</p:selectOneMenu></td>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
 				<td><p:inputText size="28" maxlength="17" 
-						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
 			</tr>
 			<tr>
 			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
 			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
-						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						value="#{flTrackingDiaryBackingBean.managedBean.searchDocType}">
 						<f:selectItems
-							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
+							value="#{flTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
 						<p:ajax event="change"
-							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
-							listener="#{flDocumentBackingBean.selectedDoctype}" />
+							update="docStatusSearch"
+							listener="#{flTrackingDiaryBackingBean.selectedDoctype}" />
 					</p:selectOneMenu></td>
-			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
 			<td><p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
+						value="#{flTrackingDiaryBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
 						</tr>
 			</table>
 			<h:panelGroup id="docStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
 					<p:selectOneMenu id="statusId"
-						value="#{flDocumentBackingBean.managedBean.statusDescId}"
+						value="#{flTrackingDiaryBackingBean.managedBean.statusDescId}"
 						style="width: 314px;">
-						<f:selectItems value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
+						<f:selectItems value="#{flTrackingDiaryBackingBean.getStatusDropdownValues('FL',flTrackingDiaryBackingBean.managedBean.searchDocType)}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
 				<p:inputText size="45"
-					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
+					value="#{flTrackingDiaryBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGroup id="docDoStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
+					rendered="#{flTrackingDiaryBackingBean.managedBean.checkDoDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
 					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
+						value="#{flTrackingDiaryBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
 				</h:panelGrid>
 			</h:panelGroup>
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{flTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					icon="ui-icon-search" update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
+					action="#{flTrackingDiaryBackingBean.reset}" icon="ui-icon-reset"
 					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
-				width="100%" rows="10">
-
-				<ac:paginator for="unspscTableID"></ac:paginator>
+			<p:dataTable id="flDocListDt"
+				value="#{flTrackingDiaryBackingBean.managedBean.flDocumentDataModel}" lazy="true"
+				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
+				width="100%">
+				<ac:paginator for="flDocListDt" />
 
 				<p:column width="15%">
 					<f:facet name="header">
