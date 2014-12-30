@@ -13,6 +13,11 @@
 	<ui:define name="contentSection">
 		<p:messages id="defUpdateMofApplMsgs" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" />
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<table style="width: 100%">
 			<tr>
 				<td style="padding-left: 4px;"><p:outputPanel>
@@ -39,7 +44,8 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="updCmdBtn"
 				action="#{backingBean.proceedToApplication('U')}"
-				disabled="#{!backingBean.managedBean.termsAccepted}" />
+				disabled="#{!backingBean.managedBean.termsAccepted}" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			<!-- <p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->
 		</div>
