@@ -29,7 +29,7 @@
 						update="@form" />
 
 					<c:if
-						test="#{((evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2') or(evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and  evaluationBackingBean.managedBean.complianceActiveIndex eq '3') or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '1')or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2'))}">
+						test="#{((evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and evaluationBackingBean.managedBean.complianceActiveIndex eq '3') or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
 							action="#{evaluationBackingBean.retriveComplianceSummary}"
 							update="@form">
@@ -46,7 +46,7 @@
 				</c:if> <ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
 					<c:if
-						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
 
 						<ui:include src="complianceSample.xhtml"></ui:include>
 
