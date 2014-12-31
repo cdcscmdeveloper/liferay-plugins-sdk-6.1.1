@@ -137,10 +137,10 @@
 							listener="#{contractRequestBackingBean.updateDeliveryDate}"
 							update="delEndDate" />
 					</p:calendar></td>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
-				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.mto}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
+					<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
+					</p:inputText>
+					</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
@@ -154,7 +154,13 @@
 						<p:ajax event="dateSelect"
 							listener="#{contractRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
+				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.mto}"
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
+			</tr>
+			<tr>
+				<td colspan="4"><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
