@@ -8,13 +8,27 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	
+	<script type="text/javascript">
+	
+		function updateEpFooter(){
+			document.getElementsByClassName('gtBudgetAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtBudgetAmt')[0].value;
+			document.getElementsByClassName('gtPlanAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtPlanAmt')[0].value;
+			document.getElementsByClassName('gtNonAllocAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtNonAllocAmt')[0].value;
+			
+		}
+			
+ 	</script>
 	<p:outputPanel id="opPlanEp">
 	<br/>
+		<p:inputText style="display:none" id="hiddenGtBudgetAmt" styleClass="hiddenGtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}"/>
+		<p:inputText style="display:none" id="hiddenGtPlanAmt" styleClass="hiddenGtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}"/>
+		<p:inputText style="display:none" id="hiddenGtNonAllocAmt" styleClass="hiddenGtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}"/>
+
 	   	<p:dataTable id="dtExpenditurePlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
 		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
 		     rowIndexVar="index" rowKey="#{epItem}">
-
+		
 	    	<p:columnGroup type="header">
 				<p:row>
 				 	<p:column selectionMode="multiple"  style="width:2%" />
@@ -100,10 +114,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
-		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}"
+		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}" 
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-		  				update="dtExpenditurePlan" />
+		  				update=":form:hiddenGtBudgetAmt, :form:hiddenGtNonAllocAmt" oncomplete="updateEpFooter();" 
+		  				 />
 		  		</p:inputText>
 		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
 	        </p:column>
@@ -112,7 +127,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-		  				update="dtExpenditurePlan"  />
+		  				update=":form:hiddenGtPlanAmt, :form:hiddenGtNonAllocAmt" oncomplete="updateEpFooter();"   />
 		  		</p:inputText>
 		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
@@ -174,17 +189,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-				     		<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" />
+				     		<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" styleClass="gtBudgetAmt"  />
 					    </f:facet>
 					</p:column>
 					<p:column>
 					 	<f:facet name="footer">
-					     	<p:outputLabel id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}" />
+					     	<p:outputLabel id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}" styleClass="gtPlanAmt" />
 					    </f:facet>
 					</p:column>
 					 <p:column>
 					 	<f:facet name="footer">
-					     	<p:outputLabel id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}" />
+					     	<p:outputLabel id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}" styleClass="gtNonAllocAmt"  />
 					    </f:facet>
 					</p:column>
 					<p:column>
