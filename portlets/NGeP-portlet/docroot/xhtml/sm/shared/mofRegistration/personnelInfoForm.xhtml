@@ -473,7 +473,7 @@
 								rendered="#{person.contractSignerFlg eq 1}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or ((person.equityOwner or person.director) and backingBean.managedBean.disAllowOwnerEdit)}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
 							<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form"
