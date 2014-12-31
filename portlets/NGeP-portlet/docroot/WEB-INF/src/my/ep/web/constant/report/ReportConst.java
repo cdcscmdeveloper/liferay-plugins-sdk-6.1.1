@@ -63,6 +63,8 @@ public class ReportConst {
 	public static final String SC_PRICE_SCHEDULE_OR_RPT_VAL = "SC_043";
 	public static final String SC_LETTER_OF_ACCPT_OR_RPT_VAL = "SC_044";
 	public static final String SC_COMMITTEE_DTLS_TD_RPT_VAL = "SC_045";
+	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
+	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	
 	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
 	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
