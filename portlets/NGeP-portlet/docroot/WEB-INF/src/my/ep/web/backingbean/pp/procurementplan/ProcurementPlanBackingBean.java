@@ -42,10 +42,10 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
-import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
@@ -1132,7 +1132,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			int size = this.getManagedBean().getSelectedPlan().getPpExpenditureItems().size();
 //			PpExpenditureItem epItem = this.getManagedBean().getSelectedPlan().getPpExpenditureItems().get(size-1);
 			for(PpExpenditureItem epItem: this.getManagedBean().getSelectedPlan().getPpExpenditureItems()){
-				if(epItem.getPmSo().getSoId()==null){
+				if(epItem.getPmGlAccount().getGlAccountId()==null){
 					throw new EpException(MessageConst.ERROR_730003);
 				}
 				if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
@@ -1151,7 +1151,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						throw new EpException(MessageConst.ERROR_730007);
 					}
 				}
-				soIds.add(epItem.getPmSo().getSoId());
+				soIds.add(epItem.getPmGlAccount().getGlAccountId());
 			}
 			if(!soIds.isEmpty()){
 				Set<Long> soIdSet = new HashSet<Long>(soIds);
@@ -1163,7 +1163,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 
 		PpExpenditureItem epItem = new PpExpenditureItem();
-		epItem.setPmSo(new PmSo());
+		epItem.setPmGlAccount(new PmGlAccount());
 		epItem.setEditable(true);
 		this.getManagedBean().getSelectedPlan().addPpExpenditureItems(epItem);
 
@@ -1897,7 +1897,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				throw new EpException(MessageConst.ERROR_730019);
 			}
 			for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
-				if(epItem.getPmSo().getSoId()==null){
+				if(epItem.getPmGlAccount().getGlAccountId()==null){
 					throw new EpException(MessageConst.ERROR_730003);
 				}
 				if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
