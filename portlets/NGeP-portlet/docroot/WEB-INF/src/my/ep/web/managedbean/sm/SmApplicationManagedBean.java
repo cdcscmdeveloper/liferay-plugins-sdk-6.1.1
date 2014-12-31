@@ -325,6 +325,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showPersonnelViewOnly;
 	private boolean disabledShareholderPersonnelNameAndNationality;
 	private String selectedShareholderIdentificationType;
+	private String revisionApplType;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2490,5 +2491,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDisabledShareholderPersonnelNameAndNationality(
 			boolean disabledShareholderPersonnelNameAndNationality) {
 		this.disabledShareholderPersonnelNameAndNationality = disabledShareholderPersonnelNameAndNationality;
+	}
+
+	public String getRevisionApplType() {
+		return revisionApplType;
+	}
+
+	public void setRevisionApplType(String revisionApplType) {
+		this.revisionApplType = revisionApplType;
 	}
 }
