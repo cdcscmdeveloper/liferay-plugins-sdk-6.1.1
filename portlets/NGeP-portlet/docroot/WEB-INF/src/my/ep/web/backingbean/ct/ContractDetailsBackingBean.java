@@ -964,7 +964,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 		 
 			if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) 
-					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
+					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 
 				if(getManagedBean().getCtContract().isFrequencySchedule()){
 					getManagedBean().getContractVer().setCtProgressivePayments(null);
