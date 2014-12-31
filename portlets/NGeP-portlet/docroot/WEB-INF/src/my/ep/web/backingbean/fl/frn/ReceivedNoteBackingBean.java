@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.frn;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -327,6 +328,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
 				getManagedBean().getFulfilmentNote().setReceivedDate(getCurrentDate());
 			}
+			if(null == getManagedBean().getFulfilmentNote().getCreatedDate()){
+				getManagedBean().getFulfilmentNote().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			}		
+			if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
+				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
+				getManagedBean().getFulfilmentNote().setSubmissionDate(getCurrentDate());
+			}			
 		}
 	}
 	
