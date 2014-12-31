@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -77,7 +78,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmAppl basicSmAppl;
 	private String noSupplierUserMsg;
 	private SmPersonnel selectedPersonnelToReassign;
-	
+	private SmSupplier smSupplier;
+
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -419,7 +421,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	}
 
 	public PmParameter getAdminVerifyIdType() {
-		if(adminVerifyIdType == null)
+		if (adminVerifyIdType == null)
 			adminVerifyIdType = new PmParameter();
 		return adminVerifyIdType;
 	}
@@ -429,7 +431,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	}
 
 	public String getAdminVerifyICNo() {
-		if(adminVerifyICNo == null)
+		if (adminVerifyICNo == null)
 			adminVerifyICNo = "";
 		return adminVerifyICNo;
 	}
@@ -439,7 +441,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	}
 
 	public List<SelectItem> getAssignList() {
-		if(assignList == null)
+		if (assignList == null)
 			assignList = new ArrayList<SelectItem>();
 		return assignList;
 	}
@@ -528,6 +530,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setDisabledActivateAndDeactivate(
 			boolean disabledActivateAndDeactivate) {
 		this.disabledActivateAndDeactivate = disabledActivateAndDeactivate;
+	}
+
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
 	}
 
 }
