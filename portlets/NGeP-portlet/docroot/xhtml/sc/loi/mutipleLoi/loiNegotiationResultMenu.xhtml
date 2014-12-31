@@ -17,16 +17,16 @@
 				process="@all"
 				partialSubmit="true"
 				update="@form"
-				action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
+				action="#{lOIDetailBackingBean.saveMultipleLoiAction}"
 				icon="ui-icon-save" />
 					
-			<ui:repeat var="bpmAction" value="#{suppFinalizationBackingBean.managedBean.outComes}">
+			<ui:repeat var="bpmAction" value="#{lOIDetailBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								
 				<p:commandButton value="#{lbl[buttonLabel]}"  
 					styleClass="ui-button"
 					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
+					action="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(bpmAction)}"
 					partialSubmit="true"
 					process="@form"
 					update="@form" />
@@ -43,20 +43,32 @@
 						style="display : table-caption;">
 						
 						<p:menuitem value="#{lbl['lbl.sc.result.of.negotation']}"
-							action="#{lOIDetailBackingBean.retrieveResultNegotiation}"
-							process="@form" update="@form" />
+							process="@form" update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
 							
 						<p:menuitem value="#{lbl['lbl.sc.negotation.committee']}"
-							action="#{lOIDetailBackingBean.retrieveNegotiationCommitteeDtls}"
-							process="@form" update="@form" />
+							process="@form" update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
 							
 						<p:menuitem value="#{lbl['lbl.sc.recommendation']}"
-							action="#{lOIDetailBackingBean.retrieveMultipleLoiRecommendation}"
-							process="@form" update="@form" />
+							process="@form" update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
 							
 						<p:menuitem value="#{lbl['lbl.sc.report']}"
-							action="#{lOIDetailBackingBean.retrieveReport}"
-							process="@form" update="@form" />
+							process="@form" update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
 					</p:tabMenu>
 				</td>
 				
