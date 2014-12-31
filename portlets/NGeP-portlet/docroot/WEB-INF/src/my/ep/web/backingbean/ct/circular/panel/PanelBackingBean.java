@@ -468,6 +468,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			    }if(getManagedBean().getSearchStartDate()==null && getManagedBean().getSearchEndDate()!=null) {
 			        searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getSearchEndDate()));	
 			    }
+			    
+			    if(getManagedBean().getSearchStatusId()!=null) {
+					//Filter out cancelled status
+					if(getManagedBean().getSearchStatusId().longValue() == ContractStatusConst.PQ_APPROVED || 
+							getManagedBean().getSearchStatusId().longValue() == ContractStatusConst.PQ_REJECTED)
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_NOT_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
+					//display cancelled circular
+					else if(getManagedBean().getSearchStatusId().longValue() == 0L)
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
+				}					
 				
 			    CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
@@ -1172,12 +1182,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
 			
 		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
-		    items = new SelectItem[list.size()+1];
+		    items = new SelectItem[list.size()+2];
 		    items[0] = new SelectItem(null, "- Select One -");
 		      
 			for(PmStatusDesc statusDesc : list) {
 				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
 			}
+			items[i++] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.ct.panel.circular.canceled", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
