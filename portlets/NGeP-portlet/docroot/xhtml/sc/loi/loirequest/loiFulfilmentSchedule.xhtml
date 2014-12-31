@@ -18,7 +18,7 @@
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
-					<p:inputText disabled="#{!isEditableStatus}"
+					<p:inputText disabled="#{!isEditableStatus}" styleClass="ppNumericAlign"
 						value="#{lOIDetailBackingBean.managedBean.totalFrequency}">
 						<p:ajax event="blur" update="frequencySchedule"
 							partialSubmit="true" process="@this"
@@ -82,10 +82,9 @@
 					</p:column>
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
-						style="width:10%">
+					    style="width:15%; text-align: right;">
 						<h:panelGroup id="scheduleDetails">
-							<h:outputText style="text-align:right"
-								value="#{frequency.totalMonths}"></h:outputText>
+							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
 						</h:panelGroup>
 					</p:column>
 
