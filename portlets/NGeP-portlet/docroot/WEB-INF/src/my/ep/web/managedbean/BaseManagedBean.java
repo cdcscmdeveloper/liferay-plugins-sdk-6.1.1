@@ -19,6 +19,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String title;
 	private Long currentStatusId;
 	private String taskName;
+	private int postCodeMyMaxLength;
+	private int postCodeForeignMaxLength;
 
 	public String getTaskName() {
 		return taskName;
@@ -80,6 +82,22 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setCurrentStatusId(Long currentStatusId) {
 		this.currentStatusId = currentStatusId;
+	}
+
+	public int getPostCodeMyMaxLength() {
+		return postCodeMyMaxLength;
+	}
+
+	public void setPostCodeMyMaxLength(int postCodeMyMaxLength) {
+		this.postCodeMyMaxLength = postCodeMyMaxLength;
+	}
+
+	public int getPostCodeForeignMaxLength() {
+		return postCodeForeignMaxLength;
+	}
+
+	public void setPostCodeForeignMaxLength(int postCodeForeignMaxLength) {
+		this.postCodeForeignMaxLength = postCodeForeignMaxLength;
 	}
 
 }
