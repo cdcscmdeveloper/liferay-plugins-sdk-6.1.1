@@ -68,13 +68,15 @@
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mto']}"/></td>	
 						
 			</tr>
-			<tr><td style="width: 145px;"></td>
-			<td></td>
-			<td><p:outputLabel
-									value="#{lbl['lbl.fl.dan.factored']}" /></td>
-						<td><p:selectBooleanCheckbox disabled="true"
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}" /></td>
+				<td><p:inputText disabled="true" size="45" value="#{paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.fulfillmentType)}" 
+				rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
+				<td><p:selectBooleanCheckbox disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
-									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>	</tr>
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>	
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.payment.match.payment.desc']}" toggleable="true">
