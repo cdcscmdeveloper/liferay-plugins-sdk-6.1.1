@@ -333,14 +333,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			list.removeAll(toBeRemovedList);
 		}
 	}
-	
-	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
+
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(
+			List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
 		}
 		try {
 			if (list != null) {
-				if(markDeletedList == null){
+				if (markDeletedList == null) {
 					markDeletedList = new ArrayList<ENTITY_CLASS>();
 				}
 
@@ -362,7 +363,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		}
 	}
-	
 
 	/**
 	 * Create search bean.
@@ -834,5 +834,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			output = StringUtils.replace(input, "&", "&#38;");
 		}
 		return output;
+	}
+
+	public int getPostCodeMaxLength(String countryCode) {
+		if (countryCode != null && countryCode.equals("MY")) {
+			return 5;
+		}else{
+			return 10;
+		}
 	}
 }
