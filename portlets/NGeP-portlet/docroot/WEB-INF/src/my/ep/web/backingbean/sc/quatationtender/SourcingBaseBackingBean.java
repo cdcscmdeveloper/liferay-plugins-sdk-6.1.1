@@ -80,6 +80,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -980,6 +981,44 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 		return isDate;
+	}
+	
+	public String getUserRoleCode() {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(RoleCode.GOVT_SELLER.toString());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.toString());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.toString());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.toString());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.toString());
+		roleCodes.add(RoleCode.REQUISITIONER.toString());
+		roleCodes.add(RoleCode.RN_APPROVER.toString());
+		roleCodes.add(RoleCode.CT_APPROVER.toString());
+		roleCodes.add(RoleCode.BPK_APPROVER.toString());
+		
+		String roleCode = null;
+		
+		List<String> pmRoleCodes = new ArrayList<String>();
+		
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
+			}
+			
+			for(String role : roleCodes) {
+				if(pmRoleCodes.contains(role)) {
+					roleCode = role;
+					break;
+				}
+			}
+		}
+		return roleCode;
 	}
 
 }

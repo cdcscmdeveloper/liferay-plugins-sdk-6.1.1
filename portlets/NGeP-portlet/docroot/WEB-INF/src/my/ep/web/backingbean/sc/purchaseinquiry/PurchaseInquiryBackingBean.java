@@ -535,6 +535,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		    	requestNote.setRequestNoteDtls(requestNoteDtls);
 		    	String token = facesScopes.getBPMAuthenticationCtxToken();
 		    	reqDTO.setToken(token);
+		    	reqDTO.setPmUser(facesScopes.getUserSessionBean());
+		    	reqDTO.setRoleCode(getUserRoleCode());
 		    	reqDTO.setPrInquiryDetail(prInquiry);
 		    	reqDTO.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
 		    	reqDTO.setRequestNote(requestNote);
@@ -576,6 +578,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			   reqDTO.setPrInquiryDetail(prInquiry);
 			   FacesScopes facesScopes = new FacesScopes();
 			   String token = facesScopes.getBPMAuthenticationCtxToken();
+			   reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			   reqDTO.setRoleCode(getUserRoleCode());
 			   reqDTO.setToken(token);
 			   reqDTO.setOutcome(outcome);
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -762,6 +766,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			reqDTO.setPrInquiryDetail(prInquiry);
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
