@@ -91,6 +91,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate;
 	private String textBeforeSign;
+	private String taskName;
 
 	public boolean isUpdateAction() {
 		return updateAction;
@@ -361,5 +362,11 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
+	}
+	public String getTaskName() {
+		return taskName;
+	}
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 }
