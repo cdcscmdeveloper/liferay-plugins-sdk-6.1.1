@@ -1885,6 +1885,7 @@ public class QTDetailBackingBean extends
 					if (null == scQt.getScQtSupplierCriteria()) {
 						this.getManagedBean().setSupplierCriteria(
 								new ScQtSupplierCriteria());
+						this.getManagedBean().getSupplierCriteria().setScQt(scQt);
 					} else {
 						this.getManagedBean().setSupplierCriteria(
 								scQt.getScQtSupplierCriteria());
