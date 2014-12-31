@@ -102,7 +102,7 @@
 				<p:outputPanel id="quantityListTbl"  rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
 								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 					<div class="datalist-quantity">
-						<p:dataList 
+						<ui:repeat 
 							var="qty"
 							value="#{item.awardSupplierList}">
 							<p:column>
@@ -113,7 +113,7 @@
 										maxIntegerDigits="10" max="#{item.requestItem.quantity}" />								
 								</h:inputText>
 							</p:column>
-						</p:dataList>
+						</ui:repeat>
 					</div>
 				</p:outputPanel>
 				
