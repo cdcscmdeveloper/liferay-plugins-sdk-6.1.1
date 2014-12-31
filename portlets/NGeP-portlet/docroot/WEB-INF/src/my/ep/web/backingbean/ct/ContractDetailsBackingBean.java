@@ -972,10 +972,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					getManagedBean().getContractVer().setCtSchedules(null);  	
 				}
 
-				if((contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2) && getManagedBean().getCtContract().isFrequencySchedule()) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750022);
-
+				if(getManagedBean().getCtContract().isFrequencySchedule()) {
+			           	if(contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2) {
+					          RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					          throw new EpException(MessageConst.ERROR_750022);
+			           	}
+			           	
+			           	for(CtSchedule schedules : contractVer.getCtSchedules()){
+			           		    if(schedules.getStartMonth() == null) {
+			           			      RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			           			  	  throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule start date"});
+			    				  }
+			           	
+			           		    if(schedules.getEndMonth() == null) {
+			           			     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			           			  throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule end date"});
+			           		    }
+			             }     	
 				} else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750022);
@@ -994,6 +1007,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 							RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 							throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
 						}
+						
+						    if(progressivePayment.getStartMonth() == null) {
+		           			      RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+		           			  	  throw new EpException(MessageConst.ERROR_100022, new String[] { "Progressive payment start date"});
+		    				  }
+		           	
+		           		    if(progressivePayment.getEndMonth() == null) {
+		           			     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+		           			  throw new EpException(MessageConst.ERROR_100022, new String[] { "Progressive payment end date"});
+		           		    }     	
 					}
 					int value = Float.compare(percentage,100);
 					if(value != 0) {
