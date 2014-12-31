@@ -88,6 +88,7 @@ public class SmPersonnelBackingBean extends
 
 	public void preRenderSmPersonnel() {
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		getManagedBean().setSmSupplier(smSupplier);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
@@ -1083,7 +1084,8 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 
-		getManagedBean().setDisableAddNewUser(validatePersonLimit(null));
+		getManagedBean().setDisableAddNewUser(
+				validatePersonLimit(getManagedBean().getSmSupplier()));
 
 	}
 
