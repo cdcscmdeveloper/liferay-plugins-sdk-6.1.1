@@ -145,7 +145,7 @@
 		</h:panelGrid>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true" rendered="false">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;">
@@ -153,7 +153,7 @@
 				</td>
 				
 				<td class="TableFieldRight">
-					<p:dataGrid var="remarkVar" value="#{lOIDetailBackingBean.managedBean.qtCommitteeRemarks}"
+					<p:dataGrid var="remarkVar" value="#{lOIDetailBackingBean.managedBean.scQtCommittee.qtCommitteRemarks}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>

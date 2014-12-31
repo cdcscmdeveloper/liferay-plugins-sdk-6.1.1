@@ -89,7 +89,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -310,7 +311,7 @@ public class LOIDetailBackingBean extends
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
 			getManagedBean().setPayLoadData(awardDataType);
 			
-			retrieveMultipleLoiDtls(sourceId, awardDataType.getGroupkeyList());
+			retrieveMultipleLoiDtls(sourceId, "PBA", awardDataType.getGroupkeyList());
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
@@ -319,13 +320,14 @@ public class LOIDetailBackingBean extends
 		} 
 	}
 	
-	private void retrieveMultipleLoiDtls(Long qtId, List<String> recommendDtlIds) {
+	private void retrieveMultipleLoiDtls(Long qtId, String committeeType, List<String> recommendDtlIds) {
 		IQTAwardSO qtAwardSO;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
+			reqDTO.setCommitteeType(committeeType);
 			reqDTO.setRecommendDtlIdList(recommendDtlIds);
 			
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveMultipleLoiDtls(reqDTO);
@@ -342,6 +344,20 @@ public class LOIDetailBackingBean extends
 					}
 				}
 				
+				// Committee Details
+				ScQtCommittee scQtCommittee = resDTO.getScQtCommittee();
+				getManagedBean().setEcActivityList(resDTO.getEcActivityList());
+				getManagedBean().setTecActivityList(resDTO.getTecActivityList());
+				getManagedBean().setFecActivityList(resDTO.getFecActivityList());
+				getManagedBean().setScQtCommittee(scQtCommittee);
+				scQtCommittee.setQtCommitteRemarks(initializeRemarks(
+						scQtCommittee, 
+						null,
+						scQtCommittee.getQtCommitteRemarks(),
+						ScQtCommitteRemarks.class));
+				
+				// LOI Reports
+				getManagedBean().setScLoiReports(resDTO.getScLoi().getScLoiReports());
 
 				// status
 				getCurrentStatus(getManagedBean().getCurrentStatusId());
@@ -1773,6 +1789,7 @@ public class LOIDetailBackingBean extends
 			iqtAwardSO = null;
 		}
 	}
+	
 	/**
 	 * @param action
 	 * @param object
@@ -1866,6 +1883,14 @@ public class LOIDetailBackingBean extends
 		}	
 	}
 	
+	public void saveMultipleLoiAction() {
+		
+	}
+	
+	public void updateMultiLoiBpmTaskAction(String outcome) {
+		
+	}
+	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -1899,24 +1924,20 @@ public class LOIDetailBackingBean extends
 		debugLogger("..In addMeetingAttendance()..");
 
 		try {
-			List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean()
-					.getMeetingAttendanceList();
-			List<ScQtCommitteeActivity> fcActivityList = getManagedBean()
-					.getFcActivityList();
+			ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
+			List<ScQtMeetingAttendance> meetingAttendanceList = scQtCommittee.getMeetingAttendances();
 
 			if (null == meetingAttendanceList) {
 				meetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
+				scQtCommittee.setMeetingAttendances(
+						meetingAttendanceList);
 			}
 
 			ScQtMeetingAttendance meeting = new ScQtMeetingAttendance();
-			if (fcActivityList != null && fcActivityList.size() > 0) {
-				meeting.setQtCommittee(fcActivityList.get(0).getScQtCommittee());
-			}
+			meeting.setQtCommittee(scQtCommittee);
 			setUserDetails(meeting);
 			meetingAttendanceList.add(meeting);
 
-			this.getManagedBean().setMeetingAttendanceList(
-					meetingAttendanceList);
 		} finally {
 
 		}
@@ -2877,18 +2898,6 @@ public class LOIDetailBackingBean extends
     	context.put("agency", pmOrgProfile.getOrgName());
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-cover.vm", context, new FileOutputStream(getActualFilePath(attachment)));
-	}
-	
-	public void retrieveResultNegotiation(){
-		this.getManagedBean().setSelectedTabIndex(0);
-	}
-	
-	public void retrieveNegotiationCommitteeDtls(){
-		this.getManagedBean().setSelectedTabIndex(1);
-	}
-
-	public void retrieveMultipleLoiRecommendation(){
-		this.getManagedBean().setSelectedTabIndex(2);		
 	}
 	
 	public void selectAll(AjaxBehaviorEvent event) {

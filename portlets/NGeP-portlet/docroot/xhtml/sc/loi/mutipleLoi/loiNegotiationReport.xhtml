@@ -10,7 +10,7 @@
 		toggleable="true">
 		<p:dataTable id="reportContentsTbl"
 			widgetVar="reportContentsTblWidget" var="scLoiReport"
-			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiReports}"
+			value="#{lOIDetailBackingBean.managedBean.scLoiReports}"
 			rows="10" rowKey="#{scLoiReport}"
 			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiReports}">
 
@@ -71,7 +71,7 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, reportContentsTbl" partialSubmit="true"
-				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiReports, lOIDetailBackingBean.managedBean.selectedScLoiReports)}"
+				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoiReports, lOIDetailBackingBean.managedBean.selectedScLoiReports)}"
 				icon="ui-icon-delete" update="reportContentsTbl" />
 
 		</div>

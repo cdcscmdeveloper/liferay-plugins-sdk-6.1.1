@@ -92,6 +92,8 @@
 			</p:dataTable>
 		</p:panel>
 		
+		<br />
+		
 		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeFinancialEvaluationCommittee)}" toggleable="true">
 			<p:dataTable id="fecMemberTbl" var="committeeDtl"
 				value="#{lOIDetailBackingBean.managedBean.fecActivityList}"
@@ -133,10 +135,12 @@
 			</p:dataTable>
 		</p:panel>
 	</c:if>
+	
+	<br />
 
 	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="true">
 		<p:dataTable id="fcMemberTbl" var="committeeDtl"
-			value="#{lOIDetailBackingBean.managedBean.fcActivityList}"
+			value="#{lOIDetailBackingBean.managedBean.scQtCommittee.committeeActivities}"
 			rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 		
 			<ac:paginator for="fcMemberTbl" />
@@ -149,7 +153,7 @@
 				#{committeeDtl.scCommitteeMember.icPassport}
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.designation']}">
+			<p:column headerText="#{lbl['lbl.sc.designation']}" style="white-space: normal;">
 				#{committeeDtl.scCommitteeMember.designation}
 			</p:column>
 						
@@ -179,9 +183,11 @@
 		</p:dataTable>
 	</p:panel>
 	
+	<br />
+	
 	<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
 		<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
-			value="#{lOIDetailBackingBean.managedBean.meetingAttendanceList}" rows="10"
+			value="#{lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances}" rows="10"
 			rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
 			selection="#{lOIDetailBackingBean.managedBean.selectedMeetingAttList}">
 		
@@ -211,7 +217,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, meetingAttDtlTbl" partialSubmit="true"
 				icon="ui-icon-delete"
-				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.meetingAttendanceList, lOIDetailBackingBean.managedBean.selectedMeetingAttList)}"
+				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances, lOIDetailBackingBean.managedBean.selectedMeetingAttList)}"
 				update="meetingAttDtlTbl" />
 	
 		</div>

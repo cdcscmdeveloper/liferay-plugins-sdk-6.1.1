@@ -7,8 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.StreamedContent;
-
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -21,6 +19,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -38,6 +37,8 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author Viswanath
@@ -112,8 +113,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> ecActivityList;
 	private List<ScQtCommitteeActivity> tecActivityList;
 	private List<ScQtCommitteeActivity> fecActivityList;
-	private List<ScQtCommitteeActivity> fcActivityList;
-	private List<ScQtMeetingAttendance> meetingAttendanceList;
+	private ScQtCommittee scQtCommittee;
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
 	private List<String> recommendDtlIds;
@@ -127,6 +127,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private int totalProgressivePayment;
 	private List<ScQtProgressivePayment> progressivePaymentList;
 	
+	private List<ScLoiReport> scLoiReports;
 	private List<ScLoiReport> selectedScLoiReports;
 	private ScLoiReport selectedScLoiReport;
 	private String attachmentDocType;
@@ -838,32 +839,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the fcActivityList
+	 * @return the scQtCommittee
 	 */
-	public List<ScQtCommitteeActivity> getFcActivityList() {
-		return fcActivityList;
+	public ScQtCommittee getScQtCommittee() {
+		return scQtCommittee;
 	}
 
 	/**
-	 * @param fcActivityList the fcActivityList to set
+	 * @param scQtCommittee the scQtCommittee to set
 	 */
-	public void setFcActivityList(List<ScQtCommitteeActivity> fcActivityList) {
-		this.fcActivityList = fcActivityList;
-	}
-
-	/**
-	 * @return the meetingAttendanceList
-	 */
-	public List<ScQtMeetingAttendance> getMeetingAttendanceList() {
-		return meetingAttendanceList;
-	}
-
-	/**
-	 * @param meetingAttendanceList the meetingAttendanceList to set
-	 */
-	public void setMeetingAttendanceList(
-			List<ScQtMeetingAttendance> meetingAttendanceList) {
-		this.meetingAttendanceList = meetingAttendanceList;
+	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
+		this.scQtCommittee = scQtCommittee;
 	}
 
 	/**
@@ -1009,6 +995,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.progressivePaymentList = progressivePaymentList;
 	}
 
+
+	/**
+	 * @return the scLoiReports
+	 */
+	public List<ScLoiReport> getScLoiReports() {
+		return scLoiReports;
+	}
+
+	/**
+	 * @param scLoiReports the scLoiReports to set
+	 */
+	public void setScLoiReports(List<ScLoiReport> scLoiReports) {
+		this.scLoiReports = scLoiReports;
+	}
 
 	/**
 	 * @return the selectedScLoiReports
