@@ -171,6 +171,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICatalogueSO.class);
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
+		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		if(scQuote == null){
 			scQuote = new ScQuote();
 		}
@@ -195,8 +197,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					QuoteResDTO resDTO= getQuoteSO().getPanelSupplierByPanelItem(reqDTO);
 					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
 					if(selectedPanelItem != null) {
-						TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
-						TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 
 						if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
 							if(productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
@@ -398,7 +398,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		
 		CatalogueBackingBean catalogueBackingBean =  new CatalogueBackingBean();
-		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+
+		if(productTplSpecBean.getSpecMaster() != null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null &&  
+				productTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0  || 
+				serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
+				serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+		} else{
+			catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
+		}
 
 	   return "simpleQuote";
 	}
@@ -2201,12 +2209,25 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void backToPervious() {
 		debugLogger("backToPervious");
-		 FacesContext fc = FacesContext.getCurrentInstance();
-		 if(getManagedBean().getPageNavToRequestNote() != null){
-			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
-		 } else {
-			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
-		 }
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(getManagedBean().getPageNavToRequestNote() != null){
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
+		} else {
+			TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+			TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+			CatalogueBackingBean catalogueBackingBean =  new CatalogueBackingBean();
+
+			if(productTplSpecBean.getSpecMaster() != null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null &&  
+					productTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0  || 
+					serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
+					serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+			} else{
+				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
+			}
+			
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
+		}
 	}
 
 	 public void  getCurrentStatus(PmStatus pmStatus) {

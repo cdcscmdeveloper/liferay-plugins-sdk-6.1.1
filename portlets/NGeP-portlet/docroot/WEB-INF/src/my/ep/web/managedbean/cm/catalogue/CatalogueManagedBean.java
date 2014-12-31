@@ -49,8 +49,10 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
+import my.ep.web.backingbean.sc.directpurchase.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -393,8 +395,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					setSimpleQuoteFlag(false);
 				}
 				
+				SimpleQuoteBackingBean simpleQuoteBackingBean =  new SimpleQuoteBackingBean();
+				TemplateSpecBean productTplSpecBean = simpleQuoteBackingBean.getManagedBean().getProductTemplateSpecBean();
+				TemplateSpecBean serviceTplSpecBean = simpleQuoteBackingBean.getManagedBean().getServiceTemplateSpecBean();
+
+				if(productTplSpecBean.getSpecMaster() != null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null &&  
+						productTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0  || 
+						serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
+						serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+					setSimpleQuoteFlag(false);
+				} 
 				
-				return resDTO.getViewSuppItemResultBean();
+			 return resDTO.getViewSuppItemResultBean();
 			}catch(Exception e){
 				e.printStackTrace();
 				return new SearchResultBean();
