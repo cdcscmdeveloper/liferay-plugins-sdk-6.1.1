@@ -1916,7 +1916,8 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() == 11) {
+							if (proposalScore.getCriteriaType() == 11
+									|| proposalScore.getCriteriaType() == 0) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
 												proposalScore);
@@ -2064,7 +2065,8 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
-							if (proposalScore.getCriteriaType() == 16) {
+							if (proposalScore.getCriteriaType() == 16
+									|| proposalScore.getCriteriaType() == 0) {
 								this.getManagedBean()
 										.setNoOfyearsProposalScore(
 												proposalScore);
