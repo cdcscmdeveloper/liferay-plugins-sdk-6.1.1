@@ -801,6 +801,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 		}
 		
+		if((getManagedBean().isUpdateAction() || getManagedBean().getCircular().getLatestCircularVer() != null) && 
+				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				throw new EpException(MessageConst.ERROR_750018, new String[]{"panel circular update"});
+		}
+		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
