@@ -141,11 +141,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				PmStatus status = new PmStatus();
 				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 				getManagedBean().getCircularVer().setStatus(status);
-			}
-			
-			if(ctBB == null) {
-			     ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+				 ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			     initializeRemarks();
 			}
 			
 			if(isCentralContractAdmin()) 
@@ -193,7 +191,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();			
+			Object obj = res.getPojo();	
+			getManagedBean().setTaskName(res.getTaskName());
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 			
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
@@ -261,10 +260,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
 			
-			initializeRemarks();
 			ctBB = new ContractBackingBean(fileDirectory);
-			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
+			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
+			initializeRemarks();
 	}
 	
 	private void initializeApproverList() {
@@ -552,30 +551,31 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))
 			       validateCircular(action);
 			
-			CtCircular circular = this.getManagedBean().getCircular();
+			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
-			CtCircularVer circularVer = this.getManagedBean().getCircularVer();
+			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
-		    reqDTO.setUserMap(this.getManagedBean().getUserMap());
-		    reqDTO.setSelectedApprovers(this.getManagedBean().getApproverModel().getTarget());
-			reqDTO.setAvailableApprovers(this.getManagedBean().getApproverModel().getSource());
-			reqDTO.setRemark(this.getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());			
+		    reqDTO.setUserMap(getManagedBean().getUserMap());
+		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			PmUser pmUSer = new PmUser();
-			pmUSer.setLoginId(this.getManagedBean().getCircularAdmin());
+			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
 			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
+			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			if(isBPKApprover()) {
 				circularVer.setApprover(getFacesScopes().getUserSessionBean());
@@ -585,8 +585,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			
-			if(this.getManagedBean().getPmDigiSign() !=null){
-				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			if(getManagedBean().getPmDigiSign() !=null){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
@@ -604,7 +604,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					} 
 				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
+						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
 								resDTO.getCircular().getCircularNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			     if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
