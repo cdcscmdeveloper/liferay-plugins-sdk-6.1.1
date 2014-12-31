@@ -6547,6 +6547,20 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setRevisionApproverAppNoParam(revApprvrAppNo);
 		getManagedBean().setRevisionSupplierAppNoParam(revSupplAppNo);
 		getManagedBean().setRevisionBaseUrl(url);
+		setRevisionApplicationType();
+	}
+
+	private void setRevisionApplicationType() {
+		String applType = "";
+
+		if (getManagedBean().getRevisionApproverAppNoParam() != null
+				&& StringUtils.isNotBlank(getManagedBean()
+						.getRevisionApproverAppNoParam())
+				&& getManagedBean().getRevisionApproverAppNoParam().length() > 2) {
+			applType = Character.toString(getManagedBean()
+					.getRevisionApproverAppNoParam().charAt(1));
+		}
+		getManagedBean().setRevisionApplType(applType);
 	}
 
 	public void unSelectAdmin(AjaxBehaviorEvent e) {
