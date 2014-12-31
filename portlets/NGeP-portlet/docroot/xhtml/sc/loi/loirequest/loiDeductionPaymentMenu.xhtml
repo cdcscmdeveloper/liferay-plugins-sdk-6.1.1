@@ -96,7 +96,7 @@
 						<h:outputText value="#{scQtDeductionClause.clauseDesc}" rendered="#{!isEditableStatus}" />
 					</h:panelGroup>
 					
-					<h:outputText value="#{scQtDeductionClause.pmClause.clauseDesc}" rendered="#{!empty scQtDeductionClause.pmClause}" />
+					<h:outputText  escape="false" value="#{scQtDeductionClause.pmClause.clauseDesc}" rendered="#{!empty scQtDeductionClause.pmClause}" />
 
 				</p:column>
 
