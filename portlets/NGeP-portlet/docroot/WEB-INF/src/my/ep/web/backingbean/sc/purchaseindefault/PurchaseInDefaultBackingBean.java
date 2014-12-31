@@ -322,6 +322,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 				//Hoa: add token authenticate to support BPM
 				String token = facesScopes.getBPMAuthenticationCtxToken();
+				reqDTO.setPmUser(facesScopes.getUserSessionBean());
+				reqDTO.setRoleCode(getUserRoleCode());
 				reqDTO.setToken(token);
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
 				if (resDTO.isSuccessful()) {
@@ -406,6 +408,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   FacesScopes facesScopes = new FacesScopes();
 			   String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			   reqDTO.setToken(ctxToken);
+			   reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			   reqDTO.setRoleCode(getUserRoleCode());
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
 			   reqDTO.setOutcome(outcome);
 			   reqDTO.setDigiSignData(digiSign);

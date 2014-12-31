@@ -845,8 +845,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setToken(token);
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
+			reqDTO.setRoleCode(getUserRoleCode());
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
 				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
@@ -1281,6 +1283,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
 				reqDTO.setSubmit(Boolean.TRUE);
@@ -3278,6 +3282,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
+			reqDTO.setRoleCode(getUserRoleCode());
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setSupplier(getManagedBean().getSmSupplier());
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
