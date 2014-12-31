@@ -105,10 +105,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void initMain() {
 		if (reloadApplication()) {
 			initApplication(null);
-			getManagedBean().setMaxTab(
-					getManagedBean().getSmAppl() == null ? 0
-							: getMaxTabByApplType(getManagedBean().getSmAppl()
-									.getApplType()));
+			setMaxTab();
 		}
 		setTabParam();
 	}
@@ -280,9 +277,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String tabParam = originalServletRequest.getParameter("currentTab");
 		try {
 			if (tabParam != null) {
-				if(Integer.parseInt(tabParam)<=getManagedBean().getMaxTab()){
+				if (Integer.parseInt(tabParam) <= getManagedBean().getMaxTab()) {
 					setTabValue(Integer.parseInt(tabParam), "");
-				}else{
+				} else {
 					setTabValue(0, "");
 				}
 			}
@@ -1162,14 +1159,25 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
-	private int getMaxTabByApplType(String applType) {
+	private int getMaxTabByApplTypeAndCatType(String applType,
+			String applCategoryType) {
 		int maxTab = 0;
 		switch (applType) {
 		case ParameterConst.NEW_SM_APPLN_FOR_MOF:
-			maxTab = 8;
+			if (applCategoryType != null
+					&& applCategoryType.equalsIgnoreCase("S")) {
+				maxTab = 8;
+			} else {
+				maxTab = 6;
+			}
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
-			maxTab = 7;
+			if (applCategoryType != null
+					&& applCategoryType.equalsIgnoreCase("S")) {
+				maxTab = 7;
+			} else {
+				maxTab = 5;
+			}
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
 			maxTab = 4;
@@ -1178,12 +1186,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			maxTab = 5;
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
-			maxTab = 8;
+			if (applCategoryType != null
+					&& applCategoryType.equalsIgnoreCase("S")) {
+				maxTab = 8;
+			} else {
+				maxTab = 6;
+			}
 			break;
 		default:
 			break;
 		}
 		return maxTab;
+	}
+
+	private void setMaxTab() {
+		int maxTab = 0;
+		if (getManagedBean().getSmAppl() != null) {
+			maxTab = getMaxTabByApplTypeAndCatType(getManagedBean().getSmAppl()
+					.getApplType(), getManagedBean().getSmAppl()
+					.getApplCategoryType());
+		}
+		getManagedBean().setMaxTab(maxTab);
 	}
 
 	public StreamedContent getFile() {
