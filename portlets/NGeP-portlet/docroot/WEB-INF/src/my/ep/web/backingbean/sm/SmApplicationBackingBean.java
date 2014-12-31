@@ -114,6 +114,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -310,6 +311,13 @@ public class SmApplicationBackingBean extends
 			}
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
+			}
+			if (getManagedBean().getSmAppl().getSmSvTasks() != null
+					&& !getManagedBean().getSmAppl().getSmSvTasks().isEmpty()) {
+				for (SmSvTask task : getManagedBean().getSmAppl()
+						.getSmSvTasks()) {
+					task.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+				}
 			}
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
 					&& !getManagedBean().getSmAppl().getSmSupplierCategories()
