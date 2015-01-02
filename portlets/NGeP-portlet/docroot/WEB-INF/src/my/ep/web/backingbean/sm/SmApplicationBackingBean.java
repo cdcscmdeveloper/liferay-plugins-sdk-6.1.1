@@ -5791,7 +5791,6 @@ public class SmApplicationBackingBean extends
 			resetState(state);
 			resetDistrict(district);
 			resetCity(city);
-			setMyPostCode(coutryId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6858,15 +6857,6 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setDisabledShareholderPersonnelNameAndNationality(
 				retVal);
-	}
-
-	private void setMyPostCode(Long countryId) {
-		if (countryId != null
-				&& countryId.compareTo(SmCommonUtil.getMyCountryId()) == 0) {
-			getManagedBean().setMalaysianPostCode(true);
-		} else {
-			getManagedBean().setMalaysianPostCode(false);
-		}
 	}
 
 	public boolean checkIfPendingCategoryStatus(Integer recordStatusFlg) {
