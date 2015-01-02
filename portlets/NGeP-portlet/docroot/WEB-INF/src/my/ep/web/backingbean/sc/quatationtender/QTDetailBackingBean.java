@@ -1498,9 +1498,11 @@ public class QTDetailBackingBean extends
 		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())
 				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean().getTaskName()) ||  SCProcessNameConst.ASSIGN_FC_SECRETARY
 						.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
 			if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+					.equalsIgnoreCase(this.getManagedBean().getTaskName()) && !SCProcessNameConst.ASSIGN_FC_SECRETARY
+					.equalsIgnoreCase(this.getManagedBean().getTaskName()) ) {
 
 				SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
 				this.getManagedBean().setQuotationTenderDataType(
@@ -1596,7 +1598,11 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setScQt(qt);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
-			} else {
+			}else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
+					.equalsIgnoreCase(taskName)) {
+			
+			}
+			else {
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(res.getPojo());
