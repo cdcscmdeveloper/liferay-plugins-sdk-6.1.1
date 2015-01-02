@@ -1092,7 +1092,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 			}
-
+			//remove N/A from Item name if any
+			String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
+			this.getManagedBean().getSelectedMaintainItem().getCmItem().setItemName(itemNameForView);
 			System.out.println("*****************end********************");
 			
 		} catch (Exception e) {
