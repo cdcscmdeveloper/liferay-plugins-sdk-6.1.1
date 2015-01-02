@@ -23,7 +23,8 @@
 							value="#{amendmentBackingBean.managedBean.ctContract.contractNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
-					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}">
+					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.agreement or 
+						amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
 					<td class="columnWidth150">
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 					</td> 
