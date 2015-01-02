@@ -9375,12 +9375,22 @@ public class SpecificationBackingBean extends
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
-		if (this.getManagedBean().getFulfilmentType()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+		if (null != this.getManagedBean().getFulfilmentType()
+				&& !"".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+				&& this.getManagedBean()
+						.getFulfilmentType()
+						.equalsIgnoreCase(
+								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 			scQt.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
 		}
-		if (this.getManagedBean().getFulfilmentType()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+		if (null != this.getManagedBean().getFulfilmentType()
+				&& !"".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+				&& this.getManagedBean()
+						.getFulfilmentType()
+						.equalsIgnoreCase(
+								ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 			scQt.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
 		}
 
@@ -9927,6 +9937,14 @@ public class SpecificationBackingBean extends
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = constructSpecCommitteDtls().getScQt();
+				if (this.getManagedBean().isReadOnly()) {
+					if ((null != scQt.getFulfilmentType() && null == scQt
+							.getFulfilmentType().getParameterId())
+							|| (null == scQt.getContractDuration())) {
+						throw new EpException(MessageConst.ERROR_760134);
+
+					}
+				}
 				specReqDTO.setScQt(scQt);
 				specSO.validateSpecCommitteGeneralInfo(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
