@@ -996,13 +996,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(svTemplate.getSmSvMachines() != null){
 				log.info("***svTemplate.getSmSvMachines()>>>" + svTemplate.getSmSvMachines().size());
 				if(svTemplate.getSelectedSmMachine() == null){
-					svTemplate.setSelectedSmMachine(new SmMachineDtl[svTemplate.getSmSvTemplateAddresses().size()]);
+//					svTemplate.setSelectedSmMachine(new SmMachineDtl[svTemplate.getSmSvTemplateAddresses().size()]);
+					svTemplate.setSelectedSmMachine(new SmMachineDtl[svTemplate.getSmSvMachines().size()]);
 				}
 				SmMachineDtl[] selectedMachine = svTemplate.getSelectedSmMachine();
-				for(int macCount = 0; macCount < svTemplate.getSmSvMachines().size(); svTemplate.getSmSvMachines()){
+				for(int macCount = 0; macCount < svTemplate.getSmSvMachines().size(); macCount++){
 					selectedMachine[macCount] = svTemplate.getSmSvMachines().get(macCount).getSmMachineDtl();
-					log.info("****selectedAdd*******" + svTemplate.getSmSvTemplateAddresses().get(macCount).getSmSvAddress());
-					macCount++;
+//					log.info("****selectedAdd*******" + svTemplate.getSmSvTemplateAddresses().get(macCount).getSmSvAddress());
+//					macCount++;
 				}
 			}
 			
