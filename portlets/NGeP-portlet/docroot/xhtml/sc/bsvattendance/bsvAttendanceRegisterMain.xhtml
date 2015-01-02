@@ -6,6 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
@@ -17,10 +18,16 @@
 			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
 				width="100%">
 				<p:column>
-					<div style="float: right;">						
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							icon="ui-icon-submit" action="#{bsvAttendanceBackingBean.submitBsvDetails}" process="@all">
-						</p:commandButton>
+					<div style="float: right;">
+						<ui:repeat var="bpmAction"
+							value="#{bsvAttendanceBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+								action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}" />
+						</ui:repeat>
 					</div>
 				</p:column>
 				<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -43,12 +50,11 @@
 
 						</td>
 						<td style="width: 13%" class="header-info-text"><h:outputLabel
-								value="#{lbl['lbl.sc.status']}" />							
-								</td>
+								value="#{lbl['lbl.sc.status']}" /></td>
 						<td style="width: 21%" class="header-info-text">
-						
-						#{bsvAttendanceBackingBean.getStatusDescById(bsvAttendanceBackingBean.managedBean.scQt.qtStatus.statusId)}
-								</td>
+
+							#{bsvAttendanceBackingBean.getStatusDescById(bsvAttendanceBackingBean.managedBean.scQt.qtStatus.statusId)}
+						</td>
 					</tr>
 				</table>
 			</div>
