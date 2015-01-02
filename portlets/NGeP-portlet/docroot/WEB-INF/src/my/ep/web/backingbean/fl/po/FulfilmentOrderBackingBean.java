@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -34,6 +35,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -292,14 +295,23 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+				
 				if(getManagedBean().getFlRequest().getCtContract().isFactored()){
-					if(getManagedBean().getFulfilmentOrder().isFactored()){
-						getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId();
-						getCrSelectedFactoringCompDtl(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+					IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+					
+					ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+					contractSupplierReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						getManagedBean().getFlRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							getManagedBean().getFulfilmentOrder().setPmFinancialOrg(contractSupplierResDTO.getFactoring().getFinancialOrg());
+							getManagedBean().getFulfilmentOrder().setPmFinancialBranch(contractSupplierResDTO.getFactoring().getPmFinancialBranch());
+							getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						}
 					}else{
 						getManagedBean().getFlRequest().getCtContract().setFactored(false);
 					}
-					
 				}
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
