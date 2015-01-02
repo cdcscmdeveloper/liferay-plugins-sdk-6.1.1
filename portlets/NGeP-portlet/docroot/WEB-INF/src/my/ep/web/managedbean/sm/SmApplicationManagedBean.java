@@ -324,6 +324,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showWorkShopPanel;
 	private boolean showPersonnelViewOnly;
 	private boolean disabledShareholderPersonnelNameAndNationality;
+	private boolean malaysianPostCode;
 	private String selectedShareholderIdentificationType;
 	private String revisionApplType;
 	
@@ -526,6 +527,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		currDate = new Date();
 		currYear = Calendar.getInstance().get(Calendar.YEAR);
 		System.out.println("*** Date String *** " + df.format(new Date()));
+		
+		malaysianPostCode = true;
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -2499,5 +2502,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRevisionApplType(String revisionApplType) {
 		this.revisionApplType = revisionApplType;
+	}
+
+	public boolean isMalaysianPostCode() {
+		return malaysianPostCode;
+	}
+
+	public void setMalaysianPostCode(boolean malaysianPostCode) {
+		this.malaysianPostCode = malaysianPostCode;
 	}
 }

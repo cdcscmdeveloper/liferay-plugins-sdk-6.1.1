@@ -124,6 +124,7 @@ import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -5790,6 +5791,7 @@ public class SmApplicationBackingBean extends
 			resetState(state);
 			resetDistrict(district);
 			resetCity(city);
+			setMyPostCode(coutryId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -6858,6 +6860,15 @@ public class SmApplicationBackingBean extends
 				retVal);
 	}
 
+	private void setMyPostCode(Long countryId) {
+		if (countryId != null
+				&& countryId.compareTo(SmCommonUtil.getMyCountryId()) == 0) {
+			getManagedBean().setMalaysianPostCode(true);
+		} else {
+			getManagedBean().setMalaysianPostCode(false);
+		}
+	}
+
 	public boolean checkIfPendingCategoryStatus(Integer recordStatusFlg) {
 		System.out.println("****** checkIfPendingCategoryStatus *********"
 				+ recordStatusFlg);
@@ -6868,6 +6879,7 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
+
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
 	// String appNo = getManagedBean().getSmAppl().getApplNo();
