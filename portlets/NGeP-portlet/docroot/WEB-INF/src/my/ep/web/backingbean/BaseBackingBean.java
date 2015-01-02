@@ -835,12 +835,4 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return output;
 	}
-
-	public int getPostCodeMaxLength(String countryCode) {
-		if (countryCode != null && countryCode.equals("MY")) {
-			return 5;
-		}else{
-			return 10;
-		}
-	}
 }

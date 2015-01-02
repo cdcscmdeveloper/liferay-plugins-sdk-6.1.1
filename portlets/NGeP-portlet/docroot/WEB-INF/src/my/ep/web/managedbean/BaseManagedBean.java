@@ -19,7 +19,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private String title;
 	private Long currentStatusId;
 	private String taskName;
-	private int postCodeMaxLength;
 
 	public String getTaskName() {
 		return taskName;
