@@ -445,7 +445,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 									getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 								}
 							}
-							
+						} else {
+							getManagedBean().getInvoice().getFlFulfilmentOrder().setFactored(DbValueConst.FLAG_NO);
+							getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(null);
+							getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialBranch(null);
 						}
 					}	
 				}	
