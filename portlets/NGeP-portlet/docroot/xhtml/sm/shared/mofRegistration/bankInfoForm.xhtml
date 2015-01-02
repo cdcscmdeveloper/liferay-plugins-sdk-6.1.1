@@ -284,7 +284,7 @@
 								backingBean.managedBean.selectedBank.smAddress.pmState,
 								backingBean.managedBean.selectedBank.smAddress.pmDistrict,
 								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
-								update="smBankState,smBankDist,smBankCity,postCodePanelId" />
+								update="smBankState,smBankDist,smBankCity,postCodeBankPanelId" />
 						</p:selectOneMenu> <p:message id="smBankCntryIdMsg" for="smBankCntryId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -352,7 +352,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<p:outputPanel id="postCodePanelId">
+						<p:outputPanel id="postCodeBankPanelId">
 							<p:outputPanel rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5"
 										required="#{backingBean.managedBean.valueReqd}"

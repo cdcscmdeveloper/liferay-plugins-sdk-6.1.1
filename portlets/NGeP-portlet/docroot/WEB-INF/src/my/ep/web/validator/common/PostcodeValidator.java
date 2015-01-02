@@ -17,9 +17,9 @@ public class PostcodeValidator implements Validator {
 	public void validate(FacesContext context, UIComponent component,
 			Object value) throws ValidatorException {
 		String myValue = value.toString();
-
+		
 		if (myValue != null && !myValue.isEmpty()
-				&& (!StringUtils.isNumeric(myValue) || myValue.length() != 5)) {
+				&& (!StringUtils.isNumeric(myValue) || myValue.length() !=5)) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "Postcode Error",
 					SmCommonUtil.getMessage(
