@@ -24,6 +24,13 @@
 		#end
 		
 		#parse("/sm/sitevisit/shared/machine.vm")
+    #elseif($templateCode == "M")
+    
+    	#parse("/sm/sitevisit/shared/manufacturing-documents.vm")
+    	<br /><br />
+    	#parse("/sm/sitevisit/shared/manufacturing-additional-documents.vm")
+    	<br /><br />
+    	#parse("/sm/sitevisit/shared/machine.vm")
     #end
 
 #include("/sm/sitevisit/shared/footer.vm")
