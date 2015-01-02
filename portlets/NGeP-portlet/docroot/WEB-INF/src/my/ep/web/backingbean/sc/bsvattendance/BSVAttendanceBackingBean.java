@@ -13,8 +13,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
@@ -197,7 +195,7 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * Method To call to save Briefing Site Visit Details
 	 */
-	public String submitBsvDetails() {
+	public String submitBsvDetails(String outCome) {
 		List<ScQtBsv> bsvs = new ArrayList<ScQtBsv>();
 		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
 		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
@@ -260,6 +258,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBsvDetails(bsvs);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setOutcome(outCome);
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				FacesContext
@@ -272,16 +271,19 @@ public class BSVAttendanceBackingBean extends
 										MessageUtils
 												.getMessage(
 														MessageConst.INFO_700026,
-														new String[] { "Briefing and Site Visit" },
+														new String[] {
+																"Briefing and Site Visit",
+																"" },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
-
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
 
 		}
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		return null;
+
 	}
 
 	/**
@@ -321,11 +323,12 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setQtBriefingList(briefingDetails);
 
 			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
-
+			String[] outComes = this.getManagedBean().getOutComes();
 			if ("complete".equalsIgnoreCase(status)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
 				Long qtId = this.getManagedBean().getScQt().getQtId();
 				renewSesionObject();
+				this.getManagedBean().setOutComes(outComes);
 				retrieveBriefingSiteVisitList(qtId);
 				url = previousPage + ".xhtml?faces-redirect=true";
 			}
@@ -334,6 +337,7 @@ public class BSVAttendanceBackingBean extends
 				String previousPage = this.getManagedBean().getPreviousPage();
 				ScQt scQt = this.getManagedBean().getScQt();
 				renewSesionObject();
+				this.getManagedBean().setOutComes(outComes);
 				this.getManagedBean().setPreviousPage(previousPage);
 				this.getManagedBean().setScQt(scQt);
 
