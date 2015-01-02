@@ -350,7 +350,7 @@
 							disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />
 						<p:spacer width="1" />
 						<h:commandLink
-							value="#{supplierBackingBean.managedBean.factoring.fileName}"
+							value="#{supplierBackingBean.managedBean.factoring.removeFileName}"
 							style="float:left;" styleClass="blue_font"
 							rendered="#{supplierBackingBean.managedBean.factoring.removeFileName != null}"
 							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
