@@ -957,4 +957,22 @@ public class SmCommonUtil {
 		defaultAddr.setPmState(new PmState());
 		return defaultAddr;
 	}
+
+	public static boolean isMalaysianPostcode(Long countryId) {
+		if (countryId != null) {
+			PmCountry country = SmApplicationUtil
+					.retrievePmCountryById(countryId);
+			if (country != null
+					&& country.getCountryCode() != null
+					&& country.getCountryCode().equals(
+							SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+
+	}
 }
