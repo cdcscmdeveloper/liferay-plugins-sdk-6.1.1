@@ -75,9 +75,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -1371,6 +1371,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	
     	String locationLevel = null;
     	boolean isLocLevel = false;
+    	boolean isSubLocLevel = false;
     	if (qt.getZoneLocationLevel() != null) {
 	    	if (ParameterConst.LOCATION_LEVEL_STATE.equals(qt.getZoneLocationLevel().getParameterCode())) {
 	    		isLocLevel = true;
@@ -1384,6 +1385,19 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			}
 	    	context.put("locLevel", isLocLevel);
     	} else {
+    		ScQtSupplierCriteria criteria = qt.getScQtSupplierCriteria();
+    		if (criteria.getLocationLevel() != null) {
+    			if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria.getLocationLevel().getParameterCode())) {
+    				isSubLocLevel = true;
+    	    		locationLevel = "State";
+        		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(criteria.getLocationLevel().getParameterCode())) {
+        			isSubLocLevel = true;
+    				locationLevel = "District";
+    			}
+    			context.put("subLocLevel", isSubLocLevel);
+    		} else {
+    			context.put("subLocLevel", isSubLocLevel);
+    		}
     		context.put("locLevel", isLocLevel);
     	}
     	context.put("locationLevel", locationLevel);
