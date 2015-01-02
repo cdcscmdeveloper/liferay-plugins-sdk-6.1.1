@@ -2217,14 +2217,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(getManagedBean().getPageNavToRequestNote() != null){
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
 		} else {
-			TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
-			TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 			CatalogueBackingBean catalogueBackingBean =  new CatalogueBackingBean();
 
-			if(productTplSpecBean.getSpecMaster() != null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null &&  
-					productTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0  || 
-					serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
-					serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+			if(getManagedBean().getScQuote().getPanelItem() != null){
 				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
 			} else{
 				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
