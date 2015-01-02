@@ -64,7 +64,7 @@
 								backingBean.managedBean.selectedBranch.smAddress.pmState,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchState,branchDist,branchCity" />
+						update="branchState,branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> <p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
@@ -130,17 +130,34 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td><p:inputText id="branchPostCode"
-					required="#{backingBean.managedBean.valueReqd}"
-					label="#{lbl['lbl.sm.postcode']}" 
-					validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="35" maxlength="10" > 
-					<f:validator validatorId="postcodeValidator"/>
-					</p:inputText>
-					<p:message id="branchPostCodeMsg"
-					for="branchPostCode" showSummary="true" showDetail="false"
-					display="icon" /></td>
+			<td>
+				<p:outputPanel id="postCodeBranchPanelId">
+					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+						<p:inputText maxlength="5"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
+								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+								size="35" >
+								<f:validator validatorId="postcodeValidator" />
+								</p:inputText>
+								<p:message id="branchPostCodeMyMsg"
+								for="branchPostCodeMy" showSummary="true" showDetail="false"
+								display="icon" />
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+						<p:inputText maxlength="10"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
+								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+								size="35" >
+								</p:inputText>
+								<p:message id="branchPostCodeForeignMsg"
+								for="branchPostCodeForeign" showSummary="true" showDetail="false"
+								display="icon" />
+					</p:outputPanel>
+				</p:outputPanel>
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

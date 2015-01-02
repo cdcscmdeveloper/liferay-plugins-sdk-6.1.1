@@ -150,7 +150,7 @@
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmState,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-									update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
+									update="basicOffFacState,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId" />
 							</p:selectOneMenu> <p:message id="cmpnyCntryNameMsg" for="companyCntry"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -222,13 +222,34 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText size="35" maxlength="10" required="true"
-								label="#{lbl['lbl.sm.postcode']}" id="companyPostCode"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
-								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-								<f:validator validatorId="postcodeValidator" />
-							</p:inputText> <p:message id="companyPostCodeMsg" for="companyPostCode"
-								showSummary="true" showDetail="false" display="icon" /></td>
+						<td>
+						<p:outputPanel id="postCodeOffFacPanelId">
+							<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="5"
+										required="true"
+										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
+										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+										size="35" >
+										<f:validator validatorId="postcodeValidator" />
+										</p:inputText>
+										<p:message id="companyPostMyCodeMsg"
+										for="companyPostMyCode" showSummary="true" showDetail="false"
+										display="icon" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="10"
+										required="true"
+										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
+										size="35" >
+										</p:inputText>
+										<p:message id="companyPostForeignCodeMsg"
+										for="companyPostForeignCode" showSummary="true" showDetail="false"
+										display="icon" />
+							</p:outputPanel>
+						</p:outputPanel>
+						</td>
 						<td colspan="2"></td>
 					</tr>
 

@@ -64,7 +64,7 @@
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmState,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
-										update="shrPermState,shrPermDist,shrPermCity" />
+										update="shrPermState,shrPermDist,shrPermCity,postCodePermPanelId" />
 								</p:selectOneMenu> <p:message id="equiPersPermCntryMsg" for="equiPersPermCntry"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
@@ -133,16 +133,34 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:inputText maxlength="10"
-									id="equiPersPermAddrPostCode" required="true"
-									label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
-									size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
-									<f:validator validatorId="postcodeValidator"/>
-									</p:inputText>
-									 <p:message id="equiPersPermAddrPostCodeMsg"
-									for="equiPersPermAddrPostCode" showSummary="true"
-									showDetail="false" display="icon" /></td>
+							<td>
+								<p:outputPanel id="postCodePermPanelId">
+									<p:outputPanel rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+										<p:inputText maxlength="5"
+												required="true"
+												label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersPermAddrPostCodeMy"
+												value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
+												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+												size="35" >
+												<f:validator validatorId="postcodeValidator" />
+												</p:inputText>
+												<p:message id="equiPersPermAddrPostCodeMyMsg"
+												for="equiPersPermAddrPostCodeMy" showSummary="true" showDetail="false"
+												display="icon" />
+									</p:outputPanel>
+									<p:outputPanel rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+										<p:inputText maxlength="10"
+												required="true"
+												label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersPermAddrPostCodeForeign"
+												value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
+												size="35" >
+												</p:inputText>
+												<p:message id="equiPersPermAddrPostCodeForeignMsg"
+												for="equiPersPermAddrPostCodeForeign" showSummary="true" showDetail="false"
+												display="icon" />
+									</p:outputPanel>
+								</p:outputPanel>
+							</td>
 						</tr>
 					</table>
 				</p:panel></td>
@@ -229,7 +247,7 @@
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmState,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
-												update="shrMailState,shrMailDist,shrMailCity" />
+												update="shrMailState,shrMailDist,shrMailCity,postCodeMailPanelId" />
 										</p:selectOneMenu> <p:message id="equiPerMailCntryMsg" for="equiPerMailCntry"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
@@ -302,19 +320,36 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="10"
-											id="equiPersMailAddrPostCode"
-											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.postcode']}"
-											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
-											size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
-											<f:validator validatorId="postcodeValidator"/>
-											</p:inputText>
-											<p:message id="equiPersMailAddrPostCodeMsg"
-											for="equiPersMailAddrPostCode" showSummary="true"
-											showDetail="false" display="icon" /></td>
+									<td>
+										<p:outputPanel id="postCodeMailPanelId">
+											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="5"
+														required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+														disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+														label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersMailAddrPostCodeMy"
+														value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+														size="35" >
+														<f:validator validatorId="postcodeValidator" />
+														</p:inputText>
+														<p:message id="equiPersMailAddrPostCodeMyMsg"
+														for="equiPersMailAddrPostCodeMy" showSummary="true" showDetail="false"
+														display="icon" />
+											</p:outputPanel>
+											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="10"
+														required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+														disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+														label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersMailAddrPostCodeForeign"
+														value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+														size="35" >
+														</p:inputText>
+														<p:message id="equiPersMailAddrPostCodeForeignMsg"
+														for="equiPersMailAddrPostCodeForeign" showSummary="true" showDetail="false"
+														display="icon" />
+											</p:outputPanel>
+										</p:outputPanel>
+									</td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
@@ -409,7 +444,7 @@
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmState,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
-												update="shrResState,shrResDist,shrResCity" />
+												update="shrResState,shrResDist,shrResCity,postCodeResdPanelId" />
 										</p:selectOneMenu> <p:message id="equiPersResiCntryMsg" for="equiPersResiCntry"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
@@ -482,19 +517,36 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="10"
-											id="equiPersResdAddrPostCode"
-											label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.postcode']}"
-											required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-											readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"
-											size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
-											<f:validator validatorId="postcodeValidator"/>
-											</p:inputText>
-											<p:message id="equiPersResdAddrPostCodeMsg"
-											for="equiPersResdAddrPostCode" showSummary="true"
-											showDetail="false" display="icon" /></td>
+									<td>
+										<p:outputPanel id="postCodeResdPanelId">
+											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="5"
+														required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+														disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+														label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.postcode']}" id="equiPersResdAddrPostCodeMy"
+														value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
+														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+														size="35" >
+														<f:validator validatorId="postcodeValidator" />
+														</p:inputText>
+														<p:message id="equiPersResdAddrPostCodeMyMsg"
+														for="equiPersResdAddrPostCodeMy" showSummary="true" showDetail="false"
+														display="icon" />
+											</p:outputPanel>
+											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="10"
+														required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+														disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+														label="#{lbl['lbl.sm.person.resiAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersResdAddrPostCodeForeign"
+														value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
+														size="35" >
+														</p:inputText>
+														<p:message id="equiPersResdAddrPostCodeForeignMsg"
+														for="equiPersResdAddrPostCodeForeign" showSummary="true" showDetail="false"
+														display="icon" />
+											</p:outputPanel>
+										</p:outputPanel>
+									</td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
@@ -582,7 +634,7 @@
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmState,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
-												update="shrOffState,shrOffDist,shrOffCity" />
+												update="shrOffState,shrOffDist,shrOffCity,postCodeOffAddrPanelId" />
 										</p:selectOneMenu> <p:message id="equiPersOffcCntryMsg" for="equiPersOffcCntry"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
@@ -655,19 +707,37 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="10"
-											id="equiPersOffcAddrPostCode"
-											label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.postcode']}"
-											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+									<td>
+										<p:outputPanel id="postCodeOffAddrPanelId">
+											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="5"
+														required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-											readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"
-											size="35" validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" >
-											<f:validator validatorId="postcodeValidator"/>
-											</p:inputText> 
-											<p:message id="equiPersOffcAddrPostCodeMsg"
-											for="equiPersOffcAddrPostCode" showSummary="true"
-											showDetail="false" display="icon" /></td>
+														label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.postcode']}" id="equiPersOffcAddrPostCodeMy"
+														value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
+														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+														size="35" >
+														<f:validator validatorId="postcodeValidator" />
+														</p:inputText>
+														<p:message id="equiPersOffcAddrPostCodeMyMsg"
+														for="equiPersOffcAddrPostCodeMy" showSummary="true" showDetail="false"
+														display="icon" />
+											</p:outputPanel>
+											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="10"
+														required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+														disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+														label="#{lbl['lbl.sm.person.offAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersOffcAddrPostCodeForeign"
+														value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
+														size="35" >
+														</p:inputText>
+														<p:message id="equiPersOffcAddrPostCodeForeignMsg"
+														for="equiPersOffcAddrPostCodeForeign" showSummary="true" showDetail="false"
+														display="icon" />
+											</p:outputPanel>
+										</p:outputPanel>
+										
+									</td>
 								</tr>
 							</c:otherwise>
 						</c:choose>

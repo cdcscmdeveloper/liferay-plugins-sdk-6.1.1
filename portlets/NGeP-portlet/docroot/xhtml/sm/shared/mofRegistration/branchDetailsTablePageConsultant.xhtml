@@ -53,7 +53,7 @@
 								backingBean.managedBean.selectedBranch.smAddress.pmState,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
-						update="branchesState,branchesDist,branchesCity" />
+						update="branchesState,branchesDist,branchesCity,postCodeBranchConsPanelId" />
 				</p:selectOneMenu></td>
 		</tr>
 
@@ -107,12 +107,39 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-			<td><p:inputText validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+			<td>
+				<p:inputText validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
 					size="10">
 					<f:validator validatorId="postcodeValidator"/>
 					</p:inputText>
-					</td>
+				
+				<p:outputPanel id="postCodeBranchConsPanelId">
+					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+						<p:inputText maxlength="5"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeConsMy"
+								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+								size="35" >
+								<f:validator validatorId="postcodeValidator" />
+								</p:inputText>
+								<p:message id="branchPostCodeConsMyMsg"
+								for="branchPostCodeConsMy" showSummary="true" showDetail="false"
+								display="icon" />
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+						<p:inputText maxlength="10"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeConsForeign"
+								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+								size="35" >
+								</p:inputText>
+								<p:message id="branchPostCodeConsForeignMsg"
+								for="branchPostCodeConsForeign" showSummary="true" showDetail="false"
+								display="icon" />
+					</p:outputPanel>
+				</p:outputPanel>
+					
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
