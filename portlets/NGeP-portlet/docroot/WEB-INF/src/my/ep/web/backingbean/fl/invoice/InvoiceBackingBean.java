@@ -80,8 +80,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialBranch;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -404,18 +402,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 							contractSupplierResDTO.getFactoring();
 							getManagedBean().getInvoice().getFlFulfilmentOrder().setFactored(DbValueConst.FLAG_YES);
 							if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-								contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-								if(null == getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg()){
-									getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(new PmFinancialOrg());
-								}
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(contractSupplierResDTO.getFactoring().getFinancialOrg());
 								//getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							}
 							if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
-								contractSupplierResDTO.getFactoring().getPmFinancialBranch();
-								if(null == getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()){
-									getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialBranch(new PmFinancialBranch());
-								}
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialBranch(contractSupplierResDTO.getFactoring().getPmFinancialBranch());
 							}	
 							if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
