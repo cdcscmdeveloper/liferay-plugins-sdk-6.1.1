@@ -413,7 +413,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
 			if(getManagedBean().getPidId() != null){
-				requestNoteReqDTO.setPidId(pidId);
+				requestNoteReqDTO.setPidId(getManagedBean().getPidId());
 			}
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
