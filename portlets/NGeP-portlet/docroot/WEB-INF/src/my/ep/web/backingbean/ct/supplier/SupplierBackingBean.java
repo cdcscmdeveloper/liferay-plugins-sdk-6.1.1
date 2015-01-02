@@ -1056,8 +1056,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 				
 				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+					
 					context.put("contractAdminName", getFacesScopes().getUserSessionBean().getUserName());
-					context.put("contractAdminDesignation", getFacesScopes().getUserSessionBean().getDesignation());
+					context.put("contractAdminDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
 				}
 				
 				if (vmFile != null && context != null) {
