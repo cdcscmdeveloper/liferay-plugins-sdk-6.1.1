@@ -284,7 +284,7 @@
 								backingBean.managedBean.selectedBank.smAddress.pmState,
 								backingBean.managedBean.selectedBank.smAddress.pmDistrict,
 								backingBean.managedBean.selectedBank.smAddress.pmCity)}"
-								update="smBankState,smBankDist,smBankCity" />
+								update="smBankState,smBankDist,smBankCity,postCodePanelId" />
 						</p:selectOneMenu> <p:message id="smBankCntryIdMsg" for="smBankCntryId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -351,17 +351,34 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="10"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCode"
-							value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
-							validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-							size="35" >
-							<f:validator validatorId="postcodeValidator" />
-							</p:inputText>
-							<p:message id="suppBankPostCodeMsg"
-							for="suppBankPostCode" showSummary="true" showDetail="false"
-							display="icon" /></td>
+					<td>
+						<p:outputPanel id="postCodePanelId">
+							<p:outputPanel rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="5"
+										required="#{backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeMy"
+										value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
+										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+										size="35" >
+										<f:validator validatorId="postcodeValidator" />
+										</p:inputText>
+										<p:message id="suppBankPostCodeMsgMy"
+										for="suppBankPostCodeMy" showSummary="true" showDetail="false"
+										display="icon" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="10"
+										required="#{backingBean.managedBean.valueReqd}"
+										label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeForeign"
+										value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
+										size="35" >
+										</p:inputText>
+										<p:message id="suppBankPostCodeMsgForeign"
+										for="suppBankPostCodeForeign" showSummary="true" showDetail="false"
+										display="icon" />
+							</p:outputPanel>
+						</p:outputPanel>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.assocBran']}"
