@@ -87,7 +87,7 @@
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 1 and viewSmApplBackingBean.managedBean.approverUser}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0 and viewSmApplBackingBean.managedBean.approverUser}" />
-				</p:column> -->
+				</p:column> 
 				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 					<p:outputLabel value="#{catBean.poRemarks}" style="float: left;white-space: normal;"/>
@@ -106,7 +106,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 					<p:outputLabel value="#{catBean.approverRemarks}" style="float: left;white-space: normal;"/>
-				</p:column>
+				</p:column>-->
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			
@@ -169,7 +169,7 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0 and viewSmApplBackingBean.managedBean.approverUser}" />
 
-				</p:column> -->
+				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 30%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 					<p:outputLabel value="#{catBeanR.poRemarks}" style="float: left;white-space: normal;" />
@@ -188,7 +188,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 					<p:outputLabel value="#{catBeanR.approverRemarks}" style="float: left;white-space: normal;" />
-				</p:column>
+				</p:column> -->
 			</p:dataTable>
 			
 		</p:panel>
