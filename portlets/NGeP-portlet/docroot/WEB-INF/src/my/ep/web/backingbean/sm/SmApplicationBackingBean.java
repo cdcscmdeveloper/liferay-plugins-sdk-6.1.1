@@ -310,6 +310,11 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmApplSectionReviews().clear();
 
 			}
+			if (getManagedBean().getSmAppl().getRecordStatusFlg()
+					.compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0) {
+				getManagedBean().getSmAppl().setRecordStatusFlg(
+						DbValueConst.RECORD_STATUS_ACTIVE);
+			}
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
 			}
