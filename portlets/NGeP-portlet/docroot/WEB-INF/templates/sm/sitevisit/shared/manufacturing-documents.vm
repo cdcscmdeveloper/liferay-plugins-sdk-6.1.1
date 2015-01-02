@@ -1,0 +1,29 @@
+<u class="txtBold">Financial</u>
+<br /><br />
+
+
+<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%" class="txtBold">No</th>
+			<th width="35%" class="txtBold">Documents</th>
+			<th width="20%" class="txtBold">Reference</th>
+			<th width="10%" class="txtBold">Date Issued</th>
+			<th width="30%" class="txtBold">Notes</th>
+		</tr>
+		
+		#if($machineLs.size() > 0)
+			#foreach($financialDoc in $financialDocLs)
+			<tr>
+				<td>$velocityCount</td>
+				<td>$financialDoc.pmParameter.parameterId</td>
+				<td>$financialDoc.docRef</td>
+				<td>$financialDoc.docDate</td>
+				<td>$financialDoc.remark</td>
+			</tr>
+			#end
+		#else
+			<tr>
+				<td colspan="5" align="center">No Record Found</td>
+			</tr>
+		#end
+</table>

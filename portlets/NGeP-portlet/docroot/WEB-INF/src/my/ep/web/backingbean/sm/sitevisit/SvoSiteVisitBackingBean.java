@@ -1261,7 +1261,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		boolean isSectionE = false;
 		
 		if(templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
-				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
+				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
+				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 			isSectionE = true;
 		}
 		
@@ -1506,6 +1507,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private String commonSiteVisitSectionC(SmSvTask svTask, String templateType) throws Exception{
+		log.info("commonSiteVisitSectionC..");
+		
 		VelocityContext context = new VelocityContext();
 		String vmSectionC = "/sm/sitevisit/sv-section-c.vm";
 		
@@ -1514,13 +1517,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(templateType.equals(SupplierManagementConst.CAT_TYPE_INSURANCE) || templateType.equals(SupplierManagementConst.CAT_TYPE_BUMIPUTERA) || 
 				templateType.equals(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA) || templateType.equals(SupplierManagementConst.CAT_TYPE_TRANSPORTATION) || 
 				templateType.equals(templateType.equals(SupplierManagementConst.CAT_TYPE_TRAVEL))){
-			
+
 			List<SmSupplierCategory> catLs = retrieveActiveCategoryCode(svTask.getSmAppl().getSmSupplier().getSmAppl().getApplId());
 			context.put("categoryCodeLs", catLs);
 			//context.put("templateType",templateDesc);
 			//context.put("templateCode", templateType);
 			//context.put("templateDesc", value);
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
+
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.DOCKYARD_WORKSHOP_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
 //			List<PmParameterDesc>  equipmentMaintLs = new ArrayList<PmParameterDesc>();
 //			List<PmParameterDesc>  equipmentBeatingLs = new ArrayList<PmParameterDesc>();
@@ -1541,6 +1545,25 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("licenseInsurance", licenseInsuranceLs);
 			context.put("equipmentMaintenance", equipmentMaintLs);
 			context.put("equipmentBeating", equipmentBeatingLs);
+			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
+			
+		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+			SmSvTemplate manufacturingTemplate = null;
+			for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()) {
+				if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					manufacturingTemplate = svTemplate;
+					if(manufacturingTemplate.getFinancialDocLs() == null) {
+						manufacturingTemplate.setFinancialDocLs(new ArrayList<SmSvManufacturingDoc>());
+					}
+					if(manufacturingTemplate.getFinancialDocParamMap() == null) {
+						manufacturingTemplate.setFinancialDocParamMap(new HashMap<Long,PmParameterDesc>());						
+					}
+				}
+			}
+
+			this.prepareFinancialDoc(manufacturingTemplate);
+			context.put("financialDocLs", manufacturingTemplate.getFinancialDocLs());
+			context.put("additionalDocLs", manufacturingTemplate.getAdditionalDocLs());
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
 		}
 		
