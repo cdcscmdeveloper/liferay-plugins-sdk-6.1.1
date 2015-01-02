@@ -1444,8 +1444,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			items = new SelectItem[3];
 			int i = 0;
 			items[i++] = new SelectItem(0,"- Select One -");
-			items[i++] = new SelectItem(ContractConst.STATUS_COMPLETE, ContractConst.CONTRACT_STATUS_COMPLETE);
-			items[i++] = new SelectItem(ContractConst.STATUS_INCOMPLETE, ContractConst.CONTRACT_STATUS_INCOMPLETE);
+			items[i++] = new SelectItem(ContractConst.STATUS_COMPLETE,  ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.STATUS_INCOMPLETE,  ResourceBundleUtils.getMessage("lbl.ct.incomplete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -2196,9 +2196,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    
 	public String chkContractStatusType(int status){
 		if(status==ContractConst.STATUS_COMPLETE) {
-			return ContractConst.CONTRACT_STATUS_COMPLETE;
+			return ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
-			return ContractConst.CONTRACT_STATUS_INCOMPLETE;
+			return ResourceBundleUtils.getMessage("lbl.ct.incomplete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 	}
 	
