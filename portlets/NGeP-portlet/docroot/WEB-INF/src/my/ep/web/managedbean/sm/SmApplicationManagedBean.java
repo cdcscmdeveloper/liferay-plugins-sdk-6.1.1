@@ -327,6 +327,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean malaysianPostCode;
 	private String selectedShareholderIdentificationType;
 	private String revisionApplType;
+	private Long myCountryId;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -529,6 +530,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		System.out.println("*** Date String *** " + df.format(new Date()));
 		
 		malaysianPostCode = true;
+		myCountryId = SmCommonUtil.getMyCountryId();
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -2504,11 +2506,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.revisionApplType = revisionApplType;
 	}
 
-	public boolean isMalaysianPostCode() {
-		return malaysianPostCode;
+	public Long getMyCountryId() {
+		return myCountryId;
 	}
 
-	public void setMalaysianPostCode(boolean malaysianPostCode) {
-		this.malaysianPostCode = malaysianPostCode;
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
 	}
 }
