@@ -957,22 +957,13 @@ public class SmCommonUtil {
 		defaultAddr.setPmState(new PmState());
 		return defaultAddr;
 	}
-
-	public static boolean isMalaysianPostcode(Long countryId) {
-		if (countryId != null) {
-			PmCountry country = SmApplicationUtil
-					.retrievePmCountryById(countryId);
-			if (country != null
-					&& country.getCountryCode() != null
-					&& country.getCountryCode().equals(
-							SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-
+	
+	public static Long getMyCountryId(){
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		return resDTO.getPmCountry().getCountryId();
 	}
 }
