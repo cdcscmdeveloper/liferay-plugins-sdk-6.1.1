@@ -44,12 +44,9 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,financialbranchid" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialBranch}"
-				update="financialbranchid" />
+				update="financialbranchid,factoringPanel" />
 
 		</div>
-
-
-
 	</p:panel>
 
 	<p:panel id="factoringPanel" >
