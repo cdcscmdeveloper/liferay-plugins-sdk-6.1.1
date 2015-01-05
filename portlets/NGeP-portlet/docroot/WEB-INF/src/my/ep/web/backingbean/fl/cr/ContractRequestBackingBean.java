@@ -3107,6 +3107,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
 					getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
 				}
+				getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
 			}
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setStandardPrice(true);
