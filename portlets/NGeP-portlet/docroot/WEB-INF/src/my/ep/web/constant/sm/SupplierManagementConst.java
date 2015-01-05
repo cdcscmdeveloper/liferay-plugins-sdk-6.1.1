@@ -351,6 +351,10 @@ public class SupplierManagementConst {
 	public static final int RECORD_STATUS_SUSPENDED = 0;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
+	
+	//Revision Application Type
+	public static final String ORIGINAL_APPLICATION = "O";
+	public static final String PREVIOUS_APPLICATION = "P";
 
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";
