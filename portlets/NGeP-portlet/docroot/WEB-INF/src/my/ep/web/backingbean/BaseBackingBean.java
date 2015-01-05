@@ -9,11 +9,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -682,7 +684,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
 
-		FileInputStream docInputStream = new FileInputStream(new File(filePath));
+		InputStream docInputStream = null;
+		try {
+			URLConnection uc = new URL(filePath)
+					.openConnection();
+			docInputStream = new BufferedInputStream(uc.getInputStream());
+		} catch (Exception e) {
+			// Cannot open connection, maybe local file
+			docInputStream = new FileInputStream(filePath);
+		}
 
 		OutputStream out = response.getOutputStream();
 		byte[] buffer = new byte[4096];
