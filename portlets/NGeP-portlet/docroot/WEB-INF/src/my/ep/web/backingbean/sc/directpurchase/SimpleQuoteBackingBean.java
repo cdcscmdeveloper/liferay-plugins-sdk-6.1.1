@@ -894,10 +894,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		FacesScopes facesScopes = new FacesScopes();
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+		int checkQty = 0;
 		if(productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
 				productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
 
-			int checkQty = 0;
+			
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
 				if(tplSpecQuestion.getClQuantity() != null){
 					 checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
@@ -915,7 +916,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
 
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
-				int checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+				
+				if(tplSpecQuestion.getClQuantity() != null){
+					 checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+				}
 
 				if(checkQty < 0) {
 					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
