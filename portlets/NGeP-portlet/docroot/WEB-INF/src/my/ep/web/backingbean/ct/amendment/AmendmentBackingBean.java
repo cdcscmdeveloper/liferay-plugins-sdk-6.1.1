@@ -2780,6 +2780,28 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return portletTitle;
 	}
 	
+	public String gpkiSignAction(String outcome) throws Exception{
+		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+				&& isGpkiRole()) {
+			chkComplyAP201Rule();
+			validateContractAmendment(outcome);
+			// Temp setTextBeforeSign : DocNo+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getCtContract().getContractNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else{
+			return saveContractAmendment(outcome);
+		}
+	}
+	
 	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
@@ -2837,5 +2859,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			return true;
 		else 
 			return false;
+	}
+	
+	public boolean isGpkiRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
