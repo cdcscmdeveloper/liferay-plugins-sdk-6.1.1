@@ -41,14 +41,12 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setViewSupplierProfile(true);
 			if (applNo != null && StringUtils.isNotBlank(applNo)) {
 				initApplication(resDTO.getSmAppl());
-				String applType = getManagedBean().getSmAppl().getApplType();
-				redirectToAppl = SmApplicationUtil
-						.getReviewApplicationSupplierProfileBasePage(applType);
+				redirectToAppl = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
 
-			}else{
+			} else {
 				SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
 			}
-		}else{
+		} else {
 			SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
 		}
 
