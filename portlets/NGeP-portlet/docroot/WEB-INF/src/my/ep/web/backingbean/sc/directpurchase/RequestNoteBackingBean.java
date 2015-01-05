@@ -341,6 +341,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getDeliverTermType() != null){
 					scRequestNoteDtl.setDeliverTermTypeId(scRequestNoteDtl.getDeliverTermType().getParameterId());
 				}
+				
+				if(scRequestNoteDtl.getAssignedUser() == null){
+					FacesScopes facesScopes = new FacesScopes();
+					scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
+				}
+				
 			}
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
