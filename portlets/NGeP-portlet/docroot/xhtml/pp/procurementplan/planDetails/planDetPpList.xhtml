@@ -101,7 +101,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		 		<p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />  
 	        </p:column>	 
 	        <p:column>
-       			<p:selectOneMenu id="somCategory" 
+       			<p:selectOneMenu id="somCategory" style="width:99%"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -112,7 +112,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
 	        <p:column>
-       			<p:selectOneMenu id="somProcurementMethod" 
+       			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
 					label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -174,7 +174,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}"
+	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}" style="width:99%"
 	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.brandNew}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu> 
