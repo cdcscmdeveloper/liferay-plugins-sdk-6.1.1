@@ -138,6 +138,8 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	private String headerTitle;
 	private String commTypeTitle;
+	
+	private Object payLoad;
 
 	public CommitteManagedBean() {
 		log.info("inside ");
@@ -654,5 +656,15 @@ public class CommitteManagedBean extends BaseManagedBean {
 			List<SelectItem> addRepresentativesTypeslist) {
 		this.addRepresentativesTypeslist = addRepresentativesTypeslist;
 	}
+
+	public Object getPayLoad() {
+		return payLoad;
+	}
+
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
+	}
+
+	
 
 }
