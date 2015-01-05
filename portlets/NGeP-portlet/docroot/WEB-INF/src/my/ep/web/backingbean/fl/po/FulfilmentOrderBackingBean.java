@@ -76,6 +76,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -172,7 +173,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					|| getManagedBean().getProcessName() != null 
 					&& getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME)){
 				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
-				messagePrefix = "Removal Factoring Company for ";
+				messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.rfc.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 			}
 			
 			if(resDTO.isSuccessful()) {
