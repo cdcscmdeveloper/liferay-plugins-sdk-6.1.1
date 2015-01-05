@@ -112,20 +112,17 @@
 			<p:column rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}">
 			<f:facet name="header" style="width:8%;">
 			<h:outputText style="text-align:right" />
-				<p:commandLink oncomplete="addQuery.show();"
+				
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
+			</f:facet>
+			<p:commandLink oncomplete="addQuery.show();"
 					action="#{purchaseRequestBackingBean.showItemQuery(chargeLineNode)}"
-					 rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}"
+					 rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'true'}"
 					update=":form:queryDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
 						value="/resources/ep/images/design/exclamation.png"
 						title="Query" />
 				</p:commandLink>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
-			</f:facet>
-			<f:facet name="footer">
-				<h:outputText value=""></h:outputText>			
-			</f:facet>
-			
 			</p:column>
 		</p:treeTable>
 		
@@ -253,7 +250,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.query.desc']}" /></td>
 				<td><p:inputTextarea cols="50" rows="6" disabled="true"
-						style=" margin-bottom:5px;" /></td>
+						style=" margin-bottom:5px;" value="#{purchaseRequestBackingBean.queryDesc}"  /></td>
 			</tr>
 		</table>
 		<p:spacer height="2px"></p:spacer>
