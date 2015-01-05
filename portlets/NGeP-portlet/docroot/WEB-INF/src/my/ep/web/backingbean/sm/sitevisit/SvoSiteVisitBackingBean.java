@@ -1417,7 +1417,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("govtUnitrustEquity", svTask.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity());
 		context.put("govtEquity", svTask.getSmAppl().getSmCompanyBasic().getGovtEquity());
 		context.put("localCompanyEquity", svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
-		context.put("foreignCompanyEquity", svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
+		context.put("foreignCompanyEquity", svTask.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
 		
 		context.put("bumiEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getBumiEquity().toString()));
 		context.put("nonBumiEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getNonBumiEquity().toString()));
@@ -1425,7 +1425,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("govtUnitrustEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity().toString()));
 		context.put("govtEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getGovtEquity().toString()));
 		context.put("localCompanyEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().toString()));
-		context.put("foreignCompanyEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity().toString()));
+		context.put("foreignCompanyEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity().toString()));
 		
 		context.put("ownerList", this.getManagedBean().getEquityOwnerLs());
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
