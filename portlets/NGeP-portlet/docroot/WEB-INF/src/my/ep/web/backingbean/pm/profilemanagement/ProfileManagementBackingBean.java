@@ -124,6 +124,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private static Map<String, Object> identityTypeMapper;
 	private static Map<Long, Object> orgTypeMapper;
 	
+	//Authorization 
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 	
 	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
