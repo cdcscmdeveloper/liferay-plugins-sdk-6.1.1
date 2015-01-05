@@ -92,9 +92,11 @@ import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
@@ -339,6 +341,7 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 				getManagedBean().setLois(resDTO.getScLois());
 				getManagedBean().setRecommendList(scQtRecommendList);
+				getManagedBean().setRecommendDtlIds(recommendDtlIds);
 				
 				if (scQtRecommendList != null) {
 					for (ScQtRecommend scQtRecommend : scQtRecommendList) {
@@ -1885,11 +1888,88 @@ public class LOIDetailBackingBean extends
 	}
 	
 	public void saveMultipleLoiAction() {
-		
+		debugLogger("saveAction");
+
+		// IStatusSO statusSO = null;
+		// IUserSO userSO = null;
+		IQTAwardSO qtAwardSO = null;
+
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			ScLoi scLoi = this.getManagedBean().getScLoi();
+			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+					
+			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
+
+			AwardSupplierResDTO resDTO = qtAwardSO.saveMultipleLOIDtl(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				renewSessionWithPreviousValues();
+				
+				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(), "PBA", getManagedBean().getRecommendDtlIds());
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700004,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_MULTIPLE_LOI),
+																		scQtFinalization.getScQt().getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+			}
+
+		} finally {
+			qtAwardSO = null;
+		}
 	}
 	
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		
+	}
+	
+	private AwardSupplierReqDTO parseMultipleLoiDtls() {
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		
+		reqDTO.setScLois(getManagedBean().getLois());
+		
+		// Save EC/TEC/FEC activities details.
+		List<ScQtCommitteeActivity> ecActivityList = new ArrayList<ScQtCommitteeActivity>();
+		if (getManagedBean().getEcActivityList() != null) {
+			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getEcActivityList()) {
+				ecActivityList.add(committeeActivity);
+			}
+		}
+		if (getManagedBean().getTecActivityList() != null) {
+			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getTecActivityList()) {
+				ecActivityList.add(committeeActivity);
+			}
+		}
+		if (getManagedBean().getFecActivityList() != null) {
+			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getFecActivityList()) {
+				ecActivityList.add(committeeActivity);
+			}
+		}
+		reqDTO.setEcActivityList(ecActivityList);
+		
+		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
+		scQtCommittee.setQtCommitteRemarks(
+				finalizeRemarks(scQtCommittee.getQtCommitteRemarks()));
+		reqDTO.setScQtCommittee(scQtCommittee);
+		
+		reqDTO.setScQtRecommendList(getManagedBean().getRecommendList());
+		
+		return reqDTO;
 	}
 	
 	private void debugLogger(Object message) {
@@ -2156,6 +2236,7 @@ public class LOIDetailBackingBean extends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
 		boolean  qtLoaEditFlag = getManagedBean().isQtLoaEditFlag();
+		List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 
 		this.renewSesionObject();
 
@@ -2169,6 +2250,7 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
 		}
 		getManagedBean().setDocType(docType);
+		getManagedBean().setRecommendDtlIds(recommendDtlIds);
 	}
 
 	public SelectItem[] getDeductionItemTypeDropdownList() {
