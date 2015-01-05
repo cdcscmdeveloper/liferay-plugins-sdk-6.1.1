@@ -29,7 +29,7 @@
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomdecimal']}" /></td>
      	<td><p:selectOneMenu id="uomDec" style="width:178px;margin-bottom:5px;"
-     			disabled="#{unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
+     			disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
      			value="#{unitOfMeasurementBackingBean.managedBean.pmUom.decimalScale}"> 
       			<f:selectItems value="#{unitOfMeasurementBackingBean.getMeasurementDecimal()}"></f:selectItems>  	   	
     	    </p:selectOneMenu></td>				
