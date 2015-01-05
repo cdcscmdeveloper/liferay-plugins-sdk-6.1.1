@@ -435,10 +435,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		Date date = new Date();
 		if(flRequest.getCtContract().isRecordStatus()){
 			if(date.compareTo(flRequest.getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) >= 0 ){
-				throw new EpException("Contract has been expired");
+				throw new EpException(MessageConst.ERROR_745064,new String[]{flRequest.getCtContract().getContractNo()});
 			}
 		}else{
-			throw new EpException("Contract has been suspended/terminated");
+			throw new EpException(MessageConst.ERROR_745065,new String[]{flRequest.getCtContract().getContractNo()});
 		}
 	}
 		
