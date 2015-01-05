@@ -472,6 +472,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
 		}
+		for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
+			if(item.getFlQuery() != null){
+				getManagedBean().setQueryDisplay(true);
+				break;
+			}
+		}
 	}
 
 	public void flDeliveryAddrList() {
@@ -1906,12 +1912,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
-		getManagedBean().setQueryDisplay(false);
 		flItemAddress.getScRequestItem().getItemName();
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
 		if(null != flItemAddress.getFlFulfilmentItem().getFlQuery()){
-			getManagedBean().setQueryDisplay(true);
 			setQueryDesc(flItemAddress.getFlFulfilmentItem().getFlQuery().getQueryDesc());
 		}
 	}
@@ -2649,5 +2653,4 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 	}
-
 }
