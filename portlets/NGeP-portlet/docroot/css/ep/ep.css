@@ -1929,7 +1929,7 @@ table.ppTwoTable td {
 }
 
 .ppDisplayCalXS input{
-	width: 60px !important;
+	width: 62px !important;
 }
 
 .ui-selectonemenu.ppDropDownWidthM {
@@ -3453,3 +3453,9 @@ table.rptTbl {
 	background: #F0EFEF;
 }
 /*--------------------------       Panel Grid - End      ------------------------------ */
+
+
+.tempClassName{
+	background: transparent;
+
+	}
