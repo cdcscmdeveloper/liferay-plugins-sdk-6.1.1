@@ -13,15 +13,15 @@
                 <ac:paginator for="committeTable" />
                 <p:column selectionMode="multiple" style="width:2%;" />
 			   
-			    <p:column style="width:20%;white-space:normal" headerText="#{lbl['lbl.ct.name']}">
+			    <p:column style="width:15%;white-space:normal" headerText="#{lbl['lbl.ct.name']}">
 				   <p:outputLabel value="#{ctCommitteeVar.memberName}" style="float:left;"/>
 				</p:column> 
 				 
-				 <p:column style="width:15%;" headerText="#{lbl['lbl.ct.identification.no']}">
+				 <p:column style="width:13%;" headerText="#{lbl['lbl.ct.identification.no']}">
 				    <p:outputLabel value="#{ctCommitteeVar.icPassport}" style="float:left;"/>
 				 </p:column>  
 				 
-				 <p:column style="width:20%;white-space:normal" headerText="#{lbl['lbl.ct.designation']}" >
+				 <p:column style="width:27%;white-space:normal" headerText="#{lbl['lbl.ct.designation']}" >
 				      <p:outputLabel value="#{ctCommitteeVar.designation}" style="float:left;"/>
 				 </p:column> 
 				
@@ -38,23 +38,20 @@
 				 </p:column>
 				 
 				 <p:column headerText="Role" style="width:13%;">
-					 <ui:fragment rendered="#{ctCommitteeVar.pnp == true}">
-							<h:outputText value="#{lbl['lbl.ct.chairperson']}" />
-					 </ui:fragment>
-					<ui:fragment rendered="#{ctCommitteeVar.pnp == false}" >
-						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}"
-							style="width: 110px;margin-bottom: 5px;" required="true" label="Role">
-							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown()}" />
-							</p:selectOneMenu>
-						 </ui:fragment>
+						<p:selectOneMenu value="#{ctCommitteeVar.memberRole.parameterId}"
+							style="width: 110px;margin-bottom: 5px;"  id="appaction"
+						    disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" required="true" label="Role" >
+							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
+						</p:selectOneMenu>
 				 </p:column>
-	    
 	         </p:dataTable>
 	         <p:spacer height="5"/>
 	         
 	         <div class="ppRightBtn"> 
-		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlg2.show();"  />
-		          <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onsuccess="dlgDel.show();" icon="ui-icon-delete"/>
+		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" 
+		             onclick="dlg2.show();" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
+		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" 
+		             process="@form" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
 		     </div>
            
              <p:dialog id="dlgCommitteDetails"
@@ -75,7 +72,7 @@
              </p:dialog>
         </p:panel>
       
-         <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" modal="true" width="875" height="525">
+         <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" modal="true" width="950" height="550">
 		         
 		           <p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"   toggleSpeed="500">
 		              
@@ -108,7 +105,7 @@
                            <ac:paginator for="newCommitteTable"/>
                            <p:column selectionMode="multiple" style="width:2%" />
                       
-				            <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.name']}">
+				            <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.name']}">
 				                 <p:outputLabel value="#{data.userName}" style="float:left;"/>
 				            </p:column> 
 				      
@@ -116,15 +113,15 @@
 				                 <p:outputLabel value="#{data.identificationNo}" style="float:left;"/>
 				             </p:column> 
 				            
-				             <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.designation']}">
+				             <p:column style="width:38%;white-space:normal;" headerText="#{lbl['lbl.ct.designation']}">
 				                  <p:outputLabel value="#{data.designation}" style="float:left;"/>
 				             </p:column> 
 				    
-				             <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.email']}">
+				             <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.email']}">
 				                  <p:outputLabel value="#{data.email}" style="float:left;"/>
 				             </p:column> 
 				      
-				             <p:column style="width:10%;white-space:normal;" headerText="#{lbl['lbl.ct.grade']}">
+				             <p:column style="width:8%;white-space:normal;" headerText="#{lbl['lbl.ct.grade']}">
 				                  <p:outputLabel value="#{data.grade}" style="float:left;"/>
 				             </p:column> 
 				       
@@ -140,7 +137,6 @@
                        <p:commandButton value="#{lbl['lbl.btn.cancel']}" type="button"  icon="ui-icon-cancel" ajax="false" onclick="dlg2.hide();" />
 			      </h:panelGrid>
 		        </f:facet>
-		  
 		    </p:panel>
     </p:dialog>
 </ui:composition>
