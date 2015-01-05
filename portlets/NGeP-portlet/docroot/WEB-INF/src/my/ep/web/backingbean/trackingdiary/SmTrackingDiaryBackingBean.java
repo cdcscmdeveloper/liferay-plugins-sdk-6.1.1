@@ -13,7 +13,9 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -34,11 +36,10 @@ public class SmTrackingDiaryBackingBean extends
 	private static Logger log = Logger.getLogger(SmTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_SMSUPPLIER_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_SMSUPPLIER_DETAIL_SEARCH = "smTrackingDiaryDetailSearch.xhtml";
-	private SearchFilterBean businessTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean regStatusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean MOFAccountFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean businessRegNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean companyNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean applicationTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean applicationNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private IPagingDataModel<SmSupplier> searchDataModel = new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	public SmTrackingDiaryBackingBean() {
@@ -46,18 +47,14 @@ public class SmTrackingDiaryBackingBean extends
 //		SmSupplier smSupplier = new SmSupplier();
 	}
 	
-	public void smSupplierSearch() {
-		String smSupplierTitle = businessRegNoFilterBean.getSearchValue().toString();
-
-		log.info(".........................businessRegNoFilterBean="+ businessRegNoFilterBean.getSearchValue());
-//		log.info(".......................smSupplierCode="+ smSupplierCode);
-		log.info("................................smSupplierTitle="+ smSupplierTitle);
+	public void search() {
+//		log.info("................................smSupplierTitle="+ smSupplierTitle);
 //		if ((extensionCode != null && extensionCode.isEmpty()) && ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
 //			throw new EpException(MessageConst.ERROR_716006);
 //		}
+		searchDataModel.reloadData();
 
-
-		searchDataModel.reloadData();	}
+		}
 
 	
 	private class SearchPagingDataModel extends PagingDataModel<SmSupplier> {
@@ -72,11 +69,11 @@ public class SmTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<SmSupplier> pageChangeListener(
 				ISearchBean<SmSupplier> searchBean) {
-			System.out.println("businessRegNoFilterBean.getSearchValue()="+ businessRegNoFilterBean.getSearchValue());
+			System.out.println("applicationNoFilterBean.getSearchValue()="+ applicationNoFilterBean.getSearchValue());
 		
 
-			if (StringUtils.isBlank((String) businessRegNoFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) businessRegNoFilterBean
+			if (StringUtils.isBlank((String) applicationNoFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String) applicationNoFilterBean
 							.getSearchValue())) {
 				System.out.println("isBlank");
 				return new SearchResultBean();
@@ -89,20 +86,23 @@ public class SmTrackingDiaryBackingBean extends
 						.getServiceObject("sm", ISupplierSearchSO.class);
 
 
-				if (StringUtils.isNotBlank((String) businessRegNoFilterBean
+				if (StringUtils.isNotBlank((String) applicationNoFilterBean
 						.getSearchValue())) {
-					System.out.println("*********businessRegNoFilterBean***********");
-					businessRegNoFilterBean.setSearchField("regNo");
-					searchBean.getDataFilterBeans().add(businessRegNoFilterBean);
+					System.out.println("*********applicationNoFilterBean***********");
+					applicationNoFilterBean.setSearchField("appNo");
+					searchBean.getDataFilterBeans().add(applicationNoFilterBean);
 				}
 
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSearchBean(searchBean);
 				System.out.println("*********b4***********");
-				ISearchResultBean<SmSupplier> res = smSupplierSO.retriveSupplierList(searchBean);
+				reqDTO.setCompanyName("METRO");
+//				SupplierSearchReqDTO supplierSearchReqDTO = null;
+//				SupplierSearchReqDTO supplierSearchReqDTO = null;
+				SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
 
-				System.out.println("*********after***********");
-				return res;
+				System.out.println("*********after***********"+res.getResultBean().getTotalRecord());
+				return res.getResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -110,8 +110,8 @@ public class SmTrackingDiaryBackingBean extends
 			}
 			return new SearchResultBean();
 		}
-
 	}
+
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
 		private static final long serialVersionUID = 1L;
@@ -124,37 +124,37 @@ public class SmTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
-			System.out.println("businessRegNoFilterBean.getSearchValue()="+ businessRegNoFilterBean.getSearchValue());
-		
-
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-//			statusFilterBean.setSearchField("trackingDiaryId");
-//			statusFilterBean.setSearchValue(new Long(4));
-//			searchBean.getDataFilterBeans().add(statusFilterBean);
+//			docTypeFilterBean.setSearchField("docType");
+//			docTypeFilterBean.setSearchValue("PO");
+//			searchBean.getDataFilterBeans().add(docTypeFilterBean);
+//
+//			docIdFilterBean.setSearchField("docId");
+//			docIdFilterBean.setSearchValue("2233");
+//			searchBean.getDataFilterBeans().add(docTypeFilterBean);
+
 			reqDTO.setSearchBean(searchBean);
-	TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
-	try {
-		ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
+			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
+			try {
+				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
 			return resDTO.getResultBean();
 			
 		}
-
 	}
 
-
-	public String goToTrackingDiarySearch(SmSupplier smSupplierObj) {
-		log.debug("*******www***goToExtensionSearch************");
-
-		searchTrackingDiaryDataModel.reloadData();	
-		return NAV_TO_SMSUPPLIER_DETAIL_SEARCH + "?faces-redirect=true";
-	}
+//	public String goToTrackingDiarySearch(CmUnspsc unspscObj) {
+//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
+//		getManagedBean().setCmUnspsc(unspscObj);
+//		searchTrackingDiaryDataModel.reloadData();	
+//		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
+//	}
 
 	public String reset() {
 		return null;
@@ -165,13 +165,13 @@ public class SmTrackingDiaryBackingBean extends
 		return NAV_TO_SMSUPPLIER_SEARCH;
 	}
 
-	public IPagingDataModel<SmSupplier> getSearchDataModel() {
-		return searchDataModel;
-	}
-
-	public void setSearchDataModel(IPagingDataModel<SmSupplier> searchDataModel) {
-		this.searchDataModel = searchDataModel;
-	}
+//	public IPagingDataModel<SmSupplier> getSearchDataModel() {
+//		return searchDataModel;
+//	}
+//
+//	public void setSearchDataModel(IPagingDataModel<SmSupplier> searchDataModel) {
+//		this.searchDataModel = searchDataModel;
+//	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
 		return searchTrackingDiaryDataModel;
@@ -182,30 +182,6 @@ public class SmTrackingDiaryBackingBean extends
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 
-	public SearchFilterBean getBusinessRegNoFilterBean() {
-		return businessRegNoFilterBean;
-	}
-
-	public void setBusinessRegNoFilterBean(SearchFilterBean businessRegNoFilterBean) {
-		this.businessRegNoFilterBean = businessRegNoFilterBean;
-	}
-
-	public SearchFilterBean getRegStatusFilterBean() {
-		return regStatusFilterBean;
-	}
-
-	public void setRegStatusFilterBean(SearchFilterBean regStatusFilterBean) {
-		this.regStatusFilterBean = regStatusFilterBean;
-	}
-
-	public SearchFilterBean getBusinessTypeFilterBean() {
-		return businessTypeFilterBean;
-	}
-
-	public void setBusinessTypeFilterBean(SearchFilterBean businessTypeFilterBean) {
-		this.businessTypeFilterBean = businessTypeFilterBean;
-	}
-
 	public SearchFilterBean getMOFAccountFilterBean() {
 		return MOFAccountFilterBean;
 	}
@@ -214,14 +190,38 @@ public class SmTrackingDiaryBackingBean extends
 		MOFAccountFilterBean = mOFAccountFilterBean;
 	}
 
-	public SearchFilterBean getCompanyNameFilterBean() {
-		return companyNameFilterBean;
+	public SearchFilterBean getApplicationTypeFilterBean() {
+		return applicationTypeFilterBean;
 	}
 
-	public void setCompanyNameFilterBean(SearchFilterBean companyNameFilterBean) {
-		this.companyNameFilterBean = companyNameFilterBean;
+	public void setApplicationTypeFilterBean(
+			SearchFilterBean applicationTypeFilterBean) {
+		this.applicationTypeFilterBean = applicationTypeFilterBean;
 	}
 
+	public SearchFilterBean getApplicationNoFilterBean() {
+		return applicationNoFilterBean;
+	}
+
+	public void setApplicationNoFilterBean(SearchFilterBean applicationNoFilterBean) {
+		this.applicationNoFilterBean = applicationNoFilterBean;
+	}
+
+	public SearchFilterBean getSupplierNameFilterBean() {
+		return supplierNameFilterBean;
+	}
+
+	public void setSupplierNameFilterBean(SearchFilterBean supplierNameFilterBean) {
+		this.supplierNameFilterBean = supplierNameFilterBean;
+	}
+
+	public IPagingDataModel<SmSupplier> getSearchDataModel() {
+		return searchDataModel;
+	}
+
+	public void setSearchDataModel(IPagingDataModel<SmSupplier> searchDataModel) {
+		this.searchDataModel = searchDataModel;
+	}
 
 }
 
