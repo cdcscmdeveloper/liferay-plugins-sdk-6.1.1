@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -323,6 +324,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtPanelItem selectCtPanelItem;
 	private boolean specComplete;
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
+	private List<ScQtLocCriteria> existingSupplierLocationList;
+	private boolean isSupplierValidation;
 
 	/**
 	 * @return the specComplete
@@ -3249,5 +3252,36 @@ public class SpecificationManagedBean extends BaseManagedBean {
 			List<ScQtCheckList> markDeletedFinChecklist) {
 		this.markDeletedFinChecklist = markDeletedFinChecklist;
 	}
+
+	/**
+	 * @return the existingSupplierLocationList
+	 */
+	public List<ScQtLocCriteria> getExistingSupplierLocationList() {
+		return existingSupplierLocationList;
+	}
+
+	/**
+	 * @param existingSupplierLocationList the existingSupplierLocationList to set
+	 */
+	public void setExistingSupplierLocationList(
+			List<ScQtLocCriteria> existingSupplierLocationList) {
+		this.existingSupplierLocationList = existingSupplierLocationList;
+	}
+
+	/**
+	 * @return the isSupplierValidation
+	 */
+	public boolean isSupplierValidation() {
+		return isSupplierValidation;
+	}
+
+	/**
+	 * @param isSupplierValidation the isSupplierValidation to set
+	 */
+	public void setSupplierValidation(boolean isSupplierValidation) {
+		this.isSupplierValidation = isSupplierValidation;
+	}
+
+	
 
 }
