@@ -708,7 +708,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		BigDecimal paidUpCapital = this.getManagedBean().getSmSvTask().getSmAppl().getSmCompanyBasic().getPaidUpCapital();
 		//eqAmt.divide(paidUpCapital, 3, RoundingMode.CEILING);
 //		BigDecimal eqPercentage = eqAmt.divide(paidUpCapital, 3, RoundingMode.CEILING).multiply();
-		BigDecimal percentage = eqAmt.divide(paidUpCapital, 3, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+		BigDecimal percentage = eqAmt.divide(paidUpCapital, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 
 		return percentage;
 	}
