@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -701,6 +702,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					new FacesScopes().getUserLocale())));
 			return "";
 		}
+	}
+	
+	private String formatEquity(BigDecimal equityAmount) {
+		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		return formatter.format(equityAmount);
 	}
 	
 	public BigDecimal calculateEquityPercentage(String equityAmt){
@@ -1408,16 +1414,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		VelocityContext context = new VelocityContext();
 		String vmEquity= "/sm/sitevisit/sv-section-a.vm";
 		
-		context.put("authorizedCapital", svTask.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());
-		context.put("paidUpCapital", svTask.getSmAppl().getSmCompanyBasic().getPaidUpCapital());
+		context.put("authorizedCapital", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()));
+		context.put("paidUpCapital", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getPaidUpCapital()));
 		context.put("countOwner", this.getManagedBean().getTotalEquityOwner());
-		context.put("bumiEquity", svTask.getSmAppl().getSmCompanyBasic().getBumiEquity());
-		context.put("nonBumiEquity", svTask.getSmAppl().getSmCompanyBasic().getNonBumiEquity());
-		context.put("nonMalaysianEquity", svTask.getSmAppl().getSmCompanyBasic().getForeignerEquity());
-		context.put("govtUnitrustEquity", svTask.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity());
-		context.put("govtEquity", svTask.getSmAppl().getSmCompanyBasic().getGovtEquity());
-		context.put("localCompanyEquity", svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
-		context.put("foreignCompanyEquity", svTask.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
+		context.put("bumiEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getBumiEquity()));
+		context.put("nonBumiEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getNonBumiEquity()));
+		context.put("nonMalaysianEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getForeignerEquity()));
+		context.put("govtUnitrustEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity()));
+		context.put("govtEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getGovtEquity()));
+		context.put("localCompanyEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity()));
+		context.put("foreignCompanyEquity", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity()));
 		
 		context.put("bumiEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getBumiEquity().toString()));
 		context.put("nonBumiEquityPct", calculateEquityPercentage(svTask.getSmAppl().getSmCompanyBasic().getNonBumiEquity().toString()));
