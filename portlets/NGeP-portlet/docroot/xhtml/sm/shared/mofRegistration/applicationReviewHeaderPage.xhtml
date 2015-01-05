@@ -95,6 +95,7 @@
 						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
 						<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
 						<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
+						<f:param name="revType" value="#{SupplierManagementConst.PREVIOUS_APPLICATION}"/>
 					</h:outputLink>
 				</td>
 			</tr>
@@ -110,6 +111,7 @@
 						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionSupplierAppNoParam}"/>
 						<f:param name="applicationType" value="#{backingBean.managedBean.smAppl.applType}"/>
 						<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
+						<f:param name="revType" value="#{SupplierManagementConst.ORIGINAL_APPLICATION}"/>
 					</h:outputLink>
 				</td>
 			</tr>
