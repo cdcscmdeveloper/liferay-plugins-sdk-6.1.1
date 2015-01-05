@@ -93,14 +93,14 @@
 							
 						</tr>
 					</table></td>
-				<td style="width: 180px;"><p:outputLabel
-						value="#{lbl['lbl.fl.payment.match.prepared.date']}" /></td>
+				<td style="width: 102px;"><p:outputLabel
+						value="#{lbl['lbl.fl.prepared.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.date']}"/></td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.prepared.date']}"/></td>
 			</tr>
 			<tr>
 				<td ><p:outputLabel
