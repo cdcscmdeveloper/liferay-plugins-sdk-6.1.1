@@ -323,12 +323,12 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setQtBriefingList(briefingDetails);
 
 			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
-			String[] outComes = this.getManagedBean().getOutComes();
 			if ("complete".equalsIgnoreCase(status)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
 				Long qtId = this.getManagedBean().getScQt().getQtId();
-				renewSesionObject();
-				this.getManagedBean().setOutComes(outComes);
+				
+				renewSessionWithPreviousValues();
+				
 				retrieveBriefingSiteVisitList(qtId);
 				url = previousPage + ".xhtml?faces-redirect=true";
 			}
@@ -336,8 +336,9 @@ public class BSVAttendanceBackingBean extends
 				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);
 				String previousPage = this.getManagedBean().getPreviousPage();
 				ScQt scQt = this.getManagedBean().getScQt();
-				renewSesionObject();
-				this.getManagedBean().setOutComes(outComes);
+				
+				renewSessionWithPreviousValues();
+				
 				this.getManagedBean().setPreviousPage(previousPage);
 				this.getManagedBean().setScQt(scQt);
 
@@ -366,6 +367,22 @@ public class BSVAttendanceBackingBean extends
 
 		return url;
 
+	}
+	
+	private void renewSessionWithPreviousValues() {		
+		String taskId = getManagedBean().getTaskId();
+		String[] outcomes = getManagedBean().getOutComes();
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		String taskName = getManagedBean().getTaskName();
+		Object siteVisitDatatype = getManagedBean().getSiteVisitPayLoad();
+
+		this.renewSesionObject();
+
+		getManagedBean().setTaskId(taskId);
+		getManagedBean().setOutComes(outcomes);
+		getManagedBean().setCurrentStatusId(currentStatusId);
+		getManagedBean().setTaskName(taskName);
+		getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
 	}
 
 	/**
