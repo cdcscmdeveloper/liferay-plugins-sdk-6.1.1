@@ -22,6 +22,9 @@
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
 				update="chargeLineTbl,@(.chargeLineSection)"></p:ajax>
 			<p:column style="width:5%">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
 					rendered="#{chargeLineNode.parent == 'true'}"
@@ -37,6 +40,9 @@
 					<h:outputText value="#{lbl['lbl.fl.charge.line.coa']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.complete']}"/>
 				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
 				<h:outputText value="#{chargeLineNode.coaValue}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
@@ -45,18 +51,30 @@
 					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" />
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" />			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">
+			 	<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
 				<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
 				<h:outputText value="#{chargeLineNode.unitPrice}"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
@@ -64,6 +82,9 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right;" >
+				<f:facet name="footer">
+					<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}"></h:outputText>			
+				</f:facet>
 				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
 					rendered="#{chargeLineNode.parent == 'false'}" >
 					<f:converter converterId="dynamicNumberConverter" />
@@ -71,6 +92,12 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right;width:15%;">
+				<f:facet name="footer">
+					<h:outputText
+						value="#{purchaseRequestBackingBean.managedBean.orderedAmtGrandTotal}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>		
+				</f:facet>
 				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
 					rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber
@@ -95,22 +122,12 @@
 				</p:commandLink>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
 			</f:facet>
+			<f:facet name="footer">
+				<h:outputText value=""></h:outputText>			
+			</f:facet>
 			
 			</p:column>
 		</p:treeTable>
-		<br />
-		<br />
-		<br />
-		<table style="width: 93%">
-			<tr>
-				<td style="text-align: right; font: bold; size: 10;">#{lbl['lbl.fl.charge.line.grandtotal']} <p:spacer width="10px" />
-					<h:outputText
-						value="#{purchaseRequestBackingBean.managedBean.orderedAmtGrandTotal}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</td>
-			</tr>
-		</table>
 		
 		<br />
 		<br />
