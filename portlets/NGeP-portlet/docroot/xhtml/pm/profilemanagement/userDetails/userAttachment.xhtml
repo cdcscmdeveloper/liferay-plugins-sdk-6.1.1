@@ -17,15 +17,15 @@
 		    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
 	          	#{attachment.fileName}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pp.created.by']}" >
+	        <p:column headerText="#{lbl['lbl.pm.created.by']}" >
 	          	#{profileManagementBackingBean.getUsername(attachment.createdBy)}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pp.created.date']}" >
+	        <p:column headerText="#{lbl['lbl.pm.created.date']}" >
 	        	<h:outputText value="#{attachment.createdDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
-	        <p:column headerText="#{lbl['lbl.pp.action']}" >
+	        <p:column headerText="#{lbl['lbl.pm.action']}" >
 	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
 	          		immediate="true" ajax="false" disabled="#{attachment.brandNew}">
  					  <p:graphicImage value="/css/images/design/attach.png" />
