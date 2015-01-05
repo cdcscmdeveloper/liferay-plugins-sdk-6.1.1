@@ -112,17 +112,15 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column >
-				<f:facet name="header" style="width:8%;">
-					<h:outputText style="text-align:right" value="#{lbl['lbl.fl.charge.line.query']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
-				</f:facet>
-				<f:facet name="footer">
-					<h:outputText value=""></h:outputText>			
-				</f:facet>
-				<p:commandLink oncomplete="addQuery.show();"
+			<p:column rendered="#{contractRequestBackingBean.managedBean.queryDisplay}">
+			<f:facet name="header" style="width:8%;">
+			<h:outputText style="text-align:right" />
+				
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
+			</f:facet>
+			<p:commandLink oncomplete="addQuery.show();"
 					action="#{contractRequestBackingBean.showItemQuery(chargeLineNode)}"
-					rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}"
+					 rendered="#{contractRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'true'}"
 					update=":form:queryDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
 						value="/resources/ep/images/design/exclamation.png"
@@ -244,7 +242,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.query.desc']}" /></td>
 				<td><p:inputTextarea cols="50" rows="6" disabled="true"
-						style=" margin-bottom:5px;" /></td>
+						style=" margin-bottom:5px;" value="#{contractRequestBackingBean.queryDesc}"/></td>
 			</tr>
 		</table>
 		<p:spacer height="2px"></p:spacer>
