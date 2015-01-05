@@ -396,14 +396,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 				
 				SimpleQuoteBackingBean simpleQuoteBackingBean =  new SimpleQuoteBackingBean();
-				TemplateSpecBean productTplSpecBean = simpleQuoteBackingBean.getManagedBean().getProductTemplateSpecBean();
-				TemplateSpecBean serviceTplSpecBean = simpleQuoteBackingBean.getManagedBean().getServiceTemplateSpecBean();
 
-				if(productTplSpecBean.getSpecMaster() != null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null &&  
-						productTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0  || 
-						serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
-						serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
-					setSimpleQuoteFlag(false);
+				if(simpleQuoteBackingBean.getManagedBean() != null){
+					if(simpleQuoteBackingBean.getManagedBean().getScQuote() != null){
+						if(simpleQuoteBackingBean.getManagedBean().getScQuote().getPanelItem() != null){
+							setSimpleQuoteFlag(false);
+						}
+					}
 				} 
 				
 			 return resDTO.getViewSuppItemResultBean();
