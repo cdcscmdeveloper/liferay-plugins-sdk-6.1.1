@@ -916,12 +916,17 @@ public class QTDetailBackingBean extends
 					.getScQtContactPersons();
 			List<ScQtContactPerson> deskOfficerAdminList = this
 					.getManagedBean().getPmuserContactpersonList();
-
+			List<ScQtContactPerson> contactList = new ArrayList<ScQtContactPerson>();
+			
 			if (deskOfficerAdminList != null && !deskOfficerAdminList.isEmpty()) {
-				contactPersonsList.addAll(deskOfficerAdminList);
+				//contactPersonsList.addAll(deskOfficerAdminList);
+				contactList.addAll(deskOfficerAdminList);
+			}
+			if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
+				contactList.addAll(contactPersonsList);
 			}
 			if (null != contactPersonsList) {
-				scQt.setScQtContactPersons(contactPersonsList);
+				scQt.setScQtContactPersons(contactList);
 			}
 
 			// Setting the Deductions to qtdetails.
