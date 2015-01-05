@@ -64,7 +64,7 @@
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.result']}" toggleable="true"	toggleSpeed="500">
 			<div style="overflow-x: auto">				
-				<p:dataTable id="contractTbl" value="#{contractDetailsBackingBean.contractDataModel}"
+				<p:dataTable id="contractTbl" value="#{contractDetailsBackingBean.managedBean.contractDataModel}"
 					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" >
 					<ac:paginator for="contractTbl" />
 					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;">

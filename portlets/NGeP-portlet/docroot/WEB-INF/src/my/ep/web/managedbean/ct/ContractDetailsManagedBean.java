@@ -15,6 +15,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -37,9 +48,13 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
@@ -174,6 +189,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean selectAll;
 	
 	private CtAmendment ctAmendment;
+	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	
 	public String[] getAction() {
 		return action;
@@ -1076,5 +1092,119 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtAmendment(CtAmendment ctAmendment) {
 		this.ctAmendment = ctAmendment;
+	}
+	
+	public IPagingDataModel<VCtContract> getContractDataModel() {
+		return contractDataModel;
+	}
+
+	public void setContractDataModel(IPagingDataModel<VCtContract> contractDataModel) {
+		this.contractDataModel = contractDataModel;
+	}
+
+	private class ContractPagingDataModel extends PagingDataModel<VCtContract> {
+		private static final long serialVersionUID = 1L;
+
+		public ContractPagingDataModel() {
+			super("contractTbl");
+		}
+		
+		@Override
+		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
+			IContractSO contractSO = null;
+			try {
+				if(getCtNumber()!=null && getCtNumber().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
+													getCtNumber());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getCtName()!=null && getCtName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+													getCtName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getCtCircularNo()!=null && getCtCircularNo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
+													getCtCircularNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getCtCircularName()!=null && getCtCircularName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.name",SearchOperator.OPERATOR_LIKE.value(),
+													getCtCircularName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getCtSupplierId()!=null && getCtSupplierId().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
+					getCtSupplierId()));
+				}
+				if(getCtSupplierName()!=null && getCtSupplierName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
+													getCtSupplierName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getCtDateStart()!=null && getCtDateEnd()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getCtDateStart()));	
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getCtDateEnd()));		
+				
+				}
+				if(getCtDateStart()!=null && getCtDateEnd()==null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getCtDateStart()));					
+				}
+				if(getCtDateStart()==null && getCtDateEnd()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getCtDateEnd()));	
+				}
+				if(getCtPhysicalNo()!=null && getCtPhysicalNo().length()>0) {
+				   	SearchFilterBean filterBean = new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+				   									getCtPhysicalNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);					
+				}
+				if(getCtLOANo()!=null && getCtLOANo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+													getCtLOANo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);					
+				}
+				if(getCtContractStatus()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
+					getCtContractStatus()));					
+				}
+				if(getTerminationTypeId() != null) {
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterId(getTerminationTypeId());
+					reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+					String parameterCode = resDTO.getPmParameter().getParameterCode();
+					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+					}
+					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+					}
+					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
+					}
+				}
+				
+				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setvCtContractSearchBean(searchBean);
+				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
+				setSelectedIndex(0);
+					
+				if(resDTO.isSuccessful()) {
+					return resDTO.getvCtContractResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 }

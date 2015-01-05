@@ -9,11 +9,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.circular.CircularResDTO;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -26,9 +38,14 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
@@ -102,6 +119,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate;
 	private String textBeforeSign;
+	
+	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
 	public CtCircular getCircular() {
 		return circular;
@@ -515,5 +534,112 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
+	}
+	
+	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {
+		return circularVerPagingDataModel;
+	}
+
+	public void setCircularVerPagingDataModel(
+			IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
+		this.circularVerPagingDataModel = circularVerPagingDataModel;
+	}
+	
+	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
+		private static final long serialVersionUID = 1L;
+
+		public CircularVerPagingDataModel() {
+			super("circularVerDt");
+		}
+		
+		@Override
+		public ISearchResultBean<CtCircularVer> pageChangeListener(ISearchBean<CtCircularVer> searchBean) {
+			try {				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_PANEL));
+				if(getSearchCircularNo()!=null && getSearchCircularNo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctCircular.circularNo",
+													SearchOperator.OPERATOR_LIKE.value(),getSearchCircularNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);	
+				}
+				if(getSearchCircularName()!=null && getSearchCircularName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("name",
+													SearchOperator.OPERATOR_LIKE.value(),getSearchCircularName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+				if(getSearchSupplierName()!=null && getSearchSupplierName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",
+													SearchOperator.OPERATOR_LIKE.value(),getSearchSupplierName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}			
+				if(getSearchPhysicalCircularNo()!=null && getSearchPhysicalCircularNo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
+													SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalCircularNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}	
+				if(getSearchItemName()!=null && getSearchItemName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ctPanelItems.itemName",
+													SearchOperator.OPERATOR_LIKE.value(),getSearchItemName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				
+				}if(getSearchStartDate()!=null && getSearchEndDate()!=null) {
+				    searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchStartDate()));	
+				    searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchEndDate()));		
+			
+			    }if(getSearchStartDate()!=null && getSearchEndDate()==null) {
+				   searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchStartDate()));	
+			
+			    }if(getSearchStartDate()==null && getSearchEndDate()!=null) {
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getSearchEndDate()));	
+			    }
+			    
+			    if(getSearchStatusId()!=null) {
+					//Filter out cancelled status
+					if(getSearchStatusId().longValue() == ContractStatusConst.PQ_APPROVED || 
+							getSearchStatusId().longValue() == ContractStatusConst.PQ_REJECTED)
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_NOT_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
+					//display cancelled circular
+					else if(getSearchStatusId().longValue() == 0L)
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
+				}					
+				
+			    CircularReqDTO reqDTO = new CircularReqDTO();
+				reqDTO.setCircularVerSearchBean(searchBean);
+				reqDTO.setFilterStatusId(getSearchStatusId());
+				
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
+				if(resDTO.isSuccessful()) {
+					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
+						
+						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+							/*CircularReqDTO circularReqDTO = new CircularReqDTO();
+							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
+							circularVer.getCtCircular().setLatestCircularVer(circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
+							*/
+							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
+								PmStatus cancelStatus = new PmStatus();
+								cancelStatus.setStatusId(0L);
+								circularVer.setStatus(cancelStatus);
+							
+						  }
+							//if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
+								if(circularVer.getCtCircular().getLatestCircularVer() != null)
+									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+						 // }
+					  }
+				  }
+				return resDTO.getCircularVerResultBean();
+			}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+			return null;
+		}
 	}
 }
