@@ -229,15 +229,15 @@ public class ReportConst {
 	public static final String FL_NGEP_DEBIT_NOTE = "FL_NGEP_DEBIT_NOTE.jsp";
 	//FL Module reports end
 	//SM Module report start
-	public static final String SM_LST_OF_APP_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_APP_RPT_NAME";
+	/*public static final String SM_LST_OF_APP_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_APP_RPT_NAME";
 	public static final String SM_LST_OF_APP_RPT_VAL = "LstOfApplication";
 	public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_NAME";
 	public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL = "LstOfflnSupportDocPendSubmission(NoOfDaysLapse)";
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME";
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_VAL = "VirtCertiReleasedLstOnTheDayReport";
-	public static final String SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME = "lbl.rpt.sm.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME";
+	public static final String SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME = "lbl.rpt.sm.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME";*/
 	public static final String SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL = "SM_001";
-	public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME";
+	/*public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME";
 	public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL = "LstOfCompBasedSuppTypeBumiputeraStsCatRpt";
 	public static final String SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME";
 	public static final String SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_VAL = "LstOfCompDirectorsOwnersCEOEquivalentRpt";
@@ -253,20 +253,20 @@ public class ReportConst {
 	public static final String SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_VAL = "ListMOF-regCancellation(ReqBySupp/AutoCancelledByTheSystem)";
 	public static final String SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_NAME";
 	public static final String SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_VAL = "LstOfPaymentForProcessingAndRegistrationFee";
-	public static final String SM_CAT_STATIC_RPT_NAME = "lbl.rpt.sm.SM_CAT_STATIC_RPT_NAME";
-	public static final String SM_CAT_STATIC_RPT_VAL = "SM_002";
+	public static final String SM_CAT_STATIC_RPT_NAME = "lbl.rpt.sm.SM_CAT_STATIC_RPT_NAME";*/
+	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_NAME = "lbl.rpt.sm.SM_CAT_STATIC_BY_YEAR_RPT_NAME";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";
 	public static final String SM_CAT_STATIC_BY_STATE_RPT_NAME = "lbl.rpt.sm.SM_CAT_STATIC_BY_STATE_RPT_NAME";
 	public static final String SM_CAT_STATIC_BY_STATE_RPT_VAL = "SM_004";
 	public static final String SM_APPL_VERIFY_RPT_NAME = "lbl.rpt.sm.SM_APPL_VERIFY_RPT_NAME";
-	public static final String SM_APPL_VERIFY_RPT_VAL = "SM_005";
+	public static final String SM_APPLICATION_VERIFICATION_RPT_VAL = "SM_005";
 	public static final String SM_APPL_APPROVED_RPT_NAME = "lbl.rpt.sm.SM_APPL_APPROVED_RPT_NAME";
-	public static final String SM_APPL_APPROVED_RPT_VAL = "SM_006";
+	public static final String SM_APPLICATION_APPROVED_RPT_VAL = "SM_006";
 	public static final String SM_APPL_REJECTED_RPT_NAME = "lbl.rpt.sm.SM_APPL_REJECTED_RPT_NAME";
-	public static final String SM_APPL_REJECTED_RPT_VAL = "SM_007";
+	public static final String SM_APPLICATION_REJECTED_RPT_VAL = "SM_007";
 	public static final String SM_LST_APPL_PEND_SITE_VISIT_RPT_NAME = "lbl.rpt.sm.SM_LST_APPL_PEND_SITE_VISIT_RPT_NAME";
-	public static final String SM_LST_APPL_PEND_SITE_VISIT_RPT_VAL = "SM_008";
+	public static final String SM_APPL_PEND_SITE_VISIT_RPT_VAL = "SM_008";
 	public static final String SM_TOT_NUM_YEARLY_APPL_RPT_NAME = "lbl.rpt.sm.SM_TOT_NUM_YEARLY_APPL_RPT_NAME";
 	public static final String SM_TOT_NUM_YEARLY_APPL_RPT_VAL = "SM_009";
 	public static final String SM_LST_PRE_EXP_COMP_RPT_NAME = "lbl.rpt.sm.SM_LST_PRE_EXP_COMP_RPT_NAME";
