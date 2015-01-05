@@ -4870,7 +4870,9 @@ public class SmApplicationBackingBean extends
 			PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
 					.getStateId());
 			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
-			reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase());
+			if (zone != null && zone.getZoneName() != null) {
+				reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase());
+			}
 		} else {
 			throw new EpException(MessageConst.ERROR_722568);
 		}
@@ -5083,9 +5085,18 @@ public class SmApplicationBackingBean extends
 			reqDTO.setBpmTaskName(getManagedBean().getBpmTaskName());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setLocation(getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
-					.getStateName().toUpperCase());
+			PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+			if (state != null && state.getStateId() != null) {
+				PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+						.getStateId());
+				log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
+				if (zone != null && zone.getZoneName() != null) {
+					reqDTO.setLocation(zone.getZoneName().toUpperCase());
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_722568);
+			}
 			reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
 					.getSupplierType().toUpperCase());
 			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
