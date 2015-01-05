@@ -95,7 +95,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     private boolean titleChecker = Boolean.TRUE;
     private Long prInquiryId; // To get PI id to cancel in request note
-    private Long pidId; // To get pid Id in request note
     private ScRNZone scRNZone = new ScRNZone(); 
     
     // BPM Task
@@ -798,12 +797,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPrInquiryId(Long prInquiryId) {
 		this.prInquiryId = prInquiryId;
-	}
-	public Long getPidId() {
-		return pidId;
-	}
-	public void setPidId(Long pidId) {
-		this.pidId = pidId;
 	}
 	/**
 	 * @return the scRNZone
