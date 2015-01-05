@@ -423,6 +423,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmPersonnels(
 					new ArrayList<SmPersonnel>());
 		} else {
+			setPersonnelInfoCalculationSummary();
 			for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
 				if (smPersonnel.getRoleName() != null
@@ -470,7 +471,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
-		setPersonnelInfoCalculationSummary();
 	}
 
 	private void initStep3CaptialAndEquityInfo() {
