@@ -777,7 +777,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 								else 
 									conReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 								      
-								conReqDTO.setFinalizationSecratary(false);
+								conReqDTO.setFinalizationSecratary(true);
 								conReqDTO.setCommitteeType(contractSO.getCommitteType(getManagedBean().getContractVer()));
 								committeResDTO =  committeSO.retrieveCommitteMembersByQtIdAndCommType(conReqDTO);
 								
