@@ -897,9 +897,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
 				productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
 
+			int checkQty = 0;
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
-
-				int checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+				if(tplSpecQuestion.getClQuantity() != null){
+					 checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+				}
 
 				if(checkQty < 0) {
 					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
