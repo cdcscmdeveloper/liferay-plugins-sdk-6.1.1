@@ -1179,6 +1179,7 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
+			isFinancialSpec(financialCheckList);
 			for (ScQtCheckList checkList : financialCheckList) {
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 						.equalsIgnoreCase(checkList.getDefinationType()
@@ -1191,6 +1192,24 @@ public class SpecificationBackingBean extends
 
 				}
 			}
+
+		}
+
+	}
+
+	public void isFinancialSpec(List<ScQtCheckList> techCheckList) {
+		int count = 0;
+		for (ScQtCheckList checkList : techCheckList) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+					.equalsIgnoreCase(checkList.getDefinationType()
+							.getParameterCode())) {
+				count++;
+			}
+
+		}
+		if (count == 0) {
+			this.getManagedBean().setActiveIndex(2);
+			throw new EpException(MessageConst.ERROR_760215);
 
 		}
 
@@ -10792,9 +10811,11 @@ public class SpecificationBackingBean extends
 				}
 			}
 
-		/*	this.getManagedBean().setExistingSupplierLocationList(
-					exchangeLoccriteria);*/
-			
+			/*
+			 * this.getManagedBean().setExistingSupplierLocationList(
+			 * exchangeLoccriteria);
+			 */
+
 		}
 
 	}
