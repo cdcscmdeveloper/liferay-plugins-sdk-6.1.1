@@ -91,6 +91,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean productItem = true;
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
+	private boolean confirmMeeting;
 	
 	private List<CtItemPrice> itemPriceList;
 	private List<CtRemark> remarkList;
@@ -778,5 +779,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	public boolean isConfirmMeeting() {
+		return confirmMeeting;
+	}
+
+	public void setConfirmMeeting(boolean confirmMeeting) {
+		this.confirmMeeting = confirmMeeting;
 	}	
 }

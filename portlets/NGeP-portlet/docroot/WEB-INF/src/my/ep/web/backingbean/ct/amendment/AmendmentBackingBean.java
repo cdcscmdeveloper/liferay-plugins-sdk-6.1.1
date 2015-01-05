@@ -541,6 +541,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      AmendTabSideMenus sideMenu = new AmendTabSideMenus();
 		      FacesContext facesContext = FacesContext.getCurrentInstance();
 		      getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
+		      getManagedBean().setConfirmMeeting(false);
 		  
 		       if(getManagedBean().getAckFA() == null) {
 			         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
@@ -559,6 +560,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithSpAprlAP201);
 			  
 			       } if(getManagedBean().isPrepareLOA() && getManagedBean().isDecisionPbQcLOA()){
+			    	    getManagedBean().setConfirmMeeting(true);
 			    	    getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 			    
 			       } if(getManagedBean().isPrepareLOA()){
@@ -568,9 +570,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			    
 			      } if(getManagedBean().isSignUpdateDecision()){
+			    	  getManagedBean().setConfirmMeeting(true);
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 			    
 			      } if(getManagedBean().isSignOffDecision()){
+			    	  getManagedBean().setConfirmMeeting(true);
 		    	      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 		         }
 		   
@@ -940,26 +944,31 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
 	 }
 	 
-	public SelectItem[] getCommitteDropdown() {
+	public SelectItem[] getCommitteDropdown(boolean temp) {
 		
 		SelectItem[] items = null;     
 		try {
-		        int i = 1;
+		        int i = 0;
 		        IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		        ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-				reqDTO.setLanguageCode("en");
+				String languageCode = new FacesScopes().getUserLocale().getLanguage();
+				reqDTO.setLanguageCode(languageCode);
 				
 				ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 				
 				List<PmParameterDesc> list = resDTO.getParameterDescList();
-				 items = new SelectItem[list.size()];
-			     items[0] = new SelectItem(null, "- Select One -");
-				System.out.println("list: " + list.size());
+				if(temp)
+				  items = new SelectItem[list.size()];
+				else
+					  items = new SelectItem[list.size()-1];
 				
 				for (PmParameterDesc parameterDesc : list) {
-					  if(!parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON))
-						    items[i++] = new SelectItem( parameterDesc.getPmParameter().getParameterId(),parameterDesc.getCodeName());       
+					if(temp){
+					     items[i++] = new SelectItem( parameterDesc.getPmParameter().getParameterId(),parameterDesc.getCodeName());       
+					}else if(!parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+						    items[i++] = new SelectItem( parameterDesc.getPmParameter().getParameterId(),parameterDesc.getCodeName());   
+					   }
 				}
 				
 		} catch (Exception e) {
@@ -2151,7 +2160,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			         		    	 committeMember.add(entry.getValue());
 			         		    }	    
 			         	} getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(committeMember);
-		     	}       
+		     	}  Collections.sort(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());  
 	    }
 
 		public SelectItem[] getcontractSignerDropdown(){
@@ -2282,7 +2291,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setModuleCode("SC");
 				reqDTO.setDocType("MS");
-				reqDTO.setLanguageCode("en");
+				String languageCode = new FacesScopes().getUserLocale().getLanguage();
+				reqDTO.setLanguageCode(languageCode);
 				
 				StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
 				
