@@ -925,16 +925,19 @@ public class QTDetailBackingBean extends
 			}
 
 			// Setting the Deductions to qtdetails.
-			List<ScQtDeduction> deductionList = this.getManagedBean().getScQtDeductionList();
+			List<ScQtDeduction> deductionList = this.getManagedBean()
+					.getScQtDeductionList();
 			if (null != deductionList && !deductionList.isEmpty()) {
 				for (ScQtDeduction deduction : deductionList) {
 					deduction.setScQt(this.getManagedBean().getQt());
 					if (null == deduction.getDeductionType().getParameterCode()) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { "Deduction Type" });
+						throw new EpException(MessageConst.ERROR_100022,
+								new String[] { "Deduction Type" });
 					} else {
 						List<ScQtDeductionClause> deductionClauses = deduction
 								.getScQtDeductionClauses();
-						if (null != deductionClauses && !deductionClauses.isEmpty()) {
+						if (null != deductionClauses
+								&& !deductionClauses.isEmpty()) {
 							for (ScQtDeductionClause deductionClause : deductionClauses) {
 								deductionClause.setScQtDeduction(deduction);
 							}
@@ -1498,11 +1501,14 @@ public class QTDetailBackingBean extends
 		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())
 				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean().getTaskName()) ||  SCProcessNameConst.ASSIGN_FC_SECRETARY
-						.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+						.equalsIgnoreCase(this.getManagedBean().getTaskName())
+				|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(this
+						.getManagedBean().getTaskName())) {
 			if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(this.getManagedBean().getTaskName()) && !SCProcessNameConst.ASSIGN_FC_SECRETARY
-					.equalsIgnoreCase(this.getManagedBean().getTaskName()) ) {
+					.equalsIgnoreCase(this.getManagedBean().getTaskName())
+					&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())) {
 
 				SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
 				this.getManagedBean().setQuotationTenderDataType(
@@ -1598,11 +1604,21 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setScQt(qt);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
-			}else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
+			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
-			
-			}
-			else {
+				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setToken(ctxToken);
+				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				committeReqDTO.setPayLoad(res.getPojo());
+				committeReqDTO.setOutcome(outcome);
+				committeReqDTO.setScQt(qt);
+				committeResDto = committeSO
+						.updateFinalizateSecrataryTask(committeReqDTO);
+
+			} else {
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(res.getPojo());
@@ -1891,7 +1907,8 @@ public class QTDetailBackingBean extends
 					if (null == scQt.getScQtSupplierCriteria()) {
 						this.getManagedBean().setSupplierCriteria(
 								new ScQtSupplierCriteria());
-						this.getManagedBean().getSupplierCriteria().setScQt(scQt);
+						this.getManagedBean().getSupplierCriteria()
+								.setScQt(scQt);
 					} else {
 						this.getManagedBean().setSupplierCriteria(
 								scQt.getScQtSupplierCriteria());

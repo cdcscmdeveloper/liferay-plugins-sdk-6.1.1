@@ -424,6 +424,12 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.ESCALATE_BIDDING,
 				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
 
+		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.ASSIGN_FC_SECRETARY, "qtdetails");
+
+		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.ASSIGN_FC_MEMBER, "fccommittemaintanance");
+
 		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");
