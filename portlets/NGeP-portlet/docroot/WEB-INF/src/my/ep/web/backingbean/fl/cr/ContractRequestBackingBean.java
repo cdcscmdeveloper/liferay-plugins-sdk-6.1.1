@@ -475,6 +475,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+		for(FlFulfilmentItem item : getManagedBean().getFlRequest().getFlFulfilmentItems()){
+			if(item.getFlQuery() != null){
+				getManagedBean().setQueryDisplay(true);
+				break;
+			}
+		}
 	}
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
@@ -2561,12 +2567,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	// display itemCode,itemName,QueryDesc in popup
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
-		getManagedBean().setQueryDisplay(false);
 		flItemAddress.getScRequestItem().getItemName();
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
 		if(null != flItemAddress.getFlFulfilmentItem().getFlQuery()){
-			getManagedBean().setQueryDisplay(true);
 			setQueryDesc(flItemAddress.getFlFulfilmentItem().getFlQuery().getQueryDesc());
 		}
 	}
