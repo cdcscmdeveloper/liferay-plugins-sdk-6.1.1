@@ -27,35 +27,28 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	
 	private TaskAssignmentSearchBean taskAssignmentSearchBean;
 	private WorklistItemVO selectedTask;
-//	private List<PmUser> selectedUsers;
 	private List<PmUser> availableUsers;
 	private PmUser selectedUser;
 	private boolean orgProfileRequired;
-//	private boolean epAdmin;
-	private boolean filterOrg;
 	private String filterOrgCondition;
-	private String userActiveOrgs;
-	
+	private PmOrgProfile currentActiveOrg;
 	
 	private PmUser resultUser;
 	private PmOrgProfile resultOrgProfile;
 	
-	private String tempRole;
-	
-	
 
 	/**
-	 * @return the tempRole
+	 * @return the currentActiveOrg
 	 */
-	public String getTempRole() {
-		return tempRole;
+	public PmOrgProfile getCurrentActiveOrg() {
+		return currentActiveOrg;
 	}
 
 	/**
-	 * @param tempRole the tempRole to set
+	 * @param currentActiveOrg the currentActiveOrg to set
 	 */
-	public void setTempRole(String tempRole) {
-		this.tempRole = tempRole;
+	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
+		this.currentActiveOrg = currentActiveOrg;
 	}
 
 	/**
@@ -157,47 +150,7 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 		this.resultUser = resultUser;
 	}
 
-//	/**
-//	 * @return the epAdmin
-//	 */
-//	public boolean isEpAdmin() {
-//		return epAdmin;
-//	}
-//
-//	/**
-//	 * @param epAdmin the epAdmin to set
-//	 */
-//	public void setEpAdmin(boolean epAdmin) {
-//		this.epAdmin = epAdmin;
-//	}
 
-	/**
-	 * @return the userActiveOrgs
-	 */
-	public String getUserActiveOrgs() {
-		return userActiveOrgs;
-	}
-
-	/**
-	 * @param userActiveOrgs the userActiveOrgs to set
-	 */
-	public void setUserActiveOrgs(String userActiveOrgs) {
-		this.userActiveOrgs = userActiveOrgs;
-	}
-
-	/**
-	 * @return the filterOrg
-	 */
-	public boolean isFilterOrg() {
-		return filterOrg;
-	}
-
-	/**
-	 * @param filterOrg the filterOrg to set
-	 */
-	public void setFilterOrg(boolean filterOrg) {
-		this.filterOrg = filterOrg;
-	}
 
 	/**
 	 * @return the filterOrgCondition
@@ -214,22 +167,6 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	}
 
 	
-
-
-
-//	/**
-//	 * @return the selectedUsers
-//	 */
-//	public List<PmUser> getSelectedUsers() {
-//		return selectedUsers;
-//	}
-//
-//	/**
-//	 * @param selectedUsers the selectedUsers to set
-//	 */
-//	public void setSelectedUsers(List<PmUser> selectedUsers) {
-//		this.selectedUsers = selectedUsers;
-//	}
 
 	
 	

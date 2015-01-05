@@ -71,7 +71,6 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 /**
@@ -91,6 +90,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 
 	//Mapper for DDL object
 	private static Map<Long, Object> orgTypeMapper;
+
+	//Authorization 
+	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 	
 	//List for Paging
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
@@ -100,21 +102,64 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	
 	public void preLoading() throws EpException{
 		log.info("preLoading");
-		this.retrieveOrgTypeMap();
+		this.setCurrentActiveOrg();
+		this.generateAdditionalFilter();
 		this.resetTaskAssignSearchBean();
+		this.retrieveOrgTypeMap();
+		
 		this.getManagedBean().setOrgProfileRequired(true);
 		this.getManagedBean().setResultUser(null);
 		this.getManagedBean().setResultOrgProfile(null);
-		
-		this.getManagedBean().setFilterOrg(true); // for org filter 
-		this.getManagedBean().setUserActiveOrgs(null); // for org filter 
-		this.getManagedBean().setFilterOrgCondition(null); // for org filter 
-		
-		roleCheck();
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 	
+	/**
+	 * retrieve and set the current active org
+	 */
+	private void setCurrentActiveOrg(){
+		log.info("setCurrentActiveOrg");
+		if(getFacesScopes().getUserSessionBean().getUserId()==null){
+			throw new EpException(MessageConst.ERROR_770149);
+		}
+		
+		List <PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), false);
+		
+		if(userOrgList==null || userOrgList.isEmpty()){
+			throw new EpException(MessageConst.ERROR_770105);
+		}
+		
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+	}
+	
+	public ISearchBean<PmParameterDesc> getOrgTypeSearchBean() {
+		log.info("getOrgTypeSearchBean");
+		if (this.orgTypeSearchBean == null) {
+			this.orgTypeSearchBean = super.createSearchBean(
+					PmParameterDesc.class, "somOrgType");
+			
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
+			orgTypeSearchBean.getDataFilterBeans().add(bean);
+			
+			if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+				if(this.getManagedBean().getCurrentActiveOrg()!=null){
+					SearchFilterBean orgTypeBean = new SearchFilterBean();
+					orgTypeBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					orgTypeBean.setSearchField("pmParameter.parameterCode");
+					orgTypeBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgCode());
+					orgTypeSearchBean.getDataFilterBeans().add(orgTypeBean);
+				}
+			}
+			
+		}
+
+		return this.orgTypeSearchBean;
+	}
 	
 	
 	
@@ -190,57 +235,59 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	}
 
 	
-	public void roleCheck(){
-		log.info("roleCheck");
-		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
-			if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
-				this.getManagedBean().setFilterOrg(false);
-			}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-				this.getManagedBean().setFilterOrg(true);
-				StringBuilder sb = new StringBuilder();
-				//parentId = orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
-					int count = 1;
-					for(PmUserOrg pmUserOrg: pmUserOrgs){
-						sb.append(pmUserOrg.getPmOrgProfile().getOrgProfileId());
-						if(count<pmUserOrgs.size()){
-							sb.append(",");
-						}
-						count++;
-					}
-				}
-				this.getManagedBean().setUserActiveOrgs(sb.toString());
-			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
-				this.getManagedBean().setFilterOrg(true);
-				StringBuilder sb = new StringBuilder();
-				//parentId = parentOrg.orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
-				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
-					int count = 1;
-					for(PmUserOrg pmUserOrg: pmUserOrgs){
-						if(pmUserOrg.getPmOrgProfile().getParentOrgProfile()!=null){
-							sb.append(pmUserOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
-							if(count<pmUserOrgs.size()){
-								sb.append(",");
-							}
-						}
-						count++;
-					}
-				}
-				this.getManagedBean().setUserActiveOrgs(sb.toString());
-				
-			}
-		}
-		log.info("UserActiveOrgs: " + this.getManagedBean().getUserActiveOrgs());
-		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
-	}
-	
+//	public void roleCheck(){
+//		log.info("roleCheck");
+//		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
+//			if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+//				this.getManagedBean().setFilterOrg(false);
+//			}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+//				this.getManagedBean().setFilterOrg(true);
+//				StringBuilder sb = new StringBuilder();
+//				//parentId = orgProfileId
+//				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+//				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
+//					int count = 1;
+//					for(PmUserOrg pmUserOrg: pmUserOrgs){
+//						sb.append(pmUserOrg.getPmOrgProfile().getOrgProfileId());
+//						if(count<pmUserOrgs.size()){
+//							sb.append(",");
+//						}
+//						count++;
+//					}
+//				}
+//				this.getManagedBean().setUserActiveOrgs(sb.toString());
+//			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+//				this.getManagedBean().setFilterOrg(true);
+//				StringBuilder sb = new StringBuilder();
+//				//parentId = parentOrg.orgProfileId
+//				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+//				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
+//					int count = 1;
+//					for(PmUserOrg pmUserOrg: pmUserOrgs){
+//						if(pmUserOrg.getPmOrgProfile().getParentOrgProfile()!=null){
+//							sb.append(pmUserOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
+//							if(count<pmUserOrgs.size()){
+//								sb.append(",");
+//							}
+//						}
+//						count++;
+//					}
+//				}
+//				this.getManagedBean().setUserActiveOrgs(sb.toString());
+//				
+//			}
+//		}
+//		log.info("UserActiveOrgs: " + this.getManagedBean().getUserActiveOrgs());
+//		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
+//	}
+//	
 	
 	/**
 	 * change organization type
 	 */
 	public void changeOrgType() {
+
+		
 		log.info("changeOrgType");
 		if(this.getManagedBean().getTaskAssignmentSearchBean()!=null){
 			
@@ -255,8 +302,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId()!=null){
 				PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId());
 				this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().setParameterCode(pmParameter.getParameterCode());
-				
-				
+		
 				if(ParameterConst.ORG_TYPE_SM_BPK_HQ.equals(pmParameter.getParameterCode())
 					|| ParameterConst.ORG_TYPE_SM_PMS_SABAH.equals(pmParameter.getParameterCode())
 					|| ParameterConst.ORG_TYPE_SM_PMS_SARAWAK.equals(pmParameter.getParameterCode())){
@@ -268,58 +314,24 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				}else{
 					this.getManagedBean().setOrgProfileRequired(true);
 				}
-				
-				
-				generateOrgFilter(pmParameter.getParameterCode());
 			}
 		}
 		
 	}
 	
 		
-	
-	public void generateOrgFilter(String orgTypeCode){
-		log.info("generateOrgFilter");
-		StringBuilder conditionSB = new StringBuilder();
-		if(this.getManagedBean().isFilterOrg()){
-			if(StringUtils.isBlank(this.getManagedBean().getUserActiveOrgs())){
-				throw new EpException(MessageConst.ERROR_770105);
-			}
-			conditionSB.append("orgTypeCode.parameterType^");
-			conditionSB.append(ParameterTypeConst.ORGANISATION_TYPES);
-			conditionSB.append("|");
-			conditionSB.append("orgTypeCode.parameterCode^");
-			conditionSB.append(orgTypeCode);
-			conditionSB.append("|");
-			conditionSB.append("recordStatus^1");
-
-			if(ParameterConst.ORG_TYPE_MINISTRY.equals(orgTypeCode)){
-				conditionSB.append("|");
-				conditionSB.append("orgProfileId^");
-				conditionSB.append(this.getManagedBean().getUserActiveOrgs());
-				conditionSB.append("^9");
-			}else{
-				conditionSB.append("|");
-				conditionSB.append("parentOrgProfile.orgProfileId^");
-				conditionSB.append(this.getManagedBean().getUserActiveOrgs());
-				conditionSB.append("^9");
-			}
-		}else{
-			conditionSB.append("orgTypeCode.parameterType^");
-			conditionSB.append(ParameterTypeConst.ORGANISATION_TYPES);
-			conditionSB.append("|");
-			conditionSB.append("orgTypeCode.parameterCode^");
-			conditionSB.append(orgTypeCode);
-			conditionSB.append("|");
-			conditionSB.append("recordStatus^1");
+	private void generateAdditionalFilter(){
+		log.info("generateAdditionalFilter");
+		this.getManagedBean().setFilterOrgCondition("");
+		//generate additional filter
+		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
+					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}
-		this.getManagedBean().setFilterOrgCondition(conditionSB.toString());
-
-		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
-		log.info("OrgProfiles: " + this.getManagedBean().getUserActiveOrgs());
-		log.info("FilterOrgCondition: " + this.getManagedBean().getFilterOrgCondition());
 	}
-		
+
 	
 	/**
 	 * retrieve valid org profile based on selected org type

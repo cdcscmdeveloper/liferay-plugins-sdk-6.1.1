@@ -27,7 +27,7 @@
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" 
 					disabled="#{!orgUnit.brandNew}" id="somOrgType"  required="#{!empty param['disableValidation']}" 
 					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />     
+					     
 					<f:selectItems value="#{profileManagementBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, profileManagementBackingBean.orgTypeSearchBean)}" />
 			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
 			     		update="lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, dtOrgUnit, 
