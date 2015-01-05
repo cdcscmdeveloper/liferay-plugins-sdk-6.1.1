@@ -273,12 +273,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
 	    requestNoteReqDTO.setRoleCode(getUserRoleCode());
 	    Long prInqId = getManagedBean().getPrInquiryId();
-	    Long pidId = getManagedBean().getPidId();
 	    if(getManagedBean().getPrInquiryId() != null){
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
-		}
-	    if(pidId != null){
-			requestNoteReqDTO.setPidId(pidId);
 		}
 		String token = face.getBPMAuthenticationCtxToken();
 	    if(outcome.isEmpty()){
@@ -294,7 +290,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	 requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 	    	 renewSesionObject();
 	    	 getManagedBean().setPrInquiryId(prInqId);
-	    	 getManagedBean().setPidId(pidId);
 	     }
 	    
 	    if (requestNoteResDTO.isSuccessful()) {
@@ -415,9 +410,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
-			}
-			if(getManagedBean().getPidId() != null){
-				requestNoteReqDTO.setPidId(getManagedBean().getPidId());
 			}
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -1972,7 +1964,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if(defaultResDTO.getPurchaseInDefaultDtl() != null){
 						ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
 						requestItem.setPurchaseInDefault(purchaseInDefault);
-						getManagedBean().setPidId(purchaseInDefault.getPurchaseInDefaultId());
 					} else {
 						requestItem.setPurchaseInDefault(null);
 					}
