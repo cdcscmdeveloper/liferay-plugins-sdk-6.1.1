@@ -25,7 +25,7 @@
 						"#{lbl['lbl.sm.review.resubmitApplication']}");
 			</script>
 		</h:panelGroup>
-		
+
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and !backingBean.managedBean.smAppl.resubmit}">
 			<script>
@@ -118,7 +118,9 @@
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+					sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+					invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
 			</p:dialog>

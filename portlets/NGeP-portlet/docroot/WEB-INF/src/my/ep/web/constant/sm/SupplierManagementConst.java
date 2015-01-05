@@ -395,6 +395,8 @@ public class SupplierManagementConst {
 	public static final long CATEGORY_TYPE_ID_TRAVEL = 210;
 	public static final long CATEGORY_TYPE_ID_READING = 1261;
 
+	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
+
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
 		return SM_BASIC_INFO_PANEL;
@@ -791,6 +793,10 @@ public class SupplierManagementConst {
 
 	public String getSM_APPL_BUTTON_TYPE_SAME() {
 		return SM_APPL_BUTTON_TYPE_SAME;
+	}
+
+	public Integer getSM_SUPPORTDOCS_FILE_SIZE_LIMIT() {
+		return SM_SUPPORTDOCS_FILE_SIZE_LIMIT;
 	}
 
 }

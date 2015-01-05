@@ -62,7 +62,9 @@
 			<p:fileUpload allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted"
 				id="upload"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 				fileUploadListener="#{backingBean.handleCancelMofRegFileAttachment}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				update="@form" oncomplete="excelDialog.hide();" />
 		</p:dialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />

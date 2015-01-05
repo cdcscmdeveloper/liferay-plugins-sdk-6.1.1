@@ -24,7 +24,7 @@
 						"#{lbl['lbl.sm.review.resubmitApplication']}");
 			</script>
 		</h:panelGroup>
-		
+
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and !backingBean.managedBean.smAppl.resubmit}">
 			<script>
@@ -49,24 +49,30 @@
 				closable="true" showSummary="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
-				<ui:include src="/xhtml/sm/updateMofDetails/step1UpdateMof_CompanyInfo.xhtml" />
+				<ui:include
+					src="/xhtml/sm/updateMofDetails/step1UpdateMof_CompanyInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 1}">
-				<ui:include src="/xhtml/sm/updateMofDetails/step2UpdateMof_BranchCompanyInfo.xhtml" />
+				<ui:include
+					src="/xhtml/sm/updateMofDetails/step2UpdateMof_BranchCompanyInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 2}">
-				<ui:include src="/xhtml/sm/updateMofDetails/step4UpdateMof_PersonnelInfo.xhtml" />
+				<ui:include
+					src="/xhtml/sm/updateMofDetails/step4UpdateMof_PersonnelInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
-				<ui:include src="/xhtml/sm/updateMofDetails/step3UpdateMof_CaptialAndEquityStatusInfo.xhtml" />
+				<ui:include
+					src="/xhtml/sm/updateMofDetails/step3UpdateMof_CaptialAndEquityStatusInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
-				<ui:include src="/xhtml/sm/updateMofDetails/step5UpdateMof_BankInfo.xhtml" />
+				<ui:include
+					src="/xhtml/sm/updateMofDetails/step5UpdateMof_BankInfo.xhtml" />
 			</c:if>
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.supplierUser}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
-						<ui:include src="/xhtml/sm/updateMofDetails/step6UpdateMof_SupportingDocumentsInfo.xhtml" />
+						<ui:include
+							src="/xhtml/sm/updateMofDetails/step6UpdateMof_SupportingDocumentsInfo.xhtml" />
 					</c:if>
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poUser}">
@@ -113,7 +119,9 @@
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+					sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+					invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
 			</p:dialog>
