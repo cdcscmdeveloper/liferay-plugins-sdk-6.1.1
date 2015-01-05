@@ -108,7 +108,7 @@
 			<portlet id="scSupplierNotification"/>
             <portlet id="scTemplateDocument" />
             <portlet id="scBriefingSiteVisitAttendance" />
-            <portlet id="scCommitteMaintance" />
+            <portlet id="scUpdateCommitte" />
             <portlet id="scPresentation Demo" />
             <portlet id="scSupplierFinalizationMeetingConfirmation"/>
 			<portlet id="scSupplierFinalization"/>
