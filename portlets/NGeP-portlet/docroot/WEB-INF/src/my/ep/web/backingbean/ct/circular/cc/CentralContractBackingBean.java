@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -97,8 +96,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -129,7 +126,6 @@ import com.liferay.portal.util.PortalUtil;
 public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
-	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	ContractBackingBean ctBB = null;
 	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
@@ -439,94 +435,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
-	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
-		private static final long serialVersionUID = 1L;
-
-		public CircularVerPagingDataModel() {
-			super("circularVerDt");
-		}
-		
-		@Override
-		public ISearchResultBean<CtCircularVer> pageChangeListener(ISearchBean<CtCircularVer> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
-				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctCircular.circularNo",
-													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}
-				if(getManagedBean().getSearchCircularName()!=null && getManagedBean().getSearchCircularName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("name",
-													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}
-				if(getManagedBean().getSearchPhysicalCircularNo()!=null && getManagedBean().getSearchPhysicalCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
-													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchPhysicalCircularNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}
-				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getSearchStartDate()));	
-				    searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getSearchEndDate()));		
-				}
-				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()==null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getSearchStartDate()));	
-			    }
-				if(getManagedBean().getSearchStartDate()==null && getManagedBean().getSearchEndDate()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getSearchEndDate()));	
-				}
-		    
-				if(getManagedBean().getSearchStatusId()!=null) {
-					//Filter out cancelled status
-					if(getManagedBean().getSearchStatusId().longValue() == ContractStatusConst.CQ_APPROVED || 
-							getManagedBean().getSearchStatusId().longValue() == ContractStatusConst.CQ_REJECTED)
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_NOT_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
-					//display cancelled circular
-					else if(getManagedBean().getSearchStatusId().longValue() == 0L)
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.recordStatus",SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_CANCELLED));
-				}					
-				
-				CircularReqDTO reqDTO = new CircularReqDTO();
-				reqDTO.setCircularVerSearchBean(searchBean);
-				reqDTO.setFilterStatusId(getManagedBean().getSearchStatusId());
-				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
-				if(resDTO.isSuccessful()) {
-					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
-						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
-							/*CircularReqDTO circularReqDTO = new CircularReqDTO();
-							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
-							circularVer.getCtCircular().setLatestCircularVer(
-									circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
-						*/	
-							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
-								PmStatus cancelStatus = new PmStatus();
-								cancelStatus.setStatusId(0L);
-								circularVer.setStatus(cancelStatus);
-							}
-							//if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.CQ_REJECTED)) {
-								if(circularVer.getCtCircular().getLatestCircularVer() != null)
-									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-							//}
-						}
-					}
-					return resDTO.getCircularVerResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
-			return null;
-		}
-	}
-	
 	public boolean isCentralContractAdmin() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
@@ -809,14 +717,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return null;
 	}
 
-	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {
-		return circularVerPagingDataModel;
-	}
-
-	public void setCircularVerPagingDataModel(IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
-		this.circularVerPagingDataModel = circularVerPagingDataModel;
-	}
-	
 	private List<String> getAvailableApproverList() {
 		IUserSO userSO = null;
 		List<String> sourceList = new ArrayList<String>();
@@ -1064,7 +964,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {
-				circularVerPagingDataModel.reloadData();
+				getManagedBean().getCircularVerPagingDataModel().reloadData();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

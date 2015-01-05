@@ -80,7 +80,6 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -176,7 +175,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtPerformanceBond[] selectedBondList;
 	private CtDeductionClause[] selectedDeductionClauses;
-	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	
 	public ContractDetailsBackingBean() {
@@ -630,7 +628,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			else {
-				contractDataModel.reloadData();
+				getManagedBean().getContractDataModel().reloadData();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -658,117 +656,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().setTerminationTypeId(null);
 	}
 	
-	public IPagingDataModel<VCtContract> getContractDataModel() {
-		return contractDataModel;
-	}
 
-	public void setContractDataModel(IPagingDataModel<VCtContract> contractDataModel) {
-		this.contractDataModel = contractDataModel;
-	}
-
-	private class ContractPagingDataModel extends PagingDataModel<VCtContract> {
-		private static final long serialVersionUID = 1L;
-
-		public ContractPagingDataModel() {
-			super("contractTbl");
-		}
-		
-		@Override
-		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
-			IContractSO contractSO = null;
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {
-				if(getManagedBean().getCtNumber()!=null && getManagedBean().getCtNumber().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getCtNumber());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
-				}
-				if(getManagedBean().getCtName()!=null && getManagedBean().getCtName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getCtName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
-				}
-				if(getManagedBean().getCtCircularNo()!=null && getManagedBean().getCtCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getCtCircularNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
-				}
-				if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.name",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getCtCircularName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
-				}
-				if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
-					getManagedBean().getCtSupplierId()));
-				}
-				if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getCtSupplierName());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
-				}
-				if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));		
-				
-				}
-				if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateStart()));					
-				}
-				if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateEnd()));	
-				}
-				if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
-				   	SearchFilterBean filterBean = new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-				   									getManagedBean().getCtPhysicalNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);					
-				}
-				if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-													getManagedBean().getCtLOANo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);					
-				}
-				if(getManagedBean().getCtContractStatus()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
-					getManagedBean().getCtContractStatus()));					
-				}
-				if(getManagedBean().getTerminationTypeId() != null) {
-					String parameterCode = retrieveParameterById(getManagedBean().getTerminationTypeId());
-					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}
-					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}
-					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}
-				}
-				
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				ContractReqDTO reqDTO = new ContractReqDTO();
-				reqDTO.setvCtContractSearchBean(searchBean);
-				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
-				getManagedBean().setSelectedIndex(0);
-					
-				if(resDTO.isSuccessful()) {
-					return resDTO.getvCtContractResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
 	
     public String saveContract(String action) throws Exception{
 
@@ -853,8 +741,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		return null;	
 	}
-    
-   
     
     public void validateCtContractVer(String action) throws EpException {
     	CtContractVer contractVer = getManagedBean().getContractVer();
@@ -1924,10 +1810,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 IParameterSO parameterSO = null;
 		 ParameterReqDTO reqDTO = null;
 		 try{
-			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
-			reqDTO.setLanguageCode("EN");
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			return resDTO.getPmParameter().getParameterCode();
