@@ -342,6 +342,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				VCmSupplierItem vCmSupplierItem = new VCmSupplierItem();
 				vCmSupplierItem.setCompanyName(scRequestSupplierItem.getSmSupplier().getCompanyName());
 				scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
+
+				if(scRequestNoteDtl.getDeliverTermType() != null){
+					scRequestNoteDtl.setDeliverTermTypeId(scRequestNoteDtl.getDeliverTermType().getParameterId());
+				}
 			}
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
