@@ -433,14 +433,27 @@ public class SpecificationBackingBean extends
 	// Method to save the specifcation Details..
 	public void saveSpecificationDtls() {
 		validateBusinessOwner(false);
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								getMessageCommon("lbl.sc.specification.for"),
-								this.getManagedBean().getScQt().getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		if (!this.getManagedBean().isSupplierValidation()) {
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													MessageConst.INFO_700004,
+													new String[] {
+															getMessageCommon("lbl.sc.specification.for"),
+															this.getManagedBean()
+																	.getScQt()
+																	.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+		}
+		this.getManagedBean().setSupplierValidation(false);
 
 	}
 
@@ -452,12 +465,14 @@ public class SpecificationBackingBean extends
 			String zonelocationLevel = this.getManagedBean().getStateCode();
 			String locationLevael = this.getManagedBean().getLocalLevelCode();
 			int activeIndex = this.getManagedBean().getActiveIndex();
-
+			boolean supplierValidation = this.getManagedBean()
+					.isSupplierValidation();
 			SpecificationResDTO resDTO = null;
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
 			boolean selectPanelItem = this.getManagedBean().isSelectPanelItem();
 			Long statusId = this.getManagedBean().getCurrentStatusId();
+
 			List<SelectItem> evaluationTypeList = this.getManagedBean()
 					.getEvaluationTypeItem();
 
@@ -486,7 +501,9 @@ public class SpecificationBackingBean extends
 			case 1:
 				ScQt scQtSupplier = prepareSpecReq().getScQt();
 				specReqDTO.setScQt(scQtSupplier);
-				specSO.validateSupplierQulificationInfo(specReqDTO);
+				if (!this.getManagedBean().isSupplierValidation()) {
+					specSO.validateSupplierQulificationInfo(specReqDTO);
+				}
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
@@ -569,6 +586,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setStateCode(zonelocationLevel);
 			this.getManagedBean().setLocalLevelCode(locationLevael);
 			this.getManagedBean().setSpecComplete(isSpecComplete);
+			this.getManagedBean().setSupplierValidation(supplierValidation);
+
 		} /*
 		 * catch(Exception e){ e.printStackTrace(); }
 		 */
@@ -1815,7 +1834,9 @@ public class SpecificationBackingBean extends
 							}
 							if (null != getManagedBean().getZoneTrees()
 									&& getManagedBean().getZoneTrees().size() == 0) {
-
+								this.getManagedBean()
+										.setExistingSupplierLocationList(
+												locCriteria);
 								getManagedBean().getZoneTrees().addAll(
 										LocationSingleton.getInstance()
 												.constuctTreeNode(locCriteria));
@@ -3631,6 +3652,79 @@ public class SpecificationBackingBean extends
 		// return getDropdownCodeValues(committeeRole);
 	}
 
+	// Check method for supplier Locations existing
+	private List<ScQtLocCriteria> checkExistingLocation(
+			List<ScQtLocCriteria> currentLocationList,
+			List<ScQtLocCriteria> existingLocations, String locationLevelCode) {
+		List<ScQtLocCriteria> criteriaList = new ArrayList<ScQtLocCriteria>();
+		if (null == existingLocations || existingLocations.isEmpty()) {
+			if (null != currentLocationList && !currentLocationList.isEmpty())
+
+				criteriaList.addAll(currentLocationList);
+		} else {
+			if (null != currentLocationList) {
+				List<PmState> states = new ArrayList<PmState>();
+				List<PmDivision> divisions = new ArrayList<PmDivision>();
+				List<PmDistrict> districts = new ArrayList<PmDistrict>();
+				for (ScQtLocCriteria specLoc : currentLocationList) {
+					if (null != locationLevelCode
+							&& ParameterConst.LOCATION_LEVEL_STATE
+									.equalsIgnoreCase(locationLevelCode)) {
+						PmState state = specLoc.getPmState();
+						if (null != state) {
+							if (states.isEmpty()) {
+								for (ScQtLocCriteria existingLoc : existingLocations) {
+									states.add(existingLoc.getPmState());
+									criteriaList.add(existingLoc);
+								}
+							}
+
+							if (!states.contains(state)) {
+								criteriaList.add(specLoc);
+							}
+
+						}
+					} else if (null != locationLevelCode
+							&& ParameterConst.LOCATION_LEVEL_DISTRICT
+									.equalsIgnoreCase(locationLevelCode)) {
+						PmDistrict district = specLoc.getPmDistrict();
+						if (null != district) {
+							if (districts.isEmpty()) {
+								for (ScQtLocCriteria existingLoc : existingLocations) {
+									districts.add(existingLoc.getPmDistrict());
+									criteriaList.add(existingLoc);
+								}
+							}
+
+							if (!districts.contains(district)) {
+								criteriaList.add(specLoc);
+							}
+						}
+					} else if (null != locationLevelCode
+							&& ParameterConst.LOCATION_LEVEL_DIVISION
+									.equalsIgnoreCase(locationLevelCode)) {
+						PmDivision divison = specLoc.getPmDivision();
+						if (null != divison) {
+							if (divisions.isEmpty()) {
+								for (ScQtLocCriteria existingLoc : existingLocations) {
+									divisions.add(existingLoc.getPmDivision());
+									criteriaList.add(existingLoc);
+								}
+							}
+
+							if (!divisions.contains(divison)) {
+								criteriaList.add(specLoc);
+							}
+						}
+
+					}
+				}
+			}
+		}
+
+		return criteriaList;
+	}
+
 	// Supplier Locations Pop Up Method
 	public void showZoneLocationPopup() {
 
@@ -4464,9 +4558,14 @@ public class SpecificationBackingBean extends
 				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 						this.getManagedBean().getZoneTrees(),
 						qtSupplierCriteria);
-				if (locCriteria != null && !locCriteria.isEmpty()) {
+				List<ScQtLocCriteria> existingcheckLocCriteria = (List<ScQtLocCriteria>) checkExistingLocation(
+						locCriteria, this.getManagedBean()
+								.getExistingSupplierLocationList(), this
+								.getManagedBean().getLocalLevelCode());
+				if (existingcheckLocCriteria != null
+						&& !existingcheckLocCriteria.isEmpty()) {
 					scQt.getScQtSupplierCriteria().setScQtLocCriteria(
-							locCriteria);
+							existingcheckLocCriteria);
 
 				}
 
@@ -5302,7 +5401,16 @@ public class SpecificationBackingBean extends
 			}
 			if (null != getManagedBean().getZoneTrees()
 					&& !getManagedBean().getZoneTrees().isEmpty()) {
+				this.getManagedBean().setSupplierValidation(true);
 				getManagedBean().setZoneTrees(null);
+				this.getManagedBean().setExistingSupplierLocationList(null);
+
+				ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
+						.getScQt().getScQtSupplierCriteria();
+				supplierCriteria.setScQtLocCriteria(null);
+				this.getManagedBean().getScQt()
+						.setScQtSupplierCriteria(supplierCriteria);
+				saveSpecificationDtls();
 			}
 		}
 	}
@@ -10594,6 +10702,7 @@ public class SpecificationBackingBean extends
 			ScQtSupplierCriteria supplierCriteria = null;
 			// this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 			List<TplSpecLoc> localLoc = new ArrayList<TplSpecLoc>();
+			List<ScQtLocCriteria> Criteria = new ArrayList<ScQtLocCriteria>();
 			this.getManagedBean()
 					.getScQt()
 					.getScQtSupplierCriteria()
@@ -10601,11 +10710,13 @@ public class SpecificationBackingBean extends
 							getQuoteZones(rootTrees, supplierCriteria));
 			for (ScQtLocCriteria locCriteria : this.getManagedBean().getScQt()
 					.getScQtSupplierCriteria().getScQtLocCriteria()) {
+				// Criteria.add(locCriteria);
 				TplSpecLoc specLoc = (TplSpecLoc) locCriteria;
 
 				localLoc.add(specLoc);
 
 			}
+			// this.getManagedBean().setExistingSupplierLocationList(Criteria);
 			this.getManagedBean().setTotalSuppliersSpecLoc(localLoc);
 		}
 
@@ -10619,7 +10730,10 @@ public class SpecificationBackingBean extends
 
 				for (TreeNode zoneTree : rootTree.getChildren()) {
 					if (zoneTree.isSelected()) {
+						ScQtLocCriteria loccriteria = (ScQtLocCriteria) zoneTree
+								.getData();
 						rootTrees.remove(row--);
+						deleteSupplierLocacriteria(loccriteria);
 					} else {
 						deleteChildTreeNodes(zoneTree.getChildren());
 
@@ -10638,12 +10752,18 @@ public class SpecificationBackingBean extends
 
 			for (TreeNode treeNode : treeNodes) {
 				if (treeNode.isSelected()) {
+					ScQtLocCriteria loccriteria = (ScQtLocCriteria) treeNode
+							.getData();
 					nodesToRemoved.add(treeNode);
+
+					deleteSupplierLocacriteria(loccriteria);
 				} else {
 					if (treeNode.getChildren() != null
 							&& treeNode.getChildren().size() > 0) {
+						ScQtLocCriteria loccriteria = (ScQtLocCriteria) treeNode
+								.getData();
 						deleteChildTreeNodes(treeNode.getChildren());
-
+						deleteSupplierLocacriteria(loccriteria);
 						if (treeNode.getChildren().size() == 0) {
 							nodesToRemoved.add(treeNode);
 						}
@@ -10655,6 +10775,28 @@ public class SpecificationBackingBean extends
 				treeNodes.removeAll(nodesToRemoved);
 			}
 		}
+	}
+
+	private void deleteSupplierLocacriteria(ScQtLocCriteria locCriteria) {
+		List<ScQtLocCriteria> existingLocation = this.getManagedBean()
+				.getExistingSupplierLocationList();
+		if (null != existingLocation && !existingLocation.isEmpty()) {
+			List<ScQtLocCriteria> exchangeLoccriteria = new ArrayList<ScQtLocCriteria>();
+			for (int i = 0; i < existingLocation.size(); i++) {
+				ScQtLocCriteria locallocCriteria = (ScQtLocCriteria) existingLocation
+						.get(i);
+				if (!locallocCriteria.getSpecLocId().equals(
+						locCriteria.getSpecLocId())) {
+					exchangeLoccriteria.add(locallocCriteria);
+
+				}
+			}
+
+		/*	this.getManagedBean().setExistingSupplierLocationList(
+					exchangeLoccriteria);*/
+			
+		}
+
 	}
 
 	public void categoryCodesUpdate(int index, List<ScQtCategory> categoryList,
