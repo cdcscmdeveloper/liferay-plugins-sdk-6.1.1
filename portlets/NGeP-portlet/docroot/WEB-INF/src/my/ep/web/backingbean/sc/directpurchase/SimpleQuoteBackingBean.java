@@ -2220,11 +2220,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
 		} else {
 			CatalogueBackingBean catalogueBackingBean =  new CatalogueBackingBean();
+			TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+			TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 
 			if(getManagedBean().getScQuote().getPanelItem() != null){
 				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
 			} else{
-				catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
+
+				if(productTplSpecBean.getSpecMaster() != null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null &&  
+						productTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0  || 
+						serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
+						serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+					catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
+				} else{
+					catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
+				}
 			}
 			
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
