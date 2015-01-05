@@ -249,6 +249,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private BigDecimal UomPerMonth ; 
 	private BigDecimal UomPerDay ; 
 	private BigDecimal pricePerUom;
+	private String uomName;
 	
 	private boolean emailValidate = false;
 	private boolean queryDisplay=false;
@@ -2495,5 +2496,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setMeasurementNames(String measurementNames) {
 		this.measurementNames = measurementNames;
+	}
+
+	public String getUomName() {
+		return uomName;
+	}
+
+	public void setUomName(String uomName) {
+		this.uomName = uomName;
 	}
 }
