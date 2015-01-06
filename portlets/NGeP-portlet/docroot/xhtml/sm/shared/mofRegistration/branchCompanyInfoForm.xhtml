@@ -98,6 +98,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								maxlength="200" id="poBranchRemarkId"
+								validatorMessage="#{lbl['lbl.sm.branch.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.branchRemark}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="poBranchRemarkMsg" for="poBranchRemarkId"
@@ -111,6 +112,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41" maxlength="200" id="poBranchRemark2Id"
+								validatorMessage="#{lbl['lbl.sm.branch.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.branchRemark}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="poBranchRemark2Msg" for="poBranchRemark2Id"
@@ -118,6 +120,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								maxlength="200" id="apprBranchRemarkId"
+								validatorMessage="#{lbl['lbl.sm.branch.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.apprvrSecReview.branchRemark}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="apprBranchRemarkMsg" for="apprBranchRemarkId"

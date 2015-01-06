@@ -52,8 +52,7 @@
 					<ac:paginator for="shrPerDt" />
 					<p:ajax event="rowSelect" listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
-					<p:ajax event="rowUnselect"
-						listener="#{backingBean.unSelectAdmin}"
+					<p:ajax event="rowUnselect" listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
 					<p:ajax event="rowSelectCheckbox"
 						listener="#{backingBean.unSelectAdmin}"
@@ -64,46 +63,60 @@
 					<p:ajax event="rowDblselect"
 						listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
-					<p:column selectionMode="multiple" width="5%" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}"/>
+					<p:column selectionMode="multiple" width="5%"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}" />
 
 
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
 						<h:outputText value="#{shareBean.name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
 						<h:outputText value="#{shareBean.identificationNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
 						<h:outputText value="#{shareBean.sharePercentage}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
 						<h:outputText value="#{shareBean.shareAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
 						<h:outputText value="#{lbl['lbl.txt.yes']}"
 							rendered="#{shareBean.bumiFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.label.action']}" disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+					<p:column headerText="#{lbl['lbl.sm.label.action']}"
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
 						<p:commandLink
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
-							
-							<p:outputPanel rendered="#{shareBean.equityOwner or shareBean.director}">
-								<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" rendered="#{backingBean.managedBean.disAllowOwnerEdit}"/>
-								<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" rendered="#{!backingBean.managedBean.disAllowOwnerEdit}"/>
+
+							<p:outputPanel
+								rendered="#{shareBean.equityOwner or shareBean.director}">
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/resources/ep/images/design/document.png"
+									rendered="#{backingBean.managedBean.disAllowOwnerEdit}" />
+								<p:graphicImage library="ep/images/design" name="edit.png"
+									value="/resources/ep/images/design/edit.png"
+									rendered="#{!backingBean.managedBean.disAllowOwnerEdit}" />
 							</p:outputPanel>
-							<p:outputPanel rendered="#{!shareBean.equityOwner and !shareBean.director}">
-								<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" />
+							<p:outputPanel
+								rendered="#{!shareBean.equityOwner and !shareBean.director}">
+								<p:graphicImage library="ep/images/design" name="edit.png"
+									value="/resources/ep/images/design/edit.png" />
 							</p:outputPanel>
-							
+
 						</p:commandLink>
 
 					</p:column>
@@ -124,8 +137,13 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
-									maxlength="200"
-									value="#{backingBean.managedBean.poSecReview.shareholderRemark}" /></td>
+									maxlength="200" id="capShrHoldInfoPoRmrk"
+									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+									value="#{backingBean.managedBean.poSecReview.shareholderRemark}">
+									<f:validateLength maximum="200" />
+								</p:inputTextarea> <p:message id="capShrHoldInfoPoRmrkMsg"
+									for="capShrHoldInfoPoRmrk" showSummary="true"
+									showDetail="false" display="icon" /></td>
 						</tr>
 					</table>
 				</p:outputPanel>
@@ -138,8 +156,13 @@
 									value="#{backingBean.managedBean.poSecReview.shareholderRemark}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
-									maxlength="200"
-									value="#{backingBean.managedBean.apprvrSecReview.shareholderRemark}" /></td>
+									maxlength="200" id="capShrHoldInfoApprvrRmrk"
+									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+									value="#{backingBean.managedBean.apprvrSecReview.shareholderRemark}">
+									<f:validateLength maximum="200" />
+								</p:inputTextarea> <p:message id="capShrHoldInfoApprvrRmrkMsg"
+									for="capShrHoldInfoApprvrRmrk" showSummary="true"
+									showDetail="false" display="icon" /></td>
 
 						</tr>
 					</table>

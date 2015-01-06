@@ -93,8 +93,13 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.equityCompRemark}" /></td>
+								maxlength="200" id="capEquiShrCompPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.equiComp.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.equityCompRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="capEquiShrCompPoRmrkMsg"
+								for="capEquiShrCompPoRmrk" showSummary="true" showDetail="false"
+								display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -107,8 +112,13 @@
 								value="#{backingBean.managedBean.poSecReview.equityCompRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.equityCompRemark}" /></td>
+								maxlength="200" id="capEquiShrCompApprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.equiComp.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.equityCompRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="capEquiShrCompApprvrRmrkMsg"
+								for="capEquiShrCompApprvrRmrk" showSummary="true"
+								showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>

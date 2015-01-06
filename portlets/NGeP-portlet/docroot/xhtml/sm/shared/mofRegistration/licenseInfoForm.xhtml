@@ -84,8 +84,8 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}" oncomplete="licDialog.show();"
-					update=":form:tt:licPop" />
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					oncomplete="licDialog.show();" update=":form:tt:licPop" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" />
 
 			</div>
@@ -95,7 +95,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{backingBean.managedBean.poSecReview.licenseRemarks}" /></td>
+								id="licnSecPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.license.details'] - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.licenseRemarks}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="licnSecPoRmrkMsg" for="licnSecPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -108,7 +113,12 @@
 								value="#{backingBean.managedBean.poSecReview.licenseRemarks}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{backingBean.managedBean.apprvrSecReview.licenseRemarks}" /></td>
+								id="licnSecAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.license.details'] - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.licenseRemarks}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="licnSecAprvrRmrkMsg" for="licnSecAprvrRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>
@@ -121,7 +131,8 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.license.name']}" size="35" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.name']}"
+						size="35" /></td>
 				<td><p:inputText /></td>
 			</tr>
 			<tr>
@@ -138,7 +149,8 @@
 				<td><p:calendar showOn="button" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.license.assc.equipmnt']}" /></td>
+				<td><p:outputLabel
+						value="* #{lbl['lbl.sm.license.assc.equipmnt']}" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true">
 						<f:selectItems
@@ -149,7 +161,8 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.license.assc.facility']}" /></td>
+				<td><p:outputLabel
+						value="* #{lbl['lbl.sm.license.assc.facility']}" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true">
 						<f:selectItems
@@ -163,9 +176,10 @@
 		<!-- </p:panel> -->
 		<br />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}" oncomplete="licDialog.hide();"
-				update=":form:tt:licDt" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="licDialog.hide();" />
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+				oncomplete="licDialog.hide();" update=":form:tt:licDt" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				onclick="licDialog.hide();" />
 		</div>
 
 	</p:dialog>

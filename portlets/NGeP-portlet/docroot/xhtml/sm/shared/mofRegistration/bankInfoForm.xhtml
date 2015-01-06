@@ -141,8 +141,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.bankRemark}" /></td>
+								maxlength="200" id="bankPoRmrkSec"
+								validatorMessage="#{lbl['lbl.sm.bankDtls.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.bankRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="bankPoRmrkSecMsg" for="bankPoRmrkSec"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -155,8 +159,12 @@
 								value="#{backingBean.managedBean.poSecReview.bankRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.bankRemark}" /></td>
+								maxlength="200" id="bankApprvRmrkSec"
+								validatorMessage="#{lbl['lbl.sm.bankDtls.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.bankRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="bankApprvRmrkSecMsg" for="bankApprvRmrkSec"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>
@@ -351,34 +359,33 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td>
-						<p:outputPanel id="postCodeBankPanelId">
-							<p:outputPanel rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+					<td><p:outputPanel id="postCodeBankPanelId">
+							<p:outputPanel
+								rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="5"
-										required="#{backingBean.managedBean.valueReqd}"
-										label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeMy"
-										value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
-										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-										size="35" >
-										<f:validator validatorId="postcodeValidator" />
-										</p:inputText>
-										<p:message id="suppBankPostCodeMsgMy"
-										for="suppBankPostCodeMy" showSummary="true" showDetail="false"
-										display="icon" />
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeMy"
+									value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
+									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+									size="35">
+									<f:validator validatorId="postcodeValidator" />
+								</p:inputText>
+								<p:message id="suppBankPostCodeMsgMy" for="suppBankPostCodeMy"
+									showSummary="true" showDetail="false" display="icon" />
 							</p:outputPanel>
-							<p:outputPanel rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							<p:outputPanel
+								rendered="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
 								<p:inputText maxlength="10"
-										required="#{backingBean.managedBean.valueReqd}"
-										label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeForeign"
-										value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" 
-										size="35" >
-										</p:inputText>
-										<p:message id="suppBankPostCodeMsgForeign"
-										for="suppBankPostCodeForeign" showSummary="true" showDetail="false"
-										display="icon" />
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCodeForeign"
+									value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
+									size="35">
+								</p:inputText>
+								<p:message id="suppBankPostCodeMsgForeign"
+									for="suppBankPostCodeForeign" showSummary="true"
+									showDetail="false" display="icon" />
 							</p:outputPanel>
-						</p:outputPanel>
-					</td>
+						</p:outputPanel></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.assocBran']}"
@@ -399,16 +406,17 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputTextarea maxlength="1000"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" id="banCqTnc"
 							value="#{backingBean.managedBean.selectedBank.signatureInstruction}"
 							cols="36">
 							<f:validateLength maximum="1000" />
-						</p:inputTextarea> <p:message id="banCqTncMsg" for="banCqTnc"
-							showSummary="true" showDetail="false" display="icon" /></td>
+						</p:inputTextarea> <p:message id="banCqTncMsg" for="banCqTnc" showSummary="true"
+							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.cheSigns']} " />
