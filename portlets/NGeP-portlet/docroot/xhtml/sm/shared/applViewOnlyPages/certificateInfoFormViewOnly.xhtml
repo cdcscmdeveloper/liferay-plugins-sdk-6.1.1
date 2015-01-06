@@ -27,7 +27,7 @@
 					<ac:labelDate value="#{certBean.certEndDate}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink action="#{viewSmApplBackingBean.assignSelCert(certBean)}"
+					<p:commandLink action="#{viewSmApplBackingBean.assignSelCert(certBean)}" onstart="blockWidget.show()"
 						update=":form:tt:certPop" partialSubmit="true" process="@this" oncomplete="certDialog.show()">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"

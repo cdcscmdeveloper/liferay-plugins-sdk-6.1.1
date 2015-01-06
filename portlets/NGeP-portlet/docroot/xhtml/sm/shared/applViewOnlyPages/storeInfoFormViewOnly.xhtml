@@ -20,7 +20,7 @@
 					style="float : left" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
-				<p:commandLink process="@this" partialSubmit="true"
+				<p:commandLink process="@this" partialSubmit="true" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelStore(stor)}" oncomplete="storeDialog.show()"
 					update=":form:tt:storeDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="document.png"

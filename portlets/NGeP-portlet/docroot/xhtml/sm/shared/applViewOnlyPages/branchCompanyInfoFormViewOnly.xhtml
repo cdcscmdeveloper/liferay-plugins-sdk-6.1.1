@@ -29,7 +29,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink id="selectButton"
-						partialSubmit="true" process="@this"
+						partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}" update=":form:tt:branchDialogId" oncomplete="banchDialog.show()">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"

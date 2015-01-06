@@ -23,7 +23,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="dockYardDialog.show()"
-					process="@this" partialSubmit="true"
+					process="@this" partialSubmit="true" onstart="blockWidget.show()"
 					update=":form:tt:dockYardDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png" />

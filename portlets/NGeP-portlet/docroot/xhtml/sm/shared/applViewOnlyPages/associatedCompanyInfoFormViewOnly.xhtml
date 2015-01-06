@@ -24,7 +24,7 @@
 						style="float : left" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink update=":form:tt:asDisp"
+					<p:commandLink update=":form:tt:asDisp" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelAssoc(assocBean)}" oncomplete="assocDialog.show()" 
 						partialSubmit="true" process="@this">
 						<p:graphicImage library="ep/images/design" name="document.png"
@@ -55,13 +55,6 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.regNo']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.regNo}"/></td>
 				</tr>
-				<!-- <tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.shrHolding']}" /></td>
-					<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.isShareholding}" disabled="true">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
-							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						</p:selectOneRadio></td>
-				</tr> -->
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/></td>
