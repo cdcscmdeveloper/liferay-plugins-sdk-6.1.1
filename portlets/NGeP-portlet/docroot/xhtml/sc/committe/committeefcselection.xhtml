@@ -81,7 +81,7 @@
 				</p:column>
 			</c:if>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.sctable.rep.type']}"
+			<!-- <p:column headerText="#{lbl['lbl.sc.committe.sctable.rep.type']}"
 				style="width: 15%">
 				<p:selectOneMenu value="#{committeemember.representativeType.parameterId}"
 					style="width: 178px;margin-bottom: 5px;">
@@ -89,10 +89,10 @@
 						value="#{committeBackingBean.managedBean.representativesTypeslist}" />
 				</p:selectOneMenu>
 
-			</p:column>
+			</p:column> -->
 		</p:dataTable>
 		<h:panelGroup
-			rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
+			>
 			<div class="ppRightBtn">
 				<p:commandButton id="quotationcommitteeadd"
 					value="#{lbl['lbl.so.addbtn']}" process="@this" icon="ui-icon-add"

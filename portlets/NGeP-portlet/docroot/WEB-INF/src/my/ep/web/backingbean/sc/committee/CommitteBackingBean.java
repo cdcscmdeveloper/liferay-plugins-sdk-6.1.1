@@ -120,21 +120,19 @@ public class CommitteBackingBean extends
 							BpmOutcomeConst.BPM_SUBMIT });
 		}
 
-		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
-				.getCloneSearchQTDataModel();
-		if (cloneSearchQTDataModel == null) {
-			getManagedBean().setCloneSearchQTDataModel(
-					new CloneQTPagingDataModel("clonesearchCommitteid",
-							getManagedBean().getCloneQtnTenderSearchBean()));
-		}
-
-		IPagingDataModel<PmUser> userSearhQCDataModel = getManagedBean()
-				.getUserSearchQCDataModel();
-		if (userSearhQCDataModel == null) {
-			getManagedBean().setUserSearchQCDataModel(
-					new UserQCPagingDataModel("userexistid", getManagedBean()
-							.getUserQCSearchBean()));
-		}
+		/*
+		 * IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
+		 * .getCloneSearchQTDataModel(); if (cloneSearchQTDataModel == null) {
+		 * this.getManagedBean().setCloneSearchQTDataModel( new
+		 * CloneQTPagingDataModel("clonesearchCommitteid",
+		 * getManagedBean().getCloneQtnTenderSearchBean())); }
+		 * 
+		 * IPagingDataModel<PmUser> userSearhQCDataModel = getManagedBean()
+		 * .getUserSearchQCDataModel(); if (userSearhQCDataModel == null) {
+		 * this.getManagedBean().setUserSearchQCDataModel( new
+		 * UserQCPagingDataModel("userexistid", getManagedBean()
+		 * .getUserQCSearchBean())); }
+		 */
 	}
 
 	private class UserQCPagingDataModel extends PagingDataModel<PmUser> {
@@ -224,7 +222,7 @@ public class CommitteBackingBean extends
 	}
 
 	public void searchUserAction() {
-		getManagedBean().getUserSearchQCDataModel().reloadData();
+		this.getManagedBean().getUserSearchQCDataModel().reloadData();
 	}
 
 	/**
@@ -250,9 +248,25 @@ public class CommitteBackingBean extends
 				.getSearchQTDataModel();
 
 		if (searchQTDataModel == null) {
-			getManagedBean().setSearchQTDataModel(
+			this.getManagedBean().setSearchQTDataModel(
 					new QTPagingDataModel("searchQTs", getManagedBean()
 							.getQtnTenderSearchBean()));
+		}
+
+		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
+				.getCloneSearchQTDataModel();
+		if (cloneSearchQTDataModel == null) {
+			this.getManagedBean().setCloneSearchQTDataModel(
+					new CloneQTPagingDataModel("clonesearchCommitteid",
+							getManagedBean().getCloneQtnTenderSearchBean()));
+		}
+
+		IPagingDataModel<PmUser> userSearhQCDataModel = getManagedBean()
+				.getUserSearchQCDataModel();
+		if (userSearhQCDataModel == null) {
+			this.getManagedBean().setUserSearchQCDataModel(
+					new UserQCPagingDataModel("userexistid", getManagedBean()
+							.getUserQCSearchBean()));
 		}
 	}
 
@@ -386,7 +400,7 @@ public class CommitteBackingBean extends
 	public String updateCommitteDetails(String outCome) {
 		debugLogger("submitCommitteDetails");
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
-
+		committeReqDTO.setOutcome(outCome);
 		CommitteResDTO resDTO = null;
 
 		try {
@@ -448,7 +462,7 @@ public class CommitteBackingBean extends
 		// ScQtcommitte date setting
 		ScQtCommittee scQtCommittee = this.getManagedBean().getQtCommittee();
 
-		finalizeRemarks(scQtCommittee.getScCommittee().getScCommitteeRemarks());
+		// finalizeRemarks(scQtCommittee.getScCommittee().getScCommitteeRemarks());
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
@@ -459,7 +473,7 @@ public class CommitteBackingBean extends
 			committeReqDTO.setQtId(Long.valueOf(evalDataType.getQtId()));
 			committeReqDTO.setCommitteeType(evalDataType.getCommitteeType());
 			committeReqDTO.setPayLoad(evalDataType);
-			committeReqDTO.setToken(this.getManagedBean().getTaskName());
+			// committeReqDTO.setToken(this.getManagedBean().getTaskName());
 			committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 
 		} else {
@@ -467,6 +481,9 @@ public class CommitteBackingBean extends
 			committeReqDTO.setCommitteeType(this.getManagedBean()
 					.getCommitteeType());
 		}
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		committeReqDTO.setToken(ctxToken);
 		return committeReqDTO;
 	}
 
@@ -894,12 +911,12 @@ public class CommitteBackingBean extends
 
 	public void addCommitteMember(String titleName) {
 		debugLogger("addCommitteMember");
-		getManagedBean().getUserSearchQCDataModel().reloadData();
-		getManagedBean().getUserQCSearchBean().setName(null);
-		getManagedBean().getUserQCSearchBean().setIdentificationType(null);
-		getManagedBean().getUserQCSearchBean().setIdentificationNo(null);
-		getManagedBean().setExternalUsers(null);
-		getManagedBean().setSelectedPmUser(null);
+		// getManagedBean().getUserSearchQCDataModel().reloadData();
+		// getManagedBean().getUserQCSearchBean().setName(null);
+		// getManagedBean().getUserQCSearchBean().setIdentificationType(null);
+		// getManagedBean().getUserQCSearchBean().setIdentificationNo(null);
+		// getManagedBean().setExternalUsers(null);
+		// getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
@@ -1658,6 +1675,7 @@ public class CommitteBackingBean extends
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		if (SCProcessNameConst.ASSIGN_FC_MEMBER.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
+
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) payLoad;
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			committeReqDTO.setQtId(Long.valueOf(evaluationDataType.getQtId()));
@@ -1673,7 +1691,8 @@ public class CommitteBackingBean extends
 					CommitteType.getValue(qtCommittee.getScCommittee()
 							.getCommitteeType().getParameterCode()));
 			this.getManagedBean().setScCommittee(qtCommittee.getScCommittee());
-
+			this.getManagedBean().setQt(
+					qtCommittee.getScQt());
 			String representitiveType = null;
 			if ("QCB".equalsIgnoreCase(committeeType)
 					|| "QCA".equalsIgnoreCase(committeeType)) {
@@ -1695,11 +1714,8 @@ public class CommitteBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
-				.handleNavigation(
-						fc,
-						null,
-						"NAV_TO_COMMITTEE_MAINTENANACE"
-								+ "?faces-redirect=true");
+				.handleNavigation(fc, null,
+						NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true");
 	}
 
 	public void resetSearchDetails() {
@@ -1734,4 +1750,5 @@ public class CommitteBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
+
 }
