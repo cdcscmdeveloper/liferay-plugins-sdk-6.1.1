@@ -6,13 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="loaContents" header="#{lbl['lbl.ct.panel.loa.contents']}" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="loaContentDt" var="data" 
+		<p:dataTable id="loaContentDt" var="loaReportVar" 
 		     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaReports}"
-		     selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{data}">
+		     selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{loaReportVar}">
 		     <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
 			 <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;">
-			    <p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
-				<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
+			    <p:outputLabel value="#{loaReportVar.title}" style="float:left;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
+				<p:inputText value="#{loaReportVar.title}" style="width:90%;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
 		     </p:column>
 			 <p:column style="width:15%;">
 			 	<f:facet name="header">
@@ -20,29 +20,29 @@
 			        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
 			  	</f:facet>
 				<p:outputLabel style="float:left;"
-					value="#{amendmentBackingBean.getParameterDesc(data.definationType)}" />
+					value="#{amendmentBackingBean.getParameterDesc(loaReportVar.definationType)}" />
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.btn.upload']}" styleClass="column-align-center" style="width:20%;">
-				<h:panelGroup id="uploadLetterPg" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
-					<p:commandButton icon="iconAttachment"  rendered="#{data.scLoaReportAttachment.filePath == null}"
+				<h:panelGroup id="uploadLetterPg" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
+					<p:commandButton icon="iconAttachment"  rendered="#{loaReportVar.scLoaReportAttachment.filePath == null}"
 					   update=":form:loaContentDt, uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;"  >
-						<f:setPropertyActionListener value="#{data}" 
+						<f:setPropertyActionListener value="#{loaReportVar}" 
 						    target="#{amendmentBackingBean.managedBean.selectedScLoaReports}" />
 					</p:commandButton>
-					<h:commandLink rendered="#{data.scLoaReportAttachment.filePath != null}" value="#{data.scLoaReportAttachment.fileName}"
-						action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath, data.scLoaReportAttachment.fileName)}">
+					<h:commandLink rendered="#{loaReportVar.scLoaReportAttachment.filePath != null}" value="#{loaReportVar.scLoaReportAttachment.fileName}"
+						action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
 					</h:commandLink>
 				 </h:panelGroup>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;">
-			    <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
-			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath, data.scLoaReportAttachment.fileName)}">
+			    <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
+			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
 				       <p:graphicImage library="ep/images/design" name="download.png"
 						   value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				   </h:commandLink>
 			    </h:panelGroup>
-			     <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
-			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(data)}">
+			     <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
+			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(loaReportVar)}">
 					    <p:graphicImage library="ep/images/design" name="download.png"
 						    value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				     </h:commandLink>
