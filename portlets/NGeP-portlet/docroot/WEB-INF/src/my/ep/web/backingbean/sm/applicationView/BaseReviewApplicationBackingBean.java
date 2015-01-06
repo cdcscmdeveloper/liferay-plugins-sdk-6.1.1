@@ -13,15 +13,12 @@ import java.util.Set;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -45,6 +42,7 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -689,6 +687,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
+
+		StringBuffer catL1 = new StringBuffer();
+		StringBuffer catL2 = new StringBuffer();
+		StringBuffer catL3 = new StringBuffer();
+		for (SmCompanyExperienceCat cat : consultantBean
+				.getSmCompanyExperienceCats()) {
+			if (cat.getPmCategoryL1() != null) {
+				catL1.append(cat.getPmCategoryL1().getCategoryName()).append(
+						"<br/>");
+			} else if (cat.getPmCategoryL2() != null) {
+				catL2.append(cat.getPmCategoryL1().getCategoryName()).append(
+						"<br/>");
+			} else if (cat.getPmCategoryL3() != null) {
+				catL3.append(cat.getPmCategoryL1().getCategoryName()).append(
+						"<br/>");
+			}
+		}
+		getManagedBean().setSelectedCompanyExperienceCatL1(catL1.toString());
+		getManagedBean().setSelectedCompanyExperienceCatL2(catL2.toString());
+		getManagedBean().setSelectedCompanyExperienceCatL3(catL3.toString());
+		
 		if (getManagedBean().getSelectedCompanyExperience()
 				.getProcurementModeId() != null) {
 			PmParameter procurementMode = SmApplicationUtil

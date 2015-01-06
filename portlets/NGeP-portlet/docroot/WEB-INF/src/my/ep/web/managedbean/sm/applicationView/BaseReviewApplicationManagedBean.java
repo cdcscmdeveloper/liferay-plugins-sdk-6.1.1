@@ -107,6 +107,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String selectedMachineryPurchaseMethod;
 	private String selectedShareholderIdentificationType;
 	private String selectedCompanyExperienceProcurementMode;
+	private String selectedCompanyExperienceCatL1;
+	private String selectedCompanyExperienceCatL2;
+	private String selectedCompanyExperienceCatL3;
 	private String supplierRemarks;
 	private String currentStatus;
 
@@ -872,6 +875,33 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setOriginal(boolean original) {
 		this.original = original;
+	}
+
+	public String getSelectedCompanyExperienceCatL1() {
+		return selectedCompanyExperienceCatL1;
+	}
+
+	public void setSelectedCompanyExperienceCatL1(
+			String selectedCompanyExperienceCatL1) {
+		this.selectedCompanyExperienceCatL1 = selectedCompanyExperienceCatL1;
+	}
+
+	public String getSelectedCompanyExperienceCatL2() {
+		return selectedCompanyExperienceCatL2;
+	}
+
+	public void setSelectedCompanyExperienceCatL2(
+			String selectedCompanyExperienceCatL2) {
+		this.selectedCompanyExperienceCatL2 = selectedCompanyExperienceCatL2;
+	}
+
+	public String getSelectedCompanyExperienceCatL3() {
+		return selectedCompanyExperienceCatL3;
+	}
+
+	public void setSelectedCompanyExperienceCatL3(
+			String selectedCompanyExperienceCatL3) {
+		this.selectedCompanyExperienceCatL3 = selectedCompanyExperienceCatL3;
 	}
 
 }
