@@ -96,7 +96,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								id="licnSecPoRmrk"
-								validatorMessage="#{lbl['lbl.sm.license.details'] - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								validatorMessage="#{lbl['lbl.sm.license.details']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.licenseRemarks}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="licnSecPoRmrkMsg" for="licnSecPoRmrk"
@@ -114,7 +114,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								id="licnSecAprvrRmrk"
-								validatorMessage="#{lbl['lbl.sm.license.details'] - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								validatorMessage="#{lbl['lbl.sm.license.details']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.apprvrSecReview.licenseRemarks}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="licnSecAprvrRmrkMsg" for="licnSecAprvrRmrk"
