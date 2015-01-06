@@ -739,7 +739,7 @@ public class OrganisationBackingBean extends
 						OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
 				||getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
-			throw new EpException(MessageConst.ERROR_770051);
+			throw new EpException(MessageConst.ERROR_775104);
 			
 		}
 
