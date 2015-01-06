@@ -14,9 +14,7 @@
 
 	<cc:implementation>
 			
-			<!-- disabled first because maybe no need to show remarks from PO/APPROVER for original and previous application
-			
-			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.approverUser or cc.attrs.backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.previousApproved}">
 				<br />
 				
 				<table style="width:50%;table-layout:fixed">
@@ -32,15 +30,13 @@
 						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark==null?lbl['lbl.sm.remarks.none']:cc.attrs.poRemark}"/></td>
 					</tr>
-					<c:if test="#{cc.attrs.backingBean.managedBean.approverUser}">
-						<tr>
-							<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-							<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark==null?lbl['lbl.sm.remarks.none']:cc.attrs.approverRemark}"/></td>
-						</tr>
-					</c:if>
+					<tr>
+						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark==null?lbl['lbl.sm.remarks.none']:cc.attrs.approverRemark}"/></td>
+					</tr>
 				</table>
 				
 				<br />
-			</p:outputPanel> -->
+			</p:outputPanel>
 	</cc:implementation>
 </ui:component>

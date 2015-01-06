@@ -114,6 +114,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		ISmApplRevisionSO applRevisionSO = null;
 
 		try {
+			// set revision application type
+			setRevisionApplType();
+
 			// checking if SER file not exist then recreate
 			createSerFileIfNotExist(smAppl);
 
@@ -1159,6 +1162,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	private void setRevisionApplType() {
+		String serType = getManagedBean()
+				.getApplicationNoParam()
+				.substring(
+						getManagedBean().getApplicationNoParam().length() - 3,
+						getManagedBean().getApplicationNoParam().length())
+				.equals("APP") ? "APP" : "SUP";
+		if (serType.equals("APP")) {
+			if (getManagedBean().isViewSupplierProfile()) {
+				getManagedBean().setPreviousApproved(false);
+				getManagedBean().setOriginal(false);
+			} else {
+				getManagedBean().setPreviousApproved(true);
+				getManagedBean().setOriginal(false);
+			}
+		} else {
+			getManagedBean().setPreviousApproved(false);
+			getManagedBean().setOriginal(true);
+		}
+	}
+
 	private int getMaxTabByApplTypeAndCatType(String applType,
 			String applCategoryType) {
 		int maxTab = 0;
@@ -1166,31 +1190,63 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		case ParameterConst.NEW_SM_APPLN_FOR_MOF:
 			if (applCategoryType != null
 					&& applCategoryType.equalsIgnoreCase("S")) {
-				maxTab = 8;
+				if (getManagedBean().isPreviousApproved()) {
+					maxTab = 10;
+				} else {
+					maxTab = 8;
+				}
 			} else {
-				maxTab = 6;
+				if (getManagedBean().isPreviousApproved()) {
+					maxTab = 8;
+				} else {
+					maxTab = 6;
+				}
 			}
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
 			if (applCategoryType != null
 					&& applCategoryType.equalsIgnoreCase("S")) {
+				if (getManagedBean().isPreviousApproved()) {
+					maxTab = 9;
+				} else {
+					maxTab = 7;
+				}
+			} else {
+				if (getManagedBean().isPreviousApproved()) {
+					maxTab = 7;
+				} else {
+					maxTab = 5;
+				}
+			}
+			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+			if (getManagedBean().isPreviousApproved()) {
+				maxTab = 6;
+			} else {
+				maxTab = 4;
+			}
+			break;
+		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+			if (getManagedBean().isPreviousApproved()) {
 				maxTab = 7;
 			} else {
 				maxTab = 5;
 			}
 			break;
-		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-			maxTab = 4;
-			break;
-		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
-			maxTab = 5;
-			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
 			if (applCategoryType != null
 					&& applCategoryType.equalsIgnoreCase("S")) {
-				maxTab = 8;
+				if (getManagedBean().isPreviousApproved()) {
+					maxTab = 10;
+				} else {
+					maxTab = 8;
+				}
 			} else {
-				maxTab = 6;
+				if (getManagedBean().isPreviousApproved()) {
+					maxTab = 8;
+				} else {
+					maxTab = 6;
+				}
 			}
 			break;
 		default:
