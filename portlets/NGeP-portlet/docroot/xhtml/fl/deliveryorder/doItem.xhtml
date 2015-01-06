@@ -375,14 +375,16 @@
 			<p:panel id="measurementPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 				<h:panelGrid columns="2" >
 				        <h:outputLabel value="#{lbl['lbl.fl.uom.uomcode']}"></h:outputLabel>
-			            <p:inputText value="#{createDOBackingBean.managedBean.measurementCodes}" size="30"  />					
+			            <p:inputText value="#{createDOBackingBean.managedBean.measurementCodes}" size="30"  
+			            onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>					
 						<h:outputLabel value="#{lbl['lbl.fl.uom.uomname']}"></h:outputLabel>
-						<p:inputText value="#{createDOBackingBean.managedBean.measurementNames}" size="50" />
+						<p:inputText value="#{createDOBackingBean.managedBean.measurementNames}" size="50" 
+						onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>
 				</h:panelGrid>
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
 							 action="#{createDOBackingBean.retrieveMeasurement}"
-						     update="measurementSR" process="measurementPanel"/>
+						     update="measurementSR" process="measurementPanel" widgetVar="uomSearch"/>
             		<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
             				 action="#{createDOBackingBean.resetMeasurementSearch}"
             				 process="@this" update="measurementPanel,resultPanel" />
