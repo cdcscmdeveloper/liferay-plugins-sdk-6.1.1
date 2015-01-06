@@ -131,7 +131,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
-	
+
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -787,5 +787,5 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setConfirmMeeting(boolean confirmMeeting) {
 		this.confirmMeeting = confirmMeeting;
-	}	
+	} 
 }

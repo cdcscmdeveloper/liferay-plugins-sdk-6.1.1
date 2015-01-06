@@ -38,11 +38,15 @@
 				 </p:column>
 				 
 				 <p:column headerText="Role" style="width:13%;">
-						<p:selectOneMenu value="#{ctCommitteeVar.memberRole.parameterId}"
-							style="width: 110px;margin-bottom: 5px;"  id="appaction"
-						    disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" required="true" label="Role" >
+				 <ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
+							<h:outputText value="#{lbl['lbl.ct.secretary']}" />
+					 </ui:fragment>
+					<ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
+						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;"
+						    required="true" label="Role"  disabled="#{amendmentBackingBean.managedBean.confirmMeeting}">
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
-						</p:selectOneMenu>
+							</p:selectOneMenu>
+						 </ui:fragment>
 				 </p:column>
 	         </p:dataTable>
 	         <p:spacer height="5"/>
