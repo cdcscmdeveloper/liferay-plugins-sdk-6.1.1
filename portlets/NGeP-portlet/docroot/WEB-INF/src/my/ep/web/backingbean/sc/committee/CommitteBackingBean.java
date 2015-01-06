@@ -1373,15 +1373,9 @@ public class CommitteBackingBean extends
 				committeeMember.setMemberName(user.getUserName());
 				committeeMember.setIcPassport(user.getIdentificationNo());
 				committeeMember.setDesignation(user.getDesignation());
-				if (null != user.getPmAddressTypes()) {
-					for (PmAddressType address : user.getPmAddressTypes()) {
-						if (null != address.getPmAddress()) {
-							committeeMember.setEmail(address.getPmAddress()
-									.getEmail());
-							break;
-						}
-					}
-				}
+
+				committeeMember.setEmail(user.getEmail());
+
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPNP(user.isPMP());
 				committeeMember.setPmUser(user);
@@ -1691,8 +1685,7 @@ public class CommitteBackingBean extends
 					CommitteType.getValue(qtCommittee.getScCommittee()
 							.getCommitteeType().getParameterCode()));
 			this.getManagedBean().setScCommittee(qtCommittee.getScCommittee());
-			this.getManagedBean().setQt(
-					qtCommittee.getScQt());
+			this.getManagedBean().setQt(qtCommittee.getScQt());
 			String representitiveType = null;
 			if ("QCB".equalsIgnoreCase(committeeType)
 					|| "QCA".equalsIgnoreCase(committeeType)) {
