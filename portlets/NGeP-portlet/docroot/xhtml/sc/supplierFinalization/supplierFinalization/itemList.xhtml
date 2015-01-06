@@ -78,17 +78,17 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
-				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.awardSupplierList}">
+				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.recommendDtls}">
 								
 					<div class="datalist-noborder">
-						<ui:repeat var="supplier"
-								   value="#{item.awardSupplierList}">
+						<ui:repeat var="recommendDetail"
+								   value="#{item.recommendDtls}">
 							<p:column>
 								<p:commandLink update="@([id$=suppDtlPopUp])"
 									action="#{suppFinalizationBackingBean.supplier}"
 									oncomplete="suppDtlWidgetVar.show();">
-									<f:setPropertyActionListener value="#{supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-									<h:outputText value="#{supplier.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+									<f:setPropertyActionListener value="#{recommendDetail.supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
+									<h:outputText value="#{recommendDetail.supplier.companyName}" />
 								</p:commandLink>
 								<br/>
 							</p:column>
@@ -101,15 +101,13 @@
 				<p:outputPanel id="quantityListTbl"  rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
 								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 					<div class="datalist-quantity">
-						<ui:repeat 
-							var="qty"
-							value="#{item.awardSupplierList}">
+						<ui:repeat var="qty" value="#{item.recommendDtls}">
 							<p:column>
-								<h:inputText value="#{qty.qtyAward}" maxlength="6" size="10" required="true" 
+								<h:inputText value="#{qty.awardQty}" maxlength="6" size="10" required="true" 
 											 style="text-align: right;" label="#{lbl['lbl.sc.quantity']}">
 									<p:ajax partialSubmit="true" process="@this" update="@this" />
 									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
-										maxIntegerDigits="10" max="#{item.requestItem.quantity}" />								
+										maxIntegerDigits="10" />								
 								</h:inputText>
 								<br/>
 							</p:column>
