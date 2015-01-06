@@ -487,7 +487,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 		}catch(Exception e){
 			log.error(e);
-			throw new EpException(e.toString()); //TODO
+			throw e;
 		}finally{
 			reqSO = null;
 		}
@@ -1372,7 +1372,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public SelectItem[] getPlanYearOptions() {
 		log.info("getPlanYearOptions");
-		//TODO REMOVE RAIN
+		
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
 			return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
 		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
@@ -1382,6 +1382,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			return items;
 		}
+		//TODO REMOVE
 //		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 //		Integer nextYear = currentYear + 1;
 //		SelectItem[] items = new SelectItem[3];
@@ -1431,8 +1432,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			items[i++] = new SelectItem(parameterDesc.getPmParameter()
 					.getParameterId(), parameterDesc.getCodeName());
 		}
-		return items; //TODO REMOVE RAIN
-//		return getVotTypeOptions();
+		return items; 
+//		return getVotTypeOptions();//TODO REMOVE RAIN
 	}
 
 	/**
@@ -1861,8 +1862,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 	private boolean validationPlanSubmit(String action, PpPlan ppPlan){
 		log.info("validationPlanSubmit - START");
-		// basic validation TODO
-		
+		// basic validation 
 		if(ppPlan.getPlanType().getParameterId()==null){
 			throw new EpException(MessageConst.ERROR_730016);
 		}
@@ -2080,7 +2080,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//Validation
 			validationPlanSubmit(action, ppPlan);
 			if(ppPlan.isBrandNew()){
-				validationPlanAvailability(ppPlan); //TODO rain remove
+				validationPlanAvailability(ppPlan);
 			}
 			
 			//Get All Values
@@ -2218,7 +2218,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException(e.toString()); //TODO
+			throw e;
 		}
 		return items;
 	}
