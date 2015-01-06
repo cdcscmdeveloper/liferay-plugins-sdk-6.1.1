@@ -94,6 +94,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean reviewApplicationExist;
 	private boolean hasPreviousApplication;
 	private boolean viewSupplierProfile;
+	private boolean previousApproved;
+	private boolean original;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
 	private String catTypeConfirm;
@@ -854,6 +856,22 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setMaxTab(int maxTab) {
 		this.maxTab = maxTab;
+	}
+
+	public boolean isPreviousApproved() {
+		return previousApproved;
+	}
+
+	public void setPreviousApproved(boolean previousApproved) {
+		this.previousApproved = previousApproved;
+	}
+
+	public boolean isOriginal() {
+		return original;
+	}
+
+	public void setOriginal(boolean original) {
+		this.original = original;
 	}
 
 }

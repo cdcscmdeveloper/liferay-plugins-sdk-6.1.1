@@ -34,59 +34,30 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
 						<ui:include src="step6.2ViewEquipmentInfo.xhtml" />
 					</c:if>
-					<c:choose>
-						<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser }">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-								<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
-							</c:if>
-						</c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-								<ui:include
-									src="step7ViewSupportingDocumentsInfo.xhtml" />
-							</c:if>
-							<!-- <c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-								<ui:include src="step8ViewPoDecision.xhtml" />
-							</c:if> -->
-						</c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-								<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
-							</c:if>
-							<!-- <c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-								<ui:include src="step8ViewApproverDecision.xhtml" />
-							</c:if> -->
-						</c:when>
-						<c:otherwise>
-						</c:otherwise>
-					</c:choose>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+						<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.previousApproved}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
+							<ui:include src="step8ViewPoDecision.xhtml" />
+						</c:if>
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
+							<ui:include src="step8ViewApproverDecision.xhtml" />
+						</c:if>
+					</c:if>
 				</c:when>
 				<c:otherwise>
-					<c:choose>
-						<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser }">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
-							</c:if>
-						</c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
-							</c:if>
-							<!-- <c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include src="step8ViewPoDecision.xhtml" />
-							</c:if> -->
-						</c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
-							</c:if>
-							<!-- <c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include src="step8ViewApproverDecision.xhtml" />
-							</c:if> -->
-						</c:when>
-						<c:otherwise>
-						</c:otherwise>
-					</c:choose>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.previousApproved}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+							<ui:include src="step8ViewPoDecision.xhtml" />
+						</c:if>
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+							<ui:include src="step8ViewApproverDecision.xhtml" />
+						</c:if>
+					</c:if>
 				</c:otherwise>
 			</c:choose>
 		</ac:smPanel>
