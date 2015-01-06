@@ -428,7 +428,7 @@ public class CommitteBackingBean extends
 																	.getUserLocale())));
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
-					renewSesionObject();
+					//renewSesionObject();
 
 					FacesContext
 							.getCurrentInstance()
@@ -448,11 +448,8 @@ public class CommitteBackingBean extends
 							resDTO.getScQtCommittee());
 				}
 			}
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Sorry For the inconvinence", ""));
+		} finally {
+
 		}
 		return null;
 	}
@@ -1673,8 +1670,9 @@ public class CommitteBackingBean extends
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) payLoad;
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			committeReqDTO.setQtId(Long.valueOf(evaluationDataType.getQtId()));
-			committeReqDTO.setCommitteeType(evaluationDataType
-					.getCommitteeType());
+			/*committeReqDTO.setCommitteeType(evaluationDataType
+					.getCommitteeType());*/
+			committeReqDTO.setCommitteeType("QCA");
 			CommitteResDTO committeResDTO = committeSO
 					.retrieveCommitteByQtIdNCommType(committeReqDTO);
 			ScQtCommittee qtCommittee = committeResDTO.getScQtCommittee();
