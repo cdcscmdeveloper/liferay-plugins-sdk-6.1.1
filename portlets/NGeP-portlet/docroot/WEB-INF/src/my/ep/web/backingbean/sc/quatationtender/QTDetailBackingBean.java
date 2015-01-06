@@ -2283,6 +2283,10 @@ public class QTDetailBackingBean extends
 				List<ScQtDeduction> deductionList = resDTO
 						.getDeductionResultBean().getResultList();
 				this.getManagedBean().setScQtDeductionList(deductionList);
+				if (null != deductionList && !deductionList.isEmpty()) {
+					this.getManagedBean().setSelectedScQtDeduction(deductionList.get(0));
+					this.getManagedBean().getSelectedScQtDeduction().setScQtDeductionClauses(deductionList.get(0).getScQtDeductionClauses());
+				}
 			} finally {
 				detailSO = null;
 			}
