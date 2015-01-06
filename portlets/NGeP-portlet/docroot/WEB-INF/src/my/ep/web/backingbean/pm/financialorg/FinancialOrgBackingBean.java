@@ -329,7 +329,6 @@ public class FinancialOrgBackingBean extends
 	}
 	
 public void saveFactoringDetails(PmFinancialOrg financialOrg){
-		System.out.println("1111111111111");
 		// Factoring company
 		List<PmOrgProfile> orgProfileList = getManagedBean().getOrgProfileList();
 		PmOrgProfile orgProfile = new PmOrgProfile();
@@ -450,7 +449,6 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 			 getManagedBean().getServiceTypes().add(getManagedBean().getServiceType());
 		}
 		
-		System.out.println("getServiceType 123:"+getManagedBean().getServiceType());
 		// financial org Address
 		List<PmAddressType> finAddressTypes = financialOrg.getPmAddressTypes();
 
@@ -493,15 +491,7 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					for (PmContact contactPerson : pmAddressType.getPmContacts())
 						getManagedBean().setContactPerson(contactPerson);
-				} else {
-					List<PmContact> contactLst = getManagedBean().getPmContact();
-					getManagedBean().setContactPerson(new PmContact());
-					PmContact contact = getManagedBean().getContactPerson();
-					contact.setPmAddressType(pmAddressType);
-					contactLst.add(contact);
-					pmAddressType.setPmContacts(contactLst);
-
-				}
+				} 
 			}
 		}
 		if (!addrExist) {
@@ -745,7 +735,9 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 				}
 				
 			}
+			
 			PmFinancialBranch finBranch = new PmFinancialBranch();
+			finBranch.setPmFinancialOrg(getManagedBean().getFinancialOrg());
 			this.getManagedBean().getPmFinancialBranch().add(finBranch);
 			
 			List<PmAddressType> branchAddressTypes = new ArrayList<PmAddressType>();
