@@ -803,6 +803,34 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			              }
 			    }
 			    
+			    if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) &&
+			    		(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) ||
+			    				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME))) {
+			    	if (getManagedBean().getContractVer().getCtAmendment().getCtMeetings().size() == 0) {
+			    		RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+			    		throw new EpException(MessageConst.ERROR_100023, new String[]{
+			    				ResourceBundleUtils.getMessage("lbl.ct.menu.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			    	}
+			    	else {
+			    		for (CtMeeting ctMeeting : getManagedBean().getContractVer().getCtAmendment().getCtMeetings()) {
+			    			if (ctMeeting.getMeetingDate() == null) {
+			    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					    		throw new EpException(MessageConst.ERROR_100022, new String[]{
+					    				ResourceBundleUtils.getMessage("lbl.ct.date.of.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			    			}
+			    			if (ctMeeting.getMeetingLocation() == null || ctMeeting.getMeetingLocation().isEmpty()) {
+			    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					    		throw new EpException(MessageConst.ERROR_100022, new String[]{
+					    				ResourceBundleUtils.getMessage("lbl.ct.location.of.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			    			}
+			    			if (ctMeeting.getMeetingStatusId() == null) {
+			    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					    		throw new EpException(MessageConst.ERROR_100022, new String[]{"Meeting Status"});
+			    			}
+			    		}
+			    	}
+			    }
+			    
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
