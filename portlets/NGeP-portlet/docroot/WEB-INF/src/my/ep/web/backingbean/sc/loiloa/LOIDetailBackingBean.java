@@ -65,6 +65,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -310,12 +311,12 @@ public class LOIDetailBackingBean extends
 		debugLogger("preRenderMultipleLoiView");
 		
 		try {
-			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			
-			Long sourceId = Long.valueOf(awardDataType.getSourceId());
-			getManagedBean().setPayLoadData(awardDataType);
+			Long sourceId = Long.valueOf(evaluationDataType.getQtId());
+			getManagedBean().setPayLoadData(evaluationDataType);
 			
-			retrieveMultipleLoiDtls(sourceId, "PBA", awardDataType.getGroupkeyList());
+			retrieveMultipleLoiDtls(sourceId, evaluationDataType.getCommitteeType(), evaluationDataType.getGroupkeyMa());
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
@@ -339,6 +340,7 @@ public class LOIDetailBackingBean extends
 				List<ScQtRecommend> scQtRecommendList = resDTO.getScQtRecommendList();
 				
 				getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+				getManagedBean().setCommitteeType(committeeType);
 				getManagedBean().setLois(resDTO.getScLois());
 				getManagedBean().setRecommendList(scQtRecommendList);
 				getManagedBean().setRecommendDtlIds(recommendDtlIds);
@@ -1904,7 +1906,9 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				renewSessionWithPreviousValues();
 				
-				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(), "PBA", getManagedBean().getRecommendDtlIds());
+				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(), 
+						getManagedBean().getCommitteeType(), 
+						getManagedBean().getRecommendDtlIds());
 
 				FacesContext
 						.getCurrentInstance()
@@ -1940,7 +1944,7 @@ public class LOIDetailBackingBean extends
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
+			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
 					.getPayLoadData();
 					
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
@@ -1949,7 +1953,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setToken(new FacesScopes()
 					.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setPayLoad(awardDataType);
+			reqDTO.setPayLoad(evaluationDataType);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveMultipleLOIDtl(reqDTO);
 
@@ -2265,6 +2269,7 @@ public class LOIDetailBackingBean extends
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
+		String committeeType = getManagedBean().getCommitteeType();
 		boolean  qtLoaEditFlag = getManagedBean().isQtLoaEditFlag();
 		List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 
@@ -2281,6 +2286,7 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().setDocType(docType);
 		getManagedBean().setRecommendDtlIds(recommendDtlIds);
+		getManagedBean().setCommitteeType(committeeType);
 	}
 
 	public SelectItem[] getDeductionItemTypeDropdownList() {

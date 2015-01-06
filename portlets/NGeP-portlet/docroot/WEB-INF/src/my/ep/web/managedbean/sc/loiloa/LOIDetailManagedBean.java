@@ -145,6 +145,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private StreamedContent streamedContent;
 	
 	private Long awardSupplierId;
+	private String committeeType;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1149,6 +1150,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAwardSupplierId(Long awardSupplierId) {
 		this.awardSupplierId = awardSupplierId;
+	}
+
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
 	}
 	
 }
