@@ -70,8 +70,9 @@
 							value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change"
-								listener="#{specificationBackingBean.calculateStartMonth}"></p:ajax>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scheduleDetails"
+								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
@@ -84,8 +85,8 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change"
-								listener="#{specificationBackingBean.calculateStartMonth}"></p:ajax>
+							<p:ajax event="change" process="@this" partialSubmit="true" update="scheduleDetails"
+								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
 
@@ -98,7 +99,7 @@
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails"
+							<p:ajax event="change" update="scheduleDetails" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -110,7 +111,7 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails"
+							<p:ajax event="change" update="scheduleDetails" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -210,7 +211,7 @@
 							value="#{payment.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change"
+							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -224,7 +225,7 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change"
+							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -238,7 +239,7 @@
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}">
 							</f:selectItems>
-							<p:ajax event="change"
+							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
 
