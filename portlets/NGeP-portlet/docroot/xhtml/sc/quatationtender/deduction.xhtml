@@ -16,14 +16,9 @@
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				listener="#{qTDeductionPaymentBackingBean.retrieveDeductionCluses}"
-				update="@([id$=clausePnl])" />
-
-			<p:ajax event="rowUnselect" partialSubmit="true"
-				process="@this,:form:clausePnl" update="@([id$=clausePnl])"
-				listener="#{qTDeductionPaymentBackingBean.rowUnselectEvent}" />
-			<p:ajax event="rowUnselect" partialSubmit="true"
-				process="@this,:form:clausePnl" update=":form:clausePnl" />
+				update=":form:clausePnl" />
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
 
 			<ac:paginator for="deductPaymentTblId" />
 
@@ -33,7 +28,8 @@
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						update=":form:clausePnl, deductionamountid, deductPaymentTblId"
+						update=":form:clausePnl, deductionamountid"
+						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
 				</p:selectOneMenu>
 				<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
@@ -61,9 +57,8 @@
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				icon="ui-icon-delete"
 				action="#{qTDeductionPaymentBackingBean.deleteDeductionPaymentAction}"
-				update="deductPaymentTblId" />
+				update="deductPaymentTblId,deductClauseTblId" />
 		</div>
-
 		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}"
 			toggleable="true">
 			<p:dataTable id="deductClauseTblId" widgetVar="deductClauseTblWidget"
@@ -72,7 +67,7 @@
 				selection="#{qTDeductionPaymentBackingBean.managedBean.selectedDeductionClauses}"
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
 
-				<ac:paginator for="deductClauseTblId" />
+				<ac:paginator for="deductClauseTbl" />
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
@@ -80,11 +75,11 @@
 					<ui:fragment
 						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
-							cols="170" rows="2" maxlength="500" style=" margin-bottom:5px;" />
+							cols="140" rows="2" maxlength="500" style=" margin-bottom:5px;" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode ne ParameterConst.deductionTypeOthers}">
-						<h:outputText value="#{scQtDeductionClause.pmClause.clauseDesc}" />
+						<h:outputText escape="false" value="#{scQtDeductionClause.pmClause.clauseDesc}" rendered="#{!empty scQtDeductionClause.pmClause}" />
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>

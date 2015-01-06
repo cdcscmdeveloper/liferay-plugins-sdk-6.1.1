@@ -9,17 +9,21 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.common.clause.ClauseReqDTO;
+import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -55,21 +59,52 @@ public class QTDeductionPaymentBackingBean extends
 
 	public void deductionTypeChange(int index, ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
+		
 		IParameterSO parameterSO = null;
+		IClauseSO clauseSO = null;
 		try {
 			Long parameterId = scQtDeduction.getDeductionType()
 					.getParameterId();
+			
 			if (null != parameterId) {
 				parameterSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				clauseSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
+				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scQtDeduction.setDeductionType(resDTO.getPmParameter());
-				scQtDeduction.setScQtDeductionClauses(null);
+				ScQtDeductionClause deductionClause = null;
+				List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
+				if (!ParameterConst.DEDUCTION_TYPE_OTHERS
+						.equalsIgnoreCase(scQtDeduction.getDeductionType()
+								.getParameterCode())) {
+					ClauseReqDTO clauseReqDTO = new ClauseReqDTO();
+					clauseReqDTO.setDeductionType(scQtDeduction.getDeductionType()
+							.getParameterCode());
+					ClauseResDTO clauseResDTO = clauseSO
+							.retrieveClausesByDeductionType(clauseReqDTO);
+					if (clauseResDTO.getResultBean() != null) {
+						List<PmClause> pmClauseList = clauseResDTO.getResultBean()
+								.getResultList();
+						for (PmClause pmClause : pmClauseList) {
+							deductionClause = new ScQtDeductionClause();
+							deductionClause.setPmClause(pmClause);
+							deductionClause.setScQtDeduction(scQtDeduction);
+							deductionClauseList.add(deductionClause);
+						}
+						scQtDeduction.setScQtDeductionClauses(deductionClauseList);
+					} else {
+						scQtDeduction.setScQtDeductionClauses(null);
+					}
+				} else {
+					scQtDeduction.setScQtDeductionClauses(null);
+				}
+				
 				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			} else {
-				//ScQtDeduction deduction = new ScQtDeduction();
 				scQtDeduction.setDeductionType(new PmParameter());
 				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			}
