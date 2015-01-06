@@ -2702,6 +2702,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	}
 	            //Auto size all the columns
 		        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+		        	if(!(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) || productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+		        		if(x==4) {
+				        	productSheet.setColumnHidden(x, true);
+		        		}
+		        	}
 		        	productSheet.autoSizeColumn(x);
 		        }
 	        }else{
@@ -2757,6 +2762,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		jadualHarga.setZone(itemPrice.getCtContractZone() != null ? itemPrice.getCtContractZone().getZoneName() : "N/A");
 		jadualHarga.setItem(itemPrice.getCtContractItem().getItemName());
 		jadualHarga.setUnitPrice(nf.format(itemPrice.getUnitPrice().longValue()));
+		jadualHarga.setPriceType(itemPrice.getCtContractItem().getPriceType().getParameterCode());
 		
 		if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			jadualHarga.setUom(itemPrice.getCtContractItem().getUom().getUomName());
