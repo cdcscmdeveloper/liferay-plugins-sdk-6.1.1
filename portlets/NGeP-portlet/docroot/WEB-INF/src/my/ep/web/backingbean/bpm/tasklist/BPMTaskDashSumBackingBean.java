@@ -5,6 +5,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,6 @@ public class BPMTaskDashSumBackingBean extends
 	}
 
 	private void createTaskBarModel() {
-		System.out.println(">>>>>>>>>>>>>createTaskBarModel<<<<<<<<<<<<<<");
 		IDashSummarySO dashSummarySO = null;
 		try {
 
@@ -88,7 +88,6 @@ public class BPMTaskDashSumBackingBean extends
 			String token = face.getBPMAuthenticationCtxToken();
 			long userId = new FacesScopes().getUserSessionBean().getUserId();
 
-			System.out.println("testing BPM auth******" + token);
 			DashSummaryReqDTO reqDTO = new DashSummaryReqDTO();
 
 			reqDTO.setCtxToken(token);
@@ -100,26 +99,30 @@ public class BPMTaskDashSumBackingBean extends
 			}
 			DashSummaryResDTO responseDTO = dashSummarySO
 					.getTaskSummary(reqDTO);
-			log.info("responseDTO*****" + responseDTO);
-			log.info("responseDTO.getTaskSummaryDTOList()*****"
-					+ responseDTO.getTaskSummaryDTOList());
+//			log.info("responseDTO*****" + responseDTO);
+//			log.info("responseDTO.getTaskSummaryDTOList()*****"
+//					+ responseDTO.getTaskSummaryDTOList());
+			log.info("after call service in backingBean: " + new Date());
 			dashboardSummary = responseDTO.getTaskSummaryDTOList();
-			log.info("responseDTO.getTotalTask()*****"
-					+ responseDTO.getTotalTask());
+//			log.info("responseDTO.getTotalTask()*****"
+//					+ responseDTO.getTotalTask());
 			totalTask = responseDTO.getTotalTask();
+			log.info("after getting responce list in backingBean: " + new Date());
 			pendingDeliveryListNum = responseDTO.getPendingDeliveryNum();
-			log.info("responseDTO.getPendingDeliveryNum()*****"
-					+ responseDTO.getPendingDeliveryNum());
-			
+//			log.info("responseDTO.getPendingDeliveryNum()*****"
+//					+ responseDTO.getPendingDeliveryNum());
+//			log.info("back in backingBean: " + new Date());
+			log.info("after getting pendingDeliveryListNum in backingBean: " + new Date());
 				pendingApprovalItemNum = responseDTO
 						.getPendingApprovalItemNum();
+				log.info("after getting pendingApprovalItemNum in backingBean: " + new Date());
 				pendingCodifiedItemsNum = responseDTO
 						.getPendingCodifiedItemsNum();
 			
-			log.info("pendingApprovalItemNum*****" + pendingApprovalItemNum);
-
-			log.info("pendingCodifiedItemsNum*****" + pendingCodifiedItemsNum);
-
+//			log.info("pendingApprovalItemNum*****" + pendingApprovalItemNum);
+//
+//			log.info("pendingCodifiedItemsNum*****" + pendingCodifiedItemsNum);
+				log.info("after getting pendingCodifiedItemsNum and end backingBean: " + new Date());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -351,6 +354,21 @@ public class BPMTaskDashSumBackingBean extends
 		}
 
 		return this.docTypeSearchBean;
+	}
+	
+	/**
+	 * Get meaningful application status message
+	 * @param docInt
+	 * @return String
+	 */
+	public String applicationStatus(Integer docInt) {
+		log.info("applicationStatus");
+		log.info("docInt:" + docInt);
+		if(docInt!=null){
+			return getStatusDescById(docInt.longValue());
+		}else{
+			return "";
+		}
 	}
 
 }
