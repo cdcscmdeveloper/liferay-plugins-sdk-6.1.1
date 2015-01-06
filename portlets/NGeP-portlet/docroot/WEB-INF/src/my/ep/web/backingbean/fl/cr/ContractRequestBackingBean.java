@@ -2567,7 +2567,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	// display itemCode,itemName,QueryDesc in popup
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
-		flItemAddress.getScRequestItem().getItemName();
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
 		if(null != flItemAddress.getFlFulfilmentItem().getFlQuery()){
