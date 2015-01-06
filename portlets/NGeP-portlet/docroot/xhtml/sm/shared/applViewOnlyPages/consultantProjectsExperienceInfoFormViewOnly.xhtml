@@ -116,45 +116,15 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
-								<td>
-									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-										<table width="100%">
-										<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-											<c:if test="#{not empty exp.pmCategoryL1}">
-												<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL1.categoryName}"/></td></tr>
-											</c:if>
-										</ui:repeat>
-										</table>
-									</c:if>
-								</td>
+								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceCatL1}" escape="false"/></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
-								<td>
-									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-										<table width="100%">
-										<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-											<c:if test="#{not empty exp.pmCategoryL2}">
-												<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL2.categoryName}"/></td></tr>
-											</c:if>
-										</ui:repeat>
-										</table>
-									</c:if>
-								</td>
+								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceCatL2}" escape="false"/></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
-								<td>
-									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-										<table width="100%">
-										<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-											<c:if test="#{not empty exp.pmCategoryL3}">
-												<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL3.categoryName}"/></td></tr>
-											</c:if>
-										</ui:repeat>
-										</table>
-									</c:if>
-								</td>
+								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceCatL3}" escape="false"/></td>
 							</tr>
 						</table>
 	
