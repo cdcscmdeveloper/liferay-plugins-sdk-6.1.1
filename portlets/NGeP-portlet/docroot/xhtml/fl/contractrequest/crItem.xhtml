@@ -136,7 +136,7 @@
 		<h:panelGroup id="itemDetPanelGroup">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list']}" escape="false"  /> 
 			<p:commandLink oncomplete="uomRefDialog.show();" value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
-					action="#{createDOBackingBean.resetMeasurementSearch}" process="@this"
+					action="#{contractRequestBackingBean.resetMeasurementSearch}" process="@this"
 					update=":form:uomRefDlg"/>
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address2']}" />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list2']}" escape="false"  /> 			
@@ -697,23 +697,25 @@
 			<p:panel id="measurementPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 				<h:panelGrid columns="2" >
 				        <h:outputLabel value="#{lbl['lbl.fl.uom.uomcode']}"></h:outputLabel>
-			            <p:inputText value="#{createDOBackingBean.managedBean.measurementCodes}" size="30"  />					
+			            <p:inputText value="#{contractRequestBackingBean.managedBean.measurementCodes}" size="30"  
+			            	onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>					
 						<h:outputLabel value="#{lbl['lbl.fl.uom.uomname']}"></h:outputLabel>
-						<p:inputText value="#{createDOBackingBean.managedBean.measurementNames}" size="50" />
+						<p:inputText value="#{contractRequestBackingBean.managedBean.measurementNames}" size="50" 
+							onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>
 				</h:panelGrid>
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
-							 action="#{createDOBackingBean.retrieveMeasurement}"
-						     update="measurementSR" process="measurementPanel"/>
+							 action="#{contractRequestBackingBean.retrieveMeasurement}"
+						     update="measurementSR" process="measurementPanel" widgetVar="uomSearch"/>
             		<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
-            				 action="#{createDOBackingBean.resetMeasurementSearch}"
+            				 action="#{contractRequestBackingBean.resetMeasurementSearch}"
             				 process="@this" update="measurementPanel,uomResultPanel" />
 	  			</div>
     			<br/>
 				<br/>
 			 </p:panel>
 			<p:panel id="uomResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-				<p:dataTable id="measurementSR" value="#{createDOBackingBean.unitOfMeasurementDataModel}"
+				<p:dataTable id="measurementSR" value="#{contractRequestBackingBean.unitOfMeasurementDataModel}"
 				rows="10" var="measurementList" rowIndexVar="index" lazy="true">	
 			   <ac:paginator for="measurementSR" />				
 		       <p:column headerText="#{lbl['lbl.fl.uom.uomcode']}" style="width:15%"> 
