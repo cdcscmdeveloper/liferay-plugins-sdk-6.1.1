@@ -474,16 +474,24 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
 							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
-							<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							<p:commandLink onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form"
 								style="padding-right:5px;">
-								<p:outputPanel rendered="#{person.equityOwner or person.director}">
-									<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" rendered="#{backingBean.managedBean.disAllowOwnerEdit}"/>
-									<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" rendered="#{!backingBean.managedBean.disAllowOwnerEdit}"/>
+								<p:outputPanel
+									rendered="#{person.equityOwner or person.director}">
+									<p:graphicImage library="ep/images/design" name="document.png"
+										value="/resources/ep/images/design/document.png"
+										rendered="#{backingBean.managedBean.disAllowOwnerEdit}" />
+									<p:graphicImage library="ep/images/design" name="edit.png"
+										value="/resources/ep/images/design/edit.png"
+										rendered="#{!backingBean.managedBean.disAllowOwnerEdit}" />
 								</p:outputPanel>
-								<p:outputPanel rendered="#{!person.equityOwner and !person.director}">
-									<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" />
+								<p:outputPanel
+									rendered="#{!person.equityOwner and !person.director}">
+									<p:graphicImage library="ep/images/design" name="edit.png"
+										value="/resources/ep/images/design/edit.png" />
 								</p:outputPanel>
 							</p:commandLink>
 						</p:column>
@@ -493,11 +501,13 @@
 					<p:spacer height="2px;" />
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-							process="@this" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							process="@this" partialSubmit="true" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form" />
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-							process="persInfoDtPanel" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							process="persInfoDtPanel" partialSubmit="true"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form:tt:personDt , :form:tt:stfSummaryPan " />
 					</div>
@@ -508,8 +518,12 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
-									maxlength="200"
-									value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
+									maxlength="200" id="prsnlInfoSecPoRmrk"
+									validatorMessage="#{lbl['lbl.sm.person.composition.listDtHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+									value="#{backingBean.managedBean.poSecReview.personnelRemark}">
+									<f:validateLength maximum="200" />
+								</p:inputTextarea> <p:message id="prsnlInfoSecPoRmrkMsg" for="prsnlInfoSecPoRmrk"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 					</table>
 				</p:outputPanel>
@@ -522,8 +536,12 @@
 									value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
-									maxlength="200"
-									value="#{backingBean.managedBean.apprvrSecReview.personnelRemark}" /></td>
+									maxlength="200" id="prsnlSecApprvrRmrk"
+									validatorMessage="#{lbl['lbl.sm.person.composition.listDtHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+									value="#{backingBean.managedBean.apprvrSecReview.personnelRemark}">
+									<f:validateLength maximum="200" />
+								</p:inputTextarea> <p:message id="prsnlSecApprvrRmrkMsg" for="prsnlSecApprvrRmrk"
+									showSummary="true" showDetail="false" display="icon" /></td>
 
 						</tr>
 					</table>
