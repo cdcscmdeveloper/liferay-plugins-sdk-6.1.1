@@ -9,7 +9,7 @@
     <p:panel id="secretryPanel" header="#{lbl['lbl.ct.panel.meeting.decision']}" toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
              <p:outputLabel value="Decision"/>
-             <p:selectOneMenu  style="width:190px;margin-bottom: 4px;"
+             <p:selectOneMenu  style="width:190px;margin-bottom: 4px;" disabled="#{isPendingLoaSubmission}"
                  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbQcApproved}" >
 			     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
 			     <f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="True"/>
@@ -22,7 +22,7 @@
                 </div>
             </h:panelGroup>
             <h:panelGrid>
-               <p:inputTextarea id="justificationPbQCC"   rows="4" 
+               <p:inputTextarea id="justificationPbQCC"   rows="4" disabled="#{isPendingLoaSubmission}"
                    style="width:180px;"   maxlength="200"  autoResize="false"  
                    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
             </h:panelGrid>

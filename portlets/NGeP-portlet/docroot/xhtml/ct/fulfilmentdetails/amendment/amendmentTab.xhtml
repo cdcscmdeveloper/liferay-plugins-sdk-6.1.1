@@ -63,6 +63,7 @@
     	  });
     	});
 	 </script> 	
+	  <ui:param name="isPendingLoaSubmission" value="#{amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission}" />
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
