@@ -69,20 +69,28 @@
 					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
+			<h:panelGroup id="docDoStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
+					<p:outputLabel
+						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
+					<p:calendar mode="popup" showOn="button"
+						readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderFromDuration}">
+					</p:calendar>
+					<p:spacer width="5" />
+					<p:calendar mode="popup" showOn="button"
+						readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderToDuration}">
+					</p:calendar>
+				</h:panelGrid>
+			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
 				<p:inputText size="45"
 					value="#{flTrackingDiaryBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
-			<h:panelGroup id="docDoStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flTrackingDiaryBackingBean.managedBean.checkDoDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
-					<p:inputText size="28"
-						value="#{flTrackingDiaryBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
-				</h:panelGrid>
-			</h:panelGroup>
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
@@ -104,7 +112,7 @@
 					<f:facet name="header">
 					Creation Date
 				</f:facet>
-					#{unspscObj.unspscCode}
+					#{flDocument.docNo}
 
 				</p:column>
 
@@ -112,27 +120,27 @@
 					<f:facet name="header">
 					Document No.
 				</f:facet>
-				#{unspscObj.unspscCode}
+				#{flDocument.docNo}
 
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Document Title
 				</f:facet>
-				#{unspscObj.unspscTitle}
+				#{flDocument.docNo}
 			</p:column>
 				<p:column>
 					<f:facet name="header">
 					Status
 				</f:facet>
-				#{unspscObj.unspscTitle}
+				#{flDocument.docNo}
 			</p:column>				
 			<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(flDocument)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 						</p:commandLink>
