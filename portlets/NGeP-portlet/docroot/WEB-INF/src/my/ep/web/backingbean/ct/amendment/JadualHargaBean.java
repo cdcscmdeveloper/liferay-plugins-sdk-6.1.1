@@ -21,6 +21,7 @@ public class JadualHargaBean implements Serializable{
 	private String uomPerDay;
 	private String uomPerMonth;
 	private String uomPerYear;
+	private String priceType;
 	
 	public String getItem() {
 		return item;
@@ -94,6 +95,12 @@ public class JadualHargaBean implements Serializable{
 	}
 	public void setUomPerYear(String uomPerYear) {
 		this.uomPerYear = uomPerYear;
+	}
+	public String getPriceType() {
+		return priceType;
+	}
+	public void setPriceType(String priceType) {
+		this.priceType = priceType;
 	}
 
 
