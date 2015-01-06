@@ -1608,7 +1608,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPayLoad(res.getPojo());
 				committeReqDTO.setOutcome(outcome);
 				committeReqDTO.setScQt(qt);
-				committeResDto = committeSO.updateBPMAction(committeReqDTO);
+				committeResDto = committeSO.updateFinalizateSecrataryTask(committeReqDTO);
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
