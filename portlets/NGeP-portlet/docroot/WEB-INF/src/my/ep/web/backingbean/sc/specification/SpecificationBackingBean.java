@@ -5994,6 +5994,7 @@ public class SpecificationBackingBean extends
 				if (this.getManagedBean().getScQt().isZonal()
 						&& this.getManagedBean().getScQt().getQtType()
 								.equals(QTConstants.OPEN_TYPE)) {
+					retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 					ScQtSupplierCriteria supplierCriteria = this
 							.getManagedBean().getScQt()
 							.getScQtSupplierCriteria();
@@ -7547,7 +7548,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void calculateStartMonth(ScQtSchedule schedule) {
-		//event.getComponent().getAttributes().get("value");
+		// event.getComponent().getAttributes().get("value");
 		List<ScQtSchedule> freqSchedule = this.getManagedBean()
 				.getScheduleList();
 		if (null == freqSchedule) {
@@ -12172,9 +12173,35 @@ public class SpecificationBackingBean extends
 					.getScQtSupplierCriteria();
 			if (null != supplierCriteria
 					&& null != supplierCriteria.getQtZoneCriterias()) {
+				if (SourcingConstants.FINANCIAL_STAGE
+						.equalsIgnoreCase(specType)
+						&& !supplierCriteria.getQtZoneCriterias().isModified()) {
 
-				templateSpecBean.getSpecMaster().setTplSpecZone(
-						supplierCriteria.getQtZoneCriterias());
+					List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+							this.getManagedBean().getZoneGeneralTrees(), null);
+
+					if (businessOwnerZone != null
+							&& !businessOwnerZone.isEmpty()) {
+						// TODO Code needs to be remove
+						// setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
+
+						for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+							supplierCriteria.getQtZoneCriterias().setModified(
+									true);
+							tplSpecZoneDtl.setTplSpecZone(supplierCriteria
+									.getQtZoneCriterias());
+
+						}
+						templateSpecBean.getSpecMaster().setTplSpecZone(
+								supplierCriteria.getQtZoneCriterias());
+						templateSpecBean.getSpecMaster().getTplSpecZone()
+								.setTplSpecZoneDtls(businessOwnerZone);
+					}
+
+				} else {
+					templateSpecBean.getSpecMaster().setTplSpecZone(
+							supplierCriteria.getQtZoneCriterias());
+				}
 
 			}
 		}
