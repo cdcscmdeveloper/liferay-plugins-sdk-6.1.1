@@ -240,6 +240,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							
 							//sm module
 							//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
+							//sm module
+						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
+						        worklistItemVO.setTitle(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						       }
 						}
 					}
 					
