@@ -46,7 +46,8 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.certVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.certVerified : false)}" />
 
 			<p:dataTable var="certBean" editable="true"
-				widgetVar="suppCertDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				widgetVar="suppCertDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
 				selection="#{backingBean.managedBean.selectedCertList}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
@@ -100,8 +101,13 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.certRemark}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200" id="certInfoPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.certInfo']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.certRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="certInfoPoRmrkMsg" for="certInfoPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -113,8 +119,13 @@
 								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.certRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.certRemark}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								maxlength="200" id="certInforAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.certInfo']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.certRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="certInforAprvrRmrkMsg" for="certInforAprvrRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>

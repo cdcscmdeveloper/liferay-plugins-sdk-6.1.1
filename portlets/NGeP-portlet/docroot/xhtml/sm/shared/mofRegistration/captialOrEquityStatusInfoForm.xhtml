@@ -354,8 +354,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.capitalRemark}" /></td>
+								maxlength="200" id="capEquiStatsPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.equiStatus.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.capitalRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="capEquiStatsPoRmrkMsg" for="capEquiStatsPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -368,8 +372,13 @@
 								value="#{backingBean.managedBean.poSecReview.capitalRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.capitalRemark}" /></td>
+								maxlength="200" id="capEquiStatsApprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.equiStatus.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.capitalRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="capEquiStatsApprvrRmrkMsg"
+								for="capEquiStatsApprvrRmrk" showSummary="true"
+								showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>

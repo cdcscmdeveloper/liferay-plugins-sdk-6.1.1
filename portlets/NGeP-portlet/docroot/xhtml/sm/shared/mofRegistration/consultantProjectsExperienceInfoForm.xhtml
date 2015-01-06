@@ -105,8 +105,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.experienceRemark}" /></td>
+								maxlength="200" id="consultProjPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.projDtls.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.experienceRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="consultProjPoRmrkMsg" for="consultProjPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -119,8 +123,13 @@
 								value="#{backingBean.managedBean.poSecReview.experienceRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.experienceRemark}" /></td>
+								maxlength="200" id="consultProjAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.projDtls.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.experienceRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="consultProjAprvrRmrkMsg"
+								for="consultProjAprvrRmrk" showSummary="true" showDetail="false"
+								display="icon" /></td>
 
 					</tr>
 				</table>

@@ -64,8 +64,12 @@
 									<td style="padding-left: 38px;"><p:outputLabel
 											value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 									<td><p:inputTextarea autoResize="true" cols="41"
-											maxlength="200"
-											value="#{backingBean.managedBean.poSecReview.factoryRemark}" /></td>
+											maxlength="200" id="newMofFactPoRmrk"
+											validatorMessage="#{lbl['lbl.sm.poRemarks.length.validMsg']}"
+											value="#{backingBean.managedBean.poSecReview.factoryRemark}">
+											<f:validateLength maximum="200" />
+										</p:inputTextarea> <p:message id="newMofFactPoRmrkMsg" for="newMofFactPoRmrk"
+											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 							</table>
 						</p:outputPanel>
@@ -80,8 +84,12 @@
 									<td style="padding-left: 22px;"><p:outputLabel
 											value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 									<td><p:inputTextarea autoResize="true" cols="41"
-											maxlength="200"
-											value="#{backingBean.managedBean.apprvrSecReview.factoryRemark}" /></td>
+											maxlength="200" id="newFactApprvrRmrk"
+											validatorMessage="#{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+											value="#{backingBean.managedBean.apprvrSecReview.factoryRemark}">
+											<f:validateLength maximum="200" />
+										</p:inputTextarea> <p:message id="newFactApprvrRmrkMsg" for="newFactApprvrRmrk"
+											showSummary="true" showDetail="false" display="icon" /></td>
 
 								</tr>
 							</table>
@@ -93,13 +101,15 @@
 						<table style="width: 100%">
 							<tr>
 								<td><div align="left" style="width: 99%">
-										<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('6','5')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 											update=":form" />
 									</div></td>
 								<td><div align="right" style="width: 99%">
-										<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('6','7')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 											update=":form" />
@@ -129,13 +139,15 @@
 			<table style="width: 100%">
 				<tr>
 					<td><div align="left" style="width: 99%">
-							<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{backingBean.setTabValue('6','5')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 								update=":form" />
 						</div></td>
 					<td><div align="right" style="width: 99%">
-							<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{backingBean.setTabValue('6','7')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 								update=":form" />

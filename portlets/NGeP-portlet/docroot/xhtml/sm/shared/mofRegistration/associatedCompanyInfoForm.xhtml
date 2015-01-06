@@ -93,8 +93,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.associateRemark}" /></td>
+								maxlength="200" id="assocCmpnyPORmrks"
+								validatorMessage="#{lbl['lbl.sm.assocCmpny.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.associateRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="assocCmpnyPORmrksMsg" for="assocCmpnyPORmrks"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -107,8 +111,13 @@
 								value="#{backingBean.managedBean.poSecReview.associateRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.associateRemark}" /></td>
+								maxlength="200" id="assocCompanyAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.assocCmpny.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.associateRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="assocCompanyAprvrRmrkMsg"
+								for="assocCompanyAprvrRmrk" showSummary="true"
+								showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>
@@ -275,34 +284,33 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
-					<p:outputPanel id="postCodeAssocPanelId">
-						<p:outputPanel rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+				<td><p:outputPanel id="postCodeAssocPanelId">
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="5"
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeMy"
-									value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
-									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-									size="35" >
-									<f:validator validatorId="postcodeValidator" />
-									</p:inputText>
-									<p:message id="assocCmpyPostCodeMyMsg"
-									for="assocCmpyPostCodeMy" showSummary="true" showDetail="false"
-									display="icon" />
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeMy"
+								value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="assocCmpyPostCodeMyMsg" for="assocCmpyPostCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
 						</p:outputPanel>
-						<p:outputPanel rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
 							<p:inputText maxlength="10"
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeForeign"
-									value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
-									size="35" >
-									</p:inputText>
-									<p:message id="assocCmpyPostCodeForeignMsg"
-									for="assocCmpyPostCodeForeign" showSummary="true" showDetail="false"
-									display="icon" />
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeForeign"
+								value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="assocCmpyPostCodeForeignMsg"
+								for="assocCmpyPostCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
 						</p:outputPanel>
-					</p:outputPanel>
-				</td>
+					</p:outputPanel></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
