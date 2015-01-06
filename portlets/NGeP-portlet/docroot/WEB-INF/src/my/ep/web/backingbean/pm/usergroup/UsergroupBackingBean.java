@@ -379,22 +379,24 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public String gotoMaintanance(PmUserGroup userGroup) {
 		debugLogger("gotoMaintanance");
 		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
+		List<PmUserGroupUser> groupUserList = new ArrayList<PmUserGroupUser>();
 		for (PmUserGroupUser userGroupUser : userGroup.getPmUserGroupUsers()) {
 			for (PmUserOrg userOrg : userGroupUser.getPmUser().getPmUserOrgs()) {
-				for (PmUserRole userRole : userOrg.getPmUserRoles()) {
-					if (null != userRole.getApprovalLimit()) {
-						userGroupUser.setCreatedBy(userRole.getApprovalLimit()
-								.longValue());
-						;
-						break;
-					}
+					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+						if (null != userRole.getApprovalLimit()) {
+							System.out.println("userRole.getApprovalLimit() :"+userRole.getApprovalLimit());
+							if(!groupUserList.contains(userGroupUser)){
+								userGroupUser.setPmUserRole(userRole);
+								groupUserList.add(userGroupUser);
+							}
+						}
 				}
 			}
 		}
-
+		System.out.println("groupUserList  :"+groupUserList.size());
 		this.getManagedBean().setOrgProfileId(orgProfileId);
 		this.getManagedBean().setUserGroup(userGroup);
-		this.getManagedBean().setUserGroups(userGroup.getPmUserGroupUsers());
+		this.getManagedBean().setUserGroups(groupUserList);
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 	}
 
@@ -466,9 +468,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 								MessageUtils.getMessage(
 										MessageConst.INFO_770091, new String[] {
 												resDTO.getUserGroup()
-												.getGroupCode(),
-												resDTO.getUserGroup()
-														.getGroupCode() },
+												.getGroupCode()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			} else {
@@ -478,9 +478,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 								MessageUtils.getMessage(
 										MessageConst.INFO_770092, new String[] {
 												resDTO.getUserGroup()
-												.getGroupCode(),
-												resDTO.getUserGroup()
-														.getGroupCode() },
+												.getGroupCode()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
