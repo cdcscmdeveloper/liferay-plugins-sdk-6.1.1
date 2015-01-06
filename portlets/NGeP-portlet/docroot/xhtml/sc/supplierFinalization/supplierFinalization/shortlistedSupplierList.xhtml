@@ -50,7 +50,7 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.proposal.id']}" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
@@ -68,7 +68,7 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalNo}" />
+					<h:outputText value="#{shortlistedSupp.scQtProposal.supplierNo}" />
 				</p:column>
 				
 				<p:column>
@@ -81,16 +81,16 @@
 				</p:column>
 	
 				<p:column>
-					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi)}" />
+					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
 				</p:column>
 				
-				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}">
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}" rendered="#{shortlistedSupp.scQtProposal.proposalAmount ne null}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
 	
-				<p:column>
+				<p:column style="text-align:right;">
 					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
@@ -133,19 +133,19 @@
 				
 				<p:ajax event="rowSelect"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl])" process="@this" partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this" partialSubmit="true"/>
 				
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselect"
 					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselectCheckbox"
 					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -180,7 +180,7 @@
 				</p:column>
 	
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}" />
+					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">
@@ -188,11 +188,13 @@
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}"/>
+					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" rendered="#{shortlistedSupp.evaluationResultDtls ne null}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
 				</p:column>
 	
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" />
+					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" rendered="#{shortlistedSupp.evaluationResultDtls ne null}"/>
 				</p:column>
 				
 				<p:column>
