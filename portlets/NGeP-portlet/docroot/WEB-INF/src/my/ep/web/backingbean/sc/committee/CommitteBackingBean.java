@@ -422,7 +422,7 @@ public class CommitteBackingBean extends
 											MessageUtils
 													.getMessage(
 															MessageConst.INFO_700005,
-															new String[] { "Committe" },
+															new String[] { "Committe","" },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
@@ -440,7 +440,7 @@ public class CommitteBackingBean extends
 											MessageUtils
 													.getMessage(
 															MessageConst.INFO_700004,
-															new String[] { "Committe" },
+															new String[] { "Committe","" },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
@@ -1670,9 +1670,9 @@ public class CommitteBackingBean extends
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) payLoad;
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			committeReqDTO.setQtId(Long.valueOf(evaluationDataType.getQtId()));
-			/*committeReqDTO.setCommitteeType(evaluationDataType
-					.getCommitteeType());*/
-			committeReqDTO.setCommitteeType("QCA");
+			committeReqDTO.setCommitteeType(evaluationDataType
+					.getCommitteeType());
+			//committeReqDTO.setCommitteeType("QCA");
 			CommitteResDTO committeResDTO = committeSO
 					.retrieveCommitteByQtIdNCommType(committeReqDTO);
 			ScQtCommittee qtCommittee = committeResDTO.getScQtCommittee();
