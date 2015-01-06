@@ -576,10 +576,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		getManagedBean().setSelectedAssocCompany(assocBean);
+		closeBlockUI();
 	}
 
 	public void assignSelBranch(SmSupplierBranch branchBean) {
 		getManagedBean().setSelectedBranch(branchBean);
+		closeBlockUI();
 	}
 
 	public void assignSelCert(SmSupplierCert certBean) {
@@ -589,6 +591,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						"CRT",
 						Long.parseLong(getManagedBean().getSelectedCert()
 								.getCertTypeId().toString())));
+		closeBlockUI();
 	}
 
 	public void assignSelBank(SmSupplierBank shareBankBean) {
@@ -622,6 +625,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			shareBankBean.setSmAddress(setDefaultAddr());
 		}
 		setSelectedBankAccountPurpose();
+		closeBlockUI();
 	}
 
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
@@ -629,43 +633,40 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	public void assignSelFactory(SmFacility facilityBean) {
-		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
 		getManagedBean().setFacilityType(
-				StringUtils.upperCase(ResourceBundleUtils.getMessage(
-						"lbl.sm.facility.type.factory",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.factory", null)));
+		closeBlockUI();
 	}
 
 	public void assignSelWorkshop(SmFacility facilityBean) {
-		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedWorkShopFacility(facilityBean);
 		getManagedBean().setFacilityType(
-				StringUtils.upperCase(ResourceBundleUtils.getMessage(
-						"lbl.sm.facility.type.workshop",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.workshop", null)));
+		closeBlockUI();
 	}
 
 	public void assignSelDockyard(SmFacility facilityBean) {
-		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedDockyardFacility(facilityBean);
 		getManagedBean().setFacilityType(
-				StringUtils.upperCase(ResourceBundleUtils.getMessage(
-						"lbl.sm.facility.type.dockyard",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.dockyard", null)));
+		closeBlockUI();
 	}
 
 	public void assignSelStore(SmFacility facilityBean) {
-		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedStoreFacility(facilityBean);
 		getManagedBean().setFacilityType(
-				StringUtils.upperCase(ResourceBundleUtils.getMessage(
-						"lbl.sm.facility.type.store",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
+				StringUtils.upperCase(SmCommonUtil.getMessage(
+						"lbl.sm.facility.type.store", null)));
+		closeBlockUI();
 	}
 
 	public void assignSelManufacturer(SmManufacturingDtl manBean) {
 		getManagedBean().setSelectedManufacturer(manBean);
+		closeBlockUI();
 	}
 
 	public void assignSelMachinery(SmMachineDtl macBean) {
@@ -682,7 +683,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							SmCommonUtil
 									.getParamDescriptionByLanguageAndPmParameter(paymentMethod));
 		}
-
+		closeBlockUI();
 	}
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
@@ -707,7 +708,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedCompanyExperienceCatL1(catL1.toString());
 		getManagedBean().setSelectedCompanyExperienceCatL2(catL2.toString());
 		getManagedBean().setSelectedCompanyExperienceCatL3(catL3.toString());
-		
+
 		if (getManagedBean().getSelectedCompanyExperience()
 				.getProcurementModeId() != null) {
 			PmParameter procurementMode = SmApplicationUtil
@@ -719,6 +720,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							SmCommonUtil
 									.getParamDescriptionByLanguageAndPmParameter(procurementMode));
 		}
+		closeBlockUI();
 	}
 
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
@@ -1025,18 +1027,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		getManagedBean().setSelectedJobFunction(exp);
+		closeBlockUI();
 	}
 
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		getManagedBean().setSelectedRelatedCompany(com);
+		closeBlockUI();
 	}
 
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
+		closeBlockUI();
 	}
 
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		getManagedBean().setSelectedStaffAcademic(aca);
+		closeBlockUI();
 	}
 
 	private void setApplicationShareHolders(List<SmPersonnel> perList) {
@@ -1225,6 +1231,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			break;
 		}
 		return maxTab;
+	}
+
+	private void closeBlockUI() {
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
 
 	private void setMaxTab() {

@@ -182,7 +182,7 @@
 				<h:outputText value="#{jf.toYear}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiJobFunctionInfo"
+				<p:commandLink update=":form:tt:equiJobFunctionInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show()" 
 					partialSubmit="true" process="@this">
 					<p:graphicImage library="ep/images/design" name="document.png"
@@ -256,7 +256,7 @@
 				<h:outputText value="#{relCom.mofNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiRelCompInfo"
+				<p:commandLink update=":form:tt:equiRelCompInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show()"
 					partialSubmit="true" process="@this">
 					<p:graphicImage library="ep/images/design" name="document.png"
@@ -316,7 +316,7 @@
 				<ac:labelDate value="#{profBean.expDate}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiShrProfBeanInfo"
+				<p:commandLink update=":form:tt:equiShrProfBeanInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrProfBody(profBean)}"
 					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show()">
 					<p:graphicImage library="ep/images/design" name="document.png"
@@ -385,7 +385,7 @@
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiAcadInfo"
+				<p:commandLink update=":form:tt:equiAcadInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrAcademics(aq)}"
 					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show()">
 					<p:graphicImage library="ep/images/design" name="document.png"

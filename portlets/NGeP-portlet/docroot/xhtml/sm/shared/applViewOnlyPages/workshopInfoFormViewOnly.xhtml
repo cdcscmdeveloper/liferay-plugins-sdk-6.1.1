@@ -23,7 +23,7 @@
 					style="float : left" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.action']}">
-				<p:commandLink partialSubmit="true" process="@this"
+				<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelWorkshop(work)}" oncomplete="workShopDialog.show()"
 					update=":form:tt:workShopDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="document.png"

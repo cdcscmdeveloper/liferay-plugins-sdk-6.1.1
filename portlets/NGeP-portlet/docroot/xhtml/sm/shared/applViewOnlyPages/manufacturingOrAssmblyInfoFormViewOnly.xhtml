@@ -30,7 +30,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:manufactorDialog" process="@this" oncomplete="manufactorDialog.show()"
-						partialSubmit="true"
+						partialSubmit="true" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelManufacturer(manBean)}"
 						style="padding-right:5px">
 						<p:graphicImage library="ep/images/design" name="document.png"

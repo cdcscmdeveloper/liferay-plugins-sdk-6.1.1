@@ -34,7 +34,7 @@
 						rendered="#{consBean.progressStatus eq 'F'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink
+					<p:commandLink onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelCompanyExperience(consBean)}" oncomplete="consDialog.show()"
 						update=":form:tt:consDialog" partialSubmit="true" process="@this">
 						<p:graphicImage library="ep/images/design" name="document.png"

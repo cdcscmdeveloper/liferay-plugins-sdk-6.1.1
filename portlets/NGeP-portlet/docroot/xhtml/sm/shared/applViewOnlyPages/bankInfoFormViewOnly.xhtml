@@ -38,7 +38,8 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink action="#{viewSmApplBackingBean.viewSignatories(bankBean)}"
+					<p:commandLink action="#{viewSmApplBackingBean.viewSignatories(bankBean)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this" update=":form:tt:sfieldset"
 						style="padding-right :5px;">
 						<p:graphicImage library="ep/images/design"
@@ -46,7 +47,7 @@
 							value="/resources/ep/images/design/seller_detail.png"
 							title="View Signatories" />
 					</p:commandLink>
-					<p:commandLink partialSubmit="true" process="@this"
+					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelBank(bankBean)}" oncomplete="bankDialog.show()"
 						update=":form:tt:bankDialog" style="padding-right :5px;">
 						<p:graphicImage library="ep/images/design" name="document.png"

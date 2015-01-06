@@ -34,7 +34,7 @@
 						rendered="#{contrBean.progressStatus eq 'F'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink partialSubmit="true" process="@this"
+					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelCompanyExperience(contrBean)}" oncomplete="contDialog.show()"
 						update=":form:tt:contDialog">
 						<p:graphicImage library="ep/images/design" name="document.png"
