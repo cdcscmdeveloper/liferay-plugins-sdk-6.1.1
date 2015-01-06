@@ -538,14 +538,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	private void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
-
-		if (getManagedBean().isPoUser()) {
-			setDefaultPoReviewSection();
-		}
-
-		if (getManagedBean().isApproverUser()) {
-			setDefaultApproverReviewSection();
-		}
+		setReviewSectionRemarks();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
 		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
@@ -833,8 +826,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
-	private void setDefaultApproverReviewSection() {
-		boolean containsAppRev = false;
+	private void setReviewSectionRemarks() {
 		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null) {
 			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
@@ -848,39 +840,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
-		if (!containsAppRev) {
-			SmApplSectionReview appRev = new SmApplSectionReview();
-			appRev.setSmAppl(getManagedBean().getSmAppl());
-			appRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
-			getManagedBean().setApprvrSecReview(appRev);
-			getManagedBean().getSmAppl().getSmApplSectionReviews()
-					.add(getManagedBean().getApprvrSecReview());
-		}
-	}
-
-	private void setDefaultPoReviewSection() {
-
-		boolean containsPORev = false;
-
-		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
-			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
-					.getSmApplSectionReviews()) {
-				if (rev.getRoleType().equalsIgnoreCase(
-						SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-					getManagedBean().setPoSecReview(rev);
-					containsPORev = true;
-				}
-			}
-		}
-		if (!containsPORev) {
-			SmApplSectionReview poRev = new SmApplSectionReview();
-			poRev.setSmAppl(getManagedBean().getSmAppl());
-			poRev.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
-			getManagedBean().setPoSecReview(poRev);
-			getManagedBean().getSmAppl().getSmApplSectionReviews()
-					.add(getManagedBean().getPoSecReview());
-		}
-
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
