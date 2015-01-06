@@ -1568,6 +1568,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 
 			this.prepareFinancialDoc(manufacturingTemplate);
+			manufacturingTemplate.getFinancialDocParamMap();
+			context.put("financialDocParamMap", manufacturingTemplate.getFinancialDocParamMap());
 			context.put("financialDocLs", manufacturingTemplate.getFinancialDocLs());
 			context.put("additionalDocLs", manufacturingTemplate.getAdditionalDocLs());
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
