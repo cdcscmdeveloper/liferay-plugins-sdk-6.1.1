@@ -1888,16 +1888,13 @@ public class LOIDetailBackingBean extends
 	}
 	
 	public void saveMultipleLoiAction() {
-		debugLogger("saveAction");
+		debugLogger("saveMultipleLoiAction");
 
-		// IStatusSO statusSO = null;
-		// IUserSO userSO = null;
 		IQTAwardSO qtAwardSO = null;
 
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			ScLoi scLoi = this.getManagedBean().getScLoi();
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 					
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
@@ -1935,12 +1932,45 @@ public class LOIDetailBackingBean extends
 	}
 	
 	public void updateMultiLoiBpmTaskAction(String outcome) {
-		
+		debugLogger("updateMultiLoiBpmTaskAction");
+
+		IQTAwardSO qtAwardSO = null;
+
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
+					.getPayLoadData();
+					
+			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
+			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setToken(new FacesScopes()
+					.getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setPayLoad(awardDataType);
+
+			AwardSupplierResDTO resDTO = qtAwardSO.saveMultipleLOIDtl(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				super.renewSesionObject();
+
+				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_MULTIPLE_LOI,
+						scQtFinalization.getScQt().getQtNo());
+			}
+
+		} finally {
+			qtAwardSO = null;
+		}
 	}
 	
 	private AwardSupplierReqDTO parseMultipleLoiDtls() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		
+		reqDTO.setScQtFinalization(scQtFinalization);		
 		reqDTO.setScLois(getManagedBean().getLois());
 		
 		// Save EC/TEC/FEC activities details.
