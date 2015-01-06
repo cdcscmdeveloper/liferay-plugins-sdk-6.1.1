@@ -694,18 +694,23 @@ public class PpCommonUtil {
 	public static String getDocTitle(PpPlan plan){
 		log.info("getDocTitle");
 		StringBuilder sb = new StringBuilder();
-		sb.append(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode()) 
-				? getMessageCommon("lbl.pp.procurement.plan")
-				: getMessageCommon("lbl.pp.expenditure.plan"));
+//		sb.append(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode()) 
+//				? getMessageCommon("lbl.pp.procurement.plan")
+//				: getMessageCommon("lbl.pp.expenditure.plan"));
+//		sb.append(" ");
+		sb.append(plan.getOrgProfile().getPmOrgValidity().getOrgCode());
+		sb.append(" ");
+		sb.append(plan.getOrgProfile().getPmOrgValidity().getOrgName());
 		sb.append(" ");
 		sb.append(getYear(0));
 
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
-			sb.append(" ");
+//			sb.append(" ");
 		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
 			sb.append(" ");
 			sb.append(ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.VOT_TYPE, plan.getVotFundType().getParameterCode()));
 		}
+		System.out.println(sb.toString());
 	    return sb.toString();
 	}
     

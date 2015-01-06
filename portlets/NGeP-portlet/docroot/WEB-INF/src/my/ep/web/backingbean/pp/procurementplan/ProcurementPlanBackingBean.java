@@ -1095,6 +1095,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//plan type is not editable after submission
 		}else{
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
+			this.getManagedBean().getSelectedPlan().setVotFundType(new PmParameter());
 			this.getManagedBean().getSelectedPlan().setPpExpenditureItems(null);
 			this.getManagedBean().getSelectedPlan().setStatus(PpCommonUtil.getDefaultStatus(ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
 			loadPlanActors(this.getManagedBean().getSelectedPlan().getOrgProfile(), null); //plan type is not editable after submission
@@ -2144,7 +2145,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException(e.toString()); //TODO
+			throw e;
 		}finally{
 			reqSO = null;
 		}
