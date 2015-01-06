@@ -112,11 +112,12 @@
 				<tr>
 					<td>
 						<p:outputPanel id="docPanLbl">
-							<p:outputLabel value="#{lbl['lbl.cm.price']}"
+							<p:outputLabel value="#{lbl['lbl.cm.price']}" styleClass="outputLabel-view-label"
 								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
-							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
+							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}" styleClass="outputLabel-view-label"
 								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
-						</p:outputPanel></td>
+						</p:outputPanel>
+					</td>
 					<td>
 						<p:outputPanel id="docPan">
 							<ui:fragment

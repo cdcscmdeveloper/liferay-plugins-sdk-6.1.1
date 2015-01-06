@@ -330,12 +330,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
-
-		// testing by user
-		// getManagedBean().setApproverUser(false);
-		// getManagedBean().setSupplierUser(false);
-		// getManagedBean().setPoUser(true);
-		// getManagedBean().setViewSupplierProfile(true);
 	}
 
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
