@@ -3,7 +3,9 @@ package my.ep.web.managedbean.pm.financialorg;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -39,7 +41,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private int selectedTabIndex;
 
 	// Financial Svc
-;
+	;
 	private PmFinancialSvc financialSvc;
 	private List<PmFinancialSvc> pmFinancialSvc;
 	private List<PmFinancialSvc> pmFinancialSvcUpdate;
@@ -95,16 +97,19 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private String serviceType;
 	private List<String> serviceTypes;
 
+	private Map<String, Object> mapObject = new HashMap<String, Object>();
+
 	private Date currentDate = new Date();
+	private boolean dropDownValue = false;
 
 	public FinancialOrgManagedBean() {
-		financialSvc= new PmFinancialSvc();
+		financialSvc = new PmFinancialSvc();
 		addressType = new ArrayList<PmAddressType>();
 		pmContact = new ArrayList<PmContact>();
 		pmAddress = new PmAddress();
 		pmAddressType = new PmAddressType();
 		contactPerson = new PmContact();
-		//contactPerson.setPmAddressType(pmAddressType);
+		// contactPerson.setPmAddressType(pmAddressType);
 		pmAddress.setPmCity(new PmCity());
 		pmAddress.setPmDistrict(new PmDistrict());
 		pmAddress.setPmCountry(new PmCountry());
@@ -119,7 +124,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		branchAddressType = new PmAddressType();
 		branchContactPerson = new PmContact();
 		branchAddressType.setPmAddress(branchAddress);
-		//branchContactPerson.setPmAddressType(branchAddressType);
+		// branchContactPerson.setPmAddressType(branchAddressType);
 		branchAddress.setPmCity(new PmCity());
 		branchAddress.setPmDistrict(new PmDistrict());
 		branchAddress.setPmCountry(new PmCountry());
@@ -432,8 +437,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.pmFinancialBranch = pmFinancialBranch;
 	}
 
-	
-
 	/**
 	 * @return the byFactoring
 	 */
@@ -611,7 +614,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param showParentMsg the showParentMsg to set
+	 * @param showParentMsg
+	 *            the showParentMsg to set
 	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
@@ -625,7 +629,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param serviceType the serviceType to set
+	 * @param serviceType
+	 *            the serviceType to set
 	 */
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
@@ -639,7 +644,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchStateList the branchStateList to set
+	 * @param branchStateList
+	 *            the branchStateList to set
 	 */
 	public void setBranchStateList(List<PmState> branchStateList) {
 		this.branchStateList = branchStateList;
@@ -653,7 +659,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchCountryList the branchCountryList to set
+	 * @param branchCountryList
+	 *            the branchCountryList to set
 	 */
 	public void setBranchCountryList(List<PmCountry> branchCountryList) {
 		this.branchCountryList = branchCountryList;
@@ -667,7 +674,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchDistrictList the branchDistrictList to set
+	 * @param branchDistrictList
+	 *            the branchDistrictList to set
 	 */
 	public void setBranchDistrictList(List<PmDistrict> branchDistrictList) {
 		this.branchDistrictList = branchDistrictList;
@@ -681,7 +689,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchCityList the branchCityList to set
+	 * @param branchCityList
+	 *            the branchCityList to set
 	 */
 	public void setBranchCityList(List<PmCity> branchCityList) {
 		this.branchCityList = branchCityList;
@@ -695,7 +704,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchDivisionList the branchDivisionList to set
+	 * @param branchDivisionList
+	 *            the branchDivisionList to set
 	 */
 	public void setBranchDivisionList(List<PmDivision> branchDivisionList) {
 		this.branchDivisionList = branchDivisionList;
@@ -709,9 +719,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedPmFinancialBranch the selectedPmFinancialBranch to set
+	 * @param selectedPmFinancialBranch
+	 *            the selectedPmFinancialBranch to set
 	 */
-	public void setSelectedPmFinancialBranch(PmFinancialBranch selectedPmFinancialBranch) {
+	public void setSelectedPmFinancialBranch(
+			PmFinancialBranch selectedPmFinancialBranch) {
 		this.selectedPmFinancialBranch = selectedPmFinancialBranch;
 	}
 
@@ -723,7 +735,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param serviceTypes the serviceTypes to set
+	 * @param serviceTypes
+	 *            the serviceTypes to set
 	 */
 	public void setServiceTypes(List<String> serviceTypes) {
 		this.serviceTypes = serviceTypes;
@@ -737,11 +750,27 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param branchAddressreq the branchAddressreq to set
+	 * @param branchAddressreq
+	 *            the branchAddressreq to set
 	 */
 	public void setBranchAddressreq(boolean branchAddressreq) {
 		this.branchAddressreq = branchAddressreq;
 	}
 
+	public boolean isDropDownValue() {
+		return dropDownValue;
+	}
+
+	public void setDropDownValue(boolean dropDownValue) {
+		this.dropDownValue = dropDownValue;
+	}
+
+	public Map<String, Object> getMapObject() {
+		return mapObject;
+	}
+
+	public void setMapObject(Map<String, Object> mapObject) {
+		this.mapObject = mapObject;
+	}
 
 }

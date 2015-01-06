@@ -9,7 +9,7 @@
 			value="#{financialOrgBackingBean.managedBean.pmFinancialBranch}"
 			rowKey="#{financialbranch}" rowIndexVar="rowIndex2"  selectionMode="single"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch}">
-			 <p:ajax event="rowSelect" update=":form:factoringPanel" process="@all" listener="#{financialOrgBackingBean.showBranchAddress}" >
+			 <p:ajax event="rowSelect" update=":form:factoringPanel" listener="#{financialOrgBackingBean.showBranchAddress}" >
 				<f:param name="disableValidation" value="" />     
 			</p:ajax> 
 			<ac:paginator for="financialbranch" />

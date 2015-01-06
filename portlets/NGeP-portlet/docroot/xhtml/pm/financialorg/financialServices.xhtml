@@ -2,43 +2,61 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel>
 		<p:dataTable id="financialsrvid" var="financialsrv"
 			value="#{financialOrgBackingBean.managedBean.pmFinancialSvc}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialSvc}">
-			<p:column selectionMode="multiple" disabledSelection="#{!financialsrv.brandNew}" style="width:2%" />
+			<p:column selectionMode="multiple"
+				disabledSelection="#{!financialsrv.brandNew}" style="width:2%" />
 			<ac:paginator for="financialsrv" />
-			
-			<p:column >
-			<f:facet name="header">
-			     	<h:outputText value="* " styleClass="mandatory" />
-			     	<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
-			    </f:facet>
 
-				<p:selectOneMenu id ="svcType" value="#{financialsrv.serviceTypeCode.parameterId}" disabled="#{!financialsrv.brandNew}"
-					style="width: 275px;margin-bottom: 5px;" label="#{lbl['lbl.pm.financialorg.servicetype']}"  required="true" 
-					styleClass="ppDropDownWidthL">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
+				</f:facet>
+				<c:choose>
+					<c:when
+						test="#{financialOrgBackingBean.managedBean.serviceType eq 'PB'}">
+						<h:outputText value="Payment Bank" />
+					</c:when>
 					
-						<f:selectItems
-									value="#{financialOrgBackingBean.getServieTypeDropdownValues(ParameterTypeConst.bankServices)}" />					
-						<p:ajax event="change" listener="#{financialOrgBackingBean.updateService}" update="@form"  process="@all" />
-				</p:selectOneMenu><p:message for="svcType" id="svcTypeMsg"
-						display="icon" />
+					<c:otherwise>
+						<p:selectOneMenu id="svcType"
+							value="#{financialsrv.serviceTypeCode.parameterId}"
+							disabled="#{!financialsrv.brandNew}"
+							style="width: 275px;margin-bottom: 5px;"
+							label="#{lbl['lbl.pm.financialorg.servicetype']}" required="true"
+							styleClass="ppDropDownWidthL">
+							<f:selectItems
+								value="#{financialOrgBackingBean.getServieTypeDropdownValues(ParameterTypeConst.bankServices)}" />
+							<p:ajax event="change"
+								listener="#{financialOrgBackingBean.updateService}"
+								update="@form" process="@all" />
+						</p:selectOneMenu>
+						<p:message for="svcType" id="svcTypeMsg" display="icon" />
+
+					</c:otherwise>
+				</c:choose>
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}" >
+			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
 
-				<p:inputText value="#{financialsrv.bankCode}" styleClass="ppDisplayTextM" size="30" maxlength="20" disabled="true" />
+				<p:inputText value="#{financialsrv.bankCode}"
+					styleClass="ppDisplayTextM" size="30" maxlength="20"
+					disabled="true" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu styleClass="ppDropDownWidthS"
-					value="#{financialsrv.recordStatusFlg}"
-					required="true" style="width: 135px;margin-bottom: 5px;">
-					<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
+					value="#{financialsrv.recordStatusFlg}" required="true"
+					style="width: 135px;margin-bottom: 5px;">
+					<f:selectItems
+						value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -46,13 +64,13 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-		
 				process="@this,financialsrvid" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialService}"
-				update="financialsrvid"  />
+				update="financialsrvid" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				 update="financialsrvid"  partialSubmit="true" process="@this,financialsrvid"
+				update="financialsrvid" partialSubmit="true"
+				process="@this,financialsrvid"
 				action="#{financialOrgBackingBean.deleteFinancialService}" />
 
 		</div>
