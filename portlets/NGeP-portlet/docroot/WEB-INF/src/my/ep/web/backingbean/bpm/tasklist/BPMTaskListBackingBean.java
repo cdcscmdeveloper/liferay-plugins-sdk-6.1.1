@@ -380,7 +380,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.PREPARE_LOI,
 				SourcingConstants.LOI_LIST_PAGE);
 		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-				+ SCProcessNameConst.NEGOTIATE_LOI,
+				+ SCProcessNameConst.NEGOTIATE_MA,
 				SourcingConstants.MULTI_LOI_NEGOTIATION_PAGE);
 		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
