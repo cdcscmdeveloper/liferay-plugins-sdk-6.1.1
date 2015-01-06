@@ -47,7 +47,7 @@
            <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150" styleClass="top-aligned-columns">
                <p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
                 
-               <p:dataTable id="secretryTable" var="data" 
+               <p:dataTable id="secretryTable" var="data" rowIndexVar="index"
                    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
                    <ac:paginator for="decisionTable" />
 				   
@@ -76,8 +76,7 @@
 				    </p:column> 	
 				  
 				    <p:column style="width:7%;" headerText="#{lbl['lbl.ct.role']}">
-				         <p:outputLabel  style="float:left;"
-				            value="#{amendmentBackingBean.getParameterDesc(data.memberRole)}" />
+				         <p:outputLabel  style="float:left;" value="#{amendmentBackingBean.getParameterDesc(index, data.memberRole)}" />
 				    </p:column> 
 				   
 				    <p:column style="width:8%;" headerText="#{lbl['lbl.ct.attendance']}" styleClass="column-align-center">
