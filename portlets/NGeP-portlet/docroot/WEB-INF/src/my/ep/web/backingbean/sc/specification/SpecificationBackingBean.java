@@ -7546,8 +7546,56 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void calculateStartMonth(AjaxBehaviorEvent event) {
-		event.getComponent().getAttributes().get("value");
+	public void calculateStartMonth(ScQtSchedule schedule) {
+		//event.getComponent().getAttributes().get("value");
+		List<ScQtSchedule> freqSchedule = this.getManagedBean()
+				.getScheduleList();
+		if (null == freqSchedule) {
+			freqSchedule = new ArrayList<ScQtSchedule>();
+
+		}
+		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
+			int start = Integer.parseInt(schedule.getStartMonth());
+			String fromMonth = retriveMonthDtls(start);
+			int end = Integer.parseInt(schedule.getEndMonth());
+			String toMonth = retriveMonthDtls(end);
+
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+			String fromdate = 01 + "/" + fromMonth + "/"
+					+ schedule.getStartYear();
+			String toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+
+			// schedule.setScheduleNo(schedule.getScheduleNo());
+
+			try {
+
+				Date date1;
+				Date date2;
+				try {
+					date1 = format.parse(fromdate);
+					date2 = format.parse(toDate);
+					long days = DateUtils.getDaysDifference(date1, date2);
+					int day = (int) days;
+					int months = day / 30;
+					schedule.setTotalMonths(new BigDecimal(months));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// schedule.setFromDate(df.parse(fromdate));
+				// schedule.setToDate(df.parse(toDate));
+
+				int index = freqSchedule.indexOf(schedule);
+				freqSchedule.set(index, schedule);
+
+				this.getManagedBean().setScheduleList(freqSchedule);
+
+			} finally {
+
+			}
+		}
 
 	}
 
@@ -7574,44 +7622,47 @@ public class SpecificationBackingBean extends
 			freqSchedule = new ArrayList<ScQtSchedule>();
 
 		}
+		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
+			int start = Integer.parseInt(schedule.getStartMonth());
+			String fromMonth = retriveMonthDtls(start);
+			int end = Integer.parseInt(schedule.getEndMonth());
+			String toMonth = retriveMonthDtls(end);
 
-		int start = Integer.parseInt(schedule.getStartMonth());
-		String fromMonth = retriveMonthDtls(start);
-		int end = Integer.parseInt(schedule.getEndMonth());
-		String toMonth = retriveMonthDtls(end);
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			String fromdate = 01 + "/" + fromMonth + "/"
+					+ schedule.getStartYear();
+			String toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
 
-		String fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
-		String toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			// schedule.setScheduleNo(schedule.getScheduleNo());
 
-		// schedule.setScheduleNo(schedule.getScheduleNo());
-
-		try {
-
-			Date date1;
-			Date date2;
 			try {
-				date1 = format.parse(fromdate);
-				date2 = format.parse(toDate);
-				long days = DateUtils.getDaysDifference(date1, date2);
-				int day = (int) days;
-				int months = day / 30;
-				schedule.setTotalMonths(new BigDecimal(months));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+				Date date1;
+				Date date2;
+				try {
+					date1 = format.parse(fromdate);
+					date2 = format.parse(toDate);
+					long days = DateUtils.getDaysDifference(date1, date2);
+					int day = (int) days;
+					int months = day / 30;
+					schedule.setTotalMonths(new BigDecimal(months));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// schedule.setFromDate(df.parse(fromdate));
+				// schedule.setToDate(df.parse(toDate));
+
+				int index = freqSchedule.indexOf(schedule);
+				freqSchedule.set(index, schedule);
+
+				this.getManagedBean().setScheduleList(freqSchedule);
+
+			} finally {
+
 			}
-
-			// schedule.setFromDate(df.parse(fromdate));
-			// schedule.setToDate(df.parse(toDate));
-
-			int index = freqSchedule.indexOf(schedule);
-			freqSchedule.set(index, schedule);
-
-			this.getManagedBean().setScheduleList(freqSchedule);
-		} finally {
-
 		}
 
 	}
