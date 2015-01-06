@@ -524,6 +524,7 @@ public class QTCommitteBackingBean extends
 		for (String committeType : needToCloneCommittes) {
 
 			for (int beanCount = 0; beanCount < tabs.size(); beanCount++) {
+				List<ScCommitteeMember> memberList = new ArrayList<ScCommitteeMember>();
 				if (tabs.get(beanCount).getTitleName()
 						.equalsIgnoreCase(CommitteType.getValue(committeType))) {
 					if (null == tabs.get(beanCount).getMembers()) {
@@ -553,21 +554,22 @@ public class QTCommitteBackingBean extends
 								setUserDetails(member1);
 								member1.setChangedDate(null);
 								member1.setScCommittee(cloneCommitte);
-								tabs.get(beanCount).getMembers().add(member1);
+								//tabs.get(beanCount).getMembers().add(member1);
+								memberList.add(member1);
 							} else {
+								memberList.clear();
 								throw new EpException(
 										MessageConst.ERROR_760048,
 										new String[] { CommitteType
 												.getValue(cloneCommitte
 														.getCommitteeType()
 														.getParameterCode()) });
-
 							}
 						}
-
 					}
-
+					tabs.get(beanCount).getMembers().addAll(memberList);
 				}
+				
 			}
 		}
 		// updating the memebers into sccommitte object if no error..
