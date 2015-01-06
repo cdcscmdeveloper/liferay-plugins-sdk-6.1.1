@@ -90,8 +90,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.assocBodyRemark}" /></td>
+								maxlength="200" id="profBdySecPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.profBody.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.assocBodyRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="profBdySecPoRmrkMsg" for="profBdySecPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -104,8 +108,12 @@
 								value="#{backingBean.managedBean.poSecReview.assocBodyRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.assocBodyRemark}" /></td>
+								maxlength="200" id="profBdySecAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.profBody.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.assocBodyRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="profBdySecAprvrRmrkMsg" for="profBdySecAprvrRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 				</table>

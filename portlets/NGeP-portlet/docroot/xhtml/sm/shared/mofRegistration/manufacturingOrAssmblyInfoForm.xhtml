@@ -44,7 +44,8 @@
 				id="poManuBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.manufacturingVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.manufacturingVerified : false)}" />
 
-			<p:dataTable var="manBean" widgetVar="smManuDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			<p:dataTable var="manBean" widgetVar="smManuDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
 				selection="#{backingBean.managedBean.selectedManufacturingList}"
 				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
@@ -93,8 +94,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
+								maxlength="200" id="manufactSecPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.manufacture.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="manufactSecPoRmrkMsg" for="manufactSecPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -107,8 +112,13 @@
 								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.manufacturingRemark}" /></td>
+								maxlength="200" id="manufactSecAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.manufacture.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.manufacturingRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="manufactSecAprvrRmrkMsg"
+								for="manufactSecAprvrRmrk" showSummary="true" showDetail="false"
+								display="icon" /></td>
 
 					</tr>
 				</table>

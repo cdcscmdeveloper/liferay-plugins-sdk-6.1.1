@@ -222,34 +222,31 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td>
-						<p:outputPanel id="postCodeOffFacPanelId">
-							<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
-								<p:inputText maxlength="5"
-										required="true"
+						<td><p:outputPanel id="postCodeOffFacPanelId">
+								<p:outputPanel
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+									<p:inputText maxlength="5" required="true"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
-										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
-										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-										size="35" >
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
+										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+										size="35">
 										<f:validator validatorId="postcodeValidator" />
-										</p:inputText>
-										<p:message id="companyPostMyCodeMsg"
-										for="companyPostMyCode" showSummary="true" showDetail="false"
-										display="icon" />
-							</p:outputPanel>
-							<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
-								<p:inputText maxlength="10"
-										required="true"
+									</p:inputText>
+									<p:message id="companyPostMyCodeMsg" for="companyPostMyCode"
+										showSummary="true" showDetail="false" display="icon" />
+								</p:outputPanel>
+								<p:outputPanel
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+									<p:inputText maxlength="10" required="true"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
-										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
-										size="35" >
-										</p:inputText>
-										<p:message id="companyPostForeignCodeMsg"
-										for="companyPostForeignCode" showSummary="true" showDetail="false"
-										display="icon" />
-							</p:outputPanel>
-						</p:outputPanel>
-						</td>
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
+										size="35">
+									</p:inputText>
+									<p:message id="companyPostForeignCodeMsg"
+										for="companyPostForeignCode" showSummary="true"
+										showDetail="false" display="icon" />
+								</p:outputPanel>
+							</p:outputPanel></td>
 						<td colspan="2"></td>
 					</tr>
 
@@ -344,8 +341,12 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
+								maxlength="200" id="offFacSectPoRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.offFacility']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="offFacSectPoRmrkMsg" for="offFacSectPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 
 				</p:outputPanel>
@@ -358,8 +359,12 @@
 								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
-								maxlength="200"
-								value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
+								maxlength="200" id="offFacApprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.offFacility']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="offFacApprvrRmrkMsg" for="offFacApprvrRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 
