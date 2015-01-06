@@ -9,7 +9,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	
 	<script type="text/javascript">
-	
+		/*
+			This is to update grand total at footer without reloading the whole datatable
+			gtBudgetAmt, gtPlanAmt, gtNonAllocAmt - the class name of grand total fields 
+			hiddenGtBudgetAmt, hiddenGtPlanAmt, hiddenGtNonAllocAmt - the class name of calculated value in hidden fields
+		*/
 		function updateEpFooter(){
 			document.getElementsByClassName('gtBudgetAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtBudgetAmt')[0].value;
 			document.getElementsByClassName('gtPlanAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtPlanAmt')[0].value;
