@@ -34,6 +34,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.address.country']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="country" styleClass="ppDropDownWidthL"
+						disabled="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}"
 						label="#{lbl['lbl.pm.address.country']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.pmCountry.countryId}"
 						required="true" style="width: 276px;margin-bottom: 5px;">
