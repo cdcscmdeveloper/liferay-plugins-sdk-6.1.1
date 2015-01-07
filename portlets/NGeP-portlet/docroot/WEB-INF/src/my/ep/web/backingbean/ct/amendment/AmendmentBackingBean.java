@@ -6,6 +6,7 @@ package my.ep.web.backingbean.ct.amendment;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,6 +66,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -2980,5 +2982,45 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, ctCommitteeMember);	
 		}
 		return getParameterDesc(parameter);
+	}
+	
+	public void downloadSampleBondLetter() {
+		try {
+			String fileName = "Sample Bond Letter.pdf";
+			String filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+	
+			File file = new File(filePath);
+			if (!file.exists()) {
+				VelocityContext context = new VelocityContext();
+				String contractNo = "Contract Number";
+				int type = 0;
+				String supplierName ="Supplier Name";
+				String	sourcingTitle ="Sourcing Title";
+				String bondAmount ="Bond Amount";
+				String	expiryPeriod = "Expiry Period";
+				String	bondAmountWord = "Bond Amount Word"; 		
+				
+				context.put("type", type);
+				context.put("contractNo", contractNo);
+				context.put("supplierName", supplierName);
+				context.put("sourcingTitle", sourcingTitle);
+				context.put("bondAmount", bondAmount);
+				context.put("bondAmountWord", bondAmountWord);
+				context.put("expiryPeriod", expiryPeriod);		
+			
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOA_BOND_LETTER, context,
+						new FileOutputStream(filePath));
+			}
+			
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
