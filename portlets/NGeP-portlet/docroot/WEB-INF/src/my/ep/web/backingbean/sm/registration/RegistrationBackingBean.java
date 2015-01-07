@@ -553,21 +553,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		
 		try{
-			System.out.println(111111111);
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IRegistrationSO.class);
-			System.out.println(222222222);
 			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
-			System.out.println(333333333);
 			if (resDTO.isSuccessful()) {
-				System.out.println(444444444);
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-				System.out.println(555555555);
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				System.out.println(6666666);
 				return "/xhtml/sm/onlinereg/outputMsg";
 			} else {
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
@@ -1417,22 +1411,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setPostCode(postCode);
 		reqDTO.setName(name);
 		
-		MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-		log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
-		if(!resDTO.getSeverity().equalsIgnoreCase(SupplierManagementConst.SM_MYIDENTITY_SEVERITY_SUCC)){
-			switch (resDTO.getStatusCode()) {
-			case "70019" :
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
-			case "70020" :
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
-			case "70031" :
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
-			case "70032" :
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
-			default : 
-				log.info("MyIDENTITY ERROR: " + identificationNo + " - " + resDTO.getStatusCode() + " - " + resDTO.getStatusDesc());
-				throw new EpException(MessageConst.ERROR_MYIDENTITY_70099);
+		try{
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
+			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
+			if(!resDTO.getSeverity().equalsIgnoreCase(SupplierManagementConst.SM_MYIDENTITY_SEVERITY_SUCC)){
+				switch (resDTO.getStatusCode()) {
+				case "70019" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70032" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+				default : 
+					log.info("MyIDENTITY ERROR: " + identificationNo + " - " + resDTO.getStatusCode() + " - " + resDTO.getStatusDesc());
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70099);
+				}
 			}
+		}catch(Exception ex){
+			throw new EpException(ex.getMessage());
 		}
 	}
 	
