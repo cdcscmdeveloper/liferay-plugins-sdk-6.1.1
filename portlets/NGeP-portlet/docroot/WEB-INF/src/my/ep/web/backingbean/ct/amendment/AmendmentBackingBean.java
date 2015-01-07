@@ -46,7 +46,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
-import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -61,7 +60,6 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -77,8 +75,6 @@ import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
-import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -134,17 +130,11 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.quationtender.ScAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
-import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -154,7 +144,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
-import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -656,11 +645,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	                
 	                } if(getManagedBean().isPrepareLOA()) {
 	        
-	        	            if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null) 
+	        	            if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null) {
 	                              getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
 	                              getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	        	                  int contractDuration = getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + 	getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
 	        	                  getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
+	        	            }
 	               }
 	       
 	               reqDTO.setUserRole(getUserRole());
@@ -1212,10 +1202,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
     
     public void downloadDocFile(ScLoaReport loaReport) throws IOException {
 		
-    	IContractTemplateSO contractTemplateSO = null;
 		AttachmentFormat attachmentFormat = null;
-		ContractTemplateResDTO resDTO = null;
-		 ContractTemplateReqDTO reqDTO  = null;
 		
 	    try{
 	    	 String docDefinitionKey = loaReport.getPmDocument()
@@ -1245,11 +1232,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 }catch(Exception e) {
 			  e.printStackTrace();
 		}finally{
-			
-			contractTemplateSO = null;
 			attachmentFormat = null;
-			resDTO = null;
-			reqDTO  = null;
 		}
 	}
 	
