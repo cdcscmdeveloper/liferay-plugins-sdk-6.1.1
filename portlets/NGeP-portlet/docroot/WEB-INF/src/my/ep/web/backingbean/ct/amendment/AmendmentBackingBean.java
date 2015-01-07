@@ -840,6 +840,23 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    			}
 			    		}
 			    	}
+			    	
+			    	if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) && getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null) {
+			    		int chairPersonCount = 0;
+			    		Long chairPersonId = retrieveParameterByCodeType(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).getParameterId();
+			    		// Check all the member role must be selected
+			    		for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+			    			if(committeMember.getMemberRole()==null || committeMember.getMemberRole().getParameterId()==null) {
+			    				throw new EpException(MessageConst.ERROR_750025);
+			    			} 
+			    			if(committeMember.getMemberRole().getParameterId().equals(chairPersonId)) {
+			    				chairPersonCount++;
+			    				if(chairPersonCount>1) {
+			    					throw new EpException(MessageConst.ERROR_750026);
+			    				}
+			    			}
+			    		}
+			    	}
 			    }
 			    
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -866,7 +883,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						getManagedBean().setTextBeforeSign(sb.toString());	
 						getManagedBean().setButtonAction(action);
 					}
-			    } 
+			    } catch (NamingException e) {
+					e.printStackTrace();
+				} 
 		   finally {
 				     contractSO = null;
 				     committeSO = null;
@@ -977,94 +996,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return getManagedBean().getContractVer().getCtContractValue().getContractAmount().add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 	}
 	
-	public Map<String, Long> getCommitteDropdown(boolean temp) {
-		
-	  	 Map<String, Long> itemlist  = new HashMap<String, Long>();
-		 IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-	     ParameterReqDTO reqDTO = new ParameterReqDTO();
-	     reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-		 String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		 reqDTO.setLanguageCode(languageCode);
-			
-		 ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-		List<PmParameterDesc> list = resDTO.getParameterDescList();
-		/*Long chainpersonId = null;
-		boolean chairPersonAble = false;
-		for (PmParameterDesc parameters : list) {
-			if(parameters.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON))
-			     chainpersonId = parameters.getPmParameter().getParameterId();
+	public SelectItem[] getCommitteDropdown(boolean temp) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> committeRole = new ArrayList<String>();
+		if(temp) {
+			committeRole.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 		}
+		committeRole.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), committeRole));
 		
-		for(CtCommitteeMember committeeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-	    	  if(committeeMember.getMemberRole() != null && committeeMember.getMemberRole().getParameterId() != null
-	    		    && committeeMember.getMemberRole().getParameterId().intValue() == chainpersonId.intValue()){
-	    		  chairPersonAble = true;
-	    	}
-		}*/
-		
-		for (PmParameterDesc parameterDesc : list) {
-		
-			if( !parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY))
-			     itemlist.put(parameterDesc.getCodeName(),parameterDesc.getPmParameter().getParameterId()); 
-		}
-		
-		return itemlist;
+		return getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 	}
-	 
-	/*public SelectItem[] getCommitteDropdown(boolean temp) {
-		
-		SelectItem[] items = null;     
-		try {
-		        int i = 0;
-		        IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		        ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-				String languageCode = new FacesScopes().getUserLocale().getLanguage();
-				reqDTO.setLanguageCode(languageCode);
-				
-				ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-				List<PmParameterDesc> list = resDTO.getParameterDescList();
-				
-				boolean chairperson = false;
-				Long chairPersonId = null;
-				int counter = 0;
-				for (PmParameterDesc parameterDesc : list) {
-					if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-						chairPersonId = parameterDesc.getPmParameter().getParameterId();
-					}
-				}
-					        
-				for(CtCommitteeMember committeeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-					    	  if(committeeMember.getMemberRole() != null && committeeMember.getMemberRole().getParameterId() != null
-					    		    && committeeMember.getMemberRole().getParameterId().intValue() == chairPersonId.intValue()){
-					    			       counter++;
-					    			       if(counter == 2)
-					    	            	chairperson = true;
-					    	}
-				}
-					
-				if((chairperson))
-				     items = new SelectItem[list.size()-2];
-				else
-				    items = new SelectItem[list.size()-1];
-				
-				for (PmParameterDesc parameterDesc1 : list) {
-					
-			       	if(!chairperson && !parameterDesc1.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)){
-					     items[i++] = new SelectItem( parameterDesc1.getPmParameter().getParameterId(),parameterDesc1.getCodeName());       
-				
-			       	}else if(chairperson && !parameterDesc1.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) 
-							&& !parameterDesc1.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-						    items[i++] = new SelectItem(parameterDesc1.getPmParameter().getParameterId(),parameterDesc1.getCodeName());   
-					   }
-				}
-				
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	    return items;
-	}*/
 
 	public SelectItem[] getMinistryDropdown() {
 			
