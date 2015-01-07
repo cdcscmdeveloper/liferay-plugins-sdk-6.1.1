@@ -2879,8 +2879,12 @@ public class QTDetailBackingBean extends
 			if (list != null) {
 				for (PmParameter parameter : list) {
 					if (parameter.getParameterId().equals(id)) {
+						PmParameter pmParameter = new PmParameter();
+						pmParameter.setParameterCode(parameter.getParameterCode());
+						pmParameter.setParameterId(parameter.getParameterId());
+						pmParameter.setBrandNew(false);
 						this.getManagedBean().getQt()
-								.setFinalizationCommitte(parameter);
+								.setFinalizationCommitte(pmParameter);
 					}
 				}
 			}
@@ -2927,6 +2931,10 @@ public class QTDetailBackingBean extends
 			}
 		} else {
 			this.getManagedBean().getQt().setFinalizationSecratery(null);
+			if (null == this.getManagedBean().getQt().getFinalizationSecratery()) {
+				this.getManagedBean().getQt()
+						.setFinalizationSecratery(new PmUser());
+			}
 			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(getManagedBean()
 					.getQt().getQtId());
 			log.info("Finalization Secratory Size : " + finalizeList.size());
