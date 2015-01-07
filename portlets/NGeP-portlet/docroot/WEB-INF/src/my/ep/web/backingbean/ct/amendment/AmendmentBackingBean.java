@@ -1766,6 +1766,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("expiryPeriod", expiryPeriod);
 				
 			}else if(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)){
+				FacesScopes fs = new FacesScopes();
+				String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
 				vmFile = ContractConst.DOCPATH_CT_LOA_AGREEMENT_LETTER;
 				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
 				ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
@@ -1807,6 +1809,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					orgProfileSO = null;
 				}
 
+				context.put("hostUrl", hostUrl);
 				String agencyAddress = "";
 				String agencyPhoneNo = "";
 				String agencyFaxNo = "";
