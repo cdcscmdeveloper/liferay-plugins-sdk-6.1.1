@@ -5994,7 +5994,8 @@ public class SpecificationBackingBean extends
 				if (this.getManagedBean().getScQt().isZonal()
 						&& this.getManagedBean().getScQt().getQtType()
 								.equals(QTConstants.OPEN_TYPE)) {
-					retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
+					retriveSpecdetails(this.getManagedBean().getScQt()
+							.getQtId(), "QT");
 					ScQtSupplierCriteria supplierCriteria = this
 							.getManagedBean().getScQt()
 							.getScQtSupplierCriteria();
@@ -8998,6 +8999,50 @@ public class SpecificationBackingBean extends
 			}
 		} finally {
 
+		}
+
+	}
+
+	public void specOfferpricePackageBelowScore(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+			if (null == offerPrice.getBelowScore()
+					|| offerPrice.getBelowScore().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760216);
+			}
+
+		}
+
+	}
+
+	public void specOfferpricePackageAboveScore(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+
+			if (null == offerPrice.getAboveScore()
+					|| offerPrice.getAboveScore().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760217);
+			}
+		}
+
+	}
+
+	public void specOfferpriceItemBelowScore(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+			if (null == offerPrice.getBelowScore()
+					|| offerPrice.getBelowScore().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760218);
+			}
+
+		}
+
+	}
+
+	public void specOfferpriceItemAboveScore(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+
+			if (null == offerPrice.getAboveScore()
+					|| offerPrice.getAboveScore().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760219);
+			}
 		}
 
 	}
