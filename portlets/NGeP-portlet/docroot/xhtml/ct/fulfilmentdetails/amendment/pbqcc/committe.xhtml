@@ -37,7 +37,7 @@
 				     <h:outputText value="#{ctCommitteeVar.pnp ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"  style="float:left;"/>
 				 </p:column>
 				 
-				 <p:column headerText="Role" style="width:13%;">
+				 <p:column headerText="#{lbl['lbl.ct.role']}" style="width:13%;">
 				 <ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
 							<h:outputText value="#{lbl['lbl.ct.secretary']}" />
 					 </ui:fragment>
