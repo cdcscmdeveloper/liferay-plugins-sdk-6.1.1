@@ -144,6 +144,7 @@ import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
@@ -2923,10 +2924,20 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		getManagedBean().getContractVer().getAp201Attachements().remove(index);
 	}
 	
-	public String calculateMonthsAndYear(int months) {
-		        int year = months / 12;
-		        int month = months % 12;
-		        return String.valueOf(year +"."+month);
+	public String calculateNewContractPeriod() {
+		 return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+	}
+	
+	public String getBondAmountInText() {
+		 DecimalFormat df = new DecimalFormat("#.00");		
+		return NumberWordUtil.convert(df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()));
+	}
+	
+	public String calculateMonthsAndYear() {
+			int months = getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+getManagedBean().getContractVer().getCtAmendment().getExtendPeriod();
+			int year = months / 12;
+			int month = months % 12;
+			return String.valueOf(year +"."+month);
 	}
 	
 	public void ap201FileUpload(FileUploadEvent event) throws Exception {
@@ -2986,11 +2997,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void downloadSampleBondLetter() {
 		try {
+			
+			String filePath = getManagedBean().getFileDirectory();		      
+	        File file = new File(filePath);
+            file.mkdirs();
+			
 			String fileName = "Sample Bond Letter.pdf";
-			String filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
+			filePath = getManagedBean().getFileDirectory() +  "/" + fileName;
 	
-			File file = new File(filePath);
-			if (!file.exists()) {
+			File pdfFile = new File(filePath);
+			if (!pdfFile.exists()) {
 				VelocityContext context = new VelocityContext();
 				String contractNo = "Contract Number";
 				int type = 0;
