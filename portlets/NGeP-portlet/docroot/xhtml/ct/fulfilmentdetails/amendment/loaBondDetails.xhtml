@@ -20,7 +20,7 @@
 				<p:spacer width="2" />
 				<p:inputText style="width:50px;" value="#{!empty amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate) : ''}" disabled="true" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.period']}" />
 			<h:panelGrid columns="5">
 				<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
 					value="#{amendmentBackingBean.calculateMonthsAndYear()}" />
@@ -29,7 +29,7 @@
 				<p:spacer width="1" />
 				<p:outputLabel value="#{amendmentBackingBean.calculateNewContractPeriod()}"> #{lbl['lbl.ct.months']}</p:outputLabel>
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.contract.amount']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" />
 			<p:inputText disabled="true" style="width:170px;" styleClass="ppRightBtn"
 			    value="#{amendmentBackingBean.newContractAmt()}"  >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
