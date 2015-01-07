@@ -32,7 +32,8 @@
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction"
 						value="#{paymentMatchBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}" update="@form"
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							action="#{paymentMatchBackingBean.gpkiSignAction(bpmAction)}"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}" />							
