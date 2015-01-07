@@ -982,16 +982,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		   }
   	 }
-	 
-	public void addContractValue() {
-		
-		   double firstValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue();
-		   double contractValue = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
-		   contractValue = contractValue + firstValue - this.getManagedBean().getContractVer().getCtAmendment().getSecondValue();
-
-		   this.getManagedBean().getContractVer().getCtAmendment().setSecondValue(firstValue);
-		   this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
-	 }
+	
+	public BigDecimal newContractAmt() {
+		return getManagedBean().getContractVer().getCtContractValue().getContractAmount().add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+	}
 	
 	public Map<String, Long> getCommitteDropdown(boolean temp) {
 		
