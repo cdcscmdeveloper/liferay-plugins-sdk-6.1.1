@@ -18,16 +18,16 @@
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<p:spacer width="2" />
-				<p:inputText style="width:50px;" value="30 days" disabled="true" />
+				<p:inputText style="width:50px;" value="#{!empty amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate) : ''}" disabled="true" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
 			<h:panelGrid columns="5">
 				<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
-					value="#{amendmentBackingBean.calculateMonthsAndYear(amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod)}" />
+					value="#{amendmentBackingBean.calculateMonthsAndYear()}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="(#{lbl['lbl.ct.years']})" />
 				<p:spacer width="1" />
-				<p:outputLabel value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}"> #{lbl['lbl.ct.months']}</p:outputLabel>
+				<p:outputLabel value="#{amendmentBackingBean.calculateNewContractPeriod()}"> #{lbl['lbl.ct.months']}</p:outputLabel>
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.amount']}" />
 			<p:inputText disabled="true" style="width:170px;" styleClass="ppRightBtn"
@@ -40,15 +40,14 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.pb.amount']}" />
-			<h:panelGrid columns="3">
-				<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
-				  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
-				</p:inputText>
-				<p:spacer width="1" />
-				<p:inputText style="width:300px;" 
-				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.proposedAmt}" />
-			</h:panelGrid>
+			<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
+			  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
+			</p:inputText>
+			<p:outputLabel />
+			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
+				style="width:170px;margin-bottom:5px;"
+			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
