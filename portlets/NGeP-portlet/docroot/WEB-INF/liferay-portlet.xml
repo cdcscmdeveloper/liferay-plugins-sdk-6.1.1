@@ -1051,7 +1051,7 @@
 		<css-class-wrapper>templateDocument-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>scUpdateCommitte</portlet-name>
+		<portlet-name>scAppointFCCommittee</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>

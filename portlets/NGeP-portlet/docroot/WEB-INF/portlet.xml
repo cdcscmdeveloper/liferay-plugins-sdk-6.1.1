@@ -3562,8 +3562,8 @@
 	 </portlet>
 	 
 	 <portlet>
-	 	<portlet-name>scUpdateCommitte</portlet-name>
-	 	<display-name>UpdateCommitte</display-name>
+	 	<portlet-name>scAppointFCCommittee</portlet-name>
+	 	<display-name>Appoint FC Committee</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3577,7 +3577,7 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>UpdateCommitte</title>
+	 		<title>Appoint FC Committee</title>
 	 		<short-title>NewJSFPortlet</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
