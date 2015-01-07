@@ -2262,8 +2262,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	private void renewSessionWithPreviousValues() {
-		Object payLoadData = (SCEvaluationDataType) getManagedBean()
-				.getPayLoadData();
+		Object payLoadData = getManagedBean().getPayLoadData();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
 		String[] outcomes = getManagedBean().getOutComes();
