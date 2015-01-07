@@ -260,7 +260,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}" readonly="#{!isClosedStatus}"
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}" readonly="#{isClosedStatus}"
 										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
