@@ -55,7 +55,7 @@
 					value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 			<c:if
-				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() ne 60202}">
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() eq 60202}">
 
 				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
 					style="width: 10%">
@@ -64,7 +64,7 @@
 				</p:column>
 			</c:if>
 			<c:if
-				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() eq 60202}">
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() ne 60202}">
 				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
 					style="width: 10%">
 					<ui:fragment rendered="#{committeemember.PNP}">
