@@ -49,6 +49,9 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private PmFinancialSvc selectedFinancialSvc;
 	private boolean byFactoring = true;
 	private int activeIndex = 0;
+	private boolean enableUpdateStatus;
+	
+	
 	// Financial Org
 	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
 	private PmFinancialOrg financialOrg = new PmFinancialOrg();
@@ -771,6 +774,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 
 	public void setMapObject(Map<String, Object> mapObject) {
 		this.mapObject = mapObject;
+	}
+
+	/**
+	 * @return the enableUpdateStatus
+	 */
+	public boolean isEnableUpdateStatus() {
+		return enableUpdateStatus;
+	}
+
+	/**
+	 * @param enableUpdateStatus the enableUpdateStatus to set
+	 */
+	public void setEnableUpdateStatus(boolean enableUpdateStatus) {
+		this.enableUpdateStatus = enableUpdateStatus;
 	}
 
 }
