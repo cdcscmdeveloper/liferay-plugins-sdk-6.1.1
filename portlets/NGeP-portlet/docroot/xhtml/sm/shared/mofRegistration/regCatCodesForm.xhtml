@@ -193,14 +193,15 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0 and backingBean.managedBean.approverUser}" />
 				</p:column>
-				<p:column rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}"
+				<p:column rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" style="width : 25%;"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-					<p:inputTextarea value="#{catBean.poRemarks}" maxlength="200" disabled="#{backingBean.managedBean.approverUser}"
-						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}"
+					<p:inputTextarea value="#{catBean.poRemarks}" maxlength="200"
+						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 						id="poCatDecisionRmrk" required="#{catBean.poDecFlg == 0}" />
-					<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk"
+					<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 						showSummary="true" showDetail="false" display="icon" />
+					<p:outputLabel value="#{catBean.poRemarks}" style="float: left;white-space: normal;" rendered="#{backingBean.managedBean.approverUser}"/>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
