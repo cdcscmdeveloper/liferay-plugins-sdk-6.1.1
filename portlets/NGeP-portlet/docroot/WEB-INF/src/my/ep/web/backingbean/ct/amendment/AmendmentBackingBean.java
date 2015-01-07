@@ -2805,10 +2805,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			try {
 				    userReqDTO = new UserReqDTO();
 					if(getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())){
-					      searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							  "userName", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getName()));
-				
-					}if(getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
+						SearchFilterBean filterBean = new SearchFilterBean("userName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getName());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
+					}
+					
+					if(getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getIdentificationType()));
 					}
 					
