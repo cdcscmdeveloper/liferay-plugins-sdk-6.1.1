@@ -422,13 +422,15 @@ public class CommitteBackingBean extends
 											MessageUtils
 													.getMessage(
 															MessageConst.INFO_700005,
-															new String[] { "Committe","" },
+															new String[] {
+																	"Committe",
+																	"" },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
-					//renewSesionObject();
+					// renewSesionObject();
 
 					FacesContext
 							.getCurrentInstance()
@@ -440,12 +442,13 @@ public class CommitteBackingBean extends
 											MessageUtils
 													.getMessage(
 															MessageConst.INFO_700004,
-															new String[] { "Committe","" },
+															new String[] {
+																	"Committe",
+																	"" },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
-					this.getManagedBean().setQtCommittee(
-							resDTO.getScQtCommittee());
+
 				}
 			}
 		} finally {
@@ -972,16 +975,18 @@ public class CommitteBackingBean extends
 		debugLogger("deleteCommitteeAction");
 		List<ScCommitteeMember> committeeMemberList = getManagedBean()
 				.getQtCommittee().getScCommittee().getScCommitteeMembers();
-		List<ScCommitteeMember> selectedList = getManagedBean()
+		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getSelectedCommitteMemebers();
 
 		if (committeeMemberList.size() == selectedList.size()) {
 			committeeMemberList.clear();
 		} else {
-			for (ScCommitteeMember scCommitteeMember : selectedList) {
-				committeeMemberList.remove(scCommitteeMember);
+			for (int i=0;i<selectedList.size();i++) {
+				committeeMemberList.remove(committeeMemberList.get(i));
 			}
 		}
+		this.getManagedBean()
+		.setSelectedCommitteMemebers(null);
 	}
 
 	public void existingCommitteeSearchAction() {
@@ -1672,7 +1677,7 @@ public class CommitteBackingBean extends
 			committeReqDTO.setQtId(Long.valueOf(evaluationDataType.getQtId()));
 			committeReqDTO.setCommitteeType(evaluationDataType
 					.getCommitteeType());
-			//committeReqDTO.setCommitteeType("QCA");
+			// committeReqDTO.setCommitteeType("QCA");
 			CommitteResDTO committeResDTO = committeSO
 					.retrieveCommitteByQtIdNCommType(committeReqDTO);
 			ScQtCommittee qtCommittee = committeResDTO.getScQtCommittee();
