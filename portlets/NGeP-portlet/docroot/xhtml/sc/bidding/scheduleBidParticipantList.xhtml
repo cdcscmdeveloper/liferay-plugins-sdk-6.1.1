@@ -11,17 +11,17 @@
 			value="#{scheduleBiddingBB.managedBean.bidParticipants}"
 			var="bidParticipant">
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
-				<h:outputText value="#{bidParticipant.supplier.companyName}"/>
+				<h:outputText id="companyNamePopUp" value="#{bidParticipant.supplier.companyName}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}" style="text-align:right;">
-				<h:outputText  value="#{bidParticipant.scQtProposalItem.offerPrice}">
+				<h:outputText id="offerPricePopUp" value="#{bidParticipant.scQtProposalItem.offerPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
 
 	</div>
-	<br />
+	<p:spacer height="5" ></p:spacer>
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back"
 			onclick="participants.hide();" />
