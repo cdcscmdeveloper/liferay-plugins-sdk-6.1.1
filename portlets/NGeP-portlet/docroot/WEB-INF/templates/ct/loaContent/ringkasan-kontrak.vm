@@ -20,13 +20,13 @@
       xx. Jadual Penghantaran Refer Attachment <br/>
       xx. Potongan Pembayaran $deductionAmount **applicable for fixed deduction only<br/>
       vi.  Tempoh Kontrak Asal $months <br/>
-      $effstartDate $effEndDate<br/>
-      vii. Tempoh Kontrak Tambahan $months<br/>
+      $effStartDate $effEndDate<br/>
+      vii. Tempoh Kontrak Tambahan $extendMonths<br/>
       $amendEffExpDate<br/>
       viii. Effective Date<br/>
       $effDate<br/>
       vii. Nilai Bon Pelaksanaan Asal $bondValue<br/>
-      vii. Nilai Baru Bon Pelaksanaan $bondValue<br/>
+      vii. Nilai Baru Bon Pelaksanaan $amendBondValue<br/>
       viii. Spesifikasi Tugas / Skop Kerja Refer Attachment<br/>
       xx. Cara Pembayaran : Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)<br/>
       xx. Lain-lain Terma Refer Attachment
