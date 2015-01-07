@@ -405,7 +405,7 @@
 					<td>
 						<p:commandButton id="notificationBtn" disabled="#{!supplierBackingBean.isLetterGenerated()}"
 							value="#{lbl['lbl.ct.panel.notification.factoring']}" process="@this"
-							immediate="true" update="editorDisplay"
+							update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
 							oncomplete="factoringClauseDlg.show();" />
 					</td>
@@ -414,7 +414,7 @@
 			<p:dialog id="factoringClauseDlg"
 				header="#{lbl['lbl.ct.factoring.clauses']}"
 				widgetVar="factoringClauseDlg" modal="true" width="820" height="450">
-				<p:editor controls="print" id="editorDisplay"
+				<p:editor controls="print" id="editorDisplay" 
 					value="#{supplierBackingBean.editorValue}" width="800" height="430" />
 			</p:dialog>
 		</p:panel>		
