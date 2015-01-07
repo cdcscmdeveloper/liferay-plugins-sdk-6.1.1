@@ -117,7 +117,7 @@
 			</f:facet>
 			<p:commandLink oncomplete="addQuery.show();"
 					action="#{purchaseRequestBackingBean.showItemQuery(chargeLineNode)}"
-					 rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'true'}"
+					 rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'false' and chargeLineNode.flFulfilmentItem.flQuery != null}"
 					update=":form:queryDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
 						value="/resources/ep/images/design/exclamation.png"
