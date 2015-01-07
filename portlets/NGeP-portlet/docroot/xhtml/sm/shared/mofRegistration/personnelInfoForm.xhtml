@@ -477,7 +477,7 @@
 							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignSelShareHolder(person)}"
-								process="@this" partialSubmit="true" update=":form"
+								process="@this,@([id$=prsnlInfoSecPoRmrk]),:form:tt:prsnlSecApprvrRmrk" partialSubmit="true" update=":form"
 								style="padding-right:5px;">
 								<p:outputPanel
 									rendered="#{person.equityOwner or person.director}">
