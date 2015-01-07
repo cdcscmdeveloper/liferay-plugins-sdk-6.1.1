@@ -59,6 +59,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
@@ -957,13 +958,17 @@ public class SmCommonUtil {
 		defaultAddr.setPmState(new PmState());
 		return defaultAddr;
 	}
-	
-	public static Long getMyCountryId(){
+
+	public static Long getMyCountryId() {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		return resDTO.getPmCountry().getCountryId();
+	}
+
+	public static void closeBlockUI() {
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
 }
