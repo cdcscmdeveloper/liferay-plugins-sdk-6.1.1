@@ -16,9 +16,9 @@
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update=":form:clausePnl" />
+				update="@form" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update=":form:clausePnl" />
+				update="@form" />
 
 			<ac:paginator for="deductPaymentTblId" />
 
@@ -32,19 +32,23 @@
 						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
 				</p:selectOneMenu>
-				<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 			</p:column>
-
+			
 			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}">
 				<h:panelGroup id="deductionamountid">
 					<p:inputText id="amtid" size="30" maxlength="18" required="true"
 						label="#{lbl['lbl.sc.deduction.amount']}"
 						value="#{scQtDeduction.deductionAmount}"
 						style="margin-right:5px;text-align:right;"
-						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" />
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}" >
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+							maxIntegerDigits="14"></ac:validateNumber>
+					</p:inputText>
 					<p:message id="amtidMsg" for="amtid" display="icon" />
 				</h:panelGroup>
 			</p:column>
+
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn">

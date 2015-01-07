@@ -97,7 +97,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
-import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
@@ -938,7 +937,7 @@ public class QTDetailBackingBean extends
 					if (null == deduction.getDeductionType().getParameterCode()) {
 						throw new EpException(MessageConst.ERROR_100022,
 								new String[] { "Deduction Type" });
-					} else {
+					/*} else {
 						List<ScQtDeductionClause> deductionClauses = deduction
 								.getScQtDeductionClauses();
 						if (null != deductionClauses
@@ -947,7 +946,7 @@ public class QTDetailBackingBean extends
 								deductionClause.setScQtDeduction(deduction);
 							}
 							deduction.setScQtDeductionClauses(deductionClauses);
-						}
+						}*/
 					}
 				}
 			}
@@ -2283,10 +2282,10 @@ public class QTDetailBackingBean extends
 				List<ScQtDeduction> deductionList = resDTO
 						.getDeductionResultBean().getResultList();
 				this.getManagedBean().setScQtDeductionList(deductionList);
-				if (null != deductionList && !deductionList.isEmpty()) {
+				/*if (null != deductionList && !deductionList.isEmpty()) {
 					this.getManagedBean().setSelectedScQtDeduction(deductionList.get(0));
 					this.getManagedBean().getSelectedScQtDeduction().setScQtDeductionClauses(deductionList.get(0).getScQtDeductionClauses());
-				}
+				}*/
 			} finally {
 				detailSO = null;
 			}
