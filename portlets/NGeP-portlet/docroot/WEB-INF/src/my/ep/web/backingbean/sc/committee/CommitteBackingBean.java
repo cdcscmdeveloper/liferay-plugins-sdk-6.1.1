@@ -159,7 +159,7 @@ public class CommitteBackingBean extends
 				UserReqDTO userReqDTO = new UserReqDTO();
 				populateUserSearchCriteria(userQCSearchBean, searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
-				UserResDTO resDto = userSO.searchUserProfileDtl(userReqDTO);
+				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
 				if (resDto != null) {
 					getManagedBean().setExternalUsers(
 							resDto.getUserResultBean().getResultList());
@@ -973,7 +973,7 @@ public class CommitteBackingBean extends
 
 	public void deleteCommitteeAction() {
 		debugLogger("deleteCommitteeAction");
-		List<ScCommitteeMember> committeeMemberList = getManagedBean()
+		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
 				.getQtCommittee().getScCommittee().getScCommitteeMembers();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getSelectedCommitteMemebers();
@@ -981,12 +981,11 @@ public class CommitteBackingBean extends
 		if (committeeMemberList.size() == selectedList.size()) {
 			committeeMemberList.clear();
 		} else {
-			for (int i=0;i<selectedList.size();i++) {
+			for (int i = 0; i < selectedList.size(); i++) {
 				committeeMemberList.remove(committeeMemberList.get(i));
 			}
 		}
-		this.getManagedBean()
-		.setSelectedCommitteMemebers(null);
+		this.getManagedBean().setSelectedCommitteMemebers(null);
 	}
 
 	public void existingCommitteeSearchAction() {
