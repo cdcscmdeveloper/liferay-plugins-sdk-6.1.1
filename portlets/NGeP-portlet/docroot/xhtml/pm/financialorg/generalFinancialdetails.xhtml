@@ -52,13 +52,15 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.status']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+				<td>
+					<p:selectOneMenu styleClass="ppDropDownWidthM"
+						disabled="#{!financialOrgBackingBean.managedBean.enableUpdateStatus}"
 						label="#{lbl['lbl.pm.financialorg.status']}" required="#{!empty param['disableValidation']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}"
 						id="recordSts" style="width: 135px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{financialOrgBackingBean.getStatusOptions()}" />
-					</p:selectOneMenu></td>
+						<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
+					</p:selectOneMenu>
+				</td>
 				<td><p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
 
 			</tr>
