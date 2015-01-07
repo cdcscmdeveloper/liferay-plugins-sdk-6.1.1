@@ -4068,175 +4068,213 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
-
-		SmPersonnelAddress perm = new SmPersonnelAddress();
-		perm.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
-		perm.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-				.getDefPmCountry()));
-		perm.setSmPersonnel(shareHolderBean);
-		perm.setSameAsPerm(false);
-
-		SmPersonnelAddress mail = new SmPersonnelAddress();
-		mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
-		mail.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-				.getDefPmCountry()));
-		mail.setSmPersonnel(shareHolderBean);
-		mail.setSameAsPerm(false);
-
-		SmPersonnelAddress off = new SmPersonnelAddress();
-		off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
-		off.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-				.getDefPmCountry()));
-		off.setSmPersonnel(shareHolderBean);
-		off.setSameAsPerm(false);
-
-		SmPersonnelAddress res = new SmPersonnelAddress();
-		res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-		res.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-				.getDefPmCountry()));
-		res.setSmPersonnel(shareHolderBean);
-		res.setSameAsPerm(false);
-
-		getManagedBean().setShareHolderPermAddr(perm);
-		getManagedBean().setShareHolderMailAddr(mail);
-		getManagedBean().setShareHolderOffAddr(off);
-		getManagedBean().setShareHolderResdAddr(res);
-		List<PmState> defStates = new ArrayList<PmState>();
-		defStates = retrievePmStateList(perm.getSmAddress().getPmCountry()
-				.getCountryId());
-		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
-
-			// reset to defualt values for a new record
-			getManagedBean().setShrHldrPermStates(defStates);
-			getManagedBean().setShrHldrPermDistricts(
-					new ArrayList<PmDistrict>());
-			getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
-			getManagedBean().setShrHldrMailStates(defStates);
-			getManagedBean().setShrHldrMailDistricts(
-					new ArrayList<PmDistrict>());
-			getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
-			getManagedBean().setShrHldrResdStates(defStates);
-			getManagedBean().setShrHldrResdDistricts(
-					new ArrayList<PmDistrict>());
-			getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
-			getManagedBean().setShrHldrOffStates(defStates);
-			getManagedBean()
-					.setShrHldrOffDistricts(new ArrayList<PmDistrict>());
-			getManagedBean().setShrHldrOffCities(new ArrayList<PmCity>());
-
-		} else {
-			for (SmPersonnelAddress addr : shareHolderBean
-					.getSmPersonnelAddresses()) {
-				SmAddress smAddress = new SmAddress();
-				smAddress.setAddress1(addr.getSmAddress().getAddress1());
-				smAddress.setAddress2(addr.getSmAddress().getAddress2());
-				smAddress.setAddress3(addr.getSmAddress().getAddress3());
-				smAddress.setAddress4(addr.getSmAddress().getAddress4());
-				PmCountry country = new PmCountry();
-				country.setCountryId(addr.getSmAddress().getPmCountry()
-						.getCountryId());
-				smAddress.setPmCountry(country);
-				PmState state = new PmState();
-				state.setStateId(addr.getSmAddress().getPmState().getStateId());
-				smAddress.setPmState(state);
-				PmDistrict district = new PmDistrict();
-				district.setDistrictId(addr.getSmAddress().getPmDistrict()
-						.getDistrictId());
-				smAddress.setPmDistrict(district);
-				PmCity city = new PmCity();
-				city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-				smAddress.setPmCity(city);
-				smAddress.setPostcode(addr.getSmAddress().getPostcode());
-				addr.setSmAddress(smAddress);
-
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-					getManagedBean().setShareHolderPermAddr(addr);
-					assignStateDistAndCityForSelVal(getManagedBean()
-							.getShareHolderPermAddr().getSmAddress()
-							.getPmCountry().getCountryId(), getManagedBean()
-							.getShareHolderPermAddr().getSmAddress()
-							.getPmState().getStateId(), getManagedBean()
-							.getShareHolderPermAddr().getSmAddress()
-							.getPmDistrict().getDistrictId(),
-							SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
-
-				}
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-					getManagedBean().setShareHolderMailAddr(addr);
-					assignStateDistAndCityForSelVal(getManagedBean()
-							.getShareHolderMailAddr().getSmAddress()
-							.getPmCountry().getCountryId(), getManagedBean()
-							.getShareHolderMailAddr().getSmAddress()
-							.getPmState().getStateId(), getManagedBean()
-							.getShareHolderMailAddr().getSmAddress()
-							.getPmDistrict().getDistrictId(),
-							SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
-
-				}
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-					getManagedBean().setShareHolderResdAddr(addr);
-					assignStateDistAndCityForSelVal(getManagedBean()
-							.getShareHolderResdAddr().getSmAddress()
-							.getPmCountry().getCountryId(), getManagedBean()
-							.getShareHolderResdAddr().getSmAddress()
-							.getPmState().getStateId(), getManagedBean()
-							.getShareHolderResdAddr().getSmAddress()
-							.getPmDistrict().getDistrictId(),
-							SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-
-				}
-				if (addr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-					getManagedBean().setShareHolderOffAddr(addr);
-					assignStateDistAndCityForSelVal(getManagedBean()
-							.getShareHolderOffAddr().getSmAddress()
-							.getPmCountry().getCountryId(), getManagedBean()
-							.getShareHolderOffAddr().getSmAddress()
-							.getPmState().getStateId(), getManagedBean()
-							.getShareHolderOffAddr().getSmAddress()
-							.getPmDistrict().getDistrictId(),
-							SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
+		
+		if(isPersonnelViewOnly(shareHolderBean)){
+			if (shareHolderBean.getSmPersonnelAddresses() != null
+					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
+				for (SmPersonnelAddress personnelAddress : shareHolderBean
+						.getSmPersonnelAddresses()) {
+					if (personnelAddress.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+						if (personnelAddress.getSmAddress() != null
+								&& personnelAddress.getSmAddress().getAddressId() != null) {
+							getManagedBean().setShareHolderPermAddr(
+									personnelAddress);
+						}
+					} else if (personnelAddress.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
+						if (personnelAddress.getSmAddress() != null
+								&& personnelAddress.getSmAddress().getAddressId() != null) {
+							getManagedBean().setShareHolderMailAddr(
+									personnelAddress);
+						}
+					} else if (personnelAddress.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+						if (personnelAddress.getSmAddress() != null
+								&& personnelAddress.getSmAddress().getAddressId() != null) {
+							getManagedBean().setShareHolderResdAddr(
+									personnelAddress);
+						}
+					} else if (personnelAddress.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+						if (personnelAddress.getSmAddress() != null
+								&& personnelAddress.getSmAddress().getAddressId() != null) {
+							getManagedBean()
+									.setShareHolderOffAddr(personnelAddress);
+						}
+					}
 				}
 			}
+		}else{
+			SmPersonnelAddress perm = new SmPersonnelAddress();
+			perm.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
+			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
+					.getDefPmCountry()));
+			perm.setSmPersonnel(shareHolderBean);
+			perm.setSameAsPerm(false);
 
-			if ((getManagedBean().getShrHldrPermStates() == null)
-					|| (getManagedBean().getShrHldrPermStates() != null && getManagedBean()
-							.getShrHldrPermStates().isEmpty())) {
+			SmPersonnelAddress mail = new SmPersonnelAddress();
+			mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
+			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
+					.getDefPmCountry()));
+			mail.setSmPersonnel(shareHolderBean);
+			mail.setSameAsPerm(false);
+
+			SmPersonnelAddress off = new SmPersonnelAddress();
+			off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
+			off.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
+					.getDefPmCountry()));
+			off.setSmPersonnel(shareHolderBean);
+			off.setSameAsPerm(false);
+
+			SmPersonnelAddress res = new SmPersonnelAddress();
+			res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+			res.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
+					.getDefPmCountry()));
+			res.setSmPersonnel(shareHolderBean);
+			res.setSameAsPerm(false);
+
+			getManagedBean().setShareHolderPermAddr(perm);
+			getManagedBean().setShareHolderMailAddr(mail);
+			getManagedBean().setShareHolderOffAddr(off);
+			getManagedBean().setShareHolderResdAddr(res);
+			List<PmState> defStates = new ArrayList<PmState>();
+			defStates = retrievePmStateList(perm.getSmAddress().getPmCountry()
+					.getCountryId());
+			if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
+
+				// reset to defualt values for a new record
 				getManagedBean().setShrHldrPermStates(defStates);
 				getManagedBean().setShrHldrPermDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
-			}
-			if ((getManagedBean().getShrHldrMailStates() == null)
-					|| (getManagedBean().getShrHldrMailStates() != null && getManagedBean()
-							.getShrHldrMailStates().isEmpty())) {
 				getManagedBean().setShrHldrMailStates(defStates);
 				getManagedBean().setShrHldrMailDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
-			}
-			if ((getManagedBean().getShrHldrResdStates() == null)
-					|| (getManagedBean().getShrHldrResdStates() != null && getManagedBean()
-							.getShrHldrResdStates().isEmpty())) {
 				getManagedBean().setShrHldrResdStates(defStates);
 				getManagedBean().setShrHldrResdDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
-			}
-			if ((getManagedBean().getShrHldrOffStates() == null)
-					|| (getManagedBean().getShrHldrOffStates() != null && getManagedBean()
-							.getShrHldrOffStates().isEmpty())) {
 				getManagedBean().setShrHldrOffStates(defStates);
-				getManagedBean().setShrHldrOffDistricts(
-						new ArrayList<PmDistrict>());
+				getManagedBean()
+						.setShrHldrOffDistricts(new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrOffCities(new ArrayList<PmCity>());
+
+			} else {
+				for (SmPersonnelAddress addr : shareHolderBean
+						.getSmPersonnelAddresses()) {
+					SmAddress smAddress = new SmAddress();
+					smAddress.setAddress1(addr.getSmAddress().getAddress1());
+					smAddress.setAddress2(addr.getSmAddress().getAddress2());
+					smAddress.setAddress3(addr.getSmAddress().getAddress3());
+					smAddress.setAddress4(addr.getSmAddress().getAddress4());
+					PmCountry country = new PmCountry();
+					country.setCountryId(addr.getSmAddress().getPmCountry()
+							.getCountryId());
+					smAddress.setPmCountry(country);
+					PmState state = new PmState();
+					state.setStateId(addr.getSmAddress().getPmState().getStateId());
+					smAddress.setPmState(state);
+					PmDistrict district = new PmDistrict();
+					district.setDistrictId(addr.getSmAddress().getPmDistrict()
+							.getDistrictId());
+					smAddress.setPmDistrict(district);
+					PmCity city = new PmCity();
+					city.setCityId(addr.getSmAddress().getPmCity().getCityId());
+					smAddress.setPmCity(city);
+					smAddress.setPostcode(addr.getSmAddress().getPostcode());
+					addr.setSmAddress(smAddress);
+
+					if (addr.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+						getManagedBean().setShareHolderPermAddr(addr);
+						assignStateDistAndCityForSelVal(getManagedBean()
+								.getShareHolderPermAddr().getSmAddress()
+								.getPmCountry().getCountryId(), getManagedBean()
+								.getShareHolderPermAddr().getSmAddress()
+								.getPmState().getStateId(), getManagedBean()
+								.getShareHolderPermAddr().getSmAddress()
+								.getPmDistrict().getDistrictId(),
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL);
+
+					}
+					if (addr.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
+						getManagedBean().setShareHolderMailAddr(addr);
+						assignStateDistAndCityForSelVal(getManagedBean()
+								.getShareHolderMailAddr().getSmAddress()
+								.getPmCountry().getCountryId(), getManagedBean()
+								.getShareHolderMailAddr().getSmAddress()
+								.getPmState().getStateId(), getManagedBean()
+								.getShareHolderMailAddr().getSmAddress()
+								.getPmDistrict().getDistrictId(),
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL);
+
+					}
+					if (addr.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+						getManagedBean().setShareHolderResdAddr(addr);
+						assignStateDistAndCityForSelVal(getManagedBean()
+								.getShareHolderResdAddr().getSmAddress()
+								.getPmCountry().getCountryId(), getManagedBean()
+								.getShareHolderResdAddr().getSmAddress()
+								.getPmState().getStateId(), getManagedBean()
+								.getShareHolderResdAddr().getSmAddress()
+								.getPmDistrict().getDistrictId(),
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+
+					}
+					if (addr.getAddressType().equalsIgnoreCase(
+							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+						getManagedBean().setShareHolderOffAddr(addr);
+						assignStateDistAndCityForSelVal(getManagedBean()
+								.getShareHolderOffAddr().getSmAddress()
+								.getPmCountry().getCountryId(), getManagedBean()
+								.getShareHolderOffAddr().getSmAddress()
+								.getPmState().getStateId(), getManagedBean()
+								.getShareHolderOffAddr().getSmAddress()
+								.getPmDistrict().getDistrictId(),
+								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
+					}
+				}
+
+				if ((getManagedBean().getShrHldrPermStates() == null)
+						|| (getManagedBean().getShrHldrPermStates() != null && getManagedBean()
+								.getShrHldrPermStates().isEmpty())) {
+					getManagedBean().setShrHldrPermStates(defStates);
+					getManagedBean().setShrHldrPermDistricts(
+							new ArrayList<PmDistrict>());
+					getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
+				}
+				if ((getManagedBean().getShrHldrMailStates() == null)
+						|| (getManagedBean().getShrHldrMailStates() != null && getManagedBean()
+								.getShrHldrMailStates().isEmpty())) {
+					getManagedBean().setShrHldrMailStates(defStates);
+					getManagedBean().setShrHldrMailDistricts(
+							new ArrayList<PmDistrict>());
+					getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
+				}
+				if ((getManagedBean().getShrHldrResdStates() == null)
+						|| (getManagedBean().getShrHldrResdStates() != null && getManagedBean()
+								.getShrHldrResdStates().isEmpty())) {
+					getManagedBean().setShrHldrResdStates(defStates);
+					getManagedBean().setShrHldrResdDistricts(
+							new ArrayList<PmDistrict>());
+					getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
+				}
+				if ((getManagedBean().getShrHldrOffStates() == null)
+						|| (getManagedBean().getShrHldrOffStates() != null && getManagedBean()
+								.getShrHldrOffStates().isEmpty())) {
+					getManagedBean().setShrHldrOffStates(defStates);
+					getManagedBean().setShrHldrOffDistricts(
+							new ArrayList<PmDistrict>());
+					getManagedBean().setShrHldrOffCities(new ArrayList<PmCity>());
+				}
+
 			}
-
 		}
-
+		
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
 	}
