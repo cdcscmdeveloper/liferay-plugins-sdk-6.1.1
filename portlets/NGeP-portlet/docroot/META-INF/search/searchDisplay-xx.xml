@@ -248,20 +248,22 @@
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="categoryL3Code" />
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryL1Code" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.sub.category.div.code" />
+					<property name="bundleKey" value="lbl.pm.main.category.code" />
 					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="categoryName" />
+					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.sub.category.div" />
+					<property name="bundleKey" value="lbl.pm.main.category" />
 					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
 				</bean>
-
+				
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmCategoryL2.categoryL2Code" />
 					<property name="bundleFile"
@@ -278,23 +280,21 @@
 					<!-- <property name="columnWidth" value="150" /> -->
 					<property name="viewable" value="false" />
 				</bean>
-
+				
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryL1Code" />
+					<property name="columnName" value="categoryL3Code" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.main.category.code" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div.code" />
 					<!-- <property name="columnWidth" value="150" /> -->
-					<property name="viewable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmCategoryL2.pmCategoryL1.categoryName" />
+					<property name="columnName" value="categoryName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.main.category" />
+					<property name="bundleKey" value="lbl.pm.sub.category.div" />
 					<!-- <property name="columnWidth" value="150" /> -->
-					<property name="viewable" value="false" />
-				</bean>
+				</bean>				
 			</list>
 		</property>
 	</bean>
