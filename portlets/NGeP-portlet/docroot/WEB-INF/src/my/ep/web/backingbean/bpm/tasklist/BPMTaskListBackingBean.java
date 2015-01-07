@@ -428,7 +428,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.ASSIGN_FC_SECRETARY, "qtdetails");
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-				+ SCProcessNameConst.ASSIGN_FC_MEMBER, "fccommittemaintanance");
+				+ SCProcessNameConst.ASSIGN_FC_MEMBER, "appoint-fc-committee");
 
 		this.getManagedBean().setBpmMap(temp);
 
