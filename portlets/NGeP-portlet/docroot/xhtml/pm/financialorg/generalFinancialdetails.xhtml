@@ -13,6 +13,8 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
 				</td>
 				<td><p:inputText id="bizRegNo" styleClass="ppDisplayTextL"
+						required="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesPaymentBank) and 
+						!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.financialorg.regNo']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
 						size="40" maxlength="20" >
