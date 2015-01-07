@@ -68,7 +68,7 @@
 
 				<p:column headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
 					<h:outputText value="*" style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;"/>&#160;&#160;
-					<p:calendar id="scheduleDateId" navigator="true" required="true" label="#{lbl['lbl.sm.siteassign.pnl.scheduledate']}"
+					<p:calendar id="scheduleDateId" navigator="true" required="true" label="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
 						value="#{svc.scheduleDate}" mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						size="30" showOn="button" />
