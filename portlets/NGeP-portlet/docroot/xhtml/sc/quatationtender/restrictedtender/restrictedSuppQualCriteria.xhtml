@@ -8,10 +8,6 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
-		</f:facet>
 
 		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory"
 			widgetVar="restrictedCategoryCodes"
@@ -20,10 +16,10 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedRestrictedCategoryList}"
 			rowKey="#{restrcitedCateGory}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:1%" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
-				style="width:15%">
+				style="width:20%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.category.code']}" />
@@ -38,13 +34,13 @@
 				</p:inputText>
 
 				<p:inputText
-					value="#{restrcitedCateGory.pmCategoryL2.categoryL2Code}"
-					maxlength="2" size="1" style="margin-right: 3px !important;">
+					value="#{restrcitedCateGory.pmCategoryL2.categoryL2Code}" size="1">
 					<p:ajax event="blur"
 						update=":form:restrictedtendertabView:restrictedPnlId"
-						partialSubmit="true" process="@this"
+						partialSubmit="true" maxlength="2" process="@this"
 						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(restrcitedCateGory)}" />
 				</p:inputText>
+
 				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3" size="1"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3"
@@ -52,6 +48,7 @@
 					value="#{restrcitedCateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:restrictedtendertabView:restrictedPnlId">
 				</ac:lov>
+
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
