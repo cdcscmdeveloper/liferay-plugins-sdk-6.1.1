@@ -12,9 +12,9 @@
 		<div align="left">
 			<table style="align: left">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.start']}" /></td>
+					<td><p:outputLabel id="startDateByPackage" value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
-					<td><p:calendar showOn="button"
+					<td><p:calendar showOn="button"  readonlyInput="true"
 							id="scheduleBidPackageStartDate"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
@@ -30,9 +30,9 @@
 
 						</p:calendar></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.end']}" /></td>
+					<td><p:outputLabel id="endDateByPackage" value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
-					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate"
+					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate" readonlyInput="true"
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
@@ -46,7 +46,7 @@
 								listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 								update="bidSchedulePackageDuration" />
 						</p:calendar></td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.duration.hours']}" /></td>
+					<td><p:outputLabel id="durationByPackage" value="#{lbl['lbl.sc.duration.hours']}" /></td>
 
 					<TD><p:inputText id="bidSchedulePackageDuration"
 							disabled="true"
@@ -61,7 +61,7 @@
 			<ac:paginator for="bidScheduleByPackage"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<p:commandLink value="#{bidItem.scRequestItem.itemName}"
+				<p:commandLink id="itemNameByPackage" value="#{bidItem.scRequestItem.itemName}"
 					oncomplete="participants.show();"
 					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}"
 					size="30"
@@ -69,13 +69,13 @@
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-				<h:outputText value="#{bidItem.scRequestItem.itemDesc}" size="30" />
+				<h:outputText id="descriptionByPackage" value="#{bidItem.scRequestItem.itemDesc}" size="30" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.uom']}">
-				<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
+				<h:outputText id="uomNameByPackage" value="#{bidItem.scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.quantity']}">
-				<h:outputText style="float : right"
+				<h:outputText id="quantityByPackage" style="float : right"
 					value="#{bidItem.scRequestItem.quantity}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidItem.scRequestItem.uom.uomCode)}" />
@@ -85,7 +85,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<h:outputText style="float : right" value="#{bidItem.decrementAmt }">
+				<h:outputText id="decrementAmtByPackage" style="float : right" value="#{bidItem.decrementAmt }">
 					<f:convertNumber for="decrementAmt"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>

@@ -9,13 +9,13 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="resourceSection">
+	<ui:define  name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="ScheduleBiddingNormalMessage" showDetail="true"
+		<p:messages id="ScheduleBiddingMainnMessage" showDetail="true"
 			autoUpdate="true" closable="true" />
 
-		<ui:param name="isRecommendByPackage"
+		<ui:param  name="isRecommendByPackage"
 			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'  }"  />
 		<ui:param name="isRecommendByItem"
 			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'I' }" />
@@ -30,7 +30,7 @@
 									value="#{scheduleBiddingBB.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+									<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}" update="@form"
 										styleClass="ui-button"
 										icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 										action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
@@ -40,16 +40,16 @@
 		<div align="left" class="header-info" style="width: 100%">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:outputLabel id="docNoMain" value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td class="header-info-text">
 						#{scheduleBiddingBB.managedBean.scQt.qtNo}</td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sc.ptj.name']}" /></td>
+					<td><p:outputLabel id="ptjNameMain" value="#{lbl['lbl.sc.ptj.name']}" /></td>
 
 					<td class="header-info-text">
 						 #{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+					<td><p:outputLabel id="statusMain" value="#{lbl['lbl.sc.status']}" /></td>
 
 					<td class="header-info-text">#{scheduleBiddingBB.getStatusDescById(scheduleBiddingBB.managedBean.currentStatusId)}
 					</td>
@@ -68,10 +68,10 @@
 		<c:if test="#{isQtZonalAndRecommendTypeAny}">
 			<ui:include src="scheduleBidByZone.xhtml"></ui:include>
 		</c:if>
-		<p:spacer height="10"></p:spacer>
+		<p:spacer id="spacer1Main" height="5"></p:spacer>
 
 		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
-			id="contactDetailsPanel" toggleable="true">
+			id="contactDetailsPanelMain" toggleable="true">
 
 
 			<p:dataTable var="contact" id="contactPersonDetails"
@@ -81,13 +81,11 @@
 				editable="true" rowIndexVar="index" style="width:100%"
 				rowKey="#{contact}">
 				<ac:paginator for="contactPersonDetails" />
-				<p:column selectionMode="multiple" style="width:2%"></p:column>
-				<p:column id="contactName" headerText="#{lbl['lbl.sc.name']}"
+				<p:column  selectionMode="multiple" style="width:2%"></p:column>
+				<p:column  headerText="#{lbl['lbl.sc.name']}"
 					style="width:68%">
-					<p:inputText value="#{contact.contactName}" size="40">
-
+					<p:inputText id="contactName" value="#{contact.contactName}" size="40">
 						<p:message id="contactNameMsg" for="contactName" display="icon" />
-
 					</p:inputText>
 
 				</p:column>
@@ -109,13 +107,12 @@
 					oncomplete="contactDtls.paginator.endLink.click();"
 					update="contactPersonDetails" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					icon="ui-icon-delete"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+					icon="ui-icon-delete" partialSubmit="true"
 					action="#{scheduleBiddingBB.deleteContactDetails}"
 					update="contactPersonDetails" />
 			</div>
 		</p:panel>
-
 
 		<p:dialog closeOnEscape="true"
 			header="#{lbl['lbl.sc.participant.list']}" widgetVar="participants"

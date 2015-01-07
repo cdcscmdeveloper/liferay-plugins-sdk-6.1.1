@@ -137,6 +137,7 @@ public class ScheduleBiddingBackingBean extends
 			}
 
 			ScBidContactPerson scBidContactPerson = new ScBidContactPerson();
+			scBidContactPerson.setScBid(getManagedBean().getScBid());
 			contactList.add(scBidContactPerson);
 			this.getManagedBean().setScBidContactPersonList(contactList);
 			log.info(" **** ScBidContactPersonList Size *** "
