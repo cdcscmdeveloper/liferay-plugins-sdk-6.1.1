@@ -49,6 +49,7 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -60,6 +61,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -81,6 +83,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
@@ -114,6 +118,8 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -122,14 +128,23 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -139,9 +154,11 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
@@ -1207,9 +1224,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 ContractTemplateReqDTO reqDTO  = null;
 		
 	    try{
-	    	 String fileName = getTemplateFileName(loaReport.getPmDocument().getDocName());
-		     if (fileName != null) {
-		        
+	    	 String docDefinitionKey = loaReport.getPmDocument()
+					.getDocDefinitionKey();
+	    	 String fileName = getTemplateFileName(docDefinitionKey);
+		     if (fileName != null) {		        
 		    	   String content = null;	
 		           attachmentFormat = new AttachmentDateFormat();
 			       String filePath = getManagedBean().getFileDirectory() + "/temp";
@@ -1219,16 +1237,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		            filePath = filePath + "/" + attachmentFormat.format(fileName, null);
 			       
 		            if(ContractConst.TEMPLATE_JADUAL_HARGA.equalsIgnoreCase(loaReport.getPmDocument().getDocName())) {
-				         formJadualHargaExcel(filePath);
-			       
-		            } else {
-				         contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-				         reqDTO = new ContractTemplateReqDTO();
-				         reqDTO.setTemplateName(loaReport.getPmDocument().getDocName().toUpperCase());
-				         resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
-				         content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-				         content = getContent(loaReport.getPmDocument().getDocName());
-				         convertHtmlToDocFile(content, filePath);
+				         formJadualHargaExcel(filePath);			       
+		            } else {				        
+				         content = getContent(docDefinitionKey);
+				         DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 			      }downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		    
 		    } else {
@@ -1236,7 +1248,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		   throw new EpException(MessageConst.INFO_100052, new String[]{loaReport.getTitle()});
 		    	  }downloadFile(loaReport.getScLoaReportAttachment().getFilePath(), loaReport.getScLoaReportAttachment().getFileName());
 		    }
-		 }catch(UnsupportedEncodingException e) {
+		 }catch(Exception e) {
 			  e.printStackTrace();
 		}finally{
 			
@@ -1247,11 +1259,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 	}
 	
-	public void downloadAll() {
-		
+	public void downloadAll() {		
 		List<File> fileList = new ArrayList<File>();
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
 		String fileName = null;
 		String filePath = null;
 		String content = null;
@@ -1260,14 +1270,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		file.mkdirs();
 		
 		try{
-			
-			
 			for(ScLoaReport scLoaReport : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
 				// System Define Doc
 				if (scLoaReport.getDefinationType().getParameterId().equals(
 						(retrieveParameterByCodeType(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
 								ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
-					fileName = getTemplateFileName(scLoaReport.getTitle());
+					fileName = getTemplateFileName(scLoaReport.getPmDocument()
+							.getDocDefinitionKey());
 					filePath = tempDirectory + "/" + attachmentFormat.format(fileName, null);
 					if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
 						formJadualHargaExcel(filePath);
@@ -1318,19 +1327,18 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 	}
 	
-	private String getTemplateFileName(String templateType) {		
-		if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA)) {
-			return "AmendmentSuratSetujuPage.docx";
-		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_RINGKASAN_KONTRAK)) {
-			return "AmendmentRingkasanKontrakPage.docx";
-		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_INTEGRITY_PACT)) {
-			return "AmendmentIntegrityPactPage.docx";
-		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
+	private String getTemplateFileName(String docDefinitionKey) {		
+		if(ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
+			return "AmendmentRingkasanKontrakPage.pdf";
+		} else if(ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equals(docDefinitionKey)) {
+			return "AmendmentIntegrityPactPage.pdf";
+		} else if(ContractConst.DOC_DEF_KEY_JADUAL_HARGA.equals(docDefinitionKey)) {
 			return "AmendmentJadualHargaPage.xlsx";
-		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN)) {
-			
-		}
-		
+		} else if(ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)) {
+			return "AmendmentBonPelaksanaanPage.pdf";
+		}else if(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+			return "AmendmentSuratPengesahanSetujuTerimaPembekalPage.pdf";
+		}		
 		return null;
 	}
 	
@@ -1645,52 +1653,75 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 //		return content;
 //	}
 	
-	private String getContent(String parameterCode) {
+	private String getContent(String docDefinitionKey) {
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		VelocityContext context = null;
 		String vmFile = null;
 		String content = null;
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat percentageDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		try{
-			if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
+			if(ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 				context = new VelocityContext();	
-				vmFile = "/ct/loaContent/ringkasan-kontrak.vm";
+				vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
 				context.put("fileNo", getManagedBean().getCtContract().getQuotationTender().getFileNo());
 				context.put("sourcingNo", getManagedBean().getCtContract().getLoa().getFileExtNo());
 				context.put("sourcingTitle",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
 				context.put("successfulSupplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				context.put("contractValue",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
-				double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
-				context.put("newContractValue", contractValue + "");
-				IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
-				context.put("fulfillmentType", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
+				
+				BigDecimal contractValue = getManagedBean().getContractVer().getCtContractValue().getContractAmount() != null ? getManagedBean().getContractVer().getCtContractValue().getContractAmount() : BigDecimal.ZERO;			
+				context.put("contractValue",  amountDF.format(contractValue));
+				
+				if(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() !=null ){
+					contractValue = contractValue.add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+				}				
+				context.put("newContractValue", amountDF.format(contractValue));
+			
+				context.put("fulfillmentType", getParameterDesc(getManagedBean().getCtContract().getFulfillmentType()));
 				context.put("referAttachment", "Refer Attachment");
+				
+				double deductionAmount = 0;
+				
 				for(CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()){
 					if(deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)){
-						context.put("deductionAmount", deduction.getAmount()+"");
+						deductionAmount = deductionAmount + deduction.getAmount();
 					}
-					else{
-						context.put("deductionAmount", "");
-					}
-				}
-				context.put("months", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
+				}				
+				context.put("deductionAmount", amountDF.format(deductionAmount));
+				
+				context.put("months", getManagedBean().getContractVer().getCtContractValue().getContractPeriod() + " bulan");
 				context.put("effStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 				context.put("effEndDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
 				if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+					context.put("extendMonths",getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + " bulan");
 					context.put("amendEffExpDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
 							+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
 				}
 				else {
+					context.put("extendMonths","");
 					context.put("amendEffExpDate", "");
 				}
 				context.put("effDate", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-				context.put("bondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+													
+				context.put("bondValue",getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null  
+						?  amountDF.format(getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt())
+								: amountDF.format(BigDecimal.ZERO));
+				context.put("amendBondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() !=null 
+						? amountDF.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()) 
+								: amountDF.format(BigDecimal.ZERO));
 		
 			}
-			else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)) {
+			else if(ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equalsIgnoreCase(docDefinitionKey)) {
 				context = new VelocityContext();	
-				vmFile = "/ct/loaContent/integrity-pact.vm";
+				vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
 				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
 				context.put("loaTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
 				context.put("supplierUserName", getFacesScopes().getUserScreenName());
@@ -1698,6 +1729,160 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				context.put("supplierMofRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 		
+			}else if(ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)){
+				vmFile = ContractConst.DOCPATH_CT_LOA_BOND_LETTER;
+				context = new VelocityContext();
+				String contractNo = "Contract Number";
+				String supplierName = null;
+				String sourcingTitle = null;
+				String bondAmount = null;
+				String bondAmountWord = null; 
+				String expiryPeriod = null;
+				int type = 0;
+				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
+				if(scLoa != null){
+					type = 1;
+					supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
+					sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
+					bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
+					expiryPeriod = scLoa.getBondResDueDate() != null ? dateSDF.format(scLoa.getBondResDueDate()) : " ";
+					bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(scLoa.getBondAmt().longValue()) : " ";
+					
+				}else{
+					type = 0;
+					supplierName ="Supplier Name";
+					sourcingTitle ="Sourcing Title";
+					bondAmount ="Bond Amount";
+					expiryPeriod = "Expiry Period";
+					bondAmountWord = "Bond Amount Word"; 
+				}
+				
+				context.put("type", type);
+				context.put("contractNo", contractNo);
+				context.put("supplierName", supplierName);
+				context.put("sourcingTitle", sourcingTitle);
+				context.put("bondAmount", bondAmount);
+				context.put("bondAmountWord", bondAmountWord);
+				context.put("expiryPeriod", expiryPeriod);
+				
+			}else if(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)){
+				vmFile = ContractConst.DOCPATH_CT_LOA_AGREEMENT_LETTER;
+				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
+				ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+				context = new VelocityContext();
+				PmOrgProfile pmOrgProfile = getManagedBean().getCtContract().getOwnerOrgProfile();
+				IAddressSO addressSO = null;
+				PmAddressType pmAddressType = null;
+				IOrgProfileSO orgProfileSO = null;
+				try {
+					addressSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+
+					AddressReqDTO reqDTO = new AddressReqDTO();
+					reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+					reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+					AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+
+					if (resDTO.getAddressTypeList().size() > 0) {
+						pmAddressType = resDTO.getAddressTypeList().get(0);
+					}
+
+					orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+					OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+					orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+					OrgProfileResDTO orgProfileResDTO = orgProfileSO
+							.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+
+					if (orgProfileResDTO.getPmOrgProfile() != null) {
+						context.put("agency", orgProfileResDTO.getPmOrgProfile()
+								.getOrgName());
+						context.put("ministry", orgProfileResDTO.getPmOrgProfile()
+								.getParentOrgProfile().getOrgName());
+					}
+
+				} finally {
+					addressSO = null;
+					orgProfileSO = null;
+				}
+
+				String agencyAddress = "";
+				String agencyPhoneNo = "";
+				String agencyFaxNo = "";
+				if (pmAddressType != null) {
+					PmAddress pmAddress = pmAddressType.getPmAddress();
+
+					agencyAddress = getFullAddress(pmAddress);
+					agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+					agencyPhoneNo = pmAddress.getPhoneNo();
+					agencyFaxNo = pmAddress.getFaxNo();
+				}
+				context.put("agencyAddress", agencyAddress);
+				context.put("agencyPhoneNo", agencyPhoneNo);
+				context.put("agencyFaxNo", agencyFaxNo);
+				context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+				context.put("loaNo", scLoa.getLoaNo());
+				
+				String issueDate = "";
+				if (scLoa.getIssueDate() != null) {
+					issueDate = dateSDF.format(scLoa.getIssueDate());
+				}
+				context.put("issueDate", issueDate);
+
+				context.put("supplierName", scLoiLoa.getSupplierName());
+				String supplierAddress = "";
+				if (scLoa.getSupplierAddress() != null) {
+					supplierAddress = getFullAddress(scLoa.getSupplierAddress());
+					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+				}
+				context.put("supplierAddress", supplierAddress);
+				
+				context.put("contractTitle",getManagedBean().getCtContract().getContractName());
+				context.put("contractNo",getManagedBean().getCtContract().getContractNo());
+				
+				String bondAmt = "";
+				if (scLoa.getBondAmt() != null) {
+					bondAmt = amountDF.format(scLoa.getBondAmt());
+				}
+				context.put("bondAmt", bondAmt);
+				context.put("bondAmtText", bondAmt != "" ? NumberWordUtil.convert(bondAmt) : ""); 
+				
+				if (scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue() > 200000) {
+					context.put("bondAmt200k", true);
+				}else{
+					context.put("bondAmt200k", false);
+				}
+				
+				String bondPercentage = "";
+				if (scLoa.getBondPercentage() != null) {
+					bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+				}
+				context.put("bondPercentage", bondPercentage);
+				context.put("bondExpDate", ""); // TODO
+
+				String bondResDueDays = "";
+				if (scLoa.getBondResDueDate() != null && scLoa.getAckDate() != null) {
+					bondResDueDays = DateUtils.getDaysDifference(
+							scLoa.getBondResDueDate(), scLoa.getAckDate())
+							+ "";
+				}
+				context.put("bondResDueDays", bondResDueDays);
+				
+				String contractEffDate = "";
+				if (scLoa.getContractEffDate() != null) {
+					contractEffDate = dateSDF.format(scLoa.getContractEffDate());
+				}
+				context.put("contractEffDate", contractEffDate);
+				if (scLoa.getContractSigner() != null) {
+					context.put("contractSigner", scLoa.getContractSigner()
+							.getUserName());
+					context.put("contractSignerDesignation", scLoa.getContractSigner()
+							.getDesignation());
+				}
+
+			
 			}
 			if (vmFile != null && context != null) {
 				content = DocumentGenerator.getInstance().getHtmlFromVelocity(
@@ -2729,7 +2914,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void generateJadualHarga(String filePath,List<JadualHargaBean> productList,List<JadualHargaBean> serviceList){
 		try {
 			FileInputStream inputStream = new FileInputStream(new File(
-					FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates") + "/ct/loaContent/jadual-harga.xlsx"));	
+					FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates") + ContractConst.DOCPATH_CT_LOA_JADUAL_HARGA));	
 			XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
 	     
 	        Sheet productSheet =null;
