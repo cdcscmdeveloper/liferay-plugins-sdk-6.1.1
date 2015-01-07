@@ -31,8 +31,8 @@
 							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}"
 							update="proposalvalidityid, publishClosingDate" />
 					</p:calendar> <h:inputText value="12:00 PM" disabled="true" size="4"
-						style="width: 50px" /> <p:message id="noticePublishMsg"
-						for="noticePublish" display="icon" /></td>
+						style="width: 52px;margin-top: 1px;margin-bottom: 0px;" /> <p:message
+						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
@@ -48,8 +48,9 @@
 						readonly="true" disabled="true" style="margin-top:5px;" size="18">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160; <h:inputText value="12:00 PM" disabled="true" size="4"
-						style="width: 50px;margin-top: 5px;margin-bottom: 0px;" /></td>
+					</p:inputText> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText
+						value="12:00 PM" disabled="true" size="4"
+						style="width: 52px;margin-top: 5px;margin-bottom: 0px;" /></td>
 			</tr>
 			<c:if
 				test="#{approvalBackingBean.managedBean.qt.sampleReq eq 'true'}">
@@ -61,7 +62,7 @@
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 						<h:inputText value="12:00 PM" disabled="true" size="4"
-							style="width: 50px" />
+							style="width: 52px" />
 						<p:message id="proposalPreparationMsg" for="proposalPreparation"
 							display="icon" /></td>
 				</tr>
