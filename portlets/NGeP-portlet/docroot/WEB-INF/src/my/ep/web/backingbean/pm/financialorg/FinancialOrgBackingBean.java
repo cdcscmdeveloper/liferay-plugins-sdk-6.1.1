@@ -2,7 +2,7 @@ package my.ep.web.backingbean.pm.financialorg;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -616,34 +616,46 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 		}
 	}
 
-	public void deleteFinSvc(PmFinancialSvc financialSvc) {
-	
-		if(this.getManagedBean().getSelectedPmFinancialSvc()!=null && !this.getManagedBean().getSelectedPmFinancialSvc().isEmpty()){
-
-			if (this.getManagedBean().getSelectedPmFinancialSvc() == null) {
-				this.getManagedBean().setSelectedPmFinancialSvc(
-						new ArrayList<PmFinancialSvc>());
-			}
-			this.getManagedBean().getSelectedPmFinancialSvc()
-					.remove(financialSvc);
-		}
-		
-		else{
-			//need to change exceptions
-			throw new EpException(MessageConst.ERROR_770022);
-		}
-	}
+//	public void deleteFinSvc(PmFinancialSvc financialSvc) {
+//	
+//		if(this.getManagedBean().getSelectedPmFinancialSvc()!=null && !this.getManagedBean().getSelectedPmFinancialSvc().isEmpty()){
+//
+//			if (this.getManagedBean().getSelectedPmFinancialSvc() == null) {
+//				this.getManagedBean().setSelectedPmFinancialSvc(
+//						new ArrayList<PmFinancialSvc>());
+//			}
+//			this.getManagedBean().getSelectedPmFinancialSvc()
+//					.remove(financialSvc);
+//		}
+//		
+//		else{
+//			//need to change exceptions
+//			throw new EpException(MessageConst.ERROR_770022);
+//		}
+//	}
 
 	public void deleteFinancialService() {
 
 		List<PmFinancialSvc> cashOnHandList = this.getManagedBean().getPmFinancialSvc();
 		List<PmFinancialSvc> selectedFinancialSvcList = this.getManagedBean().getSelectedPmFinancialSvc();
+		if(selectedFinancialSvcList==null || selectedFinancialSvcList.isEmpty()){
+			throw new EpException("At least one Financial Service must be selected.");
+		}
 		if (cashOnHandList.size() == selectedFinancialSvcList.size()) {
 			cashOnHandList.clear();
+			getManagedBean().getServiceTypes().clear();
+			
 		} else {
 			for (PmFinancialSvc financialSvc : selectedFinancialSvcList) {
 				cashOnHandList.remove(financialSvc);
+				if(getManagedBean().getServiceTypes()!=null){
+					getManagedBean().getServiceTypes().remove(financialSvc.getServiceTypeCode().getParameterCode());
+				}
 			}
+		}
+
+		if(selectedFinancialSvcList!=null && !selectedFinancialSvcList.isEmpty()){
+			selectedFinancialSvcList.clear();
 		}
 	}
 
@@ -655,6 +667,7 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 				pmFinancialAccList = new ArrayList<PmFinancialAcc>();
 			}
 			PmFinancialAcc finAcc = new PmFinancialAcc();
+			finAcc.setEffDate(new Date());
 			finAcc.setPmPaymentBankOrg(new PmFinancialOrg());
 			pmFinancialAccList.add(finAcc);
 			this.getManagedBean().setPmFinancialAcc(pmFinancialAccList);
@@ -675,6 +688,9 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 			for (PmFinancialAcc financialAcc : selectedFinancialActList) {
 				financialAccList.remove(financialAcc);
 			}
+		}
+		if(selectedFinancialActList!=null && !selectedFinancialActList.isEmpty()){
+			selectedFinancialActList.clear();
 		}
 	}
 
@@ -710,6 +726,9 @@ public void saveFactoringDetails(PmFinancialOrg financialOrg){
 			for (PmFinancialAcc financialAcc : selectedFinancialActList) {
 				financialBranchAccList.remove(financialAcc);
 			}
+		}
+		if(selectedFinancialActList!=null && !selectedFinancialActList.isEmpty()){
+			selectedFinancialActList.clear();
 		}
 	}
 
