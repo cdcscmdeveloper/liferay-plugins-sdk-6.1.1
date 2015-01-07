@@ -30,6 +30,7 @@
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" 
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
