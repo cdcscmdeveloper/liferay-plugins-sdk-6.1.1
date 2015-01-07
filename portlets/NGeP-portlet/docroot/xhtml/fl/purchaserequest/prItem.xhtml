@@ -125,6 +125,7 @@
 		</p:dialog>
 	</p:panel>
 	<h:panelGroup id="itemDetPanelGroup">
+		<p:panel id="itemDetPanel" header="#{lbl['lbl.fl.item.list']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list']}" escape="false"  /> 
 			<p:commandLink oncomplete="uomRefDialog.show();" value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
 					action="#{purchaseRequestBackingBean.resetMeasurementSearch}" process="@this"
