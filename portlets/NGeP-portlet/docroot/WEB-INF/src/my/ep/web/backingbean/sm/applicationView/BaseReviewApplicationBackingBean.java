@@ -1234,7 +1234,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	private void closeBlockUI() {
-		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+		SmCommonUtil.closeBlockUI();
 	}
 
 	private void setMaxTab() {
