@@ -1363,18 +1363,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		ContractAmendmentReqDTO reqDto = new ContractAmendmentReqDTO();
 		reqDto.setContractVerId(this.getManagedBean().getContractVer().getContractVerId());
+		reqDto.setItemType(ParameterConst.ITEM_TYPE_PRODUCT);
 		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
-		parameterReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
-		ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		ContractAmendmentResDTO resDto = amendSO.getItemList(reqDto, resDTO.getPmParameter().getParameterId());
+		ContractAmendmentResDTO resDto = amendSO.getItemList(reqDto);
 		List<CtItemPrice> productList = resDto.getItemPrices();
 		
-		parameterReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
-		resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		resDto = amendSO.getItemList(reqDto, resDTO.getPmParameter().getParameterId());
+		reqDto.setItemType(ParameterConst.ITEM_TYPE_SERVICE);
+		resDto = amendSO.getItemList(reqDto);
 		List<CtItemPrice> serviceList = resDto.getItemPrices();
 		
 		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
