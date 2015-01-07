@@ -1847,7 +1847,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					bondAmt = amountDF.format(scLoa.getBondAmt());
 				}
 				context.put("bondAmt", bondAmt);
-				context.put("bondAmtText", bondAmt != "" ? NumberWordUtil.convert(bondAmt) : ""); 
+				context.put("bondAmtText", scLoa.getBondAmt() != null ? NumberWordUtil.convert(scLoa.getBondAmt().toString() ) : ""); 
 				
 				if (scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue() > 200000) {
 					context.put("bondAmt200k", true);
