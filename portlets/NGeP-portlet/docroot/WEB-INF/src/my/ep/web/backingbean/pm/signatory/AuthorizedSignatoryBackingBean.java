@@ -214,7 +214,7 @@ public class AuthorizedSignatoryBackingBean extends
 							}
 							
 							boolean isCurrentPairOverlap = false;
-							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, true);
+							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
 
 							if (isCurrentPairOverlap) {
 								throw new EpException(MessageConst.ERROR_770143);
