@@ -31,7 +31,7 @@
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<ui:param name="buttonLabel1" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<ui:param name="buttonLabel2" value="lbl.btn.#{fn:replace(buttonLabel1, ' ','.')}" />
+						<ui:param name="buttonLabel2" value="#{fn:replace(buttonLabel1, ' ','.')}" />
 						<p:commandButton value="#{lbl[buttonLabel2]}" 
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
