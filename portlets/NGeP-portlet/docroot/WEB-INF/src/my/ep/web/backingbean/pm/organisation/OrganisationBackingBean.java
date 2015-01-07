@@ -28,6 +28,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
@@ -55,6 +56,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -76,6 +79,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -363,10 +367,6 @@ public class OrganisationBackingBean extends
 			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
 			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
 			if (supResDTO.getSmSupplier() != null) {
-
-				// just for test NullpointerExcemtion
-				// supReqDTO.setSupplierId(277546L);
-
 				supResDTO = supplierSearchSO
 						.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);
 				SmSupplier supplier = supResDTO.getSmSupplier();
@@ -382,9 +382,9 @@ public class OrganisationBackingBean extends
 		boolean addrExist = false;
 		if (pmAddressTypes != null && !pmAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : pmAddressTypes) {
-
 				if (pmAddressType.getAddressType().equalsIgnoreCase(
 						AddressType.BILLING_ADDRESS.value())) {
+					getManagedBean().setOfficeAddress(pmAddressType.getPmAddress());
 					StateReqDTO stateReqDTO = new StateReqDTO();
 					stateReqDTO.setCountryId(pmAddressType.getPmAddress()
 							.getPmCountry().getCountryId());
@@ -428,34 +428,10 @@ public class OrganisationBackingBean extends
 						AddressType.DELIVERY_ADDRESS.value())) {
 					getManagedBean().setDeliveryAddress(pmAddressType);
 					}
-				if (pmAddressType.getAddressType().equalsIgnoreCase(
-						AddressType.BILLING_ADDRESS.value())) {
-					getManagedBean().setOfficeAddress(pmAddressType.getPmAddress());
-					}
-				if (!pmAddressType.getPmContacts().isEmpty()) {
-					this.getManagedBean().setOfficeContactPerson(
-							pmAddressType.getPmContacts().get(0));
-
-					pmAddressType.setPmContacts(pmAddressType.getPmContacts());
-				} 
-				
-				/*if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
+			    if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					for (PmContact contactPerson : pmAddressType.getPmContacts())
 						getManagedBean().setOfficeContactPerson(contactPerson);
-				}*/
-				else {
-
-					List<PmContact> contactLst = getManagedBean()
-							.getContactList();
-					getManagedBean().setOfficeContactPerson(new PmContact());
-					PmContact contact = getManagedBean()
-							.getOfficeContactPerson();
-					contact.setPmAddressType(pmAddressType);
-					contactLst.add(contact);
-					pmAddressType.setPmContacts(this.getManagedBean().getContactList());
-
 				}
-
 			}
 
 		}
@@ -607,7 +583,7 @@ public class OrganisationBackingBean extends
 			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
 			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
 			if (supResDTO.getSmSupplier() == null) {
-				System.out.println("Create new Supplier");
+				log.info("Create new Supplier");
 				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 				regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());
               log.info("Supplier Users Size-->"+getManagedBean().getSupplierUsers().size());
@@ -620,10 +596,8 @@ public class OrganisationBackingBean extends
 
 						FinancialOrgResDTO finResDTO = financialOrgSO
 								.retrieveFinancialOrgById(finReqDTO);
-
 						PmFinancialOrg pmFinancialOrg = finResDTO
 								.getPmFinancialOrg();
-
                log.info("Supplier Bank name --->"+pmFinancialOrg.getFinOrgName()+"Account ---->"+supplierBank.getAccountNo());
                 	 regReqDTO.setBankAccountNo(supplierBank.getAccountNo());
                 	 regReqDTO.setBank(pmFinancialOrg);
@@ -632,10 +606,32 @@ public class OrganisationBackingBean extends
 				RegistrationResDTO regResDTO = registrationSO
 						.createPTJSupplier(regReqDTO);
 				regResDTO.setSuccessful(true);
+				//Update User Role
+				for(PmUser user:getManagedBean().getSupplierUsers()){
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setPmUser(user);
+				userReqDTO.isSupplierUser();
+				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
+				userResDTO.setSuccessful(true);
+				}
+				//Fee Exemption
+				IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IFeeExemptionSO.class);
+				FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
+				PmFeeExemption feeEx = new PmFeeExemption();				
+				feeEx.setOrgProfileId(orgProfile);
+				feeReqDTO.setFeeExemption(feeEx);
+				FeeExemptionResDTO feeResDTO = exemptionSO.insertFeeExemption(feeReqDTO);
+				feeResDTO.setSuccessful(true);
 
 			}
 			if (supResDTO.getSmSupplier() != null) {
-				System.out.println("Update Supplier");
+				log.info("Update Supplier");
 				supResDTO = supplierSearchSO
 						.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);
 				SmSupplier supplier = supResDTO.getSmSupplier();
@@ -905,7 +901,7 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setDeliveryCityList(resDTO.getCityList());
 	}
 	public void addDeliveryAddr() {
-	System.out.println("Add Delivery Address");
+	log.info("Add Delivery Address");
 		retrieveDeliveryCountryList();
 		
 		PmAddress address = new PmAddress();
@@ -930,10 +926,7 @@ public class OrganisationBackingBean extends
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);		
 		getManagedBean().setDeliveryStateList(resDTO.getStateList());
-		/*getManagedBean().getDeliveryAddress().getPmAddress().setPmCountry(new PmCountry());
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmState(new PmState());
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());	*/	
+		
 		getManagedBean().getDeliveryAddress().setAddressType(AddressType.DELIVERY_ADDRESS.value());		
 		/*if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
 			setManualAddressList();
@@ -970,16 +963,10 @@ public class OrganisationBackingBean extends
 	
      public void editDeliveryAddress(PmAddressType address) {
     	 retrieveDeliveryCountryList();
-
 	
-	 getManagedBean().setDeliveryAddress(address);
-	// if(address.getAddressType().equalsIgnoreCase(AddressType.DELIVERY_ADDRESS.value())){
-		 getManagedBean().setPmAddress(address.getPmAddress());
-		 System.out.println("Address"+address.getAddressType());
-		 System.out.println("Address Name"+address.getPmAddress().getAddressName());
-		 System.out.println("Address 1"+address.getPmAddress().getAddress1());
-		 System.out.println("Address City"+address.getPmAddress().getPmCity().getCityName());
-		 getManagedBean().getDeliveryAddress().getPmAddress().getPmCountry().setCountryId(address.getPmAddress().getPmCountry().getCountryId());
+	    getManagedBean().setDeliveryAddress(address);	
+		getManagedBean().setPmAddress(address.getPmAddress());		
+		getManagedBean().getDeliveryAddress().getPmAddress().getPmCountry().setCountryId(address.getPmAddress().getPmCountry().getCountryId());
 	    StateReqDTO stateReqDTO = new StateReqDTO();		
 		stateReqDTO.setCountryId(address.getPmAddress().getPmCountry().getCountryId());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
@@ -1015,11 +1002,23 @@ public class OrganisationBackingBean extends
 				manualAddrList.add(new SelectItem(obj.getAddressTypeId(), obj.getPmAddress().getAddressName()));
 			}
 		}
-		getManagedBean().setManualAddrList(manualAddrList);
-		address.setEditable(true);
-		System.out.println("AddressSize" + address.getPmAddress().getAddress1());
-	// }
+		 if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
+				for (PmContact contactPerson : address.getPmContacts())
+					getManagedBean().setDeliveryContactPerson(contactPerson);
+			}
+			else {
 
+				List<PmContact> contactLst = getManagedBean()
+						.getDeliveryContactList();
+				getManagedBean().setDeliveryContactPerson(new PmContact());
+				PmContact contact = getManagedBean()
+						.getDeliveryContactPerson();
+				contact.setPmAddressType(address);
+				contactLst.add(contact);
+				address.setPmContacts(this.getManagedBean().getContactList());			
+				}
+		 getManagedBean().setManualAddrList(manualAddrList);
+		 address.setEditable(true);
 	}
 
 	private void setManualAddressList() {

@@ -50,7 +50,19 @@
 		<p:panel >
 
 			<table style="width: 100%">
+			<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="addressname"  styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.address.name']}" maxlength="80"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
+							size="35" /></td>
+					<td><p:message for="addressname" id="addressnameMsg"
+							display="icon" /></td>
 
+					<td></td>
+
+				</tr>
 				<tr>
 					<td width="120"><p:outputLabel
 							value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
@@ -98,8 +110,7 @@
 							value="#{lbl['lbl.pm.address.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="daddress1" styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.address.address']}" maxlength="255"
-							required="true"
+							label="#{lbl['lbl.pm.address.address']}" maxlength="255"							
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address1}"
 							size="40" /></td>
 					<td><p:message for="daddress1" id="daddress1Msg"
@@ -163,7 +174,7 @@
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="dpostCode" required="true"
+					<td><p:inputText id="dpostCode" 
 							styleClass="ppDisplayTextL"
 							label="#{lbl['lbl.pm.address.postcode']}" maxlength="10"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.postcode}"
@@ -177,7 +188,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="dtelNo" required="true"
+					<td><p:inputText id="dtelNo" 
 							styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.address.tel']}"
 							maxlength="20"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.phoneNo}"
@@ -196,8 +207,49 @@
 					<td><p:message for="daddressFax" id="daddressFaxMsg"
 							display="icon" /></td>
 				</tr>
-
-
+			</table>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.pm.header.general.org.contactPerson']}"
+			toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="dcontactName" styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.contact.name']}" 
+							value="#{organisationBackingBean.managedBean.deliveryContactPerson.contactName}"
+							size="50" /></td>
+					<td><p:message id="dcontactNameMsg" for="dcontactName"
+							display="icon" /></td>
+				
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="dcontactEmail"
+							label="#{lbl['lbl.pm.contact.email']}" 
+							styleClass="ppDisplayTextL"
+							value="#{organisationBackingBean.managedBean.deliveryContactPerson.email}"
+							size="50" >							
+						</p:inputText></td>
+					<td><p:message id="dcontactEmailMsg" for="dcontactEmail"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.phone']}" /></td>
+					<td><p:inputText id="dcontactPhone" styleClass="ppDisplayTextL"
+							value="#{organisationBackingBean.managedBean.deliveryContactPerson.phoneNo}"
+							validatorMessage="#{lbl['lbl.pm.contact.phone']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							<td><p:message id="dcontactPhoneMsg" for="dcontactPhone"
+							display="icon" /></td>
+				
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.mobile']}" /></td>
+					<td><p:inputText id="dcontactMobile" styleClass="ppDisplayTextL"
+							value="#{organisationBackingBean.managedBean.deliveryContactPerson.mobileNo}"
+							validatorMessage="#{lbl['lbl.pm.contact.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							<td><p:message id="dcontactMobileMsg" for="dcontactMobile"
+							display="icon" /></td>
+				</tr>
 			</table>
 		</p:panel>
 

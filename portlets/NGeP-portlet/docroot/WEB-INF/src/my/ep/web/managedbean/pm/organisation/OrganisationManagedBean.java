@@ -81,6 +81,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmDistrict> deliveryDistrictList;
 	private List<PmAddressType> manualAddressList;
 	private List<SelectItem> manualAddrList;
+	private List<PmContact> deliveryContactList;
+	private PmContact deliveryContactPerson;
 	
 	private List<PmAddress> addressList;
 	private PmAddress selectedPmAddress;
@@ -138,6 +140,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		orgProfile.setPmPtjGroup(new PmPtjGroup());
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
 		deliveryAddress.setPmAddress(new PmAddress());
+		deliveryContactPerson = new PmContact();
+		deliveryContactList =  new ArrayList<PmContact>();
 		
 
 	}
@@ -1030,6 +1034,34 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setManualAddrList(List<SelectItem> manualAddrList) {
 		this.manualAddrList = manualAddrList;
+	}
+
+	/**
+	 * @return the deliveryContactPerson
+	 */
+	public PmContact getDeliveryContactPerson() {
+		return deliveryContactPerson;
+	}
+
+	/**
+	 * @param deliveryContactPerson the deliveryContactPerson to set
+	 */
+	public void setDeliveryContactPerson(PmContact deliveryContactPerson) {
+		this.deliveryContactPerson = deliveryContactPerson;
+	}
+
+	/**
+	 * @return the deliveryContactList
+	 */
+	public List<PmContact> getDeliveryContactList() {
+		return deliveryContactList;
+	}
+
+	/**
+	 * @param deliveryContactList the deliveryContactList to set
+	 */
+	public void setDeliveryContactList(List<PmContact> deliveryContactList) {
+		this.deliveryContactList = deliveryContactList;
 	}
 
 	
