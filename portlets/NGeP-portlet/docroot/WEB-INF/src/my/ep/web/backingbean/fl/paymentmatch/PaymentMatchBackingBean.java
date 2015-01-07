@@ -729,8 +729,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			} else if(nonExemptedItemAmt.doubleValue() <= 0){
 				calPaymentAmt=getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew();
 			}
-			getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
+			
 		} 
+		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
 	}
 	
 	public void onNodeSelect() {
