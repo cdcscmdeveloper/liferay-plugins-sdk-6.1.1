@@ -936,10 +936,20 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setRnToSQFlag(true);
 		getManagedBean().setPanelItemBtnFlag(true);
 		getManagedBean().setPanelItemFlag(true);
-		getManagedBean().setNewableFlag(true);
 		getManagedBean().setEditableFlag(true);
 		getManagedBean().setSupplierViewBtn(true);
 		getManagedBean().setActiveIndex(0);
+
+		if(scQuote.getPanelItem() != null){
+			CtPanelItem panelItem = scQuote.getPanelItem();
+			if(panelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)){
+				// panel item general 
+				getManagedBean().setNewableFlag(Boolean.TRUE);
+			} else if(panelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
+				// panel item specific 
+				getManagedBean().setNewableFlag(Boolean.FALSE);
+			}
+		}
 
 		// service and product
 		List<TplSpecQuestion> tplSpecQuestions = new ArrayList<TplSpecQuestion>();
@@ -3044,6 +3054,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					// panel item specific 
 					scQuote.setTitle(scQuote.getPanelItem().getScRequestItem().getItemName());
 					getManagedBean().setPanelItemFlag(Boolean.FALSE);
+					getManagedBean().setNewableFlag(Boolean.FALSE);
 				}
 				getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 			}
