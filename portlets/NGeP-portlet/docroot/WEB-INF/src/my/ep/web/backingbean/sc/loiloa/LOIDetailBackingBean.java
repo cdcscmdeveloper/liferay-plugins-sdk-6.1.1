@@ -2262,7 +2262,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	private void renewSessionWithPreviousValues() {
-		SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
+		Object payLoadData = (SCEvaluationDataType) getManagedBean()
 				.getPayLoadData();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
@@ -2276,13 +2276,17 @@ public class LOIDetailBackingBean extends
 		this.renewSesionObject();
 
 		getManagedBean().setSourceId(sourceId);
-		getManagedBean().setPayLoadData(evaluationDataType);
+		getManagedBean().setPayLoadData(payLoadData);
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setQtLoaEditFlag(qtLoaEditFlag);
-		if(evaluationDataType != null){
-			getManagedBean().setRecommendDtlIds(evaluationDataType.getGroupkeyMa());
+		if(payLoadData != null){
+			if (payLoadData instanceof SCEvaluationDataType) {
+				getManagedBean().setRecommendDtlIds(((SCEvaluationDataType)payLoadData).getGroupkeyMa());
+			} else if (payLoadData instanceof SCAwardSupplierDataType) {
+				getManagedBean().setRecommendDtlIds(((SCAwardSupplierDataType)payLoadData).getGroupkeyList());
+			}
 		}
 		getManagedBean().setDocType(docType);
 		getManagedBean().setRecommendDtlIds(recommendDtlIds);
