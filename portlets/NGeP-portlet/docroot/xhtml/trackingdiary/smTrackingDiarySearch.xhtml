@@ -13,6 +13,9 @@
 	<script>
 	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
 	</script>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 			
@@ -43,25 +46,19 @@
 							</tr>
 						</table>
 
-
-
-
-						<div style="text-align: right;">
-							<p:commandButton icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
-								action="#{smTrackingDiaryBackingBean.search}"
-								update="smSearchID">
-							</p:commandButton>		
-							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
-								action="#{smTrackingDiaryBackingBean.reset}"
-								update="smSearchID">
-							</p:commandButton>
-						</div>
-					</p:panel></td>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{smTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					icon="ui-icon-search" update="resultPanel" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{smTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
+			</div>
+				</p:panel></td>
 			</tr>
 		</table>
 			
-			
-		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+
 
 			<p:dataTable id="smSupplierTableID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
 
@@ -107,6 +104,5 @@
 
 		</p:panel>
 	</h:panelGroup>
-
 
 </ui:composition>
