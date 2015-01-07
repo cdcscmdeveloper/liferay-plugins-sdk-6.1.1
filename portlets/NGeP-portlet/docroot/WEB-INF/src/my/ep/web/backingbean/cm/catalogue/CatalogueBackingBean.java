@@ -799,36 +799,49 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public String navigateToExpiredItemDet(int index) {
 		
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		try{
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
+		CatalogueResDTO resDTO = new CatalogueResDTO();
+		ICatalogueSO catalogueSO = null;
+		
+		try {
+			catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 			
-			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			reqDTO.setDocId(this.getManagedBean().getExpiredItemList().get(index).getSupplierItemId());
-			CatalogueResDTO resDTO = catalogueSO.viewSupplierItem(reqDTO);
-			CmSupplierItem a = resDTO.getSupplierItemList().get(0);
-			
-			CodificationReqDTO reqDTO2 = new CodificationReqDTO();
-			reqDTO2.setSupplierItemId(this.getManagedBean().getExpiredItemList().get(index).getSupplierItemId());
-			CodificationResDTO resDTO2 = codificationSO.getCmItemBySupplierItemId(reqDTO2);
-			a.setCmItem(resDTO2.getCmItem());
-			
-			this.getManagedBean().setSelectedMaintainItem(a);
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.setCompareDesc(a
-									.getItemDesc());
-			this.getManagedBean().setTabActiveIndex(5);
-			this.getManagedBean().setDisplayCatalogue(true);
-			this.getManagedBean().setPreviousScreen(1);//catMaintenance
-			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
-		/*} catch(Exception e){
-			e.printStackTrace();*/
+			reqDTO.setSupplierItemId(this.getManagedBean().getExpiredItemList().get(index).getSupplierItemId());
+			resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 		} finally {
-			codificationSO = null;
 			catalogueSO = null;
 		}
+
+		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
+		this.getManagedBean().getSelectedMaintainItem()
+				.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
+		this.getManagedBean().setTabActiveIndex(5);
+		this.getManagedBean().setDisplayCatalogue(true);
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		if(this.getManagedBean().getSelectedMaintainItem().getRecordStatusFlg().intValue()==1)
+			this.getManagedBean().getSelectedMaintainItem().setRecordStatus(true);
+		else
+			this.getManagedBean().getSelectedMaintainItem().setRecordStatus(false);
+			
+		//sort Tier
+		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), "S");
+		}
+		//sort Tier	Promotion		
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings(), "P");
+		}
+		//sort Zonal Tier			
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), "S");
+		}
+		//sort Zonal Tier Promotion
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
+		}
+		
+		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		//return "addCatalogItem";
 		return "editCatalogItem";
 	}
@@ -2062,7 +2075,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String saveCatalogItem() {
 		log.info("In saveCatalogItem");
 		PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		System.out.println("******getTabActiveIndex:" + this.getManagedBean().getTabActiveIndex());
+		log.info("******getTabActiveIndex:" + this.getManagedBean().getTabActiveIndex());
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		try {
@@ -2292,6 +2305,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setRejectedItemList(
 						resDTO.getSupplierItemList());
 
+			} else if (this.getManagedBean().getTabActiveIndex() == 5) {
+
+				reqDTO.setItemStatus("E");
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setRejectedItemList(
+						resDTO.getSupplierItemList());
 			}
 
 		} catch (Exception ex) {
