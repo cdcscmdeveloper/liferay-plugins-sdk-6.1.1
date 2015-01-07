@@ -13,7 +13,7 @@
 						value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td width="220"><p:selectOneMenu id="manCountry" styleClass="ppDropDownWidthL"
-						required="true" label="#{lbl['lbl.pm.address.country']}"
+						required="true" label="#{lbl['lbl.pm.address.country']}" disabled="true"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCountry.countryId}"
 						style="width: 275px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
