@@ -19,7 +19,9 @@
 						action="#{financialOrgBackingBean.backToMain}" style="float:left;" /></td>
 				<td><p:commandButton value="#{financialOrgBackingBean.managedBean.financialOrg.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 						action="#{financialOrgBackingBean.saveFinancialOrg}"
-						update="@([id$=Msg])" style="float:right;" />
+						update="@([id$=Msg])" style="float:right;" >
+						<f:param name="disableValidation" value="true" />   
+					</p:commandButton>
 				</td>
 			</tr>
 
@@ -44,7 +46,7 @@
 								value="#{financialOrgBackingBean.generalInfoTab}" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringMenu"
-							rendered="#{financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}"
+							disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}"
 							partialSubmit="true" process="@this" update="@form">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener
@@ -57,7 +59,7 @@
 						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.generalInfoTab}">
 						<ui:include src="generalFinancialdetails.xhtml" />
 					</p:outputPanel>
-					<p:outputPanel
+					<p:outputPanel id="opFactoringBranch"
 						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.factringBranchInfoTab}">
 						<ui:include src="factoringBranch.xhtml" />
 					</p:outputPanel> </td>

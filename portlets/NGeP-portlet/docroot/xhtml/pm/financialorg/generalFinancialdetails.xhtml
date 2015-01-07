@@ -26,7 +26,7 @@
 				<td><p:inputText id="finOrgName" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.financialorg.name']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}"
-						required="true" size="40" maxlength="100" /></td>
+						required="#{!empty param['disableValidation']}" size="40" maxlength="100" /></td>
 				<td><p:message id="finOrgNameMsg" for="finOrgName"
 						display="icon" /></td>
 			</tr>
@@ -37,7 +37,7 @@
 						disabled="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}"
 						label="#{lbl['lbl.pm.address.country']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.pmCountry.countryId}"
-						required="true" style="width: 276px;margin-bottom: 5px;">
+						required="#{!empty param['disableValidation']}" style="width: 276px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems var="counLs"
@@ -51,7 +51,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.status']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
-						label="#{lbl['lbl.pm.financialorg.status']}"
+						label="#{lbl['lbl.pm.financialorg.status']}" required="#{!empty param['disableValidation']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}"
 						id="recordSts" style="width: 135px;margin-bottom: 5px;">
 						<f:selectItems
@@ -65,16 +65,16 @@
 
 	<p:panel styleClass="sampleDetails" toggleable="true">
 		<h:panelGrid id="financial" style="width:100%;">
-			<p:tabView>
+			<p:tabView id="tvGeneralFinance">
 				<p:tab title="MAIN ADDRESS">
 					<ui:include src="/xhtml/pm/financialorg/financialOrgAddress.xhtml" />
 				</p:tab>
 				<p:tab title="FINANCIAL SERVICES">
 					<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
 				</p:tab>
-				<p:tab title="FACTORING BANK DETAIL"
+				<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
 					activeIndex="#{financialOrgBackingBean.managedBean.byFactoring}"
-					rendered="#{financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}">
+					disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}">
 					<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
 				</p:tab>
 			</p:tabView>
