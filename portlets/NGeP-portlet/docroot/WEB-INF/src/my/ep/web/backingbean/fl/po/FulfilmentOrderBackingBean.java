@@ -612,9 +612,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 		
 	public String getPortletTitle() {
-		String portletTitle = " Fulfilment Document Maintenance";
+		String rfc = ResourceBundleUtils.getMessage("lbl.fl.rfc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
+		String title = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
+		String portletTitle = title;
 		if(getManagedBean().isRemoveFactoring()) {
-			portletTitle = "Factoring Company Removal";
+			portletTitle = rfc;
 		}
 		return portletTitle;
 	}
