@@ -30,7 +30,7 @@
 					
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{bpmAction}" styleClass="ui-button"
+						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(bpmAction)}" process="@form"
 								update="@form"
 								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	

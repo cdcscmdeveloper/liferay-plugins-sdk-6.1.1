@@ -32,7 +32,7 @@
 						var="bpmAction"
 						value="#{contractRequestBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{bpmAction}" update="@form" 
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{contractRequestBackingBean.gpkiSignAction(bpmAction)}" />
