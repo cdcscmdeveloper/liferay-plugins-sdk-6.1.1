@@ -1046,6 +1046,9 @@ public class QTBusinessOwnerBackingBean extends
 		qtStatuses.add(qtStatus);
 		scQt.setScQtStatus(qtStatuses);
 		this.getManagedBean().setQt(scQt);
+		Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+				.getStatusId();
+		this.getManagedBean().setCurrentStatusId(currentStatus);
 		return "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml"
 				+ "?faces-redirect=true";
 	}
