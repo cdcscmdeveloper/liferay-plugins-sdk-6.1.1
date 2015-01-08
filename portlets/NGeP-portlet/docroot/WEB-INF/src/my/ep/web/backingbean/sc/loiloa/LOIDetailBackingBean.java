@@ -337,9 +337,10 @@ public class LOIDetailBackingBean extends
 			
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveMultipleLoiDtls(reqDTO);
 			if(resDTO.isSuccessful()){
+				ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 				List<ScQtRecommend> scQtRecommendList = resDTO.getScQtRecommendList();
 				
-				getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+				getManagedBean().setScQtFinalization(scQtFinalization);
 				getManagedBean().setCommitteeType(committeeType);
 				getManagedBean().setLois(resDTO.getScLois());
 				getManagedBean().setRecommendList(scQtRecommendList);
@@ -359,7 +360,7 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setScQtCommittee(scQtCommittee);
 				scQtCommittee.setQtCommitteRemarks(initializeRemarks(
 						scQtCommittee, 
-						null,
+						scQtFinalization.getCurrentStatus(),
 						scQtCommittee.getQtCommitteRemarks(),
 						ScQtCommitteRemarks.class));
 				
