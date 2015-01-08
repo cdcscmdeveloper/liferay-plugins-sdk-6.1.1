@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
-	<h:panelGrid columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
+	<h:panelGrid id="centralCircularId" columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 				
 					<h:panelGrid columns="2" style="float:right;">
 					    <p:outputLabel value="*" styleClass="mandatory" />
@@ -37,7 +37,7 @@
 		   	   		<h:panelGrid columns="2">
 		   				<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 							navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
-		      				disabled="#{centralContractBackingBean.managedBean.viewContract}" immediate="true"
+		      				disabled="#{centralContractBackingBean.managedBean.viewContract}" 
 		      				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 	     					<p:ajax event="dateSelect" process="@this" update=":form:popupButtonCal1" />
 		 				</p:calendar> 
@@ -72,13 +72,11 @@
 				      </h:panelGrid>
 		             
 		             <h:panelGroup id="uploadCircularPg">
-			         	<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
-				          	update="uploadCircularPg, uploadCircularDlg" value="#{lbl['lbl.bpm.choose.file']}"
-					        disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
-				            <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
-					            action="#{centralContractBackingBean.downloadFile(1)}" />					
+			         	<p:commandButton icon="iconAttachment" value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
+				          	action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
+				        <h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
+				           styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />					
 			         </h:panelGroup>
-				    
 			</h:panelGrid>
 	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="false" 
 	    resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">

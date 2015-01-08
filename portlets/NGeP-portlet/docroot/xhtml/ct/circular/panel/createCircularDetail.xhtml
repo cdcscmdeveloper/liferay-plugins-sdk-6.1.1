@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
-	<h:panelGrid columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
+	<h:panelGrid id="panelCircularId" columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 				
 					<h:panelGrid columns="2" style="float:right;">
 					     <p:outputLabel value="*" styleClass="mandatory" />
@@ -41,7 +41,7 @@
 			   	         <h:panelGrid columns="2">
 			   	            <p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			          navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
-			       		         disabled="#{panelBackingBean.managedBean.viewContract}" immediate="true"
+			       		         disabled="#{panelBackingBean.managedBean.viewContract}" 
 			       		             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 			       	             <p:ajax event="dateSelect" process="@this" update=":form:popupButtonCal1" />
 			                </p:calendar> 
@@ -136,9 +136,9 @@
 			</h:panelGrid>
 		
 		        <h:panelGroup id="uploadCircularPg">
-				   <p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
-					update="uploadCircularPg, uploadCircularDlg" value="#{lbl['lbl.bpm.choose.file']}"
-					disabled="#{panelBackingBean.managedBean.viewContract}"/>	
+				   <p:commandButton icon="iconAttachment" 
+					update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
+					value="#{lbl['lbl.bpm.choose.file']}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
 					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
 					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
 			  </h:panelGroup>	

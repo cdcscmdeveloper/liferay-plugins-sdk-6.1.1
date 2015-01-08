@@ -1650,6 +1650,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	public void setPanelDetailsValue(){
+		if(getManagedBean().getCircularVer().getCircularNo() == null || getManagedBean().getCircularVer().getName() == null
+				 ||getManagedBean().getCircularVer().getStartDate() == null || getManagedBean().getCircularVer().getEndDate() == null) {
+				         RequestContext.getCurrentInstance().update(":form:panelCircularId");
+				} else {
+			    	RequestContext.getCurrentInstance().execute("uploadCircularDlg.show()");
+			   }
+	}
+	
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
