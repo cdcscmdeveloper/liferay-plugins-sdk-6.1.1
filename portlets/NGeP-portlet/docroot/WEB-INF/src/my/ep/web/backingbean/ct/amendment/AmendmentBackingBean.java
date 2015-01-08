@@ -814,6 +814,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			              }
 			    }
 			    
+			    // Check all the member role must be selected
+		    	if(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) 
+		    			&& getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null) {
+		    		for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+		    			if(committeMember.getMemberRole()==null || committeMember.getMemberRole().getParameterId()==null) {
+		    				throw new EpException(MessageConst.ERROR_750025);
+		    			} 
+		    		}
+		    	}
+		    	
 			    if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null && 
 			    		(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) ||
 			    				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME))) {
@@ -844,11 +854,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) && getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null) {
 			    		int chairPersonCount = 0;
 			    		Long chairPersonId = retrieveParameterByCodeType(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).getParameterId();
-			    		// Check all the member role must be selected
 			    		for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-			    			if(committeMember.getMemberRole()==null || committeMember.getMemberRole().getParameterId()==null) {
-			    				throw new EpException(MessageConst.ERROR_750025);
-			    			} 
 			    			if(committeMember.getMemberRole().getParameterId().equals(chairPersonId)) {
 			    				chairPersonCount++;
 			    				if(chairPersonCount>1) {
@@ -858,7 +864,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    		}
 			    	}
 			    }
-			    
+		    	
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
