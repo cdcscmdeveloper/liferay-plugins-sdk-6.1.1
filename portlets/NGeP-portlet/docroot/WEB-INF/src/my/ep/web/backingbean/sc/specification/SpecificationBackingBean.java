@@ -2486,14 +2486,18 @@ public class SpecificationBackingBean extends
 				for (ScQtScoreSetting recommnendationSetting : resDTO
 						.getScoreSettingResultBean().getResultList()) {
 					if (recommnendationSetting.getSettingType() == 1) {
-
-						this.getManagedBean().setTechnicalScoreSetting(
-								recommnendationSetting);
+						if (null == this.getManagedBean()
+								.getTechnicalScoreSetting()) {
+							this.getManagedBean().setTechnicalScoreSetting(
+									recommnendationSetting);
+						}
 					}
 
 					if (recommnendationSetting.getSettingType() == 3) {
-						this.getManagedBean().setDemoScoreSetting(
-								recommnendationSetting);
+						if (null == this.getManagedBean().getDemoScoreSetting()) {
+							this.getManagedBean().setDemoScoreSetting(
+									recommnendationSetting);
+						}
 					}
 
 				}
@@ -8964,6 +8968,43 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Financial Weightage Calculation
+	public void financialWeightageCalculate() {
+		if (null != this.getManagedBean().getFinancialScoreSetting()
+				&& this.getManagedBean().getFinancialScoreSetting()
+						.isWeightageReq()) {
+			List<ScQtCheckList> checklist = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (null == checklist) {
+				checklist = new ArrayList<ScQtCheckList>();
+			}
+			Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
+			int financialWeightage = 0;
+			for (ScQtCheckList checklistlocal : checklist) {
+				if (null != checklistlocal.getQtScoreWeightage()) {
+					map.put(checklistlocal.getQtScoreWeightage()
+							.getQtScoreWeightageId(), checklistlocal
+							.getQtScoreWeightage());
+				}
+			}
+			List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
+					map.values());
+			if (null != list && !list.isEmpty()) {
+				for (ScQtScoreWeightage weightage : list) {
+					if (null == weightage.getWeightage()) {
+						weightage.setWeightage(new BigDecimal(0));
+					}
+					financialWeightage = financialWeightage
+							+ weightage.getWeightage().intValue();
+				}
+				if (financialWeightage < 100) {
+					throw new EpException(MessageConst.ERROR_760221);
+				}
+			}
+		}
+
+	}
+
 	// Finacial Scoring Weightage Sum
 	public void finWeightageSum() {
 		try {
@@ -9657,6 +9698,7 @@ public class SpecificationBackingBean extends
 		if (financialScoring != null && !financialScoring.isEmpty()) {
 			ScQtCheckList finalFinSpec = null;
 			finWeightageSum();
+			financialWeightageCalculate();
 			for (ScQtCheckList checkList : financialScoring) {
 
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -9933,6 +9975,15 @@ public class SpecificationBackingBean extends
 				&& technicalScoreSetting.getSettingType() == 1) {
 
 			if (!this.getManagedBean().isReadOnly()) {
+				if (technicalScoreSetting.isWeightageReq()) {
+					techWeightageSum();
+					if (null != this.getManagedBean()
+							.getTechnicalWeightageScore()
+							&& this.getManagedBean()
+									.getTechnicalWeightageScore().intValue() < 100) {
+						throw new EpException(MessageConst.ERROR_760220);
+					}
+				}
 				if (null == technicalScoreSetting.getPassingScore()) {
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
@@ -9964,6 +10015,7 @@ public class SpecificationBackingBean extends
 				&& financialScoreSetting.getSettingType() == 2) {
 
 			if (!this.getManagedBean().isReadOnly()) {
+
 				if (null == financialScoreSetting.getPassingScore()) {
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
