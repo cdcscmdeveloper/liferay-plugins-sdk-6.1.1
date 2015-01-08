@@ -6,8 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <h:outputLabel value="" />
-	<p:panel header="#{lbl['lbl.pm.header.general.finance']}"
-		toggleable="true">
+	<p:panel id="pGeneralFinance" header="#{lbl['lbl.pm.header.general.finance']}" toggleable="true">
 		<table>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
@@ -65,24 +64,27 @@
 
 			</tr>
 		</table>
+		<br/>
+		<br/>
+		<p:outputPanel id="opGeneralTopMenu">
+			<h:panelGrid id="financial" style="width:100%;">
+				<p:tabView id="tvGeneralFinance">
+					<p:tab title="MAIN ADDRESS">
+						<ui:include src="/xhtml/pm/financialorg/financialOrgAddress.xhtml" />
+					</p:tab>
+					<p:tab title="FINANCIAL SERVICES">
+						<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
+					</p:tab>
+					<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
+						activeIndex="#{financialOrgBackingBean.managedBean.byFactoring}"
+						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}">
+						<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</p:outputPanel>
 	</p:panel>
 
-	<p:panel styleClass="sampleDetails" toggleable="true">
-		<h:panelGrid id="financial" style="width:100%;">
-			<p:tabView id="tvGeneralFinance">
-				<p:tab title="MAIN ADDRESS">
-					<ui:include src="/xhtml/pm/financialorg/financialOrgAddress.xhtml" />
-				</p:tab>
-				<p:tab title="FINANCIAL SERVICES">
-					<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
-				</p:tab>
-				<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
-					activeIndex="#{financialOrgBackingBean.managedBean.byFactoring}"
-					disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}">
-					<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
-				</p:tab>
-			</p:tabView>
-		</h:panelGrid>
-	</p:panel>
+	
 
 </ui:composition>
