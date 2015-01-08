@@ -25,7 +25,7 @@
 			
 			<ac:paginator for="itemListTbl" />
 			
-			<p:column selectionMode="multiple" style="width:2%" /> 
+			<p:column selectionMode="multiple" style="width:2%"  rendered="#{isPendingNegotiationStatus}"/> 
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;">
 				<h:outputText value="#{item.requestItem.itemName}" />
 			</p:column>
@@ -33,7 +33,7 @@
 			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
 				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none">
 					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}">
+						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}"  rendered="#{isPendingNegotiationStatus}">
 							<p:ajax event="change" partialSubmit="true" process="@this" update="@this, @([id$=qtyPG])" 
 								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
@@ -122,7 +122,7 @@
 		</p:dataTable>
 		
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-			columnClasses="columnWidth20">
+			columnClasses="columnWidth20"  rendered="#{isPendingNegotiationStatus}">
 			
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.sc.award.supplier']}" />
@@ -174,7 +174,7 @@
 								<td></td>
 								<td>
 									<p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> 
+										rendered="#{remarkVar.remarkId eq null}"/> 
 									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
