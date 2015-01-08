@@ -325,6 +325,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
 				reqDTO.setRoleCode(getUserRoleCode());
 				reqDTO.setToken(token);
+				//reqDTO.setConditionField(getManagedBean().getConditionField());
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
 				if (resDTO.isSuccessful()) {
 					ScPurchaseInDefault purchaseInDefault = resDTO.getPurchaseInDefaultDtl();
@@ -836,10 +837,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 
 			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 
-			if(scPurchaseInDefault.isBrandNew()) {
+			//if(scPurchaseInDefault.isBrandNew()) {
 			
 				 VCmSupplierItem vCmSupplierItem = getManagedBean().getvCmSupplierItem();
-				 long  uomId = vCmSupplierItem.getUomId();
+				 //long  uomId = vCmSupplierItem.getUomId();
 				 String  itemCode   = vCmSupplierItem.getItemCode();
 				 String conditionField = getManagedBean().getConditionField();
 
@@ -871,12 +872,12 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 						paramMap.put(ReportConst.PARAM_MOF_NO, searchValue);	
 					} 
 					paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
-					paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
+					//paramMap.put(ReportConst.PARAM_UOM_ID, uomId + "");	
 					System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
 				}
 				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 0 + "");
 
-			}
+			/*}
 			else {
 				if(scPurchaseInDefault.getPanelItem() != null){
 				  requestItem =	scPurchaseInDefault.getPanelItem().getScRequestItem();
@@ -887,7 +888,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				paramMap.put(ReportConst.PARAM_REQUEST_ITEM_ID, requestItem.getRequestNoteItemId() + "");
 				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 1 + "");
 			}
-
+*/
 			generateReport(reportName, paramMap);
 		}
 	} 
