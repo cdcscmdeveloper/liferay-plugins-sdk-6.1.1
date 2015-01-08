@@ -1854,8 +1854,10 @@ public class QTDetailBackingBean extends
 			// approval
 			if (menuModel.getContents() != null
 					&& menuModel.getContents().size() > 0) {
+				/*this.getManagedBean().setSelectedApprovalTabBean(
+						tabBeans.get(0));*/
 				this.getManagedBean().setSelectedApprovalTabBean(
-						tabBeans.get(0));
+						tabBeans.get(this.getManagedBean().getSelectedApprovalTabIndex()));
 				this.getManagedBean().setTabList(tabBeans);
 			}
 		} finally {
