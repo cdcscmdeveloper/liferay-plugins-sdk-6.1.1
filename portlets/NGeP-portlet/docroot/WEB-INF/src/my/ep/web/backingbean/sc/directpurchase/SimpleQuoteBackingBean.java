@@ -146,8 +146,6 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteManagedBean> {
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
-
-	private String textBeforeSign;
 	
 	public SimpleQuoteBackingBean() {
 		super();
@@ -3289,7 +3287,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		debugLogger("supplierSubmit");
 		IDigiSignSO digiSignSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IDigiSignSO.class);
 		try {
-
+			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 
@@ -3306,11 +3304,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			if (null != pmDigiSign) {
 				updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
-						quote.getQuoteId(), quote.getQuoteNo() , getTextBeforeSign());
+						quote.getQuoteId(), quote.getQuoteNo() , prepareOriginalText());
 			}
 
 			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-			String signedData =  spkiBackingBean.spkiSignTransaction(getTextBeforeSign());
+			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
 
 			DigiSignReqDTO digiSignReqDTO = new DigiSignReqDTO();
 
@@ -3323,7 +3321,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
-			FacesScopes facesScopes = new FacesScopes();
+			
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setSupplier(getManagedBean().getSmSupplier());
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
@@ -3356,6 +3354,22 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return null;
 	}
+
+	private String prepareOriginalText() {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		String orginalText = "";
+		sb.append(getManagedBean().getScQuote().getQuoteNo())
+		.append("|")
+		.append(facesScopes.getUserSessionBean().getIdentificationNo())
+		.append("|")
+		.append(getManagedBean().getSmSupplier().getRegNo())
+		.append("|")
+		.append(getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryCode());
+		orginalText  = sb.toString();
+		return orginalText;
+	}
+
 	
 	/**
 	 * retrieve Supplier details in the supplier View
@@ -3837,18 +3851,4 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private IQuoteSO getQuoteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 	}
-
-
-	public String getTextBeforeSign() {
-		 StringBuilder sb = new StringBuilder();
-		 sb.append(getManagedBean().getScQuote().getQuoteNo());
-		 sb.append(new FacesScopes().getUserSessionBean().getUserId());
-		 textBeforeSign = sb.toString();
-		 return textBeforeSign;
-	 }
-
-	public void setTextBeforeSign(String textBeforeSign) {
-		this.textBeforeSign = textBeforeSign;
-	}
-	
 }
