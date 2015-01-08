@@ -924,19 +924,23 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 		}
 		
-		boolean supplierSelectionFlag = true;
-		
-		// Check if supplier has been selected before submission
-		if (QTConstants.SF_SINGLE.equals(getManagedBean().getSelectionMode())
-				&& getManagedBean().getRecommendedSupplier() == null) {
-			supplierSelectionFlag = false;
-		} else if (QTConstants.SF_MULTIPLE.equals(getManagedBean().getSelectionMode())
-						&& CollectionUtils.isEmpty(getManagedBean().getRecommendedSupplierList())) {
-			supplierSelectionFlag = false;
-		}
-		if (supplierSelectionFlag == false) {
-			navigateToSupplierFinalizationTab(activeIndex);
-			throw new EpException(MessageConst.ERROR_760206);
+		if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(
+				getManagedBean().getScQtFinalization().getDecision().getParameterCode())) {
+			
+			boolean supplierSelectionFlag = true;
+			
+			// Check if supplier has been selected before submission
+			if (QTConstants.SF_SINGLE.equals(getManagedBean().getSelectionMode())
+					&& getManagedBean().getRecommendedSupplier() == null) {
+				supplierSelectionFlag = false;
+			} else if (QTConstants.SF_MULTIPLE.equals(getManagedBean().getSelectionMode())
+							&& CollectionUtils.isEmpty(getManagedBean().getRecommendedSupplierList())) {
+				supplierSelectionFlag = false;
+			}
+			if (supplierSelectionFlag == false) {
+				navigateToSupplierFinalizationTab(activeIndex);
+				throw new EpException(MessageConst.ERROR_760206);
+			}	
 		}
 
 		try {
