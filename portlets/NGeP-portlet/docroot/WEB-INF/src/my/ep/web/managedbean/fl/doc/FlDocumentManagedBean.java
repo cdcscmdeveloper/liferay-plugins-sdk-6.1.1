@@ -158,9 +158,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
 				}
-				/*if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
-				}*/
+				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
+				}
 				if(getSearchCircularNo()!=null && getSearchCircularNo()!="")  {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),getSearchCircularNo()));
 				}
