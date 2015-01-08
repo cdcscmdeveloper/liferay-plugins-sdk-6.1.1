@@ -109,6 +109,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1256752);
 		//this.getManagedBean().setAppId(1256816);
 		//this.getManagedBean().setAppId(1257091);
+		//this.getManagedBean().setAppId(1257118);
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -715,8 +716,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		Double percentage = (eqAmt * 100) / paidUpCapital;
 		
-		DecimalFormat formatter = new DecimalFormat("###,##0.000");
-		
+		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		formatter.setRoundingMode(RoundingMode.HALF_UP);
 		return formatter.format(percentage);
 
 	}
@@ -816,7 +817,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		BigDecimal percentage = new BigDecimal(0.00);
 		
 		try{
-			percentage = convertedDirNo.divide(ttlDirector, 3, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+			percentage = convertedDirNo.divide(ttlDirector, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 		}catch(ArithmeticException e) {
 			percentage = new BigDecimal(0.00).setScale(2);
 		}
