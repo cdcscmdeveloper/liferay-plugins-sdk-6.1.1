@@ -7,8 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="Add2" position="top" resizable="false"
-		header="New #{committeBackingBean.managedBean.headerTitle}" width="970"
-		widgetVar="screen3" modal="true" styleClass="addQCMember">
+		header="New #{committeBackingBean.managedBean.headerTitle}"
+		width="970" widgetVar="screen3" modal="true" styleClass="addQCMember">
 		<p:panel>
 			<p:messages id="committeemessagesid" showDetail="true"
 				autoUpdate="true" closable="true" showSummary="false" />
@@ -87,8 +87,7 @@
 								<h:outputText value="#{existcommitteeuser.designation}" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">
-								<h:outputText
-									value="#{existcommitteeuser.email}" />
+								<h:outputText value="#{existcommitteeuser.email}" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
 								<h:outputText value="#{existcommitteeuser.grade}" />
@@ -98,9 +97,8 @@
 									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.so.role']}">
-								<ui:fragment rendered="#{!existcommitteeuser.PMP}">
-									<h:outputText value="Member" />
-								</ui:fragment>
+								<h:outputText
+									value="#{committeBackingBean.getParameterDesc(ParameterTypeConst.committeeRole,ParameterConst.committeeRoleMember)}" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.so.rep.type']}"
 								style="width: 15%">
@@ -108,7 +106,7 @@
 									value="#{existcommitteeuser.representativesType.parameterId}"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
-										value="#{committeBackingBean.managedBean.addRepresentativesTypeslist}" />
+										value="#{committeBackingBean.managedBean.representativesTypeslist}" />
 								</p:selectOneMenu>
 							</p:column>
 						</p:dataTable>
@@ -226,7 +224,7 @@
 										value="#{committeBackingBean.managedBean.committeMember.representativeType.parameterId}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
-											value="#{committeBackingBean.managedBean.addRepresentativesTypeslist}" />
+											value="#{committeBackingBean.managedBean.representativesTypeslist}" />
 									</p:selectOneMenu> <p:message id="repTypeidMsg" for="repTypeid" display="icon" /></td>
 							</tr>
 						</table>
@@ -235,7 +233,7 @@
 			</p:panel>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-					onclick="screen3.hide();" process="@this, newProfile"
+					 process="@this, newProfile"
 					update="@(.committeMemberDtls)" icon="ui-icon-check"
 					actionListener="#{committeBackingBean.okQCCommitteeAction}" />
 

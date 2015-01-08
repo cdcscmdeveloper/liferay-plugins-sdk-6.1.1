@@ -56,30 +56,36 @@
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
 				style="width: 10%">
-				<ui:fragment
-					rendered="#{committeemember.memberRole.parameterCode eq 'C'}">
-					<h:outputText value="Chairperson" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{committeemember.memberRole.parameterCode ne 'C'}">
-					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{committeBackingBean.managedBean.roleTypes}" />
-					</p:selectOneMenu>
-				</ui:fragment>
+
+				<h:outputText
+					value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
+
 			</p:column>
 
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.committe.sctable.rep.type']}"
-				style="width: 15%">
-				<p:selectOneMenu value="#{committeemember.representativeType.parameterId}"
-					style="width: 178px;margin-bottom: 5px;">
-					<f:selectItems
-						value="#{committeBackingBean.managedBean.representativesTypeslist}" />
-				</p:selectOneMenu>
+			<p:column style="width: 15%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.committe.sctable.rep.type']}" />
+				</f:facet>
+				<ui:fragment
+					rendered="#{committeemember.memberRole.parameterCode eq 'M'}">
+					<p:selectOneMenu required="true" id="representativeType"
+						value="#{committeemember.representativeType.parameterId}"
+						label="#{lbl['lbl.sc.committe.representive']}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{committeBackingBean.managedBean.representativesTypeslist}" />
+						<p:ajax event="change"
+							listener="#{committeBackingBean.representiveTypeChange(committeemember)}"
+							partialSubmit="true" process="@this"></p:ajax>
+					</p:selectOneMenu>
+					<p:message id="representiveMsg" for="representativeType"
+						display="icon"></p:message>
 
-			</p:column> -->
+				</ui:fragment>
+
+			</p:column>
 		</p:dataTable>
 		<h:panelGroup>
 			<div class="ppRightBtn">
