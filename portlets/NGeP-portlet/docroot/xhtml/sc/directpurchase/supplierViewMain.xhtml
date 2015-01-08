@@ -13,8 +13,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<ac:spkiPopup id="spkiPopup" textBeforeSign="#{simpleQuoteBackingBean.managedBean.textBeforeSign}"
-			postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
+		<ac:spkiPopup id="spkiPopup" postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
 			<div class="ppRightBtn">
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
