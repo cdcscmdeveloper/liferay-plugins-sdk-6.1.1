@@ -18,11 +18,11 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 			
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-			<table>
+		<table>
 			<tr>
-				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+				<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
+				<td width="35%"><p:selectOneMenu
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchTrasactionType}"
 						style="width: 314px;">
 						<f:selectItems
@@ -32,43 +32,41 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td style="width: 190px;"><p:outputLabel value="View Type"	/></td>
-				<td><p:selectOneMenu id="searchViewTypeDD" style="width: 314px;"
+				<td width="35%"><p:outputLabel value="View Type"	/></td>
+				<td width="35%"><p:selectOneMenu id="searchViewTypeDD" style="width: 314px;"
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchViewType}">
 							<f:selectItems
-								value="#{ctTrackingDiaryBackingBean.managedBean.getSearchViewType()}" />
+								value="#{ctTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
 						</p:selectOneMenu></td>
 			</tr>
-			</table>
-			<h:panelGroup id="docTypeSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" />
-					<p:inputText size="28"
+			<tr>
+				<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
+				<td width="35%"><p:inputText size="28"
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchContractNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" />
-					<p:inputText size="28"
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/></td>
+			</tr>
+			<tr>
+				<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
+				<td width="35%"><p:inputText size="28"
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" />
-					<p:inputText size="28"
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/></td>
+			</tr>
+			<tr>
+				<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
+				<td width="35%"><p:inputText size="28"
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
-					<p:inputText size="28"
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/></td>
+			</tr>
+			<tr>
+				<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
+				<td width="35%"><p:inputText size="28"
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
-					<p:calendar mode="popup" showOn="button"
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/></td>
+			</tr>
+			<tr>
+				<td width="35%"><p:outputLabel
+						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td>
+				<td width="35%"><p:calendar mode="popup" showOn="button"
 						readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchContractFromDuration}">
@@ -78,17 +76,17 @@
 						readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchContractToDuration}">
-					</p:calendar>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="Status" />
-					<p:selectOneMenu style="width: 314px;"
-							value="#{ctTrackingDiaryBackingBean.managedBean.searchStatusId}">
+					</p:calendar></td>
+			</tr>
+			<tr>
+				<td width="35%"><p:outputLabel value="Status" /></td>
+				<td width="35%"><p:selectOneMenu style="width: 314px;"
+							value="#{ctTrackingDiaryBackingBean.managedBean.searchViewType}">
 							<f:selectItems
-								value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
-					</p:selectOneMenu>
-				</h:panelGrid>
-					</h:panelGroup>
+								value="#{ctTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
+					</p:selectOneMenu></td>
+			</tr>			
+		</table>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{ctTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
@@ -101,7 +99,7 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="ctDocListDt" lazy="true"
-				value="#{ctTrackingDiaryBackingBeanBackingBean.searchDataModel}" var="flDocument"
+				value="#{ctTrackingDiaryBackingBean.managedBean.ctDocumentDataModel}" var="flDocument"
 				width="100%" rows="10">
 
 				<ac:paginator for="ctDocListDt"></ac:paginator>
@@ -145,7 +143,6 @@
 
 			</p:column>
 			</p:dataTable>
-
 
 		</p:panel>
 
