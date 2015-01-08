@@ -45,6 +45,8 @@
 						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;"
 						    required="true" label="Role"  disabled="#{amendmentBackingBean.managedBean.confirmMeeting}">
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
+							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException"
+							   listener="#{amendmentBackingBean.setListenerForCommitte(ctCommitteeVar.memberRole.parameterId)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>
@@ -53,9 +55,9 @@
 	         
 	         <div class="ppRightBtn"> 
 		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" 
-		             onclick="dlg2.show();" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
+		             action="#{amendmentBackingBean.fetchCommitteMembers()}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
 		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" 
-		             process="@form" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
+		             process="@form" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
 		     </div>
            
              <p:dialog id="dlgCommitteDetails"
@@ -97,8 +99,8 @@
                        <div class="ppRightBtn"> 
                   	      <p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" process="@form" 
                   	          action="#{amendmentBackingBean.existingCommitteMemberList}" update=":form:newCommitteTable" />
-		                  <p:commandButton value="#{lbl['lbl.ct.reset']}"  icon="ui-icon-reset" 
-		                     action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember"/>
+		                  <p:commandButton value="#{lbl['lbl.ct.reset']}"  icon="ui-icon-reset" process="@this" partialSubmit="true"
+		                     action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember, :form:searchResult"/>
 		               </div> 
 		         </p:panel>
 		         
