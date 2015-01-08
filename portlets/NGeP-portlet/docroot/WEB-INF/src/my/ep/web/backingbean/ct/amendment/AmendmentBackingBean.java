@@ -2967,7 +2967,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			jadualHarga.setSubSequence(itemPrice.getSubSequence() != null ? itemPrice.getSubSequence() + "" : "N/A");
 			
 	    	if(null != itemPrice.getUnitPrice() && null != itemPrice.getMaxQuantity()){
-	    		jadualHarga.setTotalAmount(itemPrice.getUnitPrice().multiply(itemPrice.getMaxQuantity()).toString());
+	    		jadualHarga.setTotalAmount(nf.format(itemPrice.getUnitPrice().multiply(itemPrice.getMaxQuantity()).toString()));
 			} else {
 				jadualHarga.setTotalAmount("N/A");
 			}
@@ -2983,7 +2983,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString());
 	    	jadualHarga.setQuantity(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
 				"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString());
-	    	jadualHarga.setTotalAmount(itemPrice.getUnitPrice().multiply(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString());
+	    	jadualHarga.setTotalAmount(nf.format(itemPrice.getUnitPrice().multiply(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString()));
 		}
 
 		return jadualHarga;
