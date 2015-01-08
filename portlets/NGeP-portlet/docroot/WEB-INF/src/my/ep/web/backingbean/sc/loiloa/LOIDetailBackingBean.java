@@ -219,7 +219,6 @@ public class LOIDetailBackingBean extends
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		IStatusSO statusSO;
-		IQTAwardSO qtAwardSO = null;
 		try {
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
@@ -246,12 +245,10 @@ public class LOIDetailBackingBean extends
 			// Long loiId = 299L;
 
 			ScLoi scLoi = new ScLoi();
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
-			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO
+			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
 					.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
 			if (awardSupplierResDTO.getScLoi() != null) {
 				scLoi = awardSupplierResDTO.getScLoi();
@@ -266,13 +263,12 @@ public class LOIDetailBackingBean extends
 			handleException(e);
 		} finally {
 			statusSO = null;
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
-		IQTAwardSO qtAwardSO = null;
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
@@ -285,12 +281,11 @@ public class LOIDetailBackingBean extends
 			// editSupplierLOIAction(loiId);
 			
 			ScLoi scLoi = new ScLoi();
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
-			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO
+			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
 					.retrieveSupplierLOIDtl(awardSupplierReqDTO);
 			if (awardSupplierResDTO.getScLoi() != null) {
 				scLoi = awardSupplierResDTO.getScLoi();
@@ -326,16 +321,13 @@ public class LOIDetailBackingBean extends
 	}
 	
 	private void retrieveMultipleLoiDtls(Long qtId, String committeeType, List<String> recommendDtlIds) {
-		IQTAwardSO qtAwardSO;
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setCommitteeType(committeeType);
 			reqDTO.setRecommendDtlIdList(recommendDtlIds);
 			
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveMultipleLoiDtls(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveMultipleLoiDtls(reqDTO);
 			if(resDTO.isSuccessful()){
 				ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 				List<ScQtRecommend> scQtRecommendList = resDTO.getScQtRecommendList();
@@ -366,13 +358,14 @@ public class LOIDetailBackingBean extends
 				
 				// LOI Reports
 				getManagedBean().setScLoiReports(resDTO.getScLoi().getScLoiReports());
+				getManagedBean().setScLoi(resDTO.getScLoi());
 
 				// status
 				getCurrentStatus(getManagedBean().getCurrentStatusId());
 			}
 			
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 	
@@ -395,18 +388,14 @@ public class LOIDetailBackingBean extends
 
 	public void retrieveLOIList(Long qtId) {
 		debugLogger("retrieveLOIList");
-		IQTAwardSO qtAwardSO = null;
 		try {
-
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
 //			reqDTO.setOrgProfileId(32950L); // TODO - change in SO to remove
 //											// this.
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 
-			AwardSupplierResDTO resDTO = qtAwardSO
+			AwardSupplierResDTO resDTO = getQtAwardSO()
 					.retrievePendingLoiList(reqDTO);
 
 			// loi loa list
@@ -467,16 +456,14 @@ public class LOIDetailBackingBean extends
 	}
 
 	public void onRowRecSupplierAction(SelectEvent event) {
-		IQTAwardSO qtAwardSO = null;
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
 			reqDTO.setDocId(scLoiLoa.getDocId());
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				getManagedBean().setLoiLoaBeans(
@@ -544,9 +531,6 @@ public class LOIDetailBackingBean extends
 	 * viewItemDetails method to view item details in loi listing
 	 */
 	public void viewItemDetails(LoiLoaBean bean) {
-
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
 		reqDTO = new AwardSupplierReqDTO();
@@ -558,13 +542,36 @@ public class LOIDetailBackingBean extends
 			reqDTO.setScLoa(bean.getScLoa());
 		}
 
-		AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
 		if (resDTO.getScLoi() != null) {
 			getManagedBean().setScLoi(resDTO.getScLoi());
 		}
 	}
 
+	/**
+	 * showMultipleLOIItemDetails method to view item details in multiple loi
+	 */
+	public void showMultipleLOIItemDetails(ScLoi scLoi) {
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+		reqDTO = new AwardSupplierReqDTO();
+
+		reqDTO.setScLoi(scLoi);
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
+
+		if (resDTO.getScLoi() != null) {
+			getManagedBean().setScLoi(resDTO.getScLoi());
+		}
+	}
+	
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+
+	
 	/**
 	 * getting Approver drop down listing
 	 */
@@ -691,10 +698,7 @@ public class LOIDetailBackingBean extends
 
 	public void populatePreDefinedDetails() {
 		debugLogger("populatePreDefinedDetails");
-		IQTAwardSO qtAwardSO = null;
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			String languageCode = new FacesScopes().getUserLocale()
 					.getLanguage();
@@ -704,7 +708,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setLanguageCode(languageCode);
 
 			/*
-			 * AwardSupplierResDTO resDTO = qtAwardSO
+			 * AwardSupplierResDTO resDTO = getQtAwardSO()
 			 * .retrieveTermDescListByTermType(reqDTO);
 			 * 
 			 * List<ScTermDesc> list = resDTO.getTermDescResultBean()
@@ -714,7 +718,7 @@ public class LOIDetailBackingBean extends
 			 */
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 
@@ -878,14 +882,12 @@ public class LOIDetailBackingBean extends
 	public String createLOIAction(ScQtEvaluationResult scQtEvaluationResult,
 			String docType) {
 		debugLogger("createLOIAction");
-		IQTAwardSO iqtAwardSO = null;
 		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
 		try {
 
 			long id = scQtEvaluationResult.getEvaluationResultId();
 
-			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(id);
@@ -895,7 +897,7 @@ public class LOIDetailBackingBean extends
 
 			docType = reqDTO.getDocType();
 
-			AwardSupplierResDTO resDTO = iqtAwardSO.retrieveLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
 			ScQt scQt = resDTO.getScQt();
 			if (scQt != null) {
@@ -1029,23 +1031,21 @@ public class LOIDetailBackingBean extends
 			}
 
 		} finally {
-			iqtAwardSO = null;
+			//iqtAwardSO = null;
 		}
 		return QTConstants.LOI_PAGE;
 	}
 
 	public void createLOI(ScLoiLoa scLoiLoa) {
-		IQTAwardSO qtAwardSO = null;
 		try {
 			renewSessionWithPreviousValues();
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			ScLoi loi = new ScLoi();
 			loi.setScLoiLoa(scLoiLoa);
 			reqDTO.setScLoi(loi);
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
 			populateLOIDetails(resDTO);
 
@@ -1058,16 +1058,13 @@ public class LOIDetailBackingBean extends
 	}
 
 	public void editLOI(ScLoi scLoi) {
-		IQTAwardSO qtAwardSO = null;
 		 //getManagedBean().setScLoi(scLoi);
 		try {
 			renewSessionWithPreviousValues();
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setRecommendDtlIdList(null);
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
 			populateLOIDetails(resDTO);
 
@@ -1082,25 +1079,19 @@ public class LOIDetailBackingBean extends
 
 	public String editLOIAction(ScLoi scLoi) {
 		debugLogger("editLOIAction");
-
-		IQTAwardSO qtAwardSO = null;
-
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
 			String language = new FacesScopes().getUserLocale().getLanguage();
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setLanguageCode(language);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
 			populateLOIDetails(resDTO);
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 
 		return QTConstants.LOI_PAGE;
@@ -1542,14 +1533,10 @@ public class LOIDetailBackingBean extends
 	 */
 	public void saveAction() {
 		debugLogger("saveAction");
-
 		// IStatusSO statusSO = null;
 		// IUserSO userSO = null;
-		IQTAwardSO qtAwardSO = null;
 
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 
@@ -1620,7 +1607,7 @@ public class LOIDetailBackingBean extends
 			// awardSupplierReqDTO.setOutcome(outcome);
 			// awardSupplierReqDTO.setSourceId(getManagedBean().getSourceId());
 
-			AwardSupplierResDTO resDTO = qtAwardSO.saveLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
@@ -1649,26 +1636,21 @@ public class LOIDetailBackingBean extends
 		} finally {
 			// statusSO = null;
 			// userSO = null;
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 	
 	public String submitLoiListAction() {
 		debugLogger("submitLoiListAction");
 
-		IQTAwardSO iqtAwardSO = null;
-
 		try {
-			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
 			ScQt scQt = getManagedBean().getScQtFinalization().getScQt();
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setDocType(getManagedBean().getDocType());
 
-			AwardSupplierResDTO resDTO = iqtAwardSO.completeLoiListBPMTask(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().completeLoiListBPMTask(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				renewSesionObject();
@@ -1696,7 +1678,7 @@ public class LOIDetailBackingBean extends
 			}
 
 		} finally {
-			iqtAwardSO = null;
+			//iqtAwardSO = null;
 		}
 
 		return null;
@@ -1704,13 +1686,8 @@ public class LOIDetailBackingBean extends
 
 	public String submitAction() {
 		debugLogger("submitAction");
-
-		IQTAwardSO qtAwardSO = null;
-
 		try {
 			
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoadData();
 
@@ -1728,7 +1705,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(awardDataType);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.saveLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
@@ -1759,7 +1736,7 @@ public class LOIDetailBackingBean extends
 
 		} finally {
 
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 
 		return null;
@@ -1767,12 +1744,7 @@ public class LOIDetailBackingBean extends
 
 	public void updateLOIListBpmTaskAction(String outcome) {
 		debugLogger("updateLOIListBpmTaskAction");
-
-		IQTAwardSO iqtAwardSO = null;
 		try {
-
-			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setOutcome(outcome);
@@ -1780,7 +1752,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoadData());
 
-			AwardSupplierResDTO resDTO = iqtAwardSO.updateBPMAction(reqDTO);
+			AwardSupplierResDTO resDTO =getQtAwardSO().updateBPMAction(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				String qtNo = getManagedBean().getScQtFinalization().getScQt()
@@ -1793,7 +1765,7 @@ public class LOIDetailBackingBean extends
 						ParameterConst.DOCTYPE_LETTER_OF_INTENT, qtNo);
 			}
 		} finally {
-			iqtAwardSO = null;
+			//iqtAwardSO = null;
 		}
 	}
 	
@@ -1804,11 +1776,9 @@ public class LOIDetailBackingBean extends
 	 */
 	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
-		IQTAwardSO iqtAwardSO = null;
 		AwardSupplierResDTO awardSupplierResDTO = null;
 		try {
-			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoadData();
 
@@ -1833,7 +1803,7 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiId(), scLoi.getLoiNo());
 			}
 
-			 awardSupplierResDTO = iqtAwardSO
+			 awardSupplierResDTO = getQtAwardSO()
 					.saveLOIDtl(awardSupplierReqDTO);
 
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
@@ -1870,7 +1840,7 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiNo());
 			}
 		} finally {
-			iqtAwardSO = null;
+			//iqtAwardSO = null;
 		}
 		return awardSupplierResDTO;
 	}
@@ -1892,17 +1862,13 @@ public class LOIDetailBackingBean extends
 	
 	public void saveMultipleLoiAction() {
 		debugLogger("saveMultipleLoiAction");
-
-		IQTAwardSO qtAwardSO = null;
-
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 					
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
 
-			AwardSupplierResDTO resDTO = qtAwardSO.saveMultipleLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				renewSessionWithPreviousValues();
@@ -1932,18 +1898,14 @@ public class LOIDetailBackingBean extends
 			}
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 	
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
-
-		IQTAwardSO qtAwardSO = null;
-
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
 					.getPayLoadData();
@@ -1956,7 +1918,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setPayLoad(evaluationDataType);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.saveMultipleLOIDtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
@@ -1967,7 +1929,7 @@ public class LOIDetailBackingBean extends
 			}
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 	
@@ -2811,7 +2773,7 @@ public class LOIDetailBackingBean extends
 				scLoiReportAttachment.setScLoiReport(selectedScLoiReport);
 				selectedScLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
 			}
-			scLoiReportAttachment.setDocNo(selectedScLoiReport.getScLoi().getLoiNo());
+			scLoiReportAttachment.setScLoiReport(selectedScLoiReport);
 			scAttachment = scLoiReportAttachment;
 			
 			uploadAttachment(event.getFile(), scAttachment);
@@ -2844,6 +2806,7 @@ public class LOIDetailBackingBean extends
 			ParameterResDTO resDTO = parameterSO
 					.retrieveParameterByTypeAndCode(reqDTO);
 			scLoiReport.setDefinationType(resDTO.getPmParameter());
+			scLoiReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOI_NEGOTIATION_RESULT); //NR
 		} finally {
 			parameterSO = null;
 		}
@@ -2930,6 +2893,11 @@ public class LOIDetailBackingBean extends
 			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
+	
+	
+	
+	
+	
 	
 	private ScLoiReportAttachment generateDocumentAttachment(ScLoiReport scLoiReport) {
 		String definitionType = scLoiReport.getDefinationType().getParameterCode();
@@ -3129,7 +3097,9 @@ public class LOIDetailBackingBean extends
 
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getManagedBean().getScLoi().getLoiNo());
+		if(getManagedBean().getScLoi() != null){
+			sb.append(getManagedBean().getScLoi().getLoiNo());
+		}
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		textBeforeSign = sb.toString();
 		return textBeforeSign;
