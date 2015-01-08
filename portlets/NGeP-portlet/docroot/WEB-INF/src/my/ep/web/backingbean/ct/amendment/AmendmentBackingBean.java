@@ -1019,14 +1019,18 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	     ParameterReqDTO reqDTO = null;
 	     IParameterSO parameterSO = null;
 	    
-	    	    reqDTO = new ParameterReqDTO();
+	            if(parameterId == null)
+	    	    return;
+	    	    
+	            reqDTO = new ParameterReqDTO();
 		        parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		        reqDTO.setParameterId(parameterId);
 		        ParameterResDTO resDTO =parameterSO.retrieveParameterById(reqDTO);
 		        int counter = 0;
 		        if(resDTO.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				     for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-		      	       if(committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
+		      	       if(committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null &&
+		      	    		   committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
 				    	       counter++;
 		    	              if(counter ==2) {
 		    	            	  throw new EpException(MessageConst.WARN_755016);
