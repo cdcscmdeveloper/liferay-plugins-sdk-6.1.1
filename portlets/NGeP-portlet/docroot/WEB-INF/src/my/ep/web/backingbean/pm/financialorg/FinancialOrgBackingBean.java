@@ -46,6 +46,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -58,6 +59,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -66,6 +68,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -102,7 +105,14 @@ public class FinancialOrgBackingBean extends
 
 
 	public FinancialOrgBackingBean() {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			System.out.println("***userId: " + pmUser.getUserId());
 
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
+		}
 	}
 
 	public void preLoadingFinOrg() {
@@ -671,9 +681,19 @@ public class FinancialOrgBackingBean extends
 
 	private void validation(){
 		log.info("validation");
+		if(this.getManagedBean().getPmFinancialSvc()!=null && this.getManagedBean().getPmFinancialSvc().isEmpty()){
+			throw new EpException("Please add service type.");
+		}
+		
 		if(StringUtils.isBlank(this.getManagedBean().getFinancialOrg().getBizRegNumber())){
 			if(!this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_PAYMENT_BANK)){
 				throw new EpException("Reg No. is mandatory for Service Type other than Payment Bank.");
+			}
+		}
+		
+		if(this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)){
+			if(this.getManagedBean().getPmFinancialAcc() == null || this.getManagedBean().getPmFinancialAcc().isEmpty()){
+				throw new EpException("At least one Factoring Bank Detail is required.");
 			}
 		}
 		
@@ -682,12 +702,11 @@ public class FinancialOrgBackingBean extends
 
 	public String saveFinancialOrg() {
 		log.info("Save Method");
+		validation();
 		PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
 		if (financialOrg.isBrandNew()) {
-			setUserDetails(financialOrg);
-			if(this.getManagedBean().getPmFinancialSvc()!=null&& this.getManagedBean().getPmFinancialSvc().isEmpty()){
-				throw new EpException("Please add service type.");
-			}
+//			setUserDetails(financialOrg);
+			
 			for (PmFinancialSvc financialSvc : this.getManagedBean().getPmFinancialSvc()) {
 				setUserDetails(financialSvc);
 				parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
