@@ -843,9 +843,10 @@ public class QTDetailBackingBean extends
 				}
 				if (bsvs.size() > 0) {
 					scQt.setBsvRequired(isRequired);
+					scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
+							.getScQtBsvDtls()));
 				}
-				scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
-						.getScQtBsvDtls()));
+				
 			} else {
 				// code for if bsv details if any and non zonal
 				BriefingZoneBean bsvDtlBean = this.getManagedBean()
