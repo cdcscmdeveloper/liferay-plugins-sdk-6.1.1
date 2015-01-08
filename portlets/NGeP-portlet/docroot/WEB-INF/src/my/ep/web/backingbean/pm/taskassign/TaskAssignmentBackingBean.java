@@ -24,6 +24,7 @@ import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -45,6 +46,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpBpmException;
@@ -579,6 +582,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		//CT
 		}else if(ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(moduleCode)){
 			selectedApprovers = retrieveCtApprovers(task.getDocNumber(), task.getDocType());
+		//PP
+		}else if(ModuleCodeConst.PROCUREMENT_PLAN.equalsIgnoreCase(moduleCode)){
+			selectedApprovers = retrievePpApprovers(task.getDocId().longValue());
 		}
 		if(selectedApprovers!=null && !selectedApprovers.isEmpty()){
 			log.info("add approvers to list");
@@ -586,6 +592,35 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 	}
 
+	/**
+	 * retrieve selected approvers from PP
+	 * @param docNo
+	 * @param docType
+	 * @return List<PmUser>
+	 */
+	private List<PmUser> retrievePpApprovers(Long docId){
+		log.info("retrievePpApprovers");
+		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
+		ProcurementPlanResDTO resDTO = new ProcurementPlanResDTO();
+		try{
+			
+			log.info("docId: " + docId);
+			reqDTO.setDocId(docId);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
+			resDTO = reqSO.retrieveApproverListByDocId(reqDTO);
+			if(resDTO.isSuccessful()){
+				selectedApprovers = resDTO.getApproverList();
+			}
+		}catch(Exception e){
+			throw new EpException(MessageConst.ERROR_770103, new String[]{ModuleCodeConst.PROCUREMENT_PLAN, e.getMessage()}); 
+		}finally{
+			reqSO = null;
+		}
+		
+		return selectedApprovers;
+	}
 	/**
 	 * retrieve selected approvers from FL
 	 * @param docNo
