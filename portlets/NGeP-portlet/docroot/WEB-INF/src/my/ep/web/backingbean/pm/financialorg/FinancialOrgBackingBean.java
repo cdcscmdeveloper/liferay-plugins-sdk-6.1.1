@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.financialorg;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -654,7 +655,7 @@ public class FinancialOrgBackingBean extends
 		  baseObject.setChangedBy(1L);
 	}
 
-	private void validation(){
+	private void validation()throws Exception {
 		log.info("validation");
 		if(this.getManagedBean().getPmFinancialSvc()!=null && this.getManagedBean().getPmFinancialSvc().isEmpty()){
 			throw new EpException("At least one Financial Service is required.");
@@ -673,12 +674,54 @@ public class FinancialOrgBackingBean extends
 		}
 		
 		validateFinancialService();
+		validateFinancialAccount();
+		
 		
 	}
 	
+	private void validateFinancialAccount()throws Exception {
+		log.info("validateFinancialAccount");
+		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getPmFinancialAcc();
+		if (pmFinancialAccList != null && !pmFinancialAccList.isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date endLess = sdf.parse("2099-12-31");
+			for (int index1 = 0; index1 < pmFinancialAccList.size(); index1++) {
+				if (pmFinancialAccList.get(index1).getRecordStatusFlg() 
+						== DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (pmFinancialAccList.size() > 1) {
+						for (int index2 = index1 + 1; index2 < pmFinancialAccList.size(); index2++) {
+							if (pmFinancialAccList.get(index2).getRecordStatusFlg() 
+									== DbValueConst.RECORD_STATUS_ACTIVE) {
+								// Overlap exists if (StartA <= EndB) and (EndA
+								// >= StartB)
+								Date startA = pmFinancialAccList.get(index1).getEffDate();
+								Date endA = pmFinancialAccList.get(index1).getExpDate();
+								Date startB = pmFinancialAccList.get(index2).getEffDate();
+								Date endB = pmFinancialAccList.get(index2).getExpDate();
 
-	public String saveFinancialOrg() {
-		log.info("Save Method");
+								// not null
+								if(endA==null){
+									endA = endLess;
+								}if(endB==null){
+									endB = endLess;
+								}
+								
+								boolean isCurrentPairOverlap = false;
+								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
+								
+								if (isCurrentPairOverlap) {
+									throw new EpException("Factoring Bank Effective Date and Expiry Date must not overlapping.");
+								}
+							}
+						}
+					} 
+				}
+			}
+		}
+	}
+
+	public String saveFinancialOrg() throws Exception{
+		log.info("saveFinancialOrg");
 		validation();
 		PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
 		if (financialOrg.isBrandNew()) {
@@ -721,18 +764,18 @@ public class FinancialOrgBackingBean extends
 		reqDTO.setPmFinancialOrg(financialOrg);
 		try{	
 
-		FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrg(reqDTO);
-
-		if (resDTO.isSuccessful()) {
-			result = resDTO.isSuccessful();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Financial Org successfully.", "Org Name : "
-									+ this.getManagedBean().getFinancialOrg()
-											.getFinOrgName()));
-
-		}
+			FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrg(reqDTO);
+	
+			if (resDTO.isSuccessful()) {
+				result = resDTO.isSuccessful();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Financial Org successfully.", "Org Name : "
+										+ this.getManagedBean().getFinancialOrg()
+												.getFinOrgName()));
+	
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
