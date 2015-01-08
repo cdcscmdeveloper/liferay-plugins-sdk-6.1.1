@@ -17,7 +17,7 @@
 		    </p:selectOneMenu>
 		   
 		    <h:panelGroup>
-                <div style="height: 85px; vertical-align:top;">
+                <div style="height: 80px; vertical-align:top;">
                      <p:outputLabel for="justificationPbQCC" value="#{lbl['lbl.txt.remarks']}" />
                 </div>
             </h:panelGroup>
@@ -26,22 +26,6 @@
                    style="width:180px;"   maxlength="200"  autoResize="false"  
                    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
             </h:panelGrid>
-          
-            <p:outputLabel value="#{lbl['lbl.ct.date.of.meeting']}"/>   
-            <p:calendar id="calMeeting" 
-                 showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  styleClass="calanderWidth" 
-                value="#{amendmentBackingBean.meetingDate(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}" /> 
-		   
-		     <h:panelGroup>
-                 <div style="height: 85px; vertical-align:top;">
-                    <p:outputLabel for="SecretryLocation" value="#{lbl['lbl.ct.location.of.meeting']}" />
-                 </div>
-              </h:panelGroup>
-              <h:panelGrid>
-                 <p:inputTextarea id="SecretryLocation" disabled="true"  rows="4"  
-                     style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false"  
-                     value="#{amendmentBackingBean.meetingLocation(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}"/>
-              </h:panelGrid> 
            </h:panelGrid>
        
            <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150" styleClass="top-aligned-columns">
