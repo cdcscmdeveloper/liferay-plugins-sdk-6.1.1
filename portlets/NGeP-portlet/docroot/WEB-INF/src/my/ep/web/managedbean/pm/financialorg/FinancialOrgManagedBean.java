@@ -3,9 +3,7 @@ package my.ep.web.managedbean.pm.financialorg;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -100,12 +98,13 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private String serviceType;
 	private List<String> serviceTypes;
 
-	private Map<String, Object> mapObject = new HashMap<String, Object>();
+//	private Map<String, Object> mapObject = new HashMap<String, Object>();
 
 	private Date currentDate = new Date();
 	private boolean dropDownValue = false;
 
 	public FinancialOrgManagedBean() {
+		selectedPmFinancialBranch = new PmFinancialBranch();
 		financialSvc = new PmFinancialSvc();
 		addressType = new ArrayList<PmAddressType>();
 		pmContact = new ArrayList<PmContact>();
@@ -767,14 +766,14 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	public void setDropDownValue(boolean dropDownValue) {
 		this.dropDownValue = dropDownValue;
 	}
-
-	public Map<String, Object> getMapObject() {
-		return mapObject;
-	}
-
-	public void setMapObject(Map<String, Object> mapObject) {
-		this.mapObject = mapObject;
-	}
+//
+//	public Map<String, Object> getMapObject() {
+//		return mapObject;
+//	}
+//
+//	public void setMapObject(Map<String, Object> mapObject) {
+//		this.mapObject = mapObject;
+//	}
 
 	/**
 	 * @return the enableUpdateStatus

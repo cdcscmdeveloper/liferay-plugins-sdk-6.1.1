@@ -4,9 +4,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panel id="financialBranchDtl">
+	<p:outputPanel id="financialBranchDtl"  rendered="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch!=null}" >
 		<p:dataTable id="financialBranchAccId" var="financialacc"
-			value="#{financialOrgBackingBean.managedBean.pmFinancialBranchAcc}"
+			value="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranchAcc}">
 
@@ -90,5 +90,5 @@
 		</div>
 
 
-	</p:panel>
+	</p:outputPanel>
 </ui:composition>
