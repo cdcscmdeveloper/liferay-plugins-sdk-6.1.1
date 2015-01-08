@@ -82,12 +82,4 @@ public abstract class BaseManagedBean implements Serializable {
 		this.currentStatusId = currentStatusId;
 	}
 
-	public int getPostCodeMaxLength() {
-		return postCodeMaxLength;
-	}
-
-	public void setPostCodeMaxLength(int postCodeMaxLength) {
-		this.postCodeMaxLength = postCodeMaxLength;
-	}
-
 }
