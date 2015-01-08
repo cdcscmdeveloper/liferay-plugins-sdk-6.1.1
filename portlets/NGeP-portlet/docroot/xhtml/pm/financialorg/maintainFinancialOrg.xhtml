@@ -31,10 +31,10 @@
 			test="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 			<ui:include src="/xhtml/pm/financialorg/financialOrgHeader.xhtml"></ui:include>
 		</c:if> -->
-		<table border="0" cellspacing="0" cellpadding="0" width="100%"
-			id="subMenu">
+		<table style="border:0; cellspacing:0; cellpadding:0; width:100%;" id="subMenu">
 			<tr>
-				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu
 						styleClass="sidemenu"
 						activeIndex="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
 						style="display : table-caption;">
@@ -54,17 +54,19 @@
 								value="#{financialOrgBackingBean.factringBranchInfoTab}" />
 						</p:menuitem>
 
-					</p:tabMenu></td>
-				<td width="80%" valign="top"><p:outputPanel
+					</p:tabMenu>
+				</td>
+				<td width="80%" valign="top">
+					<p:outputPanel
 						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.generalInfoTab}">
 						<ui:include src="generalFinancialdetails.xhtml" />
 					</p:outputPanel>
 					<p:outputPanel id="opFactoringBranch"
 						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.factringBranchInfoTab}">
 						<ui:include src="factoringBranch.xhtml" />
-					</p:outputPanel> </td>
+					</p:outputPanel> 
+				</td>
 			</tr>
 		</table>
-
 	</ui:define>
 </ui:composition>
