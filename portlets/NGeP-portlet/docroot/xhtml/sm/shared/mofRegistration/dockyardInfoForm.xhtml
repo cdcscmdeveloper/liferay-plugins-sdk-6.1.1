@@ -120,7 +120,7 @@
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmState,
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict,
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
-							update="dockyardState,dockyardDist,dockyardCity" />
+							update="dockyardState,dockyardDist,dockyardCity,postCodeFacDockYardPanelId" />
 					</p:selectOneMenu> <p:message id="smDockContryMsg" for="smDockContry"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -187,15 +187,33 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="smFacDockYardPosCode" maxlength="10"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.postcode']}"
-						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
-						size="35"
-						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-						<f:validator validatorId="postcodeValidator" />
-					</p:inputText> <p:message id="smFacDockYardPosCodeMsg" for="smFacDockYardPosCode"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				<td>
+					<p:outputPanel id="postCodeFacDockYardPanelId">
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5" required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="smFacDockYardPosCodeMy"
+								value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="smFacDockYardPosCodeMyMsg" for="smFacDockYardPosCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10" required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="smFacDockYardPosCodeForeign"
+								value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="smFacDockYardPosCodeForeignMsg"
+								for="smFacDockYardPosCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
