@@ -23,7 +23,8 @@
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="financialweightage,finaddpoints"></p:ajax>
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="financialweightage,finaddpoints"></p:ajax>
 					</p:selectOneRadio> <p:message id="finScoring" for="finScoreWeight" display="icon"></p:message>
 				</td>
 			</tr>
@@ -163,7 +164,7 @@
 							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpricePackageBelowScore(specificationBackingBean.managedBean.offerPricePackage)}" />
-							
+
 						</p:inputText>
 					</p:column>
 					<p:column colspan="1">
@@ -176,7 +177,7 @@
 							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpricePackageAboveScore(specificationBackingBean.managedBean.offerPricePackage)}" />
-							
+
 						</p:inputText>
 					</p:column>
 				</p:row>
@@ -209,7 +210,7 @@
 							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpriceItemBelowScore(specificationBackingBean.managedBean.offerPriceItem)}" />
-							
+
 						</p:inputText>
 					</p:column>
 					<p:column colspan="1">
@@ -222,7 +223,7 @@
 							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpriceItemAboveScore(specificationBackingBean.managedBean.offerPriceItem)}" />
-							
+
 						</p:inputText>
 					</p:column>
 				</p:row>
