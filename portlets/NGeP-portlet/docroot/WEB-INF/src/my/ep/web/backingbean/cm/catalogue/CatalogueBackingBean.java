@@ -2311,7 +2311,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CatalogueResDTO resDTO = catalogueSO
 						.searchSupplierItemByStatus(reqDTO);
 
-				this.getManagedBean().setRejectedItemList(
+				this.getManagedBean().setExpiredItemList(
 						resDTO.getSupplierItemList());
 			}
 
