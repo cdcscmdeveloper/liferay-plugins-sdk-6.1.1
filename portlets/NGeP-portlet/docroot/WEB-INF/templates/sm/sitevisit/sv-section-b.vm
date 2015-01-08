@@ -66,18 +66,17 @@
 					<tr>
 						<td></td>
 						<td class="txtBold" valign="top">Cheque Signatory Name</td>
-						<td valign="top">
+						<td>
 							#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)
-								$velocityCount. $signatory.smPersonnel.name
+								$velocityCount. $signatory.smPersonnel.name<br />
 							#end
-
 						</td>
 					</tr>
 					
 					<tr>
 						<td></td>
 						<td valign="top" class="txtBold">Terms and Conditions</td>
-						<td valign="top">$bank.smSupplierBank.signatureInstruction</td>
+						<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
 					</tr>
 				#end
 			</table>
