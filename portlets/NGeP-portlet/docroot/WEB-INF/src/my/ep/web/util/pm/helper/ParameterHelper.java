@@ -311,6 +311,29 @@ public class ParameterHelper {
 		return list;
 	}
 	
+	/**
+	 * To get PmParameterBy parameter id..
+	 * @param parameterId
+	 * @return
+	 */
+	public PmParameter getPmParameterById(Long parameterId) {
+		IParameterSO parameterSO;
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterId(parameterId);
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterById(parameterReqDTO);
+			return resDTO.getPmParameter();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
