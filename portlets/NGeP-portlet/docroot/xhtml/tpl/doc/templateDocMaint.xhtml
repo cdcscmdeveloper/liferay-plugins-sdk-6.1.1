@@ -225,7 +225,7 @@
 		</p:dialog>
 		
 		<p:dialog id="popupImportSec" widgetVar="popupImportSec" modal="false" 
-			resizable="false" header="Import Section" width="650" height="460">
+			resizable="false" header="Import Section" width="850" height="460">
 			<table>
 				<tr>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Name" /></td>
@@ -237,16 +237,16 @@
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Process Type" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu style="width:100px;"
+						<p:selectOneMenu id="imptProcessType" style="width:100px;"
 							value="#{templateDocBackingBean.managedBean.impProcessTypeId}">
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Title" /></td>
-					<td class="TableFieldRight"><p:inputText style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" /></td>
+					<td class="TableFieldRight"><p:inputText id="imptTitle" style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" /></td>
 					<td>
 						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
-							process="@this,imptTemplateCategory" update="impMasterList">
+							process="@this,imptTemplateCategory,imptProcessType,imptTitle" update="impMasterList">
 							<h:graphicImage library="ep/images/design" name="Search-icon.png"/> 
 						</p:commandLink> 
 					</td>
