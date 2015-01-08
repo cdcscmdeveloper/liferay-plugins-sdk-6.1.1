@@ -547,4 +547,43 @@
 			</p:panel>
 		</h:panelGroup>
 	</p:dialog>
+	<p:dialog id="uomRefDlg" header="#{lbl['lbl.fl.instruction.uom.table']}" 
+			widgetVar="uomRefDialog" showEffect="fade" hideEffect="fade" modal="true"
+			width="600" resizable="false">
+			<p:panel id="measurementPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+				<h:panelGrid columns="2" >
+				        <h:outputLabel value="#{lbl['lbl.fl.uom.uomcode']}"></h:outputLabel>
+			            <p:inputText value="#{purchaseRequestBackingBean.managedBean.measurementCodes}" size="30"  
+			            	onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>					
+						<h:outputLabel value="#{lbl['lbl.fl.uom.uomname']}"></h:outputLabel>
+						<p:inputText value="#{purchaseRequestBackingBean.managedBean.measurementNames}" size="50" 
+							onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>
+				</h:panelGrid>
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+							 action="#{purchaseRequestBackingBean.retrieveMeasurement}"
+						     update="measurementSR" process="measurementPanel" widgetVar="uomSearch"/>
+            		<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+            				 action="#{purchaseRequestBackingBean.resetMeasurementSearch}"
+            				 process="@this" update="measurementPanel,uomResultPanel" />
+	  			</div>
+    			<br/>
+				<br/>
+			 </p:panel>
+			<p:panel id="uomResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+				<p:dataTable id="measurementSR" value="#{purchaseRequestBackingBean.unitOfMeasurementDataModel}"
+				rows="10" var="measurementList" rowIndexVar="index" lazy="true">	
+			   <ac:paginator for="measurementSR" />				
+		       <p:column headerText="#{lbl['lbl.fl.uom.uomcode']}" style="width:15%"> 
+					<h:outputText value="#{measurementList.uomCode}" />    
+		       </p:column>		       
+		       <p:column headerText="#{lbl['lbl.fl.uom.uomname']}" style="width:50%"> 
+					<h:outputText value="#{measurementList.uomName}" /> 
+		       </p:column>  		       
+		        <p:column headerText="#{lbl['lbl.fl.uom.uomdecimal']}" style="width:20%"> 
+					<h:outputText value="#{measurementList.decimalScale}" /> 
+		       </p:column> 		    	
+		     </p:dataTable>	
+			</p:panel>			
+		</p:dialog>
 </ui:composition>
