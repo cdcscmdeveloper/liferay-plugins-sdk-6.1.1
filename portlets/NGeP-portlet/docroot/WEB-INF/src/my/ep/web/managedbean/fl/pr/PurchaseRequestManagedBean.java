@@ -267,6 +267,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private boolean validated = false;
 	
+	//uom
+	private String measurementCodes;	
+	private String measurementNames;
+	
 /**
 	 * @return the chargeLineItemRoot
 	 */
@@ -2251,6 +2255,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setValidated(boolean validated) {
 		this.validated = validated;
+	}
+
+	/**
+	 * @return the measurementCodes
+	 */
+	public String getMeasurementCodes() {
+		return measurementCodes;
+	}
+
+	/**
+	 * @param measurementCodes the measurementCodes to set
+	 */
+	public void setMeasurementCodes(String measurementCodes) {
+		this.measurementCodes = measurementCodes;
+	}
+
+	/**
+	 * @return the measurementNames
+	 */
+	public String getMeasurementNames() {
+		return measurementNames;
+	}
+
+	/**
+	 * @param measurementNames the measurementNames to set
+	 */
+	public void setMeasurementNames(String measurementNames) {
+		this.measurementNames = measurementNames;
 	}
 
 }

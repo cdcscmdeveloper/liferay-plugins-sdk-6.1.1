@@ -26,6 +26,9 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -40,6 +43,7 @@ import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -77,6 +81,8 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -113,6 +119,7 @@ import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
@@ -121,6 +128,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -129,6 +137,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -160,6 +170,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private boolean displayItemPnl;
 	private boolean selectedAllChargeItem;
 	private String className="@(.myPrClassName)";
+	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	
 	/**
 	 * @return the className
@@ -2652,5 +2663,82 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 			}
 		}
+	}
+	
+
+	private class UnitOfMeasurementPagingDataModel extends PagingDataModel<PmUom> {
+		private static final long serialVersionUID = 1L;
+
+		public UnitOfMeasurementPagingDataModel() {
+			super("measurementSR");
+		}
+
+		@Override
+		public ISearchResultBean<PmUom> pageChangeListener(ISearchBean<PmUom> searchBean) {
+			try {	
+				ISearchBean<PmUom> searchBeanData = getMeasurementSearchBeanData(searchBean);
+				UomReqDTO reqDTO = new UomReqDTO();
+				reqDTO.setMeasurementSearchBean(searchBeanData);				
+				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+				UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getMeasurementSearchResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
+		
+		if (getManagedBean().getMeasurementCodes() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
+			SearchFilterBean uomSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			uomSearchBean
+					.setSearchField("uomCode");
+			uomSearchBean
+					.setCaseInsensitive(true);
+			uomSearchBean.setSearchValue(getManagedBean()
+					.getMeasurementCodes());
+			searchBean.getDataFilterBeans().add(uomSearchBean);
+		}
+
+		if (getManagedBean().getMeasurementNames() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementNames())) {
+			SearchFilterBean uomSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			uomSearchBean
+					.setSearchField("uomName");
+			uomSearchBean
+					.setCaseInsensitive(true);
+			uomSearchBean.setSearchValue(getManagedBean()
+					.getMeasurementNames());
+			searchBean.getDataFilterBeans().add(uomSearchBean);
+		}
+		return searchBean;
+	}
+
+	public IPagingDataModel<PmUom> getUnitOfMeasurementDataModel() {
+		return unitOfMeasurementDataModel;
+	}
+
+	public void setUnitOfMeasurementDataModel(
+			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
+		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
+	}	
+	
+	public void retrieveMeasurement(){		
+		unitOfMeasurementDataModel.reloadData();		
+	}
+	
+	public void resetMeasurementSearch() {		
+		this.getManagedBean().setMeasurementCodes(null);
+		this.getManagedBean().setMeasurementNames(null);
+		getUnitOfMeasurementDataModel().resetData();
+		unitOfMeasurementDataModel.reloadData();		
 	}
 }
