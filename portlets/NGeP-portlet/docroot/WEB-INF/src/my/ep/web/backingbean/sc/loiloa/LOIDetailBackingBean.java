@@ -357,7 +357,7 @@ public class LOIDetailBackingBean extends
 						ScQtCommitteRemarks.class));
 				
 				// LOI Reports
-				getManagedBean().setScLoiReports(resDTO.getScLoi().getScLoiReports());
+				getManagedBean().setRecommendedLoi(resDTO.getScLoi());
 				getManagedBean().setScLoi(resDTO.getScLoi());
 
 				// status
@@ -1937,6 +1937,7 @@ public class LOIDetailBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		
+		reqDTO.setScLoi(getManagedBean().getRecommendedLoi());
 		reqDTO.setScQtFinalization(scQtFinalization);		
 		reqDTO.setScLois(getManagedBean().getLois());
 		

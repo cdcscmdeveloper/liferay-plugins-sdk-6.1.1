@@ -127,7 +127,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private int totalProgressivePayment;
 	private List<ScQtProgressivePayment> progressivePaymentList;
 	
-	private List<ScLoiReport> scLoiReports;
+	private ScLoi recommendedLoi;
 	private List<ScLoiReport> selectedScLoiReports;
 	private ScLoiReport selectedScLoiReport;
 	private String attachmentDocType;
@@ -998,17 +998,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 
 	/**
-	 * @return the scLoiReports
+	 * @return the recommendedLoi
 	 */
-	public List<ScLoiReport> getScLoiReports() {
-		return scLoiReports;
+	public ScLoi getRecommendedLoi() {
+		return recommendedLoi;
 	}
 
 	/**
-	 * @param scLoiReports the scLoiReports to set
+	 * @param recommendedLoi the recommendedLoi to set
 	 */
-	public void setScLoiReports(List<ScLoiReport> scLoiReports) {
-		this.scLoiReports = scLoiReports;
+	public void setRecommendedLoi(ScLoi recommendedLoi) {
+		this.recommendedLoi = recommendedLoi;
 	}
 
 	/**
