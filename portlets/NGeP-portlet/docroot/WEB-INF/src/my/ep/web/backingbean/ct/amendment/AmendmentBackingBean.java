@@ -580,14 +580,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	   getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
 			    	   
 			       }
-			      
+			       if(getManagedBean().isPbConfirmMeeting()){
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
-			       
-			 
+			       }
+			       if(getManagedBean().isSignUpdateDecision()){
 			    	  getManagedBean().setConfirmMeeting(true);
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 			    
-			       if(getManagedBean().isSignOffDecision()){
+			       } if(getManagedBean().isSignOffDecision()){
 			    	  getManagedBean().setConfirmMeeting(true);
 		    	      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 		         }
