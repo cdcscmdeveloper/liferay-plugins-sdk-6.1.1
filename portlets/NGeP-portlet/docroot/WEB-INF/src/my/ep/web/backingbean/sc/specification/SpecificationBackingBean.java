@@ -9635,8 +9635,13 @@ public class SpecificationBackingBean extends
 				for (ScQtCheckList technicalCheckList : techCheckList) {
 					if (technicalCheckList.getTitle().equalsIgnoreCase(
 							scoringCheckList.getTitle())) {
-						technicalCheckList.setQtScoreWeightage(scoringCheckList
-								.getQtScoreWeightage());
+						if (null != scoringCheckList.getQtScoreWeightage()
+								&& scoringCheckList.getQtScoreWeightage()
+										.getScore().intValue() > 0) {
+							technicalCheckList
+									.setQtScoreWeightage(scoringCheckList
+											.getQtScoreWeightage());
+						}
 					}
 				}
 
@@ -9679,8 +9684,13 @@ public class SpecificationBackingBean extends
 										.equalsIgnoreCase(financialSpecs
 												.getDefinationType()
 												.getParameterCode())) {
-							financialList.setQtScoreWeightage(financialSpecs
-									.getQtScoreWeightage());
+							if (null != financialSpecs.getQtScoreWeightage()
+									&& financialSpecs.getQtScoreWeightage()
+											.getScore().intValue() > 0) {
+								financialList
+										.setQtScoreWeightage(financialSpecs
+												.getQtScoreWeightage());
+							}
 						}
 					}
 
@@ -9695,8 +9705,12 @@ public class SpecificationBackingBean extends
 									.equalsIgnoreCase(financialSpecs
 											.getDefinationType()
 											.getParameterCode())) {
-						financialList.setQtScoreWeightage(financialSpecs
-								.getQtScoreWeightage());
+						if (null != financialSpecs.getQtScoreWeightage()
+								&& financialSpecs.getQtScoreWeightage()
+										.getScore().intValue() > 0) {
+							financialList.setQtScoreWeightage(financialSpecs
+									.getQtScoreWeightage());
+						}
 					}
 				}
 
