@@ -134,6 +134,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 
 		} catch (NullPointerException ne) {
+			log.info("Error init revision appl:"+ne.getMessage());
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
 			applRevisionSO = null;
