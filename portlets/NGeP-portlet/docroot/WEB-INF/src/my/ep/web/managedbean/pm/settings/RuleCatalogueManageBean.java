@@ -8,6 +8,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.python.modules.newmodule;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -22,11 +24,12 @@ import my.ep.dto.pm.general.settings.kpi.KPIResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.common.PmKpiStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
-import my.ep.persistence.entity.pm.general.settings.PmConfigRule;
-import my.ep.persistence.entity.pm.general.settings.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sm.SmSupplier;
 
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -36,6 +39,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 
 @ManagedBean(name = "ruleCatalogueMB")
 @SessionScoped
@@ -64,6 +68,10 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmFeeExemption> deletedOrgAndItemFeeExemptions;
 	private List<PmFeeExemption> deletedComodityFeeExemptions;
 	private List<PmFeeExemption> deletedContractFeeExemptions;
+	private List<PmThreshold> thresholds;
+	private List<PmThreshold> deletedThresholds;
+	private PmOrgProfile selectedOrgProfile;
+	private List<PmOrgProfile> orgProfileList;
 	
 	public RuleCatalogueManageBean() {
 		
@@ -291,6 +299,47 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setDeletedContractFeeExemptions(
 			List<PmFeeExemption> deletedContractFeeExemptions) {
 		this.deletedContractFeeExemptions = deletedContractFeeExemptions;
+	}
+
+	public List<PmThreshold> getThresholds() {
+		if(this.thresholds == null){
+			this.thresholds = new ArrayList<PmThreshold>();
+		}
+		return this.thresholds;
+	}
+
+	public void setThresholds(List<PmThreshold> thresholds) {
+		this.thresholds = thresholds;
+	}
+
+	public List<PmThreshold> getDeletedThresholds() {
+		if(this.deletedThresholds == null){
+			this.deletedThresholds = new ArrayList<PmThreshold>();
+		}
+		return deletedThresholds;
+	}
+
+	public void setDeletedThresholds(List<PmThreshold> deletedThresholds) {
+		this.deletedThresholds = deletedThresholds;
+	}
+
+	public PmOrgProfile getSelectedOrgProfile() {
+		if(selectedOrgProfile == null){
+			selectedOrgProfile = new PmOrgProfile();
+		}
+		return selectedOrgProfile;
+	}
+
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	public List<PmOrgProfile> getOrgProfileList() {
+		return orgProfileList;
+	}
+
+	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
+		this.orgProfileList = orgProfileList;
 	}
 	
 

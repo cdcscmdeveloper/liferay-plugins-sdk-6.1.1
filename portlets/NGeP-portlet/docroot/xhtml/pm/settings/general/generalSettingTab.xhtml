@@ -12,9 +12,9 @@
 
 			<h:panelGroup>
 				<p:commandButton value="#{lbl['lbl.cm.save']}"
-					icon="ui-icon-save"
+					icon="ui-icon-save" partialSubmit="true" process="settingTabId"
 					action="#{ruleCatalogueBackingBean.saveGeneralSetting}"
-					update="@form"></p:commandButton>
+					update="settingTabId"></p:commandButton>
 
 			</h:panelGroup>
 
@@ -88,7 +88,7 @@
 				</tr>
 				<tr style="height: 30px;">
 					<td><p:outputLabel
-							value="#{lbl['lbl.pm.settings.notification.language']}" /> <p:outputLabel
+							value="#{lbl['lbl.pm.settings.notification.language']}" /><p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.preferredLanguage}"
@@ -99,6 +99,16 @@
 						</p:selectOneMenu></td>
 					<td />
 					<td />
+				</tr>
+				<tr style="height: 30px;">
+				  <td><p:outputLabel
+							value="#{lbl['lbl.pm.settings.operational.threshold']}" />
+				  </td>
+				  <td><p:selectOneRadio value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isGeneralThreshold}">
+				        <f:selectItem itemLabel="#{lbl['lbl.pm.settings.centralized']}" itemValue="1"/>
+				        <f:selectItem itemLabel="#{lbl['lbl.pm.settings.ministry']}" itemValue="0"/>
+				  </p:selectOneRadio>
+				  </td>
 				</tr>
 
 			</table>
