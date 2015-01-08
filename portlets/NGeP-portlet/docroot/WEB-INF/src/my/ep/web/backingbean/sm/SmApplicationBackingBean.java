@@ -5306,25 +5306,12 @@ public class SmApplicationBackingBean extends
 
 					}
 				}
-				if (getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-						|| getManagedBean()
-								.getSmAppl()
-								.getApplType()
-								.equalsIgnoreCase(
-										ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-					reqDTO.setBusinessRegNo(getManagedBean().getSmSupplier()
-							.getRegNo());
-					reqDTO.setCompanyName(getManagedBean().getSmSupplier()
-							.getCompanyName());
-					reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
-					reqDTO.setCategoryDescription(SmApplicationUtil
-							.retriveCategoryMessageForNotification(getManagedBean()));
-					reqDTO.setNotifLink("<a href=https://www.google.com.my/>"
-							+ " Click Here " + " </a>");
+				SmApplicationUtil.setApprovalNotificationParameters(
+						getManagedBean(), reqDTO);
 
-				}
-
+			} else if (res.equalsIgnoreCase("Reject")) {
+				SmApplicationUtil.setRejectionNotificationParameters(
+						getManagedBean(), reqDTO);
 			}
 
 			log.info("Before final decision ---"

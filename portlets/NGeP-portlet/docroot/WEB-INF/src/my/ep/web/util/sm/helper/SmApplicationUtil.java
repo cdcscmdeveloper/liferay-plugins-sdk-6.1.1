@@ -75,6 +75,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -256,6 +257,8 @@ public class SmApplicationUtil {
 					break;
 				}
 			}
+		} else {
+			addedNewCode = true;
 		}
 
 		return addedNewCode;
@@ -3341,6 +3344,63 @@ public class SmApplicationUtil {
 								new FacesScopes().getUserLocale())));
 	}
 
+	public static void setApprovalNotificationParameters(
+			SmApplicationManagedBean managedBean, ReviewApplicationReqDTO reqDTO) {
+		reqDTO.setBusinessRegNo(managedBean.getSmSupplier().getRegNo());
+		reqDTO.setCompanyName(managedBean.getSmSupplier().getCompanyName());
+		if (managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| managedBean
+						.getSmAppl()
+						.getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
+			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(managedBean));
+		} else if (managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(managedBean));
+			reqDTO.setMofNum(getActiveMofNumForSupplier(managedBean));
+		}
+		reqDTO.setNotifLink("<a href=\"https://www.google.com.my\"> Sila Klik </a>");
+
+	}
+
+	public static void setRejectionNotificationParameters(
+			SmApplicationManagedBean managedBean, ReviewApplicationReqDTO reqDTO) {
+		if (managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			reqDTO.setBusinessRegNo(managedBean.getSmSupplier().getRegNo());
+			reqDTO.setCompanyName(managedBean.getSmSupplier().getCompanyName());
+			reqDTO.setCategoryDescription(managedBean.getApplnApprovalRemarks());
+			reqDTO.setMofNum(getActiveMofNumForSupplier(managedBean));
+		}
+
+	}
+
+	public static String getActiveMofNumForSupplier(
+			SmApplicationManagedBean managedBean) {
+		String mofNum = "";
+		List<SmMofAccount> accounts = managedBean.getSmSupplier()
+				.getSmMofAccounts();
+		if (accounts != null && !accounts.isEmpty()) {
+			for (SmMofAccount account : accounts) {
+				if (account.getSupplierType().equalsIgnoreCase(
+						managedBean.getSmAppl().getSupplierType())
+						&& account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+					mofNum = account.getMofNo();
+				}
+			}
+		}
+		return mofNum;
+	}
+
+	public static String retriveCancelRegistrationMessageForNotification(
+			SmApplicationManagedBean managedBean) {
+		return null;
+
+	}
+
 	public static String retriveCategoryMessageForNotification(
 			SmApplicationManagedBean managedBean) {
 		StringBuffer approvedCatCodes = new StringBuffer();
@@ -3369,20 +3429,25 @@ public class SmApplicationUtil {
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				approvedCatCodes.append(++i + ".)")
+				approvedCatCodes.append("2.1.").append(++i + ".) ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
-						.append(cat.getPmCategoryL3().getCategoryL3Code());
+						.append(cat.getPmCategoryL3().getCategoryL3Code())
+						.append("-")
+						.append(cat.getPmCategoryL3().getCategoryName())
+						.append("<br/>");
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.RECORD_STATUS_SUSPENDED) == 0) {
 				existsRejectedCodes = true;
 				rejectedCatCodes.append("<tr>");
 				rejectedCatCodes
 						.append("<td style=\"border: 1px solid black;\">")
-						.append(++j + ".)")
+						.append("2.2.").append(++j + ".) ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
 						.append(cat.getPmCategoryL3().getCategoryL3Code())
+						.append("-")
+						.append(cat.getPmCategoryL3().getCategoryName())
 						.append("</td>");
 				rejectedCatCodes
 						.append("<td style=\"border: 1px solid black;\">");
@@ -3398,9 +3463,11 @@ public class SmApplicationUtil {
 		}
 
 		rejectedCatCodes.append("</table>");
-		finalMsg.append(approvedCatCodes.toString());
+		finalMsg.append("<p style=\"margin-left: 20px;\">")
+				.append(approvedCatCodes.toString()).append("</p>");
 		if (existsRejectedCodes) {
-			finalMsg.append(rejectedCatCodes.toString());
+			finalMsg.append("<div style=\"margin-left: 20px;\">")
+					.append(rejectedCatCodes.toString()).append("</div>");
 		}
 		if (finalMsg.toString() == null) {
 			finalMsg.append("");
