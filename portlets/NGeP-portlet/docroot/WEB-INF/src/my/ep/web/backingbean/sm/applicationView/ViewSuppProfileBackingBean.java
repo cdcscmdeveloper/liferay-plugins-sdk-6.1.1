@@ -44,11 +44,11 @@ public class ViewSuppProfileBackingBean extends
 				redirectToAppl = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
 
 			} else {
-				log.info("*****************applNo is null**************");
+				log.error("*****************applNo is null**************");
 				SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
 			}
 		} else {
-			log.info("*****************appl is null**************");
+			log.error("*****************appl is null**************");
 			SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
 		}
 
