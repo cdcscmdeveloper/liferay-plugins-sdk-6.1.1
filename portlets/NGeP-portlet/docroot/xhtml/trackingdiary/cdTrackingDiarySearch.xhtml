@@ -22,6 +22,11 @@
 
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
+								<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
+								<td width="35%"><p:inputText size="50"
+										value="#{cmTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+							</tr>
+							<tr>
 								<td width="15%"><p:outputLabel
 										value="UNSPSC Code" /></td>
 								<td width="35%"><p:inputText size="50"
@@ -39,14 +44,14 @@
 								<td width="65%"><p:inputText size="50"
 										value="#{cdTrackingDiaryBackingBean.extensionCodeFilterBean.searchValue}"></p:inputText></td>
 							</tr>
-<!-- 							<tr> -->
-<!-- 								<td width="35%"><p:outputLabel -->
-<!-- 										value="Status" /></td> -->
-<!-- 								<td width="35%"><p:selectOneMenu value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode}"> -->
-<!-- 										<f:selectItems value="#{cdTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" /> -->
-<!-- 									</p:selectOneMenu> -->
-<!-- 								</td>						 -->
-<!-- 							</tr> -->
+							<tr>
+								<td width="35%"><p:outputLabel value="Status" /></td>
+								<td width="65%"><p:selectOneMenu style="width: 314px;"
+											value="#{ctTrackingDiaryBackingBean.managedBean.searchStatusId}">
+											<f:selectItems
+												value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
+									</p:selectOneMenu></td>
+							</tr>
 						</table>
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.search']}"

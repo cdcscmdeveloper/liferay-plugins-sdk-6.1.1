@@ -22,10 +22,9 @@
 
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
-								<td width="15%"><p:outputLabel
-										value="#{lbl['lbl.cm.item.name']}" /></td>
-								<td width="35%%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.itemNameFilterBean.searchValue}"></p:inputText></td>
+								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
+								<td><p:inputText size="50"
+										value="#{cmTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="15%"><p:outputLabel
@@ -33,12 +32,34 @@
 								<td width="35%"><p:inputText size="50"
 										value="#{cmTrackingDiaryBackingBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
 							</tr>
-
-
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
-								<td><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="15%"><p:outputLabel
+										value="Item Name" /></td>
+								<td width="35%%"><p:inputText size="50"
+										value="#{cmTrackingDiaryBackingBean.itemNameFilterBean.searchValue}"></p:inputText></td>
+							</tr>
+							<tr>
+								<td width="15%"><p:outputLabel
+										value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td>
+								<td width="35%"><p:calendar mode="popup" showOn="button"
+										readonlyInput="true"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										value="#{ctTrackingDiaryBackingBean.managedBean.searchContractFromDuration}">
+									</p:calendar>
+									<p:spacer width="5" />
+									<p:calendar mode="popup" showOn="button"
+										readonlyInput="true"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										value="#{ctTrackingDiaryBackingBean.managedBean.searchContractToDuration}">
+									</p:calendar></td>
+							</tr>
+							<tr>
+								<td width="15%"><p:outputLabel value="Status" /></td>
+								<td width="35%"><p:selectOneMenu style="width: 314px;"
+											value="#{ctTrackingDiaryBackingBean.managedBean.searchStatusId}">
+											<f:selectItems
+												value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
+									</p:selectOneMenu></td>
 							</tr>
 						</table>
 
