@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -54,6 +55,7 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -83,6 +85,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
@@ -3045,6 +3048,25 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			// panel item 
 			if(scQuote.getPanelItem() != null){
+				//check is panel item from PID task
+				IPurchaseInDefaultSO pidSO = null;
+				try {
+					
+					pidSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+					
+					PurchaseInDefaultReqDTO pidReqDTO = new PurchaseInDefaultReqDTO();
+					pidReqDTO.setPanelItem(scQuote.getPanelItem());
+					pidReqDTO.setSimpleQuoteFlag(true);
+					pidReqDTO.setPmOrgProfile(getManagedBean().getRequestNote().getPmOrgProfile());
+					ScPurchaseInDefault pid = pidSO.getPurchaseInDefaultByPanelItemId(pidReqDTO).getPurchaseInDefaultDtl();
+					scQuote.setPurchaseInDefault(pid);
+					getManagedBean().setScQuote(scQuote);
+					
+				} finally {
+					pidSO = null;
+				}
+
 
 				if(scQuote.getPanelItem().getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)){
 					// panel item general 
