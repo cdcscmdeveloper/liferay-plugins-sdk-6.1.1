@@ -1501,12 +1501,20 @@ public class SmApplicationUtil {
 		reqDTO.setType("Online");
 		reqDTO.setPostCode(postCode);
 		log.debug(" *** Req DTO Post Code ****" + reqDTO.getPostCode());
-		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
-		// StringBuffer sb = new StringBuffer();
-		if (resDTO.getStatusCode() != null) {
-			per.setIdentityResponseCode(resDTO.getStatusCode());
+		MyIdentityResDTO resDTO;
+		try {
+			resDTO = myIdentitySO.myIdentityVerification(reqDTO);
+			// StringBuffer sb = new StringBuffer();
+			if (resDTO.getStatusCode() != null) {
+				per.setIdentityResponseCode(resDTO.getStatusCode());
+			}
+			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.info("**********error calling myidentity api[" + e.getMessage()
+					+ "]");
 		}
-		log.info("**** My identiy output is *****" + resDTO.getStatusCode());
+
 		// sb.append("MessageConst.ERROR_MYIDENTITY_");
 		// if (!resDTO.getStatusCode().equalsIgnoreCase(
 		// SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
