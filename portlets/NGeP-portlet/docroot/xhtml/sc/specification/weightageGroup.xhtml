@@ -25,7 +25,8 @@
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="technicalWeigtage,addpoints"></p:ajax>
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="technicalWeigtage,addpoints"></p:ajax>
 					</p:selectOneRadio> <p:message id="techScoring" for="techWeightage" display="icon"></p:message></td>
 			</tr>
 
