@@ -33,11 +33,9 @@
     
             <div class="ppRightBtn"> 
 		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
-		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"
-		           disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
+		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"/>
 		       <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true"  
-		          onclick="dlgMeetingDetails.show();" icon="ui-icon-delete" update="meetingTable"
-		          disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
+		          onclick="dlgMeetingDetails.show();" icon="ui-icon-delete" update="meetingTable"/>
 		    </div>
 		    
 		    <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" styleClass="screen-title" 
