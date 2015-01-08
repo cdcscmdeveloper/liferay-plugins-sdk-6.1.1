@@ -119,7 +119,7 @@
 								backingBean.managedBean.selectedFactoryFacility.smAddress.pmState,
 								backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict,
 								backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity)}"
-							update="factoryState,factoryDist,factoryCity" />
+							update="factoryState,factoryDist,factoryCity,postCodeFacFactoryPanelId" />
 					</p:selectOneMenu> <p:message id="smFacFactoryCntryMsg" for="smFacFactoryCntry"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -185,15 +185,33 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="smFacFactoryPostCode"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.postcode']}" maxlength="10"
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
-						size="35"
-						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-						<f:validator validatorId="postcodeValidator" />
-					</p:inputText> <p:message id="smFacFactoryPostCodeMsg" for="smFacFactoryPostCode"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				<td>
+					<p:outputPanel id="postCodeFacFactoryPanelId">
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5" required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="smFacFactoryPostCodeMy"
+								value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="smFacFactoryPostCodeMyMsg" for="smFacFactoryPostCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10" required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="smFacFactoryPostCodeForeign"
+								value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="smFacFactoryPostCodeForeignMsg"
+								for="smFacFactoryPostCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

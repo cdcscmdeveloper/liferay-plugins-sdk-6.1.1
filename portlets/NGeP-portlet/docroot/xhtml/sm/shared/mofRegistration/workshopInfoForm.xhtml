@@ -120,7 +120,7 @@
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmState,
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict,
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
-							update="workShopState,workShopDist,workShopCity" />
+							update="workShopState,workShopDist,workShopCity,postCodeFacWrkShpPanelId" />
 					</p:selectOneMenu> <p:message id="smWrkShpCntryMsg" for="smWrkShpCntry"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -187,15 +187,33 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="smFacWrkShpPosCode"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.postcode']}" maxlength="10"
-						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
-						size="35"
-						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-						<f:validator validatorId="postcodeValidator" />
-					</p:inputText> <p:message id="smFacWrkShpPosCodeMsg" for="smFacWrkShpPosCode"
-						showSummary="true" showDetail="false" display="icon" /></td>
+				<td>
+					<p:outputPanel id="postCodeFacWrkShpPanelId">
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5" required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="smFacWrkShpPosCodeMy"
+								value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="smFacWrkShpPosCodeMyMsg" for="smFacWrkShpPosCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10" required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="smFacWrkShpPosCodeForeign"
+								value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="smFacWrkShpPosCodeForeignMsg"
+								for="smFacWrkShpPosCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
