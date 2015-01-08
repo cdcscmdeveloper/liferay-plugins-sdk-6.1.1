@@ -328,6 +328,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String selectedShareholderIdentificationType;
 	private String revisionApplType;
 	private Long myCountryId;
+	private String applnApprovalRemarks;
+	private String applnRejectionRemarks;
+	private String applnOverLapRemarks;
 	
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2512,5 +2515,29 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setMyCountryId(Long myCountryId) {
 		this.myCountryId = myCountryId;
+	}
+
+	public String getApplnApprovalRemarks() {
+		return applnApprovalRemarks;
+	}
+
+	public void setApplnApprovalRemarks(String applnApprovalRemarks) {
+		this.applnApprovalRemarks = applnApprovalRemarks;
+	}
+
+	public String getApplnRejectionRemarks() {
+		return applnRejectionRemarks;
+	}
+
+	public void setApplnRejectionRemarks(String applnRejectionRemarks) {
+		this.applnRejectionRemarks = applnRejectionRemarks;
+	}
+
+	public String getApplnOverLapRemarks() {
+		return applnOverLapRemarks;
+	}
+
+	public void setApplnOverLapRemarks(String applnOverLapRemarks) {
+		this.applnOverLapRemarks = applnOverLapRemarks;
 	}
 }
