@@ -43,8 +43,8 @@
 					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
 				</p:column>
 							
-				<p:column headerText="#{lbl['lbl.sc.selection']}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
+				<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"/>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -86,7 +86,7 @@
 					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
 				</p:column>
 							
-				<p:column headerText="#{lbl['lbl.sc.selection']}">
+				<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">
 					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
 				</p:column>
 			</p:dataTable>
@@ -129,8 +129,8 @@
 					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
 				</p:column>
 							
-				<p:column headerText="#{lbl['lbl.sc.selection']}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
+				<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">>
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"/>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -177,7 +177,7 @@
 				#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}
 			</p:column>
 						
-			<p:column headerText="#{lbl['lbl.sc.selection']}">
+			<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">
 				<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
 			</p:column>
 		</p:dataTable>
@@ -193,14 +193,16 @@
 		
 			<ac:paginator for="meetingAttDtlTbl" />
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{isPendingNegotiationStatus}"/>
 					
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"/>
+				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50" rendered="#{isPendingNegotiationStatus}"/>
+				<h:outputText value="#{meetingAttDtl.name}" rendered="#{!isPendingNegotiationStatus}"></h:outputText>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.id.no']}">
-				<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15" size="15"/>
+				<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15" size="15" rendered="#{isPendingNegotiationStatus}"/>
+				<h:outputText value="#{meetingAttDtl.icPassport}" rendered="#{!isPendingNegotiationStatus}"></h:outputText>
 			</p:column>
 						
 		</p:dataTable>
@@ -212,12 +214,14 @@
 				partialSubmit="true"
 				action="#{lOIDetailBackingBean.addMeetingAttendance}"
 				update="meetingAttDtlTbl" 
+				rendered="#{isPendingNegotiationStatus}"
 				icon="ui-icon-add" />
 							
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, meetingAttDtlTbl" partialSubmit="true"
 				icon="ui-icon-delete"
 				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances, lOIDetailBackingBean.managedBean.selectedMeetingAttList)}"
+				rendered="#{isPendingNegotiationStatus}"
 				update="meetingAttDtlTbl" />
 	
 		</div>
