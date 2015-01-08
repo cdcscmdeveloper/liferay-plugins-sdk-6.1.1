@@ -3,8 +3,10 @@ package my.ep.web.backingbean.pm.financialorg;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -28,6 +30,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -59,6 +62,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -435,36 +439,7 @@ public class FinancialOrgBackingBean extends
 	}
 
 	
-	public void updateService(AjaxBehaviorEvent e) {
 
-		Long finServiceId = (Long) e.getComponent().getAttributes()
-				.get("value");
-		System.out.println("finServiceId :" + finServiceId);
-		int i = 0;
-		for (PmFinancialSvc financialService : getManagedBean()
-				.getPmFinancialSvc()) {
-			parameterReqDTO.setParameterId(finServiceId);
-			System.out.println("Parameter ID"
-					+ financialService.getServiceTypeCode().getParameterId());
-			if (finServiceId == financialService.getServiceTypeCode()
-					.getParameterId()) {
-				i++;
-				System.out.println("i value :" + i);
-				if (i > 1) {
-					deleteFinancialService();
-					throw new EpException("Selection already exists.");
-				}
-			}
-			ParameterResDTO parameterResDTO = parameterSO
-					.retrieveParameterById(parameterReqDTO);
-			if (getManagedBean().getServiceTypes() == null) {
-				getManagedBean().setServiceTypes(new ArrayList<String>());
-			}
-			getManagedBean().getServiceTypes().add(
-					parameterResDTO.getPmParameter().getParameterCode());
-
-		}
-	}
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
@@ -682,7 +657,7 @@ public class FinancialOrgBackingBean extends
 	private void validation(){
 		log.info("validation");
 		if(this.getManagedBean().getPmFinancialSvc()!=null && this.getManagedBean().getPmFinancialSvc().isEmpty()){
-			throw new EpException("Please add service type.");
+			throw new EpException("At least one Financial Service is required.");
 		}
 		
 		if(StringUtils.isBlank(this.getManagedBean().getFinancialOrg().getBizRegNumber())){
@@ -696,6 +671,8 @@ public class FinancialOrgBackingBean extends
 				throw new EpException("At least one Factoring Bank Detail is required.");
 			}
 		}
+		
+		validateFinancialService();
 		
 	}
 	
@@ -859,44 +836,29 @@ public class FinancialOrgBackingBean extends
 	/* Financial Service - START */
 	public void addFinancialService() {
 		if(this.getManagedBean().getPmFinancialSvc()!=null){
-			if(this.getManagedBean().getPmFinancialSvc().size()>3){
-				throw new EpException("Exceed the limit");
+			if(this.getManagedBean().getPmFinancialSvc().size() > ProfileManagementConst.MAX_FINANCIAL_SERVICE){
+				throw new EpException("Financial Org. exceeded maximum Financial Services.");
 			}
 		}	
+		validateFinancialService();
+		
 		PmFinancialSvc pmFinancialSvc = new PmFinancialSvc();
-		System.out.println("inside addFinancialService");
 		getManagedBean().setServiceType(null);
 		try {
 			List<PmFinancialSvc> pmFinancialList = this.getManagedBean().getPmFinancialSvc();
 			if (null == pmFinancialList) {
 				pmFinancialList = new ArrayList<PmFinancialSvc>();
 			}
+			
 			getManagedBean().setDropDownValue(true);
 			pmFinancialSvc.setServiceTypeCode(new PmParameter());
 			pmFinancialList.add(pmFinancialSvc);
 			this.getManagedBean().setPmFinancialSvc(pmFinancialList);
 		} catch (Exception e) {
-			throw new IllegalArgumentException();
+			throw e;
 		}
 	}
 
-//	public void deleteFinSvc(PmFinancialSvc financialSvc) {
-//	
-//		if(this.getManagedBean().getSelectedPmFinancialSvc()!=null && !this.getManagedBean().getSelectedPmFinancialSvc().isEmpty()){
-//
-//			if (this.getManagedBean().getSelectedPmFinancialSvc() == null) {
-//				this.getManagedBean().setSelectedPmFinancialSvc(
-//						new ArrayList<PmFinancialSvc>());
-//			}
-//			this.getManagedBean().getSelectedPmFinancialSvc()
-//					.remove(financialSvc);
-//		}
-//		
-//		else{
-//			//need to change exceptions
-//			throw new EpException(MessageConst.ERROR_770022);
-//		}
-//	}
 
 	public void deleteFinancialService() {
 
@@ -923,6 +885,40 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	
+	public void updateService(AjaxBehaviorEvent e) {
+
+		validateFinancialService();
+		
+		Long finServiceId = (Long) e.getComponent().getAttributes().get("value");
+		System.out.println("finServiceId :" + finServiceId);
+
+		for (PmFinancialSvc financialService : getManagedBean().getPmFinancialSvc()) {
+			parameterReqDTO.setParameterId(finServiceId);
+			System.out.println("Parameter ID" + financialService.getServiceTypeCode().getParameterId());
+
+			ParameterResDTO parameterResDTO = parameterSO
+					.retrieveParameterById(parameterReqDTO);
+			if (getManagedBean().getServiceTypes() == null) {
+				getManagedBean().setServiceTypes(new ArrayList<String>());
+			}
+			getManagedBean().getServiceTypes().add(
+					parameterResDTO.getPmParameter().getParameterCode());
+
+		}
+	}
+	
+	private void validateFinancialService(){
+		//check if duplicated service added
+		List <Long> tempServiceList = new ArrayList<Long>();
+		for (PmFinancialSvc financialService : getManagedBean().getPmFinancialSvc()) {
+			tempServiceList.add(financialService.getServiceTypeCode().getParameterId());
+		}
+		Set<Long> tempServiceSet = new HashSet<Long>(tempServiceList);
+		if(tempServiceSet.size()!=tempServiceList.size()){
+			throw new EpException("Service Type must be unique.");
+		}
+		
+	}
 	/* Financial Service - END */
 	
 	/* Factoring Bank - START */
