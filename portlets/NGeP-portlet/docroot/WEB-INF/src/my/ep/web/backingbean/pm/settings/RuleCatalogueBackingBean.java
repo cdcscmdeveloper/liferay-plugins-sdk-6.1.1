@@ -17,6 +17,7 @@ import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.pm.general.settings.threshold.IOperationalThresholdSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -34,6 +35,8 @@ import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.pm.general.settings.threshold.ThresholdReqDTO;
+import my.ep.dto.pm.general.settings.threshold.ThresholdResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmType;
@@ -44,8 +47,9 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
-import my.ep.persistence.entity.pm.general.settings.PmConfigRule;
-import my.ep.persistence.entity.pm.general.settings.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -77,20 +81,20 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
-		System.out
-				.println("........in constructor of RuleCatalogueBackingBean........");
-		IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", IFeeExemptionSO.class);
-		// PmFeeExemption fee = new PmFeeExemption();
-		FeeExemptionReqDTO req = new FeeExemptionReqDTO();
+//		System.out
+//				.println("........in constructor of RuleCatalogueBackingBean........");
+//		IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
+//				.getInstance().getServiceObject("pm", IFeeExemptionSO.class);
+//		// PmFeeExemption fee = new PmFeeExemption();
+//		FeeExemptionReqDTO req = new FeeExemptionReqDTO();
 		// req.setFeeExemption(fee);
 		// feeSO.insertFeeExemption(req);
-		List<PmFeeExemption> list = feeSO.getFeeExemptionsForOrgAndItem(req)
-				.getFeeExemptions();
-		log.info("....................list.get(1).getFeeExemptionId()="
-				+ list.get(1).getFeeExemptionId());
-		req.setFeeExemption(list.get(1));
-		feeSO.deleteFeeExemption(req);
+//		List<PmFeeExemption> list = feeSO.getFeeExemptionsForOrgAndItem(req)
+//				.getFeeExemptions();
+//		log.info("....................list.get(1).getFeeExemptionId()="
+//				+ list.get(1).getFeeExemptionId());
+//		req.setFeeExemption(list.get(1));
+//		feeSO.deleteFeeExemption(req);
 		// IRuleSO ruleSO = null;
 //        FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 //		 reqDTO.setOrgProfileId(594L);
@@ -327,9 +331,33 @@ public class RuleCatalogueBackingBean extends
 			}
 
 			// this.getManagedBean().setFeeExemptionIndex(2);
+			// ////////////getting Thresholds////////////////////////////
+			if(this.getManagedBean().getSelectedConfigGeneral().getIsGeneralThreshold() == 0){
+				retrieveOrgProfileList();
+			}
+			IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject("pm", IOperationalThresholdSO.class);
+
+			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
+			ThresholdResDTO resTDTO = null;
+
+			this.getManagedBean().getThresholds().clear();
+			this.getManagedBean().getDeletedThresholds().clear();
+			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
+
+			for (PmThreshold threshold : resTDTO.getThresholdList()) {
+				if (threshold.getOrgProfileId() == null) {// TODO: clear it before
+													// updating the threshold list
+					threshold.setOrgProfileId(new PmOrgProfile());
+				}
+				this.getManagedBean().getThresholds()
+						.add(threshold);
+			}
+			
 			System.out
-					.println("...................resFDTO.getFeeExemptions().size()="
-							+ resFDTO.getFeeExemptions().size());
+					.println("...................resTDTO.getThresholdList().size()="
+							+ resTDTO.getThresholdList().size());
 
 			// ///////////////////////////////
 			// ///////////////////////////////
@@ -690,6 +718,19 @@ public class RuleCatalogueBackingBean extends
 										// save
 		this.getManagedBean().getFeeExemptionsForOrgAndItem()
 				.remove(deletedExemption);
+
+	}
+	
+	public void deleteOperationalThreshold(int rowIndex) {
+		log.info(".................deleteOperationalThreshold...................");
+		PmThreshold deletedThreshold = this.getManagedBean()
+				.getThresholds().get(rowIndex);
+		deletedThreshold.setDeleted(true);
+		this.getManagedBean().getDeletedThresholds()
+				.add(deletedThreshold);// should added to original list before
+										// save
+		this.getManagedBean().getThresholds()
+				.remove(deletedThreshold);
 
 	}
 
@@ -1238,6 +1279,19 @@ public class RuleCatalogueBackingBean extends
 			e.printStackTrace();
 		}
 	}
+	
+	public void addMoreOperationalThreshod() {
+		log.info(".................addMoreOperationalThreshod...................");
+		PmThreshold newThreshold = new PmThreshold();
+		newThreshold.setEffDate(new Date());
+		newThreshold.setOrgProfileId(new PmOrgProfile());//make sure delete if not be selected
+
+		int index = this.getManagedBean().getThresholds()
+				.size();
+		this.getManagedBean().getThresholds()
+				.add(index, newThreshold);
+
+	}
 
 	public void saveFeeExemptionForComodity() {
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
@@ -1422,5 +1476,19 @@ public class RuleCatalogueBackingBean extends
 	// KPIResDTO resDTO = kpiSO.getKpiValuesDocyType(reqDTO);
 	// this.getManagedBean().setKpiStatusList(resDTO.getKpiStatusList());
 	// }
+   public void saveOperationalThreshold(){
+	 
+   }
+   
+   private void retrieveOrgProfileList() {
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();		
+		OrgProfileResDTO resDTO = orgProfileSO
+				.retrieveOrgProfileListByMinistry(reqDTO);
+		this.getManagedBean().setOrgProfileList(resDTO.getOrgProfileList());
+	}
 
 }
