@@ -908,6 +908,7 @@ public class FinancialOrgBackingBean extends
 	}
 	
 	private void validateFinancialService(){
+		log.info("validateFinancialService");
 		//check if duplicated service added
 		List <Long> tempServiceList = new ArrayList<Long>();
 		for (PmFinancialSvc financialService : getManagedBean().getPmFinancialSvc()) {
@@ -955,6 +956,19 @@ public class FinancialOrgBackingBean extends
 		if(selectedFinancialActList!=null && !selectedFinancialActList.isEmpty()){
 			selectedFinancialActList.clear();
 		}
+	}
+	
+	public boolean editableBankDet(Date effDate){
+		log.info("editableBankDet");
+		Date today = new Date();
+    	if(today.compareTo(effDate)>0){
+    		//today > orgDate
+    		return false;
+    	}else if(today.compareTo(effDate)==0){
+    		return false;
+		}else{
+    		return true;
+    	}
 	}
 	/* Factoring Bank - END */
 	
