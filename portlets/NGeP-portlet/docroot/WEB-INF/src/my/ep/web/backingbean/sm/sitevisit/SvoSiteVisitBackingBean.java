@@ -171,13 +171,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			//Set Template Map for index of tabMenu
 			this.getManagedBean().setIndexPageMap(new HashMap<Integer,String>());
-			int i = viewMode.equals("V") ? 1 : 4;
+			int i = viewMode.equalsIgnoreCase("V") ? 1 : 4;
 			for (Map.Entry<String, SmSvTemplate> entry : this.getManagedBean().getSmSvTemplateMap().entrySet()) {
 				this.getManagedBean().getIndexPageMap().put(i, entry.getKey());
 				i++;
 			}
 			
-			if(!viewMode.equals("V")){
+			if(!viewMode.equalsIgnoreCase("V")){
 				this.getManagedBean().setLastIndex(i);
 			}
 			
@@ -709,14 +709,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return formatter.format(equityAmount);
 	}
 	
-	public BigDecimal calculateEquityPercentage(String equityAmt){
-		BigDecimal eqAmt =  (BigDecimal)(equityAmt == null || equityAmt == "" ? new BigDecimal(0) : new BigDecimal(equityAmt));
-		BigDecimal paidUpCapital = this.getManagedBean().getSmSvTask().getSmAppl().getSmCompanyBasic().getPaidUpCapital();
-		//eqAmt.divide(paidUpCapital, 3, RoundingMode.CEILING);
-//		BigDecimal eqPercentage = eqAmt.divide(paidUpCapital, 3, RoundingMode.CEILING).multiply();
-		BigDecimal percentage = eqAmt.divide(paidUpCapital, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+	public String calculateEquityPercentage(String equityAmt){
+		double eqAmt =  (equityAmt == null || equityAmt == "" ? new Double(0) : new Double(equityAmt));
+		double paidUpCapital = this.getManagedBean().getSmSvTask().getSmAppl().getSmCompanyBasic().getPaidUpCapital().doubleValue();
+		
+		Double percentage = (eqAmt * 100) / paidUpCapital;
+		
+		DecimalFormat formatter = new DecimalFormat("###,##0.000");
+		
+		return formatter.format(percentage);
 
-		return percentage;
 	}
 	
 	public void preRenderView(){
