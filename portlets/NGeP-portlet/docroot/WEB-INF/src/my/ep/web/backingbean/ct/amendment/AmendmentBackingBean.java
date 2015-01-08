@@ -373,6 +373,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 							content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 						}
 						getManagedBean().setEditorValue(content);
+						changeAccountActionListener();
 		
 	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 				       this.getManagedBean().setAction(res.getAction());
