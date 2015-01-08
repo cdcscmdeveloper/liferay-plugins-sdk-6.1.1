@@ -134,7 +134,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 
 		} catch (NullPointerException ne) {
-			log.info("***************Error init revision appl:"+ne.getMessage());
+			log.error("***************Error init revision appl:"+ne.getMessage());
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
 			applRevisionSO = null;
@@ -142,7 +142,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		// show message if supp profile not ready
 		if (!getManagedBean().isReviewApplicationExist()) {
-			log.info("**************error init revision appl*****************");
+			log.error("**************error init revision appl*****************");
 			SmApplicationUtil.showSuppProfileNotReadyMsg(FacesContext
 					.getCurrentInstance());
 		}
