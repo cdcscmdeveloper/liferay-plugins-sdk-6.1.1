@@ -43,7 +43,7 @@
 					 </ui:fragment>
 					<ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
 						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;"
-						    required="true" label="Role"  disabled="#{amendmentBackingBean.managedBean.confirmMeeting}">
+						      disabled="#{amendmentBackingBean.managedBean.confirmMeeting}">
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
 							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException"
 							   listener="#{amendmentBackingBean.setListenerForCommitte(ctCommitteeVar.memberRole.parameterId)}"></p:ajax>
@@ -56,8 +56,8 @@
 	         <div class="ppRightBtn"> 
 		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" 
 		             action="#{amendmentBackingBean.fetchCommitteMembers()}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
-		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" 
-		             process="@form" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
+		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" partialSubmit="true"
+		             process="@this" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
 		     </div>
            
              <p:dialog id="dlgCommitteDetails"
@@ -71,8 +71,8 @@
                   </h:panelGrid>
                  
                   <div class="ppRightBtn">
-		              <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="committeTable"
-		                icon="ui-icon-accept" process="@form"  action="#{amendmentBackingBean.delCommitteMembers}" onclick="dlgDel.hide();"/>
+		              <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="committeTable" partialSubmit="true"
+		                icon="ui-icon-accept" process="@all"  action="#{amendmentBackingBean.delCommitteMembers}" onclick="dlgDel.hide();"/>
 			          <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		          </div>
              </p:dialog>
