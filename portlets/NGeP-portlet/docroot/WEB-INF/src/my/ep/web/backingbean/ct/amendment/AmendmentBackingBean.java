@@ -869,9 +869,37 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    				}
 			    			}
 			    		}
-			    	}
-			    }
-		    	
+			    	  }
+			       }
+			    
+			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
+			    		getManagedBean().isConfirmMeeting() && getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null) {
+				
+			            boolean memberRole = false;
+				        boolean secratoryRole = false;
+				        boolean chairmanRole = false;
+				 
+			           for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+			    			 if(!committeMember.isAttended() 
+			    				    	&& retriveParameterById(committeMember.getMemberRole().getParameterId()).getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			    				        chairmanRole = true;
+			    			
+			    			  } else if(!committeMember.isAttended() 
+				    					&& retriveParameterById(committeMember.getMemberRole().getParameterId()).getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+			    				  secratoryRole = true;
+			    			
+			    			 } else if(!committeMember.isAttended() 
+				    				&& retriveParameterById(committeMember.getMemberRole().getParameterId()).getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+			    				        memberRole  = true;
+			    			  }
+			    		}
+			           
+			           if(!chairmanRole || !secratoryRole || !memberRole){
+			        	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException("Attandance for meeting is mandatory");   
+			           }
+			     }
+		
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
@@ -1021,31 +1049,45 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 	}
 	
-	public void setListenerForCommitte(Long parameterId) throws Exception{
+	private PmParameter retriveParameterById(Long parameterId) {
 		
-	     ParameterReqDTO reqDTO = null;
+		 ParameterReqDTO reqDTO = null;
 	     IParameterSO parameterSO = null;
-	    
-	            if(parameterId == null)
+		
+		try {
+			     reqDTO = new ParameterReqDTO();
+			     parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			     reqDTO.setParameterId(parameterId);
+			     ParameterResDTO resDTO =parameterSO.retrieveParameterById(reqDTO);
+			     return resDTO.getPmParameter();
+		}catch( Exception ex) {
+			ex.printStackTrace();    
+		} finally{
+			parameterSO = null;
+			reqDTO = null;
+		}
+		return null;
+	}
+	
+	public void setListenerForCommitte(Long parameterId) throws Exception{
+	
+	           if(parameterId == null)
 	    	    return;
-	    	    
-	            reqDTO = new ParameterReqDTO();
-		        parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		        reqDTO.setParameterId(parameterId);
-		        ParameterResDTO resDTO =parameterSO.retrieveParameterById(reqDTO);
-		        int counter = 0;
-		        if(resDTO.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				     for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-		      	       if(committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null &&
-		      	    		   committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
-				    	       counter++;
-		    	              if(counter ==2) {
-		    	            	  throw new EpException(MessageConst.WARN_755016);
-		    	              }
-		      	       }
-		       }
-	      }	    
-}
+	    	   
+	            int counter = 0;
+		         if(retriveParameterById(parameterId).getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				  
+		        	 for(CtCommitteeMember committeMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {  
+				    	     if(committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null &&
+		      	    		       committeMember.getMemberRole().getParameterId().intValue() == parameterId.intValue()) {
+				    	           counter++;
+		    	                   if(counter ==2) {
+		    	            	        throw new EpException(MessageConst.WARN_755016);
+		    	                    }
+		      	              }
+		              }
+	            }	    
+     }
 
 	public SelectItem[] getMinistryDropdown() {
 			
