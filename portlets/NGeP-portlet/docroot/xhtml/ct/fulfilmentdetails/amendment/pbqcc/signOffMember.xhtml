@@ -26,22 +26,7 @@
              <p:inputTextarea id="justificationMember" disabled="true"
                   rows="4"  maxlength="200"  autoResize="false" style="width:180px;margin-bottom: 4px;" 
                   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"/>
-          </h:panelGrid>
-           
-           <p:outputLabel value="#{lbl['lbl.ct.date.of.meeting']}"/>    
-           <p:calendar id="calMemMeeting" showOn="button" disabled="true" 
-               styleClass="calanderWidth"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-               value="#{amendmentBackingBean.meetingDate(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}" /> 
-		  
-		    <h:panelGroup>
-                <div style="height: 80px; vertical-align:top;">
-                      <p:outputLabel for="memberLocation" value="#{lbl['lbl.ct.location.of.meeting']}" />
-                </div>
-             </h:panelGroup>
-             <h:panelGrid>
-                <p:inputTextarea id="memberLocation" disabled="true" maxlength="200"  style="width:180px;margin-bottom: 4px;" autoResize="false" 
-                    rows="4"  value="#{amendmentBackingBean.meetingLocation(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}"/>
-             </h:panelGrid> 
+          </h:panelGrid>           
           </h:panelGrid>
           
           <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" styleClass="top-aligned-columns">
