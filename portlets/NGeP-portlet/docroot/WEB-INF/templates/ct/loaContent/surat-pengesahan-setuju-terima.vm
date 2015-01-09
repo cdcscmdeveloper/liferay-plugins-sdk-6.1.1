@@ -8,6 +8,7 @@
 			display: block; text-align: center;
 			position: running(footer);
 		}
+		ol {text-align: justify}
 		
 	</style>
 </head>

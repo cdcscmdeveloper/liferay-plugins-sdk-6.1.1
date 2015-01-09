@@ -6,6 +6,10 @@
          display: block; text-align: center;
          position: running(footer);
          }
+         div {
+			text-align: justify;
+			text-justify: inter-word;
+		}
       </style>
    </head>
    <body>
