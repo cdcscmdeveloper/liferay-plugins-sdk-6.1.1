@@ -1674,7 +1674,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context = new VelocityContext();	
 				vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
 				context.put("fileNo", getManagedBean().getCtContract().getQuotationTender().getFileNo());
-				context.put("sourcingNo", getManagedBean().getCtContract().getLoa().getFileExtNo());
+				context.put("sourcingNo", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
 				context.put("sourcingTitle",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
 				context.put("successfulSupplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				
@@ -1770,7 +1770,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				FacesScopes fs = new FacesScopes();
 				String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
 				vmFile = ContractConst.DOCPATH_CT_LOA_AGREEMENT_LETTER;
-				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
+				ScLoa scLoa = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa();
 				ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 				context = new VelocityContext();
 				PmOrgProfile pmOrgProfile = getManagedBean().getCtContract().getOwnerOrgProfile();
@@ -1860,7 +1860,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("bondAmt", bondAmt);
 				context.put("bondAmtText", scLoa.getBondAmt() != null ? NumberWordUtil.convert(scLoa.getBondAmt().toString() ) : ""); 
 				
-				if (scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue() > 200000) {
+				if (scLoa.getBondAmt() != null && getManagedBean().getContractVer().getCtContract().isBondReq()) {
 					context.put("bondAmt200k", true);
 				}else{
 					context.put("bondAmt200k", false);
@@ -1882,8 +1882,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("bondResDueDays", bondResDueDays);
 				
 				String contractEffDate = "";
-				if (scLoa.getContractEffDate() != null) {
-					contractEffDate = dateSDF.format(scLoa.getContractEffDate());
+				if (getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null) {
+					contractEffDate = dateSDF.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 				}
 				context.put("contractEffDate", contractEffDate);
 				if (scLoa.getContractSigner() != null) {
