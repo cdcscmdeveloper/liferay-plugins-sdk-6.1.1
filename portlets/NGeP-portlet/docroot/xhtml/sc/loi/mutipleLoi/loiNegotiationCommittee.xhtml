@@ -43,8 +43,8 @@
 					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
 				</p:column>
 							
-				<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"/>
+				<p:column headerText="#{lbl['lbl.sc.selection']}">
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" disabled="#{!isPendingNegotiationStatus}"/>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -86,8 +86,8 @@
 					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
 				</p:column>
 							
-				<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
+				<p:column headerText="#{lbl['lbl.sc.selection']}">
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" disabled="#{!isPendingNegotiationStatus}"/>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -129,8 +129,8 @@
 					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
 				</p:column>
 							
-				<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">>
-					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}"/>
+				<p:column headerText="#{lbl['lbl.sc.selection']}" >
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" disabled="#{!isPendingNegotiationStatus}"/>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -177,8 +177,8 @@
 				#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}
 			</p:column>
 						
-			<p:column headerText="#{lbl['lbl.sc.selection']}" rendered="#{isPendingNegotiationStatus}">
-				<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
+			<p:column headerText="#{lbl['lbl.sc.selection']}">
+				<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" disabled="#{!isPendingNegotiationStatus}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
