@@ -3223,6 +3223,13 @@ public class SmApplicationBackingBean extends
 		if (validShrHldr) {
 			if (getManagedBean().getSmAppl().getSmPersonnels()
 					.contains(getManagedBean().getSelectedShareHolder())) {
+
+				// reset eprole to null if not authorized
+				if (getManagedBean().getSelectedShareHolder()
+						.getAuthorizedFlg() == 0) {
+					getManagedBean().getSelectedShareHolder().setEpRole(null);
+				}
+				
 				getManagedBean()
 						.getSmAppl()
 						.getSmPersonnels()
