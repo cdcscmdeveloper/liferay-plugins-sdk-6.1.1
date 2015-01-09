@@ -124,12 +124,12 @@ import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
@@ -5313,12 +5313,14 @@ public class SmApplicationBackingBean extends
 
 					}
 				}
-				SmApplicationUtil.setApprovalNotificationParameters(
-						getManagedBean(), reqDTO);
+				SmApplicationNotificationUtil
+						.setApprovalNotificationParameters(getManagedBean(),
+								reqDTO);
 
 			} else if (res.equalsIgnoreCase("Reject")) {
-				SmApplicationUtil.setRejectionNotificationParameters(
-						getManagedBean(), reqDTO);
+				SmApplicationNotificationUtil
+						.setRejectionNotificationParameters(getManagedBean(),
+								reqDTO);
 			}
 
 			log.info("Before final decision ---"
