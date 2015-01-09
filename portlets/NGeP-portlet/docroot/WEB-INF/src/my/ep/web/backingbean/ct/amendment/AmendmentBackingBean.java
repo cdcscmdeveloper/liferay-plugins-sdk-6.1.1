@@ -3067,6 +3067,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	public String getBondAmountInText() {
+		if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue()==0) {
+			return "";
+		}
 		 DecimalFormat df = new DecimalFormat("#.00");		
 		return NumberWordUtil.convert(df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()));
 	}
