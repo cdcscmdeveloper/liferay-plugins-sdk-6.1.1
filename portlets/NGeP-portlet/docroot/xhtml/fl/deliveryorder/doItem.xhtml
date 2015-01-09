@@ -220,7 +220,7 @@
 								value="#{lbl['lbl.fl.instruction.attachment']}" escape="false" />
 							<tr>
 								<td class="TableFieldLeft" width="24%"><h:outputLabel
-										value="Attachment" /></td>
+										value="#{lbl['lbl.txt.attachment']}" /></td>
 								<td class="TableFieldRight"><p:commandButton
 										oncomplete="uploadDlg.show();return false;"
 										icon="iconAttachment"
@@ -233,7 +233,7 @@
 								<td><p:dataGrid id="lampiran"
 										value="#{fulfilmentBackingBean.managedBean.attachmentList}"
 										var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-										style="width:100%">
+										style="width:100%" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 										<table>
 											<tr>
 												<td rowspan="2"><h:graphicImage
