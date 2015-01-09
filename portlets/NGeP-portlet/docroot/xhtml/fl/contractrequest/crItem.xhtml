@@ -325,7 +325,9 @@
 							<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveDistrictList}"
 								update="manDistrict" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.manual.addr']}"/>
+						<p:message for="manDistrict" display="icon" /></td>
 					<td></td>
 				</tr>
 				<tr>
