@@ -1240,7 +1240,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					}
 					else {
 						content = getContent(scLoaReport.getTitle());					
-						convertHtmlToDocFile(content, filePath);
+						DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 						fileList.add(new File(filePath));
 					}
 				}
