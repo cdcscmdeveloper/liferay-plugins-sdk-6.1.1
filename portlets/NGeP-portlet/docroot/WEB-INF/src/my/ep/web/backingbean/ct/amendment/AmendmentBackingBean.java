@@ -1222,6 +1222,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		File file = new File(tempDirectory);
 		file.mkdirs();
 		
+		
 		try{
 			for(ScLoaReport scLoaReport : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
 				// System Define Doc
@@ -1235,11 +1236,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						formJadualHargaExcel(filePath);
 						fileList.add(new File(filePath));
 					}
-					else if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN)) {
-						// TODO: get from SC
-					}
 					else {
-						content = getContent(scLoaReport.getTitle());					
+						String docDefinitionKey = scLoaReport.getPmDocument()
+								.getDocDefinitionKey();
+						content = getContent(docDefinitionKey);					
 						DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
 						fileList.add(new File(filePath));
 					}
