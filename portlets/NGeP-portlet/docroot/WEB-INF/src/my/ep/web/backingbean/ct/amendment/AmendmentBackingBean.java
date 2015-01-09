@@ -1324,6 +1324,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		ContractAmendmentReqDTO reqDto = new ContractAmendmentReqDTO();
 		reqDto.setContractVerId(this.getManagedBean().getContractVer().getContractVerId());
+		reqDto.setZonal(getManagedBean().getContractVer().getCtContract().isZonalPricing());
 		reqDto.setItemType(ParameterConst.ITEM_TYPE_PRODUCT);
 		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 		ContractAmendmentResDTO resDto = amendSO.getItemList(reqDto);
