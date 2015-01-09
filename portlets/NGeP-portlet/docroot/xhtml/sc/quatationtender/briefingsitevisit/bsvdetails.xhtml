@@ -31,16 +31,15 @@
 			<p:column headerText="#{lbl['lbl.so.desc']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
-					rendered="#{QTStatusConst.BSV_COMPLETED eq sitevisitdtls.bsvStatus.statusId}">
+					rendered="#{QTStatusConst.BSV_COMPLETED eq briefingdtls.bsvStatus.statusId}">
 					<p:commandLink
-						rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}"
 						action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
 						partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 						<h:outputText value="#{briefingdtls.bsvDesc}" />
 					</p:commandLink>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}">
+					rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}">
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</h:panelGroup>
 			</p:column>
@@ -146,7 +145,6 @@
 						<h:panelGroup
 							rendered="#{QTStatusConst.BSV_COMPLETED eq sitevisitdtls.bsvStatus.statusId}">
 							<p:commandLink
-								rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}"
 								action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(sitevisitdtls)}"
 								partialSubmit="true" process="@this">
 								<h:outputText value="#{sitevisitdtls.bsvDesc}" />
