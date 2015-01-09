@@ -204,7 +204,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.address.selectall']}"/>	
 				</f:facet>
 			</p:column>
-			<p:column headerText="Address" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.supp.address']}" style="white-space:normal;">
 				<h:outputText
 					value="#{purchaseRequestBackingBean.getFullAddress(delAddr.pmAddress)}"
 					escape="false" />
@@ -212,7 +212,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="ADD" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();"
 				update=":form:itemDetPanelGroup,addressDataTable,@(.orderSummaryChange) ">
@@ -237,7 +237,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="manCountry"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="Country"
+							label="#{lbl['lbl.fl.country']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -254,7 +254,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="manState"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="State"
+							label="#{lbl['lbl.fl.state']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -271,7 +271,7 @@
 				<tr>
 					<td width="126"><p:outputLabel value="#{lbl['lbl.fl.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="address1" label="Address Line 1"
+					<td><p:inputText id="address1" label="#{lbl['lbl.fl.address']}"
 							maxlength="255"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
@@ -306,7 +306,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manDistrict"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="District"
+							label="#{lbl['lbl.fl.district']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -334,7 +334,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manCity"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="City"
+							label="#{lbl['lbl.fl.city']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -355,7 +355,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="Post Code" maxlength="10"
+							label="#{lbl['lbl.fl.postcode']}" maxlength="10"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
 							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"
@@ -367,7 +367,7 @@
 							styleClass="mandatory" /></td>
 					<td><p:inputText id="email"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="Email" maxlength="80"
+							label="#{lbl['lbl.fl.email']}" maxlength="80"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							size="35"
@@ -381,7 +381,7 @@
        				
 					<td><p:outputLabel value="#{lbl['lbl.fl.delivery.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manAddress" label="Manual Address"
+					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.other.addr']}"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
