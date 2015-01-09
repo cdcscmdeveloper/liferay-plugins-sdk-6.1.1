@@ -63,6 +63,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -1836,6 +1837,41 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					context.put("contractSignerDesignation", scLoa.getContractSigner()
 							.getDesignation());
 				}
+				
+				if(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(getManagedBean().getContractVer().getStatus().getStatusId())){
+					String ackDate = "";
+					ackDate = dateSDF.format(new Date());
+					context.put("ackDate", ackDate);
+	
+					// Bank account details.
+					String bankAccNo = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+					if (bankAccNo == null) {
+						bankAccNo = "";
+					}
+					context.put("bankAccNo", bankAccNo);
+					
+					String bankName = getManagedBean().getContractVer().getCtContractValue().getBankName();
+					if (bankName == null) {
+						bankName = "";
+					}
+					context.put("bankName", bankName.replaceAll("&", "&#38;"));
+					String bankBranch = getManagedBean().getContractVer().getCtContractValue().getBankBranch();
+					if (bankBranch == null) {
+						bankBranch = "";
+					}
+					context.put("bankBranch", bankBranch);
+					String bankAddress = "";
+					if (getManagedBean().getContractVer().getCtContractValue().getBankAddress() != null) {
+						bankAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getBankAddress());
+						bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+						bankAddress = bankAddress.replaceAll("&", "&#38;");
+					}
+					context.put("bankAddress", bankAddress);
+					context.put("pendingAck", true);
+				}else{
+					context.put("pendingAck", false);
+				}
+
 
 			
 			}
@@ -3189,5 +3225,39 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 }
 		}
 		RequestContext.getCurrentInstance().execute("dlg2.show()");
+	}
+	
+	public String getLoaStreamFilePath() throws FileNotFoundException, Exception {
+		String filePath = null;
+		ScLoaReport agreementLetterReport = null;
+		for (ScLoaReport scLoaReport : getManagedBean().getContractVer()
+				.getCtAmendment().getAmendmentLoa().getScLoaReports()) {
+			String docDefinitionKey = scLoaReport.getPmDocument()
+					.getDocDefinitionKey();
+			if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+					.equals(docDefinitionKey)) {
+				agreementLetterReport = scLoaReport;
+				break;
+			}
+		}
+		if (agreementLetterReport != null) {
+			String docDefinitionKey = agreementLetterReport.getPmDocument()
+					.getDocDefinitionKey();
+			String fileName = getTemplateFileName(docDefinitionKey);
+			if (fileName != null) {
+				String content = null;
+				AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+				filePath = getManagedBean().getFileDirectory() + "/temp";
+				File file = new File(filePath);
+				file.mkdirs();
+				filePath = filePath + "/"
+						+ attachmentFormat.format(fileName, null);
+				content = getContent(docDefinitionKey);
+				DocumentGenerator.getInstance().generatePdf(
+						new FileOutputStream(filePath), content);
+			}
+		}
+		
+			return filePath;
 	}
 }
