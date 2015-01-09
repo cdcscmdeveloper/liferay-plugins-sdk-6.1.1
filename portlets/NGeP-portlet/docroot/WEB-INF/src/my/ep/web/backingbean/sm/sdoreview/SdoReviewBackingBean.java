@@ -88,6 +88,21 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 	}
 
+	
+	public String getBusinessType(String businessType){
+		String retVal = "";
+		if(getManagedBean().getBusinessTypeLs()!=null && !getManagedBean().getBusinessTypeLs().isEmpty()){
+			for(PmParameterDesc desc:getManagedBean().getBusinessTypeLs()){
+				if(desc.getPmParameter().getParameterCode().equals(businessType)){
+					retVal = desc.getCodeName();
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+	
+	
 	public String submitSDOReviewAction(String resAction) {
 
 		if(resAction != null || resAction != ""){
