@@ -2929,20 +2929,28 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		row.createCell(cellIndex++).setCellValue(product.getZone());
 	        		row.createCell(cellIndex++).setCellValue(product.getItem());
 	        		row.createCell(cellIndex++).setCellValue(product.getUom());
-	        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
+	        		row.createCell(cellIndex++).setCellValue(product.getTier());
 	        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
+	        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
 	        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
 	        		row.createCell(cellIndex++).setCellValue(product.getTotalAmount());	 
 	        	}
 	            //Auto size all the columns
 		        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-		        	if(!(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) || productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
-		        		if(x==4) {
-				        	productSheet.setColumnHidden(x, true);
-		        		}
-		        	}
 		        	productSheet.autoSizeColumn(x);
 		        }
+		        //Hide column by price type
+		        productSheet.setColumnHidden(3, true);
+		        productSheet.setColumnHidden(4, true);
+	        	if(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) 
+	        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+	        		productSheet.setColumnHidden(3, false);
+	        		productSheet.setColumnHidden(4, false);
+	        	}
+	        	if(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) 
+	        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+			        productSheet.setColumnHidden(3, false);
+	        	}
 	        }else{
 	        	wb.removeSheetAt(0);
 	        	emptyProductList = true;
@@ -3000,8 +3008,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			jadualHarga.setUom(itemPrice.getCtContractItem().getUom().getUomName());
-			jadualHarga.setQuantity(itemPrice.getFromQty() != null && itemPrice.getToQty() !=null ? itemPrice.getFromQty() + " To " + itemPrice.getToQty() : 
-					itemPrice.getMaxQuantity() != null ? itemPrice.getMaxQuantity().toString() : "N/A");
+			if(itemPrice.getFromQty() != null && itemPrice.getToQty() !=null) {
+				jadualHarga.setTier(itemPrice.getFromQty() + " to " + itemPrice.getToQty());
+			}
+			jadualHarga.setQuantity(itemPrice.getMaxQuantity() != null ? itemPrice.getMaxQuantity().toString() : "N/A");
 			jadualHarga.setSubSequence(itemPrice.getSubSequence() != null ? itemPrice.getSubSequence() + "" : "N/A");
 			
 	    	if(null != itemPrice.getUnitPrice() && null != itemPrice.getMaxQuantity()){
