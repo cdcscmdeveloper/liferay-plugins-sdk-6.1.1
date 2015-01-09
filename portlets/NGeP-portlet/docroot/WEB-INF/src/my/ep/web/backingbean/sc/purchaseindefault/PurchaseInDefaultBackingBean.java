@@ -219,7 +219,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			getManagedBean().setvCmSupplierItem(vCmSupplierItem);
 			
 			initialInformation(scPurchaseInDefault);
-			
+			scPurchaseInDefault.setCreatedBy(user.getUserId());
 			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 			// by default value as cheaper price
 			PmReason reason = new PmReason();
