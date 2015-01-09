@@ -19,12 +19,12 @@
 	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" onHide="resetAllData();">
 	
 		<f:facet name="header">
-			<h:panelGroup id="lovTitle">#{lovBackingBean.lovBean.title} Listing</h:panelGroup>
+			<h:panelGroup id="lovTitle">#{lbl['lbl.lov.listing']} - #{lovBackingBean.lovBean.title} </h:panelGroup>
 		</f:facet>
 		
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
 		
-		<p:panel header="Search" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
 		
 		<h:panelGroup id="searchPanel" style="width:100%;">
 
@@ -52,7 +52,7 @@
 
 		</h:panelGroup>
 		</p:panel>
-		<p:panel header="Result" toggleable="true">
+		<p:panel header="#{lbl['lbl.fl.result']}" toggleable="true">
 		<h:panelGroup id="resultPanel" style="width:100%;">
 			
 			<h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'single'}">
@@ -125,7 +125,7 @@
 			<table style="width:100%;"><tr><TD style="text-align:right;">
 				<p:commandButton 
 					id="slbtn"
-					value="Select"
+					value="#{lbl['lbl.btn.select']}"
 					action="#{lovBackingBean.populateToSaveObject}"
 					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
 					oncomplete="lovPopup.hide();"
