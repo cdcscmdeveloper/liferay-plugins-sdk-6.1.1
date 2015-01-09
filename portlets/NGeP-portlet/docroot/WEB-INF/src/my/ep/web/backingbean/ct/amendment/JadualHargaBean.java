@@ -12,6 +12,7 @@ public class JadualHargaBean implements Serializable{
 	private String item;
 	private String uom;
 	private String quantity;
+	private String tier;
 	private String subSequence;
 	private String unitPrice;
 	private String totalAmount;
@@ -101,6 +102,12 @@ public class JadualHargaBean implements Serializable{
 	}
 	public void setPriceType(String priceType) {
 		this.priceType = priceType;
+	}
+	public String getTier() {
+		return tier;
+	}
+	public void setTier(String tier) {
+		this.tier = tier;
 	}
 
 
