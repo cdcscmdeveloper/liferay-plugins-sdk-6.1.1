@@ -680,8 +680,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					          messageId = MessageConst.INFO_700025;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					         messageId = MessageConst.INFO_700009;
-				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				        		 && ContractConst.DOC_TYPE_CONTRACT_UPDATE.equals(getManagedBean().getContractVer().getDocType())) {
 					         messageId = MessageConst.INFO_700007;
+				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+				        		 && ContractConst.DOC_TYPE_CONTRACT_AMENDMENT.equals(getManagedBean().getContractVer().getDocType())) {				        	 
+					         messageId = getManagedBean().getContractVer().getCtAmendment().isComplyAP201() 
+					        		 ? MessageConst.INFO_700051 : MessageConst.INFO_700050;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					         messageId = MessageConst.INFO_700008;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
