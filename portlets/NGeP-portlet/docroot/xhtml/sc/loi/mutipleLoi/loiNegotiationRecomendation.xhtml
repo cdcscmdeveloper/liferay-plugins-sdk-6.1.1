@@ -38,10 +38,9 @@
 								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
 						<p:commandLink update="@([id$=suppDtlPopUp])"
-							action="#{lOIDetailBackingBean.supplier}"
 							oncomplete="suppDtlWidgetVar.show();">
 							<f:setPropertyActionListener value="#{scQtRecommendDtl.supplier}"
-								target="#{lOIDetailBackingBean.managedBean.shortlistedSupplier}" />
+								target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
 							<h:outputText value="#{scQtRecommendDtl.supplier.companyName}" />
 						</p:commandLink>
 						<br />
@@ -101,7 +100,7 @@
 					<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none" rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 						<p:column>
 							<h:inputText id="awardQty" value="#{scQtRecommendDtl.awardQty}" maxlength="14" size="6"
-								rendered="#{scQtRecommendDtl.recordStatus}"
+							  rendered="#{isPendingNegotiationStatus}"
 								style="text-align: right;"
 								required="true"
 								label="#{lbl['lbl.sc.quantity']}">
@@ -109,6 +108,7 @@
 								<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
 									maxIntegerDigits="10" max="#{item.requestItem.quantity}" />
 							</h:inputText>
+							<h:outputText value="#{scQtRecommendDtl.awardQty}" rendered="#{!isPendingNegotiationStatus}"/>
 							<p:message id="awardQtyMsg" for="awardQty" display="icon" />
 							<br />
 						</p:column>
