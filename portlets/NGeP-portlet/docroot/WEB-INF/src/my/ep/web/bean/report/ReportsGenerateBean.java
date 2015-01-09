@@ -157,7 +157,16 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryApplicationStatusView = false;
 		private boolean smMandatoryMofRegNoView = false;
 		private boolean smMandatoryExpiryDateView = false;
-		private boolean smMandatoryPrintedDateView = false;		
+		private boolean smMandatoryPrintedDateView = false;	
+		private boolean smMandatoryCategoryView = false;
+		private boolean smMandatoryFromDateView = false;
+		private boolean smMandatoryStateView = false;
+		private boolean smMandatoryDistrictView = false;
+		private boolean smMandatoryRegistrationStatusView = false;
+		private boolean smMandatoryCreatedFromYearView = false;
+		private boolean smMandatoryCompanyNameView = false;
+		private boolean smMandatoryRegistrationTypeView = false;
+		private boolean smMandatoryMonthlyRptByYearView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -370,7 +379,87 @@ public class ReportsGenerateBean {
 		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		
+		private String smCreatedFromYearVar=ReportConst.EMPTY_VAL;
+		private String smCreatedToYearVar=ReportConst.EMPTY_VAL;
+		private String smMonthlyRptByYearVar=ReportConst.EMPTY_VAL;
+		
 	
+		public boolean isSmMandatoryMonthlyRptByYearView() {
+			return smMandatoryMonthlyRptByYearView;
+		}
+		public void setSmMandatoryMonthlyRptByYearView(
+				boolean smMandatoryMonthlyRptByYearView) {
+			this.smMandatoryMonthlyRptByYearView = smMandatoryMonthlyRptByYearView;
+		}
+		public String getSmMonthlyRptByYearVar() {
+			return smMonthlyRptByYearVar;
+		}
+		public void setSmMonthlyRptByYearVar(String smMonthlyRptByYearVar) {
+			this.smMonthlyRptByYearVar = smMonthlyRptByYearVar;
+		}
+		public boolean isSmMandatoryRegistrationTypeView() {
+			return smMandatoryRegistrationTypeView;
+		}
+		public void setSmMandatoryRegistrationTypeView(
+				boolean smMandatoryRegistrationTypeView) {
+			this.smMandatoryRegistrationTypeView = smMandatoryRegistrationTypeView;
+		}
+		public boolean isSmMandatoryCompanyNameView() {
+			return smMandatoryCompanyNameView;
+		}
+		public void setSmMandatoryCompanyNameView(boolean smMandatoryCompanyNameView) {
+			this.smMandatoryCompanyNameView = smMandatoryCompanyNameView;
+		}
+		public boolean isSmMandatoryCreatedFromYearView() {
+			return smMandatoryCreatedFromYearView;
+		}
+		public void setSmMandatoryCreatedFromYearView(
+				boolean smMandatoryCreatedFromYearView) {
+			this.smMandatoryCreatedFromYearView = smMandatoryCreatedFromYearView;
+		}
+		public String getSmCreatedFromYearVar() {
+			return smCreatedFromYearVar;
+		}
+		public void setSmCreatedFromYearVar(String smCreatedFromYearVar) {
+			this.smCreatedFromYearVar = smCreatedFromYearVar;
+		}
+		public String getSmCreatedToYearVar() {
+			return smCreatedToYearVar;
+		}
+		public void setSmCreatedToYearVar(String smCreatedToYearVar) {
+			this.smCreatedToYearVar = smCreatedToYearVar;
+		}
+		public boolean isSmMandatoryRegistrationStatusView() {
+			return smMandatoryRegistrationStatusView;
+		}
+		public void setSmMandatoryRegistrationStatusView(
+				boolean smMandatoryRegistrationStatusView) {
+			this.smMandatoryRegistrationStatusView = smMandatoryRegistrationStatusView;
+		}
+		public boolean isSmMandatoryDistrictView() {
+			return smMandatoryDistrictView;
+		}
+		public void setSmMandatoryDistrictView(boolean smMandatoryDistrictView) {
+			this.smMandatoryDistrictView = smMandatoryDistrictView;
+		}
+		public boolean isSmMandatoryStateView() {
+			return smMandatoryStateView;
+		}
+		public void setSmMandatoryStateView(boolean smMandatoryStateView) {
+			this.smMandatoryStateView = smMandatoryStateView;
+		}
+		public boolean isSmMandatoryFromDateView() {
+			return smMandatoryFromDateView;
+		}
+		public void setSmMandatoryFromDateView(boolean smMandatoryFromDateView) {
+			this.smMandatoryFromDateView = smMandatoryFromDateView;
+		}
+		public boolean isSmMandatoryCategoryView() {
+			return smMandatoryCategoryView;
+		}
+		public void setSmMandatoryCategoryView(boolean smMandatoryCategoryView) {
+			this.smMandatoryCategoryView = smMandatoryCategoryView;
+		}
 		public boolean isScRequestQuoteNoView() {
 			return scRequestQuoteNoView;
 		}

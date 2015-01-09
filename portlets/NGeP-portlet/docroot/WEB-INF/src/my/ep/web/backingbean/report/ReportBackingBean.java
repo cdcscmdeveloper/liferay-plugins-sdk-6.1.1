@@ -325,6 +325,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String smRegistrationType;
 	private String smBusinessRegNo;
 	private String smIcNumber;
+	private String smCreatedFromYear;
+	private String smCreatedToYear;
+	private String smMonthlyRptByYear;
 	//CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -332,6 +335,25 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctContrMontrStatus;
 	private String ctComplete;	
 	
+	
+	public String getSmMonthlyRptByYear() {
+		return smMonthlyRptByYear;
+	}
+	public void setSmMonthlyRptByYear(String smMonthlyRptByYear) {
+		this.smMonthlyRptByYear = smMonthlyRptByYear;
+	}
+	public String getSmCreatedFromYear() {
+		return smCreatedFromYear;
+	}
+	public void setSmCreatedFromYear(String smCreatedFromYear) {
+		this.smCreatedFromYear = smCreatedFromYear;
+	}
+	public String getSmCreatedToYear() {
+		return smCreatedToYear;
+	}
+	public void setSmCreatedToYear(String smCreatedToYear) {
+		this.smCreatedToYear = smCreatedToYear;
+	}
 	public String getScRequestQuoteNo() {
 		return scRequestQuoteNo;
 	}
@@ -1996,16 +2018,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setApplicationTypeTotVar(ReportConst.AMP_APPL_TYPE_EQ+this.getSmApplicationType());
 			}
 			if((this.getSmPaymentType()!=null)&&(this.getSmPaymentType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPaymentTypeTotVar(ReportConst.AMP_PAYMENT_TYPE_EQ+this.getSmPaymentType());
+				rptGenBean.setPaymentTypeTotVar(ReportConst.AMP_SM_PAYMENT_TYPE_EQ+this.getSmPaymentType());
 			}
 			if((this.getSmCancelledBy()!=null)&&(this.getSmCancelledBy()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCancelledByTotVar(ReportConst.AMP_USER_PRINTED_BY_EQ+this.getSmCancelledBy());
 			}
 			if((this.getSmCompanyName()!=null)&&(this.getSmCompanyName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getSmCompanyName());
+				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_SM_COMP_NAME_EQ+this.getSmCompanyName());
 			}
 			if((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getSmRegistrationType());
+				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_SM_REG_TYPE_EQ+this.getSmRegistrationType());
 			}
 			if((this.getSmSupportingDocument()!=null)&&(this.getSmSupportingDocument()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setSupportingDocumentTotVar(ReportConst.AMP_SUPP_DOC_EQ+this.getSmSupportingDocument());
@@ -2020,16 +2042,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setRegistrationNoTotVar(ReportConst.AMP_REG_NO_EQ+this.getSmRegistrationNo());
 			}					
 			if((this.getSmApplicationNo()!=null)&&(this.getSmApplicationNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setApplicationNoTotVar(ReportConst.AMP_APPLICATION_NO_EQ+this.getSmApplicationNo());
+				rptGenBean.setApplicationNoTotVar(ReportConst.AMP_SM_APPLICATION_NO_EQ+this.getSmApplicationNo());
 			}
 			if((this.getSmZone()!=null)&&(this.getSmZone()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setZoneTotVar(ReportConst.AMP_ZONE_NAME_EQ+this.getSmZone());
+				rptGenBean.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ+this.getSmZone());
 			}
 			if((this.getSmSupplierType()!=null)&&(this.getSmSupplierType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSupplierTypeTotVar(ReportConst.AMP_SUPPLIER_TYPE_EQ+this.getSmSupplierType());
+				rptGenBean.setSupplierTypeTotVar(ReportConst.AMP_SM_SUPPLIER_TYPE_EQ+this.getSmSupplierType());
 			}
 			if((this.getSmMofRegNo()!=null)&&(this.getSmMofRegNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofRegNoTotVar(ReportConst.AMP_MOF_NO_EQ+this.getSmMofRegNo());
+				rptGenBean.setMofRegNoTotVar(ReportConst.AMP_SM_MOF_REG_NO_EQ+this.getSmMofRegNo());
 			}				
 			if((this.getSmMofRegNoFrom()!=null)&&(this.getSmMofRegNoFrom()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setMofRegNoFromTotVar(ReportConst.AMP_REG_MOF_FROM_EQ+this.getSmMofRegNoFrom());
@@ -2038,7 +2060,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setMofRegNoToTotVar(ReportConst.AMP_REG_MOF_TO_EQ+this.getSmMofRegNoTo());
 			}			
 			if((this.getSmRegistrationStatus()!=null)&&(this.getSmRegistrationStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationStatusTotVar(ReportConst.AMP_REG_STATUS_EQ+this.getSmRegistrationStatus());
+				rptGenBean.setRegistrationStatusTotVar(ReportConst.AMP_SM_REG_STATUS_EQ+this.getSmRegistrationStatus());
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
@@ -2069,31 +2091,31 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setNoOfCategoryTotVar(""+this.getSmNoOfCategory());
 			}
 			if((this.getSmMainCategory()!=null)&&(this.getSmMainCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMainCategoryTotVar(ReportConst.AMP_MAIN_CATEGORY_EQ+this.getSmMainCategory());
+				rptGenBean.setMainCategoryTotVar(ReportConst.AMP_SM_MAIN_CATEGORY_EQ+this.getSmMainCategory());
 			}
 			if((this.getSmSubCategory()!=null)&&(this.getSmSubCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSubCategoryTotVar(ReportConst.AMP_SUB_CATEGORY_EQ+this.getSmSubCategory());
+				rptGenBean.setSubCategoryTotVar(ReportConst.AMP_SM_SUB_CATEGORY_EQ+this.getSmSubCategory());
 			}
 			if((this.getSmSubCategoryDivision()!=null)&&(this.getSmSubCategoryDivision()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSubCategoryDivisionTotVar(ReportConst.AMP_SUB_DIV_CATEGORY_EQ+this.getSmSubCategoryDivision());
+				rptGenBean.setSubCategoryDivisionTotVar(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ+this.getSmSubCategoryDivision());
 			}
 			if((this.getSmRole()!=null)&&(this.getSmRole()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setRoleTotVar(ReportConst.AMP_ROLE_EQ+this.getSmRole());
 			}
 			if((this.getSmApplicationStatus()!=null)&&(this.getSmApplicationStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setApplicationStatusTotVar(ReportConst.AMP_APPL_STATUS_EQ+this.getSmApplicationStatus());
+				rptGenBean.setApplicationStatusTotVar(ReportConst.AMP_SM_APPL_STATUS_EQ+this.getSmApplicationStatus());
 			}
 			if((this.getSmState()!=null)&&(this.getSmState()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setStateTotVar(ReportConst.AMP_STATE_NAME_EQ+this.getSmState());
+				rptGenBean.setStateTotVar(ReportConst.AMP_SM_STATE_NAME_EQ+this.getSmState());
 			}
 			if((this.getSmDistrict()!=null)&&(this.getSmDistrict()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDistrictTotVar(""+this.getSmDistrict());
+				rptGenBean.setDistrictTotVar(ReportConst.AMP_SM_DISTRICT_NAME_EQ+this.getSmDistrict());
 			}
 			if((this.getSmSupplierName()!=null)&&(this.getSmSupplierName()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setSupplierNameTotVar(""+this.getSmSupplierName());
 			}
 			if((this.getSmReportType()!=null)&&(this.getSmReportType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setReportTypeTotVar(""+this.getSmReportType());
+				rptGenBean.setReportTypeTotVar(ReportConst.AMP_SM_REPORT_TYPE_EQ+this.getSmReportType());
 			}
 			if((this.getSmOrganizationType()!=null)&&(this.getSmOrganizationType()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setOrganizationTypeTotVar(""+this.getSmOrganizationType());
