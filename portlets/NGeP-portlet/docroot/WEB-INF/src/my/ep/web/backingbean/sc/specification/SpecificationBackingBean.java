@@ -9697,10 +9697,8 @@ public class SpecificationBackingBean extends
 
 		if (financialScoring != null && !financialScoring.isEmpty()) {
 			ScQtCheckList finalFinSpec = null;
-			
 			finWeightageSum();
-			financialWeightageCalculate();
-			
+			//financialWeightageCalculate();
 			for (ScQtCheckList checkList : financialScoring) {
 
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
