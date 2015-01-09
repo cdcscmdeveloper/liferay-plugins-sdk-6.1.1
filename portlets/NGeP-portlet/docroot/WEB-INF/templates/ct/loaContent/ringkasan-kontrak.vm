@@ -11,24 +11,150 @@
    <body>
       <strong>APPENDIKS: RINGKASAN KONTRAK</strong><br/><br/>
       Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak<br/><br/>
-      i. No Rujukan $fileNo $sourcingNo<br/>
-      ii. Skop / Tajuk $sourcingTitle<br/>
-      iii. Pembekal $successfulSupplierName<br/>
-      iv. Nilai Kontrak Asal $contractValue<br/>
-      iv. Nilai Baru KontrakTambahan $newContractValue<br/>
-      xx. Jenis Pemenuhan $fulfillmentType<br/>
-      xx. Jadual Penghantaran Refer Attachment <br/>
-      xx. Potongan Pembayaran $deductionAmount **applicable for fixed deduction only<br/>
-      vi.  Tempoh Kontrak Asal $months <br/>
-      $effStartDate $effEndDate<br/>
-      vii. Tempoh Kontrak Tambahan $extendMonths<br/>
-      $amendEffExpDate<br/>
-      viii. Effective Date<br/>
-      $effDate<br/>
-      vii. Nilai Bon Pelaksanaan Asal $bondValue<br/>
-      vii. Nilai Baru Bon Pelaksanaan $amendBondValue<br/>
-      viii. Spesifikasi Tugas / Skop Kerja Refer Attachment<br/>
-      xx. Cara Pembayaran : Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)<br/>
-      xx. Lain-lain Terma Refer Attachment
+      <table>
+      <tr>
+         <td>i.
+         </td>
+         <td>No Rujukan
+         </td>
+         <td>$fileNo $sourcingNo
+         </td>
+      </tr>
+      <tr>
+         <td>ii.
+         </td>
+         <td>Skop / Tajuk
+         </td>
+         <td>$sourcingTitle
+         </td>
+      </tr>
+      <tr>
+         <td>iii.
+         </td>
+         <td>Pembekal
+         </td>
+         <td>$successfulSupplierName
+         </td>
+      </tr>
+      <tr>
+         <td>iv.
+         </td>
+         <td>Nilai Kontrak Asal
+         </td>
+         <td>$contractValue
+         </td>
+      </tr>
+      <tr>
+         <td>xx.
+         </td>
+         <td>Jenis Pemenuhan
+         </td>
+         <td>$fulfillmentType
+         </td>
+      </tr>
+      <tr>
+         <td>xx.
+         </td>
+         <td>Jadual Penghantaran
+         </td>
+         <td>Refer Attachment
+         </td>
+      </tr>
+      <tr>
+         <td>xx.
+         </td>
+         <td>Potongan Pembayaran
+         </td>
+         <td>$deductionAmount **applicable for fixed deduction only
+         </td>
+      </tr>
+      <tr>
+         <td>vi.
+         </td>
+         <td>Tempoh Kontrak Asal
+         </td>
+         <td>$months
+         </td>
+      </tr>
+      <tr>
+         <td>
+         </td>
+         <td>$effStartDate
+         </td>
+         <td>$effEndDate
+         </td>
+      </tr>
+      <tr>
+         <td>vii.
+         </td>
+         <td>Tempoh Kontrak Tambahan
+         </td>
+         <td>$extendMonths
+         </td>
+      </tr>
+      <tr>
+         <td>
+         </td>
+         <td>$amendEffExpDate
+         </td>
+         <td>
+         </td>
+      </tr>
+      <tr>
+         <td>viii.
+         </td>
+         <td>Effective Date
+         </td>
+         <td>
+         </td>
+      </tr>
+      <tr>
+         <td>
+         </td>
+         <td>$effDate
+         </td>
+         <td>
+         </td>
+      </tr>
+      <tr>
+         <td>vii.
+         </td>
+         <td>Nilai Bon Pelaksanaan Asal
+         </td>
+         <td>bondValue
+         </td>
+      </tr>
+      <tr>
+         <td>vii.
+         </td>
+         <td>Nilai Baru Bon Pelaksanaan
+         </td>
+         <td>$amendBondValue
+         </td>
+      </tr>
+      <tr>
+         <td>viii.
+         </td>
+         <td>Spesifikasi Tugas / Skop Kerja
+         </td>
+         <td>Attachment
+         </td>
+      </tr>
+      <tr>
+         <td>xx.
+         </td>
+         <td>Cara Pembayaran :
+         </td>
+         <td>Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)
+         </td>
+      </tr>
+      <tr>
+         <td>xx.
+         </td>
+         <td>Lain-lain Terma
+         </td>
+         <td>Refer Attachment
+         </td>
+      </tr>
    </body>
 </html>
