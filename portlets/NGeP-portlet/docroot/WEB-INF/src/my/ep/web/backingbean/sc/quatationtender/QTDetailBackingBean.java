@@ -1569,6 +1569,8 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
+			// Added by visu on 09012015 - Fix for Other Approval Validations on sumbit only
+			qt.setOtherApproval(true);
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus
