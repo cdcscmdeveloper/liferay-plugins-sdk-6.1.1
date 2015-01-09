@@ -15,7 +15,7 @@
 		<p:dataTable value="#{flOrderBB.pendingDoDataModel}" lazy="true"
 			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="10">
 			<ac:paginator for="flPendingDoListDt" />
-			<p:column headerText="Order Number">
+			<p:column headerText="#{lbl['lbl.fl.dopending.order.number']}">
 				<p:commandLink value="#{pending.docNo}"
 					action="#{flOrderBB.navigateToFlOrder(rowIndex)}">
 					<f:setPropertyActionListener
@@ -24,10 +24,10 @@
 						<f:param name="status" value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" />
 				</p:commandLink>
 			</p:column>
-			<p:column headerText="Document Type">
+			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}">
 				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" />
 			</p:column>
-			<p:column headerText="Title">
+			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}">
 				<h:outputText value="#{pending.flFulfilmentRequest.title}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ptj.name']}">
