@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
@@ -3358,14 +3359,32 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private String prepareOriginalText() {
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
+		SmSupplier smSupplier = null;
+		String countryCode ="";
 		String orginalText = "";
+
+		if(getManagedBean().getSmSupplier() != null){
+			smSupplier = getManagedBean().getSmSupplier();
+
+			if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+				for (SmCompanyAddress compaAddress : companyAddress) {
+					if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+						countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+						break;
+					}
+				}
+			}
+		}
+		
 		sb.append(getManagedBean().getScQuote().getQuoteNo())
 		.append("|")
 		.append(facesScopes.getUserSessionBean().getIdentificationNo())
 		.append("|")
-		.append(getManagedBean().getSmSupplier().getRegNo())
+		.append(smSupplier.getRegNo())
 		.append("|")
-		.append(getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryCode());
+		.append(countryCode);
 		orginalText  = sb.toString();
 		return orginalText;
 	}
