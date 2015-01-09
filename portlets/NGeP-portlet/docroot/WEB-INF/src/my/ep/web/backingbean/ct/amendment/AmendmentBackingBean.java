@@ -3128,9 +3128,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public String calculateMonthsAndYear() {
 			int months = getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+getManagedBean().getContractVer().getCtAmendment().getExtendPeriod();
-			int year = months / 12;
-			int month = months % 12;
-			return String.valueOf(year +"."+month);
+			return String.format("%.2f",months/12.0);
 	}
 	
 	public void ap201FileUpload(FileUploadEvent event) throws Exception {
