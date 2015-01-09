@@ -236,7 +236,7 @@ public class ReportConst {
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME";
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_VAL = "VirtCertiReleasedLstOnTheDayReport";
 	public static final String SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME = "lbl.rpt.sm.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME";*/
-	public static final String SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL = "SM_001";
+	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	/*public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME";
 	public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL = "LstOfCompBasedSuppTypeBumiputeraStsCatRpt";
 	public static final String SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME";
@@ -302,10 +302,16 @@ public class ReportConst {
 	public static final String SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME = "lbl.rpt.sm.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME";
 	public static final String SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_VAL = "LstOfDailyApplSubmittedRpt(BasicAcc/MOFReg)";
 	public static final String SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME = "lbl.rpt.sm.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME";
-	public static final String SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_VAL = "SM_021";
+	public static final String SM_LIST_OF_PRE_EXPIRY_COMPANY_RPT_VAL = "SM_021";
 	public static final String SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME = "lbl.rpt.sm.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME";
-	public static final String SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_VAL = "SM_022";
-	public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME = "lbl.rpt.sm.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME";
+	public static final String SM_REG_COMPANY_IN_MOF_DET_RPT_VAL = "SM_022";
+	public static final String SM_REG_COMPANY_IN_MOF_PROJ_RPT_VAL = "SM_023";
+	public static final String SM_REG_COMPANY_IN_MOF_CONT_RPT_VAL = "SM_024";
+	public static final String SM_REG_COMPANY_IN_MOF_DET_CONT_RPT_VAL = "SM_025";
+	public static final String SM_REG_COMPANY_IN_MOF_PROJ_CONT_RPT_VAL = "SM_026";
+	public static final String SM_QUESTIONNAIRE_RESPONSE_RPT_VAL = "SM_028";
+
+	/*public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME = "lbl.rpt.sm.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME";
 	public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL = "ListOfBlacklistedDirectorOrOwner";
 	public static final String SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME = "lbl.rpt.sm.SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME";
 	public static final String SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_VAL = "LstOfContactPersonBnkAcBrnch";
@@ -320,7 +326,7 @@ public class ReportConst {
 	public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME = "lbl.rpt.sm.SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME";
 	public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_VAL = "LstOrStatOfPendSiteVisit/PerformSiteVisit";
 	public static final String SM_DETAILS_OF_APPLICATION_RPT_NAME = "lbl.rpt.sm.SM_DETAILS_OF_APPLICATION_RPT_NAME";
-	public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";
+	public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";*/
 	//jsp
 	public static final String SM_LST_OF_APP_RPT_JSP = "List_of_Application.jsp";
 	public static final String SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_JSP = "List_of_Company_Based_on_Type_and_Capital.jsp";
@@ -363,14 +369,33 @@ public class ReportConst {
 	public static final String CT_LST_OF_PANEL_COVERAGE_RPT_VAL = "CT_024";
 	
 	///sm
-	public static final String AMP_SM_TO_DATE_EQ = "&createddateto=";
-	public static final String AMP_SM_FROM_DATE_EQ = "&createddatefrom=";
-	public static final String AMP_SM_REG_TYPE_EQ = "&appltype=";
-	public static final String AMP_SM_MOF_REG_NO_EQ = "&mofno=";
-	public static final String AMP_SM_ZONE_ID_EQ = "&zoneid=";
-	public static final String AMP_SM_USER_ID_EQ = "&userid=";
-	public static final String AMP_SM_REPORT_ID_EQ = "&reportid=";
-	public static final String AMP_SM_APPL_STATUS_EQ = "&statusid=";
+	public static final String AMP_SM_TO_DATE_EQ = "&PTODATE=";
+	public static final String AMP_SM_FROM_DATE_EQ = "&PFROMDATE=";
+	public static final String AMP_SM_REG_TYPE_EQ = "&PREGTYPE=";
+	public static final String AMP_SM_MOF_REG_NO_EQ = "&PMOFNO=";
+	public static final String AMP_SM_USER_ID_EQ = "&PUSER=";
+	public static final String AMP_SM_REPORT_ID_EQ = "&PREPORTID=";
+	public static final String AMP_SM_APPL_STATUS_EQ = "&PAPPLSTATUS=";
+	public static final String AMP_SM_COMP_NAME_EQ = "&PCOMPANYNAME=";
+	public static final String AMP_SM_MAIN_CATEGORY_EQ = "&PCATEGORYCODE=";
+	public static final String AMP_SM_SUB_CATEGORY_EQ = "&PSUBCATEGORYCODE=";
+	public static final String AMP_SM_SUB_DIV_CATEGORY_EQ = "&PSUBCATEGORYDIVISION=";
+	public static final String AMP_SM_REG_STATUS_EQ = "&PREGSTATUSID=";
+	public static final String AMP_SM_STATE_NAME_EQ = "&PSTATEID=";
+	public static final String AMP_SM_DISTRICT_NAME_EQ = "&PDISTRICTID=";
+	public static final String AMP_SM_YEAR_FROM_EQ = "&PYEARFROM=";
+	public static final String AMP_SM_YEAR_TO_EQ = "&PYEARTO=";
+	public static final String AMP_SM_SUPPLIER_TYPE_EQ = "&PSUPPTYPE=";
+	public static final String AMP_SM_SUPPLIER_ZONE_NAME_EQ = "&PSUPPZONE=";
+	public static final String AMP_SM_YEAR_EQ = "&PYEAR=";
+	public static final String AMP_SM_APPL_TYPE_EQ = "&PAPPLTYPE=";
+	public static final String AMP_SM_REPORT_TYPE_EQ = "&PREPORTTYPE=";
+	public static final String AMP_SM_APPLICATION_NO_EQ = "&PAPPLNO=";
+	public static final String AMP_SM_SVO_NAME_EQ = "&PSVOUSERID=";
+	public static final String AMP_SM_MOF_CERTIFICATE_SERIAL_NUMBER_EQ = "";
+	public static final String AMP_SM_PAYMENT_TYPE_EQ = "&PPAYTYPE=";
+
+
 	
 	public static final String AMP_EP_NO_EQ = "&epno=";
 	public static final String AMP_TO_DATE_EQ = "&todt=";
@@ -393,9 +418,7 @@ public class ReportConst {
 	public static final String AMP_TO_PUC_EQ = "&topaidupcapital=";
 	public static final String AMP_ACMLTD_FRM_TOT_SHARE_EQ = "&frtotalshare=";
 	public static final String AMP_ACMLTD_TO_TOT_SHARE_EQ = "&tototalshare=";
-	public static final String AMP_MAIN_CATEGORY_EQ = "&maincategoryname=";
-	public static final String AMP_SUB_CATEGORY_EQ = "&subcategoryname=";
-	public static final String AMP_SUB_DIV_CATEGORY_EQ = "&subdivisioncategoryname=";
+	
 	public static final String AMP_ROLE_EQ = "&role=";
 	public static final String AMP_FRM_EXPIRY_DT_EQ = "&frexpdt=";
 	public static final String AMP_TO_EXPIRY_DT_EQ = "&toexpdt=";
