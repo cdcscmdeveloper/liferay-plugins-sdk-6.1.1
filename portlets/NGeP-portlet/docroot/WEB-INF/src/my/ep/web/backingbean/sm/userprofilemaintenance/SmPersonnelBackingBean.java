@@ -1359,14 +1359,23 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setType("Online");
 		reqDTO.setPostCode(postCode);
 
-		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
+		MyIdentityResDTO resDTO = null;
 		StringBuffer sb = new StringBuffer();
 		sb.append("MessageConst.ERROR_MYIDENTITY_");
-		if (!resDTO.getStatusCode().equalsIgnoreCase(
-				SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
-			sb.append(resDTO.getStatusCode());
-			throw new EpException(sb.toString());
+		
+		try {
+			resDTO = myIdentitySO.myIdentityVerification(reqDTO);
+			// StringBuffer sb = new StringBuffer();
+			if (!resDTO.getStatusCode().equalsIgnoreCase(
+					SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
+				sb.append(resDTO.getStatusCode());
+				throw new EpException(sb.toString());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new EpException(e.getMessage());
 		}
+		
 	}
 
 	public String getCompanyId() {
