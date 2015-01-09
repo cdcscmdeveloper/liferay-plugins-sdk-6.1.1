@@ -1769,18 +1769,25 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				}
 
 				context.put("hostUrl", hostUrl);
-				String agencyAddress = "";
+				StringBuilder agencyAddress = new StringBuilder();
 				String agencyPhoneNo = "";
 				String agencyFaxNo = "";
 				if (pmAddressType != null) {
 					PmAddress pmAddress = pmAddressType.getPmAddress();
-
-					agencyAddress = getFullAddress(pmAddress);
-					agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+					agencyAddress.append(pmAddress.getAddress1());
+					agencyAddress.append(",<br />");
+					agencyAddress.append(pmAddress.getAddress2());
+					agencyAddress.append(",<br />");
+					agencyAddress.append(pmAddress.getPostcode());
+					agencyAddress.append(" ");
+					agencyAddress.append(pmAddress.getPmCity() != null ? pmAddress.getPmCity().getCityName() : "");
+					agencyAddress.append(",<br />");
+					agencyAddress.append(pmAddress.getPmState() != null ? pmAddress.getPmState().getStateName() : "");
+					
 					agencyPhoneNo = pmAddress.getPhoneNo();
 					agencyFaxNo = pmAddress.getFaxNo();
 				}
-				context.put("agencyAddress", agencyAddress);
+				context.put("agencyAddress", agencyAddress.toString());
 				context.put("agencyPhoneNo", agencyPhoneNo);
 				context.put("agencyFaxNo", agencyFaxNo);
 				context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
