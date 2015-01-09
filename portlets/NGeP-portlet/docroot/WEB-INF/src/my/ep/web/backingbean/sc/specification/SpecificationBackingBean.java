@@ -8972,7 +8972,7 @@ public class SpecificationBackingBean extends
 	public void financialWeightageCalculate() {
 		if (null != this.getManagedBean().getFinancialScoreSetting()
 				&& this.getManagedBean().getFinancialScoreSetting()
-						.isWeightageReq()) {
+						.isWeightageReq() && !this.getManagedBean().isReadOnly()) {
 			List<ScQtCheckList> checklist = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
 			if (null == checklist) {
@@ -9697,8 +9697,10 @@ public class SpecificationBackingBean extends
 
 		if (financialScoring != null && !financialScoring.isEmpty()) {
 			ScQtCheckList finalFinSpec = null;
+			
 			finWeightageSum();
 			financialWeightageCalculate();
+			
 			for (ScQtCheckList checkList : financialScoring) {
 
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
