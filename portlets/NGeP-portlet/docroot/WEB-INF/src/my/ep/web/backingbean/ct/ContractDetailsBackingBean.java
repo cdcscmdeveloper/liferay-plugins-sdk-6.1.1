@@ -80,6 +80,7 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -2818,5 +2819,24 @@ public void removeAddRow(){
 			return true;
 		else 
 			return false;
+	}
+	
+	public boolean checkAmendmentAllow(VCtContract vCtContract) {
+		if(vCtContract.getCtContract().getLatestContractVer()!=null) {
+			double contractAmount = vCtContract.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().doubleValue();
+			if(contractAmount<=200000) {
+				return false;
+			} else if(contractAmount<=500000) {
+				if(vCtContract.getCtContract().isAgreement()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	}
 }
