@@ -5424,16 +5424,23 @@ public class SpecificationBackingBean extends
 			}
 			if (null != getManagedBean().getZoneTrees()
 					&& !getManagedBean().getZoneTrees().isEmpty()) {
-				this.getManagedBean().setSupplierValidation(true);
 				getManagedBean().setZoneTrees(null);
-				this.getManagedBean().setExistingSupplierLocationList(null);
+				if (null != this.getManagedBean()
+						.getExistingSupplierLocationList()
+						&& !this.getManagedBean()
+								.getExistingSupplierLocationList().isEmpty()) {
+					this.getManagedBean().setSupplierValidation(true);
 
-				ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
-						.getScQt().getScQtSupplierCriteria();
-				supplierCriteria.setScQtLocCriteria(null);
-				this.getManagedBean().getScQt()
-						.setScQtSupplierCriteria(supplierCriteria);
-				saveSpecificationDtls();
+					this.getManagedBean().setExistingSupplierLocationList(null);
+
+					ScQtSupplierCriteria supplierCriteria = this
+							.getManagedBean().getScQt()
+							.getScQtSupplierCriteria();
+					supplierCriteria.setScQtLocCriteria(null);
+					this.getManagedBean().getScQt()
+							.setScQtSupplierCriteria(supplierCriteria);
+					saveSpecificationDtls();
+				}
 			}
 		}
 	}
@@ -8972,7 +8979,8 @@ public class SpecificationBackingBean extends
 	public void financialWeightageCalculate() {
 		if (null != this.getManagedBean().getFinancialScoreSetting()
 				&& this.getManagedBean().getFinancialScoreSetting()
-						.isWeightageReq() && !this.getManagedBean().isReadOnly()) {
+						.isWeightageReq()
+				&& !this.getManagedBean().isReadOnly()) {
 			List<ScQtCheckList> checklist = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
 			if (null == checklist) {
@@ -9698,7 +9706,7 @@ public class SpecificationBackingBean extends
 		if (financialScoring != null && !financialScoring.isEmpty()) {
 			ScQtCheckList finalFinSpec = null;
 			finWeightageSum();
-			//financialWeightageCalculate();
+			// financialWeightageCalculate();
 			for (ScQtCheckList checkList : financialScoring) {
 
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -9981,12 +9989,14 @@ public class SpecificationBackingBean extends
 							.getTechnicalWeightageScore()
 							&& this.getManagedBean()
 									.getTechnicalWeightageScore().intValue() < 100) {
+						// this.getManagedBean().setActiveIndex(4);
 						throw new EpException(MessageConst.ERROR_760220);
 					}
 				}
 				if (null == technicalScoreSetting.getPassingScore()) {
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
+						this.getManagedBean().setActiveIndex(4);
 						throw new EpException(MessageConst.ERROR_760192);
 					} else {
 						technicalScoreSetting
@@ -9996,6 +10006,7 @@ public class SpecificationBackingBean extends
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
 						if (technicalScoreSetting.getPassingScore().intValue() <= 0) {
+							this.getManagedBean().setActiveIndex(4);
 							throw new EpException(MessageConst.ERROR_760172);
 						}
 					}
@@ -10004,6 +10015,7 @@ public class SpecificationBackingBean extends
 
 			if (null != technicalScoreSetting.getPassingScore()
 					&& technicalScoreSetting.getPassingScore().intValue() > 100) {
+				this.getManagedBean().setActiveIndex(4);
 				throw new EpException(MessageConst.ERROR_760142);
 			}
 			scoreSetting.add(technicalScoreSetting);
@@ -10019,6 +10031,7 @@ public class SpecificationBackingBean extends
 				if (null == financialScoreSetting.getPassingScore()) {
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
+						this.getManagedBean().setActiveIndex(5);
 						throw new EpException(MessageConst.ERROR_760193);
 					} else {
 						financialScoreSetting
@@ -10028,6 +10041,7 @@ public class SpecificationBackingBean extends
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
 						if (financialScoreSetting.getPassingScore().intValue() <= 0) {
+							this.getManagedBean().setActiveIndex(5);
 							throw new EpException(MessageConst.ERROR_760174);
 						}
 					}
@@ -10036,6 +10050,7 @@ public class SpecificationBackingBean extends
 
 			if (null != financialScoreSetting.getPassingScore()
 					&& financialScoreSetting.getPassingScore().intValue() > 100) {
+				this.getManagedBean().setActiveIndex(5);
 				throw new EpException(MessageConst.ERROR_760143);
 			}
 			scoreSetting.add(financialScoreSetting);
@@ -10050,10 +10065,12 @@ public class SpecificationBackingBean extends
 					&& !this.getManagedBean().isReadOnly()) {
 				if (null == demoScoreSetting.getPassingScore()
 						|| demoScoreSetting.getPassingScore().intValue() <= 0) {
+					this.getManagedBean().setActiveIndex(4);
 					throw new EpException(MessageConst.ERROR_760173);
 				}
 				if (null != demoScoreSetting.getPassingScore()
 						&& demoScoreSetting.getPassingScore().intValue() > 100) {
+					this.getManagedBean().setActiveIndex(4);
 					throw new EpException(MessageConst.ERROR_760144);
 				}
 			}
