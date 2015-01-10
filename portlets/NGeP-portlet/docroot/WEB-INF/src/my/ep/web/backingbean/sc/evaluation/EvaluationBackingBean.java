@@ -4977,12 +4977,12 @@ public class EvaluationBackingBean extends
 			reportId = "SC_026";
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_AKPT_FEC_RPT_JSP;
-			reportId = "SC_015";
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_TEC_RPT_JSP;
 			reportId = "SC_007";
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_AKPT_FEC_RPT_JSP;
+			reportId = "SC_015";
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
