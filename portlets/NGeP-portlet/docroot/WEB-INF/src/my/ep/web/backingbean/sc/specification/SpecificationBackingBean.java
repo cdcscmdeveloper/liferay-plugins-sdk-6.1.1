@@ -8196,6 +8196,17 @@ public class SpecificationBackingBean extends
 					}
 				}
 			}
+			if (null != checkList.getScQtCheckListValue()) {
+				if (null == checkList.getScQtCheckListValue().getFromDate()
+						|| null == checkList.getScQtCheckListValue()
+								.getToDate()) {
+					throw new EpException(MessageConst.ERROR_760222);
+					// checkList.getScQtCheckListValue().setFromDate(new
+					// Date());
+					// checkList.getScQtCheckListValue().setToDate(
+					// DateUtils.addDays(new Date(), 90));
+				}
+			}
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
