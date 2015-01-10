@@ -42,22 +42,40 @@
 							<h:outputText value="#{lbl['lbl.ct.secretary']}" />
 					 </ui:fragment>
 					<ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
-						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;"
-						      disabled="#{amendmentBackingBean.managedBean.confirmMeeting}">
+						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
-							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException"
+							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException, :form:committeTable"
 							   listener="#{amendmentBackingBean.setListenerForCommitte(ctCommitteeVar.memberRole.parameterId)}"></p:ajax>
 							</p:selectOneMenu>
+							<p:message id="appactionMsg" for="appaction" display="icon"></p:message>
 						 </ui:fragment>
 				 </p:column>
+				 <p:column style="width: 15%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
+				</f:facet>
+				<ui:fragment id="committeRepresentTypeId"
+					rendered="#{amendmentBackingBean.retriveCommitteType(ctCommitteeVar.memberRole)}">
+					<p:selectOneMenu  id="representativeType"
+						value="#{ctCommitteeVar.representativeType.parameterId}"
+						label="#{lbl['lbl.ct.represent.type']}" style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{amendmentBackingBean.managedBean.representativesTypeslist}" />
+					</p:selectOneMenu>
+					<p:message id="representiveMsg" for="representativeType" display="icon"></p:message>
+
+				</ui:fragment>
+
+			</p:column>
 	         </p:dataTable>
 	         <p:spacer height="5"/>
 	         
 	         <div class="ppRightBtn"> 
 		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" 
-		             action="#{amendmentBackingBean.fetchCommitteMembers()}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
+		             action="#{amendmentBackingBean.fetchCommitteMembers()}" />
 		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" partialSubmit="true"
-		             process="@this" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
+		             process="@this" icon="ui-icon-delete" />
 		     </div>
            
              <p:dialog id="dlgCommitteDetails"

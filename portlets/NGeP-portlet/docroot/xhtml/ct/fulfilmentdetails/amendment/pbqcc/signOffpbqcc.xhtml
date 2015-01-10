@@ -62,8 +62,16 @@
 				    <p:column style="width:7%;" headerText="#{lbl['lbl.ct.role']}">
 				         <p:outputLabel  style="float:left;" value="#{amendmentBackingBean.getParameterDesc(index, data.memberRole)}" />
 				    </p:column> 
+				    
+				     <p:column style="width:7%;" headerText="#{lbl['lbl.ct.represent.type']}">
+				         <p:outputLabel  style="float:left;" value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
+				    </p:column> 
 				   
-				    <p:column style="width:8%;" headerText="#{lbl['lbl.ct.attendance']}" styleClass="column-align-center">
+				    <p:column style="width:8%;" styleClass="column-align-center">
+				        <f:facet name="header">
+					        <h:outputText value="* " styleClass="mandatory" />
+					       <h:outputText value="#{lbl['lbl.ct.attendance']}" />
+				        </f:facet>
 				        <p:selectBooleanCheckbox value="#{data.attended}" />
 				    </p:column> 
            </p:dataTable>
