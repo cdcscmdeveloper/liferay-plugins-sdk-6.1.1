@@ -2728,17 +2728,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	*/
 	public boolean breachAP201Rules(int rulesType) {
+		double maxAdditionalLimit = 7500000;
+		double maxTotalLimit = 25000000;
+		if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			maxAdditionalLimit = 250000;
+			maxTotalLimit = 750000;
+		}
 		if(rulesType==1) { // extend
 			if(getManagedBean().getAmendHistoryList().size()>0 || getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()>=24) {
 				return true;
 			}
 		} else if(rulesType==2) { // quantity
-			if(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() > 7500000) {
-				return true;
-			}
-			if(getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue() > 25000000) {
-				return true;
-			}
 			for(CtContractItem ctContractItem : getManagedBean().getCtItemList()) {
 				for(CtItemCeilingQty ctItemCeilingQty : ctContractItem.getCtItemCeilingQties()) {
 					if(ctItemCeilingQty.isChangeCeilQuantity()) {
@@ -2749,10 +2749,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				}
 			}
 		} else if(rulesType==3) { // value
-			if(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() > 7500000) {
+			if((getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() / getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) > 0.5) {
+				return true;
+			}			
+			if(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() > maxAdditionalLimit) {
 				return true;
 			}
-			if(getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue() > 25000000) {
+			if((getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()+getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue()) > maxTotalLimit) {
 				return true;
 			}
 		}

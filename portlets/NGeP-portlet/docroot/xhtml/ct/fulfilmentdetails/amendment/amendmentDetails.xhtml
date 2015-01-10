@@ -31,8 +31,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
-					disabled="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue
-								or amendmentBackingBean.bpkApprover}">
+					disabled="#{amendmentBackingBean.bpkApprover}">
 					 <p:ajax event="change" update=":form"  process="@form" 
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
@@ -46,8 +45,7 @@
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
-					disabled="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue
-								or amendmentBackingBean.bpkApprover}">
+					disabled="#{amendmentBackingBean.bpkApprover}">
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
@@ -61,7 +59,6 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
 				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange
-				    or amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue
 				    or amendmentBackingBean.bpkApprover}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
 					<p:ajax event="change"  update=":form:amend" process="@form" 
