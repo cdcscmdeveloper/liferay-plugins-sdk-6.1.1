@@ -894,10 +894,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    			  }
 			    		}
 			           
-//			           if(!chairmanRole || !secratoryRole || !memberRole){
-//			        	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-//							throw new EpException("Attandance for meeting is mandatory");   
-//			           }
+			           if(!chairmanRole || !secratoryRole || !memberRole){
+			        	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+							throw new EpException("Attandance for meeting is mandatory");   
+			           }
 			     }
 		
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
