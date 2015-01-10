@@ -2739,6 +2739,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				return true;
 			}
 		} else if(rulesType==2) { // quantity
+			if((getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() / getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) > 0.5) {
+				return true;
+			}			
+			if(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() > maxAdditionalLimit) {
+				return true;
+			}
+			if((getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()+getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue()) > maxTotalLimit) {
+				return true;
+			}			
 			for(CtContractItem ctContractItem : getManagedBean().getCtItemList()) {
 				for(CtItemCeilingQty ctItemCeilingQty : ctContractItem.getCtItemCeilingQties()) {
 					if(ctItemCeilingQty.isChangeCeilQuantity()) {
