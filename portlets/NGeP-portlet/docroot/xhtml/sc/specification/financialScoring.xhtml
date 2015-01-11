@@ -147,7 +147,8 @@
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}">
-							<p:ajax event="change" process="@this" partialSubmit="true" />
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpricePackageFromVarieance(specificationBackingBean.managedBean.offerPricePackage)}" />
 						</p:inputText>
 					</p:column>
 
@@ -155,7 +156,8 @@
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}">
-							<p:ajax event="change" process="@this" partialSubmit="true" />
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpricePackageToVarieance(specificationBackingBean.managedBean.offerPricePackage)}" />
 						</p:inputText>
 					</p:column>
 					<p:column colspan="1">
@@ -192,7 +194,8 @@
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}">
-							<p:ajax event="change" process="@this" partialSubmit="true" />
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpriceItemFromVarieance(specificationBackingBean.managedBean.offerPriceItem)}" />
 
 						</p:inputText>
 					</p:column>
@@ -201,7 +204,8 @@
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}">
-							<p:ajax event="change" process="@this" partialSubmit="true" />
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpriceItemToVarieance(specificationBackingBean.managedBean.offerPriceItem)}" />
 						</p:inputText>
 					</p:column>
 					<p:column colspan="1">
