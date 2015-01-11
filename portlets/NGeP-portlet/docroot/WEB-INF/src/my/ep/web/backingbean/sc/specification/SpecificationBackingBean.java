@@ -9063,6 +9063,29 @@ public class SpecificationBackingBean extends
 
 	}
 
+	public void specOfferpricePackageFromVarieance(
+			ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+			if (null == offerPrice.getFromVariance()
+					|| offerPrice.getFromVariance().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760224);
+			}
+
+		}
+
+	}
+
+	public void specOfferpricePackageToVarieance(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+			if (null == offerPrice.getToVariance()
+					|| offerPrice.getToVariance().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760225);
+			}
+
+		}
+
+	}
+
 	public void specOfferpricePackageBelowScore(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
 			if (null == offerPrice.getBelowScore()
@@ -9081,6 +9104,28 @@ public class SpecificationBackingBean extends
 					|| offerPrice.getAboveScore().intValue() <= 0) {
 				throw new EpException(MessageConst.ERROR_760217);
 			}
+		}
+
+	}
+
+	public void specOfferpriceItemFromVarieance(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+			if (null == offerPrice.getFromVariance()
+					|| offerPrice.getFromVariance().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760226);
+			}
+
+		}
+
+	}
+
+	public void specOfferpriceItemToVarieance(ScQtScoreOfferPrice offerPrice) {
+		if (null != offerPrice) {
+			if (null == offerPrice.getToVariance()
+					|| offerPrice.getToVariance().intValue() <= 0) {
+				throw new EpException(MessageConst.ERROR_760227);
+			}
+
 		}
 
 	}
