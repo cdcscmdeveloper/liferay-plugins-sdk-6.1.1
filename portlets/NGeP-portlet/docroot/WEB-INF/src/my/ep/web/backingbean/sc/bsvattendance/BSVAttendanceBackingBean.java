@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.bsvattendance;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
@@ -33,6 +35,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -199,8 +202,10 @@ public class BSVAttendanceBackingBean extends
 		List<ScQtBsv> bsvs = new ArrayList<ScQtBsv>();
 		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
 		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					new CommonUtils().getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
 			throw new EpException(MessageConst.ERROR_760209,
-					new String[] { closeDate.toString() });
+					new String[] { sdf.format(closeDate) });
 		}
 		if (this.getManagedBean().getScQt().isZonal()) {
 			List<BriefingZoneBean> zoneBean = this.getManagedBean()
@@ -306,7 +311,10 @@ public class BSVAttendanceBackingBean extends
 						.getBsvAttendance();
 				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
 
-				if (!flag) {
+				if (flag) {
+					registration.setAttended(true);
+					
+				} else {
 					throw new EpException(MessageConst.ERROR_760043,
 							new String[] { "1" });
 				}
@@ -664,8 +672,9 @@ public class BSVAttendanceBackingBean extends
 			List<ScQtBsvDtl> bsvDtls = zoneBean.getBriefingList();
 			return isBsvStatusComplete(bsvDtls);
 		} else {
-			zoneBean.getBriefingList().addAll(zoneBean.getSitevisitList());
-			return isBsvStatusComplete(zoneBean.getBriefingList());
+			List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>(zoneBean.getBriefingList());
+			bsvDetails.addAll(zoneBean.getSitevisitList());
+			return isBsvStatusComplete(bsvDetails);
 		}
 	}
 
