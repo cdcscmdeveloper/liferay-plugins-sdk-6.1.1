@@ -39,14 +39,14 @@
 				rowKey="#{shortlistedSupp}"
 				rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
 				<ac:paginator for="supplierListTblSingle" />
-				
+					
 				<p:ajax event="rowSelect"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl])" />
+					update="@([id$=supplierListTblSingle])" process="@this" partialSubmit="true"/>					
 					
 				<p:ajax event="rowEdit"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl])" />
+					update="@([id$=supplierListTblSingle])" process="@this" partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
 		        	<p:row>

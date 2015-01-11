@@ -48,7 +48,7 @@
 					<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
-						<p:ajax event="change" update="@([id$=itemSupplierPanel])" 
+						<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
 							listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" />
 		   			</p:selectOneRadio>
 				</h:column>
@@ -155,26 +155,25 @@
 					<p:outputLabel value="#{lbl['lbl.sc.reevaluation.required.for']}" />
 				</h:column>
 				<h:column>
-					<div class="label">
-						<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
-					</div>
-					
 					<div class="checkbox">
 						<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"/>
+					</div>				
+					<div class="label" style="float:left;">
+						<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
 					</div>
 				</h:column>
 				
 				<h:column>
 				</h:column>
 				<h:column>
-					<div class="label">
-						<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
-					</div>
 					<div class="checkbox">
 						<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" />
 					</div>
+					<div class="label" style="float:left;">
+						<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
+					</div>					
 				</h:column>
 			</h:panelGrid>
 		</p:outputPanel>
