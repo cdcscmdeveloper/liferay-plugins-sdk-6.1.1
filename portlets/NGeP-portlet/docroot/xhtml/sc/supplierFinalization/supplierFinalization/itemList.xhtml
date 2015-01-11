@@ -23,28 +23,21 @@
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtRecommends}"
-			rows="10"
-			selection="#{suppFinalizationBackingBean.managedBean.selectedRecommendList}"
-			rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex">
+			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex">
 			<ac:paginator for="itemListTbl" />
-			
-			<p:ajax event="rowSelect" 
-				listener="#{suppFinalizationBackingBean.selectItemEvent}"
-				update="@([id$=supplierPanel])" />
-				
-			<p:ajax event="rowSelectCheckbox" 
-				listener="#{suppFinalizationBackingBean.selectItemEvent}"
-				update="@([id$=supplierPanel])" />
-				
-			<p:ajax event="rowUnselect"
-				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
-				update="@([id$=supplierPanel])"></p:ajax>
-				
-			<p:ajax event="rowUnselectCheckbox"
-				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
-				update="@([id$=supplierPanel])"></p:ajax>
 
-			<p:column selectionMode="multiple" style="width:2%" /> 
+			<p:column style="width:2%;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl])"
+								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll, suppFinalizationBackingBean.managedBean.scQtFinalization.scQtRecommends)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl])" listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
+				</p:selectBooleanCheckbox>
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.sc.item']}">
 				<h:outputText value="#{item.requestItem.itemName}" />
 			</p:column>
@@ -107,7 +100,7 @@
 											 style="text-align: right;" label="#{lbl['lbl.sc.quantity']}">
 									<p:ajax partialSubmit="true" process="@this" update="@this" />
 									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
-										maxIntegerDigits="10" />								
+										maxIntegerDigits="10" maxFractionDigits="3"/>								
 								</h:inputText>
 								<br/>
 							</p:column>
