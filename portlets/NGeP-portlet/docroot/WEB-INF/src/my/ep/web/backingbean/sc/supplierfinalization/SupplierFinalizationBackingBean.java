@@ -216,8 +216,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}		
 		
 		//Meeting Details
-		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-		getManagedBean().setMeetingList(meetingList);
+//		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+//		getManagedBean().setMeetingList(meetingList);
 	}
 	
 	private void preparationRetrival(){
