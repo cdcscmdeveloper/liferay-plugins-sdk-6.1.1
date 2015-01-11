@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -118,8 +116,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -504,7 +500,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
-			SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex, true);
+			SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex);
 			qtSuppFinalizationSO.saveSupplierFinalization(reqDTO);
 			
 			renewSessionAndRetrieve(activeIndex);			
@@ -520,7 +516,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	private SuppFinalizationReqDTO validateInfo(int index, boolean isSave){
+	private SuppFinalizationReqDTO validateInfo(int index){
 		debugLogger("..In validateInfo()..");
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -551,18 +547,17 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			case 2:
 				//Supplier Finalization Tab
 				scQtFinalization = supplierFinalizationInfo(scQtFinalization);
-				if(isSave){
-					String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
-					if(decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
-						
-						String recommendTypeCode = scQtFinalization.getRecommendedTypeId().getParameterCode();
-						if(recommendTypeCode.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)){
-							saveByPackage(scQtFinalization);
-						
-						}else if(recommendTypeCode.equals(ParameterConst.RECOMMEND_TYPE_ITEM)){
-							saveByItem(scQtFinalization);
-						}
+				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+				if (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
+					String recommendTypeCode = scQtFinalization.getRecommendedTypeId().getParameterCode();
+					if (recommendTypeCode.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
+						saveByPackage(scQtFinalization);
+					} else if (recommendTypeCode.equals(ParameterConst.RECOMMEND_TYPE_ITEM)) {
+						saveByItem(scQtFinalization);
 					}
+				} else {
+					// TODO : To delete recommend details for each item [Uncomment if needed]
+					// deleteRecommendDetails(scQtFinalization);
 				}
 				reqDTO.setScQtFinalization(scQtFinalization);
 				qtSuppFinalizationSO.validateSupplierFinalization(reqDTO);
@@ -704,6 +699,29 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return scQtFinalization;
 	}
 	
+	private void deleteRecommendDetails(ScQtFinalization scQtFinalization) {
+		List<ScQtRecommend> scQtRecommendList = scQtFinalization.getScQtRecommends();
+		if (CollectionUtils.isNotEmpty(scQtRecommendList)) {
+			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+				List<ScQtRecommendDtl> removedList = scQtRecommend.getRemoveSupplierList();
+				List<ScQtRecommendDtl> recommendDtlList = scQtRecommend.getRecommendDtls();
+				if (CollectionUtils.isNotEmpty(recommendDtlList)) {
+					if (removedList == null) {
+						removedList = new ArrayList<ScQtRecommendDtl>();
+					}
+					for (ScQtRecommendDtl recommendDtl : recommendDtlList) {
+						if (!recommendDtl.isBrandNew()) {
+							recommendDtl.setDeleted(true);
+							removedList.add(recommendDtl);
+						}
+					}
+				}
+				scQtRecommend.setRecommendDtls(null);
+			}
+		}
+		
+	}
+	
 	private void recommendSupplier(ScQtFinalization scQtFinalization){
 		//PmParameter recommendType = getPmParameterByTypeAndCode(ParameterTypeConst.SC_RECOMMEND_TYPE, getManagedBean().getRecommendType());
 		//scQtFinalization.setRecommendedTypeId(recommendType);
@@ -722,112 +740,140 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
 		
 		String recommendBy = getManagedBean().getRecommendBy();
-		
 		ScQtEvaluationResult scQtEvaluationResult = getManagedBean().getRecommendedSupplier();
-		if(scQtEvaluationResult != null){
+		if (scQtEvaluationResult != null) {
 			//award
 			SmSupplier smSupplier = scQtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier();
-			for(ScQtRecommend scQtRecommend : scQtRecommendList){
-				Set<ScQtRecommendDtl> listToAdd = new HashSet<ScQtRecommendDtl>();
-				List<ScQtRecommendDtl> dbList = scQtRecommend.getRecommendDtls();
-				Set<SmSupplier> supplierList = new HashSet<SmSupplier>();
+			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 				
-				if(dbList != null && dbList.size() > 0){
-					for(ScQtRecommendDtl db : dbList){
-						supplierList.add(db.getSupplier());
+				//setRemovableRecommendDetails(qtSuppFinalizationSO, scQtRecommend, reqDTO, isRecommendTypeChanged);
+				if (scQtRecommend.getRecommendDtls() == null) {
+					scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>());
+				}
+				boolean alreadyExists = false;
+				ScQtRecommendDtl selectedRecommendDtl = null;
+				BigDecimal awardQty = scQtRecommend.getRequestItem().getQuantity();
+				for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+					if ((smSupplier.getSupplierId())
+							.equals(recommendDtl.getSupplier().getSupplierId())) {
+						scQtRecommend.getRecommendDtls().remove(recommendDtl);
+						alreadyExists = true;
+						selectedRecommendDtl = recommendDtl;
+						selectedRecommendDtl.setAwardQty(awardQty);
+						break;
 					}
 				}
-				
-				if(!supplierList.contains(smSupplier)){
-					ScQtRecommendDtl scQtRecommendDtl = prepareRecommendDtlInfo(scQtRecommend, scQtEvaluationResult);
-					listToAdd.add(scQtRecommendDtl);
-				}else{
-					for(ScQtRecommendDtl db : dbList){
-						if(db.getSupplier().equals(smSupplier)){
-							listToAdd.add(db);
-						}
+				if (scQtRecommend.getRemoveSupplierList() == null) {
+					scQtRecommend.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>());
+				}
+				for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+					if (!recommendDtl.isBrandNew()) {
+						recommendDtl.setDeleted(true);
+						scQtRecommend.getRemoveSupplierList().add(recommendDtl);
 					}
 				}
-				scQtRecommend.setRecommendByStr(recommendBy);
-				scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>(listToAdd));
+				if (!alreadyExists) {
+					selectedRecommendDtl = setSelectedSupplier(scQtEvaluationResult, scQtRecommend, awardQty, 
+															   scQtRecommend.getRemoveSupplierList());
+					setUserDetails(selectedRecommendDtl);
+				} 
+				scQtRecommend.getRecommendDtls().clear();
+				scQtRecommend.getRecommendDtls().add(selectedRecommendDtl);					
 			}
-		}else{
+		} else {
 			//multiple LOI or Online Bidding
 			
 			//to set the recommend details for each recommend
 			for(ScQtRecommend scQtRecommend : scQtRecommendList){
-				List<ScQtRecommendDtl> dbList = scQtRecommend.getRecommendDtls();
-				Set<ScQtRecommendDtl> listToAdd = new HashSet<ScQtRecommendDtl>();
-				Set<ScQtRecommendDtl> listToRemove = new HashSet<ScQtRecommendDtl>();
-				Set<SmSupplier> supplierList = new HashSet<SmSupplier>();
-				
-				if(dbList != null && dbList.size() > 0){
-					for(ScQtRecommendDtl db : dbList){
-						supplierList.add(db.getSupplier());
-					}
-				}
-				
 				List<ScQtEvaluationResult> recommendedSupplierList = getManagedBean().getRecommendedSupplierList();
-				if(recommendedSupplierList != null && recommendedSupplierList.size() > 0){
-					for(ScQtEvaluationResult evalResult : recommendedSupplierList){
-						SmSupplier smSupplier = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier();
-						if(!supplierList.contains(smSupplier)){
-							ScQtRecommendDtl scQtRecommendDtl = prepareRecommendDtlInfo(scQtRecommend, evalResult);
-							listToAdd.add(scQtRecommendDtl);
-						}else{
-							for(ScQtRecommendDtl db : dbList){
-								if(db.getSupplier().equals(smSupplier)){
-									listToAdd.add(db);
-								}
+				if (CollectionUtils.isNotEmpty(recommendedSupplierList)) {
+					if (scQtRecommend.getRecommendDtls() == null) {
+						scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>());
+					}						
+					ScQtRecommendDtl selectedRecommendDtl = null;
+					BigDecimal awardQty = scQtRecommend.getRequestItem().getQuantity();
+					List<ScQtRecommendDtl> toBeAddedList = new ArrayList<ScQtRecommendDtl>();
+					
+					for (ScQtEvaluationResult recomendedSupplier : recommendedSupplierList) {
+						boolean alreadyExists = false; 
+						List<ScQtRecommendDtl> removedList = scQtRecommend.getRemoveSupplierList();
+						for (ScQtRecommendDtl detail : scQtRecommend.getRecommendDtls()) {
+							if ((detail.getSupplier().getSupplierId())
+									.equals(recomendedSupplier.getScQtProposal().getScQtSupplier()
+											.getSmSupplier().getSupplierId())) {
+								alreadyExists = true;
+								checkAndRemoveFromDeletedList(removedList, detail);
+								detail.setAwardQty(scQtRecommend.getRequestItem().getQuantity());
+								setUserDetails(detail);
+								toBeAddedList.add(detail);										
+								break;
 							}
 						}
-					}
-				}
-				
-				List<ScQtEvaluationResult> unRecommendedSupplierList = getManagedBean().getUnRecommendedSupplierList();
-				if(unRecommendedSupplierList != null && unRecommendedSupplierList.size() > 0){
-					for(ScQtEvaluationResult evalResult : unRecommendedSupplierList){
-						SmSupplier smSupplier = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier();
-						for(ScQtRecommendDtl db : dbList){
-							if(db.getSupplier().equals(smSupplier)){
-								db.setDeleted(true);
-								listToRemove.add(db);
-							}
+						if (!alreadyExists) {
+							selectedRecommendDtl = setSelectedSupplier(recomendedSupplier, scQtRecommend, awardQty,
+																	   scQtRecommend.getRemoveSupplierList());	
+							setUserDetails(selectedRecommendDtl);
+							toBeAddedList.add(selectedRecommendDtl);
 						}
 					}
+					if (scQtRecommend.getRemoveSupplierList() == null) {
+						scQtRecommend.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>());
+					}
+					for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+						if (!recommendDtl.isBrandNew() && 
+								!toBeAddedList.contains(recommendDtl)) {
+							recommendDtl.setDeleted(true);
+							scQtRecommend.getRemoveSupplierList().add(recommendDtl);
+						}
+					}
+					scQtRecommend.getRecommendDtls().clear();
+					scQtRecommend.getRecommendDtls().addAll(toBeAddedList);
 				}
-				
 				scQtRecommend.setRecommendByStr(recommendBy);
-				scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>(listToAdd));
-				scQtRecommend.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>(listToRemove));
 			}
 		}
 		scQtFinalization.setScQtRecommends(scQtRecommendList);
 	}
 	
-	/* private void prepareRecommendInfo(ScQtFinalization scQtFinalization, ScQtRecommend scQtRecommend, ScQtEvaluationResultDtl scQtEvaluationResultDtl){
-		PmParameter recommendBy = getPmParameterById(getManagedBean().getRecommendBy());
-		scQtRecommend.setRecommendBy(recommendBy);
-		scQtRecommend.setTplSpecZoneDtl(getManagedBean().getTplSpecZoneDtl());
-		scQtRecommend.setRequestItem(scQtEvaluationResultDtl.getScRequestItem());
-		scQtRecommend.setScQtFinalization(scQtFinalization);
-		setUserDetails(scQtRecommend);
+	private ScQtRecommendDtl setSelectedSupplier(ScQtEvaluationResult scQtEvaluationResult, ScQtRecommend scQtRecommend,
+												 BigDecimal awardQty, List<ScQtRecommendDtl> removedList) {
+		SmSupplier supplier = scQtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier();
+		if (CollectionUtils.isNotEmpty(removedList)) {
+			for (ScQtRecommendDtl removedDetail : removedList) { 
+				if ((supplier.getSupplierId())
+						.equals(removedDetail.getSupplier().getSupplierId())) {
+					removedDetail.setDeleted(false);
+					removedDetail.setAwardQty(awardQty);
+					removedList.remove(removedDetail);
+					return removedDetail;
+				}
+			}
+		}
 		
-	}*/
+		ScQtRecommendDtl recommendDtl = new ScQtRecommendDtl();
+		recommendDtl.setAwardQty(awardQty);
+		recommendDtl.setSupplier(supplier);
+		recommendDtl.setScQtProposalAmount(scQtEvaluationResult.getScQtProposal().getProposalAmount());
+		recommendDtl.setScQtRecommend(scQtRecommend);
+		
+		return recommendDtl;
+	}
 	
-	private ScQtRecommendDtl prepareRecommendDtlInfo(ScQtRecommend scQtRecommend, ScQtEvaluationResult scQtEvaluationResult){
-		ScQtRecommendDtl scQtRecommendDtl = new ScQtRecommendDtl();
-		
-		SmSupplier smSupplier = scQtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier();
-		ScRequestItem scRequestItem = scQtRecommend.getRequestItem();
-		
-		scQtRecommendDtl.setSupplier(smSupplier);
-		scQtRecommendDtl.setAwardQty(scRequestItem.getQuantity());
-		scQtRecommendDtl.setScQtProposalAmount(scQtEvaluationResult.getScQtProposal().getProposalAmount());
-		scQtRecommendDtl.setScQtRecommend(scQtRecommend);
-		setUserDetails(scQtRecommendDtl);
-		
-		return scQtRecommendDtl;
+	private void checkAndRemoveFromDeletedList(List<ScQtRecommendDtl> deletedList, ScQtRecommendDtl recommendDtl) {
+		if (CollectionUtils.isNotEmpty(deletedList)) {
+			List<ScQtRecommendDtl> excludedList = new ArrayList<ScQtRecommendDtl>();
+			for (ScQtRecommendDtl detail : deletedList) {
+				Long supplierId = recommendDtl.getSupplier().getSupplierId();
+				if (supplierId.equals(detail.getSupplier().getSupplierId())) {
+					detail.setDeleted(false);
+					recommendDtl = detail;
+					excludedList.add(detail);
+				}
+			}
+			if (CollectionUtils.isNotEmpty(excludedList)) {
+				deletedList.removeAll(excludedList);
+			}
+		}
 	}
 	
 	private void saveByItem(ScQtFinalization scQtFinalization){
@@ -835,71 +881,20 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
 		
 		//to set the recommend details for each recommend
-		for(ScQtRecommend scQtRecommend : scQtRecommendList){
-//			List<ScQtRecommendDtl> dbList = scQtRecommend.getRecommendDtls();
-//			Set<ScQtRecommendDtl> listToAdd = new HashSet<ScQtRecommendDtl>();
-//			Set<ScQtRecommendDtl> listToRemove = new HashSet<ScQtRecommendDtl>();
-//			Set<SmSupplier> supplierList = new HashSet<SmSupplier>();
-//			Set<SmSupplier> supplierList2 = new HashSet<SmSupplier>();
-			 
-//			if(dbList != null && dbList.size() > 0){
-//				for(ScQtRecommendDtl db : dbList){
-//					supplierList.add(db.getSupplier());
-//				}
-//			}
-			if (CollectionUtils.isEmpty(scQtRecommend.getAwardSupplierList())) {
-				scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
-			}
+		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 			validateAwardOfItem(scQtRecommend);
 			
-/*			for(ScQtEvaluationResult evalResult : scQtRecommend.getAwardSupplierList()){
-				SmSupplier smSupplier = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier();
-				
-				if(!supplierList.contains(smSupplier)){
-					ScQtRecommendDtl scQtRecommendDtl = prepareRecommendDtlInfo(scQtRecommend, evalResult);
-					if(scQtRecommend.getRecommendByStr().equals(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD)){
-						scQtRecommendDtl.setAwardQty(evalResult.getQtyAward());
-					}else{
-						scQtRecommendDtl.setAwardQty(scQtRecommend.getRequestItem().getQuantity());
-					}
-					listToAdd.add(scQtRecommendDtl);
-				}else{
-					for(ScQtRecommendDtl db : dbList){
-						if(db.getSupplier().equals(smSupplier)){
-							if(scQtRecommend.getRecommendByStr().equals(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD)){
-								db.setAwardQty(evalResult.getQtyAward());
-							}else{
-								db.setAwardQty(scQtRecommend.getRequestItem().getQuantity());
-							}
-							listToAdd.add(db);
-						}
-					}
-				}
-			}*/
-			
+			List<ScQtRecommendDtl> removedList = scQtRecommend.getRemoveSupplierList();
 			for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend.getRecommendDtls()) {
-				if(!scQtRecommend.getRecommendByStr().equals(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD)){
+				if (!ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
+						.equals(scQtRecommend.getRecommendByStr())) {
 					scQtRecommendDtl.setAwardQty(scQtRecommend.getRequestItem().getQuantity());
 				}
+				checkAndRemoveFromDeletedList(removedList, scQtRecommendDtl);
 				setUserDetails(scQtRecommendDtl);
 			}
-			
-/*			if(listToAdd != null && listToAdd.size() > 0){
-				for(ScQtRecommendDtl newDtl : listToAdd){
-					supplierList2.add(newDtl.getSupplier());
-				}
-			}*/
-/*			for(ScQtRecommendDtl db : dbList){
-				SmSupplier smSupplier = db.getSupplier();
-				if(!supplierList2.contains(smSupplier)){
-					db.setDeleted(true);
-					listToRemove.add(db);
-				}
-			}*/
-//			scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>(listToAdd));
-//			scQtRecommend.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>(listToRemove));
 		}
-		scQtFinalization.setScQtRecommends(scQtRecommendList);
+		scQtFinalization.setScQtRecommends(scQtRecommendList);		
 	}
 	
 	public void submitSuppFinalization(String outcome) {
@@ -946,7 +941,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
-			SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex, true);
+			SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(taskId);
@@ -2390,18 +2385,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)) {
 			itemize = true;
 			selectionMode = QTConstants.SF_MULTIPLE;
-			
-/*			List<ScQtRecommend> scQtRecommendList = scQtFinalization.getScQtRecommends();
-			if(scQtRecommendList != null && scQtRecommendList.size() > 0){
-				for(ScQtRecommend scQtRecommend : scQtRecommendList){
-					//scQtRecommend.setRecommendByStr(scQtRecommend.getRecommendBy().getParameterCode());
-					//log.info("Recommend By :: " + scQtRecommend.getRecommendBy().getParameterCode());
-					
-					scQtRecommend.setRecommendBy(null);
-				}
-			}*/
-		}else{
-			if(getManagedBean().getRecommendBy() == null){
+			this.getManagedBean().setOnlineBidding(false);
+		} else {
+			if (getManagedBean().getRecommendBy() == null) {
 				getManagedBean().setRecommendBy("");
 			}
 		}
@@ -2457,12 +2443,22 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		if (StringUtils.isBlank(recommendBy)) {
 			return;
 		}
-		if(recommendBy.equals(ParameterConst.RECOMMEND_BY_AWARD) || recommendBy.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)){
+		if (recommendBy.equals(ParameterConst.RECOMMEND_BY_AWARD) 
+				|| recommendBy.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) {
 			//clear the list if more than 1
-			if(scQtRecommend.getAwardSupplierList() != null){
-				int size = scQtRecommend.getAwardSupplierList().size();
-				if(size > 1){
+			if (scQtRecommend.getRecommendDtls() != null) {
+				int size = scQtRecommend.getRecommendDtls().size();
+				if (size > 1) {
 					scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
+					if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
+						List<ScQtRecommendDtl> toBeRemovedList = new ArrayList<ScQtRecommendDtl>();
+						for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+							recommendDtl.setDeleted(true);
+							toBeRemovedList.add(recommendDtl);
+						}
+						scQtRecommend.setRemoveSupplierList(toBeRemovedList);
+					}
+					scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>());
 				}
 			}
 		}
@@ -2517,70 +2513,137 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		retrieveCommitteeSecretary(finalizationCommittee);
 	}
 	
-	public void selectItemEvent(SelectEvent event) {
-		debugLogger("selectItemEvent");
-		
-		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
-		getManagedBean().setRecommendedSupplierList(new ArrayList<ScQtEvaluationResult>());
-		List<ScQtEvaluationResult> recommendedSupplierList = getManagedBean().getRecommendedSupplierList();
-		if (scQtRecommend.getAwardSupplierList() != null) {
-			recommendedSupplierList.addAll(scQtRecommend.getAwardSupplierList());
+//	public void selectItemEvent(SelectEvent event) {
+//		debugLogger("selectItemEvent");
+//		
+//		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
+//		selectItemEvent(scQtRecommend);
+//	}
+	
+//	public void selectAllItemsEvent(ToggleSelectEvent event) {
+//		debugLogger("selectAllItemsEvent");
+//
+//		if (event.isSelected()) {
+//			List<ScQtRecommend> selectedItemsList = this.getManagedBean().getScQtFinalization().getScQtRecommends();
+//			getManagedBean().setSelectedRecommendList(selectedItemsList);
+//		} else {
+//			getManagedBean().setSelectedRecommendList(new ArrayList<ScQtRecommend>());
+//		}
+//	}	
+
+//	public void unselectItemEvent(UnselectEvent event) {
+//	debugLogger("unselectItemEvent");
+//	
+//	if(getManagedBean().getSelectedRecommendList() == null){
+//		getManagedBean().setSelectedRecommendList(new ArrayList<ScQtRecommend>());
+//	}
+//}	
+	
+	public void selectItemEvent(ScQtRecommend scQtRecommend) {
+		if (getManagedBean().getSelectedRecommendList() == null) {
+			getManagedBean().setSelectedRecommendList(new ArrayList<ScQtRecommend>());
+		}
+		if (scQtRecommend.isSelected()) {
+			scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
+			List<ScQtEvaluationResult> shortlistedSupplierList = getManagedBean().getShortlistedSupplierList();
+			List<ScQtEvaluationResult> recommendedSupplierList = new ArrayList<ScQtEvaluationResult>();
+
+			getManagedBean().getSelectedRecommendList().add(scQtRecommend);
+			
+			List<ScQtRecommendDtl> recommendDtls = scQtRecommend.getRecommendDtls();
+			if (CollectionUtils.isNotEmpty(shortlistedSupplierList)
+					&& CollectionUtils.isNotEmpty(recommendDtls)) {
+				for (ScQtRecommendDtl recommendDtl : recommendDtls) {
+					for (ScQtEvaluationResult evalResult : shortlistedSupplierList) {
+						Long recommendedSupplierId = recommendDtl.getSupplier().getSupplierId();
+						Long shortlistedSupplierId = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
+						if (shortlistedSupplierId.equals(recommendedSupplierId)) {
+							scQtRecommend.getAwardSupplierList().add(evalResult);
+							recommendedSupplierList.add(evalResult);
+						}
+					}
+				}
+			}
+			getManagedBean().setRecommendedSupplierList(recommendedSupplierList);	
+		} else {
+			getManagedBean().getSelectedRecommendList().remove(scQtRecommend);
+			getManagedBean().setSelectAll(false);
 		}
 	}
 	
-	public void unselectItemEvent(UnselectEvent event) {
-		debugLogger("unselectItemEvent");
+	public void selectAllItems(boolean selected, List<ScQtRecommend> items) {
+		debugLogger("selectAllItemsEvent");
+
+		super.selectAll(selected,items);
 		
-		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
-		if(getManagedBean().getSelectedRecommendList() == null){
+		if (selected) {
+			List<ScQtRecommend> selectedItemsList = this.getManagedBean().getScQtFinalization().getScQtRecommends();
+			getManagedBean().setSelectedRecommendList(selectedItemsList);
+		} else {
 			getManagedBean().setSelectedRecommendList(new ArrayList<ScQtRecommend>());
-		}else{
-			List<ScQtRecommend> selectedRecommendList = getManagedBean().getSelectedRecommendList();
-			List<ScQtRecommend> toBeRemovedList = new ArrayList<ScQtRecommend>();
-			for(ScQtRecommend item : selectedRecommendList){
-				if(scQtRecommend.equals(item)){
-					toBeRemovedList.add(item);
-				}
-			}
-			selectedRecommendList.removeAll(toBeRemovedList);
 		}
-	}
+	}	
 	
 	public void selectSupplierEvent() {
 		debugLogger("selectSupplierEvent");
 		
+		addSelectedSupplier();
+	}
+	
+	private void addSelectedSupplier() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();		
 		String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
+		
 		List<ScQtRecommend> selectedItemList = getManagedBean().getSelectedRecommendList();
-		if(selectedItemList != null){
+		if (selectedItemList != null){
 			List<ScQtEvaluationResult> recomendedList = getManagedBean().getRecommendedSupplierList();
-			for(ScQtRecommend scQtRecommend : selectedItemList){
+			for (ScQtRecommend scQtRecommend : selectedItemList) {
+				if (scQtRecommend.getRecommendBy() == null) {
+					throw new EpException(MessageConst.ERROR_760211);
+				}
 				scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResult>());
 				
-				List<ScQtRecommendDtl> details = scQtRecommend.getRecommendDtls();
-				if (CollectionUtils.isNotEmpty(details)) {
-					for (ScQtRecommendDtl recommendDtl : details) {
-						if (recommendDtl.getRecommendDtlId() != null) {
-							if (scQtRecommend.getRemoveSupplierList() == null) {
-								scQtRecommend.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>());
+				if (CollectionUtils.isNotEmpty(recomendedList)) {
+					ScQtRecommendDtl selectedRecommendDtl = null;
+					BigDecimal awardQty = null;
+					List<ScQtRecommendDtl> toBeAddedList = new ArrayList<ScQtRecommendDtl>();
+					for (ScQtEvaluationResult recomendedSupplier : recomendedList) {
+						boolean alreadyExists = false; 
+						scQtRecommend.getAwardSupplierList().add(recomendedSupplier);
+						List<ScQtRecommendDtl> removedList = scQtRecommend.getRemoveSupplierList();
+						for (ScQtRecommendDtl detail : scQtRecommend.getRecommendDtls()) {
+							if ((detail.getSupplier().getSupplierId())
+									.equals(recomendedSupplier.getScQtProposal().getScQtSupplier()
+											.getSmSupplier().getSupplierId())) {
+								alreadyExists = true;
+								checkAndRemoveFromDeletedList(removedList, detail);
+								detail.setAwardQty(awardQty);
+								setUserDetails(detail);
+								toBeAddedList.add(detail);								
+								break;
 							}
-							recommendDtl.setDeleted(true);
-							scQtRecommend.getRemoveSupplierList().add(recommendDtl);
+						}
+						if (!alreadyExists) {
+							selectedRecommendDtl = setSelectedSupplier(recomendedSupplier, scQtRecommend, awardQty, removedList);	
+							setUserDetails(selectedRecommendDtl);
+							toBeAddedList.add(selectedRecommendDtl);
 						}
 					}
-				}
-				scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>());
-
-				for (ScQtEvaluationResult recomendedSupplier : recomendedList) {
-					scQtRecommend.getAwardSupplierList().add(recomendedSupplier);
-					
-					ScQtRecommendDtl recommendDtl = new ScQtRecommendDtl();
-					recommendDtl.setAwardQty(new BigDecimal(0.0));
-					recommendDtl.setSupplier(recomendedSupplier.getScQtProposal().getScQtSupplier().getSmSupplier());
-					recommendDtl.setScQtProposalAmount(recomendedSupplier.getScQtProposal().getProposalAmount());
-					recommendDtl.setScQtRecommend(scQtRecommend);
-					scQtRecommend.getRecommendDtls().add(recommendDtl);						
-				}
+					if (scQtRecommend.getRemoveSupplierList() == null) {
+						scQtRecommend.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>());
+					}
+					for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+						if (!recommendDtl.isBrandNew() && 
+								!toBeAddedList.contains(recommendDtl)) {
+							recommendDtl.setDeleted(true);
+							if (!scQtRecommend.getRemoveSupplierList().contains(recommendDtl)) {
+								scQtRecommend.getRemoveSupplierList().add(recommendDtl);
+							}
+						}
+					}
+					scQtRecommend.getRecommendDtls().clear();
+					scQtRecommend.getRecommendDtls().addAll(toBeAddedList);
+				}				
 				
 				if(recommendType.equalsIgnoreCase(ParameterConst.RECOMMEND_TYPE_ITEM) && scQtRecommend.getAwardSupplierList() != null){
 					PmParameter pmParameter = scQtRecommend.getRecommendBy();
@@ -2633,7 +2696,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					scQtRecommend.setRecommendByStr(recommendBy);
 				}
 			}
-		}
+		}		
 	}
 	
 	public void unSelectSupplierEvent(ScQtEvaluationResult scQtEvaluationResult) {
@@ -2648,7 +2711,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 			getManagedBean().getUnRecommendedSupplierList().add(scQtEvaluationResult);
 		} else {
-			selectSupplierEvent();
+			addSelectedSupplier();
 		}
 	}
 	
@@ -2687,18 +2750,28 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		debugLogger("awardSupplierEvent");
 		
 		String awardSupplierStr = getManagedBean().getAwardSupplier();
-		ScQtEvaluationResult awardSupplier = null;
+		List<ScQtEvaluationResult> recommendedSupplierList = getManagedBean().getRecommendedSupplierList();
+		if (recommendedSupplierList == null) {
+			recommendedSupplierList = new ArrayList<ScQtEvaluationResult>();
+		}
 		
 		//get the SmSupplier object by the dropdown selection
 		for(ScQtEvaluationResult evalResult : getManagedBean().getShortlistedSupplierList()){
-			String suppId = evalResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId().toString();
+			String suppId = String.valueOf(evalResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
 			if (suppId.equalsIgnoreCase(awardSupplierStr)) {
-				awardSupplier = evalResult;
-				break;
+				if (!recommendedSupplierList.contains(evalResult)) {
+					recommendedSupplierList.add(evalResult);
+					getManagedBean().setRecommendedSupplier(evalResult);
+					break;
+				} else {
+					return;
+				}
 			}
 		}
+
+		addSelectedSupplier();
 		
-		//add the SmSupplier to the item selected
+/*		//add the SmSupplier to the item selected
 		List<ScQtRecommend> selectedItemList = getManagedBean().getSelectedRecommendList();
 		if (CollectionUtils.isNotEmpty(selectedItemList)) {
 			for(ScQtRecommend scQtRecommend : selectedItemList){
@@ -2759,30 +2832,55 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
-		if (scQtRecommend.getRecommendBy() == null) {
+		if (scQtRecommend.getRecommendByStr() == null 
+				|| scQtRecommend.getRecommendBy() == null) {
 			throw new EpException(MessageConst.ERROR_760211);
 		}
-		if (StringUtils.equals(scQtRecommend.getRecommendByStr(), 
-				ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD) &&
-				CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
-			BigDecimal totalQuantity = scQtRecommend.getRequestItem().getQuantity();
-			BigDecimal tempQuantity = new BigDecimal(0.0);
-			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
-				BigDecimal quantityAwarded = recommendDtl.getAwardQty();
-				if (quantityAwarded == null 
-						|| quantityAwarded.compareTo(totalQuantity) >= 0) {
+		
+		String recommendByDesc = getParameterDesc(scQtRecommend.getRecommendBy());
+		String itemName = scQtRecommend.getRequestItem().getItemName();
+		List<ScQtRecommendDtl> recommendDtlList = scQtRecommend.getRecommendDtls();
+		if (StringUtils.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD,
+				scQtRecommend.getRecommendByStr()) && 
+					(recommendDtlList == null ||
+						recommendDtlList.size() != 1)) {
+			throw new EpException(MessageConst.ERROR_760213);
+		}		
+		if (StringUtils.equals(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD, 
+				scQtRecommend.getRecommendByStr())) {
+			if (recommendDtlList == null || 
+					recommendDtlList.size() < 2) {
+				throw new EpException(MessageConst.ERROR_760223, new String[]{itemName, recommendByDesc});
+			} else {
+				BigDecimal totalQuantity = scQtRecommend.getRequestItem().getQuantity();
+				BigDecimal tempQuantity = new BigDecimal(0.0);
+				for (ScQtRecommendDtl recommendDtl : recommendDtlList) {
+					BigDecimal quantityAwarded = recommendDtl.getAwardQty();
+					if (quantityAwarded == null 
+							|| quantityAwarded.compareTo(totalQuantity) >= 0) {
+						throw new EpException(MessageConst.ERROR_760214);
+					}
+					tempQuantity = tempQuantity.add(quantityAwarded);
+				}
+				if (totalQuantity.compareTo(tempQuantity) != 0) {
 					throw new EpException(MessageConst.ERROR_760214);
 				}
-				tempQuantity = tempQuantity.add(quantityAwarded);
-			}
-			if (totalQuantity.compareTo(tempQuantity) != 0) {
-				throw new EpException(MessageConst.ERROR_760214);
 			}
 		}	
+		if (StringUtils.equals(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING, 
+				scQtRecommend.getRecommendByStr()) ||
+				StringUtils.equals(ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, 
+						scQtRecommend.getRecommendByStr())) {
+			if (recommendDtlList == null || 
+					recommendDtlList.size() < 2) {
+				throw new EpException(MessageConst.ERROR_760223, new String[]{itemName, recommendByDesc});
+			}
+		}
+		
 	}
 	
 	public void selectSupplierDropDownEvent() {
