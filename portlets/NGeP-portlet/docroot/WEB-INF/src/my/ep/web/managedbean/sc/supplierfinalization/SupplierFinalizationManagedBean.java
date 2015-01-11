@@ -133,6 +133,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Object payLoad;
 	
 	private Date currentDate;
+	
+	private boolean selectAll;
 
 	/**
 	 * @return the activeIndex
@@ -1006,5 +1008,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		return currentDate;
 	}
 
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
 	
 }
