@@ -135,7 +135,7 @@ public class ApprovalBackingBean extends
 		selectItems[2] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(),
 				"PTJ Approval");
 		selectItems[3] = new SelectItem(
-				ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL.value(),
+				ApprovalCategory.FINALIZATION_COMMITTEE_APPROVAL.value(),
 				"Finalization Committee Approval");
 		selectItems[4] = new SelectItem(
 				ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
@@ -389,7 +389,7 @@ public class ApprovalBackingBean extends
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
-					ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL
+					ApprovalCategory.FINALIZATION_COMMITTEE_APPROVAL
 							.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
