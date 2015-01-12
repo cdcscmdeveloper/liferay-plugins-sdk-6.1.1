@@ -1318,16 +1318,6 @@ public class SmPersonnelBackingBean extends
 		}
 
 		try {
-			if (UserLocalServiceUtil.getUserByEmailAddress(
-					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
-				throw new EpException(MessageConst.ERROR_722540);
-			}
-		} catch (NumberFormatException | PortalException | SystemException e) {
-			// TODO Auto-generated catch block
-			log.info(e.getMessage());
-		}
-
-		try {
 			if (UserLocalServiceUtil.getUserByScreenName(
 					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
 				throw new EpException(MessageConst.ERROR_722541);
