@@ -978,6 +978,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		
 		renewSesionObject();
 		
@@ -988,7 +989,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
-		
+		this.getManagedBean().setCurrentStatusId(currentStatusId);
 	}
 
 	public void submitAction(String outCome) {
