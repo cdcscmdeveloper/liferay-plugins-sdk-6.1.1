@@ -1310,9 +1310,6 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 
-		if (isExistEmailInPmUser(smPersonnel.getEmail())) {
-			throw new EpException(MessageConst.ERROR_722540);
-		}
 		if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_722541);
 		}
