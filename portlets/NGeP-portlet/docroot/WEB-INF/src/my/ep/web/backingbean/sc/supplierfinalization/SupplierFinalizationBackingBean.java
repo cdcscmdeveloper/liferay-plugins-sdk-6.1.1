@@ -63,6 +63,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -97,6 +98,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -115,6 +117,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -133,6 +136,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	private static final Logger log = EpLogger.getLogger(SupplierFinalizationBackingBean.class);
 
 	private int currentTab;
+	private String textBeforeSign;
 	
 	public static final int ACTIVE_INDEX_PREPARATION = 0;
 	public static final int ACTIVE_INDEX_REPORT = 1;
@@ -901,11 +905,26 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	public void submitSuppFinalization(String outcome) {
+		debugLogger("submitSuppFinalization");
+		this.getManagedBean().setAction(outcome);
+		if(isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		} else {
+			updateBPMTask(outcome, null);
+		}	
+	}
+	
+	public void updateBPMTask(String outcome ,PmDigiSign digiSign){
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
 		String token = new FacesScopes().getBPMAuthenticationCtxToken();
 		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
+		
+		if (null != digiSign) {
+			updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, 
+					getManagedBean().getScQt().getQtId(), getManagedBean().getScQt().getQtNo());
+		}
 		
 		if (CollectionUtils.isNotEmpty(meetingList)) {
 			for (ScQtMeeting meeting : meetingList) {
@@ -949,6 +968,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(taskId);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setDigiSignData(digiSign);
 			
 			ScQtCommittee scQtCommittee = preparationDtlsInfo();
 			reqDTO.setScQtCommittee(scQtCommittee);
@@ -2918,6 +2938,22 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	 */
 	public void setCurrentTab(int currentTab) {
 		this.currentTab = currentTab;
+	}
+
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
+
+	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
 	}
 	
 }
