@@ -614,8 +614,10 @@ public class SmApplicationBackingBean extends
 
 				if (applicationType
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					setSupplierCancellationRemarks(applicationType,
-							getManagedBean().getSmAppl().getApplId());
+					getManagedBean().setSupplierRemarks(
+							SmApplicationUtil.getSmRemarksByDocTypeAndId(
+									applicationType, getManagedBean()
+											.getSmAppl().getApplId()));
 				}
 
 				// currently is display for ApplType C/DPA
@@ -723,31 +725,6 @@ public class SmApplicationBackingBean extends
 					.getDefPmCountry());
 		}
 		return addr;
-	}
-
-	private void setSupplierCancellationRemarks(String docType, Long docId) {
-		SmRemaksResDTO resDTO = getRemarksByDoc(docType, docId);
-		StringBuffer sb = new StringBuffer();
-		if (resDTO != null && resDTO.getRemarksList() != null
-				&& !resDTO.getRemarksList().isEmpty()) {
-
-			sb.append(resDTO.getRemarksList().get(0).getRemark());
-			// for (SmRemark rem : resDTO.getRemarksList()) {
-			// sb.append(rem.getRemark()).append("\n");
-			// }
-		}
-		getManagedBean().setSupplierRemarks(sb.toString());
-
-	}
-
-	private SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
-		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-		reqDTO.setDocId(docId);
-		reqDTO.setDocType(docType);
-		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", ISmRemarksSO.class);
-		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
-		return resDTO;
 	}
 
 	private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
@@ -5267,8 +5244,18 @@ public class SmApplicationBackingBean extends
 					setSmApplRejectionReasons();
 					reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
 				}
-			}
-			if (res.equalsIgnoreCase("Approve")) {
+				if (StringUtils.isNotBlank(getManagedBean()
+						.getApplnRejectionRemarks())) {
+					SmApplicationUtil.manageAndSaveNewSmRemarks(
+							getManagedBean().getSmAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+							getManagedBean().getApplnRejectionRemarks());
+				}
+				SmApplicationNotificationUtil
+						.setRejectionNotificationParameters(getManagedBean(),
+								reqDTO);
+
+			} else if (res.equalsIgnoreCase("Approve")) {
 				if (getManagedBean()
 						.getSmAppl()
 						.getApplType()
@@ -5329,11 +5316,23 @@ public class SmApplicationBackingBean extends
 				SmApplicationNotificationUtil
 						.setApprovalNotificationParameters(getManagedBean(),
 								reqDTO);
+				if (StringUtils.isNotBlank(getManagedBean()
+						.getApplnApprovalRemarks())) {
+					SmApplicationUtil.manageAndSaveNewSmRemarks(
+							getManagedBean().getSmAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
+							getManagedBean().getApplnApprovalRemarks());
+				}
+				if (getManagedBean().isOverLappedCategoryExists()
+						&& StringUtils.isNotBlank(getManagedBean()
+								.getOverLappedCategoryMsg())) {
+					SmApplicationUtil.manageAndSaveNewSmRemarks(
+							getManagedBean().getSmAppl().getApplId(),
+							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
+							getManagedBean().getOverLappedCategoryMsg());
+				}
 
 			} else if (res.equalsIgnoreCase("Reject")) {
-				SmApplicationNotificationUtil
-						.setRejectionNotificationParameters(getManagedBean(),
-								reqDTO);
 			}
 
 			log.info("Before final decision ---"
