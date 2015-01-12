@@ -123,6 +123,7 @@ import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1695,6 +1696,20 @@ public class SmApplicationUtil {
 						ISmRemarksSO.class);
 		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
 		return resDTO;
+	}
+
+	public static String getSmRemarksByDocTypeAndId(String docType, Long docId) {
+		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType,
+				docId);
+		StringBuffer sb = new StringBuffer();
+		if (resDTO != null && resDTO.getRemarksList() != null
+				&& !resDTO.getRemarksList().isEmpty()) {
+			sb.append(resDTO.getRemarksList().get(0).getRemark());
+			return sb.toString();
+		} else {
+			return "";
+		}
+
 	}
 
 	public static void checkOverLappingCategories(
@@ -3333,7 +3348,6 @@ public class SmApplicationUtil {
 								new FacesScopes().getUserLocale())));
 	}
 
-	
 	public static String getActiveMofNumForSupplier(
 			SmApplicationManagedBean managedBean) {
 		String mofNum = "";
@@ -3351,7 +3365,7 @@ public class SmApplicationUtil {
 		}
 		return mofNum;
 	}
-	
+
 	public static void handleShowOrHideFacilityPanels(
 			SmApplicationManagedBean managedBean) {
 		managedBean.setShowDockyardPanel(false);
@@ -3392,5 +3406,24 @@ public class SmApplicationUtil {
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setSmSupplierId(supplierId);
 		return personnelSO.isPersonnelCreatedDuringBasicAccount(reqDTO);
+	}
+
+	public static void manageAndSaveNewSmRemarks(Long docId, String docType,
+			String remarks) {
+		SmRemark remark = new SmRemark();
+		remark.setDocId(docId);
+		remark.setDocType(docType);
+		remark.setRemark(remarks);
+		saveSmRemarks(remark);
+
+	}
+
+	public static void saveSmRemarks(SmRemark remarks) {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setSmRemark(remarks);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISmRemarksSO.class);
+		reqSO.saveSmRemarks(reqDTO);
+
 	}
 }

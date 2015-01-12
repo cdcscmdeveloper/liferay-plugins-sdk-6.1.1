@@ -331,7 +331,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String applnApprovalRemarks;
 	private String applnRejectionRemarks;
 	private String applnOverLapRemarks;
-	
+	private String poToSvcRmrk;
+
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
 	}
@@ -369,8 +370,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
 			setSupplierUser(true);
-			if(sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)){
+			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
 			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
@@ -531,7 +532,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		currDate = new Date();
 		currYear = Calendar.getInstance().get(Calendar.YEAR);
 		System.out.println("*** Date String *** " + df.format(new Date()));
-		
+
 		malaysianPostCode = true;
 		myCountryId = SmCommonUtil.getMyCountryId();
 	}
@@ -2140,7 +2141,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return activeCategoryList;
 	}
 
-	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
+	public void setActiveCategoryList(
+			List<SmSupplierCategory> activeCategoryList) {
 		this.activeCategoryList = activeCategoryList;
 	}
 
@@ -2167,7 +2169,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setRevisionApproverAppNoParam(String revisionApproverAppNoParam) {
 		this.revisionApproverAppNoParam = revisionApproverAppNoParam;
 	}
-
 
 	public List<SmAssociationBody> getNonPersonnelProfBodyList() {
 		return nonPersonnelProfBodyList;
@@ -2539,5 +2540,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setApplnOverLapRemarks(String applnOverLapRemarks) {
 		this.applnOverLapRemarks = applnOverLapRemarks;
+	}
+
+	public String getPoToSvcRmrk() {
+		return poToSvcRmrk;
+	}
+
+	public void setPoToSvcRmrk(String poToSvcRmrk) {
+		this.poToSvcRmrk = poToSvcRmrk;
 	}
 }
