@@ -32,7 +32,6 @@
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{danBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>

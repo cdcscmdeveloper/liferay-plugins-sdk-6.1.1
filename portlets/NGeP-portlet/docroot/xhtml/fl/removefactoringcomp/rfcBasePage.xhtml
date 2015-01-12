@@ -34,7 +34,6 @@
 						<ui:param name="buttonLabel2" value="#{fn:replace(buttonLabel1, ' ','.')}" />
 						<p:commandButton value="#{lbl[buttonLabel2]}" 
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
 							process="@this" />
 					</ui:repeat> </td>
