@@ -312,7 +312,7 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setPayLoadData(evaluationDataType);
 			
 			retrieveMultipleLoiDtls(sourceId, evaluationDataType.getCommitteeType(), evaluationDataType.getGroupkeyMa());
-
+			getManagedBean().setMultipleLoiFlag(Boolean.TRUE);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
@@ -1904,6 +1904,21 @@ public class LOIDetailBackingBean extends
 	
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
+		this.getManagedBean().setAction(outcome);
+		if(isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		} else {
+			updateMultiLoiBpmTask(outcome, null);
+		}	
+	}
+
+	/**
+	 * @param outcome
+	 * @param PmDigiSign 
+	 * @return 
+	 */
+	private void updateMultiLoiBpmTask(String outcome , PmDigiSign digiSign) {
+		debugLogger("updateMultiLoiBpmTask");
 		try {
 			
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -1913,11 +1928,16 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setOutcome(outcome);
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_MULTIPLE_LOI, 
+						scQtFinalization.getScQt().getQtId(), scQtFinalization.getScQt().getQtNo());
+			}
+			
 			reqDTO.setToken(new FacesScopes()
 					.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setPayLoad(evaluationDataType);
-
+			reqDTO.setDigiSignData(digiSign);
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -3087,6 +3107,11 @@ public class LOIDetailBackingBean extends
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
+	
+	public void gpkiSignMultiLoiAction(PmDigiSign digiSign) {
+		updateMultiLoiBpmTask(this.getManagedBean().getAction(), digiSign);
+	}
+
 
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
@@ -3098,9 +3123,16 @@ public class LOIDetailBackingBean extends
 
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
-		if(getManagedBean().getScLoi() != null){
-			sb.append(getManagedBean().getScLoi().getLoiNo());
+		if(getManagedBean().isMultipleLoiFlag()){
+			if(getManagedBean().getScQtFinalization() != null){
+				sb.append(getManagedBean().getScQtFinalization().getScQt().getQtNo());
+			}
+		} else{
+			if(getManagedBean().getScLoi() != null){
+				sb.append(getManagedBean().getScLoi().getLoiNo());
+			}
 		}
+
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		textBeforeSign = sb.toString();
 		return textBeforeSign;
