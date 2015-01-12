@@ -10,8 +10,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +77,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.AddressType;
@@ -83,6 +86,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -460,15 +464,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
 		
-		try {
-			
+		try {			
 			    validateChangeBankRequest(action);
                 reqDTO = new ContractReqDTO();
 			    reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			    reqDTO.setOutcome(action);
 			    reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			    reqDTO.setUserRole(getUserRole());
-			    if(getSupplierUserRole()) {
+			    if(isSupplierRole()) {
 			    	 getContractAdminlist(); 
 				     reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
 				     reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist()); 	
@@ -515,45 +518,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public void validateChangeBankRequest(String action){
 		getManagedBean().setAutoUpdate(true);
 		if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_750000);
 		}
 		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
-				 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	    }
-		
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(getManagedBean().getContractVer().getDocType());
-			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
-			sb.append(action);			
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(action);
-		}	
-		
-	}
-	
-	public boolean getSupplierUserRole(){
-	    if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
-			return true;
-		else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()))
-			return true;		
-		else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
-			return true;
-		else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
-			return true;		
-		else
-			return false;
 	}
 	
 	private String getUserRole() {
@@ -620,7 +593,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			    reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				reqDTO.setUserRole(getUserRole());
-				if(getSupplierUserRole()) {
+				if(isSupplierRole()) {
 					getContractAdminlist();
 					reqDTO.getContractAdminlist().addAll(getManagedBean().getContractAdminlist());
 		        }    
@@ -1146,7 +1119,16 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     
     public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
-			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+			FacesScopes facesScope = new FacesScopes();
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+			Long userId = facesScope.getUserSessionBean().getUserId();
+			Timestamp date = new Timestamp(System.currentTimeMillis());
+			String originalText = prepareSupplierOriginalText();
+			pmDigiSign.setCreatedBy(userId);
+		    pmDigiSign.setCreatedDate(date);
+		    pmDigiSign.setOrginalData(originalText);
+		    pmDigiSign.setSignedData(spkiBackingBean.spkiSignTransaction(originalText));
+			getManagedBean().setPmDigiSign(pmDigiSign);			
 		}
 		return saveChangeBankRequest(getManagedBean().getButtonAction());
 	}
@@ -1170,5 +1152,74 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 
 		return url;
+	}
+    
+    private boolean isSupplierRole() {
+		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()));
+	}
+    
+    public String changeBankRequestSignAction(String outcome) throws Exception{		
+    	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+    	StringBuilder sb = null;
+		 if(BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()){
+			validateChangeBankRequest(outcome);			
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type			
+			sb = new StringBuilder();
+			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(outcome);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()){
+			validateChangeBankRequest(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);			
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
+		}else{
+			return saveChangeBankRequest(outcome);
+		}
+	}
+    
+    private String prepareSupplierOriginalText() {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		SmSupplier smSupplier = null;
+		String countryCode ="";
+		String orginalText = "";
+
+		if(getManagedBean().getCtContract().getSmSupplier() != null){
+			smSupplier = getManagedBean().getCtContract().getSmSupplier();
+
+			if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+				for (SmCompanyAddress compaAddress : companyAddress) {
+					if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+						countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+						break;
+					}
+				}
+			}
+		}
+		
+		sb.append(getManagedBean().getCtContract().getContractNo())
+		.append("|")
+		.append(facesScopes.getUserSessionBean().getIdentificationNo())
+		.append("|")
+		.append(smSupplier.getRegNo())
+		.append("|")
+		.append(countryCode);
+		orginalText  = sb.toString();
+		return orginalText;
 	}
 }

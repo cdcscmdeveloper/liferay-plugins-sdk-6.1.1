@@ -35,11 +35,18 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<ac:gpkiPopup
+			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(gpkiBackingBean.pmDigiSign)}" />
+		<ac:spkiPopup
+			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(spkiBackingBean.pmDigiSign)}" />
 		<p:panel id="bankHeader">
 			<f:event listener="#{supplierBackingBean.preRenderView}"
 				type="preRenderView" />
 			<p:messages id="messages" showSummary="false" showDetail="true"
-				autoUpdate="#{supplierBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+				autoUpdate="#{supplierBackingBean.managedBean.autoUpdate}"
+				closable="true" severity="error, info" />
 			<table style="width: 100%;">
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
@@ -49,23 +56,12 @@
 							value="#{supplierBackingBean.managedBean.action}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(outcome)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}" ajax="false"
+							<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
 								styleClass="ui-button" process="@form"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}"
-								action="#{supplierBackingBean.saveChangeBankRequest(outcome)}"
-								rendered="#{outcome != 'ACKNOWLEDGE'}" />
-
-							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-								icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form"
-								update="@form,@([id$=messages])"
-								actionListener="#{supplierBackingBean.validateChangeBankRequest(outcome)}"
-								action="#{supplierBackingBean.disableUpdate}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
-								rendered="#{outcome == 'ACKNOWLEDGE'}" />
-						</ui:repeat> <ac:gpkiPopup
-							textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
-							postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(gpkiBackingBean.pmDigiSign)}" />
-					</td>
+								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
+								actionListener="#{spkiBackingBean.getChallengeQuestions}"/>
+						</ui:repeat></td>
 				</tr>
 			</table>
 
@@ -128,10 +124,10 @@
 					style="width:200px;" disabled="true"
 					rendered="#{supplierBackingBean.managedBean.taskId != null}" />
 
-                <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 				<p:inputText style="width:200px;" disabled="true"
 					value="#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}" />
-				
+
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 				<p:inputText id="effDate" disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
@@ -149,8 +145,8 @@
 				<p:outputLabel value="Ministry Name" />
 				<p:inputText style="width:350px;" disabled="true"
 					value="#{supplierBackingBean.getMinistryAndPtjName(1)}" />
-					
-					<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+
+				<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
 				<h:panelGrid columns="3">
 					<p:inputText id="physicalNo" disabled="true" style="width:200px;"
 						value="#{supplierBackingBean.managedBean.contractVer.contractPhysicalNo}" />
@@ -158,7 +154,7 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 				</h:panelGrid>
-					
+
 				<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
@@ -169,15 +165,17 @@
 						value="#{supplierBackingBean.managedBean.ctContract.contractName}"
 						disabled="true" autoResize="false" />
 				</h:panelGrid>
-			
-			<h:panelGroup>
+
+				<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
 						<p:outputLabel value="PTJ Name" />
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
-					<p:inputTextarea id="ptjName" rows="3" style="width:200px;" disabled="true"
-						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"  autoResize="false" />
+					<p:inputTextarea id="ptjName" rows="3" style="width:200px;"
+						disabled="true"
+						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"
+						autoResize="false" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</p:panel>
