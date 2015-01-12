@@ -39,13 +39,12 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{invoiceBackingBean.gpkiSignAction(bpmAction)}" />
 					</ui:repeat></td>
 			<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="#{lbl['lbl.btn.update']}" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.submitAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -53,7 +52,7 @@
 				<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.submitAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>

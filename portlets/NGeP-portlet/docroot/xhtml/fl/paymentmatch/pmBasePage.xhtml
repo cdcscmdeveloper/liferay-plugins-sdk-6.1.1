@@ -35,8 +35,7 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							action="#{paymentMatchBackingBean.gpkiSignAction(bpmAction)}"
-							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}" />							
+							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>							
 					</ui:repeat></td>
 			</tr>
 		</table>

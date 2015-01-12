@@ -36,14 +36,14 @@
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton
-							styleClass="ui-button" icon="ui-icon-save" value="#{lbl['lbl.btn.save']}"
+							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"  
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
-							styleClass="ui-button" icon="ui-icon-submit" value="#{lbl['lbl.btn.submit']}"
+							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
-						<p:commandButton value="#{lbl['lbl.btn.Stop.Delivery']}" icon="ui-icon-cancel" 
+						<p:commandButton value="#{lbl['lbl.btn.Stop.Delivery']}" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							rendered="#{false and createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
 							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
@@ -57,7 +57,6 @@
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								icon="ui-icon-#{fn:toLowerCase(bpmAction)}" 
 								action="#{createDOBackingBean.gpkiSignAction(bpmAction)}" />
 						</ui:repeat></td>
 				</h:panelGroup>
@@ -65,7 +64,7 @@
 				<h:panelGroup
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="#{lbl['lbl.btn.update']}" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -73,7 +72,7 @@
 				<h:panelGroup
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>

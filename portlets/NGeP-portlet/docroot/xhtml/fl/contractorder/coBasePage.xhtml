@@ -32,7 +32,7 @@
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">	
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+							styleClass="ui-button" 
 							update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}" />
 					</ui:repeat>
@@ -47,7 +47,6 @@
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq "Cancel"}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.cancel']}" update="@form"
-						icon="ui-icon-cancel"
 						action="#{flOrderBB.gpkiSignAction('CANCEL')}">
 						<f:param name="actionName" value="CANCEL" />
 					</p:commandButton></td>
