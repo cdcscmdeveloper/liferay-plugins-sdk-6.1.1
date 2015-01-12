@@ -107,7 +107,7 @@
 					oncomplete="contactDtls.paginator.endLink.click();"
 					update="contactPersonDetails" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this,contactPersonDetails"
 					icon="ui-icon-delete" partialSubmit="true"
 					action="#{scheduleBiddingBB.deleteContactDetails}"
 					update="contactPersonDetails" />

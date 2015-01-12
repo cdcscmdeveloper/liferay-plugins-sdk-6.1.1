@@ -151,38 +151,26 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	public void deleteContactDetails() {
-
 		try {
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
-
 			log.info(" **** contact list *** " + contactList.size());
 			List<ScBidContactPerson> multiSelectContacts = getManagedBean()
 					.getMultiSelectContact();
-
 			log.info(" **** multiSelectContacts *** "
 					+ multiSelectContacts.size());
 
-			if (contactList.size() == multiSelectContacts.size())
-
-			{
-
+			if (contactList.size() == multiSelectContacts.size()){
 				contactList.clear();
 			} else {
-				for (ScBidContactPerson contact : multiSelectContacts)
-
-				{
-
+				for (ScBidContactPerson contact : multiSelectContacts){
 					contactList.remove(contact);
 				}
 			}
-
 		}
-
 		catch (Exception e) {
 
 		}
-
 	}
 
 	public void retrieveParticipantsListAction(ScBidItem bidItem) {
@@ -338,10 +326,10 @@ public class ScheduleBiddingBackingBean extends
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
-								null,
+								getManagedBean().getScQt().getQtNo(),
 								new FacesMessage(
 										FacesMessage.SEVERITY_INFO,
-										null,
+										getManagedBean().getScQt().getQtNo(),
 										MessageUtils
 												.getMessage(
 														MessageConst.INFO_700026,
