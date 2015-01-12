@@ -1370,21 +1370,10 @@ public class SmApplicationUtil {
 
 	public static void validatePersonnelICandEmailLiferayAndPm(
 			SmPersonnel smPersonnel) {
-		if (isExistEmailInPmUser(smPersonnel.getEmail())) {
-			throw new EpException(MessageConst.ERROR_722540);
-		}
 		if (smPersonnel.getAuthorizedFlg() == 1
 				&& isExistUserByIdentificationNo(smPersonnel
 						.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_722541);
-		}
-		try {
-			if (UserLocalServiceUtil.getUserByEmailAddress(
-					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
-				throw new EpException(MessageConst.ERROR_722540);
-			}
-		} catch (NumberFormatException | PortalException | SystemException e) {
-			log.info(e.getMessage());
 		}
 
 		try {
