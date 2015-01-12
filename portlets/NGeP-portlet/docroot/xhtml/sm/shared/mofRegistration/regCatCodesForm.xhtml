@@ -111,7 +111,7 @@
 							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}"
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 						<p:column
-							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}"
+							rendered="#{backingBean.managedBean.poUser}"
 							headerText="#{lbl['lbl.sm.catCodes.remark']}"
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 						<p:column rendered="#{backingBean.managedBean.approverUser}"
@@ -187,15 +187,30 @@
 						showDetail="false" display="icon" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
-						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.approverUser}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
-						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 1 and backingBean.managedBean.approverUser}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
-						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0 and backingBean.managedBean.approverUser}" />
+					
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+						<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+							<tr>
+								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" escape="false"/>
+									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 1}" escape="false"/>
+									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0}" escape="false"/>
+								</td>
+							</tr>
+							<tr>
+								<td style="border: none !important; font-weight: bold;"><h:outputText
+										value="#{lbl['lbl.sm.catCodes.remark']}" /></td>
+							</tr>
+							<tr>
+								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										value="#{catBean.poRemarks}"
+										rendered="#{not empty catBean.poRemarks}" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
 				</p:column>
 				<p:column
-					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}"
+					rendered="#{backingBean.managedBean.poUser}"
 					style="width : 25%;"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 					<p:inputTextarea value="#{catBean.poRemarks}" maxlength="200"
@@ -205,9 +220,6 @@
 					<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 						showSummary="true" showDetail="false" display="icon" />
-					<p:outputLabel value="#{catBean.poRemarks}"
-						style="float: left;white-space: normal;"
-						rendered="#{backingBean.managedBean.approverUser}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
@@ -439,13 +451,27 @@
 						showDetail="false" display="icon" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
-						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.approverUser}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
-						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 1 and backingBean.managedBean.approverUser}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.rejected']}"
-						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0 and backingBean.managedBean.approverUser}" />
-
+						
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+						<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+							<tr>
+								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" escape="false"/>
+									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 1}" escape="false"/>
+									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0}" escape="false"/>
+								</td>
+							</tr>
+							<tr>
+								<td style="border: none !important; font-weight: bold;"><h:outputText
+										value="#{lbl['lbl.sm.catCodes.remark']}" /></td>
+							</tr>
+							<tr>
+								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										value="#{catBeanR.poRemarks}"
+										rendered="#{not empty catBeanR.poRemarks}" /></td>
+							</tr>
+						</table>
+					</p:outputPanel>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
 					<p:inputTextarea value="#{catBeanR.poRemarks}" maxlength="200"
