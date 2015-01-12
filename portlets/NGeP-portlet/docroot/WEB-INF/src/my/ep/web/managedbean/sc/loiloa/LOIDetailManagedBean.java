@@ -146,6 +146,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private Long awardSupplierId;
 	private String committeeType;
+	private boolean multipleLoiFlag;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1164,6 +1165,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
+	}
+
+	public boolean isMultipleLoiFlag() {
+		return multipleLoiFlag;
+	}
+
+	public void setMultipleLoiFlag(boolean multipleLoiFlag) {
+		this.multipleLoiFlag = multipleLoiFlag;
 	}
 	
 }
