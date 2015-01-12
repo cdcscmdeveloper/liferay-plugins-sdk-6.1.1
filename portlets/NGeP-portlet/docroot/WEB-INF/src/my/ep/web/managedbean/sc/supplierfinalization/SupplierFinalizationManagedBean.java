@@ -135,6 +135,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Date currentDate;
 	
 	private boolean selectAll;
+	private String action;
 
 	/**
 	 * @return the activeIndex
@@ -1020,6 +1021,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 	
 }

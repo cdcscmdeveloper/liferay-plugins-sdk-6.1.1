@@ -9,8 +9,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error,info"/>
+		
+		<ac:gpkiPopup textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
+		   postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
 				process="@all"
