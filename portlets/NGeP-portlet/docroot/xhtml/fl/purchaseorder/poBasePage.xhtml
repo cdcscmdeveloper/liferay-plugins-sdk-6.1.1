@@ -39,12 +39,12 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"  update="@form"
+							update="@form"
 							action="#{flOrderBB.gpkiSignAction(bpmAction)}" />
 					</ui:repeat> </td></c:if><c:if
 						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
 						<td colspan="4" style="text-align: right">
-						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"  update="@form"
+						<p:commandButton value="STOP FULFILMENT" update="@form"
 							action="#{flOrderBB.gpkiSignAction('STOP FULFILMENT')}">
 							<f:param name="actionName" value="STOP" />
 						</p:commandButton>

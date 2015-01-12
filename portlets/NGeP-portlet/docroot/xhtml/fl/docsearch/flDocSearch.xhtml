@@ -153,9 +153,9 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					icon="ui-icon-search" update="resultPanel" />
+					update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
+					action="#{flDocumentBackingBean.searchReset}" 
 					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>

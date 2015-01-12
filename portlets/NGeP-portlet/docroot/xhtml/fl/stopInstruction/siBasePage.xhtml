@@ -35,11 +35,10 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" styleClass="ui-button"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}" 
 							action="#{stopInstrBB.gpkiSignAction(bpmAction)}"  update="@form"  />
 					</ui:repeat> 
 					<c:if test='#{stopInstrBB.managedBean.stopInstr.brandNew}'>
-						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" icon="ui-icon-terminate"
+						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{stopInstrBB.gpkiSignAction('STOP FULFILMENT')}"  update="@form">
 						</p:commandButton>
