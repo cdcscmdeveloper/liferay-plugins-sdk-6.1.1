@@ -74,6 +74,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
@@ -294,7 +295,7 @@ public class OrganisationBackingBean extends
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
 			retrievePmZoneList();			
-			getManagedBean().getOrgProfile().setPmZone(orgProfile.getPmZone());
+			getManagedBean().getOrgProfile().setPmZone(orgProfile.getPmZone()==null ? new PmZone() : orgProfile.getPmZone());
 
 		}
 		// PTJ
