@@ -602,9 +602,11 @@ public class OrganisationBackingBean extends
 				}
 			}
 		}
+		
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			//orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
+			getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
 			if (getManagedBean().getOrgProfile().isGroupOrg()) {
 				
@@ -618,6 +620,9 @@ public class OrganisationBackingBean extends
 				profileGroup.addAll(profileGrp);
 				orgProfile.setMainProfileGroups(profileGroup);
 				
+			}
+			else{
+				orgProfile.setMainProfileGroups(null);				
 			}
 		}
 		validateOrgProfiel(orgProfile);
@@ -951,7 +956,7 @@ public class OrganisationBackingBean extends
 		
 		//deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
 		deliveryAddr.setAddressType(AddressType.DELIVERY_ADDRESS.value());
-		
+		deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setStateId(manualAddr.getPmState().getStateId());
