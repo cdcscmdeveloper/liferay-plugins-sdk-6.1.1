@@ -58,7 +58,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private ScBidPrice newScBidPrice;
 	private BigDecimal selectedDecrementAmt;
 	private BigDecimal newBidPrice;
-	private String hashSupplierId;
 	private Long selectedBidScheduleId;
 	private String recommendTypeItem = ParameterConst.RECOMMEND_TYPE_ITEM;
 	private String recommendTypePackage = ParameterConst.RECOMMEND_TYPE_PACKAGE;
@@ -109,9 +108,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
-		String docId = originalServletRequest.getParameter("docId");
-		String encodedSupplierId = originalServletRequest
-				.getParameter("supplierId");
 		String bidScheduleIdStr = originalServletRequest
 				.getParameter("bidScheduleId");
 
@@ -121,13 +117,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			bidScheduleId = Long.parseLong(bidScheduleIdStr);
 		}
 
-		retrieveOnlineBiddingDtls(Long.parseLong(docId), encodedSupplierId,
-				bidScheduleId,
+		retrieveOnlineBiddingDtls(bidScheduleId,
 				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
 	}
 
-	private void retrieveOnlineBiddingDtls(Long docId, String hashSupplierId,
-			Long bidScheduleId, Long userId) {
+	private void retrieveOnlineBiddingDtls(Long bidScheduleId, Long userId) {
 
 		log.info("retrieveOnlineBiddingDtls");
 
@@ -140,8 +134,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 
 			reqDTO.setUserID(userId);
-			reqDTO.setHashSupplierId(hashSupplierId);
-			reqDTO.setDocId(docId);
 			reqDTO.setBidScheduleId(bidScheduleId);
 
 			BiddingResDTO resDTO = biddingSO
@@ -152,7 +144,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 				setActiveBidSchedules(resDTO.getActiveBidSchedules());
 				setScBidSchedule(bidSchedule);
-				setHashSupplierId(hashSupplierId);
 				setSelectedBidScheduleId(bidSchedule.getBidScheduleId());
 				setBidContactPersons(resDTO.getBidContactPersons());
 				setSmSupplier(resDTO.getSmSupplier());
@@ -205,8 +196,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		externalContext.redirect(commonUrl + "/"
 				+ SourcingConstants.SC_BID_PAGE
-				+ scBidSchedule.getScBid().getDocId() + "&supplierId="
-				+ hashSupplierId + "&bidScheduleId=" + bidScheduleId);
+				+ "bidScheduleId=" + bidScheduleId);
 	}
 
 	public void pollListener() throws PortalException, SystemException,
@@ -673,21 +663,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public void setScBidAction(ScBidAction scBidAction) {
 		this.scBidAction = scBidAction;
-	}
-
-	/**
-	 * @return the hashSupplierId
-	 */
-	public String getHashSupplierId() {
-		return hashSupplierId;
-	}
-
-	/**
-	 * @param hashSupplierId
-	 *            the hashSupplierId to set
-	 */
-	public void setHashSupplierId(String hashSupplierId) {
-		this.hashSupplierId = hashSupplierId;
 	}
 
 	/**
