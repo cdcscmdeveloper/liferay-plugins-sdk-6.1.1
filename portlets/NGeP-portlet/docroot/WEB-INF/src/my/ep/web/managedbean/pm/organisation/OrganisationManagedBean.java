@@ -47,7 +47,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private Long orgTypeId;
 	// Org Details
 	private PmOrgProfile orgProfile;
-	private PmOrgValidity orgValidity = new PmOrgValidity();
+	
 	private Date currentDate = new Date();
 	private List<PmZone> zoneList;
 	private PmZone zone = new PmZone();
@@ -311,22 +311,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setOrgProfile(PmOrgProfile orgProfile) {
 		this.orgProfile = orgProfile;
-	}
-
-	/**
-	 * @return the orgValidity
-	 */
-	public PmOrgValidity getOrgValidity() {
-		return orgValidity;
-	}
-
-	/**
-	 * @param orgValidity
-	 *            the orgValidity to set
-	 */
-	public void setOrgValidity(PmOrgValidity orgValidity) {
-		this.orgValidity = orgValidity;
-	}
+	}	
 
 	/**
 	 * @return the currentDate
