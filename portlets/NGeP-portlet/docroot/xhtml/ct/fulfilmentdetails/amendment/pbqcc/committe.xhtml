@@ -46,13 +46,17 @@
 				     <h:outputText value="#{ctCommitteeVar.pnp ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"  style="float:left;"/>
 				 </p:column>
 				 
-				 <p:column headerText="#{lbl['lbl.ct.role']}" style="width:13%;">
+				 <p:column style="width:13%;">
+				 <f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.ct.role']}" />
+				</f:facet>
 				 <ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
 							<h:outputText value="#{lbl['lbl.ct.secretary']}" />
 					 </ui:fragment>
 					<ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
 						<p:selectOneMenu id="appaction" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
-						    value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
+						    value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
 							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException, :form:committeTable"
 							   listener="#{amendmentBackingBean.setListenerForCommitte(ctCommitteeVar.memberRole.parameterId)}"></p:ajax>
