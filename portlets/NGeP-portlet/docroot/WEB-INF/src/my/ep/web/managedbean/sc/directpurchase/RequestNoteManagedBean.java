@@ -125,6 +125,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private VCmSupplierItem vCmSupplierItem;
     private boolean autoUpdate = Boolean.TRUE;
     private String action;
+    private Long purchaseInDefaultId;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -922,5 +923,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+	public Long getPurchaseInDefaultId() {
+		return purchaseInDefaultId;
+	}
+	public void setPurchaseInDefaultId(Long purchaseInDefaultId) {
+		this.purchaseInDefaultId = purchaseInDefaultId;
 	}
 }

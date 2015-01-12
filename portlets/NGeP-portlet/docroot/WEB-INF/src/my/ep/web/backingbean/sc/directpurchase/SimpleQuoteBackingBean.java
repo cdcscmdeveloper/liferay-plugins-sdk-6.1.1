@@ -845,6 +845,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
+			ScPurchaseInDefault pid = quote.getPurchaseInDefault();
+			
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
 				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
@@ -858,11 +860,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 					reqDTO.setQuoteId(scQuote.getQuoteId());
 					reqDTO.setFetchSubEntity(true);
-				    quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
+					scQuote = getQuoteSO().getQuoteDtl(reqDTO).getQuoteBidDtl();
+					scQuote.setPurchaseInDefault(pid);
+				    //quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
 		    		getManagedBean().setOutComes(outcomes);
 		    		getManagedBean().setTaskId(taskId);
 		    		getManagedBean().setDefaultCountryId(defaultCountryId);
-					reloadSimpleQuote(quoteResDTO.getQuoteBidDtl());
+					reloadSimpleQuote(scQuote);
 					
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_INFO, null, 
@@ -2886,6 +2890,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			Object obj = res.getPojo();
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 			Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
+			Long purchaseInDefaultId = null;
+			if(directPurchaseDataType.getPid() != null && directPurchaseDataType.getPid().size() > 0) {
+				purchaseInDefaultId = Long.valueOf(directPurchaseDataType.getPid().get(0));
+			}
+			
 			quoteReqDTO.setQuoteId(quoteId);
 			quoteReqDTO.setFetchSubEntity(true);
 			QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
@@ -3044,7 +3053,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 
 			// panel item 
-			if(scQuote.getPanelItem() != null){
+			if(purchaseInDefaultId != null){
 				//check is panel item from PID task
 				IPurchaseInDefaultSO pidSO = null;
 				try {
@@ -3053,10 +3062,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 					
 					PurchaseInDefaultReqDTO pidReqDTO = new PurchaseInDefaultReqDTO();
-					pidReqDTO.setPanelItem(scQuote.getPanelItem());
-					pidReqDTO.setSimpleQuoteFlag(true);
-					pidReqDTO.setPmOrgProfile(getManagedBean().getRequestNote().getPmOrgProfile());
-					ScPurchaseInDefault pid = pidSO.getPurchaseInDefaultByPanelItemId(pidReqDTO).getPurchaseInDefaultDtl();
+					pidReqDTO.setPurchaseInDefaultId(purchaseInDefaultId);
+					ScPurchaseInDefault pid = pidSO.getPurchaseInDefault(pidReqDTO).getPurchaseInDefaultDtl();
 					scQuote.setPurchaseInDefault(pid);
 					getManagedBean().setScQuote(scQuote);
 					

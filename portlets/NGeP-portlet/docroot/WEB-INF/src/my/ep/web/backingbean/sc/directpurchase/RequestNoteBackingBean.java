@@ -273,6 +273,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
 	    requestNoteReqDTO.setRoleCode(getUserRoleCode());
 	    Long prInqId = getManagedBean().getPrInquiryId();
+	    Long pidId = getManagedBean().getPurchaseInDefaultId();
 	    if(getManagedBean().getPrInquiryId() != null){
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
@@ -290,6 +291,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	 requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 	    	 renewSesionObject();
 	    	 getManagedBean().setPrInquiryId(prInqId);
+	    	 getManagedBean().setPurchaseInDefaultId(pidId);
 	     }
 	    
 	    if (requestNoteResDTO.isSuccessful()) {
@@ -324,6 +326,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     return null;
 	}
 	
+	private ScRequestNoteDtl getPidForRequestItem(ScRequestNoteDtl rnDtl) {
+		if(rnDtl.getRequestItem() != null && rnDtl.getRequestItem().getPurchaseInDefault() == null
+				&& getManagedBean().getPurchaseInDefaultId() != null) {
+			IPurchaseInDefaultSO purchaseInDefaultSO  = null;
+			try {
+				//TODO Based on ptj selection have to get pid for request note 
+				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+				PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+				// fetch pid item for request note item	
+
+				purchaseInDefaultReqDTO.setPurchaseInDefaultId(getManagedBean().getPurchaseInDefaultId());
+				PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
+
+				// pid to request note
+				if(defaultResDTO.getPurchaseInDefaultDtl() != null){
+					ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
+					rnDtl.getRequestItem().setPurchaseInDefault(purchaseInDefault);
+				}
+			}
+			finally {
+				purchaseInDefaultSO = null;
+			}
+		}
+		
+		return rnDtl;
+	}
+	
 	private void reloadRequestNote(ScRequestNote requestNote){
 		getManagedBean().setPiRNChecker(false);
 		getManagedBean().setAutoUpdate(true);
@@ -348,6 +377,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 				
 			}
+			
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
@@ -489,6 +519,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				dpId = Long.valueOf(directPurchaseDataType.getRnId());
 			}
 			
+			if(directPurchaseDataType.getPid() != null && directPurchaseDataType.getPid().size() > 0) {
+				getManagedBean().setPurchaseInDefaultId(
+						Long.valueOf(directPurchaseDataType.getPid().get(0)));
+			}
+			
 			requestNoteReqDTO.setRequestNoteId(dpId);
 			RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
 			if(requestNoteResDTO.getRequestNoteDetail() != null){
@@ -575,7 +610,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestSupplierItem.setSmSupplier(smSupplier);
 					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				}
-				
+
+				scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
+
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
 				requestNoteDtls.add(scRequestNoteDtl);
@@ -1963,8 +2000,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// TODO selected ptj id for non contract item for pid
 					
 					purchaseInDefaultReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getRequestItem().getCmItem().getItemId()) ;
-					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
+					purchaseInDefaultReqDTO.setItemCode(scRequestNoteDtl.getRequestItem().getCmItem().getExtensionCode()) ;
+					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemCode(purchaseInDefaultReqDTO);
 
 					// pid to request note
 					if(defaultResDTO.getPurchaseInDefaultDtl() != null){
