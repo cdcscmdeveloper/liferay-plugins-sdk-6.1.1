@@ -11,14 +11,12 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 			<td><p:inputTextarea cols="70" maxlength="200"
-					value="#{backingBean.managedBean.poSecReview.remarkToApprover}" 
+					value="#{backingBean.managedBean.poSecReview.remarkToApprover}"
 					maxlength="200" id="apprRemarkIdd"
-					validatorMessage="#{lbl['lbl.sm.remarks.recommendAppr']}"					
-					 <f:validateLength maximum="200" />
-					</p:inputTextarea>
-					<p:message id="apprRemarkIddMsg" for="apprRemarkIdd"
-                     showSummary="true" showDetail="false" display="icon" />
-					</td>
+					validatorMessage="#{lbl['lbl.sm.remarks.recommendAppr']}">
+					<f:validateLength maximum="200" />
+				</p:inputTextarea> <p:message id="apprRemarkIddMsg" for="apprRemarkIdd"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<!-- <tr>
 			<td><p:outputLabel value="Recommendation For Approver" /></td>
