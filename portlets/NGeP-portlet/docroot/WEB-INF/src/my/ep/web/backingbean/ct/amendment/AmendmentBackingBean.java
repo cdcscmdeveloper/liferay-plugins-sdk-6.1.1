@@ -378,7 +378,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						getManagedBean().setEditorValue(content);
 						changeAccountActionListener();
 		
-	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
 				       this.getManagedBean().setAction(res.getAction());
 				       this.getManagedBean().setSignOffDecision(true);
 			
