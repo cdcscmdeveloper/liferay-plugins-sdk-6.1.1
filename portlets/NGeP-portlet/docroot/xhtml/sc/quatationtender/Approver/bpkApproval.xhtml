@@ -36,17 +36,21 @@
 					<h:outputText value="#{lbl['lbl.sc.decision']}" />
 				</f:facet>
 				
-				<p:selectOneMenu id="decisiontypeid" value="#{requestdetails.approverAction.parameterId}"
+				<p:selectOneMenu id="decisiontypeid" value="#{requestdetails.approverAction.parameterId}" required="true"
+					label="#{lbl['lbl.sc.decision']}"
 					style="width: 178px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode ne 'RT'}">
 					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
 					<p:ajax event="change" listener="#{approvalBackingBean.updatePmParameter(requestdetails)}" />
-				</p:selectOneMenu>
+				</p:selectOneMenu><p:message id="decisiontypeidhMsg" for="decisiontypeid"
+										display="icon" />
 				
-				<p:selectOneMenu id="decisiontypeids" value="#{requestdetails.approverAction.parameterId}"
+				<p:selectOneMenu id="decisiontypeids" value="#{requestdetails.approverAction.parameterId}" required="true"
+					label="#{lbl['lbl.sc.decision']}"
 					style="width: 178px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode eq 'RT'}">
 					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
 					<p:ajax event="change" listener="#{approvalBackingBean.updatePmParameter(requestdetails)}" />
-				</p:selectOneMenu>
+				</p:selectOneMenu><p:message id="decisiontypeidsMsg" for="decisiontypeids"
+										display="icon" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
