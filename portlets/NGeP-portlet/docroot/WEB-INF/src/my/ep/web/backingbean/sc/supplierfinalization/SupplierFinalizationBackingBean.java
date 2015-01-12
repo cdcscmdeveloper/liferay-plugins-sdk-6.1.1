@@ -486,7 +486,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	public void saveSupplierFinalization(){
+	public void saveSupplierFinalization() {
 		debugLogger("..In saveSupplierFinalization()..");
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -496,6 +496,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
@@ -504,7 +505,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			qtSuppFinalizationSO.saveSupplierFinalization(reqDTO);
 			
 			renewSessionAndRetrieve(activeIndex);			
-			setTaskDetails(activeIndex, prepareActiveIndex, taskId, outComes, processName);
+			setTaskDetails(activeIndex, prepareActiveIndex, taskId, outComes, processName, currentStatusId);
 			
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
 			String desc = getParameterDesc( ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION);
@@ -603,7 +604,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	private void setTaskDetails(Integer activeIndex, Integer prepareActiveIndex, String taskId, String[] outComes, String processName){
+	private void setTaskDetails(Integer activeIndex, Integer prepareActiveIndex, String taskId, 
+								String[] outComes, String processName, Long currentStatusId) {
 		if(activeIndex != null){
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
@@ -613,6 +615,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
+		this.getManagedBean().setCurrentStatusId(currentStatusId);
 	}
 	
 	private ScQtCommittee preparationDtlsInfo(){
