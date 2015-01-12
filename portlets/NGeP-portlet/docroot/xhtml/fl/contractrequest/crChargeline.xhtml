@@ -138,7 +138,7 @@
 					<td><p:selectOneMenu id="votCode1" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{contractRequestBackingBean.managedBean.votFundId}"
 						style="width: 150px; margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="votCodeList"
 							value="#{contractRequestBackingBean.managedBean.votFundList}"
 							itemLabel="#{votCodeList.votFundCode}"
@@ -149,7 +149,7 @@
 					</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
 					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
-						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
+						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.fund.code']}"
 						saveObject="contractRequestBackingBean.managedBean.pmVoteFund"
 						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						readonly="true"
@@ -165,7 +165,7 @@
 					
 					<td><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
 					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov"><ac:lov id="gosodo"
-						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
+						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.charge.asset.gosodo']}"
 						saveObject="contractRequestBackingBean.managedBean.gosodo"
 						readonly="true"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
@@ -175,7 +175,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td> 
 					<td><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
-						lovId="PM_PRG_ACTIVITY" headerText="Program Activity "
+						lovId="PM_PRG_ACTIVITY" headerText="#{lbl['lbl.fl.program.activiti']}"
 						saveObject="contractRequestBackingBean.managedBean.pmPrgActivity"
 						readonly="true"
 						disabled="#{!contractRequestBackingBean.managedBean.programLov}" 
@@ -184,7 +184,7 @@
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
 					<td><h:panelGroup styleClass="projectLov" id="projectLov"><ac:lov id="pmProject"
-						lovId="PM_PROJECT" headerText="Project/Setia/Sub Setia LOV "
+						lovId="PM_PROJECT" headerText="#{lbl['lbl.fl.project']}"
 						saveObject="contractRequestBackingBean.managedBean.pmSubSetia"
 						readonly="true"
 						disabled="#{!contractRequestBackingBean.managedBean.projectLov}" 
