@@ -93,6 +93,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean itemCeilingQuantity;
 	private boolean confirmMeeting;
 	private boolean selectAll;
+	private String pbQcApproved;
 	
 	private List<CtItemPrice> itemPriceList;
 	private List<CtRemark> remarkList;
@@ -806,6 +807,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
-	} 
+	}
+
+	public String getPbQcApproved() {
+		return pbQcApproved;
+	}
+
+	public void setPbQcApproved(String pbQcApproved) {
+		this.pbQcApproved = pbQcApproved;
+	}
 	
 }
