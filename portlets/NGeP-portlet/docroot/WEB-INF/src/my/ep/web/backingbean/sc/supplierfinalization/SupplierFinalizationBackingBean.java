@@ -2380,24 +2380,26 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public void recommendTypeEvent() {
 		debugLogger("recommendTypeEvent");
 		
+		boolean	itemize = false;
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
-		boolean	itemize = false;
 		String selectionMode = QTConstants.SF_SINGLE;
+		String recommendByCode = getManagedBean().getRecommendBy();
 		
 		if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)) {
 			itemize = true;
 			selectionMode = QTConstants.SF_MULTIPLE;
 			this.getManagedBean().setOnlineBidding(false);
 		} else {
-			if (getManagedBean().getRecommendBy() == null) {
+			if (recommendByCode == null) {
 				getManagedBean().setRecommendBy("");
+			} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(recommendByCode)) {
+				selectionMode = QTConstants.SF_MULTIPLE;
+				this.getManagedBean().setOnlineBidding(true);
 			}
 		}
 		this.getManagedBean().setItemize(itemize);
 		this.getManagedBean().setSelectionMode(selectionMode);
-		
-		
 	}
 	
 	/**
