@@ -4,10 +4,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panel styleClass="sampleDetails">
+	<p:panel styleClass="sampleDetails" >
 
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.orgProfile.pmAddressTypes}"
+			value="#{organisationBackingBean.managedBean.addressTypesList}"
 			var="address" rowIndexVar="index" rowKey="#{address}">
 			<ac:paginator for="deliveryAddressId" />
 
@@ -47,7 +47,7 @@
 	<p:dialog header="Delivery Address" widgetVar="addressPopup" id="deliveryAddressDialog"
 		modal="true" width="900" height="450">
 
-		<p:panel >
+		<p:panel header="#{lbl['lbl.pm.header.general.org.delivery']}" toggleable="true" >
 
 			<table style="width: 100%">
 			<tr>
@@ -211,7 +211,7 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.pm.header.general.org.contactPerson']}"
 			toggleable="true">
-			<table>
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>

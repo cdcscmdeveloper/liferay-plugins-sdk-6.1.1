@@ -2,9 +2,7 @@ package my.ep.web.backingbean.pm.organisation;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -73,7 +71,6 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -90,10 +87,12 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -162,55 +161,16 @@ public class OrganisationBackingBean extends
 
 	public void initialOrganisation() {
 		this.getManagedBean().setOrgTypeId(null);
-		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
-		retrievePmZoneList();
-		getManagedBean().setOrgProfile(new PmOrgProfile());
-		getManagedBean().setOrgValidity(new PmOrgValidity());
-		getManagedBean().setOfficeAddress(new PmAddress());
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryReqDTO countryReqDTO = new CountryReqDTO();
-		countryReqDTO.setCountryCode("MY");
-		getManagedBean().getOfficeAddress().setPmCountry(
-				countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
-
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(getManagedBean().getOfficeAddress().getPmCountry()
-				.getCountryId());
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-		getManagedBean().setStateList(resDTO.getStateList());
-		getManagedBean().getOfficeAddress().setPmCountry(new PmCountry());
-		getManagedBean().getOfficeAddress().setPmState(new PmState());
-		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
+		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);		
+		getManagedBean().setOrgProfile(new PmOrgProfile());		
+		getManagedBean().getOrgProfile().setPmOrgValidity(new PmOrgValidity());
+		getManagedBean().setOfficeAddress(setDefaultAddr());		
 		getManagedBean().setContactList(new ArrayList<PmContact>());
 		getManagedBean().setOfficeContactPerson(new PmContact());
-		getManagedBean().getOrgProfile().setPmZone(new PmZone());
+		//getManagedBean().getOrgProfile().setPmZone(new PmZone());
 		getManagedBean().setOrgType(null);		
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());
-		getManagedBean().getDeliveryAddress().setPmAddress(new PmAddress());
-		
-		getManagedBean()
-				.getDeliveryAddress()
-				.getPmAddress()
-				.setPmCountry(
-						countrySO.retrieveCountryByCode(countryReqDTO)
-								.getPmCountry());
-		getManagedBean().getDeliveryAddress().getPmAddress()
-				.setPmState(new PmState());
-		getManagedBean().getDeliveryAddress().getPmAddress()
-				.setPmDistrict(new PmDistrict());
-		getManagedBean().getDeliveryAddress().getPmAddress()
-				.setPmCity(new PmCity());
-		getManagedBean().getDeliveryAddress().getPmAddress()
-				.setPmDivision(new PmDivision());
-		getManagedBean().setDeliveryAddress(new PmAddressType());
-
 	}
 
 	public void searchOrganisation() {
@@ -333,14 +293,15 @@ public class OrganisationBackingBean extends
 				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
-			retrievePmZoneList();
-			getManagedBean().setZoneId(orgProfile.getPmZone().getZoneId());
+			retrievePmZoneList();			
+			getManagedBean().getOrgProfile().setPmZone(orgProfile.getPmZone());
 
 		}
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
 			retrieveOrgProfileList();
+			orgDeliveryAddrList(orgProfile);
 			this.getManagedBean().setProfileGroup(
 					orgProfile.getMainProfileGroups());
 
@@ -363,7 +324,7 @@ public class OrganisationBackingBean extends
 							ISupplierSearchSO.class);
 			SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
 			SupplierSearchResDTO supResDTO;
-			log.info("Org Profile ID--->"+orgProfile.getOrgProfileId());
+			log.info("Org Profile ID-----"+orgProfile.getOrgProfileId());
 			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
 			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
 			if (supResDTO.getSmSupplier() != null) {
@@ -384,6 +345,7 @@ public class OrganisationBackingBean extends
 			for (PmAddressType pmAddressType : pmAddressTypes) {
 				if (pmAddressType.getAddressType().equalsIgnoreCase(
 						AddressType.BILLING_ADDRESS.value())) {
+					this.getManagedBean().setOfficeAddress((pmAddressType!=null) ? pmAddressType.getPmAddress() : setDefaultAddr());
 					getManagedBean().setOfficeAddress(pmAddressType.getPmAddress());
 					StateReqDTO stateReqDTO = new StateReqDTO();
 					stateReqDTO.setCountryId(pmAddressType.getPmAddress()
@@ -424,10 +386,6 @@ public class OrganisationBackingBean extends
 					addrExist = true;
 				}
 				
-				if (pmAddressType.getAddressType().equalsIgnoreCase(
-						AddressType.DELIVERY_ADDRESS.value())) {
-					getManagedBean().setDeliveryAddress(pmAddressType);
-					}
 			    if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					for (PmContact contactPerson : pmAddressType.getPmContacts())
 						getManagedBean().setOfficeContactPerson(contactPerson);
@@ -450,12 +408,9 @@ public class OrganisationBackingBean extends
 			addressType.setPmContacts(contactLst);
 			addressType.setPmOrgProfile(orgProfile);
 			orgProfile.setPmAddressTypes(pmAddressTypes);
-
-		}
+		}		
 		
-		this.getManagedBean().setOrgValidity(
-				orgResDTO.getPmOrgProfile().getPmOrgValidity());
-		this.getManagedBean().setOrgProfile(orgResDTO.getPmOrgProfile());
+		getManagedBean().setOrgProfile(orgResDTO.getPmOrgProfile());
 
 		return NAV_TO_SEARCH;
 
@@ -534,20 +489,13 @@ public class OrganisationBackingBean extends
 		ParameterResDTO parameterResDTO = parameterSO
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
 
-		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
-		PmOrgValidity orgValidity = this.getManagedBean().getOrgValidity();
+		PmOrgProfile orgProfile = getManagedBean().getOrgProfile();
+		PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();
+		
 		List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
 		if (orgProfile.isBrandNew()) {
 			orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
-			orgValidity.setEffDate(new Date());
-			if (parameterResDTO.getPmParameter().getParameterCode().equalsIgnoreCase(
-							OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
-					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
-				PmZone zone = getManagedBean().getZone();
-				zone.setZoneId(getManagedBean().getZoneId());
-				orgProfile.setPmZone(zone);
-			}
+			orgValidity.setEffDate(new Date());			
 			PmAddressType addressType = this.getManagedBean()
 					.getPmAddressType();
 			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -562,11 +510,16 @@ public class OrganisationBackingBean extends
 			addressType.setPmContacts(contactLst);
 			addressType.setPmAddress(address);
 			addressType.setPmOrgProfile(orgProfile);
-			orgProfile.setPmAddressTypes(pmAddressTypes);
+			orgProfile.setPmAddressTypes(pmAddressTypes);			
 			orgValidity.setPmOrgProfile(orgProfile);
-			
+			orgProfile.setPmOrgValidity(orgValidity);
 		}	
-		
+		if (parameterResDTO.getPmParameter().getParameterCode().equalsIgnoreCase(
+				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
+		|| getManagedBean().getOrgType().equalsIgnoreCase(
+				OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {				
+	    orgProfile.setPmZone(getManagedBean().getOrgProfile().getPmZone());
+       }
 		
 		if (getManagedBean().getOrgProfile().isGovtSeller()) {
 			IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
@@ -582,12 +535,12 @@ public class OrganisationBackingBean extends
 			SupplierSearchResDTO supResDTO;
 			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
 			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
+			// new Supplier
 			if (supResDTO.getSmSupplier() == null) {
 				log.info("Create new Supplier");
 				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 				regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());
-              log.info("Supplier Users Size-->"+getManagedBean().getSupplierUsers().size());
-              log.info("Supplier Bank Size--->"+getManagedBean().getSmSupplierBanks().size());
+             
 				regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 				if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
                  for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
@@ -597,8 +550,7 @@ public class OrganisationBackingBean extends
 						FinancialOrgResDTO finResDTO = financialOrgSO
 								.retrieveFinancialOrgById(finReqDTO);
 						PmFinancialOrg pmFinancialOrg = finResDTO
-								.getPmFinancialOrg();
-               log.info("Supplier Bank name --->"+pmFinancialOrg.getFinOrgName()+"Account ---->"+supplierBank.getAccountNo());
+								.getPmFinancialOrg();               
                 	 regReqDTO.setBankAccountNo(supplierBank.getAccountNo());
                 	 regReqDTO.setBank(pmFinancialOrg);
                 }
@@ -651,21 +603,25 @@ public class OrganisationBackingBean extends
 		}
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-
+			//orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
+			
 			if (getManagedBean().getOrgProfile().isGroupOrg()) {
-
+				
 				List<PmProfileGroup> profileGrp = getManagedBean()
 						.getProfileGroup();
 				for (PmProfileGroup proGroup : profileGrp) {
-					proGroup.setMainOrgProfile(orgProfile);
-
+					if(proGroup.isBrandNew()){
+						proGroup.setMainOrgProfile(orgProfile);
+					}
 				}
 				profileGroup.addAll(profileGrp);
 				orgProfile.setMainProfileGroups(profileGroup);
+				
 			}
 		}
-
-		orgProfile.setPmOrgValidity(orgValidity);
+		validateOrgProfiel(orgProfile);
+		validateOrgAddress(this.getManagedBean().getOfficeAddress());
+		validateContactPerson(this.getManagedBean().getOfficeContactPerson());
 		reqDTO.setPmOrgProfile(orgProfile);
 
 		OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
@@ -681,41 +637,98 @@ public class OrganisationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Org Name : ",
-							this.getManagedBean().getOrgValidity().getOrgName()
+							this.getManagedBean().getOrgProfile().getOrgName()
 									+ "Submit successfully."));
 		}
 
 		return NAV_TO_SEARCH;
 
 	}
+	private void validateOrgProfiel(PmOrgProfile orgProfile){
+		
+		if(StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgCode())){
+			throw new EpException(MessageConst.ERROR_775105);
+		}		
+		if(StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgName())){
+			throw new EpException(MessageConst.ERROR_775106);
+		}
+
+	}
+     private void validateContactPerson(PmContact contactPerson){
+		
+		if(StringUtils.isBlank(contactPerson.getContactName())){
+			throw new EpException(MessageConst.ERROR_775113);
+		}		
+		if(StringUtils.isBlank(contactPerson.getEmail())){
+			throw new EpException(MessageConst.ERROR_775114);
+		}
+
+	}
+	private boolean validateOrgAddress(PmAddress pmAddress){
+		
+		boolean addressEntered = false;
+	
+			//address is optional
+			if(pmAddress.getPmCountry().getCountryId()!=null || !StringUtils.isBlank(pmAddress.getAddress1()) ||
+					!StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId()!=null ||
+					pmAddress.getPmDistrict().getDistrictId()!=null
+					){
+				addressEntered = true;
+			}
+			if(addressEntered){
+				if(pmAddress.getPmCountry().getCountryId()==null){
+					throw new EpException(MessageConst.ERROR_775107);
+				}
+		
+				if(StringUtils.isBlank(pmAddress.getAddress1())){
+					throw new EpException(MessageConst.ERROR_775108);
+				}
+				
+				if(StringUtils.isBlank(pmAddress.getPostcode())){
+					throw new EpException(MessageConst.ERROR_775109);
+				}
+				
+				if(pmAddress.getPmState().getStateId()==null){
+					throw new EpException(MessageConst.ERROR_775110);
+				}
+		
+				if(pmAddress.getPmDistrict().getDistrictId()==null){
+					throw new EpException(MessageConst.ERROR_775111);
+				}	
+				if(pmAddress.getPmCity().getCityId()==null){
+					throw new EpException(MessageConst.ERROR_775112);
+				}	
+			}
+		
+		return addressEntered;
+	}
 
 	public void resetOrgProfile() {
-		getManagedBean().setOrgProfile(new PmOrgProfile());
-		getManagedBean().setOrgValidity(new PmOrgValidity());
-		getManagedBean().setOfficeAddress(new PmAddress());
+		getManagedBean().setOrgProfile(new PmOrgProfile());	
+		getManagedBean().getOrgProfile().setPmOrgValidity(new PmOrgValidity());
+		//getManagedBean().getOrgProfile().setPmZone(new PmZone());
+		getManagedBean().setOfficeAddress(setDefaultAddr());
 		getManagedBean().setOfficeContactPerson(new PmContact());
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryReqDTO countryReqDTO = new CountryReqDTO();
-		countryReqDTO.setCountryCode("MY");
-		getManagedBean().getOfficeAddress().setPmCountry(
-				countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
-		getManagedBean().getOfficeAddress().setPmState(new PmState());
-		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
-       IParameterSO parameterSO = (IParameterSO) BusinessDelegate
+		
+		  IParameterSO parameterSO = (IParameterSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(getManagedBean().getOrgTypeId());
-
 		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-
 		this.getManagedBean().setOrgType(
 				resDTO.getPmParameter().getParameterCode());
+		if (getManagedBean().getOrgType().equalsIgnoreCase(
+				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
+				|| getManagedBean().getOrgType().equalsIgnoreCase(
+						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
+			retrievePmZoneList();			
+			getManagedBean().getOrgProfile().setPmZone(new PmZone());
+
+		}
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
 		orgReqDTO.setOrgType(getManagedBean().getOrgType());
+		
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -928,9 +941,7 @@ public class OrganisationBackingBean extends
 		getManagedBean().setDeliveryStateList(resDTO.getStateList());
 		
 		getManagedBean().getDeliveryAddress().setAddressType(AddressType.DELIVERY_ADDRESS.value());		
-		/*if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
-			setManualAddressList();
-		}*/		
+		
 	}
 	public void updateDeliveryAddrDt() {	
 		
@@ -957,13 +968,24 @@ public class OrganisationBackingBean extends
 		cityReqDTO.setCityId(manualAddr.getPmCity().getCityId());
 		CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);
 		manualAddr.setPmCity(cityResDTO.getPmCity());	
-		
-		getManagedBean().getOrgProfile().getPmAddressTypes().add(deliveryAddr);		
+		if(manualAddr.isBrandNew() && !manualAddr.isModified()){
+			getManagedBean().getAddressTypesList().add(deliveryAddr);	
+		}else{
+			for(int i =0; i < getManagedBean().getAddressTypesList().size(); i++){
+				PmAddressType adressType = getManagedBean().getAddressTypesList().get(i);
+				PmAddress address = adressType.getPmAddress();
+				if( (!manualAddr.isBrandNew()) && address.getAddressId() != null && address.getAddressId().equals(manualAddr.getAddressId())){					
+					getManagedBean().getAddressTypesList().set(i, adressType);
+				}else if(address.getAddressName().equals(manualAddr.getAddressName())){
+					getManagedBean().getAddressTypesList().set(i, adressType);
+				}
+			}
+		}
+			
 	}
 	
      public void editDeliveryAddress(PmAddressType address) {
-    	 retrieveDeliveryCountryList();
-	
+    	 retrieveDeliveryCountryList();	
 	    getManagedBean().setDeliveryAddress(address);	
 		getManagedBean().setPmAddress(address.getPmAddress());		
 		getManagedBean().getDeliveryAddress().getPmAddress().getPmCountry().setCountryId(address.getPmAddress().getPmCountry().getCountryId());
@@ -992,10 +1014,7 @@ public class OrganisationBackingBean extends
 						ICitySO.class);
 		CityResDTO cityResDTO = citySO.retriveCityListByDistrictId(cityReqDTO);
 		this.getManagedBean().setDeliveryCityList(cityResDTO.getCityList());
-		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
-			setManualAddressList();
-		}
-		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(address.getPmAddress().getPmDistrict().getDistrictId()));
+		
 		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
 		if(getManagedBean().getManualAddressList()!=null) {
 			for (PmAddressType obj : getManagedBean().getManualAddressList()) {
@@ -1016,41 +1035,23 @@ public class OrganisationBackingBean extends
 				contact.setPmAddressType(address);
 				contactLst.add(contact);
 				address.setPmContacts(this.getManagedBean().getContactList());			
-				}
-		 getManagedBean().setManualAddrList(manualAddrList);
+				}		
+		 if(address.getPmAddress().isBrandNew()){
+			 address.getPmAddress().setModified(true);
+		 }
 		 address.setEditable(true);
 	}
-
-	private void setManualAddressList() {
-		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
-		if (getManagedBean().getAddressTypesList() == null
-				|| getManagedBean().getAddressTypesList().size() == 0) {
-			orgDeliveryAddrList();
-		}
-		for (PmAddressType addressType : getManagedBean().getAddressTypesList()) {
-			Long key = addressType.getPmAddress().getPmDistrict()
-					.getDistrictId();
-			if (!addressTypeMap.containsKey(key)) {
-				addressTypeMap.put(key, new ArrayList<PmAddressType>());
-			}
-			addressTypeMap.get(key).add(addressType);
-		}
-		getManagedBean().setManualAddressMap(addressTypeMap);
-	}
-
-	public void orgDeliveryAddrList() {
+    public void orgDeliveryAddrList(PmOrgProfile orgProfile) {
 		AddressReqDTO reqDTO = new AddressReqDTO();
-		reqDTO.setOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+		log.info("ORG PROFILE ID"+orgProfile.getOrgProfileId());
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());		
 		reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IAddressSO.class);
-		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
-
-	}
-
-	public void deleteSelectedAdddress() {
+		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);		
+		log.info("Address List"+resDTO.getAddressTypeList().size());
+		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());		
 
 	}
 
@@ -1058,11 +1059,11 @@ public class OrganisationBackingBean extends
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		recommendList.add("SYS");
-		recommendList.add("FJA");
-		recommendList.add("FFC");
-		recommendList.add("SUP");
-		recommendList.add("OTH");
+		recommendList.add(OrganizationType.EP_PROFILE.value());
+		recommendList.add(OrganizationType.DEPARTMENT.value());
+		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
+		recommendList.add(OrganizationType.SUPPLIER.value());
+		recommendList.add(OrganizationType.OTHERS.value());
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -1078,14 +1079,13 @@ public class OrganisationBackingBean extends
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		recommendList.add("SYS");
-		recommendList.add("FJA");
-		recommendList.add("FFC");
-		recommendList.add("SUP");
-		recommendList.add("OTH");
-		recommendList.add("FPJ");
-		recommendList.add("SPT");
-
+		recommendList.add(OrganizationType.EP_PROFILE.value());
+		recommendList.add(OrganizationType.DEPARTMENT.value());
+		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
+		recommendList.add(OrganizationType.SUPPLIER.value());
+		recommendList.add(OrganizationType.OTHERS.value());		
+		recommendList.add(OrganizationType.DIVISION.value());
+		recommendList.add(OrganizationType.SUPPORT.value());
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
@@ -1160,8 +1160,15 @@ public class OrganisationBackingBean extends
 	}
 	private PmAddress setDefaultAddr() {
 		PmAddress addr = new PmAddress();
-		addr.setPmCity(new PmCity());
-		addr.setPmCountry(new PmCountry());
+		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);StateReqDTO reqDTO = new StateReqDTO();
+		addr.setPmCountry(defaultCountry);
+		reqDTO.setCountryId(defaultCountry.getCountryId());
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		getManagedBean().setStateList(resDTO.getStateList());
+		addr.setPmCity(new PmCity());	
 		addr.setPmState(new PmState());
 		addr.setPmDistrict(new PmDistrict());
 		return addr;
