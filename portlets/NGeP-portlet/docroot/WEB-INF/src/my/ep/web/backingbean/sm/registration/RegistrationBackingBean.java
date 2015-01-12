@@ -359,11 +359,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
 		}
 		
-		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
-			log.info("In Pm User....");
-			throw new EpException(MessageConst.ERROR_721004);
-		}
-		
 		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
 		if(isExistUserByIdentificationNo(loginID)){
 			throw new EpException(MessageConst.ERROR_721005);
