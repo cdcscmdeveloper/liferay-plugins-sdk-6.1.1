@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Deflater;
@@ -2354,14 +2355,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    	}selectedMeetingUser = null;
 	    }
 	    
-        public void delCommitteMembers(){
-	    	for(int i=0; i<selectedCommitteMembers.length; i++){
-	    		 CtCommitteeMember committeMember = selectedCommitteMembers[i];
-	    		 this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(committeMember);
-	    	} selectedCommitteMembers = null;
-	    }
-	    
-        
 	    public void radioButtonForMeeting() {
 		      this.getManagedBean().setExistingUsers(false);
 	  	      this.getManagedBean().setNewUsers(false);
@@ -2881,15 +2874,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		this.selectedBondList = selectedBondList;
 	}
 
-	public CtCommitteeMember[] getSelectedCommitteMembers() {
-		return selectedCommitteMembers;
-	}
-
-	public void setSelectedCommitteMembers(
-			CtCommitteeMember[] selectedCommitteMembers) {
-		this.selectedCommitteMembers = selectedCommitteMembers;
-	}
-
 	public PmUser[] getSelectedPmUser() {
 		return selectedPmUser;
 	}
@@ -3375,5 +3359,30 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   return true;
 		}
 		  return false;
+	}
+	
+	public void selectAll(){
+	    if(getManagedBean().isSelectAll()) {
+	    	  for(CtCommitteeMember  CtCommiteMembers : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+	    		  CtCommiteMembers.setSelectedCheckBox(true);
+	    	  }
+	    }
+}
+	
+	public void removeAddRow(){
+		try {
+			if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
+				Iterator<CtCommitteeMember> committeeMembers = getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().iterator();
+				while(committeeMembers.hasNext()){
+					CtCommitteeMember  members = committeeMembers.next();
+					if(members.isSelectedCheckBox()){
+						committeeMembers.remove();
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally{}
 	}
 }

@@ -92,6 +92,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
 	private boolean confirmMeeting;
+	private boolean selectAll;
 	
 	private List<CtItemPrice> itemPriceList;
 	private List<CtRemark> remarkList;
@@ -797,5 +798,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setRepresentativesTypeslist(
 			List<SelectItem> representativesTypeslist) {
 		this.representativesTypeslist = representativesTypeslist;
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
 	} 
+	
 }
