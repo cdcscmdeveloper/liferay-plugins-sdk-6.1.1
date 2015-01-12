@@ -172,6 +172,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					throw new EpException(MessageConst.ERROR_721109);
 				}
 			}catch(Exception ex){
+				log.info("*********ERROR submitSDOReviewAction["+ex.getMessage()+"]********************");
 				throw new EpException(MessageConst.ERROR_721108);
 			}
 		}
