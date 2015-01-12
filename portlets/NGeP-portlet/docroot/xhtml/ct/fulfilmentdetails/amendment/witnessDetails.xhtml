@@ -67,11 +67,10 @@
 					    </h:panelGrid>
 					    
 			  	       <h:panelGrid columns="2" style="float:right;">
-			                <p:outputLabel value="*" styleClass="mandatory" />
 					        <p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 			           </h:panelGrid>
 			           <h:panelGrid columns="2">
-					        <p:inputText id="faxNo" style="width:150px;" required="true"  label="#{lbl['lbl.ct.fax']}"
+					        <p:inputText id="faxNo" style="width:150px;" label="#{lbl['lbl.ct.fax']}"
 					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" validator="#{webappBean.checkFaxNumber}"   />
 					        <p:message for="faxNo" display="icon"/>
 					   </h:panelGrid>
