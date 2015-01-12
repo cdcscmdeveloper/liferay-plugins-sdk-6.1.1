@@ -53,7 +53,8 @@
 				<h:outputText value="#{lbl['lbl.fl.do.supp.do.no']}" />
 				<br />
 				<p:inputText size="37" maxlength="30"
-					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"></p:inputText>
+					value="#{doDelAddress.flTempDoAddr.supplierDoRef}" 
+					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo"></p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
 				<p:commandLink oncomplete="addRemarks.show();"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
@@ -117,7 +118,8 @@
     				</f:facet>
 						<h:panelGroup id="delQtyTxt">
 							<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled}"
-								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}">
+								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}" 
+								onkeypress="if (event.keyCode == 13) { delQty.jq.click(); return false; }" widgetVar="delQty">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 									<f:converter converterId="dynamicNumberConverter" />
