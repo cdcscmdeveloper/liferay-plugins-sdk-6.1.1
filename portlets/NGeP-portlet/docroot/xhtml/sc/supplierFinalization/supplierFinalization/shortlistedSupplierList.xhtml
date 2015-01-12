@@ -21,7 +21,7 @@
 				<p:selectOneMenu id="recommendBy" required="true" label="#{lbl['lbl.sc.recommend.by']}"
 					value="#{suppFinalizationBackingBean.managedBean.recommendBy}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
-					<p:ajax event="change" update="@([id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
+					<p:ajax event="change" update="@([id$=recommendBy],[id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
 						listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
 	   			</p:selectOneMenu>
 			</h:column>
