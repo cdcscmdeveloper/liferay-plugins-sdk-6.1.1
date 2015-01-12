@@ -1096,8 +1096,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void setListenerForCommitte(Long parameterId) throws Exception{
 	
-	           if(parameterId == null)
-	    	    return;
+		   if(parameterId == null || parameterId.intValue() == 0)
+			return;
 	    	   
 	            int counter = 0;
 		         if(ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
