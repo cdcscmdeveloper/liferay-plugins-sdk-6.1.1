@@ -24,7 +24,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
@@ -52,7 +51,6 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
@@ -3286,7 +3284,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public String supplierSubmit(PmDigiSign  pmDigiSign) {
 		debugLogger("supplierSubmit");
-		IDigiSignSO digiSignSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IDigiSignSO.class);
 		try {
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
@@ -3307,21 +3304,20 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
 						quote.getQuoteId(), quote.getQuoteNo() , prepareOriginalText());
 			}
-
+			
+			// spki 
 			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
 			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
-
-			DigiSignReqDTO digiSignReqDTO = new DigiSignReqDTO();
-
-			pmDigiSign.setSignedData(signedData);
-			digiSignReqDTO.setPmDigiSign(pmDigiSign);
-			digiSignSO.saveOrUpdateDigiSign(digiSignReqDTO);
 
 			// remarks
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
+			
+		
+			pmDigiSign.setSignedData(signedData);
+			reqDTO.setPmDigiSign(pmDigiSign);
 			
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setSupplier(getManagedBean().getSmSupplier());
