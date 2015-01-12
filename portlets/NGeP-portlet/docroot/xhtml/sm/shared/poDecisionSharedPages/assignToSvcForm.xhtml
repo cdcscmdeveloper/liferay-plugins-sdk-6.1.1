@@ -49,7 +49,8 @@
 				<h:outputText value="#{assocBean.companyName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.address']}" style="width: 60%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sm.address']}"
+				style="width: 60%;white-space: normal;">
 				<h:outputText
 					value="#{backingBean.getFullAddress(assocBean.smAddress)}" />
 			</p:column>
@@ -73,7 +74,8 @@
 				<h:outputText value="#{branchBean.branchName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.address']}" style="width: 60%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sm.address']}"
+				style="width: 60%;white-space: normal;">
 				<h:outputText
 					value="#{backingBean.getFullAddress(branchBean.smAddress)}" />
 			</p:column>
@@ -96,8 +98,7 @@
 
 			<p:column style="width: 60%;white-space: normal;"
 				headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
-				<h:outputText
-					value="#{backingBean.getFullAddress(fac.smAddress)}" />
+				<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}" />
 			</p:column>
 
 		</p:dataTable>
@@ -148,12 +149,10 @@
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
 					maxlength="200" id="poRemarksToSvc"
 					validatorMessage="#{lbl['lbl.sm.po.svc.Remarks']}"
-					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" 
-					 <f:validateLength maximum="200" />
-					</p:inputTextarea>
-					<p:message id="poRemarksToSvcMsg" for="poRemarksToSvc"
-                     showSummary="true" showDetail="false" display="icon" />
-					</td>
+					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}">
+					<f:validateLength maximum="200" />
+				</p:inputTextarea> <p:message id="poRemarksToSvcMsg" for="poRemarksToSvc"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 	</table>
 
@@ -167,13 +166,11 @@
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
 							maxlength="200" id="apprRemarks"
 							validatorMessage="#{lbl['lbl.sm.remarks.recommendAppr']}"
-							value="#{backingBean.managedBean.poSecReview.remarkToApprover}" 
-							 <f:validateLength maximum="200" />
-							 </p:inputTextarea>
-					<p:message id="appRemarksMsg" for="apprRemarks"
-                     showSummary="true" showDetail="false" display="icon" />
-					</td>
-					
+							value="#{backingBean.managedBean.poSecReview.remarkToApprover}">
+							<f:validateLength maximum="200" />
+						</p:inputTextarea> <p:message id="appRemarksMsg" for="apprRemarks"
+							showSummary="true" showDetail="false" display="icon" /></td>
+
 				</tr>
 				<tr>
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
