@@ -944,17 +944,14 @@ public class OrganisationBackingBean extends
 		reqDTO.setCountryId(getManagedBean().getDeliveryAddress().getPmAddress().getPmCountry().getCountryId());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);		
-		getManagedBean().setDeliveryStateList(resDTO.getStateList());
-		
+		getManagedBean().setDeliveryStateList(resDTO.getStateList());		
 		getManagedBean().getDeliveryAddress().setAddressType(AddressType.DELIVERY_ADDRESS.value());		
-		
+
 	}
 	public void updateDeliveryAddrDt() {	
 		
 		PmAddressType deliveryAddr = getManagedBean().getDeliveryAddress();
-		PmAddress manualAddr = deliveryAddr.getPmAddress();
-		
-		//deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
+		PmAddress manualAddr = deliveryAddr.getPmAddress();	
 		deliveryAddr.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
