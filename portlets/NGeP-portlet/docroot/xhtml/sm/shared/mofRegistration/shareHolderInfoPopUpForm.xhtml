@@ -240,7 +240,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
 				<td><p:selectOneRadio
-						disabled="#{not empty backingBean.managedBean.selectedShareHolder.pmUser or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}"
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -259,7 +259,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
 						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
-						disabled="#{not empty backingBean.managedBean.selectedShareHolder.pmUser or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1') or (backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONSULTANT)}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1') or (backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONSULTANT)}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
