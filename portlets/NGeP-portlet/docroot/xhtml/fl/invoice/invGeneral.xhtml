@@ -73,7 +73,7 @@
 						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='Update' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}"
 						style="width:300px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
-						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
 						<p:ajax event="change" 
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
