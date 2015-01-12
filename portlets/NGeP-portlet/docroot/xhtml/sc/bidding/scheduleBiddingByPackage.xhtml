@@ -12,9 +12,10 @@
 		<div align="left">
 			<table style="align: left">
 				<tr>
-					<td><p:outputLabel id="startDateByPackage" value="#{lbl['lbl.sc.bidding.start']}" /></td>
+					<td><p:outputLabel id="startDateByPackage"
+							value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
-					<td><p:calendar showOn="button"  readonlyInput="true"
+					<td><p:calendar showOn="button" readonlyInput="true"
 							id="scheduleBidPackageStartDate"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
@@ -27,12 +28,15 @@
 								partialSubmit="true"
 								listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 								update="scheduleBidPackageEndDate" />
+						</p:calendar> <p:message id="byPackageStartDateMsg"
+							for="scheduleBidPackageStartDate" display="icon" /></td>
+					<TD><p:spacer width="10"></p:spacer></TD>
 
-						</p:calendar></td>
+					<td><p:outputLabel id="endDateByPackage"
+							value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
-					<td><p:outputLabel id="endDateByPackage" value="#{lbl['lbl.sc.bidding.end']}" /></td>
-
-					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate" readonlyInput="true"
+					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate"
+							readonlyInput="true"
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
@@ -45,8 +49,11 @@
 								partialSubmit="true"
 								listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 								update="bidSchedulePackageDuration" />
-						</p:calendar></td>
-					<td><p:outputLabel id="durationByPackage" value="#{lbl['lbl.sc.duration.hours']}" /></td>
+						</p:calendar> <p:message id="byPackageEndDateMsg"
+							for="scheduleBidPackageEndDate" display="icon" /></td>
+					<TD><p:spacer width="10"></p:spacer></TD>
+					<td><p:outputLabel id="durationByPackage"
+							value="#{lbl['lbl.sc.duration.hours']}" /></td>
 
 					<TD><p:inputText id="bidSchedulePackageDuration"
 							disabled="true"
@@ -56,25 +63,29 @@
 		</div>
 
 		<p:dataTable id="bidScheduleByPackage" var="bidItem"
+			rowKey="#{bidItem}" rowIndexVar="index"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">
 
-			<ac:paginator for="bidScheduleByPackage"></ac:paginator>
-
-			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<p:commandLink id="itemNameByPackage" value="#{bidItem.scRequestItem.itemName}"
-					oncomplete="participants.show();"
+			<p:column headerText="#{lbl['lbl.sc.item.name']}"
+				style="white-space : normal; width : 25%;">
+				<p:commandLink id="itemNameByPackage"
+					value="#{bidItem.scRequestItem.itemName}"
+					oncomplete="participants.show();" process="@this"
+					partialSubmit="true"
 					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}"
-					size="30"
 					update="@([id$=participants])" />
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-				<h:outputText id="descriptionByPackage" value="#{bidItem.scRequestItem.itemDesc}" size="30" />
+			<p:column headerText="#{lbl['lbl.sc.item.description']}"
+				style="white-space : normal; width : 30%;">
+				<h:outputText id="descriptionByPackage"
+					value="#{bidItem.scRequestItem.itemDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.uom']}">
-				<h:outputText id="uomNameByPackage" value="#{bidItem.scRequestItem.uom.uomName}" />
+			<p:column headerText="#{lbl['lbl.sc.uom']}" style="width : 15%;">
+				<h:outputText id="uomNameByPackage"
+					value="#{bidItem.scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+			<p:column headerText="#{lbl['lbl.sc.quantity']}" style="width : 15%;">
 				<h:outputText id="quantityByPackage" style="float : right"
 					value="#{bidItem.scRequestItem.quantity}">
 					<f:convertNumber
@@ -84,8 +95,10 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<h:outputText id="decrementAmtByPackage" style="float : right" value="#{bidItem.decrementAmt }">
+			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}"
+				style="width :15%;">
+				<h:outputText id="decrementAmtByPackage" style="float : right"
+					value="#{bidItem.decrementAmt }">
 					<f:convertNumber for="decrementAmt"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>

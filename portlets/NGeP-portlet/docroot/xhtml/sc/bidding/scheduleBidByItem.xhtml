@@ -9,40 +9,40 @@
 		<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
 			id="scheduleByItemPanel">
 
-			<p:dataTable id="bidScheduleByItem" var="bidSchedule" rows="10"
+			<p:dataTable id="bidScheduleByItem" var="bidSchedule" 
 				selection="#{scheduleBiddingBB.managedBean.selectedBidBidScheduleList}"
 				rowKey="#{bidSchedule}" rowIndexVar="index"
 				value="#{scheduleBiddingBB.managedBean.bidScheduleList}">
 
-				<ac:paginator for="bidScheduleByItem"></ac:paginator>
+				
 
 				<p:column  selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="#{lbl['lbl.sc.item.name']}">
-					<p:commandLink id="itemNameByItem"
+				<p:column headerText="#{lbl['lbl.sc.item.name']}" style="white-space : normal; width : 20%;" >
+					<p:commandLink id="itemNameByItem" partialSubmit="true"
 						value="#{bidSchedule.scBidItems[0].scRequestItem.itemName}" process="@this"
-						oncomplete="participants.show();"
-						action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidSchedule)}"
-						size="30" />
+						oncomplete="participants.show();" update="@([id$=participants])"
+						action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidSchedule.scBidItems[0])}"
+						 />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.item.description']}">
+				<p:column headerText="#{lbl['lbl.sc.item.description']}" style="white-space : normal; width : 25%;" >
 					<h:outputText id="itemDescByItem"
 						value="#{bidSchedule.scBidItems[0].scRequestItem.itemDesc}"
-						size="30" />
+						 />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.uom']}">
+				<p:column headerText="#{lbl['lbl.sc.uom']}" style="width : 8%;">
 					<h:outputText id="uomNameByItem"
 						value="#{bidSchedule.scBidItems[0].scRequestItem.uom.uomName}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.quantity']}">
+				<p:column headerText="#{lbl['lbl.sc.quantity']}" style="width : 7%;">
 					<h:outputText id="quantityByItem" style="float : right"
 						value="#{bidSchedule.scBidItems[0].scRequestItem.quantity}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidSchedule.scBidItems[0].scRequestItem.uom.uomCode)}" />
 					</h:outputText>
 				</p:column>
-				<p:column  headerText="#{lbl['lbl.sc.bidding.start']}">
-					<p:calendar value="#{bidSchedule.startDate}" showOn="button"
+				<p:column  headerText="#{lbl['lbl.sc.bidding.start']}" style="width : 10%;">
+					<p:calendar value="#{bidSchedule.startDate}" showOn="button" 
 						required="true" id="bidStartDateByItem" readonlyInput="true"
 						mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -54,10 +54,10 @@
 						<p:ajax event="change" process="bidStartDateByItem" partialSubmit="true"
 							listener="#{scheduleBiddingBB.bidStartDateSelectListener(bidSchedule)}"
 							update="@([id$=bidEndDateByItem])" />
-
 					</p:calendar>
+					<p:message id="byItemStartDateMsg" for="bidStartDateByItem" display="icon" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
+				<p:column headerText="#{lbl['lbl.sc.bidding.end']}" style="width : 10%;">
 
 					<p:calendar id="bidEndDateByItem" value="#{bidSchedule.endDate}"
 						mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
@@ -72,13 +72,13 @@
 						<p:ajax event="change" process="bidEndDateByItem" partialSubmit="true"
 							listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
 							update="@([id$=bidDurationByItem])" />
-
 					</p:calendar>
+					<p:message id="byItemEndDateMsg" for="bidEndDateByItem" display="icon" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
+				<p:column headerText="#{lbl['lbl.sc.duration.hours']}" style="width : 8%;">
 					<p:outputLabel id="bidDurationByItem" value="#{bidSchedule.duration}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
+				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}" style="width : 10%;">
 					<h:outputText style="float : right" id="decrementAmtByItem"
 						value="#{bidSchedule.scBidItems[0].decrementAmt }" disabled="true">
 						<f:convertNumber for="decrementAmtByItem"
