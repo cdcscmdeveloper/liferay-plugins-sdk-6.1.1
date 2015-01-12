@@ -44,11 +44,11 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>				
-						<td><p:inputText id="orgCode" disabled="#{!organisationBackingBean.managedBean.orgValidity.brandNew}"
+						<td><p:inputText id="orgCode" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
 								label="#{lbl['lbl.pm.organisation.orgCode']}" size="40"
 								styleClass="ppDisplayTextL"
-								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}"
-								maxlength="20" required="true" /></td>
+								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
+								maxlength="20" required="#{!empty param['disableValidation']}" /></td>
 						<td><p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>					
 				<ui:fragment
 					rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
@@ -60,7 +60,7 @@
 						</p:selectBooleanCheckbox></td>
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{organisationBackingBean.managedBean.orgType eq 'STG' or organisationBackingBean.managedBean.orgType eq 'GLC' or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'STB' or organisationBackingBean.managedBean.orgType eq 'LAT'}">
+					rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (organisationBackingBean.managedBean.orgType eq 'STG' or organisationBackingBean.managedBean.orgType eq 'GLC' or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'STB' or organisationBackingBean.managedBean.orgType eq 'LAT')}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.organisation.govSeller']}" /></td>
 					<td><p:selectBooleanCheckbox
@@ -77,8 +77,8 @@
 				
 						<td><p:inputText id="orgName" disabled="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
-								value="#{organisationBackingBean.managedBean.orgValidity.orgName}"
-								required="true" size="40" styleClass="ppDisplayTextL"
+								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
+								required="#{!empty param['disableValidation']}" size="40" styleClass="ppDisplayTextL"
 								maxlength="99" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>					
 			</tr>
@@ -89,7 +89,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="zoneCode"
 							label="#{lbl['lbl.pm.zone.name']}" styleClass="ppDropDownWidthM"
-							value="#{organisationBackingBean.managedBean.zoneId}"
+							value="#{organisationBackingBean.managedBean.orgProfile.pmZone.zoneId}"
 							required="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }"
 							style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -110,7 +110,7 @@
 						label="#{lbl['lbl.pm.organisation.status']}"
 						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgType eq 'FPJ'}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
-						required="true" style="margin-bottom: 5px;">
+						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;">
 						<f:selectItems
 							value="#{organisationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
@@ -122,19 +122,16 @@
 		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
 	</ui:fragment>
-
-
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
 		toggleable="true">
-
 		<p:tabView>
 			<p:tab title="#{lbl['lbl.pm.header.general.org.office']}">
 				<ui:include src="/xhtml/pm/organisation/orgOfficeAddress.xhtml" />
 			</p:tab>
-			<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+		<p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
-			</p:tab> -->
+			</p:tab>
 		</p:tabView>
 	</p:panel>
 
