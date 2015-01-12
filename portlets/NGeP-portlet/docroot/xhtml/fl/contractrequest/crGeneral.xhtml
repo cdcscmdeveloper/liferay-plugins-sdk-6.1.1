@@ -21,7 +21,7 @@
 				<td style="width: 460px;"><p:inputText size="8" id="preparedOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
-						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
+						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
