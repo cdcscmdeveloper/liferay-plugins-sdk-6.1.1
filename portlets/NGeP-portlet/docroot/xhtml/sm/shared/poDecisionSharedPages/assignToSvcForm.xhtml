@@ -146,8 +146,14 @@
 			<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 					value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
-					maxlength="200"
-					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" /></td>
+					maxlength="200" id="poRemarksToSvc"
+					validatorMessage="#{lbl['lbl.sm.po.svc.Remarks']}"
+					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" 
+					 <f:validateLength maximum="200" />
+					</p:inputTextarea>
+					<p:message id="poRemarksToSvcMsg" for="poRemarksToSvc"
+                     showSummary="true" showDetail="false" display="icon" />
+					</td>
 		</tr>
 	</table>
 
@@ -159,9 +165,15 @@
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
-							maxlength="200"
-							value="#{backingBean.managedBean.poSecReview.remarkToApprover}" />
+							maxlength="200" id="apprRemarks"
+							validatorMessage="#{lbl['lbl.sm.remarks.recommendAppr']}"
+							value="#{backingBean.managedBean.poSecReview.remarkToApprover}" 
+							 <f:validateLength maximum="200" />
+							 </p:inputTextarea>
+					<p:message id="appRemarksMsg" for="apprRemarks"
+                     showSummary="true" showDetail="false" display="icon" />
 					</td>
+					
 				</tr>
 				<tr>
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
