@@ -374,11 +374,18 @@ public class SmPersonnelBackingBean extends
 		getPersonnelInfoById(personnelId);
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
+		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
+		setPersonnelViewOnlyData(getManagedBean()
+				.getBasicSmPersonnel());
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(
 					getManagedBean().getBasicSmPersonnelMailingAddress()
 							.getSmAddress());
-		return "basicUserProfile.xhtml";
+		if(getManagedBean().isViewOnlyPersonnel()){
+			return "basicUserProfileViewOnly.xhtml";
+		}else{
+			return "basicUserProfile.xhtml";
+		}
 	}
 
 	public String cancel() {
@@ -1349,7 +1356,7 @@ public class SmPersonnelBackingBean extends
 		MyIdentityResDTO resDTO = null;
 		StringBuffer sb = new StringBuffer();
 		sb.append("MessageConst.ERROR_MYIDENTITY_");
-		
+
 		try {
 			resDTO = myIdentitySO.myIdentityVerification(reqDTO);
 			// StringBuffer sb = new StringBuffer();
@@ -1362,7 +1369,7 @@ public class SmPersonnelBackingBean extends
 			// TODO Auto-generated catch block
 			throw new EpException(e.getMessage());
 		}
-		
+
 	}
 
 	public String getCompanyId() {
@@ -1718,4 +1725,30 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setDisabledActivateAndDeactivate(true);
 		}
 	}
+
+	private void setPersonnelViewOnlyMode(SmPersonnel smPersonnel) {
+		getManagedBean().setViewOnlyPersonnel(false);
+		if (getManagedBean().isEditMode() && smPersonnel.getPmUser() == null
+				|| smPersonnel.getPmUser().getUserId() == null) {
+			{
+				getManagedBean().setViewOnlyPersonnel(true);
+			}
+		}
+	}
+
+	private void setPersonnelViewOnlyData(SmPersonnel smPersonnel) {
+		if (getManagedBean().isViewOnlyPersonnel()) {
+			getManagedBean()
+					.setSelectedPersonnelIdentificationType(
+							SmCommonUtil
+									.getParamDescriptionByLanguageAndPmParameter(smPersonnel
+											.getIdentificationType()));
+			for(SelectItem item:getManagedBean().getRoleList()){
+				if(smPersonnel.getEpRole().equals(item.getValue())){
+					smPersonnel.setEpRole(item.getLabel());
+					break;
+				}
+			}
+		}
+	} 
 }
