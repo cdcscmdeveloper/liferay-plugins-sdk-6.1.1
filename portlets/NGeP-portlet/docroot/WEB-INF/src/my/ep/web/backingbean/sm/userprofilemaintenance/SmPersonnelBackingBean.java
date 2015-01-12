@@ -1310,9 +1310,9 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 
-		if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())) {
+		/*if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_722541);
-		}
+		}*/
 
 		try {
 			if (UserLocalServiceUtil.getUserByScreenName(
