@@ -3224,12 +3224,6 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getSmPersonnels()
 					.contains(getManagedBean().getSelectedShareHolder())) {
 
-				// reset eprole to null if not authorized
-				if (getManagedBean().getSelectedShareHolder()
-						.getAuthorizedFlg() == 0) {
-					getManagedBean().getSelectedShareHolder().setEpRole(null);
-				}
-				
 				getManagedBean()
 						.getSmAppl()
 						.getSmPersonnels()
@@ -3260,12 +3254,8 @@ public class SmApplicationBackingBean extends
 						.add(getManagedBean().getSelectedShareHolder());
 
 			}
-			if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
-				getManagedBean().getSelectedShareHolder().setEpRole(null);
-				getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
-				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
-						0);
-			}
+			updateAuthorizedPersonnel(getManagedBean().getSmAppl()
+					.getSmPersonnels());
 			saveOrUpdateAppl();
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
@@ -3298,6 +3288,29 @@ public class SmApplicationBackingBean extends
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
+		}
+	}
+
+	private void updateAuthorizedPersonnel(List<SmPersonnel> smPersonnels) {
+		if (smPersonnels != null && !smPersonnels.isEmpty()) {
+			for (SmPersonnel smPersonnel : smPersonnels) {
+				if (smPersonnel.getAuthorizedFlg() == 0) {
+					smPersonnel.setEpRole(null);
+					smPersonnel.setSoftcertFlg(0);
+					smPersonnel.setContractSignerFlg(0);
+					smPersonnel
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				} else {
+					if (smPersonnel.getPmUser() != null
+							&& smPersonnel.getPmUser().getUserId() != null) {
+						smPersonnel
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					} else {
+						smPersonnel
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+					}
+				}
+			}
 		}
 	}
 
