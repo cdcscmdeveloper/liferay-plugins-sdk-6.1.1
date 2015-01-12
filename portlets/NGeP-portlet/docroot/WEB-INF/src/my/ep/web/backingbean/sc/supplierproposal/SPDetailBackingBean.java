@@ -1881,6 +1881,7 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO
 					.retrivePaidUpCapitalBySupplierById(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
+			getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 		} finally {
 			proposalSO = null;
 		}
@@ -2640,8 +2641,10 @@ public class SPDetailBackingBean extends
 	}
 
 	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
-
-		retrievePaidUpCapitalNdDeclarationDtls();
+		
+		if(getManagedBean().getSmSupplier() == null || getManagedBean().getSmSupplier().getCompanyName() == null){
+			retrievePaidUpCapitalNdDeclarationDtls();
+		}
 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
