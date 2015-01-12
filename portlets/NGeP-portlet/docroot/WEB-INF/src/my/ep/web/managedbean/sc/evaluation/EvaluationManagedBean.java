@@ -208,6 +208,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtFinancialCommitteeRemark>  evaluationFinancialCommitteeRemark;
 	private BigDecimal withInVarieance;
 	private String checkListType;
+	private List<TplSpecZoneDtl> evaluationStageZonesSummary;
   
 	/**
 	 * @return the today
@@ -2028,6 +2029,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckListType(String checkListType) {
 		this.checkListType = checkListType;
+	}
+
+	/**
+	 * @return the evaluationStageZonesSummary
+	 */
+	public List<TplSpecZoneDtl> getEvaluationStageZonesSummary() {
+		return evaluationStageZonesSummary;
+	}
+
+	/**
+	 * @param evaluationStageZonesSummary the evaluationStageZonesSummary to set
+	 */
+	public void setEvaluationStageZonesSummary(
+			List<TplSpecZoneDtl> evaluationStageZonesSummary) {
+		this.evaluationStageZonesSummary = evaluationStageZonesSummary;
 	}
 
 	

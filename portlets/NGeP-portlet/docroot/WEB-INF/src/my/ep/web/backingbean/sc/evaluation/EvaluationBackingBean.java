@@ -202,161 +202,21 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO evalResDTO = null;
 		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			String view = (String) event.getComponent().getAttributes()
 					.get("value");
 			this.getManagedBean().setSummaryViewBy(view);
-			String award = null;
-			EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
-			List<String> resultStg = new ArrayList<String>();
-			if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE
-					.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
-					&& !ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
-				award = QTConstants.AWARD_TYPE_PACKAGE;
-				resultStg.add(this.getManagedBean().getSummaryViewBy());
-				summaryReqDTO.setResultStages(resultStg);
-				this.getManagedBean().setSummaryZoneBean(null);
-			} else if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE
-					.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
-					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
-				resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
-				summaryReqDTO.setResultStages(resultStg);
-				this.getManagedBean().setSummaryZoneBean(null);
-
-			} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
-					.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
-					&& !ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
-
-				resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
-				summaryReqDTO.setResultStages(resultStg);
-				if (!this.getManagedBean().getScQt().isZonal()) {
-					award = SourcingConstants.AWARD_BY_ITEM;
-				}
-				this.getManagedBean().setSummaryZoneBean(null);
-			} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
-					.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
-					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
-				resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
-				summaryReqDTO.setResultStages(resultStg);
-				if (!this.getManagedBean().getScQt().isZonal()) {
-					award = SourcingConstants.AWARD_BY_ITEM;
-				}
-				this.getManagedBean().setSummaryZoneBean(null);
-			} else if (QTConstants.PREFERENCE_MARGIN.equalsIgnoreCase(this
-					.getManagedBean().getSummaryViewBy())) {
-				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType())) {
-					resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
-				} else {
-					resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
-				}
-				summaryReqDTO.setResultStages(resultStg);
-				this.getManagedBean().setSummaryZoneBean(null);
-			}
-
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-
-			summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			summaryReqDTO.setZonal(this.getManagedBean().getScQt().isZonal());
-			summaryReqDTO.setResultStages(resultStg);
-			summaryReqDTO.setAwardBy(award);
-
+			EvaluationReqDTO summaryReqDTO = setPrepareData();
 			evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
 			if (null != evalResDTO.getZones()
 					&& !evalResDTO.getZones().isEmpty()) {
-				if (this.getManagedBean().getSummaryZoneBean() == null) {
-					this.getManagedBean().setSummaryZoneBean(
-							new ArrayList<SummaryZoneBaen>());
-					for (TplSpecZoneDtl tplSpecZoneDtl : evalResDTO.getZones()) {
-
-						summaryReqDTO.setSpeZoneId(tplSpecZoneDtl
-								.getSpecZoneId());
-						EvaluationResDTO evalResDTO1 = evaluationSO
-								.retrieveSummaryDtlsByZoneNAwardNItem(summaryReqDTO);
-						SummaryZoneBaen bean = null;
-						if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
-								.equalsIgnoreCase(this.getManagedBean()
-										.getSummaryViewBy())) {
-							summaryReqDTO.setZonal(false);
-							award = SourcingConstants.AWARD_BY_ITEM;
-							summaryReqDTO.setAwardBy(award);
-							evalResDTO = evaluationSO
-									.retrieveSummaryDetails(summaryReqDTO);
-
-							if (null != evalResDTO.getRequestItemResults()
-									&& null != evalResDTO
-											.getRequestItemResults()
-											.getResultList()
-									&& !evalResDTO.getRequestItemResults()
-											.getResultList().isEmpty()) {
-								this.getManagedBean().setSummaryItemList(
-										evalResDTO.getRequestItemResults()
-												.getResultList());
-								bean = new SummaryZoneBaen(tplSpecZoneDtl,
-										evalResDTO.getRequestItemResults()
-												.getResultList());
-
-							} else {
-								bean = new SummaryZoneBaen(tplSpecZoneDtl, null);
-							}
-							/*
-							 * this.getManagedBean().getSummaryZoneBean()
-							 * .add(bean);
-							 */
-						} else {
-							bean = new SummaryZoneBaen(tplSpecZoneDtl, null,
-									null);
-							this.getManagedBean()
-									.setEvaTotQualifiedSuppliers(0);
-							if (null != evalResDTO1.getQulifiedSuppliers()
-
-									&& !evalResDTO1.getQulifiedSuppliers()
-											.getResultList().isEmpty()) {
-								this.getManagedBean()
-										.setEvaTotQualifiedSuppliers(
-												evalResDTO1
-														.getQulifiedSuppliers()
-														.getTotalRecord());
-
-								bean = new SummaryZoneBaen(tplSpecZoneDtl,
-										evalResDTO1.getQulifiedSuppliers()
-												.getResultList(), null);
-
-							}
-							this.getManagedBean()
-									.setEvaTotDisQualifiedSuppliers(0);
-							if (null != evalResDTO1.getDisQulifiedSuppliers()
-
-									&& !evalResDTO1.getDisQulifiedSuppliers()
-											.getResultList().isEmpty()) {
-
-								bean = new SummaryZoneBaen(tplSpecZoneDtl,
-										evalResDTO1.getQulifiedSuppliers()
-												.getResultList(), evalResDTO1
-												.getDisQulifiedSuppliers()
-												.getResultList());
-								this.getManagedBean()
-										.setEvaTotDisQualifiedSuppliers(
-												evalResDTO1
-														.getDisQulifiedSuppliers()
-														.getTotalRecord());
-
-							}
-						}
-
-						this.getManagedBean().getSummaryZoneBean().add(bean);
-					}
-				}
-
+				this.getManagedBean().setEvaluationStageZonesSummary(
+						evalResDTO.getZones());
+				summaryReqDTO.setSpeZoneId(this.getManagedBean()
+						.getEvaluationStageZonesSummary().get(0)
+						.getSpecZoneId());
+				EvaluationStageZoneSummary(summaryReqDTO);
 			}
 
 			else {
@@ -401,6 +261,162 @@ public class EvaluationBackingBean extends
 
 		} finally {
 
+		}
+	}
+
+	public EvaluationReqDTO setPrepareData() {
+		EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
+		String award = null;
+		List<String> resultStg = new ArrayList<String>();
+		if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE.equalsIgnoreCase(this
+				.getManagedBean().getSummaryViewBy())
+				&& !ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+			award = QTConstants.AWARD_TYPE_PACKAGE;
+			resultStg.add(this.getManagedBean().getSummaryViewBy());
+			summaryReqDTO.setResultStages(resultStg);
+			this.getManagedBean().setSummaryZoneBean(null);
+		} else if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE
+				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
+				&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
+			summaryReqDTO.setResultStages(resultStg);
+			this.getManagedBean().setSummaryZoneBean(null);
+
+		} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
+				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
+				&& !ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+
+			resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+			summaryReqDTO.setResultStages(resultStg);
+			if (!this.getManagedBean().getScQt().isZonal()) {
+				award = SourcingConstants.AWARD_BY_ITEM;
+			}
+			this.getManagedBean().setSummaryZoneBean(null);
+		} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
+				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
+				&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+			resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
+			summaryReqDTO.setResultStages(resultStg);
+			if (!this.getManagedBean().getScQt().isZonal()) {
+				award = SourcingConstants.AWARD_BY_ITEM;
+			}
+			this.getManagedBean().setSummaryZoneBean(null);
+		} else if (QTConstants.PREFERENCE_MARGIN.equalsIgnoreCase(this
+				.getManagedBean().getSummaryViewBy())) {
+			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+				resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
+			} else {
+				resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
+			}
+			summaryReqDTO.setResultStages(resultStg);
+			this.getManagedBean().setSummaryZoneBean(null);
+		}
+
+		summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		summaryReqDTO.setZonal(this.getManagedBean().getScQt().isZonal());
+		summaryReqDTO.setResultStages(resultStg);
+		summaryReqDTO.setAwardBy(award);
+		return summaryReqDTO;
+
+	}
+
+	private void EvaluationStageZoneSummary(EvaluationReqDTO summaryReqDTO) {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO evalResDTO = null;
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+			EvaluationResDTO evalResDTO1 = evaluationSO
+					.retrieveSummaryDtlsByZoneNAwardNItem(summaryReqDTO);
+			if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM.equalsIgnoreCase(this
+					.getManagedBean().getSummaryViewBy())) {
+				summaryReqDTO.setZonal(false);
+				String award = SourcingConstants.AWARD_BY_ITEM;
+				summaryReqDTO.setAwardBy(award);
+				evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
+				this.getManagedBean().setItemSummaryDisQualSuppliers(null);
+				this.getManagedBean().setItemTotDisQualSuppliers(0);
+				this.getManagedBean().setItemSummaryQualSuppliers(null);
+				this.getManagedBean().setItemTotQualSuppliers(0);
+				if (null != evalResDTO.getRequestItemResults()
+						&& null != evalResDTO.getRequestItemResults()
+								.getResultList()
+						&& !evalResDTO.getRequestItemResults().getResultList()
+								.isEmpty()) {
+					this.getManagedBean().setSummaryItemList(
+							evalResDTO.getRequestItemResults().getResultList());
+
+				}
+			} else {
+
+				this.getManagedBean().setEvaTotQualifiedSuppliers(0);
+				this.getManagedBean().setEvaluationSummaryQualSuppliers(null);
+				if (null != evalResDTO1.getQulifiedSuppliers()
+
+						&& !evalResDTO1.getQulifiedSuppliers().getResultList()
+								.isEmpty()) {
+					this.getManagedBean()
+							.setEvaTotQualifiedSuppliers(
+									evalResDTO1.getQulifiedSuppliers()
+											.getTotalRecord());
+					this.getManagedBean().setEvaluationSummaryQualSuppliers(
+							evalResDTO1.getQulifiedSuppliers().getResultList());
+
+				}
+
+				this.getManagedBean()
+						.setEvaluationSummaryDisQualSuppliers(null);
+				this.getManagedBean().setEvaTotDisQualifiedSuppliers(0);
+				if (null != evalResDTO1.getDisQulifiedSuppliers()
+
+						&& !evalResDTO1.getDisQulifiedSuppliers()
+								.getResultList().isEmpty()) {
+
+					this.getManagedBean().setEvaluationSummaryDisQualSuppliers(
+							evalResDTO1.getDisQulifiedSuppliers()
+									.getResultList());
+					this.getManagedBean().setEvaTotDisQualifiedSuppliers(
+							evalResDTO1.getDisQulifiedSuppliers()
+									.getTotalRecord());
+
+				}
+			}
+		} finally {
+
+		}
+	}
+
+	public void evaluationZonessummaryTabChange(TabChangeEvent event) {
+	
+		try {
+
+		
+			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
+			// getManagedBean().setSelectedZone(specZoneDtl);
+
+			for (int i = 0; i < this.getManagedBean()
+					.getEvaluationStageZonesSummary().size(); i++) {
+				TplSpecZoneDtl zoneDtls = this.getManagedBean()
+						.getEvaluationStageZonesSummary().get(i);
+				if (zoneDtls.getSpecZoneId() == specZoneDtl.getSpecZoneId()) {
+					EvaluationReqDTO summaryReqDTO = setPrepareData();
+					summaryReqDTO.setSpeZoneId(specZoneDtl.getSpecZoneId());
+					EvaluationStageZoneSummary(summaryReqDTO);
+
+				}
+			}
+		} finally {
+			
 		}
 	}
 
