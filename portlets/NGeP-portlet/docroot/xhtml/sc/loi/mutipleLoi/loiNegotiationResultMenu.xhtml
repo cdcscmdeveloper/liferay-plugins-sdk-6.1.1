@@ -14,6 +14,10 @@
 			
 		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
+	   <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
+		   postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" />
+		
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
 				process="@all"
