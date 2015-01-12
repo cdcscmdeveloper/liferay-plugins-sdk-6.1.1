@@ -387,7 +387,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		//check Exist email in smPersonnel
-		this.checkExistEmailInPersonnel(smPersonnel.getEmail());
+		//this.checkExistEmailInPersonnel(smPersonnel.getEmail());
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
