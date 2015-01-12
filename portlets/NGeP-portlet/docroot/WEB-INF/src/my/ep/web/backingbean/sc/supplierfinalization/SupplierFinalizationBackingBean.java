@@ -2944,6 +2944,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
+		if(getManagedBean().getScQt() != null){
+			sb.append(getManagedBean().getScQt().getQtNo());
+		}
 		sb.append(getManagedBean().getScQt().getQtNo());
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		textBeforeSign = sb.toString();
