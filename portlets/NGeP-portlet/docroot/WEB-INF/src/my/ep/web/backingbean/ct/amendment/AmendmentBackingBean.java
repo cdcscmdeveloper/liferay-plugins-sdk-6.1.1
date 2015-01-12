@@ -1841,8 +1841,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 
 				context.put("supplierName", scLoiLoa.getSupplierName());
 				String supplierAddress = "";
-				if (scLoa.getSupplierAddress() != null) {
-					supplierAddress = getFullAddress(scLoa.getSupplierAddress());
+				if (getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+					supplierAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 				}
