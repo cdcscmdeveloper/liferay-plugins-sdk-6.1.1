@@ -11,7 +11,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -46,12 +45,11 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private String orgType;
 	private Long orgTypeId;
 	// Org Details
-	private PmOrgProfile orgProfile;
-	
+	private PmOrgProfile orgProfile;	
 	private Date currentDate = new Date();
 	private List<PmZone> zoneList;
 	private PmZone zone = new PmZone();
-	private Long zoneId;
+	
 	
 	
 	
@@ -357,25 +355,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setPmAddressType(PmAddressType pmAddressType) {
 		this.pmAddressType = pmAddressType;
 	}
-
-	/**
-	 * @return the zoneId
-	 */
-	public Long getZoneId() {
-		return zoneId;
-	}
-
-	/**
-	 * @param zoneId
-	 *            the zoneId to set
-	 */
-	public void setZoneId(Long zoneId) {
-		this.zoneId = zoneId;
-	}
-
-	
-
-	/**
+    /**
 	 * @return the zone
 	 */
 	public PmZone getZone() {
