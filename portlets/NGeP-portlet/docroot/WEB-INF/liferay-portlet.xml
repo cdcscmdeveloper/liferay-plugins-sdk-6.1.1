@@ -751,6 +751,19 @@
 		<css-class-wrapper>smdelpendingappln-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Supplier Management End venkat -->
+	
+	<!-- Supplier Management Syazwan -->
+		<portlet>
+			<portlet-name>smExpiredPersonnel</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>smexpiredpersonnel-portlet</css-class-wrapper>
+		</portlet>
+	<!-- Supplier Management Syazwan -->
 
 	<!-- Supplier Management - Andrew -->
 	<portlet>
