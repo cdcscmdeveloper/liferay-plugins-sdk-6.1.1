@@ -191,7 +191,7 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						style="width: 360px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="suppBranchList"
 							value="#{purchaseRequestBackingBean.managedBean.supplierBranchesList}"
 							itemLabel="#{suppBranchList.branchName}"
