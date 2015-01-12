@@ -1174,10 +1174,13 @@ public class SpecificationBackingBean extends
 	}
 
 	public void checkFinancialSpecStatus(ScQt scqt) {
-		retriveFinancialCheckList();
-		// retriveFinancialScoring();
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
+		if (null == financialCheckList || financialCheckList.isEmpty()) {
+			retriveFinancialCheckList();
+		}
+		// retriveFinancialScoring();
+
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
 			isFinancialSpec(financialCheckList);
 			for (ScQtCheckList checkList : financialCheckList) {
@@ -1299,6 +1302,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 				specReqDTO.setScQt(scQtTechScore);
 				specSo.validateSCScoreSettings(specReqDTO);
+				specSo.validateSpecOfferPrice(specReqDTO);
 
 			}
 
@@ -1379,6 +1383,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 				specReqDTO.setScQt(scQtFinScore);
 				specSo.validateSCScoreSettings(specReqDTO);
+				specSo.validateSpecOfferPrice(specReqDTO);
 			}
 			break;
 		case 6:
@@ -5698,8 +5703,10 @@ public class SpecificationBackingBean extends
 									.getScoringForYears());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "companyExperience.xhtml?faces-redirect=true";
@@ -5798,8 +5805,10 @@ public class SpecificationBackingBean extends
 									.getScoringForYears());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
@@ -5811,7 +5820,8 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (resDTO.getCheckListScores() == null) {
+					if (resDTO.getCheckListScores() == null
+							|| resDTO.getCheckListScores().isEmpty()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
@@ -5866,8 +5876,11 @@ public class SpecificationBackingBean extends
 
 						}
 
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
+
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "technicalEmployeeList.xhtml?faces-redirect=true";
@@ -5929,8 +5942,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "totalEmployees.xhtml?faces-redirect=true";
@@ -6094,8 +6109,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "financialGovernementCompany.xhtml?faces-redirect=true";
@@ -6155,8 +6172,10 @@ public class SpecificationBackingBean extends
 							returnCheckListScores(this.getManagedBean()
 									.getCheckListScore());
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "financialPrivateCompany.xhtml?faces-redirect=true";
@@ -6167,7 +6186,8 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()) {
+					if (null == resDTO.getCheckListScores()
+							|| resDTO.getCheckListScores().isEmpty()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
@@ -6220,8 +6240,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "creditFacility.xhtml?faces-redirect=true";
@@ -6277,8 +6299,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 
@@ -6347,10 +6371,12 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
-						retriveFromMonthToManthDtls(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+							retriveFromMonthToManthDtls(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "bankStatement.xhtml?faces-redirect=true";
@@ -6416,8 +6442,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "assetsLiabilities.xhtml?faces-redirect=true";
@@ -6478,8 +6506,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "supplierinfo.xhtml?faces-redirect=true";
@@ -6534,8 +6564,10 @@ public class SpecificationBackingBean extends
 									.getCheckListScore());
 
 						}
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
+						if (null != resDTO.getScQtCheckListValue()) {
+							checkList.setScQtCheckListValue(resDTO
+									.getScQtCheckListValue());
+						}
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "paidUpCapital.xhtml?faces-redirect=true";
@@ -9779,7 +9811,7 @@ public class SpecificationBackingBean extends
 				finSpecs = constructFinSpecsNSocre(finalFinSpec);
 			}
 			if (null != finSpecs && finSpecs.size() > 0) {
-				financialScoring.remove(0);
+				// financialScoring.remove(0);
 
 				// localChecklist.addAll(finSpecs);
 				for (ScQtCheckList financialSpecs : finSpecs) {
@@ -10414,6 +10446,7 @@ public class SpecificationBackingBean extends
 					specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 					specReqDTO.setScQt(scoring);
 					specSO.validateSCScoreSettings(specReqDTO);
+					specSO.validateSpecOfferPrice(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -10517,6 +10550,7 @@ public class SpecificationBackingBean extends
 					specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 					specReqDTO.setScQt(recommendation);
 					specSO.validateSCScoreSettings(specReqDTO);
+					specSO.validateSpecOfferPrice(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -11905,7 +11939,7 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-		
+
 	}
 
 	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists) {
