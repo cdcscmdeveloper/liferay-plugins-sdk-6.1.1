@@ -21,7 +21,7 @@
 				</f:facet>
 				<c:choose>
 					<c:when
-						test="#{financialOrgBackingBean.managedBean.serviceType eq 'PB'}">
+						test="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesPaymentBank)}">
 						<h:outputText value="Payment Bank" />
 					</c:when>
 					
@@ -53,7 +53,7 @@
 					disabled="true" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu styleClass="ppDropDownWidthS" disabled="true"
+				<p:selectOneMenu styleClass="ppDropDownWidthS" disabled="#{financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"
 					style="width: 135px;margin-bottom: 5px;">
 					<f:selectItems

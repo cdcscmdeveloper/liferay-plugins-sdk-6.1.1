@@ -74,8 +74,7 @@
 						<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
 					</p:tab>
 					<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
-						activeIndex="#{financialOrgBackingBean.managedBean.byFactoring}"
-						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}">
+						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}">
 						<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
 					</p:tab>
 				</p:tabView>
