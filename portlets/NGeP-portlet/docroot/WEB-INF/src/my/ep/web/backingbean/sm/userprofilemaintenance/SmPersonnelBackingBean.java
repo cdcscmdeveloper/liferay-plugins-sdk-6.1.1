@@ -1315,21 +1315,6 @@ public class SmPersonnelBackingBean extends
 						new String[] { smPersonnel.getIdentificationNo() });
 			}
 		}
-
-		/*
-		 * if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo()))
-		 * { throw new EpException(MessageConst.ERROR_722541); }
-		 */
-
-		try {
-			if (UserLocalServiceUtil.getUserByScreenName(
-					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
-				throw new EpException(MessageConst.ERROR_722541);
-			}
-		} catch (NumberFormatException | PortalException | SystemException e) {
-			// TODO Auto-generated catch block
-			log.info(e.getMessage());
-		}
 	}
 
 	public void myIdentityVerification(SmPersonnel per) {
