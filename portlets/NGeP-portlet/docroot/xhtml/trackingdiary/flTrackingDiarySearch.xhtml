@@ -103,29 +103,32 @@
 					Creation Date
 				</f:facet>
 					#{flDocument.docNo}
-
 				</p:column>
-
 				<p:column width="15%">
 					<f:facet name="header">
 					Document No.
 				</f:facet>
 				#{flDocument.docNo}
-
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Document Title
 				</f:facet>
 				#{flDocument.docNo}
-			</p:column>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					Document Type
+				</f:facet>
+				#{flDocument.docNo}
+				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Status
 				</f:facet>
 				#{flDocument.docNo}
-			</p:column>				
-			<p:column>
+				</p:column>				
+				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
@@ -133,8 +136,7 @@
 						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(flDocument)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
-						</p:commandLink>
-
+					</p:commandLink>
 			</p:column>
 			</p:dataTable>
 		</p:panel>

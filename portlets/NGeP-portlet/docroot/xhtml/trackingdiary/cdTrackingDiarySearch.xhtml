@@ -22,34 +22,28 @@
 
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
-								<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="35%"><p:outputLabel
+										value="Document No" /></td>
+								<td width="65%"><p:inputText size="50"
+										value="#{cdTrackingDiaryBackingBean.managedBean.searchDocumentNoValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="15%"><p:outputLabel
-										value="UNSPSC Code" /></td>
+										value="UNSPSC Code/Extension Code" /></td>
 								<td width="35%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.codeFilterBean.searchValue}"></p:inputText></td>
+										value="#{cdTrackingDiaryBackingBean.managedBean.searchUNSPSCExtensionCodeValue}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel
-										value="UNSPSC Title" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.titleFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Extension Code" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.extensionCodeFilterBean.searchValue}"></p:inputText></td>
+								<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
+								<td width="35%"><p:inputText size="50"
+										value="#{cdTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel value="Status" /></td>
 								<td width="65%"><p:selectOneMenu style="width: 314px;"
-											value="#{ctTrackingDiaryBackingBean.managedBean.searchStatusId}">
+											value="#{cdTrackingDiaryBackingBean.managedBean.searchStatusId}">
 											<f:selectItems
-												value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
+												value="#{cdTrackingDiaryBackingBean.getStatus()}" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
@@ -60,14 +54,12 @@
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 								action="#{cdTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
 						</div>
-						</p:panel>
+		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{cdTrackingDiaryBackingBean.searchDataModel}" var="unspscObject"
+				value="#{cdTrackingDiaryBackingBean.managedBean.cdDocumentDataModel}" var="unspscObject"
 				width="100%" rows="10">
-
-
 
 				<ac:paginator for="unspscTableID"></ac:paginator>
 
@@ -80,17 +72,23 @@
 
 				<p:column width="15%">
 					<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.code']}
+					Document No
 				</f:facet>
 				#{unspscObject.unspscCode}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.title']}
+					UNSPSC/Extension Code
 				</f:facet>
 				#{unspscObject.unspscTitle}
-			</p:column>
-			<p:column>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					UNSPSC/Extension Code Title
+				</f:facet>
+				#{unspscObject.unspscTitle}
+				</p:column>
+				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>

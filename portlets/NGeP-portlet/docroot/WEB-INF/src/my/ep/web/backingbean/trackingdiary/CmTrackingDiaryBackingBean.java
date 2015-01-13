@@ -1,47 +1,35 @@
 package my.ep.web.backingbean.trackingdiary;
 
-import java.util.ArrayList;
+import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
-import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.cm.codification.CodificationReqDTO;
-import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.CdTrackingDiaryManagedBean;
+import my.ep.web.managedbean.trackingdiary.CmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -50,13 +38,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "cmTrackingDiaryBackingBean")
 @ViewScoped
 public class CmTrackingDiaryBackingBean extends
-		BaseBackingBean<CdTrackingDiaryManagedBean> {
+		BaseBackingBean<CmTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(CmTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cmTrackingDiaryDetailSearch.xhtml";
-	private SearchFilterBean itemNameFilterBean 		= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean itemCodeFilterBean 		= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean supplierNameFilterBean 	= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean docTypeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docIdFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docNoFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -70,9 +55,16 @@ public class CmTrackingDiaryBackingBean extends
 	}
 	
 	public void search() {
-//		String unspscCode = codeFilterBean.getSearchValue().toString();
-//		String unspscTitle = titleFilterBean.getSearchValue().toString();
-//		String extensionCode = extensionCodeFilterBean.getSearchValue().toString();
+//		if(null == getManagedBean().getSearchTrasactionType()){ 
+//		throw new EpException(MessageConst.ERROR_740023);
+//	}else if((null ==getManagedBean().getSearchViewType() 
+//			&& "".equalsIgnoreCase(getManagedBean().getSearchContractNo()) 
+//			&& "".equalsIgnoreCase(getManagedBean().getSearchLoaNo()))){
+//		throw new EpException(MessageConst.ERROR_740023);
+//	MessageConst.ERROR_715026
+//	}
+	System.out.println("pageChangeListener");
+	getManagedBean().getCmDocumentDataModel().reloadData();
 
 //		log.info(".......................unspscCode="+ unspscCode);
 //		log.info("................................unspscTitle="+ unspscTitle);
@@ -85,7 +77,7 @@ public class CmTrackingDiaryBackingBean extends
 //			throw new EpException(MessageConst.ERROR_715026);
 //		}
 
-		searchDataModel.reloadData();	
+//		searchDataModel.reloadData();	
 		
 	}
 	private class SearchPagingDataModel extends PagingDataModel<VCmSupplierItem> {
@@ -101,37 +93,12 @@ public class CmTrackingDiaryBackingBean extends
 		protected ISearchResultBean<VCmSupplierItem> pageChangeListener(
 				ISearchBean<VCmSupplierItem> searchBean) {
 
-			if(StringUtils.isBlank((String)itemNameFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())) {
-				log.debug("******Return New SearchResultBean******");
-				return new SearchResultBean();
-			}
-
 			IViewSupplierItemSO viewSO = null;
 
 			try {	
 
 				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance().getServiceObject("cm",IViewSupplierItemSO.class);
 
-
-				if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
-					itemNameFilterBean.setSearchField("itemName");
-					itemNameFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(itemNameFilterBean);
-				}
-
-				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
-					itemCodeFilterBean.setSearchField("itemCode");
-					itemCodeFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
-				}
-
-				if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
-					supplierNameFilterBean.setSearchField("companyName");
-					supplierNameFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
-				}
 
 				
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
@@ -148,10 +115,11 @@ public class CmTrackingDiaryBackingBean extends
 					return new SearchResultBean();
 				}
 				
-				log.debug("*********b4***********");
+				log.info("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
-				log.debug("*********after***********");
-				
+				log.info("*********after***********");
+				log.info("*********resDTO.getViewSuppItemResultBean()***********"+resDTO.getViewSuppItemResultBean().getTotalRecord());
+
 				return resDTO.getViewSuppItemResultBean();
 			}catch(Exception e){
 				e.printStackTrace();
@@ -206,7 +174,7 @@ public class CmTrackingDiaryBackingBean extends
 	}
 
 	public String goToTrackingDiarySearch(VCmSupplierItem unspscObj) {
-//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
+//		log.info("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 //		getManagedBean().setVCmSupplierItem(unspscObj);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
@@ -214,13 +182,36 @@ public class CmTrackingDiaryBackingBean extends
 
 	public String reset() {
 		System.out.println("In reset ...................");
-		itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+//		itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+//		itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+//		supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 		this.setSearchDataModel(new SearchPagingDataModel());
 		searchDataModel.reloadData();
 		System.out.println("after reset.........................");
 		return null;
+	}
+	public SelectItem[] getStatus() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+
+			items = new SelectItem[3];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+
+			items[1] = new SelectItem(new String("ACT"), new String("ACTIVE"));
+			items[2] = new SelectItem(new String("NACT"), new String("NON ACTIVE"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 
 	public String backToPrev() {
@@ -245,6 +236,7 @@ public class CmTrackingDiaryBackingBean extends
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 
+
 	public SearchFilterBean getDocTypeFilterBean() {
 		return docTypeFilterBean;
 	}
@@ -259,6 +251,14 @@ public class CmTrackingDiaryBackingBean extends
 
 	public void setDocIdFilterBean(SearchFilterBean docIdFilterBean) {
 		this.docIdFilterBean = docIdFilterBean;
+	}
+
+	public SearchFilterBean getDocNoFilterBean() {
+		return docNoFilterBean;
+	}
+
+	public void setDocNoFilterBean(SearchFilterBean docNoFilterBean) {
+		this.docNoFilterBean = docNoFilterBean;
 	}
 
 

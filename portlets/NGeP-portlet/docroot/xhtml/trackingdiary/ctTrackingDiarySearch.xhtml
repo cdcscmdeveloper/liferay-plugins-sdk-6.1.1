@@ -26,7 +26,7 @@
 						value="#{ctTrackingDiaryBackingBean.managedBean.searchTrasactionType}"
 						style="width: 314px;">
 						<f:selectItems
-							value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
+							value="#{ctTrackingDiaryBackingBean.getContractType()}" />
 						<p:ajax event="change" update="searchPanel"
 							listener="#{ctTrackingDiaryBackingBean.selectedOrderType}" />
 					</p:selectOneMenu></td>
@@ -36,7 +36,7 @@
 				<td width="35%"><p:selectOneMenu id="searchViewTypeDD" style="width: 314px;"
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchViewType}">
 							<f:selectItems
-								value="#{ctTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
+								value="#{ctTrackingDiaryBackingBean.getContractViewType()}" />
 						</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -83,7 +83,7 @@
 				<td width="35%"><p:selectOneMenu style="width: 314px;"
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchViewType}">
 							<f:selectItems
-								value="#{ctTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
+								value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
 					</p:selectOneMenu></td>
 			</tr>			
 		</table>
@@ -96,47 +96,49 @@
 					</div>
 					</p:panel>
 			
-		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
-
-			<p:dataTable id="ctDocListDt" lazy="true"
-				value="#{ctTrackingDiaryBackingBean.managedBean.ctDocumentDataModel}" var="flDocument"
-				width="100%" rows="10">
-
-				<ac:paginator for="ctDocListDt"></ac:paginator>
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<p:dataTable id="ctDocListDt"
+				value="#{ctTrackingDiaryBackingBean.managedBean.ctDocumentDataModel}" lazy="true"
+				var="ctDocument" rowIndexVar="rowIndex" rowKey="#{ctDocument.docId}"
+				width="100%">
+				<ac:paginator for="ctDocListDt" />
 
 				<p:column width="15%">
 					<f:facet name="header">
 					Creation Date
 				</f:facet>
-				#{flDocument.docNo}
-
+					#{ctDocument.docNo}
 				</p:column>
-
 				<p:column width="15%">
 					<f:facet name="header">
 					Document No.
 				</f:facet>
-				#{flDocument.docNo}
-
+				#{ctDocument.docNo}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Document Title
 				</f:facet>
-				#{flDocument.docNo}
-			</p:column>
+				#{ctDocument.docNo}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					Document Type
+				</f:facet>
+				#{ctDocument.docNo}
+				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Status
 				</f:facet>
-				#{flDocument.docNo}
-			</p:column>				
-			<p:column>
+				#{ctDocument.docNo}
+				</p:column>				
+				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(flDocument)}">
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(ctDocument)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 						</p:commandLink>
