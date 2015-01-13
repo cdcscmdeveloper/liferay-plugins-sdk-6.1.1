@@ -106,6 +106,7 @@ public class QTDeductionPaymentBackingBean extends
 				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			} else {
 				scQtDeduction.setDeductionType(new PmParameter());
+				scQtDeduction.setScQtDeductionClauses(null);
 				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			}
 			this.getManagedBean().getScQtDeductionList().remove(index);

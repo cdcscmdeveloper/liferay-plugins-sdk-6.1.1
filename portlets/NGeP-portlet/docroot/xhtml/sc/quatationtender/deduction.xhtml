@@ -23,7 +23,7 @@
 			<ac:paginator for="deductPaymentTblId" />
 
 			<p:column headerText="#{lbl['lbl.sc.deduction.type']}">
-				<p:selectOneMenu id="deductionType"
+				<h:selectOneMenu id="deductionType"
 					value="#{scQtDeduction.deductionType.parameterId}">
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
@@ -31,7 +31,7 @@
 						update=":form:clausePnl, deductionamountid"
 						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
-				</p:selectOneMenu>
+				</h:selectOneMenu>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}">
