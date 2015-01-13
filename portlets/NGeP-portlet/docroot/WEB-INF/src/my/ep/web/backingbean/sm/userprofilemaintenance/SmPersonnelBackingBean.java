@@ -375,15 +375,14 @@ public class SmPersonnelBackingBean extends
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
-		setPersonnelViewOnlyData(getManagedBean()
-				.getBasicSmPersonnel());
+		setPersonnelViewOnlyData(getManagedBean().getBasicSmPersonnel());
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(
 					getManagedBean().getBasicSmPersonnelMailingAddress()
 							.getSmAddress());
-		if(getManagedBean().isViewOnlyPersonnel()){
+		if (getManagedBean().isViewOnlyPersonnel()) {
 			return "basicUserProfileViewOnly.xhtml";
-		}else{
+		} else {
 			return "basicUserProfile.xhtml";
 		}
 	}
@@ -1317,9 +1316,10 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 
-		/*if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_722541);
-		}*/
+		/*
+		 * if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo()))
+		 * { throw new EpException(MessageConst.ERROR_722541); }
+		 */
 
 		try {
 			if (UserLocalServiceUtil.getUserByScreenName(
@@ -1641,6 +1641,8 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
+		reqDTO.setSmSupplierId(SmApplicationUtil.getCurrentSupplier()
+				.getSupplierId());
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = smPersonnelSO.reassignNewSupplierAdmin(reqDTO);
@@ -1743,12 +1745,12 @@ public class SmPersonnelBackingBean extends
 							SmCommonUtil
 									.getParamDescriptionByLanguageAndPmParameter(smPersonnel
 											.getIdentificationType()));
-			for(SelectItem item:getManagedBean().getRoleList()){
-				if(smPersonnel.getEpRole().equals(item.getValue())){
+			for (SelectItem item : getManagedBean().getRoleList()) {
+				if (smPersonnel.getEpRole().equals(item.getValue())) {
 					smPersonnel.setEpRole(item.getLabel());
 					break;
 				}
 			}
 		}
-	} 
+	}
 }
