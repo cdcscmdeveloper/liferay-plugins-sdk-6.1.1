@@ -13,6 +13,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -26,6 +27,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -37,6 +39,7 @@ import my.ep.web.managedbean.trackingdiary.FlTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
@@ -65,51 +68,92 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 //				&& "".equalsIgnoreCase(getManagedBean().getSearchContractNo()) 
 //				&& "".equalsIgnoreCase(getManagedBean().getSearchLoaNo()))){
 //			throw new EpException(MessageConst.ERROR_740023);
+//		MessageConst.ERROR_715026
 //		}
 		System.out.println("pageChangeListener");
 		getManagedBean().getCtDocumentDataModel().reloadData();
 	}
 	
-	private List<String> getDocTypeListByRole() {
-		List<String> flDocTypes = new ArrayList<String>();
-		if(ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(getManagedBean().getSearchTrasactionType())) {
-			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+//	private List<String> getDocTypeListByRole() {
+//		List<String> flDocTypes = new ArrayList<String>();
+//		if(ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(getManagedBean().getSearchTrasactionType())) {
+//			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+//
+//				return flDocTypes;
+//		}
+//		return flDocTypes;
+//	}
 
-				return flDocTypes;
-		}
-		return flDocTypes;
-	}
+	public SelectItem[] getContractType() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 
-	public SelectItem[] getSearchViewType() {
-			SelectItem[] items = new SelectItem[2];
-			items[0] = new SelectItem("aaaaa", "sssss");
-			items[1] = new SelectItem("aaaaa", "sssss");
-	    return items;
-	}
-
-	public SelectItem[] getDocumentTypeDropDown() {
-		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
 		try {
-			SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FULFILMENT_DOCUMENT_TYPE);
-			selectedItemList.add(items[0]);
-			List<SelectItem> itemList = new ArrayList<SelectItem>();
-		    for(SelectItem selectItem : items) {
-		    	itemList.add(selectItem);
-		    }
-			List<String> flDocTypes = getDocTypeListByRole();
-			List<String> selectedItemCode = new ArrayList<String>();
-		    for(SelectItem selectItem : itemList) {
-		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
-		    		selectedItemCode.add(selectItem.getValue().toString());
-		    		selectedItemList.add(selectItem);
-		    	}
-		    }
+
+			items = new SelectItem[5];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			items[1] = new SelectItem(new String("CC"), new String("Central Contract"));
+			items[2] = new SelectItem(new String("CC"), new String("Ministry Contract"));
+			items[3] = new SelectItem(new String("CC"), new String("Central Circular"));
+			items[4] = new SelectItem(new String("CC"), new String("Panel Circular"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(),e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
-	    return selectedItemList.toArray(new SelectItem[selectedItemList.size()]);
+
+		return items;
 	}
+
+	public SelectItem[] getContractViewType() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+
+			items = new SelectItem[2];
+
+			items[0] = new SelectItem(new String("Group"), new String("Group Doc Type"));
+			items[1] = new SelectItem(new String("Version"), new String("Version Doc Type"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+
+//	public SelectItem[] getDocumentTypeDropDown() {
+//		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
+//		try {
+//			SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FULFILMENT_DOCUMENT_TYPE);
+//			selectedItemList.add(items[0]);
+//			List<SelectItem> itemList = new ArrayList<SelectItem>();
+//		    for(SelectItem selectItem : items) {
+//		    	itemList.add(selectItem);
+//		    }
+//			List<String> flDocTypes = getDocTypeListByRole();
+//			List<String> selectedItemCode = new ArrayList<String>();
+//		    for(SelectItem selectItem : itemList) {
+//		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
+//		    		selectedItemCode.add(selectItem.getValue().toString());
+//		    		selectedItemList.add(selectItem);
+//		    	}
+//		    }
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(),e.getMessage()));
+//		}
+//	    return selectedItemList.toArray(new SelectItem[selectedItemList.size()]);
+//	}
 	
 	public void selectedOrderType(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
@@ -178,6 +222,9 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		docTypeList.add("CB");
 		docTypeList.add("AC");
 		docTypeList.add("SA");
+		docTypeList.add("PQ");
+		docTypeList.add("CQ");
+		docTypeList.add("RC");
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.docType",
 				SearchOperator.OPERATOR_IN.value(),
@@ -215,7 +262,9 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		}
 
 		return items;
-//		=MC o CC, get all CT status except DOC_TYPE=CQ,PQ,RC; If transaction type=CQ, get CT status where it's doctype=CQ,RC; If transaction type=PQ, get CT status where it's doctype=PQ,RC
+//		=MC o CC, get all CT status except DOC_TYPE=CQ,PQ,RC;
+//		If transaction type=CQ, get CT status where it's doctype=CQ,RC; 
+//		If transaction type=PQ, get CT status where it's doctype=PQ,RC
 //		System.out.println("list: " + list.size());
 
 //		for (PmStatusDesc statusDesc : list) {
@@ -244,14 +293,14 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		renewSesionObject();
 	}
 	
-	public void getProcurementTypeList(){
-		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setLanguageCode("en");
-		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-		resDTO.getParameterDescList();
-//		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
-	}
+//	public void getProcurementTypeList(){
+//		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+//		ParameterReqDTO reqDTO = new ParameterReqDTO();
+//		reqDTO.setLanguageCode("en");
+//		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+//		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+//		resDTO.getParameterDescList();
+////		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
+//	}
 	
 }
