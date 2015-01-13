@@ -158,7 +158,7 @@ public class WebappBean {
     	String inputValueStr = inputValue.toString();
     	inputValueStr=inputValueStr==null? "":inputValueStr;
         if(!inputValueStr.isEmpty()){
-           String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.percentage.value", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+           String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
            String pattern="^((100)|(\\d{0,2}))$";  
           if(!inputValueStr.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
