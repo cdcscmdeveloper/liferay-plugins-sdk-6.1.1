@@ -3275,17 +3275,6 @@ public class SmApplicationBackingBean extends
 					smPersonnel.setEpRole(null);
 					smPersonnel.setSoftcertFlg(0);
 					smPersonnel.setContractSignerFlg(0);
-					smPersonnel
-							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				} else {
-					if (smPersonnel.getPmUser() != null
-							&& smPersonnel.getPmUser().getUserId() != null) {
-						smPersonnel
-								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					} else {
-						smPersonnel
-								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-					}
 				}
 			}
 		}
@@ -4080,7 +4069,9 @@ public class SmApplicationBackingBean extends
 
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 
-		if (isPersonnelViewOnly(shareHolderBean)) {
+		if (isPersonnelViewOnly(shareHolderBean)
+				&& getManagedBean().getSmAppl().getSmPersonnels()
+						.contains(shareHolderBean)) {
 			if (shareHolderBean.getSmPersonnelAddresses() != null
 					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
 				for (SmPersonnelAddress personnelAddress : shareHolderBean
@@ -5623,7 +5614,8 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					StringUtils.replace(event.getFile().getFileName(), " ", "-");
+					StringUtils
+							.replace(event.getFile().getFileName(), " ", "-");
 					doc.getSmApplDocFiles().get(0)
 							.setFileName(event.getFile().getFileName());
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
