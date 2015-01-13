@@ -1541,7 +1541,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				String bondAmount = null;
 				String bondAmountWord = null; 
 				String expiryPeriod = null;
-				int type = 0;
+				int type = 1;
 //				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
 //				if(scLoa != null){
 //					type = 1;
@@ -1561,12 +1561,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 //				}
 				
 				context.put("type", type);
-				context.put("contractNo", ".......................");
-				context.put("supplierName", ".......................");
-				context.put("sourcingTitle", ".......................");
-				context.put("bondAmount", ".......................");
-				context.put("bondAmountWord", ".......................");
-				context.put("expiryPeriod", ".......................");
+				context.put("contractNo", "...........................");
+				context.put("supplierName", "...........................");
+				context.put("sourcingTitle", "...........................");
+				context.put("bondAmount", "..............................");
+				context.put("bondAmountWord", "..................................................");
+				context.put("expiryPeriod", "..........................");	
 				
 			}else if(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)){
 				FacesScopes fs = new FacesScopes();
@@ -3054,12 +3054,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				String	bondAmountWord = "Bond Amount Word"; 		
 				
 				context.put("type", type);
-				context.put("contractNo", ".......................");
-				context.put("supplierName", ".......................");
-				context.put("sourcingTitle", ".......................");
-				context.put("bondAmount", ".......................");
-				context.put("bondAmountWord", ".......................");
-				context.put("expiryPeriod", ".......................");	
+				context.put("contractNo", "...........................");
+				context.put("supplierName", "...........................");
+				context.put("sourcingTitle", "...........................");
+				context.put("bondAmount", "..............................");
+				context.put("bondAmountWord", "..................................................");
+				context.put("expiryPeriod", "..........................");	
 			
 				DocumentGenerator.getInstance().generatePdfFromVelocity(
 						SourcingConstants.LOA_BOND_LETTER, context,
