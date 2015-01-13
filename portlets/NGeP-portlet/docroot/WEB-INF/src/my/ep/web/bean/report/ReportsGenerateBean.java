@@ -41,6 +41,7 @@ public class ReportsGenerateBean {
 	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
 	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
 	private List<String> stsLst = new ArrayList<String>();
+	private List<String> yearList = new ArrayList<String>();
 	private Object[] statusLst;
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
@@ -100,57 +101,25 @@ public class ReportsGenerateBean {
 		private boolean cmBasicRegView = false;
 		private boolean cmMofRegView = false;		
 		//SM module
-		private boolean smSupportingDocumentView = false;	
-		private boolean smDocStatusView = false;
-		private boolean smSuppDocStatusView = false;
-		private boolean smRegistrationNoView = false;
-		private boolean smEpNoView = false;
+		private boolean smCompanyNameView = false;
 		private boolean smApplicationNoView = false;
 		private boolean smZoneView = false;
 		private boolean smSupplierTypeView = false;
 		private boolean smMofRegNoView = false;
-		private boolean smMofRegNoFromView = false;
-		private boolean smMofRegNoToView = false;
-		private boolean smRegistrationStatusView = false;
-		private boolean smCapitalNaccumView = false;
-		private boolean smPaidUpCapitalNaccumShareView = false;
 		private boolean smCategoryView = false;
 		private boolean smNoOfCategoryView = false;
 		private boolean smMainCategoryView = false;
 		private boolean smSubCategoryView = false;
 		private boolean smSubCategoryDivisionView = false;
-		private boolean smRoleView = false;
-		private boolean smApplicationStatusView = false;
-		private boolean smCancelledByView = false;
+		private boolean smRegistrationStatusView = false;
 		private boolean smPaymentTypeView = false;
 		private boolean smApplicationTypeView = false;
 		private boolean smStateView = false;
-		private boolean smDistrictView = false;
-		private boolean smSupplierNameView = false;
+		private boolean smDistrictView = false;		
 		private boolean smReportTypeView = false;
-		private boolean smOrganizationTypeView = false;
-		private boolean smKementerianView = false;
-		private boolean smNamaAgensiView = false;
-		private boolean smComplaintNoView = false;
-		private boolean smProofIdentityView = false;
-		private boolean smMofNoView = false;	
-		private boolean smCompanyStatusView = false;
-		private boolean smCaseNoView = false;
-		private boolean smExtraTwoColumnView = false;	
-		private boolean smCompApplStatusView = false;		
-		private boolean smCompanyNameView = false;	
-		private boolean smcategoryCodeView = false;
-		private boolean smSiteVisitOfficerView = false;
-		private boolean smReleaseDateView = false;
-		private boolean smApplicationDateView = false;
-		private boolean smReceiveDateView = false;
-		private boolean smExpiryDateView = false;
-		private boolean smPrintedDateView = false;
-		private boolean smMandatoryZoneView = false;
+		private boolean smApplicationStatusView = false;
+		private boolean smExtraTwoColumnView = false;
 		private boolean smRegistrationTypeView = false;
-		private boolean smSupplierView = false;
-		private boolean smCategoryCodeView = false;
-		private boolean smBasicRegView = false;
 		private boolean smMofRegView = false;
 		private boolean smMandatorySupplierTypeView = false;
 		private boolean smMandatoryApplicationDateView = false;
@@ -167,6 +136,49 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryCompanyNameView = false;
 		private boolean smMandatoryRegistrationTypeView = false;
 		private boolean smMandatoryMonthlyRptByYearView = false;
+		private boolean smMandatoryStaticByStateView = false;
+		private boolean smMandatoryApplicationNoView = false;
+		private boolean smSVOUserView = false;
+		private boolean smMandatoryReportTypeView = false;
+		private boolean smMandatoryZoneView = false;
+		private boolean smBasicRegView = false;
+		private boolean smMandatoryBothSupplierTypeView = false;
+		
+		
+		
+		/*private boolean smSupplierNameView = false;
+		private boolean smSupportingDocumentView = false;	
+		private boolean smDocStatusView = false;
+		private boolean smSuppDocStatusView = false;
+		private boolean smRegistrationNoView = false;
+		private boolean smEpNoView = false;		
+		private boolean smMofRegNoFromView = false;
+		private boolean smMofRegNoToView = false;		
+		private boolean smCapitalNaccumView = false;
+		private boolean smPaidUpCapitalNaccumShareView = false;		
+		private boolean smRoleView = false;		
+		private boolean smCancelledByView = false;		
+		private boolean smOrganizationTypeView = false;
+		private boolean smKementerianView = false;
+		private boolean smNamaAgensiView = false;
+		private boolean smComplaintNoView = false;
+		private boolean smProofIdentityView = false;
+		private boolean smMofNoView = false;	
+		private boolean smCompanyStatusView = false;
+		private boolean smCaseNoView = false;			
+		private boolean smCompApplStatusView = false;		
+			
+		private boolean smcategoryCodeView = false;
+		private boolean smSiteVisitOfficerView = false;
+		private boolean smReleaseDateView = false;
+		private boolean smApplicationDateView = false;
+		private boolean smReceiveDateView = false;
+		private boolean smExpiryDateView = false;
+		private boolean smPrintedDateView = false;
+			
+		private boolean smSupplierView = false;
+		private boolean smCategoryCodeView = false;*/		
+		
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -222,6 +234,7 @@ public class ReportsGenerateBean {
 		private boolean ctStatusView = false;
 		private boolean ctContrMontrStatusView = false;
 		private boolean ctCompleteView = false;
+		
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -270,42 +283,52 @@ public class ReportsGenerateBean {
 		private String prNoTotVar=ReportConst.EMPTY_VAL;
 		private String pmoTotVar=ReportConst.EMPTY_VAL;
 		private String fromDateVar=ReportConst.EMPTY_VAL;
-		private String toDateVar=ReportConst.EMPTY_VAL;
+		private String toDateVar=ReportConst.EMPTY_VAL;		
 		
-		private String supportingDocumentTotVar=ReportConst.EMPTY_VAL;	
-		private String docStatusTotVar=ReportConst.EMPTY_VAL;	
-		private String suppDocStatusTotVar=ReportConst.EMPTY_VAL;		
-		private String registrationNoTotVar=ReportConst.EMPTY_VAL;	
-		private String ePNoTotVar=ReportConst.EMPTY_VAL;	
+		
+		//sm
+		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String reportTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String stateTotVar=ReportConst.EMPTY_VAL;	
+		private String districtTotVar=ReportConst.EMPTY_VAL;
 		private String applicationNoTotVar=ReportConst.EMPTY_VAL;	
 		private String zoneTotVar=ReportConst.EMPTY_VAL;	
 		private String supplierTypeTotVar=ReportConst.EMPTY_VAL;	
 		private String mofRegNoTotVar=ReportConst.EMPTY_VAL;	
-		private String mofRegNoFromTotVar=ReportConst.EMPTY_VAL;	
-		private String mofRegNoToTotVar=ReportConst.EMPTY_VAL;	
 		private String registrationStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String mainCategoryTotVar=ReportConst.EMPTY_VAL;	
+		private String subCategoryTotVar=ReportConst.EMPTY_VAL;	
+		private String subCategoryDivisionTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationStatusTotVar=ReportConst.EMPTY_VAL;
+		private String smCreatedFromYearVar=ReportConst.EMPTY_VAL;
+		private String smCreatedToYearVar=ReportConst.EMPTY_VAL;
+		private String smMonthlyRptByYearVar=ReportConst.EMPTY_VAL;
+		private String smMandatoryCreatedFromYearVar=ReportConst.EMPTY_VAL;
+		private String smMandatoryCreatedToYearVar=ReportConst.EMPTY_VAL;
+		private String smSVOUserVar=ReportConst.EMPTY_VAL;
+		
+		
+		/*private String supportingDocumentTotVar=ReportConst.EMPTY_VAL;	
+		private String docStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String suppDocStatusTotVar=ReportConst.EMPTY_VAL;		
+		private String registrationNoTotVar=ReportConst.EMPTY_VAL;	
+		private String ePNoTotVar=ReportConst.EMPTY_VAL;	
+		private String mofRegNoFromTotVar=ReportConst.EMPTY_VAL;	
+		private String mofRegNoToTotVar=ReportConst.EMPTY_VAL;		
 		private String capitalNaccumFrmTotVar=ReportConst.EMPTY_VAL;	
 		private String capitalNaccumToTotVar=ReportConst.EMPTY_VAL;		
 		private String paidUpCapitalNaccumShareTotVar=ReportConst.EMPTY_VAL;	
 		private String categoryTotVar=ReportConst.EMPTY_VAL;	
-		private String noOfCategoryTotVar=ReportConst.EMPTY_VAL;	
-		private String mainCategoryTotVar=ReportConst.EMPTY_VAL;	
-		private String subCategoryTotVar=ReportConst.EMPTY_VAL;	
-		private String subCategoryDivisionTotVar=ReportConst.EMPTY_VAL;	
-		private String roleTotVar=ReportConst.EMPTY_VAL;	
-		private String applicationStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String noOfCategoryTotVar=ReportConst.EMPTY_VAL;		
+		private String roleTotVar=ReportConst.EMPTY_VAL;		
 		private String cancelledByTotVar=ReportConst.EMPTY_VAL;	
-		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
-		private String applicationTypeTotVar=ReportConst.EMPTY_VAL;	
-		private String stateTotVar=ReportConst.EMPTY_VAL;	
-		private String districtTotVar=ReportConst.EMPTY_VAL;	
-		private String supplierNameTotVar=ReportConst.EMPTY_VAL;	
-		private String reportTypeTotVar=ReportConst.EMPTY_VAL;	
+					
+		private String supplierNameTotVar=ReportConst.EMPTY_VAL;		
 		private String organizationTypeTotVar=ReportConst.EMPTY_VAL;	
 		private String kementerianTotVar=ReportConst.EMPTY_VAL;	
 		private String namAgensiTotVar=ReportConst.EMPTY_VAL;	
-		private String complaintNoTotVar=ReportConst.EMPTY_VAL;	
-	
+		private String complaintNoTotVar=ReportConst.EMPTY_VAL;		
 		private String companyStatusTotVar=ReportConst.EMPTY_VAL;	
 		private String caseNoTotVar=ReportConst.EMPTY_VAL;	
 		private String compApplStatusTotVar=ReportConst.EMPTY_VAL;	
@@ -320,13 +343,14 @@ public class ReportsGenerateBean {
 		private String expiryFromDateTotVar=ReportConst.EMPTY_VAL;		
 		private String expiryToDateTotVar=ReportConst.EMPTY_VAL;	
 		private String printedFromDateTotVar=ReportConst.EMPTY_VAL;		
-		private String printedToDateTotVar=ReportConst.EMPTY_VAL;
-		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
-		private String flContractRequestVar=ReportConst.EMPTY_VAL;
-		private String flPurchaseOrderNoVar=ReportConst.EMPTY_VAL;
+		private String printedToDateTotVar=ReportConst.EMPTY_VAL;*/
+		
+		
+		
+		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
-		
+		//sc
 		private String scCreatedFromDtVar=ReportConst.EMPTY_VAL;
 		private String scCreatedToDtVar=ReportConst.EMPTY_VAL;
 		private String scStatusVar=ReportConst.EMPTY_VAL;
@@ -361,7 +385,10 @@ public class ReportsGenerateBean {
 		private String ctContrMontrStatusVar=ReportConst.EMPTY_VAL;
 		private String ctHiddenParamGroupVar=ReportConst.EMPTY_VAL;
 		private String ctCompleteVar=ReportConst.EMPTY_VAL;
-		
+		//ct
+		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
+		private String flContractRequestVar=ReportConst.EMPTY_VAL;
+		private String flPurchaseOrderNoVar=ReportConst.EMPTY_VAL;
 		private String flGroupOneVar=ReportConst.EMPTY_VAL;
 		private String flGroupTwoVar=ReportConst.EMPTY_VAL;
 		private String flGroupThreeVar=ReportConst.EMPTY_VAL;
@@ -379,11 +406,65 @@ public class ReportsGenerateBean {
 		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		
-		private String smCreatedFromYearVar=ReportConst.EMPTY_VAL;
-		private String smCreatedToYearVar=ReportConst.EMPTY_VAL;
-		private String smMonthlyRptByYearVar=ReportConst.EMPTY_VAL;
 		
 	
+		
+		public boolean isSmMandatoryBothSupplierTypeView() {
+			return smMandatoryBothSupplierTypeView;
+		}
+		public void setSmMandatoryBothSupplierTypeView(
+				boolean smMandatoryBothSupplierTypeView) {
+			this.smMandatoryBothSupplierTypeView = smMandatoryBothSupplierTypeView;
+		}
+		public boolean isSmMandatoryReportTypeView() {
+			return smMandatoryReportTypeView;
+		}
+		public void setSmMandatoryReportTypeView(boolean smMandatoryReportTypeView) {
+			this.smMandatoryReportTypeView = smMandatoryReportTypeView;
+		}
+		public boolean isSmMandatoryApplicationNoView() {
+			return smMandatoryApplicationNoView;
+		}
+		public void setSmMandatoryApplicationNoView(boolean smMandatoryApplicationNoView) {
+			this.smMandatoryApplicationNoView = smMandatoryApplicationNoView;
+		}
+		public boolean isSmSVOUserView() {
+			return smSVOUserView;
+		}
+		public void setSmSVOUserView(boolean smSVOUserView) {
+			this.smSVOUserView = smSVOUserView;
+		}
+		public String getSmSVOUserVar() {
+			return smSVOUserVar;
+		}
+		public void setSmSVOUserVar(String smSVOUserVar) {
+			this.smSVOUserVar = smSVOUserVar;
+		}
+		public String getSmMandatoryCreatedFromYearVar() {
+			return smMandatoryCreatedFromYearVar;
+		}
+		public void setSmMandatoryCreatedFromYearVar(
+				String smMandatoryCreatedFromYearVar) {
+			this.smMandatoryCreatedFromYearVar = smMandatoryCreatedFromYearVar;
+		}
+		public String getSmMandatoryCreatedToYearVar() {
+			return smMandatoryCreatedToYearVar;
+		}
+		public void setSmMandatoryCreatedToYearVar(String smMandatoryCreatedToYearVar) {
+			this.smMandatoryCreatedToYearVar = smMandatoryCreatedToYearVar;
+		}
+		public List<String> getYearList() {
+			return yearList;
+		}
+		public void setYearList(List<String> yearList) {
+			this.yearList = yearList;
+		}
+		public boolean isSmMandatoryStaticByStateView() {
+			return smMandatoryStaticByStateView;
+		}
+		public void setSmMandatoryStaticByStateView(boolean smMandatoryStaticByStateView) {
+			this.smMandatoryStaticByStateView = smMandatoryStaticByStateView;
+		}
 		public boolean isSmMandatoryMonthlyRptByYearView() {
 			return smMandatoryMonthlyRptByYearView;
 		}
@@ -1302,19 +1383,19 @@ public class ReportsGenerateBean {
 		public void setExtraTwoColumnView(boolean extraTwoColumnView) {
 			this.extraTwoColumnView = extraTwoColumnView;
 		}
-		public boolean isSmCategoryCodeView() {
+		/*public boolean isSmCategoryCodeView() {
 			return smCategoryCodeView;
 		}
 		public void setSmCategoryCodeView(boolean smCategoryCodeView) {
 			this.smCategoryCodeView = smCategoryCodeView;
-		}
+		}*/
 		public boolean isSmRegistrationTypeView() {
 			return smRegistrationTypeView;
 		}
 		public void setSmRegistrationTypeView(boolean smRegistrationTypeView) {
 			this.smRegistrationTypeView = smRegistrationTypeView;
 		}
-		public boolean isSmSupplierView() {
+		/*public boolean isSmSupplierView() {
 			return smSupplierView;
 		}
 		public void setSmSupplierView(boolean smSupplierView) {
@@ -1350,7 +1431,7 @@ public class ReportsGenerateBean {
 		}
 		public void setSmEpNoView(boolean smEpNoView) {
 			this.smEpNoView = smEpNoView;
-		}
+		}*/
 		public boolean isSmApplicationNoView() {
 			return smApplicationNoView;
 		}
@@ -1375,7 +1456,7 @@ public class ReportsGenerateBean {
 		public void setSmMofRegNoView(boolean smMofRegNoView) {
 			this.smMofRegNoView = smMofRegNoView;
 		}
-		public boolean isSmMofRegNoFromView() {
+		/*public boolean isSmMofRegNoFromView() {
 			return smMofRegNoFromView;
 		}
 		public void setSmMofRegNoFromView(boolean smMofRegNoFromView) {
@@ -1386,14 +1467,14 @@ public class ReportsGenerateBean {
 		}
 		public void setSmMofRegNoToView(boolean smMofRegNoToView) {
 			this.smMofRegNoToView = smMofRegNoToView;
-		}
+		}*/
 		public boolean isSmRegistrationStatusView() {
 			return smRegistrationStatusView;
 		}
 		public void setSmRegistrationStatusView(boolean smRegistrationStatusView) {
 			this.smRegistrationStatusView = smRegistrationStatusView;
 		}
-		public boolean isSmCapitalNaccumView() {
+		/*public boolean isSmCapitalNaccumView() {
 			return smCapitalNaccumView;
 		}
 		public void setSmCapitalNaccumView(boolean smCapitalNaccumView) {
@@ -1405,7 +1486,7 @@ public class ReportsGenerateBean {
 		public void setSmPaidUpCapitalNaccumShareView(
 				boolean smPaidUpCapitalNaccumShareView) {
 			this.smPaidUpCapitalNaccumShareView = smPaidUpCapitalNaccumShareView;
-		}
+		}*/
 		public boolean isSmCategoryView() {
 			return smCategoryView;
 		}
@@ -1436,24 +1517,24 @@ public class ReportsGenerateBean {
 		public void setSmSubCategoryDivisionView(boolean smSubCategoryDivisionView) {
 			this.smSubCategoryDivisionView = smSubCategoryDivisionView;
 		}
-		public boolean isSmRoleView() {
+		/*public boolean isSmRoleView() {
 			return smRoleView;
 		}
 		public void setSmRoleView(boolean smRoleView) {
 			this.smRoleView = smRoleView;
-		}
+		}*/
 		public boolean isSmApplicationStatusView() {
 			return smApplicationStatusView;
 		}
 		public void setSmApplicationStatusView(boolean smApplicationStatusView) {
 			this.smApplicationStatusView = smApplicationStatusView;
 		}
-		public boolean isSmCancelledByView() {
+		/*public boolean isSmCancelledByView() {
 			return smCancelledByView;
 		}
 		public void setSmCancelledByView(boolean smCancelledByView) {
 			this.smCancelledByView = smCancelledByView;
-		}
+		}*/
 		public boolean isSmPaymentTypeView() {
 			return smPaymentTypeView;
 		}
@@ -1478,19 +1559,25 @@ public class ReportsGenerateBean {
 		public void setSmDistrictView(boolean smDistrictView) {
 			this.smDistrictView = smDistrictView;
 		}
-		public boolean isSmSupplierNameView() {
+		public boolean isSmCompanyNameView() {
+			return smCompanyNameView;
+		}
+		public void setSmCompanyNameView(boolean smCompanyNameView) {
+			this.smCompanyNameView = smCompanyNameView;
+		}
+		/*public boolean isSmSupplierNameView() {
 			return smSupplierNameView;
 		}
 		public void setSmSupplierNameView(boolean smSupplierNameView) {
 			this.smSupplierNameView = smSupplierNameView;
-		}
+		}*/
 		public boolean isSmReportTypeView() {
 			return smReportTypeView;
 		}
 		public void setSmReportTypeView(boolean smReportTypeView) {
 			this.smReportTypeView = smReportTypeView;
 		}
-		public boolean isSmOrganizationTypeView() {
+		/*public boolean isSmOrganizationTypeView() {
 			return smOrganizationTypeView;
 		}
 		public void setSmOrganizationTypeView(boolean smOrganizationTypeView) {
@@ -1537,25 +1624,20 @@ public class ReportsGenerateBean {
 		}
 		public void setSmCaseNoView(boolean smCaseNoView) {
 			this.smCaseNoView = smCaseNoView;
-		}
+		}*/
 		public boolean isSmExtraTwoColumnView() {
 			return smExtraTwoColumnView;
 		}
 		public void setSmExtraTwoColumnView(boolean smExtraTwoColumnView) {
 			this.smExtraTwoColumnView = smExtraTwoColumnView;
 		}
-		public boolean isSmCompApplStatusView() {
+		/*public boolean isSmCompApplStatusView() {
 			return smCompApplStatusView;
 		}
 		public void setSmCompApplStatusView(boolean smCompApplStatusView) {
 			this.smCompApplStatusView = smCompApplStatusView;
 		}
-		public boolean isSmCompanyNameView() {
-			return smCompanyNameView;
-		}
-		public void setSmCompanyNameView(boolean smCompanyNameView) {
-			this.smCompanyNameView = smCompanyNameView;
-		}
+		
 		public boolean isSmcategoryCodeView() {
 			return smcategoryCodeView;
 		}
@@ -1597,7 +1679,7 @@ public class ReportsGenerateBean {
 		}
 		public void setSmPrintedDateView(boolean smPrintedDateView) {
 			this.smPrintedDateView = smPrintedDateView;
-		}
+		}*/
 		public boolean isSmMandatoryZoneView() {
 			return smMandatoryZoneView;
 		}
@@ -1769,7 +1851,7 @@ public class ReportsGenerateBean {
 			this.scQuotationNoView = scQuotationNoView;
 		}	
 		
-		public String getSupportingDocumentTotVar() {
+		/*public String getSupportingDocumentTotVar() {
 			return supportingDocumentTotVar;
 		}
 		public void setSupportingDocumentTotVar(String supportingDocumentTotVar) {
@@ -1799,7 +1881,7 @@ public class ReportsGenerateBean {
 		}
 		public void setePNoTotVar(String ePNoTotVar) {
 			this.ePNoTotVar = ePNoTotVar;
-		}
+		}*/
 		public String getApplicationNoTotVar() {
 			return applicationNoTotVar;
 		}
@@ -1824,7 +1906,7 @@ public class ReportsGenerateBean {
 		public void setMofRegNoTotVar(String mofRegNoTotVar) {
 			this.mofRegNoTotVar = mofRegNoTotVar;
 		}
-		public String getMofRegNoFromTotVar() {
+		/*public String getMofRegNoFromTotVar() {
 			return mofRegNoFromTotVar;
 		}
 		public void setMofRegNoFromTotVar(String mofRegNoFromTotVar) {
@@ -1835,14 +1917,14 @@ public class ReportsGenerateBean {
 		}
 		public void setMofRegNoToTotVar(String mofRegNoToTotVar) {
 			this.mofRegNoToTotVar = mofRegNoToTotVar;
-		}
+		}*/
 		public String getRegistrationStatusTotVar() {
 			return registrationStatusTotVar;
 		}
 		public void setRegistrationStatusTotVar(String registrationStatusTotVar) {
 			this.registrationStatusTotVar = registrationStatusTotVar;
 		}
-		public String getCapitalNaccumFrmTotVar() {
+		/*public String getCapitalNaccumFrmTotVar() {
 			return capitalNaccumFrmTotVar;
 		}
 		public void setCapitalNaccumFrmTotVar(String capitalNaccumFrmTotVar) {
@@ -1872,7 +1954,7 @@ public class ReportsGenerateBean {
 		}
 		public void setNoOfCategoryTotVar(String noOfCategoryTotVar) {
 			this.noOfCategoryTotVar = noOfCategoryTotVar;
-		}
+		}*/
 		public String getMainCategoryTotVar() {
 			return mainCategoryTotVar;
 		}
@@ -1891,24 +1973,24 @@ public class ReportsGenerateBean {
 		public void setSubCategoryDivisionTotVar(String subCategoryDivisionTotVar) {
 			this.subCategoryDivisionTotVar = subCategoryDivisionTotVar;
 		}
-		public String getRoleTotVar() {
+		/*public String getRoleTotVar() {
 			return roleTotVar;
 		}
 		public void setRoleTotVar(String roleTotVar) {
 			this.roleTotVar = roleTotVar;
-		}
+		}*/
 		public String getApplicationStatusTotVar() {
 			return applicationStatusTotVar;
 		}
 		public void setApplicationStatusTotVar(String applicationStatusTotVar) {
 			this.applicationStatusTotVar = applicationStatusTotVar;
 		}
-		public String getCancelledByTotVar() {
+		/*public String getCancelledByTotVar() {
 			return cancelledByTotVar;
 		}
 		public void setCancelledByTotVar(String cancelledByTotVar) {
 			this.cancelledByTotVar = cancelledByTotVar;
-		}
+		}*/		
 		public String getPaymentTypeTotVar() {
 			return paymentTypeTotVar;
 		}
@@ -1933,19 +2015,19 @@ public class ReportsGenerateBean {
 		public void setDistrictTotVar(String districtTotVar) {
 			this.districtTotVar = districtTotVar;
 		}
-		public String getSupplierNameTotVar() {
+		/*public String getSupplierNameTotVar() {
 			return supplierNameTotVar;
 		}
 		public void setSupplierNameTotVar(String supplierNameTotVar) {
 			this.supplierNameTotVar = supplierNameTotVar;
-		}
+		}*/
 		public String getReportTypeTotVar() {
 			return reportTypeTotVar;
 		}
 		public void setReportTypeTotVar(String reportTypeTotVar) {
 			this.reportTypeTotVar = reportTypeTotVar;
 		}
-		public String getOrganizationTypeTotVar() {
+		/*public String getOrganizationTypeTotVar() {
 			return organizationTypeTotVar;
 		}
 		public void setOrganizationTypeTotVar(String organizationTypeTotVar) {
@@ -2058,7 +2140,7 @@ public class ReportsGenerateBean {
 		}
 		public void setPrintedToDateTotVar(String printedToDateTotVar) {
 			this.printedToDateTotVar = printedToDateTotVar;
-		}
+		}*/
 		
 		
 		public String getEpNumberTotVar() {
@@ -2504,5 +2586,12 @@ public class ReportsGenerateBean {
 				}*/
 			}		
 			return stsLst;
+		}
+		public List<String> generateYearList(){
+			yearList = new ArrayList<String>();
+			 for (int i = 1950; i <= 2150; i++) {
+				 yearList.add(Integer.toString(i));
+			 }
+			 return yearList; 
 		}
 }
