@@ -73,6 +73,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -894,15 +895,22 @@ public class QTDetailBackingBean extends
 				if (sampleSubmissionList != null
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
+						PmAddress pmAddress = scQtSampleSubmission.getAddress();
+						if (pmAddress.getPmDivision() != null && pmAddress.getPmDivision().getDivisionId() == null) {
+							scQtSampleSubmission.getAddress().setPmDivision(null);
+						}
 						scQtSampleSubmission.getAddress().setPmCountry(
 								retrieveCountry());
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
 					}
-
 				}
 			} else {
 				sampleSubmissionList = new ArrayList<ScQtSampleSubmission>();
 				if (null != this.getManagedBean().getScQtSampleSubmission()) {
+					PmAddress pmAddress = this.getManagedBean().getScQtSampleSubmission().getAddress();
+					if (pmAddress.getPmDivision() != null && pmAddress.getPmDivision().getDivisionId() == null) {
+						this.getManagedBean().getScQtSampleSubmission().getAddress().setPmDivision(null);
+					}
 					this.getManagedBean().getScQtSampleSubmission()
 							.getAddress().setPmCountry(retrieveCountry());
 					sampleSubmissionList.add(this.getManagedBean()
@@ -910,8 +918,8 @@ public class QTDetailBackingBean extends
 				}
 			}
 			scQt.setScQtSampleSubmission(sampleSubmissionList);
+			
 			// Setting the contact person to qtdetails.
-
 			List<ScQtContactPerson> contactPersonsList = this.getManagedBean()
 					.getScQtContactPersons();
 			List<ScQtContactPerson> deskOfficerAdminList = this
