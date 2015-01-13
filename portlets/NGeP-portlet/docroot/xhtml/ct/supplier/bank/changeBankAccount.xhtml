@@ -60,7 +60,14 @@
 								styleClass="ui-button" process="@form"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}"
 								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
-								actionListener="#{spkiBackingBean.getChallengeQuestions}"/>
+								actionListener="#{spkiBackingBean.getChallengeQuestions}"
+								rendered="#{supplierBackingBean.isSupplierRole()}"/>
+							<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
+								styleClass="ui-button" process="@form"
+								icon="ui-icon-#{fn:toLowerCase(outcome)}"
+								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
+								rendered="#{not supplierBackingBean.isSupplierRole()}"
+								/>
 						</ui:repeat></td>
 				</tr>
 			</table>

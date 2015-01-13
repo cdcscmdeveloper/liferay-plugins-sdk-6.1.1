@@ -1118,7 +1118,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     }
     
     public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
-		if (pmDigiSign != null) {
+		if (pmDigiSign != null && isSupplierRole()) {
 			FacesScopes facesScope = new FacesScopes();
 			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			Long userId = facesScope.getUserSessionBean().getUserId();
@@ -1129,6 +1129,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    pmDigiSign.setOrginalData(originalText);
 		    pmDigiSign.setSignedData(spkiBackingBean.spkiSignTransaction(originalText));
 			getManagedBean().setPmDigiSign(pmDigiSign);			
+		}else if(pmDigiSign !=null){
+			getManagedBean().setPmDigiSign(pmDigiSign);		
 		}
 		return saveChangeBankRequest(getManagedBean().getButtonAction());
 	}
@@ -1138,8 +1140,19 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
     public String preSubmitFactoringRequest(PmDigiSign pmDigiSign) throws Exception {
-		if (pmDigiSign != null) {
-			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		if (pmDigiSign != null && isSupplierRole()) {
+			FacesScopes facesScope = new FacesScopes();
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+			Long userId = facesScope.getUserSessionBean().getUserId();
+			Timestamp date = new Timestamp(System.currentTimeMillis());
+			String originalText = prepareSupplierOriginalText();
+			pmDigiSign.setCreatedBy(userId);
+		    pmDigiSign.setCreatedDate(date);
+		    pmDigiSign.setOrginalData(originalText);
+		    pmDigiSign.setSignedData(spkiBackingBean.spkiSignTransaction(originalText));
+			getManagedBean().setPmDigiSign(pmDigiSign);			
+		}else if(pmDigiSign !=null){
+			getManagedBean().setPmDigiSign(pmDigiSign);		
 		}
 		return saveFactoringRequest(getManagedBean().getButtonAction());
 	}
@@ -1154,7 +1167,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return url;
 	}
     
-    private boolean isSupplierRole() {
+    public boolean isSupplierRole() {
 		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
@@ -1221,5 +1234,33 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		.append(countryCode);
 		orginalText  = sb.toString();
 		return orginalText;
+	}
+    
+    
+    public String factoringRequesttSignAction(String outcome) throws Exception{		
+    	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+    	StringBuilder sb = null;
+		 if(BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()){
+			 validateFactoringRequest(outcome);			
+			//Temp setTextBeforeSign : ContractNo+DocType+ContractAmount+Type			
+			sb = new StringBuilder();
+			sb.append(getManagedBean().getCtContract().getContractNo());
+			sb.append(getManagedBean().getCtContract().getCurrentContractVer().getDocType());
+			sb.append(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractAmount());
+			sb.append(outcome);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()){
+			validateFactoringRequest(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);			
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
+		}else{
+			return saveFactoringRequest(outcome);
+		}
 	}
 }
