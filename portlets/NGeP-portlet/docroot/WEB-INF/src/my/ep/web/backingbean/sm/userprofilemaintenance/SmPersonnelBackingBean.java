@@ -155,7 +155,8 @@ public class SmPersonnelBackingBean extends
 
 		String redirectPage = SmApplicationUtil.getApplicationErrorPage();
 		FacesContext fc = FacesContext.getCurrentInstance();
-
+		
+		getManagedBean().setNoSupplierUserMsg("");
 		if (SmApplicationUtil.hasActiveTransactions(smSupplier)) {
 			setDisallowedDeactivateSuppAdminMsg(fc);
 		} else if (SmApplicationUtil.checkActiveSmApplForSupp(smSupplier)) {
