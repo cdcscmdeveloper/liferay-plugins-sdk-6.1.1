@@ -139,7 +139,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_QUESTIONAIRE_RPT_VAL:	
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
-	        	rptGenBean.setSmMandatorySupplierTypeView(true);
+	        	rptGenBean.setSmMandatoryBothSupplierTypeView(true);
 	        	rptGenBean.setSmReportTypeView(true);
 	        	rptGenBean.setSmMandatoryFromDateView(true);					
 	            break;
@@ -177,7 +177,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_QUESTIONNAIRE_RESPONSE_RPT_VAL:
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
-	        	rptGenBean.setSmMandatorySupplierTypeView(true);
+	        	rptGenBean.setSmMandatoryBothSupplierTypeView(true);
 	        	rptGenBean.setSmReportTypeView(true);
 	        	rptGenBean.setSmMandatoryFromDateView(true);					
 	            break;

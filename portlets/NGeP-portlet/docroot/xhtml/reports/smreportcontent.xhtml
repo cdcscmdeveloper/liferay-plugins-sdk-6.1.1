@@ -180,7 +180,7 @@
 								  
 								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
 									<p:outputLabel  value="#{lbl['lbl.rpt.cmpName']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.smCompanyName}" style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="400" value="#{reportBackingBean.smCompanyName}" style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 								<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryCompanyNameView}">
@@ -200,7 +200,7 @@
 								  <table style="width: 100%">
 									<tr>
 										<td style="width:84%">																
-									<p:inputText id="CompanyName" value="#{reportBackingBean.smCompanyName}" style="margin-top:5px;width:290px;" >									
+									<p:inputText id="CompanyName"  maxlength="400" value="#{reportBackingBean.smCompanyName}" style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</td>									
 									<td>
@@ -248,7 +248,7 @@
 									
 									<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}" style="margin-top:5px;width:160px;" />
-									<p:inputText value="#{reportBackingBean.smApplicationNo}" style="margin-top:5px;width:290px;">									
+									<p:inputText maxlength="16" value="#{reportBackingBean.smApplicationNo}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryApplicationNoView}">
@@ -256,7 +256,7 @@
 									<table style="width:160px;">
 									<tr style="width:100%;">
 									<td>
-									<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}" style="width:71px;margin-left:92px;" />	
+									<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}" style="width:94px;margin-left:60px;" />	
 									</td>
 									<td>								 					    
 									<p:outputLabel value="*" styleClass="mandatory" style="width:5px;" />
@@ -285,7 +285,7 @@
 									<table style="width:160px;">
 									<tr style="width:100%;">
 									<td>
-									<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}" style="width:71px;margin-left:92px;" />	
+									<p:outputLabel value="#{lbl['lbl.rpt.svouser']}" style="width:101px;margin-left:60px;" />	
 									</td>
 									<td>								 					    
 									<p:outputLabel value="*" styleClass="mandatory" style="width:5px;" />
@@ -428,10 +428,10 @@
 								  <table style="width:160px;">
 									<tr style="width:100%;">
 									<td>
-									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}" style="width:80px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}" style="width:154px;" />
 									</td>
 									<td>
-									<p:outputLabel value="*" styleClass="mandatory" style="width:40px;" />
+									<p:outputLabel value="*" styleClass="mandatory" style="width:5px;" />
 									</td>
 									
 									</tr>
@@ -444,8 +444,8 @@
 										<td style="width:84%">															
 									<p:selectOneMenu id="ApplicationStatus" value="#{reportBackingBean.smApplicationStatus}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendEnqAppl']}" itemValue="#{lbl['lbl.rpt.pendEnqAppl']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendPayAppl']}" itemValue="#{lbl['lbl.rpt.pendPayAppl']}"></f:selectItem>																																
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendrpt']}" itemValue="#{lbl['lbl.rpt.pendrpt']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.cmpltdrpt']}" itemValue="#{lbl['lbl.rpt.cmpltdrpt']}"></f:selectItem>																																
 									</p:selectOneMenu>
 									</td>
 									<td>
