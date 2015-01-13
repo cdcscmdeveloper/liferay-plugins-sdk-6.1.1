@@ -11439,6 +11439,7 @@ public class SpecificationBackingBean extends
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			loadPrepareSpecCommitteeDetails(scQt.getQtId(),
 					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
+			
 		}
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 
@@ -11943,6 +11944,58 @@ public class SpecificationBackingBean extends
 
 			}
 		}
+		if (null == this.getManagedBean().getScQtCheckSt2techProposal()) {
+			this.getManagedBean().setScQtCheckSt2techProposal(
+					new ArrayList<ScQtCheckList>());
+		}
+		if (null == this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+			this.getManagedBean().setScQtCheckSt2financeProposalList(
+					new ArrayList<ScQtCheckList>());
+		}
+		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(localCheckList
+				.getDocCategory())) {
+			if (this.getManagedBean().getIndex() == -1) {
+				if (null != this.getManagedBean().getScQtCheckSt2techProposal()
+						&& !this.getManagedBean().getScQtCheckSt2techProposal()
+								.isEmpty()) {
+					boolean techSpec = false;
+					for (int i = 0; i < this.getManagedBean()
+							.getScQtCheckSt2techProposal().size(); i++) {
+						ScQtCheckList qtCheckList = this.getManagedBean()
+								.getScQtCheckSt2techProposal().get(i);
+						if (qtCheckList.getTitle().equalsIgnoreCase(
+								localCheckList.getTitle())) {
+							techSpec = true;
+							this.getManagedBean().getScQtCheckSt2techProposal()
+									.remove(i);
+							this.getManagedBean().getScQtCheckSt2techProposal()
+									.add(localCheckList);
+							// Collections.sort(finanicialCheckLists);
+						}
+					}
+					if (!techSpec) {
+						this.getManagedBean().getScQtCheckSt2techProposal()
+								.add(localCheckList);
+
+					}
+				} else {
+					this.getManagedBean().getScQtCheckSt2techProposal()
+							.add(localCheckList);
+				}
+				// Collections.sort(this.getManagedBean()
+				// .getScQtCheckSt2techProposal());
+			} else {
+				this.getManagedBean().getScQtCheckSt2techProposal()
+						.remove(this.getManagedBean().getIndex());
+				this.getManagedBean().getScQtCheckSt2techProposal()
+						.add(this.getManagedBean().getIndex(), localCheckList);
+			}
+		} else {
+			this.getManagedBean().getScQtCheckSt2financeProposalList()
+					.remove(this.getManagedBean().getIndex());
+			this.getManagedBean().getScQtCheckSt2financeProposalList()
+					.add(this.getManagedBean().getIndex(), localCheckList);
+		}
 
 	}
 
@@ -11961,8 +12014,40 @@ public class SpecificationBackingBean extends
 				if (SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(checkList.getDocCategory())) {
 					if (this.getManagedBean().getIndex() == -1) {
-						this.getManagedBean().getScQtCheckSt2techProposal()
-								.add(checkList);
+
+						if (null != this.getManagedBean()
+								.getScQtCheckSt2techProposal()
+								&& !this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.isEmpty()) {
+							boolean techSpec = false;
+							for (int i = 0; i < this.getManagedBean()
+									.getScQtCheckSt2techProposal().size(); i++) {
+								ScQtCheckList qtCheckList = this
+										.getManagedBean()
+										.getScQtCheckSt2techProposal().get(i);
+								if (qtCheckList.getTitle().equalsIgnoreCase(
+										checkList.getTitle())) {
+									techSpec = true;
+									this.getManagedBean()
+											.getScQtCheckSt2techProposal()
+											.remove(i);
+									this.getManagedBean()
+											.getScQtCheckSt2techProposal()
+											.add(checkList);
+									// Collections.sort(finanicialCheckLists);
+								}
+							}
+							if (!techSpec) {
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.add(checkList);
+
+							}
+						} else {
+							this.getManagedBean().getScQtCheckSt2techProposal()
+									.add(checkList);
+						}
 						// Collections.sort(this.getManagedBean()
 						// .getScQtCheckSt2techProposal());
 					} else {
