@@ -34,7 +34,7 @@
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
-							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" 
+							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" maxlength="255"
 								value="#{meetingDtl.meetingLocation}">
 								<p:ajax partialSubmit="true" process="@this" update="@this"/>
 							</p:inputTextarea>

@@ -73,7 +73,7 @@
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.location']}">
-									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" cols="100" 
+									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" cols="100" maxlength="255"
 										label="#{lbl['lbl.sc.location']}" required="true">
 										<p:ajax process="@this" partialSubmit="true"
 												update="@this,mtgLoc" />
