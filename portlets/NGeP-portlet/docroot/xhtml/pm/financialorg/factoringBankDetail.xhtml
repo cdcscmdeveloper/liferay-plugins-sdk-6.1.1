@@ -6,7 +6,7 @@
 
 	<p:panel>
 		<p:dataTable id="financialaccid" var="financialacc"
-			value="#{financialOrgBackingBean.managedBean.pmFinancialAcc}"
+			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialAcc}">
 
@@ -25,7 +25,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="finorgLs"
-						value="#{financialOrgBackingBean.managedBean.pmFinancialOrg}"
+						value="#{financialOrgBackingBean.getPaymentBankList()}"
 						itemLabel="#{finorgLs.finOrgName}"
 						itemValue="#{finorgLs.financialOrgId}" />
 

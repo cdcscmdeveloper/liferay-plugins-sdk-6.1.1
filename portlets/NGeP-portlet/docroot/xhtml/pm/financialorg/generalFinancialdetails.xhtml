@@ -41,10 +41,8 @@
 						required="#{!empty param['disableValidation']}" style="width: 276px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems var="counLs"
-							value="#{financialOrgBackingBean.managedBean.countryList}"
-							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
-
+						<f:selectItems value="#{financialOrgBackingBean.getCountryList()}"
+							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />
 					</p:selectOneMenu></td>
 				<td><p:message id="countryMsg" for="country" display="icon" /></td>
 			</tr>
