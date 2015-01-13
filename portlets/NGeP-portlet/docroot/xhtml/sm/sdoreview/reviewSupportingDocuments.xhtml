@@ -91,8 +91,13 @@
 			height="300" width="auto">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table>
-				<tr>
-					<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+				<tr>				
+					<td>
+			           <p:outputLabel style="float:left;">
+				       <span style="color:red; font-size:12px;">*</span> #{lbl['lbl.sm.supportingdoc.subject']}
+			           </p:outputLabel>			     
+			        </td>
+					
 				</tr>
 				<tr>
 					<td><p:inputText size="50" id="inquirySubId" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquirySubject}" maxlength="50" /></td>
