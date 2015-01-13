@@ -88,8 +88,6 @@ public class SmDeleteCategoryCodeBackingBean extends
 		//
 		// }
 
-		
-
 		return retView;
 	}
 
@@ -212,7 +210,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 					selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 					selCat.setCancelledDate(new Date());
 				}
-
+				this.getManagedBean().getSmAppl().setQuestionnaire(false);
 				updateSmAppl();
 				assignActiveCategoryList();
 				FacesContext
