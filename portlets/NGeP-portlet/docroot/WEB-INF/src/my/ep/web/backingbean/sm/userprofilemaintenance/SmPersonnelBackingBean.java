@@ -71,10 +71,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.service.UserLocalServiceUtil;
-
 @ManagedBean(name = "smPersonnelBackingBean")
 @RequestScoped
 public class SmPersonnelBackingBean extends
