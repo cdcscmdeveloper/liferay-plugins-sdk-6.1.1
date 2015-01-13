@@ -218,18 +218,9 @@ public class FinancialOrgBackingBean extends
 
 		for (PmFinancialSvc financialSvc : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
-//			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase()) {
-//				// getManagedBean().getServiceTypes().add(financialSvc.getServiceTypeCode().getParameterCode());
-//				// getManagedBean().setServiceType(financialSvc.getServiceTypeCode().getParameterCode());
-//			}
-//			if (parameterResDTO.getPmParameter().getParameterCode().toString().trim().contains(ParameterConst.BANK_SERVICES_PAYMENT_BANK)) {
-//				System.out.println("inside payment banking");
-//				getManagedBean().setServiceType("PB");
-//			}
 			if(this.getManagedBean().getServiceTypes()== null){
 				this.getManagedBean().setServiceTypes(new ArrayList<String>());			   
 			}
-//			 getManagedBean().setServiceType(financialSvc.getServiceTypeCode().getParameterCode());
 			this.getManagedBean().getServiceTypes().add(pmParameter.getParameterCode());
 			 
 			 // disable/enable status update 
@@ -284,6 +275,36 @@ public class FinancialOrgBackingBean extends
 			this.getManagedBean().getFinancialOrg().setPmAddressTypes(finAddressTypes);
 	
 		}
+		
+		for(PmFinancialBranch pmFinancialBranch:this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()){
+			System.out.println("branch....");
+			for(PmAddressType pmAddressType: pmFinancialBranch.getPmAddressTypes()){
+				if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
+						&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
+					System.out.println(pmAddressType.getAddressTypeId());
+					if(pmAddressType.getPmAddress()!=null){
+						System.out.println(pmAddressType.getPmAddress().getAddressId());
+						
+						if(pmAddressType.getPmAddress().getPmState()!=null){
+							System.out.println("State " +pmAddressType.getPmAddress().getPmState().getStateId());
+						}else{
+							System.out.println("State null");
+						}
+						
+						if(pmAddressType.getPmAddress().getPmDistrict()!=null){
+							System.out.println("District " +pmAddressType.getPmAddress().getPmDistrict().getDistrictId());
+						}else{
+							System.out.println("District null");
+						}
+						
+					}else{
+						System.out.println("null");
+					}
+					
+				}
+			
+			}
+		}
 
 	}
 
@@ -303,9 +324,7 @@ public class FinancialOrgBackingBean extends
 	 */
 	public List<PmState> getStateList(Long countryId) {
 		log.info("getStateList");
-		List<PmState> stateList = PmCommonUtil.retrievePmStateList(countryId);
-//		this.retrieveStateTypeMap(stateList);
-		return  stateList;
+		return  PmCommonUtil.retrievePmStateList(countryId);
 	}
 	
 	/**
@@ -435,6 +454,7 @@ public class FinancialOrgBackingBean extends
 	public void retrievePmState(PmState pmState){
 		log.info("retrievePmState");
 		if(pmState!=null && pmState.getStateId()!=null){
+			System.out.println("pmState.getStateId() " + pmState.getStateId());
 			PmState tempState =  PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
 			pmState.setStateCode(tempState.getStateCode());
 		}else{
@@ -810,7 +830,7 @@ public class FinancialOrgBackingBean extends
 			validateFinancialAccount(); // Factoring Bank Det
 			validateBranch(); // Branch
 			
-//			updateMainAddress();
+			updateMainAddress();
 			
 			
 			PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
@@ -1177,13 +1197,21 @@ public class FinancialOrgBackingBean extends
 					hadAddress = true;
 					this.getManagedBean().setBranchAddress(pmAddressType.getPmAddress());
 					System.out.println(pmAddressType.getAddressTypeId());
-					if(pmAddressType.getPmAddress()!=null){
-						System.out.println(pmAddressType.getPmAddress().getAddressId());
-						if(pmAddressType.getPmAddress().getPmDistrict()!=null){
-							System.out.println("District " +pmAddressType.getPmAddress().getPmDistrict().getDistrictId());
+					if(this.getManagedBean().getBranchAddress()!=null){
+						System.out.println(this.getManagedBean().getBranchAddress().getAddressId());
+						
+						if(this.getManagedBean().getBranchAddress().getPmState()!=null){
+							System.out.println("State " +this.getManagedBean().getBranchAddress().getPmState().getStateId());
+						}else{
+							System.out.println("State null");
+						}
+						
+						if(this.getManagedBean().getBranchAddress().getPmDistrict()!=null){
+							System.out.println("District " +this.getManagedBean().getBranchAddress().getPmDistrict().getDistrictId());
 						}else{
 							System.out.println("District null");
 						}
+						
 					}else{
 						System.out.println("null");
 					}
