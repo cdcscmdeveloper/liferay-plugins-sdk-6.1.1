@@ -593,10 +593,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	  getManagedBean().setConfirmMeeting(true);
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 			       } 
-			    	//  if(getManagedBean().isSignOffDecision()){
-			    //	  getManagedBean().setConfirmMeeting(true);
+			      if(getManagedBean().isSignOffDecision()){
+			    	  getManagedBean().setConfirmMeeting(true);
 		    	      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
-		       //  }
+		         }
 		   
 		     } else if(this.getManagedBean().getAckFA().equalsIgnoreCase("Ack")){
 			      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
@@ -882,6 +882,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    			                          } if (ctMeeting.getMeetingStatusId() == null) {
 										    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 												    		throw new EpException(MessageConst.ERROR_100022, new String[]{"Meeting Status"});
+										    		
+			    			                          } if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+			    			                        	  if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_PENDING)) {
+			    			                        		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+													    	  throw new EpException("Meeting status can not be pending. Please select approved or cancel meeting");
+			    			                        	  }
 										    		  }
 			    		                      }
 			    	               }
