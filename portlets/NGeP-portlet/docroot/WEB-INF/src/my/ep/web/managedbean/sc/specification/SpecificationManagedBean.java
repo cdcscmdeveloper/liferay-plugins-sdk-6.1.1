@@ -54,7 +54,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
-/**	
+/**
  * @author ACER
  * 
  */
@@ -326,6 +326,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	private List<ScQtLocCriteria> existingSupplierLocationList;
 	private boolean isSupplierValidation;
+	private int technicalSpecCount;
+	private int financialSpecCount;
 
 	/**
 	 * @return the specComplete
@@ -2652,8 +2654,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.ctZoneSuppliers = ctZoneSuppliers;
 	}
 
-
-
 	public TreeNode getPanelZoneSelect() {
 		return panelZoneSelect;
 	}
@@ -3231,7 +3231,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param markDeletedTechChecklist the markDeletedTechChecklist to set
+	 * @param markDeletedTechChecklist
+	 *            the markDeletedTechChecklist to set
 	 */
 	public void setMarkDeletedTechChecklist(
 			List<ScQtCheckList> markDeletedTechChecklist) {
@@ -3246,7 +3247,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param markDeletedFinChecklist the markDeletedFinChecklist to set
+	 * @param markDeletedFinChecklist
+	 *            the markDeletedFinChecklist to set
 	 */
 	public void setMarkDeletedFinChecklist(
 			List<ScQtCheckList> markDeletedFinChecklist) {
@@ -3261,7 +3263,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param existingSupplierLocationList the existingSupplierLocationList to set
+	 * @param existingSupplierLocationList
+	 *            the existingSupplierLocationList to set
 	 */
 	public void setExistingSupplierLocationList(
 			List<ScQtLocCriteria> existingSupplierLocationList) {
@@ -3276,12 +3279,41 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isSupplierValidation the isSupplierValidation to set
+	 * @param isSupplierValidation
+	 *            the isSupplierValidation to set
 	 */
 	public void setSupplierValidation(boolean isSupplierValidation) {
 		this.isSupplierValidation = isSupplierValidation;
 	}
 
-	
+	/**
+	 * @return the technicalSpecCount
+	 */
+	public int getTechnicalSpecCount() {
+		return technicalSpecCount;
+	}
+
+	/**
+	 * @param technicalSpecCount
+	 *            the technicalSpecCount to set
+	 */
+	public void setTechnicalSpecCount(int technicalSpecCount) {
+		this.technicalSpecCount = technicalSpecCount;
+	}
+
+	/**
+	 * @return the financialSpecCount
+	 */
+	public int getFinancialSpecCount() {
+		return financialSpecCount;
+	}
+
+	/**
+	 * @param financialSpecCount
+	 *            the financialSpecCount to set
+	 */
+	public void setFinancialSpecCount(int financialSpecCount) {
+		this.financialSpecCount = financialSpecCount;
+	}
 
 }
