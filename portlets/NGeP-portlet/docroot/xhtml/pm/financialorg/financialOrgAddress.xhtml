@@ -66,7 +66,7 @@
 				<td width="220">
 					<p:selectOneMenu id="facDivision" 
 						disabled="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
-						required="#{!empty param['disableValidation'] and financialOrgBackingBean.managedBean.selectedPmFinancialBranch!=null
+						required="#{!empty param['disableValidation']
 							and financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
 						styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
