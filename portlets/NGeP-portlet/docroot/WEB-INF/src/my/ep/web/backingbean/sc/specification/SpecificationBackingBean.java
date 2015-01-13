@@ -1123,6 +1123,7 @@ public class SpecificationBackingBean extends
 			}
 
 		}
+
 		if (count == 0) {
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
 					.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
@@ -1138,7 +1139,7 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-
+		this.getManagedBean().setTechnicalSpecCount(count);
 	}
 
 	public void isTemplateSpecStatus(List<ScQtCheckList> techCheckList,
@@ -1213,6 +1214,13 @@ public class SpecificationBackingBean extends
 		if (count == 0) {
 			this.getManagedBean().setActiveIndex(2);
 			throw new EpException(MessageConst.ERROR_760215);
+
+		}
+		this.getManagedBean().setFinancialSpecCount(count);
+		if (this.getManagedBean().getTechnicalSpecCount() != this
+				.getManagedBean().getFinancialSpecCount()) {
+			this.getManagedBean().setActiveIndex(2);
+			throw new EpException(MessageConst.ERROR_760228);
 
 		}
 
@@ -1761,6 +1769,9 @@ public class SpecificationBackingBean extends
 		retriveFulfilmentDtls();
 		retriveDeliveryDetails();
 		retriveCommitteeEndorsment();
+		checktemplateSpecStatus(this.getManagedBean().getScQt());
+		checkFinancialSpecStatus(this.getManagedBean().getScQt());
+
 		// this.getManagedBean().setActiveIndex(0);
 
 	}
@@ -11439,7 +11450,7 @@ public class SpecificationBackingBean extends
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			loadPrepareSpecCommitteeDetails(scQt.getQtId(),
 					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
-			
+
 		}
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 
