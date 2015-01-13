@@ -43,8 +43,9 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.accountstatus']}" styleClass="outputLabel-view-label"/></td>
 						<td>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{smPersonnelBackingBean.managedBean.accountStatus eq 1}"/>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.deactivate']}" rendered="#{smPersonnelBackingBean.managedBean.accountStatus eq 0}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 1}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.deactivate']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 9}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 8}"/>
 						</td>
 					</tr>
 					<tr>
