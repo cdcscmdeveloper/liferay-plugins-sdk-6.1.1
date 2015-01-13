@@ -94,9 +94,9 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column>
-					<p:commandLink
+					<p:commandLink style="white-space : normal;"
 						value="#{bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
-						action="#{onlineBiddingBB.itemDetialsPopupAction(bidPriceItem)}"
+						action="#{onlineBiddingBB.itemDetialsPopupAction(bidPriceItem)}" update=":form:onlineBiddingItemDetails"
 						oncomplete="onlineBiddingItemDetails.show()" />
 				</p:column>
 				<p:column>
@@ -148,7 +148,7 @@
 				</p:column>
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-					<p:spinner size="10" value="#{bidPriceItem.newPrice}" min="0"
+					<p:spinner size="8" value="#{bidPriceItem.newPrice}" min="0"
 						id="spinner"
 						max="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt * 10}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
@@ -206,7 +206,7 @@
 						</p:column>
 						<p:column>
 							<f:facet name="footer">
-								<h:outputText value="#{onlineBiddingBB.itemStartPriceTotal}" />
+								<h:outputText style="float : right" value="#{onlineBiddingBB.itemStartPriceTotal}" />
 							</f:facet>
 						</p:column>
 						<p:column
@@ -219,7 +219,7 @@
 						<p:column
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId ne onlineBiddingBB.pendingBidding}">
 							<f:facet name="footer">
-								<h:outputText id="itemLastBidPriceTotal" styleClass="calcTotal"
+								<h:outputText style="float : right" id="itemLastBidPriceTotal" styleClass="calcTotal"
 									value="#{onlineBiddingBB.itemLastBidPriceTotal}" />
 							</f:facet>
 						</p:column>

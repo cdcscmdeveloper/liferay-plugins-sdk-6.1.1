@@ -16,12 +16,13 @@
 
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.item.description']}" /></TD>
-			<TD><p:inputTextarea cols="70" rows="5"
+			<TD><p:inputTextarea cols="80" rows="5"
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemDesc}"
 					disabled="true" /></TD>
 		</tr>
 
 		<tr>
+		<p:spacer height="4"></p:spacer>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
 			<TD><p:inputText
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
@@ -30,7 +31,7 @@
 
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
-			<TD><p:inputText style="float : right"
+			<TD><p:inputText style="text-align : right;"
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.qty}"
 					size="20" disabled="true">
 					<f:convertNumber
@@ -40,7 +41,10 @@
 
 	</table>
 
-	<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back"
-		onclick="itemDetails.hide();" />
+	<div style="width : 100%; align : right;" >
+
+		<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back" style="float : right" partialSubmit="true" process="@this"
+			onclick="itemDetails.hide();" />
+	</div>
 
 </ui:composition>
