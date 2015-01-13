@@ -907,7 +907,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void preRenderView() {
-
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -1018,6 +1017,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						getManagedBean().setOrgProfileIds(getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
 					}
 				}
+			}
+			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				updateDeliveryDate();
 			}
 		}else if(contractId != null){
 			renewSesionObject();
