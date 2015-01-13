@@ -1609,16 +1609,34 @@ public class QTDetailBackingBean extends
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(taskName)) {
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								ICommitteSO.class);
-				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setToken(ctxToken);
-				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(res.getPojo());
-				committeReqDTO.setOutcome(outcome);
-				committeReqDTO.setScQt(qt);
-				committeResDto = committeSO.updateFinalizateSecrataryTask(committeReqDTO);
+				
+				// TODO - temporary for FC.
+				if (res.getPojo() instanceof SCEvaluationDataType) {
+					if ("FC".equals(((SCEvaluationDataType)res.getPojo()).getCommitteeType())) {
+						ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+										ICommitteSO.class);
+						CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+						committeReqDTO.setToken(ctxToken);
+						committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+						committeReqDTO.setPayLoad(res.getPojo());
+						committeReqDTO.setOutcome(outcome);
+						committeReqDTO.setScQt(qt);
+						committeResDto = committeSO.updateFinalizateSecrataryTask(committeReqDTO);
+					} else {
+						ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+										ICommitteSO.class);
+						CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+						committeReqDTO.setToken(ctxToken);
+						committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+						committeReqDTO.setPayLoad(res.getPojo());
+						committeReqDTO.setOutcome(outcome);
+						committeReqDTO.setScQt(qt);
+						committeResDto = committeSO.updateBPMAction(committeReqDTO);
+					}
+				}
+				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
