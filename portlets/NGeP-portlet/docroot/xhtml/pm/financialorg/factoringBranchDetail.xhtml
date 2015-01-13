@@ -5,6 +5,8 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:outputPanel id="financialBranchDtl"  rendered="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch!=null}" >
+		<br/>
+		<br/>
 		<p:dataTable id="financialBranchAccId" var="financialacc"
 			value="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"
@@ -19,18 +21,18 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.paymentbankname']}" />
 				</f:facet>
-				<p:selectOneMenu value="#{financialacc.pmPaymentBankOrg.financialOrgId}" id="finorgn"
+				<p:selectOneMenu value="#{financialacc.pmPaymentBankOrg.financialOrgId}" id="somBranchPB"
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
 					required="true" style="width: 275px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="finorgLs"
-						value="#{financialOrgBackingBean.managedBean.pmFinancialOrg}"
+						value="#{financialOrgBackingBean.getPaymentBankList()}"
 						itemLabel="#{finorgLs.finOrgName}"
 						itemValue="#{finorgLs.financialOrgId}" />
-
+					<p:ajax event="change" />
 				</p:selectOneMenu>
-				<p:message id="finorgnMsg" for="finorgn" display="icon" />
+				<p:message id="somBranchPBMsg" for="somBranchPB" display="icon" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -38,7 +40,9 @@
 					<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
 				</f:facet>
 				<p:inputText id="finActNo" value="#{financialacc.accountNo}"  label="#{lbl['lbl.pm.financialorg.acnumber']}" required="true"
-					size="15" styleClass="ppDisplayTextS" maxlength="20"  />
+					size="15" styleClass="ppDisplayTextS" maxlength="20">
+					<p:ajax event="change" />
+				</p:inputText>
 					<p:message id="finActNoMsg" for="finActNo" display="icon" />
 			</p:column>
 			<p:column>
@@ -60,7 +64,7 @@
 					showOn="button" size="10" mindate="#{financialacc.effDate}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-
+					<p:ajax event="dateSelect" />
 				</p:calendar>
 
 			</p:column>
