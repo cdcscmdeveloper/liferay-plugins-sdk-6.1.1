@@ -1,0 +1,44 @@
+<html>
+<head>
+<style>
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:element(footer)
+	
+}
+
+}
+.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+</style>
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td>
+			<p>1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA</p>
+			<ol type="1"> 1.1 Perkara <br/> $title</ol>
+			<ol>1.2 Tempoh Perjanjian / Tempoh Penyiapan <br/> $fulfilmentType </ol>
+			<ol>1.3	Jabatan Pengguna <br/> $ptj </ol>
+			<ol>1.4	Bilangan Pembekal Dipanggil Untuk Rundingan: <br/> </ol>
+			<ol>1.5	Bilangan Pembekal Yang Mengesahkan Surat Niat: <br/> </ol>
+		</td>
+	</tr>
+</table>
+</body>
+</html>
