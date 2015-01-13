@@ -5623,6 +5623,7 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
+					StringUtils.replace(event.getFile().getFileName(), " ", "-");
 					doc.getSmApplDocFiles().get(0)
 							.setFileName(event.getFile().getFileName());
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
@@ -5644,6 +5645,7 @@ public class SmApplicationBackingBean extends
 					.contains(getManagedBean().getSupportDoc())) {
 				log.info("******* Contains selected file ****");
 				SmApplSupportDoc doc = getManagedBean().getSupportDoc();
+				StringUtils.replace(event.getFile().getFileName(), " ", "-");
 				doc.getSmApplDocFiles().get(0)
 						.setFileName(event.getFile().getFileName());
 				getManagedBean()
@@ -5674,6 +5676,7 @@ public class SmApplicationBackingBean extends
 		if (event.getFile() != null) {
 			log.info("***** File attached *******"
 					+ event.getFile().getFileName());
+			StringUtils.replace(event.getFile().getFileName(), " ", "-");
 			getManagedBean().getCancellationAttachment().setFileName(
 					event.getFile().getFileName());
 
