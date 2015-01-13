@@ -1451,256 +1451,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}  
 		
 		generateJadualHarga(filePath,productJadualHargaList,serviceJadualHargaList);
-		
-//		try {
-//			WritableWorkbook itemExcel = Workbook.createWorkbook(file);
-//			WritableSheet productSheet = null;
-//			WritableSheet ServiceSheet = null;
-//			WritableFont timesfontbold = new WritableFont(WritableFont.TIMES, 12, WritableFont.BOLD);
-//			WritableFont timesfont = new WritableFont(WritableFont.TIMES, 12);
-//			WritableCellFormat formatLeftBold = new WritableCellFormat(timesfontbold);
-//			WritableCellFormat formatRightBold = new WritableCellFormat(timesfontbold);
-//			WritableCellFormat formatLeft = new WritableCellFormat(timesfont);
-//			WritableCellFormat formatRight = new WritableCellFormat(timesfont);
-//			
-//			formatLeft.setWrap(true);
-//			formatLeft.setAlignment(Alignment.LEFT);
-//			formatRight.setWrap(true);
-//			formatLeft.setAlignment(Alignment.RIGHT);
-//			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-//			
-//			if(productList.size() > 0){
-//				productSheet = itemExcel.createSheet("ProductSheet", 1);
-//				int indexRow=0, indexCol=0;
-//				productSheet.setColumnView(indexCol, 10);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "Zone", formatLeftBold));
-//				productSheet.setColumnView(indexCol, 35);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "Item", formatLeftBold));
-//				productSheet.setColumnView(indexCol, 35);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "Specification", formatLeftBold));
-//				productSheet.setColumnView(indexCol, 10);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "UOM", formatLeftBold));
-//				productSheet.setColumnView(indexCol, 10);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "Quantity", formatRightBold));
-//				productSheet.setColumnView(indexCol, 10);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "From Qty.", formatRightBold));
-//				productSheet.setColumnView(indexCol, 10);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "To Qty.", formatRightBold));
-//				productSheet.setColumnView(indexCol, 15);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "Sub Sequence", formatRightBold));
-//				//Label header8 = new Label(indexCol++, indexRow, "Delivery Term");
-//				productSheet.setColumnView(indexCol, 16);
-//				productSheet.addCell(new Label(indexCol++, indexRow, "Unit Price(RM)", formatRightBold));
-//				productSheet.setColumnView(indexCol, 20);
-//				productSheet.addCell( new Label(indexCol++, indexRow, "Total Amount(RM)", formatRightBold));
-//				productSheet.setColumnView(indexCol, 15);
-//				productSheet.addCell( new Label(indexCol++, indexRow, "Effective Date", formatLeftBold));
-//				productSheet.setColumnView(indexCol, 15);
-//				productSheet.addCell( new Label(indexCol++, indexRow, "Expire Date", formatLeftBold));
-//				
-//				for(CtItemPrice price : productList){
-//					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-//					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-//					reqDTO.setContractItemId(price.getCtContractItem().getContractItemId());
-//					reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
-//					ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
-//					CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
-//					
-//					indexRow++; indexCol=0;
-//					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), formatRight));
-//					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getItemName(), formatRight));
-//					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion() ? 
-//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
-//					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getUom().getUomName(), formatRight));
-//					productSheet.addCell(new Label(indexCol++, indexRow, ctItemMaxQty.getMaxQuantity()+"", formatLeft));
-//					
-//					productSheet.addCell(new Label(indexCol++, indexRow, price.getFromQty() == null ? "N/A": price.getFromQty() + "", formatLeft));
-//					productSheet.addCell(new Label(indexCol++, indexRow, price.getToQty() == null ? "N/A" : price.getToQty() + "", formatLeft));
-//					productSheet.addCell(new Label(indexCol++, indexRow, price.getSubSequence() == null ? "N/A" : price.getSubSequence() + "", formatLeft));
-//					/*String delveryTerm = "";
-//					for(CtContractZone zone : item.getCtContractVer().getCtContractZones()){
-//						delveryTerm = delveryTerm + zone.getDeliveryTerm() + " ";
-//					}
-//					sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
-//					productSheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().longValue()) + "", formatLeft));
-//					if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
-//						productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity()).toString(), formatLeft));
-//					} else {
-//						productSheet.addCell(new Label(indexCol++, indexRow, "N/A"));
-//					}
-//					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getEffDate()), formatRight));
-//					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getExpDate()), formatRight));
-//				}
-//			}
-//			
-//			if(serviceList.size() > 0){
-//				ServiceSheet = itemExcel.createSheet("ServiceSheet", 2);
-//				int indexRow2=0, indexCol2=0;
-//				ServiceSheet.setColumnView(indexCol2, 25);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Item", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 25);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Specification", formatLeftBold));
-//				//ServiceSheet.setColumnView(indexCol2, 10);
-//				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Fulfilment Type", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 10);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "UOM", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Frequency per UOM", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per day", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per month", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Duration (Month)", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 10);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Quantity", formatLeftBold));
-//				//ServiceSheet.setColumnView(indexCol2, 10);
-//				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Estimated Value (RM)", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Unit Price (RM)", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Total Amount (RM)", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Effective Date", formatLeftBold));
-//				ServiceSheet.setColumnView(indexCol2, 15);
-//				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Expire Date", formatLeftBold));
-//				
-//				for(CtItemPrice price : serviceList){
-//					indexRow2++; indexCol2=0;
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getItemName(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
-//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
-//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
-//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
-//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
-//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString(), formatLeft));
-//								ServiceSheet.addCell(new Label(indexCol2++, indexRow2,  price.getUnitPrice().toString(), formatLeft));
-//						//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().toString(), formatRight));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString(), formatLeft));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getEffDate()), formatLeft));
-//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getExpDate()), formatLeft));
-//				}
-//			}
-//			
-//			itemExcel.write();
-//			itemExcel.close();
-//		} catch (IOException | WriteException e) {
-//			e.printStackTrace();
-//		}
-//		log.debug("Exit formJadualHargaExcel()");
+
 	}
-	
-//	private String getContent(String content, String parameterCode) {
-//		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-//		Map<String, String> valuesMap = new HashMap<String, String>();
-//		StringBuffer strBuff = new StringBuffer();
-//		
-//		if(ContractConst.TEMPLATE_SURAT_SETUJU_TERIMA.equalsIgnoreCase(parameterCode)) {
-//			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-//			AddressReqDTO addressReqDTO = new AddressReqDTO();
-//			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-//			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-//			AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
-//			PmAddressType pmAddressType = null;
-//			if(addressResDTO.getAddressTypeList().size()>0) {
-//				pmAddressType = addressResDTO.getAddressTypeList().get(0);
-//			}
-//			
-//			if(getManagedBean().getCtContract().isBondReq()){
-//				strBuff.append("*3.1 mendepositkandenganKerajaan, suatu Bon PelaksanaandalambentukJaminan Bank/Jaminan Syarikat Kewangan/ JaminanInsurans " +
-//						"yang takbolehbataldaripadasebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskandandidaftarkan di Malaysia " +
-//						"denganjumlahsebanyak RM ${PERF_BOND_AMOUNT} yang merupakan${BOND_AMOUNT_IN_TEXT}peratus (${PERCENTAGE}%) darijumlahkontrakdantempohsahlakusehingga" +
-//						"${NEW_BOND_DATE}. Dokumen bon PelaksanaantersebuthendaklahdikemukakankepadaKerajaandalamtempoh${BOND_SUBMISSION_PERIOD}" +
-//						"haridaritarikhsuratinidisetujuterima;<br/><br/>");
-//				strBuff.append("*3.2 SekiranyapembekalmendepositkankepadaKerajaanPolisiInsurans. Pembekalhendaklahmengemukakanresit-resit " +
-//						"premium yang telahdibayarbagitujuanpemeriksaan.<br/><br/>");
-//				strBuff.append("*3.4 Apa-apakegagalandalammematuhikehendak-kehendakpara 3 inidalamtempohmasa yang dinyatakan, " +
-//						"kecualijikadiabaikandengannyataolehKerajaan, akanmenyebabkanpenerimaan LOA** " +
-//						"initerbataldanselepasituKerajaantidaklahdenganapa-apacarajugabertanggungjawabkepadatuan.<br/><br/>");
-//			}
-//			
-//			valuesMap.put("PERFORMANCE_BOND", strBuff.toString());
-//			valuesMap.put("FILE_REF_NO", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
-//			valuesMap.put("LOA_NO", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo());
-//			valuesMap.put("LOA_SUBMITED_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckDueDate()));
-//			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-//			
-//			if(pmAddressType!=null) {
-//				valuesMap.put("ADDRESS", AddressUtils.getFullAddress(pmAddressType.getPmAddress()));
-//			}
-//			else {
-//				valuesMap.put("ADDRESS", "");	
-//			}			
-//			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getContractName());
-//			valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean().getContractVer().getContractPhysicalNo());
-//			valuesMap.put("AMENDMENT_EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-//			valuesMap.put("PERF_BOND_AMOUNT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-//			valuesMap.put("BOND_AMOUNT_IN_TEXT", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-//			valuesMap.put("PERCENTAGE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondPercentage() + "");
-//			valuesMap.put("NEW_BOND_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-//			valuesMap.put("BOND_SUBMISSION_PERIOD", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getMtoDuration() + "");
-//			//valuesMap.put("NEW_CONTRACT_EFFECTIVE_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-//			valuesMap.put("CONTRACT_SIGNER_NAME", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getUserName());
-//			valuesMap.put("CONTRACT_SIGNER_POSITION", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin().getDesignation());
-//
-//			StrSubstitutor sub = new StrSubstitutor(valuesMap);
-//			content = sub.replace(content);
-//		} 
-//		else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
-//			valuesMap.put("FILE_NO", getManagedBean().getCtContract().getQuotationTender().getFileNo());
-//			valuesMap.put("SOURCING_NO", getManagedBean().getCtContract().getLoa().getFileExtNo());
-//			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
-//			valuesMap.put("SUCCESSFUL_SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
-//			valuesMap.put("CONTRACT_VALUE",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
-//			double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
-//			valuesMap.put("NEW_CONTRACT_VALUE", contractValue + "");
-//			IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-//			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-//			parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
-//			valuesMap.put("FULFILLMENT_TYPE", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
-//			valuesMap.put("REFER_ATTACHMENT", "Refer Attachment");
-//			for(CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()){
-//				if(deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)){
-//					valuesMap.put("DEDUCTION_AMOUNT", deduction.getAmount()+"");
-//				}
-//				else{
-//					valuesMap.put("DEDUCTION_AMOUNT", "");
-//				}
-//			}
-//			valuesMap.put("MONTHS", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
-//			valuesMap.put("EFF_START_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-//			valuesMap.put("EFF_END_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-//			if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
-//				valuesMap.put("AMEND_EFF_EXP_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
-//						+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
-//			}
-//			else {
-//				valuesMap.put("AMEND_EFF_EXP_DATE", "");
-//			}
-//			valuesMap.put("EFF_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
-//			valuesMap.put("BOND_VALUE", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
-//			
-//			StrSubstitutor sub = new StrSubstitutor(valuesMap);
-//			content = sub.replace(content);
-//		}
-//		else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)) {
-//			valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-//			valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
-//			valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
-//			valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
-//			valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-//			valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-//			StrSubstitutor sub = new StrSubstitutor(valuesMap);
-//			content = sub.replace(content);
-//		}
-//		return content;
-//	}
+
 	
 	private String getContent(String docDefinitionKey) {
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -1789,31 +1542,31 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				String bondAmountWord = null; 
 				String expiryPeriod = null;
 				int type = 0;
-				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
-				if(scLoa != null){
-					type = 1;
-					supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
-					sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
-					bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
-					expiryPeriod = scLoa.getBondResDueDate() != null ? dateSDF.format(scLoa.getBondResDueDate()) : " ";
-					bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt())) : " ";
-					
-				}else{
-					type = 0;
-					supplierName ="Supplier Name";
-					sourcingTitle ="Sourcing Title";
-					bondAmount ="Bond Amount";
-					expiryPeriod = "Expiry Period";
-					bondAmountWord = "Bond Amount Word"; 
-				}
+//				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
+//				if(scLoa != null){
+//					type = 1;
+//					supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
+//					sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
+//					bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
+//					expiryPeriod = scLoa.getBondResDueDate() != null ? dateSDF.format(scLoa.getBondResDueDate()) : " ";
+//					bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt())) : " ";
+//					
+//				}else{
+//					type = 0;
+//					supplierName ="Supplier Name";
+//					sourcingTitle ="Sourcing Title";
+//					bondAmount ="Bond Amount";
+//					expiryPeriod = "Expiry Period";
+//					bondAmountWord = "Bond Amount Word"; 
+//				}
 				
 				context.put("type", type);
-				context.put("contractNo", contractNo);
-				context.put("supplierName", supplierName);
-				context.put("sourcingTitle", sourcingTitle);
-				context.put("bondAmount", bondAmount);
-				context.put("bondAmountWord", bondAmountWord);
-				context.put("expiryPeriod", expiryPeriod);
+				context.put("contractNo", ".......................");
+				context.put("supplierName", ".......................");
+				context.put("sourcingTitle", ".......................");
+				context.put("bondAmount", ".......................");
+				context.put("bondAmountWord", ".......................");
+				context.put("expiryPeriod", ".......................");
 				
 			}else if(ContractConst.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)){
 				FacesScopes fs = new FacesScopes();
@@ -3301,12 +3054,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				String	bondAmountWord = "Bond Amount Word"; 		
 				
 				context.put("type", type);
-				context.put("contractNo", contractNo);
-				context.put("supplierName", supplierName);
-				context.put("sourcingTitle", sourcingTitle);
-				context.put("bondAmount", bondAmount);
-				context.put("bondAmountWord", bondAmountWord);
-				context.put("expiryPeriod", expiryPeriod);		
+				context.put("contractNo", ".......................");
+				context.put("supplierName", ".......................");
+				context.put("sourcingTitle", ".......................");
+				context.put("bondAmount", ".......................");
+				context.put("bondAmountWord", ".......................");
+				context.put("expiryPeriod", ".......................");	
 			
 				DocumentGenerator.getInstance().generatePdfFromVelocity(
 						SourcingConstants.LOA_BOND_LETTER, context,
