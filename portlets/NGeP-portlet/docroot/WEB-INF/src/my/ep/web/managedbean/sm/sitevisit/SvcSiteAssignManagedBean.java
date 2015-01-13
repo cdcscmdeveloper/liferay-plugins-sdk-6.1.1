@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvTask;
@@ -33,7 +34,16 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private List<PmUser> selectedSVO;
 	private String currDate;
 	private SmRemark smRemark;
+	private String poRmrkToSvc;
 	
+
+	public String getPoRmrkToSvc() {
+		return poRmrkToSvc;
+	}
+
+	public void setPoRmrkToSvc(String poRmrkToSvc) {
+		this.poRmrkToSvc = poRmrkToSvc;
+	}
 
 	public SmSvTask getSmSvTask() {
 		return smSvTask;

@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
@@ -50,12 +52,22 @@ public class SvcSiteAssignBackingBean extends
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
 		
-		retrieveSVOList(resDTO.getSmSvTask().getSmAppl());
-		
+		retrieveSVOList(resDTO.getSmSvTask().getSmAppl());	
+		if(resDTO.getSmSvTask().getSmAppl().getSmApplSectionReviews() != null){
+			setPoRemarkToSVC(resDTO.getSmSvTask().getSmAppl().getSmApplSectionReviews());
+		}
 		this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
 		this.getManagedBean().setSmRemark(new SmRemark());
 	}
 	
+	public void setPoRemarkToSVC(List<SmApplSectionReview> secReviews){
+		for(SmApplSectionReview rev : secReviews){
+			if(rev.getRoleType() != null && rev.getRoleType().equalsIgnoreCase(
+					SupplierManagementConst.SECTION_REV_ROLE_PO)){
+				getManagedBean().setPoRmrkToSvc((rev.getSitevisitRemark()!=null) ? rev.getSitevisitRemark():"");
+			}
+		}
+	}
 	
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
