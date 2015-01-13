@@ -13,6 +13,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -39,6 +41,10 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.UserLocalServiceUtil;
+
 
 @ManagedBean(name="supplierUserActivationBackingBean")
 public class SupplierUserActivationBackingBean extends
@@ -50,6 +56,7 @@ public class SupplierUserActivationBackingBean extends
 	
 	private String password;
 	private String confirmPassword;
+	private String loginId;
 	
 		
 	public SupplierUserActivationBackingBean(){
@@ -59,6 +66,7 @@ public class SupplierUserActivationBackingBean extends
 	}
 
 	public void prerenderSupplierActivation() {
+		renewSesionObject();
 		log.info("****prerenderSupplierActivation - start******");
 		HttpServletRequest originalServletRequest = new FacesScopes().getOriginalServletRequest();
 		String personnelId = originalServletRequest.getParameter("pr");
@@ -162,6 +170,9 @@ public class SupplierUserActivationBackingBean extends
 				OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgReqDTO);
 				
 				if(orgResDTO.getPmOrgProfile() != null){
+					//check Liferay UserName
+					checkExistLiferayUsername(loginId);
+					
 					//create PmUser only
 					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
 					
@@ -198,7 +209,7 @@ public class SupplierUserActivationBackingBean extends
 //						reqDTO.setSmPersonnels(personnelList);
 					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-					
+					reqDTO.setLoginId(loginId);
 					reqDTO.setPassword(password);
 //					reqDTO.setConfirmPassword(confirmPassword);
 					System.out.println("Proceed to create user.............................");
@@ -218,6 +229,7 @@ public class SupplierUserActivationBackingBean extends
 
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
+							renewSesionObject();
 							return navigateToAck();
 
 						}catch(Exception ex){
@@ -225,12 +237,15 @@ public class SupplierUserActivationBackingBean extends
 						}
 					}
 				} else {
-					
 					if(password.equals(confirmPassword)) {
+						//check Liferay UserName
+						checkExistLiferayUsername(loginId);
+						
 						//Create PmOrgProfile and PmUser
 						SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();					
 						reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 						reqDTO.setPassword(password);
+						reqDTO.setLoginId(loginId);
 	//					reqDTO.setConfirmPassword(confirmPassword);
 						System.out.println("Proceed to create user.............................");
 						ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
@@ -241,6 +256,7 @@ public class SupplierUserActivationBackingBean extends
 							resDTO = reqSO.createPmProfile(reqDTO);
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
+							renewSesionObject();
 							return navigateToAck();
 							
 						}catch(Exception ex){
@@ -262,8 +278,9 @@ public class SupplierUserActivationBackingBean extends
 			log.info("Invalid Request.");
 			throw new EpException(MessageConst.ERROR_721032);
 		}
-		
+
 		return "/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml";
+	
 	}
 	
 	public void errorMsg(String errMsg){
@@ -289,6 +306,25 @@ public class SupplierUserActivationBackingBean extends
 		String url = server + SupplierManagementConst.LOGIN_URL;
 		return url;
 	}
+	
+	public String getCompanyId() {
+		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID);
+	}
+	
+	private void checkExistLiferayUsername(String userLoginId){
+		try {
+			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), userLoginId) != null) {
+				throw new EpException(MessageConst.ERROR_721015);
+			}
+			
+		} catch (NumberFormatException e) {
+			log.info(e.getMessage());
+		} catch (PortalException e) {
+			log.info(e.getMessage());
+		} catch (SystemException e) {
+			log.info(e.getMessage());
+		}
+	}
 
 	public String getTempPassword() {
 		return tempPassword;
@@ -313,5 +349,14 @@ public class SupplierUserActivationBackingBean extends
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
 	
+
 }
