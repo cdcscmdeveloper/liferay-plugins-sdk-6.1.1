@@ -32,6 +32,12 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<ac:gpkiPopup
+			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(gpkiBackingBean.pmDigiSign)}" />
+		<ac:spkiPopup
+			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(spkiBackingBean.pmDigiSign)}" />
 		<p:panel id="headerDetails">
 			<f:event listener="#{supplierBackingBean.preRenderView}"
 				type="preRenderView" />
@@ -42,28 +48,24 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 							immediate="true" icon="ui-icon-back"
-							oncomplete="window.history.back();" rendered="#{supplierBackingBean.managedBean.viewOnly}" /></td>
+							oncomplete="window.history.back();"
+							rendered="#{supplierBackingBean.managedBean.viewOnly}" /></td>
 					<td class="ppRightBtn"><ui:repeat var="outcome"
 							value="#{supplierBackingBean.managedBean.action}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(outcome)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}" ajax="false"
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form,@([id$=messages])"
 								styleClass="ui-button" process="@form"
 								icon="ui-icon-#{fn:toLowerCase(outcome)}"
-								action="#{supplierBackingBean.saveFactoringRequest(outcome)}"
-								rendered="#{outcome != 'ACKNOWLEDGE' and !supplierBackingBean.managedBean.viewOnly}" />
-
-							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-								icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form"
-								update="@form,@([id$=messages])"
-								actionListener="#{supplierBackingBean.validateFactoringRequest(outcome)}"
-								action="#{supplierBackingBean.disableUpdate}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
-								rendered="#{outcome == 'ACKNOWLEDGE'}" />
-						</ui:repeat> <ac:gpkiPopup
-							textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
-							postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(gpkiBackingBean.pmDigiSign)}" />
-					</td>
+								action="#{supplierBackingBean.factoringRequesttSignAction(outcome)}"
+								rendered="#{!supplierBackingBean.managedBean.viewOnly and not supplierBackingBean.isSupplierRole()}"/>
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form,@([id$=messages])"
+								styleClass="ui-button" process="@form"
+								icon="ui-icon-#{fn:toLowerCase(outcome)}"
+								action="#{supplierBackingBean.factoringRequesttSignAction(outcome)}"
+								actionListener="#{spkiBackingBean.getChallengeQuestions}"
+								rendered="#{!supplierBackingBean.managedBean.viewOnly and supplierBackingBean.isSupplierRole()}"/>
+						</ui:repeat></td>
 				</tr>
 			</table>
 
@@ -140,7 +142,7 @@
 					<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 				</h:panelGrid>
-				
+
 				<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 				<p:inputText style="width:200px;" disabled="true"
 					value="#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}" />
@@ -162,13 +164,13 @@
 				<p:outputLabel value="#{lbl['lbl.ct.ministry.name']}" />
 				<p:inputText style="width:350px;" disabled="true"
 					value="#{supplierBackingBean.getMinistryAndPtjName(1)}" />
-					
-					<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
+
+				<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 				<p:inputText for="physicalNo" maxlength="30" style="width:200px;"
 					disabled="true"
 					value="#{contractDetailsBackingBean.managedBean.ctContract.currentContractVer.contractPhysicalNo}" />
-				
-					
+
+
 				<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
@@ -179,15 +181,17 @@
 						value="#{supplierBackingBean.managedBean.ctContract.contractName}"
 						disabled="true" autoResize="false" />
 				</h:panelGrid>
-				
-			<h:panelGroup>
+
+				<h:panelGroup>
 					<div style="height: 40px; vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 					</div>
 				</h:panelGroup>
 				<h:panelGrid>
-					<p:inputTextarea id="ptjName" rows="3" style="width:200px;" disabled="true"
-						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"  autoResize="false" />
+					<p:inputTextarea id="ptjName" rows="3" style="width:200px;"
+						disabled="true"
+						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"
+						autoResize="false" />
 				</h:panelGrid>
 			</h:panelGrid>
 		</p:panel>
@@ -245,7 +249,8 @@
 					value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
 					<f:selectItems
 						value="#{supplierBackingBean.managedBean.financialBankBranch}" />
-					<p:ajax event="change" process="@this" update="bankName,accNo, notificationBtn"
+					<p:ajax event="change" process="@this"
+						update="bankName,accNo, notificationBtn"
 						listener="#{supplierBackingBean.resetBranch}" />
 				</p:selectOneMenu>
 
@@ -384,40 +389,39 @@
 				</p:fileUpload>
 			</p:dialog>
 		</p:panel>
-		<p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.notification.factoring']}"
+		<p:panel id="clausePanel"
+			header="#{lbl['lbl.ct.panel.notification.factoring']}"
 			toggleable="true" toggleSpeed="500"
 			rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
 			<table style="width: 100%">
 				<tr rowspan="2">
-					<h:panelGroup rendered="#{!supplierBackingBean.approverRole and !supplierBackingBean.managedBean.viewOnly}">
-					<td style="width: 10%; vertical-align: top; text-align: right">
-						<p:selectBooleanCheckbox
-							id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
-					</td>
-					<td>
-							<h:outputText value="#{lbl['lbl.ct.agree.factoring']}" />
-							<span> #{supplierBackingBean.getFactoringCompany()}</span>
-					</td>
+					<h:panelGroup
+						rendered="#{!supplierBackingBean.approverRole and !supplierBackingBean.managedBean.viewOnly}">
+						<td style="width: 10%; vertical-align: top; text-align: right">
+							<p:selectBooleanCheckbox id="checkBox" required="true"
+								value="#{supplierBackingBean.managedBean.agreeFactoringClause}" />
+						</td>
+						<td><h:outputText value="#{lbl['lbl.ct.agree.factoring']}" />
+							<span> #{supplierBackingBean.getFactoringCompany()}</span></td>
 					</h:panelGroup>
 				</tr>
 				<tr>
 					<td />
-					<td>
-						<p:commandButton id="notificationBtn" disabled="#{!supplierBackingBean.isLetterGenerated()}"
-							value="#{lbl['lbl.ct.panel.notification.factoring']}" process="@this"
-							update="editorDisplay"
+					<td><p:commandButton id="notificationBtn"
+							disabled="#{!supplierBackingBean.isLetterGenerated()}"
+							value="#{lbl['lbl.ct.panel.notification.factoring']}"
+							process="@this" update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
-							oncomplete="factoringClauseDlg.show();" />
-					</td>
-				</tr>				
+							oncomplete="factoringClauseDlg.show();" /></td>
+				</tr>
 			</table>
 			<p:dialog id="factoringClauseDlg"
 				header="#{lbl['lbl.ct.factoring.clauses']}"
 				widgetVar="factoringClauseDlg" modal="true" width="820" height="450">
-				<p:editor controls="print" id="editorDisplay" 
+				<p:editor controls="print" id="editorDisplay"
 					value="#{supplierBackingBean.editorValue}" width="800" height="430" />
 			</p:dialog>
-		</p:panel>		
+		</p:panel>
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	</ui:define>
