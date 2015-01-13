@@ -74,11 +74,13 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean afterSaving;
 	private boolean upgradeMofDraftAppl;
 	private boolean disabledActivateAndDeactivate;
+	private boolean viewOnlyPersonnel;
 	private SmAppl currSmAppl;
 	private SmAppl basicSmAppl;
 	private String noSupplierUserMsg;
 	private SmPersonnel selectedPersonnelToReassign;
 	private SmSupplier smSupplier;
+	private String selectedPersonnelIdentificationType;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -538,6 +540,23 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
+	}
+
+	public boolean isViewOnlyPersonnel() {
+		return viewOnlyPersonnel;
+	}
+
+	public void setViewOnlyPersonnel(boolean viewOnlyPersonnel) {
+		this.viewOnlyPersonnel = viewOnlyPersonnel;
+	}
+
+	public String getSelectedPersonnelIdentificationType() {
+		return selectedPersonnelIdentificationType;
+	}
+
+	public void setSelectedPersonnelIdentificationType(
+			String selectedPersonnelIdentificationType) {
+		this.selectedPersonnelIdentificationType = selectedPersonnelIdentificationType;
 	}
 
 }
