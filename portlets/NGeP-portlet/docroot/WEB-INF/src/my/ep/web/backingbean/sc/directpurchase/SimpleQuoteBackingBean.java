@@ -904,10 +904,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					 checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
 				}
 
-				if(checkQty < 0) {
-					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+				ScQuote quote = getManagedBean().getScQuote();
+				if(quote != null) {
+					if(quote.getPurchaseInDefault() == null && checkQty < 0) {
+						throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+					}
 				}
 			}
 		}
