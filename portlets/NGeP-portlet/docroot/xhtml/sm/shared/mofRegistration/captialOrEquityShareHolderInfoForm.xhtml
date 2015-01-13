@@ -104,12 +104,15 @@
 
 							<p:outputPanel
 								rendered="#{shareBean.equityOwner or shareBean.director}">
-								<p:graphicImage library="ep/images/design" name="document.png"
-									value="/resources/ep/images/design/document.png"
-									rendered="#{backingBean.managedBean.disAllowOwnerEdit}" />
 								<p:graphicImage library="ep/images/design" name="edit.png"
 									value="/resources/ep/images/design/edit.png"
 									rendered="#{!backingBean.managedBean.disAllowOwnerEdit}" />
+								<p:graphicImage library="ep/images/design" name="edit.png"
+									value="/resources/ep/images/design/edit.png"
+									rendered="#{backingBean.managedBean.disAllowOwnerEdit and shareBean.recordStatusFlg eq 8}" />
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/resources/ep/images/design/document.png"
+									rendered="#{backingBean.managedBean.disAllowOwnerEdit and shareBean.recordStatusFlg ne 8}" />
 							</p:outputPanel>
 							<p:outputPanel
 								rendered="#{!shareBean.equityOwner and !shareBean.director}">
