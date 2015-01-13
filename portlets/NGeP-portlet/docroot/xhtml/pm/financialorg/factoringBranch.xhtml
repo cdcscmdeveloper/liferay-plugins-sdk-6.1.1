@@ -48,16 +48,14 @@
 		</div>
 		
 		<p:outputPanel id="factoringPanel" >
-			<h:panelGrid style="width:100%;" toggleable="true">
-				<p:tabView>
-					<p:tab title="ADDRESS" id="tBranchAddr" disabled="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch==null}">
-						<ui:include src="/xhtml/pm/financialorg/factoringBranchAddress.xhtml" />
-					</p:tab>
-					<p:tab title="FACTORING BANK DETAIL" id="tBranchFacBankDet" disabled="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch==null}">
-						<ui:include src="/xhtml/pm/financialorg/factoringBranchDetail.xhtml" />
-					</p:tab>
-				</p:tabView>
-			</h:panelGrid>
+			<p:tabView>
+				<p:tab title="ADDRESS" id="tBranchAddr" disabled="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch==null}">
+					<ui:include src="/xhtml/pm/financialorg/factoringBranchAddress.xhtml" />
+				</p:tab>
+				<p:tab title="FACTORING BANK DETAIL" id="tBranchFacBankDet" disabled="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch==null}">
+					<ui:include src="/xhtml/pm/financialorg/factoringBranchDetail.xhtml" />
+				</p:tab>
+			</p:tabView>
 		</p:outputPanel>
 	</p:panel>
 

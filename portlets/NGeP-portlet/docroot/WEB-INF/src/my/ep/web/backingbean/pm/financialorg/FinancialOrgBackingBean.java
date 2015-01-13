@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -29,6 +30,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
@@ -107,7 +110,11 @@ public class FinancialOrgBackingBean extends
 			new LogKey(1L); 
 		}
 	}
-
+	
+	/* ------------------ PORLET - START ------------------  */
+	/**
+	 * load clean search view
+	 */
 	public void preLoadingFinOrg() {
 		log.info("preLoading");
 		this.resetFinancialOrgSearchBean();
@@ -124,15 +131,34 @@ public class FinancialOrgBackingBean extends
 		return FACTRING_BRANCH;
 	}
 
+	/**
+	 * porlet side menu 
+	 * @param index
+	 */
+	public void changeMenuIndex(int index){
+		log.info("changeMenuIndex");
+		this.getManagedBean().setSelectedTabIndex(index);
+	}
+	/**
+	 * navigate to search page
+	 * @return search page
+	 */
 	public String backToMain() {
+		log.info("backToMain");
 		getManagedBean().setServiceTypes(null);
 		initialFinOrg();
 		return NAV_TO_SEARCH;
 
 	}
 	
+	/**
+	 * navigate to financial org details
+	 * @param id
+	 * @return maintain page
+	 * @throws Exception
+	 */
 	public String redirectToFinOrg(Long id) throws Exception {
-		
+		log.info("redirectToFinOrg");
 		resetBeans();
 		retrieveServiceTypeMap();
 
@@ -147,12 +173,12 @@ public class FinancialOrgBackingBean extends
 		return NAV_TO_MAINTAIN;
 	}
 	
-	public void changeMenuIndex(int index){
-		log.info("changeMenuIndex");
-		this.getManagedBean().setSelectedTabIndex(index);
-	}
 	
+	/**
+	 * reset managed bean values
+	 */
 	private void resetBeans(){
+		log.info("resetBeans");
 		//reset managedBean
 		this.getManagedBean().setFinancialOrg(null);
 		this.getManagedBean().setSelectedPmFinancialBranch(null);
@@ -167,13 +193,14 @@ public class FinancialOrgBackingBean extends
 		this.getManagedBean().setServiceTypes(null);
 	}
 	
+	/**
+	 * initial new pmFinancialOrg
+	 */
 	public void initialFinOrg() {
-		
-		
+		log.info("initialFinOrg");
 		this.getManagedBean().setSelectedTabIndex(GENERRAL);
 		//Country Code
 		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-//		getStateList(defaultCountry.getCountryId()); // set state mapper
 		
 		// General
 		/* enable it  */
@@ -195,7 +222,13 @@ public class FinancialOrgBackingBean extends
 
 	}
 
+	/**
+	 * retrieve financial org by id
+	 * @param id
+	 * @return PmFinancialOrg
+	 */
 	private PmFinancialOrg retrievePmFinancialOrg(Long id){
+		log.info("retrievePmFinancialOrg");
 		PmFinancialOrg pmFinancialOrg = new PmFinancialOrg();
 		IFinancialOrgSO finSO  = null;
 		try{
@@ -204,17 +237,22 @@ public class FinancialOrgBackingBean extends
 			finSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IFinancialOrgSO.class);
-			FinancialOrgResDTO resDTO = finSO.retrieveFinancialOrgDetailsById(reqDTO);
+			FinancialOrgResDTO resDTO = finSO.retrieveFinancialOrgDetById(reqDTO);
 			pmFinancialOrg = resDTO.getPmFinancialOrg();
 		}finally{
 			finSO = null;
 		}
 		return pmFinancialOrg;
 	}
+	
+	/**
+	 * load financial org by id
+	 * @param id
+	 */
 	public void maintainFinancialOrg(Long id) {
+		log.info("maintainFinancialOrg");
 		
 		this.getManagedBean().setFinancialOrg(retrievePmFinancialOrg(id));
-
 
 		for (PmFinancialSvc financialSvc : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
@@ -230,7 +268,6 @@ public class FinancialOrgBackingBean extends
 				 }
 			 
 			 }
-			
 		}
 
 		
@@ -276,38 +313,62 @@ public class FinancialOrgBackingBean extends
 	
 		}
 		
-		for(PmFinancialBranch pmFinancialBranch:this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()){
-			System.out.println("branch....");
-			for(PmAddressType pmAddressType: pmFinancialBranch.getPmAddressTypes()){
-				if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
-						&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
-					System.out.println(pmAddressType.getAddressTypeId());
-					if(pmAddressType.getPmAddress()!=null){
-						System.out.println(pmAddressType.getPmAddress().getAddressId());
-						
-						if(pmAddressType.getPmAddress().getPmState()!=null){
-							System.out.println("State " +pmAddressType.getPmAddress().getPmState().getStateId());
-						}else{
-							System.out.println("State null");
-						}
-						
-						if(pmAddressType.getPmAddress().getPmDistrict()!=null){
-							System.out.println("District " +pmAddressType.getPmAddress().getPmDistrict().getDistrictId());
-						}else{
-							System.out.println("District null");
-						}
-						
-					}else{
-						System.out.println("null");
-					}
-					
-				}
-			
-			}
-		}
+		/* remove - start*/
+//		for(PmFinancialBranch pmFinancialBranch:this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()){
+//			for(PmAddressType pmAddressType: pmFinancialBranch.getPmAddressTypes()){
+//				if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
+//						&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
+//					System.out.println(pmAddressType.getAddressTypeId());
+//					if(pmAddressType.getPmAddress()!=null){
+//						System.out.println(pmAddressType.getPmAddress().getAddressId());
+//						System.out.println((pmAddressType.getPmAddress().getPmState()!=null ? ("State: " +pmAddressType.getPmAddress().getPmState().getStateId()) : "State null"));
+//						System.out.println((pmAddressType.getPmAddress().getPmDistrict()!=null ? ("District: " +pmAddressType.getPmAddress().getPmDistrict().getDistrictId()) : "District null"));
+//						System.out.println((pmAddressType.getPmAddress().getPmCity()!=null ? ("City: " +pmAddressType.getPmAddress().getPmCity().getCityId()) : "City null"));
+//					}else{
+//						System.out.println("null");
+//					}
+//					
+//				}
+//			}
+//		}
+		/* remove - end */
 
 	}
 
+	/* ----*/
+	
+	public void addContacePerson() {
+		RequestContext.getCurrentInstance().execute("contactPersonPopup.show()");
+		getManagedBean().setShowParentMsg(false);
+	}
+
+	public void okContacePerson() {
+		RequestContext.getCurrentInstance().execute("contactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+	}
+
+	public void closeContacePerson() {
+		RequestContext.getCurrentInstance().execute("contactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+	}
+
+	public void addBranchContacePerson() {
+
+		RequestContext.getCurrentInstance().execute("branchContactPersonPopup.show()");
+		getManagedBean().setShowParentMsg(false);
+	}
+
+	public void okBranchContacePersonAction() {
+		RequestContext.getCurrentInstance().execute("branchContactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(false);
+	}
+
+	public void closeBranchContacePerson() {
+
+		RequestContext.getCurrentInstance().execute(
+				"branchContactPersonPopup.hide()");
+		getManagedBean().setShowParentMsg(true);
+	}
 	/**
 	 * get all country list
 	 * @return List<PmCountry>
@@ -357,6 +418,9 @@ public class FinancialOrgBackingBean extends
 		return PmCommonUtil.retrievePmCityList(districtId);
 	}
 	
+	/**
+	 * retrieve servery type into mapper
+	 */
 	private void retrieveServiceTypeMap(){
 		log.info("retrieveServiceTypeMap");
 		List<PmParameterDesc> parameterDescs = retrieveServiceTypeList();
@@ -366,11 +430,21 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	
+	/**
+	 * retrieve service type
+	 * @return List<PmParameterDesc>
+	 */
 	private List<PmParameterDesc> retrieveServiceTypeList() {
+		log.info("retrieveServiceTypeList");
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.BANK_SERVICES, null);
 	}
 	
+	/**
+	 * generate service type options
+	 * @return  List<PmParameterDesc>
+	 */
 	public List<PmParameterDesc> getServiceTypeList() {
+		log.info("getServiceTypeList");
 		List<PmParameterDesc> serviceTypeList = new ArrayList<PmParameterDesc>();
 		if(this.getManagedBean().getServiceTypes()!=null && this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_PAYMENT_BANK)){
 				serviceTypeList = retrieveServiceTypeList();
@@ -385,12 +459,22 @@ public class FinancialOrgBackingBean extends
 
 	}
 	
+	/**
+	 * payment bank options
+	 * @return List<PmFinancialOrg>
+	 */
 	public List<PmFinancialOrg> getPaymentBankList() {
+		log.info("getPaymentBankList");
 		return retrievePaymentBankList();
 
 	}
 	
+	/**
+	 * retrieve payment list from db
+	 * @return List<PmFinancialOrg>
+	 */
 	private List<PmFinancialOrg> retrievePaymentBankList() {
+		log.info("retrievePaymentBankList");
 		IFinancialOrgSO financialOrgSO = null;
 		List<PmFinancialOrg> paymentBankList = new ArrayList<PmFinancialOrg>();
 		try{
@@ -406,51 +490,21 @@ public class FinancialOrgBackingBean extends
 		}
 		return paymentBankList;
 	}
-	
-	public void addContacePerson() {
-		RequestContext.getCurrentInstance().execute("contactPersonPopup.show()");
-		getManagedBean().setShowParentMsg(false);
-	}
 
-	public void okContacePerson() {
-		RequestContext.getCurrentInstance().execute("contactPersonPopup.hide()");
-		getManagedBean().setShowParentMsg(true);
-	}
 
-	public void closeContacePerson() {
-		RequestContext.getCurrentInstance().execute("contactPersonPopup.hide()");
-		getManagedBean().setShowParentMsg(true);
-	}
-
-	public void addBranchContacePerson() {
-
-		RequestContext.getCurrentInstance().execute("branchContactPersonPopup.show()");
-		getManagedBean().setShowParentMsg(false);
-	}
-
-	public void okBranchContacePersonAction() {
-		RequestContext.getCurrentInstance().execute("branchContactPersonPopup.hide()");
-		getManagedBean().setShowParentMsg(false);
-	}
-
-	public void closeBranchContacePerson() {
-
-		RequestContext.getCurrentInstance().execute(
-				"branchContactPersonPopup.hide()");
-		getManagedBean().setShowParentMsg(true);
-	}
-//
-//	public void onChangeAction() {
-//		if (getManagedBean().isByFactoring()) {
-//			getManagedBean().setActiveIndex(0);
-//		}
-//
-//	}
-
+	/**
+	 * status options
+	 * @return SelectItem[]
+	 */
 	public static SelectItem[] getStatusOptions() {
+		log.info("getStatusOptions");
 		return PmCommonUtil.getStatusOptionsDefault();
 	}
 	
+	/**
+	 * retrieve state object
+	 * @param pmState
+	 */
 	public void retrievePmState(PmState pmState){
 		log.info("retrievePmState");
 		if(pmState!=null && pmState.getStateId()!=null){
@@ -462,6 +516,9 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 
+	/**
+	 * validate financial org fields
+	 */
 	private void validationFinancialOrg() {
 		log.info("validationFinancialOrg");
 		if(this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null && this.getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()){
@@ -531,6 +588,9 @@ public class FinancialOrgBackingBean extends
 		
 	}
 	
+	/**
+	 * update main address 
+	 */
 	private void updateMainAddress(){
 		log.info("updateMainAddress");
 		boolean hasAddressType = false;
@@ -579,48 +639,11 @@ public class FinancialOrgBackingBean extends
 		}
 	
 	}
-	
-//	private void updateBranchAddress(){
-//		for(PmFinancialBranch pmFinancialBranch:this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()){
-//			boolean hasAddressType = false;
-//			for(PmAddressType pmAddressType:pmFinancialBranch.getPmAddressTypes()){
-//				if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
-//						&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
-//					hasAddressType = true;
-//					pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
-//					
-//					if(pmAddressType.getPmContacts()==null){
-//						pmAddressType.setPmContacts(new ArrayList<PmContact>());
-//					}
-//					
-//					this.getManagedBean().getBranchContactPerson().setPmAddressType(pmAddressType);
-//					pmAddressType.getPmContacts().add(this.getManagedBean().getBranchContactPerson());
-//				}
-//			}
-//			
-//			if(!hasAddressType){
-//				if(pmFinancialBranch.getPmAddressTypes()==null){
-//					pmFinancialBranch.setPmAddressTypes(new ArrayList<PmAddressType>());
-//				}
-//				
-//				List<PmContact> contactLst = new ArrayList<PmContact>();
-//				PmAddressType addressType = new PmAddressType();
-//				addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-//				addressType.setPmAddress(this.getManagedBean().getBranchAddress());
-//				addressType.setPmFinancialBranch(pmFinancialBranch);
-//
-//				// bind contact & address type
-//				this.getManagedBean().getBranchContactPerson().setPmAddressType(addressType);
-//				contactLst.add(this.getManagedBean().getBranchContactPerson());
-//				addressType.setPmContacts(contactLst);
-//				
-//				// by address type & financial org
-//				pmFinancialBranch.getPmAddressTypes().add(addressType);
-//			}
-//		
-//		}
-//	
-//	}
+
+	/**
+	 * validate branch fields
+	 * @throws Exception
+	 */
 	private void validateBranch() throws Exception {
 		log.info("validateBranch");
 		List<PmFinancialBranch> financialBranchList = this.getManagedBean().getFinancialOrg().getPmFinancialBranchs();
@@ -683,6 +706,10 @@ public class FinancialOrgBackingBean extends
 		validateFinancialBranch();
 	}
 	
+	/**
+	 * validate financial account fields
+	 * @throws Exception
+	 */
 	private void validateFinancialAccount()throws Exception {
 		log.info("validateFinancialAccount");
 		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
@@ -731,6 +758,10 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	
+	/**
+	 * validate financial branch fields
+	 * @throws Exception
+	 */
 	private void validateFinancialBranch()throws Exception {
 		log.info("validateFinancialBranch");
 		List<PmFinancialBranch> financialBranchList = this.getManagedBean().getFinancialOrg().getPmFinancialBranchs();
@@ -781,45 +812,13 @@ public class FinancialOrgBackingBean extends
 				}
 			}
 		}
-//		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getPmFinancialAcc();
-//		if (pmFinancialAccList != null && !pmFinancialAccList.isEmpty()) {
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			Date endLess = sdf.parse("2099-12-31");
-//			for (int index1 = 0; index1 < pmFinancialAccList.size(); index1++) {
-//				if (pmFinancialAccList.get(index1).getRecordStatusFlg() 
-//						== DbValueConst.RECORD_STATUS_ACTIVE) {
-//					if (pmFinancialAccList.size() > 1) {
-//						for (int index2 = index1 + 1; index2 < pmFinancialAccList.size(); index2++) {
-//							if (pmFinancialAccList.get(index2).getRecordStatusFlg() 
-//									== DbValueConst.RECORD_STATUS_ACTIVE) {
-//								// Overlap exists if (StartA <= EndB) and (EndA
-//								// >= StartB)
-//								Date startA = pmFinancialAccList.get(index1).getEffDate();
-//								Date endA = pmFinancialAccList.get(index1).getExpDate();
-//								Date startB = pmFinancialAccList.get(index2).getEffDate();
-//								Date endB = pmFinancialAccList.get(index2).getExpDate();
-//
-//								// not null
-//								if(endA==null){
-//									endA = endLess;
-//								}if(endB==null){
-//									endB = endLess;
-//								}
-//								
-//								boolean isCurrentPairOverlap = false;
-//								isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
-//								
-//								if (isCurrentPairOverlap) {
-//									throw new EpException("Factoring Bank Effective Date and Expiry Date must not overlapping.");
-//								}
-//							}
-//						}
-//					} 
-//				}
-//			}
-//		}
 	}
 
+	/**
+	 * save/update financial org
+	 * @return
+	 * @throws Exception
+	 */
 	public String saveFinancialOrg() throws Exception{
 		log.info("saveFinancialOrg");
 		IFinancialOrgSO financialOrgSO = null;
@@ -835,51 +834,9 @@ public class FinancialOrgBackingBean extends
 			
 			PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
 			saveFactoringDetails(financialOrg);
-	//
-//		for (PmFinancialSvc financialSvc : financialOrg.getPmFinancialSvcs()) {
-//			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
-//			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
-//				saveFactoringDetails(financialOrg);
-//			}
-//		}
-			
-			
-//		if (financialOrg.isBrandNew()) {
-////			setUserDetails(financialOrg);
-//			
-//			for (PmFinancialSvc financialSvc : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
-////				setUserDetails(financialSvc);
-//				parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
-//				parameterReqDTO.setParameterId(financialSvc.getServiceTypeCode().getParameterId());
-//				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
-//				financialSvc.setServiceTypeCode(parameterResDTO.getPmParameter());
-//				financialSvc.setPmFinancialOrg(financialOrg);
-//				if (parameterResDTO.getPmParameter().getParameterCode().toString().trim().contains(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)) {
-//					saveFactoringDetails(financialOrg);
-//				}
-//			}
-//			PmAddressType addressType = this.getManagedBean().getPmAddressType();
-//			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-//			List<PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();
-//			pmAddressTypes.add(addressType);
-//			PmAddress address = this.getManagedBean().getPmAddress();
-//			PmContact contact = this.getManagedBean().getContactPerson();
-//			contact.setPmAddressType(addressType);
-//			List<PmContact> contactLst = this.getManagedBean().getPmContact();
-//			contactLst.add(contact);
-//			addressType.setPmContacts(contactLst);
-//			addressType.setPmAddress(address);
-//			addressType.setPmFinancialOrg(financialOrg);			
-//			financialOrg.setPmAddressTypes(pmAddressTypes);
-//
-//		}
-		
-//		financialOrg.setPmFinancialSvcs(this.getManagedBean().getPmFinancialSvc());
-//		financialOrg.setPmFinancialAccs(this.getManagedBean().getPmFinancialAcc());
-//		financialOrg.setPmFinancialBranchs(this.getManagedBean().getPmFinancialBranch());
 	
-		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-		reqDTO.setPmFinancialOrg(financialOrg);
+			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+			reqDTO.setPmFinancialOrg(financialOrg);
 		
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
@@ -905,6 +862,10 @@ public class FinancialOrgBackingBean extends
 		return NAV_TO_SEARCH;
 	}
 	
+	/**
+	 * save pmOrgProfile if financial org contains factoring org
+	 * @param financialOrg
+	 */
 	public void saveFactoringDetails(PmFinancialOrg financialOrg){
 		log.info("saveFactoringDetails");
 		boolean orgRequired = false;
@@ -956,6 +917,11 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 
+	/**
+	 * check if pmOrgProfile for factoring have been added before
+	 * @param financialOrgId
+	 * @return boolean
+	 */
 	private boolean checkFactoringOrg(Long financialOrgId){
 		log.info("checkFactoringOrg");
 		boolean isExisted = false;
@@ -994,12 +960,17 @@ public class FinancialOrgBackingBean extends
 		return isExisted;
 	}
 	
-	
+	/* ------------------ PORLET -END ------------------  */
 	
 	/* ------------------ GENERAL TAB - START  ------------------  */
 	
 	/* Financial Service - START */
+	
+	/**
+	 * add new financial service to list
+	 */
 	public void addFinancialService() {
+		log.info("addFinancialService");
 		if(this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null){
 			if(this.getManagedBean().getFinancialOrg().getPmFinancialSvcs().size() > ProfileManagementConst.MAX_FINANCIAL_SERVICE){
 				throw new EpException("Financial Org. exceeded maximum Financial Services.");
@@ -1008,14 +979,12 @@ public class FinancialOrgBackingBean extends
 		validateFinancialService();
 		
 		PmFinancialSvc pmFinancialSvc = new PmFinancialSvc();
-//		getManagedBean().setServiceType(null);
 		try {
 			List<PmFinancialSvc> pmFinancialList = this.getManagedBean().getFinancialOrg().getPmFinancialSvcs();
 			if (null == pmFinancialList) {
 				pmFinancialList = new ArrayList<PmFinancialSvc>();
 			}
 			
-//			getManagedBean().setDropDownValue(true);
 			pmFinancialSvc.setServiceTypeCode(new PmParameter());
 			pmFinancialList.add(pmFinancialSvc);
 			this.getManagedBean().getFinancialOrg().setPmFinancialSvcs(pmFinancialList);
@@ -1025,6 +994,9 @@ public class FinancialOrgBackingBean extends
 	}
 
 
+	/**
+	 * delete financial service from list
+	 */
 	public void deleteFinancialService() {
 
 		List<PmFinancialSvc> cashOnHandList = this.getManagedBean().getFinancialOrg().getPmFinancialSvcs();
@@ -1050,6 +1022,10 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	
+	/**
+	 * update service type list based on selected value
+	 * @param e
+	 */
 	public void updateService(AjaxBehaviorEvent e) {
 		log.info("updateService");
 		validateFinancialService();
@@ -1057,21 +1033,17 @@ public class FinancialOrgBackingBean extends
 		Long finServiceId = (Long) e.getComponent().getAttributes().get("value");
 		System.out.println("finServiceId :" + finServiceId);
 
-//		for (PmFinancialSvc financialService : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
-			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(finServiceId);
-//			parameterReqDTO.setParameterId(finServiceId);
-//			System.out.println("Parameter ID" + financialService.getServiceTypeCode().getParameterId());
-//
-//			ParameterResDTO parameterResDTO = parameterSO
-//					.retrieveParameterById(parameterReqDTO);
-			if (getManagedBean().getServiceTypes() == null) {
-				getManagedBean().setServiceTypes(new ArrayList<String>());
-			}
-			getManagedBean().getServiceTypes().add(pmParameter.getParameterCode());
+		PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(finServiceId);
 
-//		}
+		if (getManagedBean().getServiceTypes() == null) {
+			getManagedBean().setServiceTypes(new ArrayList<String>());
+		}
+		getManagedBean().getServiceTypes().add(pmParameter.getParameterCode());
 	}
 	
+	/**
+	 * validate financial service
+	 */
 	private void validateFinancialService(){
 		log.info("validateFinancialService");
 		//check if duplicated service added
@@ -1092,8 +1064,12 @@ public class FinancialOrgBackingBean extends
 	/* Financial Service - END */
 	
 	/* Factoring Bank - START */
+	
+	/**
+	 * add new financial account to list
+	 */
 	public void addFinancialAcc() {
-
+		log.info("addFinancialAcc");
 		try {
 			List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
 			if (pmFinancialAccList == null) {
@@ -1109,8 +1085,11 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 
+	/**
+	 * delete financial acc from list
+	 */
 	public void deleteFinancialAcc() {
-
+		log.info("deleteFinancialAcc");
 		List<PmFinancialAcc> financialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
 		List<PmFinancialAcc> selectedFinancialActList = this.getManagedBean()
 				.getSelectedPmFinancialAcc();
@@ -1126,6 +1105,11 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	
+	/**
+	 * define bank details editable mode
+	 * @param effDate
+	 * @return boolean
+	 */
 	public boolean editableBankDet(Date effDate){
 		log.info("editableBankDet");
 		Date today = new Date();
@@ -1147,7 +1131,12 @@ public class FinancialOrgBackingBean extends
 	
 	/* ------------------ BRANCH TAB - START  ------------------  */
 	/* Financial BRANCH ACCOUNT - START */
+	
+	/**
+	 * add new financial branch acc to list
+	 */
 	public void addFinancialBranchAcc() {
+		log.info("addFinancialBranchAcc");
 		if(this.getManagedBean().getSelectedPmFinancialBranch()==null){
 			throw new EpException("Please select a Branch.");
 		}
@@ -1166,7 +1155,11 @@ public class FinancialOrgBackingBean extends
 		
 	}
 
+	/**
+	 * remove financial branch account from list
+	 */
 	public void deleteFinancialBranchAcc() {
+		log.info("deleteFinancialBranchAcc");
 		List<PmFinancialAcc> financialBranchAccList = this.getManagedBean().getSelectedPmFinancialBranch().getPmFinancialAccs();
 		List<PmFinancialAcc> selectedFinancialActList = this.getManagedBean().getSelectedPmFinancialBranchAcc();
 		if (financialBranchAccList.size() == selectedFinancialActList.size()) {
@@ -1186,32 +1179,25 @@ public class FinancialOrgBackingBean extends
 	
 	/* Financial BRANCH - START */
 	
+	/**
+	 * show branch's details (address)
+	 */
 	public void showBranchAddress(){
 		log.info("showBranchAddress");
 		boolean hadAddress = false;
 		if(this.getManagedBean().getSelectedPmFinancialBranch()!=null){
+
 			for(PmAddressType pmAddressType: this.getManagedBean().getSelectedPmFinancialBranch().getPmAddressTypes()){
 				if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
 						&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
 					log.info("has showBranchAddress");
 					hadAddress = true;
-					this.getManagedBean().setBranchAddress(pmAddressType.getPmAddress());
-					System.out.println(pmAddressType.getAddressTypeId());
-					if(this.getManagedBean().getBranchAddress()!=null){
-						System.out.println(this.getManagedBean().getBranchAddress().getAddressId());
-						
-						if(this.getManagedBean().getBranchAddress().getPmState()!=null){
-							System.out.println("State " +this.getManagedBean().getBranchAddress().getPmState().getStateId());
-						}else{
-							System.out.println("State null");
-						}
-						
-						if(this.getManagedBean().getBranchAddress().getPmDistrict()!=null){
-							System.out.println("District " +this.getManagedBean().getBranchAddress().getPmDistrict().getDistrictId());
-						}else{
-							System.out.println("District null");
-						}
-						
+					
+					if(pmAddressType.getPmAddress()!=null){
+						System.out.println(pmAddressType.getPmAddress().getAddressId());
+						System.out.println((pmAddressType.getPmAddress().getPmState()!=null ? ("State: " +pmAddressType.getPmAddress().getPmState().getStateId()) : "State null"));
+						System.out.println((pmAddressType.getPmAddress().getPmDistrict()!=null ? ("District: " +pmAddressType.getPmAddress().getPmDistrict().getDistrictId()) : "District null"));
+						System.out.println((pmAddressType.getPmAddress().getPmCity()!=null ? ("City: " +pmAddressType.getPmAddress().getPmCity().getCityId()) : "City null"));
 					}else{
 						System.out.println("null");
 					}
@@ -1223,6 +1209,7 @@ public class FinancialOrgBackingBean extends
 					if(pmContact.isBrandNew()){
 						pmContact.setPmAddressType(pmAddressType);
 					}
+					this.getManagedBean().setBranchAddress(pmAddressType.getPmAddress());
 					this.getManagedBean().setBranchContactPerson(pmContact);
 					break;
 				}
@@ -1254,8 +1241,47 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	
+
+	/**
+	 * retrieve address type list by user id
+	 * @param financialOrgId
+	 * @param financialBrancId
+	 * @param addressType
+	 * @return @return List<PmAddressType>
+	 */
+	public static List<PmAddressType> retrieveAddressTypesByFinancialOrg(Long financialOrgId, Long financialBrancId, String addressType){
+		log.info("retrieveAddressTypesByFinancialOrg");
+		List <PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();
+		IAddressSO addressSO = null;
+		try {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			AddressResDTO resDTO = null;
+			if(financialOrgId!=null){
+				reqDTO.setFinancialOrgId(financialOrgId);
+			}else if(financialBrancId!=null){
+				reqDTO.setFinancialBranchId(financialBrancId);
+			}
+			if(addressType!=null){
+				reqDTO.setAddressType(addressType);
+			}
+			addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmAddressTypes = resDTO.getAddressTypeList();
+			}
 	
+		}finally{
+			addressSO = null;
+		}	
+		return pmAddressTypes;
+	}
+	
+	
+	/**
+	 * add financial branch to list
+	 */
 	public void addFinancialBranch() {
+		log.info("addFinancialBranch");
 		try {
 			if (this.getManagedBean().getFinancialOrg().getPmFinancialBranchs() == null) {
 				this.getManagedBean().getFinancialOrg().setPmFinancialBranchs(new ArrayList<PmFinancialBranch>());
@@ -1290,8 +1316,12 @@ public class FinancialOrgBackingBean extends
 
 	}
 	
+	/**
+	 * remove financial branch from list
+	 * @param financialBranch
+	 */
 	public void deleteFinancialBranch(PmFinancialBranch financialBranch) {
-
+		log.info("deleteFinancialBranch");
 		if (financialBranch != null && financialBranch.isBrandNew()) {
 			if (this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()== null) {
 				this.getManagedBean().getFinancialOrg().setPmFinancialBranchs(new ArrayList<PmFinancialBranch>());
