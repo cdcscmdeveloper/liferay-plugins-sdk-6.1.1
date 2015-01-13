@@ -658,7 +658,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		UploadedFile file = event.getFile();
 
-		uploadDir = tempDir + file.getFileName();
+//		uploadDir = tempDir + StringUtils.replace(" ", file.getFileName(), "-");
 
 		// genFile(uploadDir, file.getContents());
 		genFile(tempDir, file);
@@ -738,9 +738,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 
 		try {
-
+			String finalFileName = StringUtils.replace(file.getFileName(), " ", "-");
+			log.info("finalFileName: " + finalFileName);
+			
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					new FileOutputStream(uploadDir + "/" + file.getFileName()));
+					new FileOutputStream(uploadDir + "/" + finalFileName));
 
 			bufferedOutputStream.write(file.getContents());
 
