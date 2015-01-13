@@ -1,0 +1,53 @@
+<html>
+<head>
+<style>
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:element(footer)
+	
+}
+
+}
+.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+</style>
+</head>
+<body>
+	<div style="border: 0px solid #a1a1a1;">
+		<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
+			<tbody>
+				<tr align="center">
+					<td><img
+						src="http://localhost:8080/NGeP-portlet/resources/ep/images/Lambang_Malaysia_2010.jpg"
+						alt="" width="124" height="100" /></td>
+				</tr>
+				<tr align="center">
+					<td><span
+						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agency</span>
+						<br /></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+<table>
+	<tr>
+		<td></td>
+	</tr>
+</table>
+</body>
+</html>
