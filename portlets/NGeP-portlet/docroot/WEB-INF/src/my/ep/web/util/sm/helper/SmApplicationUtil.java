@@ -1369,24 +1369,8 @@ public class SmApplicationUtil {
 		appl = null;
 	}
 
-	public static void validatePersonnelICandEmailLiferayAndPm(
-			SmPersonnel smPersonnel) {
-		if (smPersonnel.getAuthorizedFlg() == 1
-				&& isExistUserByIdentificationNo(smPersonnel
-						.getIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_722541);
-		}
-
-		try {
-			if (smPersonnel.getAuthorizedFlg() == 1
-					&& UserLocalServiceUtil.getUserByScreenName(
-							Long.valueOf(getCompanyId()),
-							smPersonnel.getEmail()) != null) {
-				throw new EpException(MessageConst.ERROR_722541);
-			}
-		} catch (NumberFormatException | PortalException | SystemException e) {
-			log.info(e.getMessage());
-		}
+	public static void validatePersonnelICandEmailLiferayAndPm(SmPersonnel smPersonnel) {
+		
 	}
 
 	public static boolean isExistEmailInPmUser(String email) {
