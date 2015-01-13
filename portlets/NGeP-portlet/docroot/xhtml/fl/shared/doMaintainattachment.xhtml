@@ -7,17 +7,18 @@
 	<table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel
-					value="Attachment" /></td>
+					value="#{lbl['lbl.txt.attachment']}" /></td>
 			<td class="TableFieldRight"><p:commandButton
 					oncomplete="doUploadDlg.show();return false;" icon="iconAttachment"
 					disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"
-					update="doMaintain" partialSubmit="true" value="Attach file(s)" /></td>
+					update="doMaintain" partialSubmit="true" value="#{lbl['lbl.fl.attach.files']}" /></td>
 		</tr>
 		<tr>
 			<td />
 			<td><p:dataGrid id="doMaintain"
 					value="#{fulfilmentBackingBean.managedBean.attachmentList}"
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" 
 					style="width:100%">
 					<table>
 						<tr>
