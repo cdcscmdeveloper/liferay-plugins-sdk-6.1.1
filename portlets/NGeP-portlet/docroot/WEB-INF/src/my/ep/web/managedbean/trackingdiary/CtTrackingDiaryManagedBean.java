@@ -66,29 +66,23 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 //				}else if(null ==getSearchViewType() ){
 //					throw new EpException(MessageConst.ERROR_740023);
 //				}
-				System.out.println("Result : aaaa");
+				System.out.println("ISearchResultBean<VCtDocument>");
 	
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orderType",SearchOperator.OPERATOR_EQUALS.value(),getSearchTrasactionType()));
 				if(getSearchViewType()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchViewType()));
-				} else {
-//					List<String> ctDocTypeList = getDocTypeListByRole();
-//					if(ctDocTypeList.size()>0) {
-//						searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),ctDocTypeList));
-//					}
 				}
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
 				}
-				/*if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
+				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
-				}*/
+				}
 				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
 				}
-				/*if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
+				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
-				}	*/
+				}	
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
 				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 				
@@ -104,26 +98,26 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	public boolean isCtFulfilmentRequisitioner() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
-	}
-	public boolean isCtFulfilmentApprover() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value());
-	}
-	public boolean isCtFulfilmentSupplier() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
-	}
-	public boolean isCtFulfilmentRecevingOfficer() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
-	}
-	public boolean isCtFulfilmentPaymentOfficer() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
-	}
+//	public boolean isCtFulfilmentRequisitioner() {
+//		FacesScopes facesScopes = new FacesScopes();
+//		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
+//	}
+//	public boolean isCtFulfilmentApprover() {
+//		FacesScopes facesScopes = new FacesScopes();
+//		return facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value());
+//	}
+//	public boolean isCtFulfilmentSupplier() {
+//		FacesScopes facesScopes = new FacesScopes();
+//		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
+//	}
+//	public boolean isCtFulfilmentRecevingOfficer() {
+//		FacesScopes facesScopes = new FacesScopes();
+//		return facesScopes.hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
+//	}
+//	public boolean isCtFulfilmentPaymentOfficer() {
+//		FacesScopes facesScopes = new FacesScopes();
+//		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
+//	}
 	public String getSearchTrasactionType() {
 		return searchTrasactionType;
 	}

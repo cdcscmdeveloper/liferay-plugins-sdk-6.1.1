@@ -24,19 +24,19 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
 								<td><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+										value="#{cmTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="15%"><p:outputLabel
 										value="#{lbl['lbl.cm.item.code']}" /></td>
 								<td width="35%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
+										value="#{cmTrackingDiaryBackingBean.managedBean.searchItemCodeValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="15%"><p:outputLabel
 										value="Item Name" /></td>
 								<td width="35%%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.itemNameFilterBean.searchValue}"></p:inputText></td>
+										value="#{cmTrackingDiaryBackingBean.managedBean.searchItemNameValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="15%"><p:outputLabel
@@ -44,21 +44,21 @@
 								<td width="35%"><p:calendar mode="popup" showOn="button"
 										readonlyInput="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-										value="#{ctTrackingDiaryBackingBean.managedBean.searchContractFromDuration}">
+										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedFromDuration}">
 									</p:calendar>
 									<p:spacer width="5" />
 									<p:calendar mode="popup" showOn="button"
 										readonlyInput="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-										value="#{ctTrackingDiaryBackingBean.managedBean.searchContractToDuration}">
+										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedToDuration}">
 									</p:calendar></td>
 							</tr>
 							<tr>
 								<td width="15%"><p:outputLabel value="Status" /></td>
 								<td width="35%"><p:selectOneMenu style="width: 314px;"
-											value="#{ctTrackingDiaryBackingBean.managedBean.searchStatusId}">
+											value="#{cmTrackingDiaryBackingBean.managedBean.searchStatusId}">
 											<f:selectItems
-												value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
+												value="#{cmTrackingDiaryBackingBean.getStatus()}" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
@@ -70,14 +70,12 @@
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 								action="#{cmTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
 						</div>
-						</p:panel>
+		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="supplierItemID" lazy="true"
-				value="#{cmTrackingDiaryBackingBean.searchDataModel}" var="unspscObject"
+				value="#{cmTrackingDiaryBackingBean.managedBean.cmDocumentDataModel}" var="unspscObject"
 				width="100%" rows="10">
-
-
 
 				<ac:paginator for="supplierItemID"></ac:paginator>
 
@@ -87,20 +85,25 @@
 					</f:facet>
 				#{unspscObject.createdDate}
 				</p:column>
-
 				<p:column width="15%">
 					<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.code']}
+					Item Code
+				</f:facet>
+				#{unspscObject.unspscCode}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Item Name
 				</f:facet>
 				#{unspscObject.unspscCode}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					#{lbl['lbl.cm.unspsc.title']}
+					Status
 				</f:facet>
 				#{unspscObject.unspscTitle}
-			</p:column>
-			<p:column>
+				</p:column>
+				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
@@ -109,7 +112,7 @@
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>
-			</p:column>
+				</p:column>
 			</p:dataTable>
 
 
