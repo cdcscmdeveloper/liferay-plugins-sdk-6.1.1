@@ -58,7 +58,7 @@
 						<p:selectOneMenu id="appaction" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
 						    value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
-							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException, :form:committeTable"
+							<p:ajax process="@this" partialSubmit="true" update=":form:panelHeaderException, committeRepresentTypeId"
 							   listener="#{amendmentBackingBean.setListenerForCommitte(ctCommitteeVar.memberRole.parameterId)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
@@ -68,7 +68,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
 				</f:facet>
-				<ui:fragment id="committeRepresentTypeId"
+				 <h:panelGroup id="committeRepresentTypeId"
 					rendered="#{amendmentBackingBean.retriveCommitteType(ctCommitteeVar.memberRole, ctCommitteeVar.pnp)}">
 					<p:selectOneMenu  id="representativeType" required="true"
 						value="#{ctCommitteeVar.representativeType.parameterId}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
@@ -76,7 +76,7 @@
 						<f:selectItems
 							value="#{amendmentBackingBean.managedBean.representativesTypeslist}" />
 					</p:selectOneMenu>
-				</ui:fragment>
+				</h:panelGroup>
 
 			</p:column>
 	         </p:dataTable>
