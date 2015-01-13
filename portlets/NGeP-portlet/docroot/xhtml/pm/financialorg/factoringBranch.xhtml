@@ -6,7 +6,7 @@
 	<p:panel header="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id ="factoringBranch"
 		toggleable="true">
 		<p:dataTable id="financialbranchid" var="financialbranch"
-			value="#{financialOrgBackingBean.managedBean.pmFinancialBranch}"
+			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialBranchs}"
 			rowKey="#{financialbranch}" rowIndexVar="rowIndex2"  selectionMode="single"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch}">
 			 <p:ajax event="rowSelect" update=":form:factoringPanel" listener="#{financialOrgBackingBean.showBranchAddress}" >

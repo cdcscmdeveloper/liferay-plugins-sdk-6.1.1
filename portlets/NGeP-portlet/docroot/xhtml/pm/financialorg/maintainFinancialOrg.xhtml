@@ -34,24 +34,19 @@
 		<table style="border:0; cellspacing:0; cellpadding:0; width:100%;" id="subMenu">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd">
-					<p:tabMenu
+					<p:tabMenu id="tmFacMenu"
 						styleClass="sidemenu"
 						activeIndex="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
 						style="display : table-caption;">
-						<p:menuitem value="#{lbl['lbl.pm.menu.general.finance']}"
-							update="@form" partialSubmit="true" process="@this">
+						<p:menuitem value="#{lbl['lbl.pm.menu.general.finance']}" action="#{financialOrgBackingBean.changeMenuIndex(financialOrgBackingBean.generalInfoTab)}"
+							update="@form">
 							<f:param name="disableValidation" value="" />
-							<f:setPropertyActionListener
-								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
-								value="#{financialOrgBackingBean.generalInfoTab}" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringMenu"
-							disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains('FC')}"
-							partialSubmit="true" process="@this" update="@form">
+							action="#{financialOrgBackingBean.changeMenuIndex(financialOrgBackingBean.factringBranchInfoTab)}"
+							disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}"
+							update="@form">
 							<f:param name="disableValidation" value="" />
-							<f:setPropertyActionListener
-								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
-								value="#{financialOrgBackingBean.factringBranchInfoTab}" />
 						</p:menuitem>
 
 					</p:tabMenu>

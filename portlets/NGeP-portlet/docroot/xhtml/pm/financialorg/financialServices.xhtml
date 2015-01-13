@@ -7,7 +7,7 @@
 
 	<p:panel>
 		<p:dataTable id="financialsrvid" var="financialsrv"
-			value="#{financialOrgBackingBean.managedBean.pmFinancialSvc}"
+			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
 			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialSvc}">
 			<p:column selectionMode="multiple"
@@ -32,8 +32,9 @@
 							style="width: 275px;margin-bottom: 5px;"
 							label="#{lbl['lbl.pm.financialorg.servicetype']}" required="true"
 							styleClass="ppDropDownWidthL">
-							<f:selectItems
-								value="#{financialOrgBackingBean.getServieTypeDropdownValues(ParameterTypeConst.bankServices)}" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<f:selectItems var="serviceType" itemLabel="#{serviceType.codeName}" itemValue="#{serviceType.pmParameter.parameterId}" 
+								value="#{financialOrgBackingBean.getServiceTypeList()}" />
 							<p:ajax event="change"
 								listener="#{financialOrgBackingBean.updateService}"
 								update="@form" process="@all" />

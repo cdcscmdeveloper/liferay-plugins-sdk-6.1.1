@@ -39,9 +39,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private int selectedTabIndex;
 
 	// Financial Svc
-	;
 	private PmFinancialSvc financialSvc;
-	private List<PmFinancialSvc> pmFinancialSvc;
+//	private List<PmFinancialSvc> pmFinancialSvc;
 	private List<PmFinancialSvc> pmFinancialSvcUpdate;
 	private List<PmFinancialSvc> selectedPmFinancialSvc;
 	private PmFinancialSvc selectedFinancialSvc;
@@ -51,36 +50,24 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	
 	
 	// Financial Org
-	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
+//	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
 	private PmFinancialOrg financialOrg = new PmFinancialOrg();
 
 	// Financial Acc
-	private PmFinancialAcc financialAcc;
-	private List<PmFinancialAcc> pmFinancialAcc = new ArrayList<PmFinancialAcc>();
+//	private PmFinancialAcc financialAcc;
 	private List<PmFinancialAcc> selectedPmFinancialAcc;
 
 	// Financial Branch
 	private PmFinancialBranch financialBranch;
-	private List<PmFinancialBranch> pmFinancialBranch;
 	private PmFinancialBranch selectedPmFinancialBranch;
+	
 	// Financial Org address
 	private PmAddressType pmAddressType;;
 	private List<PmAddressType> addressType;
 	private PmAddress pmAddress;
 	private PmContact contactPerson;
 	private List<PmContact> pmContact;
-	private List<PmState> stateList;
-	private List<PmCountry> countryList;
-	private List<PmDistrict> districtList;
-	private List<PmCity> cityList;
-	private List<PmDivision> divisionList;
 
-	// Financial Branch Address
-	private List<PmState> branchStateList;
-	private List<PmCountry> branchCountryList;
-	private List<PmDistrict> branchDistrictList;
-	private List<PmCity> branchCityList;
-	private List<PmDivision> branchDivisionList;
 	private PmAddressType branchAddressType;;
 	private List<PmAddressType> branchAddressList;
 	private PmAddress branchAddress;
@@ -90,7 +77,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 
 	// Financial Branch Acc
 	private PmFinancialAcc financialBranchAcc;
-	private List<PmFinancialAcc> pmFinancialBranchAcc;
 	private List<PmFinancialAcc> selectedPmFinancialBranchAcc;
 
 	private List<PmOrgProfile> orgProfileList;
@@ -99,118 +85,134 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private List<String> serviceTypes;
 
 //	private Map<String, Object> mapObject = new HashMap<String, Object>();
+//	private List<PmState> stateList;
+//	private List<PmCountry> countryList;
+//	private List<PmDistrict> districtList;
+//	private List<PmCity> cityList;
+//	private List<PmDivision> divisionList;
 
+	// Financial Branch Address
+//	private List<PmState> branchStateList;
+//	private List<PmCountry> branchCountryList;
+//	private List<PmDistrict> branchDistrictList;
+//	private List<PmCity> branchCityList;
+//	private List<PmDivision> branchDivisionList;
+	
+//	private List<PmFinancialBranch> pmFinancialBranch;
+//	private List<PmFinancialAcc> pmFinancialAcc = new ArrayList<PmFinancialAcc>();
+//	private List<PmFinancialAcc> pmFinancialBranchAcc;
+	
 	private Date currentDate = new Date();
 	private boolean dropDownValue = false;
 
-	public FinancialOrgManagedBean() {
-		selectedPmFinancialBranch = new PmFinancialBranch();
-		financialSvc = new PmFinancialSvc();
-		addressType = new ArrayList<PmAddressType>();
-		pmContact = new ArrayList<PmContact>();
-		pmAddress = new PmAddress();
-		pmAddressType = new PmAddressType();
-		contactPerson = new PmContact();
-		// contactPerson.setPmAddressType(pmAddressType);
-		pmAddress.setPmCity(new PmCity());
-		pmAddress.setPmDistrict(new PmDistrict());
-		pmAddress.setPmCountry(new PmCountry());
-		pmAddress.setPmState(new PmState());
-		// pmAddress.setPmDivision(new PmDivision());
-		pmAddressType.setPmAddress(pmAddress);
-		financialOrg.setPmCountry(new PmCountry());
-		// Branch Address
-		branchAddressList = new ArrayList<PmAddressType>();
-		branchContact = new ArrayList<PmContact>();
-		branchAddress = new PmAddress();
-		branchAddressType = new PmAddressType();
-		branchContactPerson = new PmContact();
-		branchAddressType.setPmAddress(branchAddress);
-		// branchContactPerson.setPmAddressType(branchAddressType);
-		branchAddress.setPmCity(new PmCity());
-		branchAddress.setPmDistrict(new PmDistrict());
-		branchAddress.setPmCountry(new PmCountry());
-		branchAddress.setPmState(new PmState());
-		// branchAddress.setPmDivision(new PmDivision());
-		// branchAddressType.setPmAddress(branchAddress);
-		orgProfileList = new ArrayList<PmOrgProfile>();
-
-	}
-
-	/**
-	 * @return the stateList
-	 */
-	public List<PmState> getStateList() {
-		return stateList;
-	}
-
-	/**
-	 * @param stateList
-	 *            the stateList to set
-	 */
-	public void setStateList(List<PmState> stateList) {
-		this.stateList = stateList;
-	}
-
-	/**
-	 * @return the countryList
-	 */
-	public List<PmCountry> getCountryList() {
-		return countryList;
-	}
-
-	/**
-	 * @param countryList
-	 *            the countryList to set
-	 */
-	public void setCountryList(List<PmCountry> countryList) {
-		this.countryList = countryList;
-	}
-
-	/**
-	 * @return the districtList
-	 */
-	public List<PmDistrict> getDistrictList() {
-		return districtList;
-	}
-
-	/**
-	 * @param districtList
-	 *            the districtList to set
-	 */
-	public void setDistrictList(List<PmDistrict> districtList) {
-		this.districtList = districtList;
-	}
-
-	/**
-	 * @return the citysList
-	 */
-	public List<PmCity> getCityList() {
-		return cityList;
-	}
-
-	/**
-	 * @param citysList
-	 *            the citysList to set
-	 */
-	public void setCityList(List<PmCity> cityList) {
-		this.cityList = cityList;
-	}
-
-	/**
-	 * @return the divisionList
-	 */
-	public List<PmDivision> getDivisionList() {
-		return divisionList;
-	}
-
-	/**
-	 * @param divisionList
-	 *            the divisionList to set
-	 */
-	public void setDivisionList(List<PmDivision> divisionList) {
-		this.divisionList = divisionList;
-	}
+//	public FinancialOrgManagedBean() {
+//		selectedPmFinancialBranch = new PmFinancialBranch();
+//		financialSvc = new PmFinancialSvc();
+//		addressType = new ArrayList<PmAddressType>();
+//		pmContact = new ArrayList<PmContact>();
+//		pmAddress = new PmAddress();
+//		pmAddressType = new PmAddressType();
+//		contactPerson = new PmContact();
+//		// contactPerson.setPmAddressType(pmAddressType);
+//		pmAddress.setPmCity(new PmCity());
+//		pmAddress.setPmDistrict(new PmDistrict());
+//		pmAddress.setPmCountry(new PmCountry());
+//		pmAddress.setPmState(new PmState());
+//		// pmAddress.setPmDivision(new PmDivision());
+//		pmAddressType.setPmAddress(pmAddress);
+//		financialOrg.setPmCountry(new PmCountry());
+//		// Branch Address
+//		branchAddressList = new ArrayList<PmAddressType>();
+//		branchContact = new ArrayList<PmContact>();
+//		branchAddress = new PmAddress();
+//		branchAddressType = new PmAddressType();
+//		branchContactPerson = new PmContact();
+//		branchAddressType.setPmAddress(branchAddress);
+//		// branchContactPerson.setPmAddressType(branchAddressType);
+//		branchAddress.setPmCity(new PmCity());
+//		branchAddress.setPmDistrict(new PmDistrict());
+//		branchAddress.setPmCountry(new PmCountry());
+//		branchAddress.setPmState(new PmState());
+//		// branchAddress.setPmDivision(new PmDivision());
+//		// branchAddressType.setPmAddress(branchAddress);
+//		orgProfileList = new ArrayList<PmOrgProfile>();
+//
+//	}
+//
+//	/**
+//	 * @return the stateList
+//	 */
+//	public List<PmState> getStateList() {
+//		return stateList;
+//	}
+//
+//	/**
+//	 * @param stateList
+//	 *            the stateList to set
+//	 */
+//	public void setStateList(List<PmState> stateList) {
+//		this.stateList = stateList;
+//	}
+//
+//	/**
+//	 * @return the countryList
+//	 */
+//	public List<PmCountry> getCountryList() {
+//		return countryList;
+//	}
+//
+//	/**
+//	 * @param countryList
+//	 *            the countryList to set
+//	 */
+//	public void setCountryList(List<PmCountry> countryList) {
+//		this.countryList = countryList;
+//	}
+//
+//	/**
+//	 * @return the districtList
+//	 */
+//	public List<PmDistrict> getDistrictList() {
+//		return districtList;
+//	}
+//
+//	/**
+//	 * @param districtList
+//	 *            the districtList to set
+//	 */
+//	public void setDistrictList(List<PmDistrict> districtList) {
+//		this.districtList = districtList;
+//	}
+//
+//	/**
+//	 * @return the citysList
+//	 */
+//	public List<PmCity> getCityList() {
+//		return cityList;
+//	}
+//
+//	/**
+//	 * @param citysList
+//	 *            the citysList to set
+//	 */
+//	public void setCityList(List<PmCity> cityList) {
+//		this.cityList = cityList;
+//	}
+//
+//	/**
+//	 * @return the divisionList
+//	 */
+//	public List<PmDivision> getDivisionList() {
+//		return divisionList;
+//	}
+//
+//	/**
+//	 * @param divisionList
+//	 *            the divisionList to set
+//	 */
+//	public void setDivisionList(List<PmDivision> divisionList) {
+//		this.divisionList = divisionList;
+//	}
 
 	/**
 	 * @return the financialBranchAcc
@@ -227,21 +229,21 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.financialBranchAcc = financialBranchAcc;
 	}
 
-	/**
-	 * @return the pmFinancialBranchAcc
-	 */
-	public List<PmFinancialAcc> getPmFinancialBranchAcc() {
-		return pmFinancialBranchAcc;
-	}
-
-	/**
-	 * @param pmFinancialBranchAcc
-	 *            the pmFinancialBranchAcc to set
-	 */
-	public void setPmFinancialBranchAcc(
-			List<PmFinancialAcc> pmFinancialBranchAcc) {
-		this.pmFinancialBranchAcc = pmFinancialBranchAcc;
-	}
+//	/**
+//	 * @return the pmFinancialBranchAcc
+//	 */
+//	public List<PmFinancialAcc> getPmFinancialBranchAcc() {
+//		return pmFinancialBranchAcc;
+//	}
+//
+//	/**
+//	 * @param pmFinancialBranchAcc
+//	 *            the pmFinancialBranchAcc to set
+//	 */
+//	public void setPmFinancialBranchAcc(
+//			List<PmFinancialAcc> pmFinancialBranchAcc) {
+//		this.pmFinancialBranchAcc = pmFinancialBranchAcc;
+//	}
 
 	/**
 	 * @return the selectedPmFinancialBranchAcc
@@ -366,13 +368,13 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.pmAddressType = pmAddressType;
 	}
 
-	public List<PmFinancialSvc> getPmFinancialSvc() {
-		return pmFinancialSvc;
-	}
-
-	public void setPmFinancialSvc(List<PmFinancialSvc> pmFinancialSvc) {
-		this.pmFinancialSvc = pmFinancialSvc;
-	}
+//	public List<PmFinancialSvc> getPmFinancialSvc() {
+//		return pmFinancialSvc;
+//	}
+//
+//	public void setPmFinancialSvc(List<PmFinancialSvc> pmFinancialSvc) {
+//		this.pmFinancialSvc = pmFinancialSvc;
+//	}
 
 	public List<PmFinancialSvc> getSelectedPmFinancialSvc() {
 		return selectedPmFinancialSvc;
@@ -383,21 +385,21 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.selectedPmFinancialSvc = selectedPmFinancialSvc;
 	}
 
-	public PmFinancialAcc getFinancialAcc() {
-		return financialAcc;
-	}
+//	public PmFinancialAcc getFinancialAcc() {
+//		return financialAcc;
+//	}
+//
+//	public void setFinancialAcc(PmFinancialAcc financialAcc) {
+//		this.financialAcc = financialAcc;
+//	}
 
-	public void setFinancialAcc(PmFinancialAcc financialAcc) {
-		this.financialAcc = financialAcc;
-	}
-
-	public List<PmFinancialAcc> getPmFinancialAcc() {
-		return pmFinancialAcc;
-	}
-
-	public void setPmFinancialAcc(List<PmFinancialAcc> pmFinancialAcc) {
-		this.pmFinancialAcc = pmFinancialAcc;
-	}
+//	public List<PmFinancialAcc> getPmFinancialAcc() {
+//		return pmFinancialAcc;
+//	}
+//
+//	public void setPmFinancialAcc(List<PmFinancialAcc> pmFinancialAcc) {
+//		this.pmFinancialAcc = pmFinancialAcc;
+//	}
 
 	public List<PmFinancialAcc> getSelectedPmFinancialAcc() {
 		return selectedPmFinancialAcc;
@@ -408,20 +410,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.selectedPmFinancialAcc = selectedPmFinancialAcc;
 	}
 
-	/**
-	 * @return the pmFinancialOrg
-	 */
-	public List<PmFinancialOrg> getPmFinancialOrg() {
-		return pmFinancialOrg;
-	}
-
-	/**
-	 * @param pmFinancialOrg
-	 *            the pmFinancialOrg to set
-	 */
-	public void setPmFinancialOrg(List<PmFinancialOrg> pmFinancialOrg) {
-		this.pmFinancialOrg = pmFinancialOrg;
-	}
+//	/**
+//	 * @return the pmFinancialOrg
+//	 */
+//	public List<PmFinancialOrg> getPmFinancialOrg() {
+//		return pmFinancialOrg;
+//	}
+//
+//	/**
+//	 * @param pmFinancialOrg
+//	 *            the pmFinancialOrg to set
+//	 */
+//	public void setPmFinancialOrg(List<PmFinancialOrg> pmFinancialOrg) {
+//		this.pmFinancialOrg = pmFinancialOrg;
+//	}
 
 	public PmFinancialBranch getFinancialBranch() {
 		return financialBranch;
@@ -430,14 +432,14 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	public void setFinancialBranch(PmFinancialBranch financialBranch) {
 		this.financialBranch = financialBranch;
 	}
-
-	public List<PmFinancialBranch> getPmFinancialBranch() {
-		return pmFinancialBranch;
-	}
-
-	public void setPmFinancialBranch(List<PmFinancialBranch> pmFinancialBranch) {
-		this.pmFinancialBranch = pmFinancialBranch;
-	}
+//
+//	public List<PmFinancialBranch> getPmFinancialBranch() {
+//		return pmFinancialBranch;
+//	}
+//
+//	public void setPmFinancialBranch(List<PmFinancialBranch> pmFinancialBranch) {
+//		this.pmFinancialBranch = pmFinancialBranch;
+//	}
 
 	/**
 	 * @return the byFactoring
@@ -637,82 +639,82 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
 	}
-
-	/**
-	 * @return the branchStateList
-	 */
-	public List<PmState> getBranchStateList() {
-		return branchStateList;
-	}
-
-	/**
-	 * @param branchStateList
-	 *            the branchStateList to set
-	 */
-	public void setBranchStateList(List<PmState> branchStateList) {
-		this.branchStateList = branchStateList;
-	}
-
-	/**
-	 * @return the branchCountryList
-	 */
-	public List<PmCountry> getBranchCountryList() {
-		return branchCountryList;
-	}
-
-	/**
-	 * @param branchCountryList
-	 *            the branchCountryList to set
-	 */
-	public void setBranchCountryList(List<PmCountry> branchCountryList) {
-		this.branchCountryList = branchCountryList;
-	}
-
-	/**
-	 * @return the branchDistrictList
-	 */
-	public List<PmDistrict> getBranchDistrictList() {
-		return branchDistrictList;
-	}
-
-	/**
-	 * @param branchDistrictList
-	 *            the branchDistrictList to set
-	 */
-	public void setBranchDistrictList(List<PmDistrict> branchDistrictList) {
-		this.branchDistrictList = branchDistrictList;
-	}
-
-	/**
-	 * @return the branchCityList
-	 */
-	public List<PmCity> getBranchCityList() {
-		return branchCityList;
-	}
-
-	/**
-	 * @param branchCityList
-	 *            the branchCityList to set
-	 */
-	public void setBranchCityList(List<PmCity> branchCityList) {
-		this.branchCityList = branchCityList;
-	}
-
-	/**
-	 * @return the branchDivisionList
-	 */
-	public List<PmDivision> getBranchDivisionList() {
-		return branchDivisionList;
-	}
-
-	/**
-	 * @param branchDivisionList
-	 *            the branchDivisionList to set
-	 */
-	public void setBranchDivisionList(List<PmDivision> branchDivisionList) {
-		this.branchDivisionList = branchDivisionList;
-	}
-
+//
+//	/**
+//	 * @return the branchStateList
+//	 */
+//	public List<PmState> getBranchStateList() {
+//		return branchStateList;
+//	}
+//
+//	/**
+//	 * @param branchStateList
+//	 *            the branchStateList to set
+//	 */
+//	public void setBranchStateList(List<PmState> branchStateList) {
+//		this.branchStateList = branchStateList;
+//	}
+//
+//	/**
+//	 * @return the branchCountryList
+//	 */
+//	public List<PmCountry> getBranchCountryList() {
+//		return branchCountryList;
+//	}
+//
+//	/**
+//	 * @param branchCountryList
+//	 *            the branchCountryList to set
+//	 */
+//	public void setBranchCountryList(List<PmCountry> branchCountryList) {
+//		this.branchCountryList = branchCountryList;
+//	}
+//
+//	/**
+//	 * @return the branchDistrictList
+//	 */
+//	public List<PmDistrict> getBranchDistrictList() {
+//		return branchDistrictList;
+//	}
+//
+//	/**
+//	 * @param branchDistrictList
+//	 *            the branchDistrictList to set
+//	 */
+//	public void setBranchDistrictList(List<PmDistrict> branchDistrictList) {
+//		this.branchDistrictList = branchDistrictList;
+//	}
+//
+//	/**
+//	 * @return the branchCityList
+//	 */
+//	public List<PmCity> getBranchCityList() {
+//		return branchCityList;
+//	}
+//
+//	/**
+//	 * @param branchCityList
+//	 *            the branchCityList to set
+//	 */
+//	public void setBranchCityList(List<PmCity> branchCityList) {
+//		this.branchCityList = branchCityList;
+//	}
+//
+//	/**
+//	 * @return the branchDivisionList
+//	 */
+//	public List<PmDivision> getBranchDivisionList() {
+//		return branchDivisionList;
+//	}
+//
+//	/**
+//	 * @param branchDivisionList
+//	 *            the branchDivisionList to set
+//	 */
+//	public void setBranchDivisionList(List<PmDivision> branchDivisionList) {
+//		this.branchDivisionList = branchDivisionList;
+//	}
+//
 	/**
 	 * @return the selectedPmFinancialBranch
 	 */
