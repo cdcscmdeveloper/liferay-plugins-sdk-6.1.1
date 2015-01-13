@@ -407,6 +407,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					}
 				}		
 			}
+			if(ParameterConst.ITEM_TYPE_SERVICE.equalsIgnoreCase(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode())){
+				if(frnItem.getReceivedAmt().doubleValue() <= 0) {
+						throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount","Delivery Amount"});
+				}		
+			}
 		}
 		
 		Date today = new Date();
@@ -441,7 +446,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Amount","Delivery Amount"});
 		}
 //		if(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
-//			if(item.getReceivedAmt().doubleValue() == 0){
+//			if(item.getReceivedAmt().doubleValue() <= 0){
 //				throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount","Delivery Amount"});
 //			}
 //		}
