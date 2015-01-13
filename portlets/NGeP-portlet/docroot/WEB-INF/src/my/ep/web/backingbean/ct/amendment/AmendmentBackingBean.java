@@ -1715,6 +1715,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
 		try{
 			if(ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 				context = new VelocityContext();	
@@ -1793,7 +1794,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
 					bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
 					expiryPeriod = scLoa.getBondResDueDate() != null ? dateSDF.format(scLoa.getBondResDueDate()) : " ";
-					bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(scLoa.getBondAmt().longValue()) : " ";
+					bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt())) : " ";
 					
 				}else{
 					type = 0;
@@ -1904,7 +1905,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					bondAmt = amountDF.format(scLoa.getBondAmt());
 				}
 				context.put("bondAmt", bondAmt);
-				context.put("bondAmtText", scLoa.getBondAmt() != null ? NumberWordUtil.convert(scLoa.getBondAmt().toString() ) : ""); 
+				context.put("bondAmtText", scLoa.getBondAmt() != null ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt()) ) : ""); 
 				
 				if (scLoa.getBondAmt() != null && getManagedBean().getContractVer().getCtContract().isBondReq()) {
 					context.put("bondAmt200k", true);
