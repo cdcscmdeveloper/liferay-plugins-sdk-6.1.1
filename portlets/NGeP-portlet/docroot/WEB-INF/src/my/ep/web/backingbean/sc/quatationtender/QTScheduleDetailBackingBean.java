@@ -11,21 +11,23 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -34,6 +36,7 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
@@ -43,6 +46,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -87,50 +91,105 @@ public class QTScheduleDetailBackingBean extends
 
 	public void retrievePmStateList() {
 		debugLogger("retrievePmStateList");
+		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 		if (null == this.getManagedBean().getStates()) {
-			StateReqDTO reqDTO = new StateReqDTO();
-			reqDTO.setCountryId(1l);
-			this.getManagedBean().setDistricts(null);
-			IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStateSO.class);
-			StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-			List<PmState> list = resDTO.getStateList();
-			this.getManagedBean().setStates(list);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+			
+			List<PmState> stateList = PmCommonUtil
+					.retrievePmStateList(countryResDTO.getPmCountry()
+							.getCountryId());
+			this.getManagedBean().setStates(stateList);
 
+		}
+		//retrievePmDistrictList();
+		retrievePmDivisions();
+	}
+	
+	public void retrievePmDivisions() {
+		debugLogger("retrievePmDistrictList");
+		this.getManagedBean().setStateCode(false);
+		if (null != this.getManagedBean().getScQtSampleSubmission()) {
+			Long stateId = this.getManagedBean().getScQtSampleSubmission().getAddress()
+					.getPmState().getStateId();
+			this.getManagedBean().setDivisionList(null);
+			this.getManagedBean().setDistrictList(null);
+			this.getManagedBean().setCitys(null);
+			if (stateId != null) {
+				PmState pmState = PmCommonUtil
+						.retrievePmStateByStateId(stateId);
+				if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(pmState
+						.getStateCode())) {
+					this.getManagedBean().setStateCode(true);
+					this.getManagedBean().setDivisionList(
+							PmCommonUtil.retrievePmDivisionList(stateId));
+				} else {
+					PmDivision division = this.getManagedBean().getScQtSampleSubmission()
+							.getAddress().getPmDivision();
+					if (null != division) {
+						this.getManagedBean().getScQtSampleSubmission().getAddress()
+								.getPmDivision().setDivisionId(null);
+					} else {
+						this.getManagedBean().getScQtSampleSubmission().getAddress()
+								.setPmDivision(new PmDivision());
+					}
+				}
+			}
 		}
 		retrievePmDistrictList();
 	}
 
 	public void retrievePmDistrictList() {
-		Long stateId = this.getManagedBean().getScQtSampleSubmission()
-				.getAddress().getPmState().getStateId();
-		this.getManagedBean().setDistricts(null);
-		if (stateId != null) {
-			DistrictReqDTO reqDTO = new DistrictReqDTO();
-			reqDTO.setStateId(stateId);
-			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IDistrictSO.class);
-			DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
-			this.getManagedBean().setDistricts(resDTO.getDistrictList());
-			retrievePmCityList();
+		debugLogger("retrievePmDistrictList");
+		if (null != this.getManagedBean().getScQtSampleSubmission()) {
+			this.getManagedBean().setDistricts(null);
+			Long divisionId = this.getManagedBean().getScQtSampleSubmission()
+					.getAddress().getPmDivision().getDivisionId();
+			Long stateId = this.getManagedBean().getScQtSampleSubmission().getAddress()
+					.getPmState().getStateId();
+			if (!this.getManagedBean().isStateCode() && divisionId == null) {
+				DistrictReqDTO reqDTO = new DistrictReqDTO();
+				reqDTO.setStateId(stateId);
+				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IDistrictSO.class);
+				DistrictResDTO resDTO = reqSO
+						.retriveDistrictListByStateID(reqDTO);
+				this.getManagedBean().setDistricts(resDTO.getDistrictList());
+			} else if (divisionId != null) {
+				DistrictReqDTO reqDTO = new DistrictReqDTO();
+				reqDTO.setDivisionId(divisionId);
+				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IDistrictSO.class);
+				DistrictResDTO resDTO = reqSO
+						.retriveDistrictListByDivision(reqDTO);
+				this.getManagedBean().setDistricts(resDTO.getDistrictList());
+			}
 		}
-
+		retrievePmCityList();
 	}
 
 	public void retrievePmCityList() {
-		Long districtId = this.getManagedBean().getScQtSampleSubmission()
-				.getAddress().getPmDistrict().getDistrictId();
+		debugLogger("retrievePmCityList");
 		this.getManagedBean().setCitys(null);
-		if (null != districtId) {
-			CityReqDTO reqDTO = new CityReqDTO();
-			reqDTO.setDistrictId(districtId);
-			ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICitySO.class);
-			CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
-			this.getManagedBean().setCitys(resDTO.getCityList());
+		if (null != this.getManagedBean().getScQtSampleSubmission()) {
+			Long districtId = this.getManagedBean().getScQtSampleSubmission()
+					.getAddress().getPmDistrict().getDistrictId();
+			if (null != districtId) {
+				CityReqDTO reqDTO = new CityReqDTO();
+				reqDTO.setDistrictId(districtId);
+				ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICitySO.class);
+				CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+				this.getManagedBean().setCitys(resDTO.getCityList());
+			}
 		}
 	}
 
@@ -293,8 +352,16 @@ public class QTScheduleDetailBackingBean extends
 		address.setPmCity(new PmCity());
 		address.setPmState(new PmState());
 		address.setPmDistrict(new PmDistrict());
+		address.setPmDivision(new PmDivision());
 		PmCountry country = new PmCountry();
-		country.setCountryId(1l);
+		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+		CountryReqDTO countryReqDTo = new CountryReqDTO();
+		countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+		CountryResDTO countryResDTO = countrySo
+				.retrieveCountryByCode(countryReqDTo);
+		country.setCountryId(countryResDTO.getPmCountry()
+				.getCountryId());
 		address.setPmCountry(country);
 		sampleSubmission.setAddress(address);
 		this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
@@ -371,14 +438,23 @@ public class QTScheduleDetailBackingBean extends
 			address.setPmCity(new PmCity());
 			address.setPmState(new PmState());
 			address.setPmDistrict(new PmDistrict());
+			address.setPmDivision(new PmDivision());
 			PmCountry country = new PmCountry();
-			country.setCountryId(1l);
+			ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+			country.setCountryId(countryResDTO.getPmCountry()
+					.getCountryId());
 			address.setPmCountry(country);
 			sampleSubmission.setAddress(address);
 		}
 		this.getManagedBean().setSampleAddressIndex(index);
 		this.getManagedBean().setActionType(SourcingConstants.ACTION_EDIT);
 		this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
+		this.getManagedBean().getScQtSampleSubmissionList().set(index, this.getManagedBean().getScQtSampleSubmission());
 		retrievePmStateList();
 		RequestContext.getCurrentInstance().execute("sampledlg.show();");
 	}
