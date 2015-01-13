@@ -536,7 +536,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	    	MenuItem zoneItem = new MenuItem();
 				zoneItem.setValue(str);
 				zoneItem.setId("zoneMenuID"+zoneTabIndex);
-				zoneItem.setUpdate("@all");
+				zoneItem.setUpdate("@form");
 				zoneItem.setActionExpression(FacesScopes
 						.createMethodExpression(facesContext,
 								"#{contractDetailsBackingBean.fulfilmentTabChangeAction("

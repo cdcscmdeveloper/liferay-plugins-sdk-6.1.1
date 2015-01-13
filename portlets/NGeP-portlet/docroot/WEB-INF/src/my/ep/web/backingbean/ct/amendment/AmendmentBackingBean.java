@@ -792,7 +792,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   
 			           //Validation checking for committee
 			           if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && getManagedBean().getTaskId()==null) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			    	             if (!getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {    		
+			        	   	if(!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
+			        	        if (getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {    		
 						                 if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
 								                  getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
 								
@@ -826,6 +827,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    		                        }
 			    	                   }			    	
 			                    }
+			        	   	}
 			            } //Validation checking for committee End
 			    
 			            // Check all the member role must be selected
