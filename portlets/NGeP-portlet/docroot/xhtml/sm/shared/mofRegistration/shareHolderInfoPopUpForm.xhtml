@@ -310,6 +310,13 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.activation.status']}" styleClass="outputLabel-view-label"/></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{backingBean.managedBean.selectedShareHolder.recordStatusFlg eq 1}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{backingBean.managedBean.selectedShareHolder.recordStatusFlg eq 8}"/>
+				</td>
+			</tr>
 		</table>
 
 	</p:panel>
