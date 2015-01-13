@@ -24,7 +24,7 @@
            <p:inputText value="#{spkiBackingBean.challsAnswer}" />
         
             <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-            <p:password binding="#{pin}" id="password"  />
+            <p:password binding="#{pin1}" id="password"  />
  			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" oncomplete="spki_dlg.hide();" />        
 		</h:panelGrid></span>
     </p:dialog>
