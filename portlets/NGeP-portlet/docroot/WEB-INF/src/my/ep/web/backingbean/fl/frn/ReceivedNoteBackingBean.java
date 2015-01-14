@@ -409,7 +409,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			}
 			if(ParameterConst.ITEM_TYPE_SERVICE.equalsIgnoreCase(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode())){
 				if(frnItem.getReceivedAmt().doubleValue() <= 0) {
-						throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount","Delivery Amount"});
+						throw new EpException(MessageConst.ERROR_100033, new String[]{"Received Amount"});
 				}		
 			}
 		}
