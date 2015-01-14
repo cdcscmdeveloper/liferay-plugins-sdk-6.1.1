@@ -89,6 +89,7 @@
 	        <p:column width="8%" headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
 			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS" navigator="true" 
 			  		readonlyInput="true" yearRange="c-0:c+99" 
+			  		disabled="#{!orgUnit.brandNew and !profileManagementBackingBean.editableOrg(orgUnit.expDate)}"
 			  		mindate="#{profileManagementBackingBean.minDate}"
 			  		maxdate="#{ProfileManagementConst.maxDate}" label="#{lbl['lbl.pm.profiles.resorg.table.expdate']}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">

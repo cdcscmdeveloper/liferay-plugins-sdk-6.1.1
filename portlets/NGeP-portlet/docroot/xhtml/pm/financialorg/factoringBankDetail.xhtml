@@ -65,6 +65,7 @@
 				<p:calendar id="expDate" value="#{financialacc.expDate}"
 					showOn="button" size="10" mindate="#{financialOrgBackingBean.managedBean.currentDate}"
 					readonlyInput="true"
+					disabled="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.expDate)}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 
 				</p:calendar>
