@@ -2957,7 +2957,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		if(getManagedBean().getScQt() != null){
 			sb.append(getManagedBean().getScQt().getQtNo());
 		}
-		sb.append(getManagedBean().getScQt().getQtNo());
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		textBeforeSign = sb.toString();
 		return textBeforeSign;
