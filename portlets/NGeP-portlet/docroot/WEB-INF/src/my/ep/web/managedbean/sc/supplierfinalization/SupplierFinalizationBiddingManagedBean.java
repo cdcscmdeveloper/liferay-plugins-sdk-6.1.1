@@ -51,6 +51,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationEndorsementRemarks> remarks;
 	private String attachmentDocType;
 	private Object payLoad;
+	private String action;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -263,9 +264,10 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
 	}
-	
-	
-
-	
-
+	public String getAction() {
+		return action;
+	}
+	public void setAction(String action) {
+		this.action = action;
+	}
 }
