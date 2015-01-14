@@ -15,21 +15,21 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.type']}
 				</f:facet>
-				<p:inputText value="#{pWork.printType}" id="txtPrintTypeId" disabled="#{viewFlag}" />
+				<p:inputText value="#{pWork.printType}" maxlength="100" id="txtPrintTypeId" disabled="#{viewFlag}" />
 			</p:column>
 			
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.uname']}
 				</f:facet>
-				<p:inputText value="#{pWork.clientName}" id="txtUsernameId" disabled="#{viewFlag}"/>
+				<p:inputText value="#{pWork.clientName}" maxlength="100" id="txtUsernameId" disabled="#{viewFlag}"/>
 			</p:column>
 			
 			<p:column>	
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.workval.rm']}
 				</f:facet>
-				<p:inputText value="#{pWork.printAmt}" id="txtWorkValueId" disabled="#{viewFlag}"/>
+				<p:inputText value="#{pWork.printAmt}" maxlength="18" id="txtWorkValueId" disabled="#{viewFlag}"/>
 			</p:column>
 		</p:dataTable>
 		

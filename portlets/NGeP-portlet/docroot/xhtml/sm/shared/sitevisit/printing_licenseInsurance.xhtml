@@ -32,7 +32,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
-				<p:inputText value="#{printingLicenseIns.pppmmNo}" disabled="#{viewFlag || printingLicenseIns.pmParameter.parameterCode != 'C'}" />
+				<p:inputText value="#{printingLicenseIns.pppmmNo}" maxlength="10" disabled="#{viewFlag || printingLicenseIns.pmParameter.parameterCode != 'C'}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
