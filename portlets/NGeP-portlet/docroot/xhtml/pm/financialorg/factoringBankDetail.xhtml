@@ -4,7 +4,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panel>
+	<p:outputPanel id="opFacBankDet">
 		<p:dataTable id="financialaccid" var="financialacc"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"
@@ -73,8 +73,7 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
 					disabled="#{financialacc.brandNew}"
-					styleClass="ppDropDownWidthS" required="true"
-					style="width: 135px;margin-bottom: 5px;">
+					styleClass="ppDropDownWidthS" required="true">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
@@ -96,5 +95,5 @@
 		</div>
 
 
-	</p:panel>
+	</p:outputPanel>
 </ui:composition>
