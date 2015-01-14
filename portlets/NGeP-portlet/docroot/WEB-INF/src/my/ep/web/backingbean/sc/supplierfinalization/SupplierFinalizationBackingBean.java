@@ -23,6 +23,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -41,6 +42,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -68,6 +71,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -111,6 +115,7 @@ import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -2098,11 +2103,27 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			//dropdown (PBB/PBA)
 			
 			List<String> finalizationCommiteeList = new ArrayList<String>();
-			String orgType = getFacesScopes().getUserSessionBean().getOrgTypeCode().getParameterCode();
-			if(orgType.equals(ParameterConst.ORG_TYPE_PMS_SABAH) || orgType.equals(ParameterConst.ORG_TYPE_PMS_SARAWAK)){//FIXME - to filter by PTJ profile
+			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+			String orgType = null; 
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				UserResDTO resDTO = userSO.retrieveUserDtlById(reqDTO);
+				if (resDTO != null) {
+					orgType = resDTO.getPmUser().getOrgTypeCode().getParameterCode();
+				}
+			} finally {
+				userSO = null;
+			}
+			
+			if (StringUtils.equals(orgType,ParameterConst.ORG_TYPE_PMS_SABAH) || 
+					StringUtils.equals(orgType,ParameterConst.ORG_TYPE_PMS_SARAWAK)) {//FIXME - to filter by PTJ profile
 				finalizationCommiteeList.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
 				finalizationCommiteeList.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
-			}else{
+			} else {
 				finalizationCommiteeList.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
 				finalizationCommiteeList.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B);
 			}
@@ -2116,6 +2137,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			
 			//hide Finalization Committee and display "Notes: Quotation/Tender will be forward to BPK"
 			getManagedBean().setForwardToBpk(true);
+		}
+		if (getManagedBean().getScQtFinalization().getHigherCommitte() == null) {
+			getManagedBean().getScQtFinalization().setHigherCommitte(new PmParameter());
+		}
+		if (getManagedBean().getScQtFinalization().getReason() == null) {
+			getManagedBean().getScQtFinalization().setReason(new PmReason());
 		}
 		
 		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.SC_COMMITTEE_TYPE, searchBean);
@@ -2531,8 +2558,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		debugLogger("finalizationCommitteeEvent");
 		
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		String finalizationCommittee = scQtFinalization.getHigherCommitte().getParameterCode();
-		retrieveCommitteeSecretary(finalizationCommittee);
+		Long paramId = scQtFinalization.getHigherCommitte().getParameterId();
+		PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(paramId);
+		scQtFinalization.setHigherCommitte(parameter);
+		scQtFinalization.setHigherCommitteStr(parameter.getParameterCode());
+		retrieveCommitteeSecretary(parameter.getParameterCode());
 	}
 	
 //	public void selectItemEvent(SelectEvent event) {
