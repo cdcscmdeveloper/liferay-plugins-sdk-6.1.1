@@ -2769,10 +2769,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        Row row = null;
 	        int rowIndex = 0;
 	        int cellIndex = 0;
+	        boolean zoneExist = false;
 	        if(!CollectionUtils.isEmpty(productList)){
 	        	rowIndex = 0;
 	        	productSheet = wb.getSheetAt(0);
 	        	wb.setSheetName(0, "ProductSheet");
+	        	for(JadualHargaBean product : productList){
+	        		if(!product.getZone().equals("N/A")){
+	        			zoneExist = true;
+	        		}
+	        	}
 	        	for(JadualHargaBean product : productList){
 	        		rowIndex ++;
 	        		cellIndex =0;
@@ -2784,7 +2790,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
 	        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
 	        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
-	        		row.createCell(cellIndex++).setCellValue(product.getTotalAmount());	 
+	        		//row.createCell(cellIndex++).setCellValue(product.getTotalAmount());	 
 	        	}
 	            //Auto size all the columns
 		        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
@@ -2802,6 +2808,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 			        productSheet.setColumnHidden(3, false);
 	        	}
+	        	// Hide zone column if all N/A
+	        	if(!zoneExist){
+	        		productSheet.setColumnHidden(0, true);
+	        	}
 	        }else{
 	        	wb.removeSheetAt(0);
 	        	emptyProductList = true;
@@ -2816,6 +2826,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		serviceSheet = wb.getSheetAt(1);
 	        		wb.setSheetName(1, "ServiceSheet");
 	        	}
+	        	
+	          	for(JadualHargaBean service : serviceList){
+	        		if(!service.equals("N/A")){
+	        			zoneExist = true;
+	        		}
+	        	}
+	          	
 	        	for(JadualHargaBean service : serviceList){
 	        		rowIndex ++;
 	        		cellIndex =0;
@@ -2829,11 +2846,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
 	        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
 	        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
-	        		row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
+	        		//row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
 	        	}
 	        	 for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
 	 	        	serviceSheet.autoSizeColumn(x);
 	 	        }
+	        	// Hide zone column if all N/A
+	        	if(!zoneExist){
+	        		 serviceSheet.setColumnHidden(0, true);
+		        }
 	        }else{
 	        	wb.removeSheetAt(1);
 	        }
@@ -2865,11 +2886,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			jadualHarga.setQuantity(itemPrice.getMaxQuantity() != null ? itemPrice.getMaxQuantity().toString() : "N/A");
 			jadualHarga.setSubSequence(itemPrice.getSubSequence() != null ? itemPrice.getSubSequence() + "" : "N/A");
 			
-	    	if(null != itemPrice.getUnitPrice() && null != itemPrice.getMaxQuantity()){
-	    		jadualHarga.setTotalAmount(nf.format(itemPrice.getUnitPrice().multiply(itemPrice.getMaxQuantity()).doubleValue()));
-			} else {
-				jadualHarga.setTotalAmount("N/A");
-			}
+//	    	if(null != itemPrice.getUnitPrice() && null != itemPrice.getMaxQuantity()){
+//	    		jadualHarga.setTotalAmount(nf.format(itemPrice.getUnitPrice().multiply(itemPrice.getMaxQuantity()).doubleValue()));
+//			} else {
+//				jadualHarga.setTotalAmount("N/A");
+//			}
 		}else if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName());
 			jadualHarga.setFreqUom(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
@@ -2882,7 +2903,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString());
 	    	jadualHarga.setQuantity(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
 				"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString());
-	    	jadualHarga.setTotalAmount(nf.format(itemPrice.getUnitPrice().multiply(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).doubleValue()));
+//	    	jadualHarga.setTotalAmount(nf.format(itemPrice.getUnitPrice().multiply(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).doubleValue()));
 		}
 
 		return jadualHarga;
