@@ -3246,4 +3246,29 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   if(getManagedBean().getPbQcApproved().equalsIgnoreCase("A")) 
 			   getManagedBean().getContractVer().getCtAmendment().setPbQcApproved(true);	   
 	}
+	
+	public boolean renderAP201Limit(int quotationFlg) {
+		BigDecimal originalContractAmount = null;
+		if(quotationFlg==1) { // use limit additional 250k and total 750k
+			if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+				return true;
+			} else if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+				originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+				if(originalContractAmount!=null && originalContractAmount.doubleValue() <= 500000) {
+					return true;
+				}
+			}
+		} else { // use limit additional 7.5m and total 75m
+			if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				return true;
+			} else if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+				originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+				if(originalContractAmount!=null && originalContractAmount.doubleValue() > 500000) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 }
