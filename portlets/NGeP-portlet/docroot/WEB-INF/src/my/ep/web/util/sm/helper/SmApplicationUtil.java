@@ -3093,7 +3093,7 @@ public class SmApplicationUtil {
 		return smSupplierBasicInfoVO;
 	}
 
-	private static SmMofAccount getActiveMofAccount(
+	public static SmMofAccount getActiveMofAccount(
 			List<SmMofAccount> smMofAccounts, String suppType) {
 		SmMofAccount smMofAccount = new SmMofAccount();
 

@@ -29,12 +29,12 @@
     	
     	<tr>
 	        <td width="30%"><b>ROC/ROB/ROS No.</b></td>
-	        <td></td>
+	        <td>$busRegNo</td>
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>Site Visit Address</b></td>
-	        <td></td>
+	        <td width="30%"><b>Company Address</b></td>
+	        <td>$addrLiines</td>
     	</tr>
     	
     	<tr>
@@ -43,27 +43,27 @@
     	
         <tr>
 	        <td width="30%"><b>Postal Code</b></td>
-	        <td></td>
+	        <td>$postCode</td>
     	</tr>
     	
     	<tr>
 	        <td width="30%"><b>Town/City</b></td>
-	        <td></td>
+	        <td>$townDtls</td>
     	</tr>
     	
     	<tr>
 	        <td width="30%"><b>State</b></td>
-	        <td></td>
+	        <td>$stateDtls</td>
     	</tr>
     	
     	<tr>
     		<td width="30%"><b>District</b></td>
-    		<td></td>
+    		<td>$districtDtls</td>
     	</tr>
     	
    	    <tr>
 	        <td width="30%"><b>MOF Registration No.</b></td>
-	        <td></td>
+	        <td>$mofNo</td>
     	</tr>
     	
     	<tr>
