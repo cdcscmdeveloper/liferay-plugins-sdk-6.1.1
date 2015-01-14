@@ -116,7 +116,7 @@ public class LovBackingBean implements Serializable {
 		try {				
 			LovReqDTO reqDTO = new LovReqDTO();
 			
-			if(lovSearchBean.getDataFilterBeans().size() <= 3) {
+			if(lovSearchBean.getDataFilterBeans().size() <= 1) {
 				constructSearchBean(getLovBean().getConditionField(), isThis);
 			}
 //			searchBean.getDataFilterBeans().clear();
@@ -278,7 +278,7 @@ public class LovBackingBean implements Serializable {
 			}
 		}
 		
-		Object searchValue2 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchValue();
+		/*Object searchValue2 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchValue();
 		if(StringUtils.isNotBlank(searchValue2.toString())) {
 			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchField() == null ||
 					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(2)).getSearchField().length() == 0) {
@@ -292,7 +292,7 @@ public class LovBackingBean implements Serializable {
 					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(1)).getSearchField().length() == 0) {
 				throw new EpException(MessageConst.WARN_755000);
 			}
-		}
+		}*/
 	}
 
 	public void resetAction() {
@@ -554,7 +554,7 @@ public class LovBackingBean implements Serializable {
 
 	public ISearchBean getLovSearchBean() {
 		if(lovSearchBean.getDataFilterBeans().size() == 0) {
-			for(int i = 0; i < 3; i++) {
+			for(int i = 0; i < 1; i++) {
 				SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 				lovSearchBean.getDataFilterBeans().add(filterBean);
 			}
