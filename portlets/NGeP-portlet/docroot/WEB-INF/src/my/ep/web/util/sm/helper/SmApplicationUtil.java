@@ -1441,11 +1441,11 @@ public class SmApplicationUtil {
 					throw new EpException(MessageConst.ERROR_722524,
 							new String[] { pers.getIdentificationNo() });
 				}
-				if (per.getEmail() != null
-						&& per.getEmail().equalsIgnoreCase(pers.getEmail())) {
-					validUser = false;
-					throw new EpException(MessageConst.ERROR_722540);
-				}
+//				if (per.getEmail() != null
+//						&& per.getEmail().equalsIgnoreCase(pers.getEmail())) {
+//					validUser = false;
+//					throw new EpException(MessageConst.ERROR_722540);
+//				}
 			}
 		}
 		if (pers.getPmUser() == null
