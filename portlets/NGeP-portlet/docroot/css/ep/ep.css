@@ -1932,7 +1932,12 @@ table.ppTwoTable td {
 	width: 62px !important;
 }
 
-
+.ui-selectonemenu.ppDropDownWidthM {
+	width: 210px !important;
+}
+.ui-selectonemenu.ppDropDownWidthM label{
+	width: 210px !important;
+}
 .ui-selectonemenu.ppDropDownWidthL label{
 	width: 310px !important;
 }
