@@ -77,7 +77,6 @@ public class SmPersonnelBackingBean extends
 		BaseBackingBean<SmPersonnelManagedBean> {
 
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
-
 	public SmPersonnelBackingBean() {
 
 	}
@@ -1709,7 +1708,6 @@ public class SmPersonnelBackingBean extends
 				.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				|| getManagedBean().getBasicSmPersonnel().getEpRole()
 						.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getManagedBean().getBasicSmPersonnel().getPmUser() == null
 				|| getManagedBean().isUpgradeMofDraftAppl()) {
 			getManagedBean().setDisabledActivateAndDeactivate(true);
 		}
