@@ -77,9 +77,10 @@
 				    <p:column style="width:7%;" styleClass="column-align-center">
 				        <f:facet name="header">
 					        <h:outputText value="* " styleClass="mandatory" />
-					       <h:outputText value="#{lbl['lbl.ct.attendance']}" />
+					       <h:outputText value="#{lbl['lbl.ct.attendance']}"  />
 				        </f:facet>
-				        <p:selectBooleanCheckbox value="#{data.attended}" />
+				        <p:selectBooleanCheckbox value="#{data.attended}" 
+				              disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}" />
 				    </p:column> 
            </p:dataTable>
       </h:panelGrid>
