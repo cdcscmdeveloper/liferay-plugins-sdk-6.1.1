@@ -95,7 +95,7 @@
 
 			<p:commandButton value="Add" process="@this"
 				action="#{organisationBackingBean.addPersonnel}" update="userSearch"
-				oncomplete="userlistpopup.show();" icon="ui-icon-add" />
+				oncomplete="userlistpopup.show();"  />
 
 		</div>		
 	</p:panel>
@@ -120,11 +120,11 @@
 		<p:spacer height="15"></p:spacer>
 		<div align="right">
 			<p:commandButton value="OK" action="#{organisationBackingBean.conformUsers}"
-				ajax="true" icon="ui-icon-check"
+				ajax="true" 
 				update="userSearch,supplierUsers"
 				process="@this, userSearch" onclick="userlistpopup.hide();" />
 
-			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+			<p:commandButton value="Cancel"  process="@this"
 				onclick="userlistpopup.hide();" />
 		</div>
 	</p:dialog>

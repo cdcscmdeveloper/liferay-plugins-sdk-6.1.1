@@ -81,6 +81,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<SelectItem> manualAddrList;
 	private List<PmContact> deliveryContactList;
 	private PmContact deliveryContactPerson;
+	private List<PmAddressType> selectedAddressTypes;
 	
 	private List<PmAddress> addressList;
 	private PmAddress selectedPmAddress;
@@ -1027,6 +1028,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setDeliveryContactList(List<PmContact> deliveryContactList) {
 		this.deliveryContactList = deliveryContactList;
+	}
+
+	/**
+	 * @return the selectedAddressTypes
+	 */
+	public List<PmAddressType> getSelectedAddressTypes() {
+		return selectedAddressTypes;
+	}
+
+	/**
+	 * @param selectedAddressTypes the selectedAddressTypes to set
+	 */
+	public void setSelectedAddressTypes(List<PmAddressType> selectedAddressTypes) {
+		this.selectedAddressTypes = selectedAddressTypes;
 	}
 
 	
