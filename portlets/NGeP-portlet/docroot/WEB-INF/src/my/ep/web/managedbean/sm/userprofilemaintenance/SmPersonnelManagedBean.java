@@ -81,6 +81,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmPersonnel selectedPersonnelToReassign;
 	private SmSupplier smSupplier;
 	private String selectedPersonnelIdentificationType;
+	private String deactivateTerminateConfirmMsg;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -557,6 +558,15 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setSelectedPersonnelIdentificationType(
 			String selectedPersonnelIdentificationType) {
 		this.selectedPersonnelIdentificationType = selectedPersonnelIdentificationType;
+	}
+
+	public String getDeactivateTerminateConfirmMsg() {
+		return deactivateTerminateConfirmMsg;
+	}
+
+	public void setDeactivateTerminateConfirmMsg(
+			String deactivateTerminateConfirmMsg) {
+		this.deactivateTerminateConfirmMsg = deactivateTerminateConfirmMsg;
 	}
 
 }

@@ -89,13 +89,18 @@
 							<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
 						</td>
 					</tr>
-					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}"  rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/></td>		
-						<td>
-							<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 1}"/>
-							<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 0}"/>
-						</td>
-					</tr>
+					<p:outputPanel rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
+								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
+								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
+								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}">
+						<tr>
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}"  rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/></td>		
+							<td>
+								<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 1}"/>
+								<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 0}"/>
+							</td>
+						</tr>
+					</p:outputPanel>
 				</table>
 			</p:panel>
 		</p:panelGrid>
