@@ -12,7 +12,7 @@
 		</p:selectOneMenu>
 		<ui:remove>
 			<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchOperator}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems value="#{lovBackingBean.searchOperators}" />
 			</p:selectOneMenu>
 		</ui:remove>
@@ -20,14 +20,14 @@
 
 		<ui:remove>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchField}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
 		</ui:remove>
 		
 		<ui:remove>
 			<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchOperator}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems value="#{lovBackingBean.searchOperators}" />
 			</p:selectOneMenu>
 		</ui:remove>
@@ -35,14 +35,14 @@
 		<ui:remove>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchField}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
 		</ui:remove>
 		
 		<ui:remove>
 			<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchOperator}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems value="#{lovBackingBean.searchOperators}" />
 			</p:selectOneMenu>
 		</ui:remove>
@@ -53,20 +53,20 @@
 		
 		<ui:remove>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchField}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchOperator}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOperators}" />
 		</p:selectOneMenu>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchValue}" style="margin-top:6px;" />
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchField}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchOperator}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOperators}" />
 		</p:selectOneMenu>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchValue}" style="margin-top:6px;" />
