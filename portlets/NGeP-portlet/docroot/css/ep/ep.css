@@ -1932,8 +1932,9 @@ table.ppTwoTable td {
 	width: 62px !important;
 }
 
-.ui-selectonemenu.ppDropDownWidthM {
-	width: 210px !important;
+
+.ui-selectonemenu.ppDropDownWidthL label{
+	width: 310px !important;
 }
 .ui-selectonemenu.ppDropDownWidthL{
 	width: 310px !important;
@@ -1941,7 +1942,13 @@ table.ppTwoTable td {
 .ui-selectonemenu.ppDropDownWidthS {
 	width: 110px !important;
 }
+.ui-selectonemenu.ppDropDownWidthS label{
+	width: 110px !important;
+}
 .ui-selectonemenu.ppDropDownWidthXS{
+	width: 60px !important;
+}
+.ui-selectonemenu.ppDropDownWidthXS label{
 	width: 60px !important;
 }
 .ppHalf {
