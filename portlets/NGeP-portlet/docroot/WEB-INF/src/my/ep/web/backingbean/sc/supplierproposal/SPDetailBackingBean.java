@@ -2197,7 +2197,11 @@ public class SPDetailBackingBean extends
 			Calendar startCalendar = new GregorianCalendar();
 			startCalendar.setTime(prpExperience.getEffectiveDate());
 			Calendar endCalendar = new GregorianCalendar();
-			endCalendar.setTime(prpExperience.getExpiryDate());
+			// to resolve one day difference 
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(prpExperience.getExpiryDate()); 
+			c.add(Calendar.DATE, 1);
+			endCalendar.setTime(c.getTime());
 			int diffYear = endCalendar.get(Calendar.YEAR)
 					- startCalendar.get(Calendar.YEAR);
 			int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH)
