@@ -2621,6 +2621,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		if (selectedItemList != null){
 			List<ScQtEvaluationResult> recomendedList = getManagedBean().getRecommendedSupplierList();
 			for (ScQtRecommend scQtRecommend : selectedItemList) {
+				
+				// Reset selection
+				scQtRecommend.setSelected(false);
+				
 				if (scQtRecommend.getRecommendBy() == null) {
 					throw new EpException(MessageConst.ERROR_760211);
 				}
@@ -2720,6 +2724,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				}
 			}
 		}		
+		this.getManagedBean().setSelectedRecommendList(new ArrayList<ScQtRecommend>());
 	}
 	
 	public void unSelectSupplierEvent(ScQtEvaluationResult scQtEvaluationResult) {
@@ -2773,6 +2778,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		debugLogger("awardSupplierEvent");
 		
 		String awardSupplierStr = getManagedBean().getAwardSupplier();
+		if (StringUtils.isBlank(awardSupplierStr) ||
+				CollectionUtils.isEmpty(this.getManagedBean().getSelectedRecommendList())) {
+			return;
+		}
+		
 		List<ScQtEvaluationResult> recommendedSupplierList = getManagedBean().getRecommendedSupplierList();
 		if (recommendedSupplierList == null) {
 			recommendedSupplierList = new ArrayList<ScQtEvaluationResult>();

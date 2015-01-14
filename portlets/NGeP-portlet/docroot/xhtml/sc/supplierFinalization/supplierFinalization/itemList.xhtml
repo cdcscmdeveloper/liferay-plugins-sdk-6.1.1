@@ -34,7 +34,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl])" listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=selectItem],[id$=supplierPanel])" listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -74,8 +74,7 @@
 				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.recommendDtls}">
 								
 					<div class="datalist-noborder">
-						<ui:repeat var="recommendDetail"
-								   value="#{item.recommendDtls}">
+						<p:dataList var="recommendDetail" value="#{item.recommendDtls}" type="none">								   
 							<p:column>
 								<p:commandLink update="@([id$=suppDtlPopUp])"
 									action="#{suppFinalizationBackingBean.supplier}"
@@ -85,7 +84,7 @@
 								</p:commandLink>
 								<br/>
 							</p:column>
-						</ui:repeat>
+						</p:dataList>
 					</div>
 				</p:outputPanel>	
 			</p:column>
@@ -94,17 +93,17 @@
 				<p:outputPanel id="quantityListTbl"  rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
 								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 					<div class="datalist-quantity">
-						<ui:repeat var="qty" value="#{item.recommendDtls}">
+						<p:dataList var="qty" value="#{item.recommendDtls}" type="none">						
 							<p:column>
-								<h:inputText value="#{qty.awardQty}" maxlength="6" size="10" required="true" 
+								<h:inputText value="#{qty.awardQty}" maxlength="13" size="10" required="true" 
 											 style="text-align: right;" label="#{lbl['lbl.sc.quantity']}">
-									<p:ajax partialSubmit="true" process="@this" update="@this" />
+									<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
 										maxIntegerDigits="10" maxFractionDigits="3"/>								
 								</h:inputText>
 								<br/>
 							</p:column>
-						</ui:repeat>
+						</p:dataList>
 					</div>
 				</p:outputPanel>
 				
