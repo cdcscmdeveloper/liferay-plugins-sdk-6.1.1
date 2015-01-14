@@ -1,11 +1,12 @@
-<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-
-	<p:panel id="addManualDelAddrPnl">
+	<p:outputLabel id="addManualDelAddrPnl">
 
 		<table style="width: 100%">
 			<tr>
@@ -18,7 +19,7 @@
 					<p:selectOneMenu id="facCountry" styleClass="ppDropDownWidthL"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.address.country']}" disabled="true"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCountry.countryId}"
-						style="width: 275px;margin-bottom: 5px;">
+						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems value="#{financialOrgBackingBean.getCountryList()}"
@@ -36,7 +37,7 @@
 					<p:selectOneMenu id="facState" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
-						style="width: 275px;margin-bottom: 5px;">
+						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
@@ -71,7 +72,7 @@
 						styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDivision.divisionId}"
-						style="width: 275px;margin-bottom: 5px;">
+						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 						  value="#{financialOrgBackingBean.getDivisionList(financialOrgBackingBean.managedBean.pmAddress.pmState.stateId)}" 
@@ -92,7 +93,7 @@
 					<p:selectOneMenu id="facDistrict" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.district']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
-						style="width: 275px;margin-bottom: 5px;">
+						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems 
@@ -115,7 +116,7 @@
 				<td><p:selectOneMenu id="facCity" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.city']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
-						style="width: 275px;margin-bottom: 5px;">
+						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems 
@@ -173,7 +174,7 @@
 					</p:commandLink></td>
 			</tr>
 		</table>
-	</p:panel>
+	</p:outputLabel>
 	<p:dialog id="contactPerson" header="Contact Person" closable="false"
 		widgetVar="contactPersonPopup" modal="true" width="600" height="200">
 		<p:messages id="finOrgContactMsg" showDetail="true" autoUpdate="true"
