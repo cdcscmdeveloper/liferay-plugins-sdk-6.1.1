@@ -45,7 +45,8 @@
 					disabled="true" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu styleClass="ppDropDownWidthS" disabled="#{financialsrv.brandNew}"
+				<p:selectOneMenu styleClass="ppDropDownWidthS" 
+					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"
 					style="width: 135px;margin-bottom: 5px;">
 					<f:selectItems
