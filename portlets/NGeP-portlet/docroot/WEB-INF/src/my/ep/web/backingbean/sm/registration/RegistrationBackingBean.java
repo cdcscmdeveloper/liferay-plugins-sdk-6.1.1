@@ -237,7 +237,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//check the professional body if supplier type is consultant
 		if(this.getManagedBean().getSmAppl().getSupplierType() != null){
 			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
-				if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
+				if(this.getManagedBean().getSmAppl().getSmAssociationBodies() == null || this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
 					throw new EpException(MessageConst.ERROR_721033);
 				}else{
 					checkDuplicatedProfessionalBody();
