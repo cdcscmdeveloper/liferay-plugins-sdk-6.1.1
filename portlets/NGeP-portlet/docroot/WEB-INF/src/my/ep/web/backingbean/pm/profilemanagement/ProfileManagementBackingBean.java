@@ -671,15 +671,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public boolean editableOrg(Timestamp orgEffDate){
 		logger.info("editableOrg");
 		Date today = new Date();
-    	Date orgDate = new Date(orgEffDate.getTime()); //DateUtils.convertStringToDate("dd/MM/yyyy", argValue);
-    	if(today.compareTo(orgDate)>0){
-    		//today > orgDate
-    		return false;
-    	}else if(today.compareTo(orgDate)==0){
-    		return false;
+		if(orgEffDate!=null){
+			Date orgDate = new Date(orgEffDate.getTime()); //DateUtils.convertStringToDate("dd/MM/yyyy", argValue);
+	    	if(today.compareTo(orgDate)>0){
+	    		//today > orgDate
+	    		return false;
+	    	}else if(today.compareTo(orgDate)==0){
+	    		return false;
+			}else{
+	    		return true;
+	    	}
 		}else{
-    		return true;
-    	}
+			return true;
+		}
+    	
 	}
 	
 	/**
