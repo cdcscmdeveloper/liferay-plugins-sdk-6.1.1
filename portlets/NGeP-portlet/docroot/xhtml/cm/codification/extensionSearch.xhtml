@@ -16,7 +16,7 @@
 			
 		<div style="text-align: right; min-height: 40px;">	
 			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" action="#{codificationBackingBean.backToPrev}" />
+				<p:commandButton value="#{lbl['lbl.cm.back']}" action="#{codificationBackingBean.backToPrev}" />
 			</div>
 		</div>
 						
@@ -137,7 +137,7 @@
 				</table>
 
 				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" id="searchButtonId"
+					<p:commandButton value="#{lbl['lbl.btn.search']}" id="searchButtonId"
 						action="#{codificationBackingBean.extensionCodeSearch}"
 						update="itemTableID" />
 				</div>
@@ -204,7 +204,7 @@
 					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
 						rendered="#{unspscCodeBackingBean.allSupplier}"
 						action="#{unspscCodeBackingBean.requestExtensionCode}" />
-					<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						rendered="#{unspscCodeBackingBean.allSupplier}"
 						action="#{catalogueBackingBean.addToMaintain()}" />
 				</div>

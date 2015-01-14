@@ -25,13 +25,13 @@
 			<div style="text-align: right; min-height: 40px;">
 				
 					<p:commandButton value="#{lbl['lbl.cm.submit']}"
-						icon="ui-icon-submit" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{unspscCodeBackingBean.submitForRequest('SUBMIT')}"
 						update="@form"></p:commandButton>
 				
 
 				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" immediate="true"
+					<p:commandButton value="#{lbl['lbl.cm.back']}" immediate="true"
 						action="#{unspscCodeBackingBean.backToPendingCodified}"
 						update="@form">
 					</p:commandButton>
