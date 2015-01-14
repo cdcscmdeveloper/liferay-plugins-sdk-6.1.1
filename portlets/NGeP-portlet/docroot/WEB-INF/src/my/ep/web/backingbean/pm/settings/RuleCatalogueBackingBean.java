@@ -341,16 +341,12 @@ public class RuleCatalogueBackingBean extends
 
 			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 			ThresholdResDTO resTDTO = null;
-
+			reqTDTO.setOrgProfileId(null);
 			this.getManagedBean().getThresholds().clear();
 			this.getManagedBean().getDeletedThresholds().clear();
 			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
 
 			for (PmThreshold threshold : resTDTO.getThresholdList()) {
-				if (threshold.getOrgProfileId() == null) {// TODO: clear it before
-													// updating the threshold list
-					threshold.setOrgProfileId(new PmOrgProfile());
-				}
 				this.getManagedBean().getThresholds()
 						.add(threshold);
 			}
@@ -1282,14 +1278,19 @@ public class RuleCatalogueBackingBean extends
 	
 	public void addMoreOperationalThreshod() {
 		log.info(".................addMoreOperationalThreshod...................");
-		PmThreshold newThreshold = new PmThreshold();
-		newThreshold.setEffDate(new Date());
-		newThreshold.setOrgProfileId(new PmOrgProfile());//make sure delete if not be selected
+		if(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId() == null){
+			//hit required msg and return
+			throw new EpException(MessageConst.ERROR_770153, new String[] {});
+		}else{
+			PmThreshold newThreshold = new PmThreshold();
+			newThreshold.setEffDate(new Date());
+			newThreshold.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile());		
 
 		int index = this.getManagedBean().getThresholds()
 				.size();
 		this.getManagedBean().getThresholds()
 				.add(index, newThreshold);
+		}
 
 	}
 
@@ -1477,7 +1478,79 @@ public class RuleCatalogueBackingBean extends
 	// this.getManagedBean().setKpiStatusList(resDTO.getKpiStatusList());
 	// }
    public void saveOperationalThreshold(){
-	 
+	   log.info("..............saveFeeExemptionForOrgItem..............");
+		List<PmThreshold> thresholdList = new ArrayList<PmThreshold>();
+		thresholdList.addAll(this.getManagedBean().getThresholds());
+
+		log.info("............................thresholdList.size="
+				+ thresholdList.size());
+
+		for (int i = 0; i < thresholdList.size(); i++) {
+
+			PmThreshold baseValueToCompare = thresholdList.get(i);
+			log.info(".........................thresholdList.get(i)="
+					+ thresholdList.get(i));
+			for (int j = i + 1; j <= (thresholdList.size() - 1); j++) {
+				PmThreshold value = thresholdList.get(j);
+				log.info(".........................second.value.thresholdList.get(j)="
+						+ thresholdList.get(j));
+			
+		if (isDateOverlaped(
+				baseValueToCompare.getEffDate(),
+				baseValueToCompare.getExpDate(),
+				value.getEffDate(), value.getExpDate())) {
+			// hit error and return
+			throw new EpException(
+					MessageConst.ERROR_770152,
+					new String[] {});
+		}
+//			for (PmThreshold th : thresholdList) {
+//				if (th.getOrgProfileId() == null) {
+//					th.setOrgProfileId(new PmOrgProfile());
+//				}
+//			}
+		
+			
+		}
+		}
+		// add deleted list before update
+			thresholdList.addAll(this.getManagedBean().getDeletedThresholds());
+		
+		IOperationalThresholdSO thresholdSO = null;
+		try {
+			thresholdSO = (IOperationalThresholdSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IOperationalThresholdSO.class);
+			ThresholdReqDTO reqDTO = new ThresholdReqDTO();
+			reqDTO.setThresholdList(thresholdList);
+		
+			ThresholdResDTO resDTO = thresholdSO
+					.updateOperationalThresholdList(reqDTO);
+			// retrieve current list again
+			this.getManagedBean().getThresholds().clear();
+			this.getManagedBean().getDeletedThresholds().clear();
+			reqDTO = new ThresholdReqDTO();
+			reqDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
+			resDTO = thresholdSO.getOperationalThresholds(reqDTO);
+			for (PmThreshold thresh : resDTO.getThresholdList())  {
+				
+				this.getManagedBean().getThresholds()
+						.add(thresh);
+			}
+			if (resDTO.isSuccessful()) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770093,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				System.out
+						.println("***************threshold list have been updated*****************");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
    }
    
    private void retrieveOrgProfileList() {
@@ -1489,6 +1562,55 @@ public class RuleCatalogueBackingBean extends
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByMinistry(reqDTO);
 		this.getManagedBean().setOrgProfileList(resDTO.getOrgProfileList());
+		for(PmOrgProfile orgprofile:resDTO.getOrgProfileList()){
+			log.info("....................orgprofile.getOrgProfileId()="+orgprofile.getOrgProfileId());
+		}
 	}
+   
+   public void ministeryChangeListener(){
+	   log.info("inside ministeryChangeListener");
+		IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("pm", IOperationalThresholdSO.class);
+		
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("pm", IOrgProfileSO.class);
+
+		OrgProfileReqDTO pReqDTO = new OrgProfileReqDTO();
+		OrgProfileResDTO pResDTO = null;
+		//get selected ministry from DB
+		if(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId() != null){
+		    pReqDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
+		    pResDTO = orgProfileSO.retrieveOrgProfileByProfileId(pReqDTO);
+		    this.getManagedBean().setSelectedOrgProfile(pResDTO.getPmOrgProfile());
+		}
+		ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
+		ThresholdResDTO resTDTO = null;
+		log.info(".....this.getManagedBean().getSelectedOrgProfile().getOrgProfileId()="+this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
+//		if(this.getManagedBean().getSelectedOrgProfile() != null){
+	    	reqTDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
+//		}
+		this.getManagedBean().getThresholds().clear();
+		this.getManagedBean().getDeletedThresholds().clear();
+		resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
+
+		for (PmThreshold threshold : resTDTO.getThresholdList()) {
+			if (threshold.getOrgProfileId() == null) {// TODO: clear it before
+												// updating the threshold list
+				threshold.setOrgProfileId(new PmOrgProfile());
+			}
+			this.getManagedBean().getThresholds()
+					.add(threshold);
+		}
+		if(resTDTO.getThresholdList().size() == 0){
+			this.getManagedBean().setThresholds(null);
+		}
+		System.out
+				.println("...................resTDTO.getThresholdList().size()="
+						+ resTDTO.getThresholdList().size());
+
+	   
+   }
 
 }
