@@ -20,7 +20,7 @@
 						#{lbl['lbl.sm.financial.reference']}
 					</f:facet>
 					
-					<p:inputText value="#{finDoc.docRef}" disabled="#{viewFlag}" />
+					<p:inputText value="#{finDoc.docRef}" disabled="#{viewFlag}" maxlength="80"/>
 					
 			</p:column>
 			
@@ -54,14 +54,14 @@
 				<f:facet name="header">
 						#{lbl['lbl.sm.financial.doc']}
 					</f:facet>
-				<p:inputText value="#{addFinDoc.docName}" disabled="#{viewFlag}"></p:inputText>
+				<p:inputText value="#{addFinDoc.docName}" maxlength="100" disabled="#{viewFlag}"></p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
 						#{lbl['lbl.sm.financial.reference']}
 					</f:facet>
-				<p:inputText value="#{addFinDoc.docRef}" disabled="#{viewFlag}" />
+				<p:inputText value="#{addFinDoc.docRef}" maxlength="80" disabled="#{viewFlag}" />
 			</p:column>
 
 			<p:column>
