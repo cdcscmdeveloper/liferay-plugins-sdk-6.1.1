@@ -9,9 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+	<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
+	 <ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
+		   postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
-		<p:messages id="supplierFinalization" showDetail="true"
-			autoUpdate="true" closable="true" severity="error,info" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"
