@@ -1190,8 +1190,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 
 	public void generateCoverPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateCoverPdf");
-		populateAttachmentDetails(attachment);
 		attachment.setFileName("finalization-Cover.pdf");
+		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
 		CommonUtils commonUtils = new CommonUtils();
@@ -1246,8 +1246,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	public void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateOfferedAndQTDtlsPdf");
-		populateAttachmentDetails(attachment);
+
 		attachment.setFileName("finalization-offeredAndQTDetails.pdf");
+		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
 		CommonUtils commonUtils = new CommonUtils();
@@ -1452,8 +1453,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	public void generateNoticeBoardPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateNoticeBoardPdf");
-		populateAttachmentDetails(attachment);
+		
 		attachment.setFileName("finalization-noticeBoard.pdf");
+		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
 		CommonUtils commonUtils = new CommonUtils();
@@ -1593,8 +1595,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	public void generatePriceSchedulePdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateNoticeBoardPdf");
-		populateAttachmentDetails(attachment);
+		
 		attachment.setFileName("finalization-priceSchedule.pdf");
+		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
 		//CommonUtils commonUtils = new CommonUtils();
