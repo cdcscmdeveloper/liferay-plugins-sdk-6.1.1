@@ -22,7 +22,7 @@
 					<h:outputText value="#{lbl['lbl.pm.financialorg.paymentbankname']}" />
 				</f:facet>
 				<p:selectOneMenu value="#{financialacc.pmPaymentBankOrg.financialOrgId}" id="somBranchPB"
-					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
+					label="#{lbl['lbl.pm.financialorg.paymentbankname']}" styleClass="ppDropDownWidthL"
 					required="true">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
@@ -53,6 +53,7 @@
 				<p:calendar value="#{financialacc.effDate}" showOn="button" id="feffDte"
 					size="10" readonlyInput="true" required="true" label="#{lbl['lbl.pm.financialorg.effdate']}"
 					mindate="#{financialOrgBackingBean.managedBean.currentDate}"
+					disabled="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.effDate)}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" update="branchexpDate" />
 				</p:calendar>
@@ -63,6 +64,7 @@
 				<p:calendar id="branchexpDate" value="#{financialacc.expDate}"
 					showOn="button" size="10" mindate="#{financialOrgBackingBean.managedBean.currentDate}"
 					readonlyInput="true"
+					disabled="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.expDate)}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" />
 				</p:calendar>
