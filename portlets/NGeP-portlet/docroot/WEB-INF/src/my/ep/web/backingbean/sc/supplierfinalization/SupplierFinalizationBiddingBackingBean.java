@@ -34,6 +34,7 @@ import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -53,6 +55,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
@@ -67,6 +70,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			.getLogger(SupplierFinalizationBiddingBackingBean.class);
 
 	private int currentTab;
+	private String textBeforeSign;
 
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 1;
@@ -515,9 +519,22 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		return scQtFinalization;
 	}
+	
+	
+	
+	public void submitBiddingEndorsement(String outcome) {
+		debugLogger("submitBiddingEndorsement");
+		this.getManagedBean().setAction(outcome);
+		if(isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		} else {
+			updateBPMTask(outcome, null);
+		}	
+	}
+	
 
-	public void submitBiddingEndorsement(String outCome) {
-
+	private void updateBPMTask(String outCome, PmDigiSign digiSign){
+		debugLogger("updateBPMTask");
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
 		SuppFinalizationResDTO suppFinalizationResDTO = null;
@@ -529,29 +546,36 @@ public class SupplierFinalizationBiddingBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
-			String qtNo = getManagedBean().getScQt().getQtNo();
+			ScQt scQt = getManagedBean().getScQt();
 
-			if (ParameterConst.ONLINE_BIDDING_MEETING 
+			/*if (ParameterConst.ONLINE_BIDDING_MEETING 
 					.equals(getManagedBean().getScQtFinalization()
 							.getOnlineBiddingEndorse())) {
 				// TODO - for endorse n sign off by committee member
 				// status should be pending Endorsement
-			} else {
-				// TODO - for escalation, upload doc and submit
-				// status should be pending Escalation
-				ScQtFinalization scQtFinalization = prepareFinalizationInfo();
+			} else {*/
+			// TODO - for escalation, upload doc and submit
+			// status should be pending Escalation
 
-				suppFinalizationReqDTO.setScQtFinalization(scQtFinalization);
-				suppFinalizationReqDTO.setPayLoad(this.getManagedBean()
-						.getPayLoad());
-				suppFinalizationResDTO = qtSuppFinalizationSO
-						.updateBPMAction(suppFinalizationReqDTO);
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, 
+						 scQt.getQtId(),  scQt.getQtNo());
 			}
+
+			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
+
+			suppFinalizationReqDTO.setScQtFinalization(scQtFinalization);
+			suppFinalizationReqDTO.setPayLoad(this.getManagedBean()
+					.getPayLoad());
+			suppFinalizationReqDTO.setDigiSignData(digiSign);
+			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
+				
+			//}
 			if (suppFinalizationResDTO.isSuccessful()) {
 				String variable1 = getParameterDesc(
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION)
-						+ " " + qtNo;
+						+ " " + scQt.getQtNo();
 				String variable2 = getMessageCommon("lbl.sc.online.bidding.endorsement");
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
 						variable1, variable2);
@@ -587,6 +611,26 @@ public class SupplierFinalizationBiddingBackingBean extends
 				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
+	
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
+
+	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		if(getManagedBean().getScQt() != null){
+			sb.append(getManagedBean().getScQt().getQtNo());
+		}
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+	
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
