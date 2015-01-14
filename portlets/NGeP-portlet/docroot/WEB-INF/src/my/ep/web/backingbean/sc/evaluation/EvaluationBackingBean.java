@@ -348,6 +348,7 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setItemTotDisQualSuppliers(0);
 				this.getManagedBean().setItemSummaryQualSuppliers(null);
 				this.getManagedBean().setItemTotQualSuppliers(0);
+				this.getManagedBean().setSummaryItemList(null);
 				if (null != evalResDTO.getRequestItemResults()
 						&& null != evalResDTO.getRequestItemResults()
 								.getResultList()
@@ -397,10 +398,9 @@ public class EvaluationBackingBean extends
 	}
 
 	public void evaluationZonessummaryTabChange(TabChangeEvent event) {
-	
+
 		try {
 
-		
 			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
 			// getManagedBean().setSelectedZone(specZoneDtl);
 
@@ -416,7 +416,7 @@ public class EvaluationBackingBean extends
 				}
 			}
 		} finally {
-			
+
 		}
 	}
 
@@ -908,6 +908,10 @@ public class EvaluationBackingBean extends
 			summaryReqDTO.setResultStages(evalstage);
 			resDTO = evaluationSO
 					.retrieveSummaryDtlsByZoneNAwardNItem(summaryReqDTO);
+			this.getManagedBean().setComplianceSummaryDisQualSuppliers(null);
+			this.getManagedBean().setComplianceDisQualifiedSuppliers(0);
+			this.getManagedBean().setComplianceSummaryQualSuppliers(null);
+			this.getManagedBean().setComplianceQualifiedSuppliers(0);
 			if (resDTO.getQulifiedSuppliers().getTotalRecord() > 0) {
 
 				this.getManagedBean().setComplianceSummaryQualSuppliers(
@@ -1134,7 +1138,11 @@ public class EvaluationBackingBean extends
 				summaryReqDTO.setResultStages(resultStg2);
 				summaryReqDTO.setZonal(false);
 				evalResDTO = evaluationSo.retrieveSummaryDetails(summaryReqDTO);
-
+				this.getManagedBean().setEvaluationSummaryQualSuppliers(null);
+				this.getManagedBean().setEvaTotQualifiedSuppliers(0);
+				this.getManagedBean()
+						.setEvaluationSummaryDisQualSuppliers(null);
+				this.getManagedBean().setEvaTotDisQualifiedSuppliers(0);
 				if (evalResDTO.getQulifiedSuppliers().getTotalRecord() > 0) {
 
 					this.getManagedBean().setEvaluationSummaryQualSuppliers(
@@ -1184,8 +1192,13 @@ public class EvaluationBackingBean extends
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()) {
+					/*
+					 * evaluationSo
+					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
+					 * );
+					 */
 					evaluationSo
-							.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
+							.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
 				}
 
 			}
@@ -1201,9 +1214,29 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						&& !this.getManagedBean().isReadOnly()
+						&& this.getManagedBean()
+								.getScQt()
+								.getEvaluationType()
+								.equalsIgnoreCase(
+										QTConstants.EVALUATION_ONE_TIER)
+						&& !this.getManagedBean().getScQt()
+								.isTechEvaluationReq()) {
 					evaluationSo
 							.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
+				} else if (this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						&& !this.getManagedBean().isReadOnly()
+						&& this.getManagedBean()
+								.getScQt()
+								.getEvaluationType()
+								.equalsIgnoreCase(
+										QTConstants.EVALUATION_ONE_TIER)
+						&& this.getManagedBean().getScQt()
+								.isTechEvaluationReq()) {
+					evaluationSo
+							.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
 				}
 
 			}
