@@ -34,9 +34,12 @@ import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -67,9 +70,11 @@ import my.ep.web.managedbean.sm.sitevisit.SvoSiteVisitManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -109,7 +114,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1256752);
 		//this.getManagedBean().setAppId(1256816);
 		//this.getManagedBean().setAppId(1257091);
-		//this.getManagedBean().setAppId(1257118);
+		this.getManagedBean().setAppId(1257118);
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -1402,7 +1407,27 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		VelocityContext context = new VelocityContext();
 		String vmCompInfo= "/sm/sitevisit/sv-companyinfo.vm";
 		
+		
+		SmMofAccount mofAccount =  SmApplicationUtil.getActiveMofAccount(svTask.getSmAppl().getSmSupplier().getSmMofAccounts(),
+				svTask.getSmAppl().getSupplierType());
+		SmAddress addr = new SmAddress();
+		if(svTask.getSmAppl().getSmCompanyBasic() != null &&
+				svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()!= null && 
+				!svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().isEmpty()){
+			addr = svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+			
+		}
+		
+		
+		context.put("addrLiines",getAddressLines(addr));
+		context.put("postCode", (addr.getPostcode() != null && addr.getPostcode().length() > 0)? addr.getPostcode() : "");
+		context.put("townDtls", (addr.getPmCity() != null && addr.getPmCity().getCityName() !=null && addr.getPmCity().getCityName().length() > 0)? addr.getPmCity().getCityName() : "");
+		context.put("districtDtls", (addr.getPmDistrict() != null && addr.getPmDistrict().getDistrictName() !=null && addr.getPmDistrict().getDistrictName().length() > 0)? addr.getPmDistrict().getDistrictName() : "");
+		context.put("stateDtls", (addr.getPmState() != null && addr.getPmState().getStateName() !=null && addr.getPmState().getStateName().length() > 0)? addr.getPmState().getStateName() : "");
+		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
+		context.put("busRegNo", svTask.getSmAppl().getSmSupplier().getRegNo());
+		context.put("mofNo",StringUtils.isNotBlank(mofAccount.getMofNo())?mofAccount.getMofNo() : "");
 		context.put("applNo",svTask.getSmAppl().getApplNo());
 		context.put("templateType",templateDesc);
 		
@@ -1668,7 +1693,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public StreamedContent getFile() {
 		return file;
 	}
-	
+
 	public String getTemplateNameFromLabel(String templateType){
 		Locale locale = new FacesScopes().getUserLocale();
 		
@@ -1676,4 +1701,31 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String templDesc = ResourceBundleUtils.getMessage(lblTemplate,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 		return templDesc;
 	}
+	
+	
+	private String getAddressLines(SmAddress smAddress) {
+		StringBuilder address = new StringBuilder();
+		if(smAddress!=null) {
+			if (smAddress.getAddress1() != null && smAddress.getAddress1().length() > 0) {
+				address.append(smAddress.getAddress1());
+				address.append("<br />");
+			}
+			if (smAddress.getAddress2() != null && smAddress.getAddress2().length() > 0) {
+				address.append(smAddress.getAddress2());
+				address.append("<br />");
+			}
+			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
+				address.append(smAddress.getAddress3());
+				address.append("<br />");
+			}
+			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
+				address.append(smAddress.getAddress4());
+			}
+					
+		}else{
+			address.append("");
+		}
+		return address.toString();
+	}
+	
 }
