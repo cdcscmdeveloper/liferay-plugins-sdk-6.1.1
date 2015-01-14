@@ -83,7 +83,7 @@
 	         <p:spacer height="5"/>
 	         
 	         <div class="ppRightBtn"> 
-		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" 
+		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" update="modelDialog"
 		             action="#{amendmentBackingBean.fetchCommitteMembers()}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"/>
 		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" partialSubmit="true"
 		             process="@this" icon="ui-icon-delete" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}" />
