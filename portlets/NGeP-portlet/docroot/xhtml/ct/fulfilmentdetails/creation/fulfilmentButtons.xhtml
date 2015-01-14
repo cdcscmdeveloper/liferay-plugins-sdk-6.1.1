@@ -12,11 +12,11 @@
 	    	  <c:if test="#{!contractDetailsBackingBean.managedBean.viewContract}">			
 				<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.action}">
 				  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />				  
-				  <p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
+				  <p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button" 
 					action="#{contractDetailsBackingBean.saveContract(action)}" 	
 					rendered="#{action != 'SUBMIT' and action != 'REJECT' and action != 'APPROVE' }"/>				  			
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						icon="ui-icon-#{fn:toLowerCase(action)}" process="@form" update="@form,@([id$=messages])"
+						process="@form" update="@form,@([id$=messages])"
 						actionListener="#{contractDetailsBackingBean.validateCtContractVer(action)}" action="#{contractDetailsBackingBean.disableUpdate}"
 						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
 						rendered="#{action == 'SUBMIT' or action == 'REJECT' or action == 'APPROVE' or action == 'SIGNOFF'}" />

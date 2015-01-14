@@ -15,11 +15,11 @@
 					value="#{centralContractBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						icon="ui-icon-#{fn:toLowerCase(action)}" update="@form"
+						update="@form"
 						action="#{centralContractBackingBean.saveCircular(action)}"
 						rendered="#{action != 'SUBMIT' and action != 'REJECT' and action != 'APPROVE'}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						icon="ui-icon-#{fn:toLowerCase(action)}" process="@form"
+						process="@form"
 						update="@form,@([id$=messages])"
 						actionListener="#{centralContractBackingBean.validateCircular(action)}"
 						action="#{centralContractBackingBean.disableUpdate}"
