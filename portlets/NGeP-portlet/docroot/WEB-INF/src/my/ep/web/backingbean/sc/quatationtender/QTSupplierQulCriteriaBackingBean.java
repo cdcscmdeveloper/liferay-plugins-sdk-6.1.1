@@ -118,10 +118,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	public QTSupplierQulCriteriaBackingBean() {
 		debugLogger("QTSupplierQulCriteriaBackingBean");
 
-		if (getManagedBean().getSupplierCriteria() == null) {
+		/*if (getManagedBean().getSupplierCriteria() == null) {
 			this.getManagedBean().setSupplierCriteria(
 					new ScQtSupplierCriteria());
-		}
+		}*/
 	}
 	
 	private class SupplierPagingDataModel extends PagingDataModel<SmSupplier> {
