@@ -3227,6 +3227,9 @@ public class SmApplicationBackingBean extends
 							.execute(
 									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
 				}
+				// for new personnel set record status flag to 8
+				getManagedBean().getSelectedShareHolder().setRecordStatusFlg(
+						DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 				getManagedBean().getSmAppl().getSmPersonnels()
 						.add(getManagedBean().getSelectedShareHolder());
 
@@ -6936,7 +6939,8 @@ public class SmApplicationBackingBean extends
 	public boolean isPersonnelViewOnly(SmPersonnel smPersonnel) {
 		boolean retVal = false;
 		if ((smPersonnel.isEquityOwner() || smPersonnel.isDirector())
-				&& getManagedBean().isDisAllowOwnerEdit()) {
+				&& getManagedBean().isDisAllowOwnerEdit()
+				&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 			retVal = true;
 		}
 		return retVal;
