@@ -235,10 +235,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	private void biefingPaperRetrival(){
 		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_REPORT);
-		
-		ScQt scQt = getManagedBean().getScQt();
-		retrieveSupplierFinalizationDtls(scQt);
-		
 		retrieveBriefingPaper();
 	}
 	
@@ -2413,11 +2409,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			selectionMode = QTConstants.SF_MULTIPLE;
 			this.getManagedBean().setOnlineBidding(false);
 		} else {
-			if (recommendByCode == null) {
-				getManagedBean().setRecommendBy("");
+			if (StringUtils.isBlank(recommendType)) {
+				getManagedBean().setRecommendBy(ParameterConst.RECOMMEND_BY_AWARD);
 			} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(recommendByCode)) {
-				selectionMode = QTConstants.SF_MULTIPLE;
 				this.getManagedBean().setOnlineBidding(true);
+				selectionMode = QTConstants.SF_MULTIPLE;
 			}
 		}
 		this.getManagedBean().setItemize(itemize);
