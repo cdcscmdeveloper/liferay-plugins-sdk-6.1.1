@@ -387,6 +387,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
 				       this.getManagedBean().setAction(res.getAction());
 				       this.getManagedBean().setSignOffDecision(true);
+				       getManagedBean().setPbQcApproved(getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
 			
 	          } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
 				      this.getManagedBean().setBpkSaSkApprover(true);
