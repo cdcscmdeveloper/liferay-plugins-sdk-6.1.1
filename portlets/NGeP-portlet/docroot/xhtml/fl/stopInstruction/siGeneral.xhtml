@@ -132,11 +132,11 @@
 						<p:outputLabel value="*" styleClass="mandatory"/>
 					</td>
 					<td style="width: 295px;">
-						<p:selectOneMenu id="reasonId" label="Reason" required="true"
+						<p:selectOneMenu id="reasonId" required="true" label="#{lbl['lbl.fl.stop.instuc.reason.justification']}" 
 							style="width:365px;margin-bottom: 5px;"
 							disabled="#{stopInstrBB.managedBean.buttonVal=='View'}"
 							value="#{stopInstrBB.managedBean.stopInstr.pmReason.reasonCode}">
-							<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{stopInstrBB.populateReasonList}" var="reason"
 								itemLabel="#{reason.reasonDesc}"
 								itemValue="#{reason.pmReason.reasonCode}"/>
@@ -144,7 +144,7 @@
 						</p:selectOneMenu> 
 					</td>
 					<td><p:message for="reasonId" display="icon" /></td>
-					<td style="width: 138px;"><p:outputLabel value="Submission Date" /></td>
+					<td style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 					<td>
 						<p:inputText value="#{stopInstrBB.managedBean.stopInstr.createdDate}" disabled="true">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
