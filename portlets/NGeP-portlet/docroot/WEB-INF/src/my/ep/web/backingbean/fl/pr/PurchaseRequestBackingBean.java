@@ -1318,7 +1318,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					
 					List<String> source = new ArrayList<String>();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
-						if(getManagedBean().getApproverModel().getSource().size()==0) {
+						if(getManagedBean().getApproverModel().getSource().size()==0 && getManagedBean().getApproverModel().getTarget().size() == 0) {
 							getManagedBean().getApproverModel().setSource(source);
 						}
 						source.add(groupUser.getPmUser().getUserName());
