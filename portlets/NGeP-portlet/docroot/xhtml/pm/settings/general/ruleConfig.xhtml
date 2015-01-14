@@ -11,7 +11,7 @@
 	<div style="text-align: right; min-height: 40px;">
 
 		<h:panelGroup>
-			<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
+			<p:commandButton value="#{lbl['lbl.cm.save']}"
 				action="#{ruleCatalogueBackingBean.saveRuleCatalog}" update="@form"></p:commandButton>
 
 		</h:panelGroup>
@@ -204,7 +204,7 @@
 	<br />
 	<h:panelGroup id="addBtnId">
 		<div style="text-align: right;">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
 				partialSubmit="true" process=":form:settingTabId"
 				update=":form:settingTabId"></p:commandButton>
