@@ -14,7 +14,8 @@
 			closable="true" severity="error,info"></p:messages>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td>
+					<p:commandButton value="&#171; #{lbl['lbl.btn.back']}" immediate="true" 
 						 update=":form" process="@this"
 						action="#{financialOrgBackingBean.backToMain}" style="float:left;" /></td>
 				<td><p:commandButton value="#{financialOrgBackingBean.managedBean.financialOrg.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
