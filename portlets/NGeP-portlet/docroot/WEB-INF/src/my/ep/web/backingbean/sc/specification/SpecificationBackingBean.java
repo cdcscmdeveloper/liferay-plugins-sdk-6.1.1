@@ -651,8 +651,76 @@ public class SpecificationBackingBean extends
 				.getFinSpecList();
 		if (null != finSpecCheckLists) {
 			for (ScQtCheckList scQtCheckList2 : finSpecCheckLists) {
-				scQtCheckList2.setQtScoreWeightage(scQtCheckList
-						.getQtScoreWeightage());
+
+				if (null != scQtCheckList.getQtScoreWeightage()) {
+					if (this.getManagedBean().getScQt().getEvaluationType()
+							.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+							&& !this.getManagedBean().getScQt()
+									.isTechEvaluationReq()) {
+						List<ScQtScoreOfferPrice> offerPrice = scQtCheckList
+								.getQtScoreWeightage()
+								.getScQtScoreOfferPrices();
+						if (null == offerPrice || offerPrice.isEmpty()) {
+							offerPrice = new ArrayList<ScQtScoreOfferPrice>();
+							if (null != this.getManagedBean()
+									.getOfferPricePackage()) {
+								offerPrice.add(this.getManagedBean()
+										.getOfferPricePackage());
+							}
+							if (null != this.getManagedBean()
+									.getOfferPriceItem()) {
+								offerPrice.add(this.getManagedBean()
+										.getOfferPriceItem());
+							}
+							scQtCheckList.getQtScoreWeightage()
+									.setScQtScoreOfferPrices(offerPrice);
+						} else {
+							List<ScQtScoreOfferPrice> otherofferpriceofferPrice = scQtCheckList
+									.getQtScoreWeightage()
+									.getScQtScoreOfferPrices();
+							if (null != otherofferpriceofferPrice
+									&& !otherofferpriceofferPrice.isEmpty()) {
+								for (int i=0;i<otherofferpriceofferPrice.size();i++) {
+								ScQtScoreOfferPrice localOfferprice=	otherofferpriceofferPrice.get(i);
+									if (localOfferprice
+											.getOfferPriceType()
+											.equalsIgnoreCase(
+													ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
+										if (null != this.getManagedBean()
+												.getOfferPricePackage()) {
+											otherofferpriceofferPrice
+													.remove(localOfferprice);
+
+											otherofferpriceofferPrice.add(this
+													.getManagedBean()
+													.getOfferPricePackage());
+										}
+									}
+									if (localOfferprice
+											.getOfferPriceType()
+											.equalsIgnoreCase(
+													ParameterConst.RECOMMEND_TYPE_ITEM)) {
+										if (null != this.getManagedBean()
+												.getOfferPriceItem()) {
+											otherofferpriceofferPrice
+													.remove(localOfferprice);
+
+											otherofferpriceofferPrice.add(this
+													.getManagedBean()
+													.getOfferPriceItem());
+										}
+									}
+
+								}
+								scQtCheckList.getQtScoreWeightage()
+										.setScQtScoreOfferPrices(
+												otherofferpriceofferPrice);
+							}
+						}
+					}
+					scQtCheckList2.setQtScoreWeightage(scQtCheckList
+							.getQtScoreWeightage());
+				}
 			}
 		}
 		return finSpecCheckLists;
