@@ -313,25 +313,13 @@ public class FinancialOrgBackingBean extends
 	
 		}
 		
-		/* remove - start*/
-//		for(PmFinancialBranch pmFinancialBranch:this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()){
-//			for(PmAddressType pmAddressType: pmFinancialBranch.getPmAddressTypes()){
-//				if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
-//						&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
-//					System.out.println(pmAddressType.getAddressTypeId());
-//					if(pmAddressType.getPmAddress()!=null){
-//						System.out.println(pmAddressType.getPmAddress().getAddressId());
-//						System.out.println((pmAddressType.getPmAddress().getPmState()!=null ? ("State: " +pmAddressType.getPmAddress().getPmState().getStateId()) : "State null"));
-//						System.out.println((pmAddressType.getPmAddress().getPmDistrict()!=null ? ("District: " +pmAddressType.getPmAddress().getPmDistrict().getDistrictId()) : "District null"));
-//						System.out.println((pmAddressType.getPmAddress().getPmCity()!=null ? ("City: " +pmAddressType.getPmAddress().getPmCity().getCityId()) : "City null"));
-//					}else{
-//						System.out.println("null");
-//					}
-//					
-//				}
-//			}
-//		}
-		/* remove - end */
+		// financial branch (set default)
+		if(this.getManagedBean().getFinancialOrg().getPmFinancialBranchs()!=null 
+				&& !this.getManagedBean().getFinancialOrg().getPmFinancialBranchs().isEmpty() ){
+			this.getManagedBean().setSelectedPmFinancialBranch(this.getManagedBean().getFinancialOrg().getPmFinancialBranchs().get(0));
+			showBranchAddress();
+		}
+	
 
 	}
 
