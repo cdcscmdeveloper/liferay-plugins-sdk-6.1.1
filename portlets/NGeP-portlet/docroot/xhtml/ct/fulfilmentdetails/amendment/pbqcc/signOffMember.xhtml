@@ -51,7 +51,8 @@
 				         <p:outputLabel  style="float:left;" value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
 				    </p:column> 
 				   
-				     <p:column style="width:10%;white-space:normal;" headerText="#{lbl['lbl.ct.attendance']}" styleClass="column-align-center">
+				     <p:column style="width:10%;white-space:normal;" 
+				           headerText="#{lbl['lbl.ct.attendance']}" styleClass="column-align-center">
 				            <p:selectBooleanCheckbox value="#{data.attended}" disabled="true" />
 				     </p:column> 	
               </p:dataTable>

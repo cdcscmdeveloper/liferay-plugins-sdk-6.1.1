@@ -134,6 +134,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
 	private List<SelectItem> representativesTypeslist;
+	private String committetype;
 
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -816,5 +817,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setPbQcApproved(String pbQcApproved) {
 		this.pbQcApproved = pbQcApproved;
 	}
-	
+
+	public String getCommittetype() {
+		return committetype;
+	}
+
+	public void setCommittetype(String committetype) {
+		this.committetype = committetype;
+	}
 }
