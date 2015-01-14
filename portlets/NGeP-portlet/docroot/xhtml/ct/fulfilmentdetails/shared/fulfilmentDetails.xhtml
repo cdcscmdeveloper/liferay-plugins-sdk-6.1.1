@@ -168,7 +168,8 @@
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    	disabled="#{contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract}" style="text-align:top;">
+			    	disabled="#{contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract or contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode==ParameterConst.contractTypeCentral}" 
+			    	style="text-align:top;">
 			     <p:ajax event="change" update=":form:justificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
