@@ -51,6 +51,7 @@
 								rendered="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.terminate']}" itemValue="9" />
 							</p:selectOneRadio></td>
 					
 					</tr>
@@ -556,5 +557,25 @@
 					</p:panel>
 		</p:panelGrid>
 		</p:panel>
+		
+		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
+			widgetVar="confirmDialog" modal="true" width="500" height="100">
+			<p:panel id="dPanel" style="width:100%">
+				<table>
+					<tr>
+						<td><p:outputLabel value="#{smPersonnelBackingBean.managedBean.deactivateTerminateConfirmMsg}" /></td>
+					</tr>
+					<tr>
+						<td>
+							<div align="center">
+								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.deactivateOrTerminate}" 
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
