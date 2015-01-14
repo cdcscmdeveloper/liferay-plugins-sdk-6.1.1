@@ -1,4 +1,6 @@
-<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
@@ -48,7 +50,7 @@
 		</div>
 		
 		<p:outputPanel id="factoringPanel" >
-			<p:tabView>
+			<p:tabView id="tvBranch" widgetVar="tvBranch" dynamic="false" cache="false" orientation="top">
 				<p:tab title="ADDRESS" id="tBranchAddr" disabled="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch==null}">
 					<ui:include src="/xhtml/pm/financialorg/factoringBranchAddress.xhtml" />
 				</p:tab>

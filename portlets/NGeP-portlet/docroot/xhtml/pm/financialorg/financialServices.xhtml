@@ -1,11 +1,11 @@
-<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-	<p:panel id="pFacFinancialService">
+	xmlns:p="http://primefaces.org/ui">
+	<p:outputPanel id="pFacFinancialService">
 		<p:dataTable id="financialsrvid" var="financialsrv"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
@@ -70,5 +70,5 @@
 		</div>
 
 
-	</p:panel>
+	</p:outputPanel>
 </ui:composition>

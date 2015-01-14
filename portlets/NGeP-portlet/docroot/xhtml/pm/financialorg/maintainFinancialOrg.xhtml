@@ -10,8 +10,9 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true"  showSummary="false" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
-			closable="true" severity="error,info"></p:messages>
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<!-- <p:messages id="messages" showDetail="true"  showSummary="false" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
+			closable="true" severity="error,info"></p:messages> -->
 		<table style="width: 100%;">
 			<tr>
 				<td>
@@ -38,7 +39,7 @@
 					<p:tabMenu id="tmFacMenu"
 						styleClass="sidemenu"
 						activeIndex="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
-						style="display : table-caption;">
+						>
 						<p:menuitem value="#{lbl['lbl.pm.menu.general.finance']}" action="#{financialOrgBackingBean.changeMenuIndex(financialOrgBackingBean.generalInfoTab)}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
@@ -53,7 +54,7 @@
 					</p:tabMenu>
 				</td>
 				<td width="80%" valign="top">
-					<p:outputPanel
+					<p:outputPanel id="opFactoringGeneral"
 						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.generalInfoTab}">
 						<ui:include src="generalFinancialdetails.xhtml" />
 					</p:outputPanel>
