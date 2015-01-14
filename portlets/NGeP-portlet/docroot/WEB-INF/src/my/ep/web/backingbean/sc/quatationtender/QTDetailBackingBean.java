@@ -2236,6 +2236,11 @@ public class QTDetailBackingBean extends
 
 		Date publishDate = this.getManagedBean().getQt().getPublishDate();
 		Date bsvDate = null;
+		List<BriefingZoneBean> briefingList = this.getManagedBean()
+				.getBriefingZoneBean();
+		if (briefingList == null || briefingList.size() == 0) {
+			retrieveBriefingSitevisitTabDtl();
+		}
 		if (getManagedBean().getQt().isZonal()) {
 			List<BriefingZoneBean> briefingBeans = getManagedBean()
 					.getBriefingZoneBean();
