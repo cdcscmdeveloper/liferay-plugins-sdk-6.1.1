@@ -1,9 +1,10 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
 
     <h:outputLabel value="" />
 	<p:panel id="pGeneralFinance" header="#{lbl['lbl.pm.header.general.finance']}" toggleable="true">
@@ -65,12 +66,12 @@
 		<br/>
 		<br/>
 		<p:outputPanel id="opGeneralTopMenu">
-			<h:panelGrid id="financial" style="width:100%;">
-				<p:tabView id="tvGeneralFinance">
-					<p:tab title="MAIN ADDRESS">
+			
+				<p:tabView id="tvGeneralFinance"  widgetVar="tvGeneralFinance" dynamic="false" cache="false" orientation="top">
+					<p:tab id="tFacAdd" title="MAIN ADDRESS">
 						<ui:include src="/xhtml/pm/financialorg/financialOrgAddress.xhtml" />
 					</p:tab>
-					<p:tab title="FINANCIAL SERVICES">
+					<p:tab id="tFinancialService" title="FINANCIAL SERVICES">
 						<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
 					</p:tab>
 					<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
@@ -78,7 +79,7 @@
 						<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
 					</p:tab>
 				</p:tabView>
-			</h:panelGrid>
+
 		</p:outputPanel>
 	</p:panel>
 
