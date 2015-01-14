@@ -2409,7 +2409,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			selectionMode = QTConstants.SF_MULTIPLE;
 			this.getManagedBean().setOnlineBidding(false);
 		} else {
-			if (StringUtils.isBlank(recommendType)) {
+			if (StringUtils.isBlank(recommendByCode)) {
 				getManagedBean().setRecommendBy(ParameterConst.RECOMMEND_BY_AWARD);
 			} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(recommendByCode)) {
 				this.getManagedBean().setOnlineBidding(true);
