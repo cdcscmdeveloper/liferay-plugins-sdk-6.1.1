@@ -262,7 +262,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.REVISE_PCB, "qtdetails");
 
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_BPK, "qtapprovals");
+				+ SCProcessNameConst.REVISE_BPK, "qtdetails");
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_QT_SCHEDULE, "qtdetails");
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
