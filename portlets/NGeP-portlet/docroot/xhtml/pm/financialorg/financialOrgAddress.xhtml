@@ -240,13 +240,13 @@
 			<div align="right">
 				<p:commandButton value="OK" process="@this, contactPerson"
 					action="#{financialOrgBackingBean.okContacePerson}" ajax="true"
-					icon="ui-icon-check" update="@([id$=Msg])" >
+					update="@([id$=Msg])" >
 					<f:param name="dialogValidation" value="true" />   
 				</p:commandButton>
 				&#160;&#160;
 				<p:commandButton value="Cancel" process="@this"
 					action="#{financialOrgBackingBean.closeContacePerson}"
-					icon="ui-icon-cancel" />
+					 />
 
 			</div>
 		</p:panel>

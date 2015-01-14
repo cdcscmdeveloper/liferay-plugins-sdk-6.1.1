@@ -242,12 +242,12 @@
 			<div align="right">
 				<p:commandButton value="OK" process="@this, branchContactPerson"
 					action="#{financialOrgBackingBean.okBranchContacePersonAction}"
-					ajax="true" icon="ui-icon-check" update="branchContactPerson" >
+					ajax="true" update="branchContactPerson" >
 					<f:param name="dialogValidation" value="true" />   
 				</p:commandButton>
 				&#160;&#160;
 				
-					<p:commandButton value="Cancel" process="@this"
+				<p:commandButton value="Cancel" process="@this"
 					action="#{financialOrgBackingBean.closeBranchContacePerson}"
 					/>
 
