@@ -2527,7 +2527,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
 			maxAdditionalLimit = 250000;
 			maxTotalLimit = 750000;
-		}
+		} else if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			maxAdditionalLimit = 7500000;
+			maxTotalLimit = 25000000;
+		} else if(getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+			BigDecimal originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+			if(originalContractAmount!=null) {
+				if(originalContractAmount.doubleValue()>500000) {
+					maxAdditionalLimit = 7500000;
+					maxTotalLimit = 25000000;
+				} else {
+					maxAdditionalLimit = 250000;
+					maxTotalLimit = 750000;
+				}
+			}
+		} 
+		
 		if(rulesType==1) { // extend
 			if(getManagedBean().getAmendHistoryList().size()>0 || getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()>=24) {
 				return true;
