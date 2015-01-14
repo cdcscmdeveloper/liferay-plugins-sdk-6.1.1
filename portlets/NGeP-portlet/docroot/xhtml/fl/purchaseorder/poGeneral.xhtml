@@ -276,7 +276,7 @@
 				<td style="width: 295px;"><p:selectOneMenu id="reasonId" label="Reason" required="true"
 						style="width:288px;margin-bottom: 5px;"
 						value="#{flOrderBB.managedBean.stopIns.pmReason.reasonCode}">
-						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems value="#{flOrderBB.populateReasonList}" var="reason"
 							itemLabel="#{reason.reasonDesc}"
 							itemValue="#{reason.pmReason.reasonCode}"/>
