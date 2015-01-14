@@ -3121,6 +3121,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					   throw new EpException("Role is mandatory");
 			 }
 		}*/
+		committeDataModel.resetData();
 		RequestContext.getCurrentInstance().execute("dlg2.show()");
 	}
 	
