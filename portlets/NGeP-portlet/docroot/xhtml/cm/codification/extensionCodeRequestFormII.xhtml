@@ -15,11 +15,11 @@
 		<h:panelGroup id="cmExtensionRequestFormID">
 
 			<div style="text-align: right;min-height: 40px;">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
+				<p:commandButton value="#{lbl['lbl.cm.submit']}"
 					action="#{codificationBackingBean.requestNewExtensionCode}" update="@form"></p:commandButton>
 				
 				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
+					<p:commandButton value="#{lbl['lbl.cm.back']}"
 						action="#{codificationBackingBean.backToExtensionSearch}" update="@form">
 					</p:commandButton>
 				</div>
@@ -87,7 +87,7 @@
 			</p:dataTable>
 			<h:panelGroup id = "addBtnId">
 			<div style="text-align: right;" >
-				<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					disabled="#{unspscCodeBackingBean.managedBean.requestExtCodeList.size() >= 1 }"
 					action="#{unspscCodeBackingBean.addMoreRequest}"
 					update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>

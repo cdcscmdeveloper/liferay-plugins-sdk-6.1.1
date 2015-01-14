@@ -64,14 +64,14 @@
 
 
 			<div style="text-align: right;">
-				<p:commandButton icon="ui-icon-search"
+				<p:commandButton
 					value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="cmUNSPSCsearchID">
 					<f:param name="itemType"
 						value="#{codificationBackingBean.managedBean.selectedRequestItem.itemType.parameterCode}" />
 				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
+				<p:commandButton value="#{lbl['lbl.btn.back']}"
 					action="#{codificationBackingBean.backToPendingCodified}">
 
 				</p:commandButton>
