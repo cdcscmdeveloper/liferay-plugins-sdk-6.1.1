@@ -45,6 +45,14 @@
          </td>
       </tr>
       <tr>
+         <td>iv.
+         </td>
+         <td>Nilai Baru Kontrak Tambahan
+         </td>
+         <td>$newContractValue
+         </td>
+      </tr>      
+      <tr>
          <td>xx.
          </td>
          <td>Jenis Pemenuhan
@@ -79,9 +87,9 @@
       <tr>
          <td>
          </td>
-         <td>$effStartDate
+         <td>$effStartDate  $effEndDate
          </td>
-         <td>$effEndDate
+         <td>
          </td>
       </tr>
       <tr>
@@ -95,7 +103,7 @@
       <tr>
          <td>
          </td>
-         <td>$amendEffExpDate
+         <td>$extStartDate  $extEndDate
          </td>
          <td>
          </td>
@@ -103,7 +111,7 @@
       <tr>
          <td>viii.
          </td>
-         <td>Effective Date
+         <td>Tarikh Kuatkuasa Pindaan
          </td>
          <td>
          </td>
@@ -111,7 +119,7 @@
       <tr>
          <td>
          </td>
-         <td>$effDate
+         <td>$amendEffExpDate
          </td>
          <td>
          </td>
@@ -121,7 +129,7 @@
          </td>
          <td>Nilai Bon Pelaksanaan Asal
          </td>
-         <td>bondValue
+         <td>$bondValue
          </td>
       </tr>
       <tr>
