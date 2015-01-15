@@ -132,7 +132,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="Apply" process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
-					update="sampledlg" icon="ui-icon-add"
+					update="sampledlg" 
 					oncomplete="sampledlg.show();" />
 			</div>
 		</p:panel>
@@ -313,9 +313,8 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
-				update="cpersondetailsid" icon="ui-icon-add" />
+				update="cpersondetailsid" />
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete"
 				action="#{qTScheduleDetailBackingBean.deleteContactPerson}"
 				update="cpersondetailsid" />
 		</div>
@@ -348,9 +347,9 @@
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
-				update="doaaid" icon="ui-icon-add" />
+				update="doaaid" />
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="doaaid"
+				update="doaaid"
 				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
 		</div>
 	</p:panel>

@@ -33,11 +33,11 @@
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
 			actionListener="#{biddingBB.bidPauseOrCancelAction}"
-			icon="ui-icon-submit" process="@this,bidPauseOrCancelsupplierNotes "
+		    process="@this,bidPauseOrCancelsupplierNotes "
 			partialSubmit="true" oncomplete="bidPauseOrCancel.hide();" />
 
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true"
-			icon="ui-icon-cancel" onclick="bidPauseOrCancel.hide();" />
+		  onclick="bidPauseOrCancel.hide();" />
 
 	</div>
 </ui:composition>

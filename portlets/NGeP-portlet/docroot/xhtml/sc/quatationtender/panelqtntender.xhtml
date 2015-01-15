@@ -28,7 +28,7 @@
 	   	</h:panelGrid>
 		<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
 				partialSubmit="true"
 				process="@this"
 				update="suppPopup"
@@ -42,10 +42,9 @@
 	<p:dialog id="suppPopup" header="Search Supplier" widgetVar="suppdlg" modal="false" appendToBody="false" width="800" height="400">
 		<ui:include src="panelSupplierSearch.xhtml" />
 		<div>           
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" icon="ui-icon-cancel"  oncomplete="suppdlg.hide()" />
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" oncomplete="suppdlg.hide()" />
 			<p:commandButton value="#{lbl['lbl.so.okbtn']}" 
 				style="float:right;" 
-				icon="ui-icon-accept"
 				update="suppQualPnl, supplierlist"
 				action="#{qTSupplierQulCriteriaBackingBean.addPanelToSupplierListAction}"  
 				oncomplete="suppdlg.hide()"  />

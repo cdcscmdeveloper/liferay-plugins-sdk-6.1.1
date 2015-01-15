@@ -33,20 +33,19 @@
 					value="#{lbl['lbl.so.addbtn']}" process="@this"
 					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
-					oncomplete="newspecificationcommittee.show();" icon="ui-icon-add" update="@(.scAddMember)"/>
+					oncomplete="newspecificationcommittee.show();" update="@(.scAddMember)"/>
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					process="@this, specificationcommitteeid"
 					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-					update="@(.scMemberDtl)" icon="ui-icon-delete"
+					update="@(.scMemberDtl)" 
 					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}" />
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 					process="@this, specificationcommitteeid"
 					update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
-					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
-					icon="ui-icon-clone" />
+					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}" />
 			</div>
 		</ui:fragment>
 

@@ -83,12 +83,11 @@
 				</table>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
-						icon="ui-icon-search"
 						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
 						update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
-						icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+						resetValues="true" partialSubmit="true"
 						process="@this" />
 				</div>
 			</p:panel>
@@ -193,9 +192,9 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
-						icon="ui-icon-check" update="@(.scMemberDtl)" />
+						update="@(.scMemberDtl)" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						icon="ui-icon-cancel" onclick="screen2.hide();"
+						onclick="screen2.hide();"
 						update="@(.scMemberDtl)" />
 				</div>
 			</p:panel>

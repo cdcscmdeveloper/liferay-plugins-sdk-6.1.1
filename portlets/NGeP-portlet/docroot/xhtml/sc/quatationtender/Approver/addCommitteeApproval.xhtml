@@ -58,11 +58,11 @@
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 								action="#{qTCommitteBackingBean.searchUserAction}"
-								update="existingcommitteeapproversearchid" icon="ui-icon-search"
+								update="existingcommitteeapproversearchid"
 								process="@this, userSearchPnl" />
 							<p:commandButton value="#{lbl['lbl.so.reset']}"
 								action="#{qTCommitteBackingBean.reset}" update="userSearchPnl"
-								icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+								resetValues="true" partialSubmit="true"
 								process="@this" />
 						</div>
 					</p:panel>
@@ -229,13 +229,11 @@
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this, newCommitteeApproverProfile, committeApproverPnlId"
 					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
-					icon="ui-icon-check"
 					update="@(.scmemberdtls, committeApproverPnlId)" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					styleClass="apply_button" process="@this"
-					oncomplete="newspecificationcommittee.hide();"
-					icon="ui-icon-cancel" />
+					oncomplete="newspecificationcommittee.hide();" />
 			</div>
 		</p:panel>
 	</p:dialog>

@@ -11,12 +11,11 @@
 
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
-			icon="ui-icon-search" partialSubmit="true" process="@this"
+			partialSubmit="true" process="@this"
 			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
 			update="suppPopup" oncomplete="suppdlg.show();" />
 
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			icon="ui-icon-delete"
 			action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedSupplierList}"
 			update="supplierlist" />
 	</div>
@@ -30,12 +29,12 @@
 
 		<br />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 				action="#{qTSupplierQulCriteriaBackingBean.addRestrictedToSupplierListAction}"
 				update="supplierlist" />
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				icon="ui-icon-cancel" oncomplete="suppdlg.hide()" />
+				 oncomplete="suppdlg.hide()" />
 		</div>
 	</p:dialog>
 </ui:composition>
