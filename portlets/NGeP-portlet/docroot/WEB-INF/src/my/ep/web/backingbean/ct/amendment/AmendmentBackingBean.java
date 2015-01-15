@@ -3197,106 +3197,102 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	public void validateMeetingDetails(){
-        boolean secratoryRole = true;
-        boolean chairmanRole = true;
-        boolean ReresentativeJ = true;
-        boolean ReresentativeBpk = true;
-        boolean ReresentativeS = true;
-        boolean ReresentativeP = true;
-        boolean ReresentativeK = true;
-        
-        for(CtCommitteeMember committeObj : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-    	   String parameterCode = ParameterHelper.getInstance().getPmParameterById(committeObj.getMemberRole().getParameterId()).getParameterCode();
-    	   String representativeCode ="";
-    	   if(committeObj.getRepresentativeType() != null && committeObj.getRepresentativeType().getParameterId() != null){
-    		   representativeCode = ParameterHelper.getInstance().getPmParameterById(committeObj.getMemberRole().getParameterId()).getParameterCode();
-			      
-    	   }
-    	   	
-    	  if(committeObj.isAttended() && parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				   chairmanRole = false;
-		  
-    	  } else if(committeObj.isAttended() && parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-				  secratoryRole = false;
-		  } 
+		        boolean secratoryRole = true;
+		        boolean chairmanRole = true;
+		        boolean ReresentativeJ = true;
+		        boolean ReresentativeBpk = true;
+		        boolean ReresentativeS = true;
+		        boolean ReresentativeP = true;
+		        boolean ReresentativeK = true;
+                
+		        for(CtCommitteeMember committeObj : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+    	 
+    	                 if(committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				                chairmanRole = false;
+    	                 } else if(committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				               secratoryRole = false;
+		                 } 
     	  
-    	  if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
-        	  if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
-        		  ReresentativeJ = false;
-        	  }else if(committeObj.isAttended() && parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_SECRETARY_HEAD_DEPARTMENT)) {
-        		  ReresentativeS = false;
-        	  } 
-		  }
+    	                if(committeObj.getRepresentativeType() != null && committeObj.getRepresentativeType().getParameterCode() != null){
+   		  
+    	                      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+        	                        if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
+        		                         ReresentativeJ = false;
+        	                        }else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_SECRETARY_HEAD_DEPARTMENT)) {
+        		                          ReresentativeS = false;
+        	                        } 
+		                       }
 	      
-	      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
-        	  if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
-        		  ReresentativeJ = false;  
-		  }else if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_BPK)) {
-			  ReresentativeBpk = false;  
-	  }
-      }
+							  if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+						          if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
+						        		  ReresentativeJ = false;  
+								  } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_BPK)) {
+									  ReresentativeBpk = false;  
+							     }
+						   }
 	  
-	  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
-		  if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
-    		  ReresentativeP = false;  
-	      } else if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)) {
-    		  ReresentativeK = false;  
-	      } else if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SBH)) {
-    		  ReresentativeS = false;  
-	      }
-	 }
+						  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+							  if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
+					    		  ReresentativeP = false;  
+						      } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)) {
+					    		  ReresentativeK = false;  
+						      } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SBH)) {
+					    		  ReresentativeS = false;  
+						      }
+						 }
 	
-	  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-		    if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
-    		     ReresentativeS = false;  
-	        } else if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK )) {
-    		   ReresentativeP = false;  
-	       }else if(committeObj.isAttended() && representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
-    		  ReresentativeK = false;  
-	      }
-	 }
-}    
-       if(chairmanRole){
-    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-    	   throw new EpException(MessageConst.ERROR_100022, 
-    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson.attendance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-    	   
-       }if(secratoryRole){
-    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-    	   throw new EpException(MessageConst.ERROR_100022, 
-    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.attendance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-  
-       }
-       
-       if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
-    	    if(ReresentativeJ){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from JKR"});
-    	    } else if(ReresentativeS){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from setiausaha bahagian/Ketua bahagian"});
-    	    }
-     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
-    	    if(ReresentativeJ){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from JKR"});
-    	    } else if(ReresentativeBpk){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative BPK"});
-    	    }
-     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
-    	    if(ReresentativeP){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Pegawai kemajuan Negeri Sabah"});
-    	    }else if(ReresentativeK){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Pejabat Pembangunan Negeri Sabah"});
-    	    }else if(ReresentativeS){
-    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Setiausaha PM Sabah"});
-    	    }
-     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
-    	    if(ReresentativeS){
-    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Setiausaha PM Sarawak"});
-    	    }else if(ReresentativeP){
-    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Ppegawai Kemajuan Negeri Sarawak"});
-    	    }else if(ReresentativeK){
-    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for ketua pengarah JKR"});
-    	    }
-       }
+						  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+							    if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
+					    		     ReresentativeS = false;  
+						        } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK )) {
+					    		   ReresentativeP = false;  
+						       }else if(committeObj.isAttended() &&committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
+					    		  ReresentativeK = false;  
+						      }
+						 }
+	                }
+                 }    
+				       if(chairmanRole){
+				    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				    	   throw new EpException(MessageConst.ERROR_100022, 
+				    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson.attendance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				    	   
+				       }if(secratoryRole){
+				    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				    	   throw new EpException(MessageConst.ERROR_100022, 
+				    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.attendance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				  
+				       }
+				       
+				       if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
+				    	    if(ReresentativeJ){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from JKR"});
+				    	    } else if(ReresentativeS){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from setiausaha bahagian/Ketua bahagian"});
+				    	    }
+				     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+				    	    if(ReresentativeJ){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from JKR"});
+				    	    } else if(ReresentativeBpk){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative BPK"});
+				    	    }
+				     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+				    	    if(ReresentativeP){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Pegawai kemajuan Negeri Sabah"});
+				    	    }else if(ReresentativeK){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Pejabat Pembangunan Negeri Sabah"});
+				    	    }else if(ReresentativeS){
+				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Setiausaha PM Sabah"});
+				    	    }
+				     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+				    	    if(ReresentativeS){
+				    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Setiausaha PM Sarawak"});
+				    	    }else if(ReresentativeP){
+				    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Ppegawai Kemajuan Negeri Sarawak"});
+				    	    }else if(ReresentativeK){
+				    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for ketua pengarah JKR"});
+				    	    }
+				       }
 	}
 	
 	public void validateCommiteeMemberDetails(){
