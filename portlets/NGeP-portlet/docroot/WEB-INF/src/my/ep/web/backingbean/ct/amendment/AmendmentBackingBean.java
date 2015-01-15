@@ -1623,6 +1623,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				
 				context.put("contractTitle",getManagedBean().getCtContract().getContractName());
 				context.put("contractNo",getManagedBean().getCtContract().getContractNo());
+				if(getManagedBean().getContractVer().getContractPhysicalNo()!=null) {
+					context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
+				} else {
+					context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
+				}
 				
 				String bondAmt = "";
 				if (scLoa.getBondAmt() != null) {
@@ -1642,14 +1647,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					bondPercentage = percentageDF.format(scLoa.getBondPercentage());
 				}
 				context.put("bondPercentage", bondPercentage);
-				context.put("bondExpDate", ""); // TODO
-
-				String bondResDueDays = "";
-				if (scLoa.getBondResDueDate() != null && scLoa.getAckDate() != null) {
-					bondResDueDays = DateUtils.getDaysDifference(
-							scLoa.getBondResDueDate(), scLoa.getAckDate())
-							+ "";
+				Date bondExpDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+				if(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()!=null) {
+					bondExpDate = getManagedBean().getContractVer().getCtAmendment().getExtendEndDate();
 				}
+				Calendar bondDate = Calendar.getInstance();
+				bondDate.setTime(bondExpDate);
+				bondDate.add(Calendar.YEAR, 1);
+				context.put("bondExpDate", dateSDF.format(bondDate.getTime())); 
+
+				// #3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
+				String bondResDueDays = "30";
+//				if (scLoa.getBondResDueDate() != null && scLoa.getAckDate() != null) {
+//					bondResDueDays = DateUtils.getDaysDifference(
+//							scLoa.getBondResDueDate(), scLoa.getAckDate())
+//							+ "";
+//				}
 				context.put("bondResDueDays", bondResDueDays);
 				
 				String contractEffDate = "";
