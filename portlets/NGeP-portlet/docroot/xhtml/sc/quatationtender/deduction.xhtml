@@ -56,10 +56,9 @@
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				action="#{qTDeductionPaymentBackingBean.addDeductionPaymentAction}"
 				oncomplete="deductPaymentTblWidget.paginator.endLink.click();"
-				update="deductPaymentTblId" icon="ui-icon-add" />
+				update="deductPaymentTblId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
-				icon="ui-icon-delete"
 				action="#{qTDeductionPaymentBackingBean.deleteDeductionPaymentAction}"
 				update="deductPaymentTblId,deductClauseTblId" />
 		</div>
@@ -94,10 +93,9 @@
 						process="@this, deductClauseTblId" partialSubmit="true"
 						action="#{qTDeductionPaymentBackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
-						update="deductClauseTblId" icon="ui-icon-add" />
+						update="deductClauseTblId" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, deductClauseTblId" partialSubmit="true"
-						icon="ui-icon-delete"
 						action="#{qTDeductionPaymentBackingBean.deleteRowsAction}"
 						update="deductClauseTblId" />
 				</h:panelGroup>

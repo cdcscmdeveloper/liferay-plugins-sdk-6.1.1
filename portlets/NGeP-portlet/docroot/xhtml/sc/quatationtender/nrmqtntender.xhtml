@@ -76,10 +76,9 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, openPnlId" partialSubmit="true" update="openPnlId"
-				icon="ui-icon-add"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				icon="ui-icon-delete" process="@this, openPnlId"
+				process="@this, openPnlId"
 				partialSubmit="true"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
 				update="openPnlId" />
@@ -207,11 +206,10 @@
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 						update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();"
-						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}"
-						icon="ui-icon-add" />
+						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}"/>
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, zoneLocationDataTable" partialSubmit="true"
-						update="@([id$=zoneLocationDataTable])" icon="ui-icon-delete"
+						update="@([id$=zoneLocationDataTable])"
 						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
@@ -312,12 +310,11 @@
 							<td>
 								<div class="ppRightBtn">
 									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-										onclick="ZoneLocation.hide();" icon="ui-icon-cancel" />
+										onclick="ZoneLocation.hide();" />
 									<p:commandButton value="#{lbl['lbl.btn.ok']}"
 										onclick="ZoneLocation.hide();" process="@all"
 										update="@this, zoneLocationDataTable,zonePopupPanel"
-										action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}"
-										icon="ui-icon-accept">
+										action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}">
 									</p:commandButton>
 								</div>
 							</td>
@@ -340,7 +337,7 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
 						update="totalSuppliersId"
 						action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
-						icon="ui-icon-search" partialSubmit="true" process="@this" /></td>
+						partialSubmit="true" process="@this" /></td>
 				<td />
 			</tr>
 		</table>

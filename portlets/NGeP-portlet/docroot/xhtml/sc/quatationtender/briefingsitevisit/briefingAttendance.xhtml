@@ -17,8 +17,7 @@
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="Back" style="float:left;"
-							icon="ui-icon-back"
+						<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 							action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
 					</p:column>
 				</p:row>
@@ -69,15 +68,14 @@
 											lovId="SM_SUPPLIER_MOFNO"
 											postUpdateListener="qTBriefingSiteVisitBackingBean.bsvRegistationListner(qTBriefingSiteVisitBackingBean.managedBean.mofAccounts)"
 											headerText="Supplier MOF No Lov" buttonLabel="Add"
-											buttonIcon="ui-icon-add" selectionMode="multiple"
+											selectionMode="multiple"
 											saveObject="qTBriefingSiteVisitBackingBean.managedBean.mofAccounts"
 											update="@form" /></td>
 									<td><p:commandButton
 											value="#{lbl['lbl.sc.action.delete']}"
 											process="@this,complisttbl" partialSubmit="true"
 											update="complisttbl"
-											action="#{qTBriefingSiteVisitBackingBean.deleteSupplierDetails}"
-											icon="ui-icon-delete" /></td>
+											action="#{qTBriefingSiteVisitBackingBean.deleteSupplierDetails}"/></td>
 								</tr>
 							</table>
 						</td>
@@ -170,13 +168,11 @@
 				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
 					process="@this,attendanceDetailstbl" partialSubmit="true"
 					update="attendanceDetailstbl"
-					action="#{qTBriefingSiteVisitBackingBean.addAttendanceForBSV}"
-					icon="ui-icon-add" />
+					action="#{qTBriefingSiteVisitBackingBean.addAttendanceForBSV}"/>
 				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
 					process="@this,attendanceDetailstbl" partialSubmit="true"
 					update="attendanceDetailstbl"
-					action="#{qTBriefingSiteVisitBackingBean.deleteBsvAttandances}"
-					icon="ui-icon-delete" />
+					action="#{qTBriefingSiteVisitBackingBean.deleteBsvAttandances}" />
 			</div>
 		</p:panel>
 

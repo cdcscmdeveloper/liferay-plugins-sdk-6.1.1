@@ -120,7 +120,7 @@
 				<td><h:panelGroup>
 						<p:commandButton value="#{lbl['lbl.sc.qt.upload']}"
 							oncomplete="approvalUpload.show();return false;"
-							partialSubmit="true" process="@this" icon="ui-icon-upload"
+							partialSubmit="true" process="@this" 
 							rendered="#{qTDetailBB.managedBean.editable}">
 							<!-- <p:graphicImage library="ep/images/design" name="upload.png"
 								value="/resources/ep/images/design/upload.png" /> -->
@@ -148,7 +148,6 @@
 						value="#{lbl['lbl.sc.qt.proworkpaper']}"></p:outputLabel></td>
 				<td><h:panelGroup>
 						<p:commandButton value="Upload" style="float:left;"
-							icon="ui-icon-upload"
 							rendered="#{qTDetailBB.managedBean.editable}" />
 					</h:panelGroup></td>
 			</tr>

@@ -32,12 +32,12 @@
 	</p:panel>
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
-			styleClass="apply_button" id="restrictSupplier" icon="ui-icon-search"
+			styleClass="apply_button" id="restrictSupplier"
 			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
 			update="restrictedsupplierPnl" process="@this, searchrestrictedsupp" />
 		<p:commandButton value="#{lbl['lbl.btn.reset']}"
 			action="#{qTSupplierQulCriteriaBackingBean.reset}"
-			update="searchrestrictedsupp" icon="ui-icon-reset" resetValues="true"
+			update="searchrestrictedsupp"  resetValues="true"
 			partialSubmit="true" process="@this" />
 	</div>
 	<p:spacer height="1" />

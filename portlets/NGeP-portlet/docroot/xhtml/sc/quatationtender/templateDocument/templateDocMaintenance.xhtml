@@ -13,12 +13,12 @@
 		autoUpdate="true" closable="true" />
 	<ui:define name="contentSection">
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{qTDocumentsBackingBean.documentBackAction}" />
 		</div>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.save']}"
-				action="#{qTDocumentsBackingBean.saveAction}" icon="ui-icon-save" />
+				action="#{qTDocumentsBackingBean.saveAction}" />
 		</div>
 		<p:spacer height="2" />
 		<p:panel>

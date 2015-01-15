@@ -89,7 +89,7 @@
 					<h:panelGroup id="addtositebutton">
 						<p:commandButton id="addtositevisitid"
 							update="@([id$=sitevisitdtlid]),@([id$=briefingdtlid])"
-							value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
+							value="#{lbl['lbl.so.addtositevisit']}"
 							process="@this,briefingdtlid" partialSubmit="true"
 							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
 							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle' or !isClosedStatus}" />
@@ -97,11 +97,10 @@
 					<p:commandButton id="briefingaddid" value="#{lbl['lbl.so.addbtn']}"
 						process="@this" rendered="#{!isClosedStatus}"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
-						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)"
-						icon="ui-icon-add" />
+						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)"/>
 
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete" process="@this,briefingdtlid"
+						process="@this,briefingdtlid"
 						partialSubmit="true" rendered="#{!isClosedStatus}"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 						update="@([id$=briefingdtlid])" />
@@ -203,11 +202,10 @@
 							<p:commandButton id="addsitevisitid" rendered="#{!isClosedStatus}"
 								value="#{lbl['lbl.so.addbtn']}" process="@this"
 								action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
-								oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)"
-								icon="ui-icon-add" />
+								oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
 							<p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{!isClosedStatus}"
-								icon="ui-icon-delete" process="@this, sitevisitdtlid"
+								process="@this, sitevisitdtlid"
 								partialSubmit="true"
 								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
 								update="@([id$=sitevisitdtlid])" />

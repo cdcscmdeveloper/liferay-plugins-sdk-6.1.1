@@ -9,22 +9,22 @@
 	<tr>
 		<td align="right">
 			<p:commandButton immediate="true"
-				value="#{lbl['lbl.sc.notice.board.backbtn']}" icon="ui-icon-back"
+				value="#{lbl['lbl.btn.back']}"
 				action="#{qTDetailBB.gotoQtSearchPage}" update="@all"
 				style="float:left;" />
 			<c:if
 				test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
 				<p:commandButton value="#{lbl['lbl.so.save']}"
 					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
-					process="@all" icon="ui-icon-save" update="@all" />
+					process="@all" update="@all" />
 
 				<p:commandButton value="#{lbl['lbl.so.submit']}"
 					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
-					process="@all" icon="ui-icon-submit" update="@all" />
+					process="@all" update="@all" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@all"
-					style="float:right;margin-right: 12px;" icon="ui-icon-cancel"
+					style="float:right;margin-right: 12px;" 
 					rendered="#{!qTDetailBB.managedBean.qt.brandNew}"
 					onclick="cancelBODlg.show()" />
 			</c:if>
@@ -43,10 +43,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="cancelBODlg.hide();"
 					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="cancelBODlg.hide();" type="button" />
 			</div>
 		</p:dialog>

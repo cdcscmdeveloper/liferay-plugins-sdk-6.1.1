@@ -105,13 +105,13 @@
 
 	<div align="right">
 
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-submit"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}"
 			actionListener="#{biddingBB.reScheduleOrReBidAction()}"
 			process="@this,reBidOrResumeSupplierNotes,newBidStart,newResumeBidEndDate,newReBidEndDate "
 			partialSubmit="true" oncomplete="bidRescheduleOrResume.hide();" update="@form"/>
 
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-			icon="ui-icon-cancel" onclick="bidRescheduleOrResume.hide();"
+			onclick="bidRescheduleOrResume.hide();"
 			immediate="true" />
 
 	</div>
