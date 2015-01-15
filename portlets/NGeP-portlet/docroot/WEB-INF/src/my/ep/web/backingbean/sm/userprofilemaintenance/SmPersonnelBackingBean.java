@@ -1756,13 +1756,17 @@ public class SmPersonnelBackingBean extends
 	}
 
 	private void setAuthorizedFlag() {
-		if (getManagedBean().getBasicSmPersonnel().getEpRole()
-				.equals(RoleCode.CM_USER.value())) {
-			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
-					Integer.parseInt(ParameterConst.FLAG_NO));
-		} else {
-			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
-					Integer.parseInt(ParameterConst.FLAG_YES));
+		if (getManagedBean().getBasicSmPersonnel().getEpRole() != null
+				&& StringUtils.isNotBlank(getManagedBean()
+						.getBasicSmPersonnel().getEpRole())) {
+			if (getManagedBean().getBasicSmPersonnel().getEpRole()
+					.equals(RoleCode.CM_USER.value())) {
+				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+						Integer.parseInt(ParameterConst.FLAG_NO));
+			} else {
+				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+						Integer.parseInt(ParameterConst.FLAG_YES));
+			}
 		}
 	}
 
