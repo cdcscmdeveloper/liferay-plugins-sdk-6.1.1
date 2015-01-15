@@ -748,6 +748,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
 		
 		String recommendByStr = getManagedBean().getRecommendBy();
+		if (StringUtils.isBlank(recommendByStr)) {
+			throw new EpException(MessageConst.ERROR_760211);
+		}
 		PmParameter recommendBy = getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, recommendByStr);
 		ScQtEvaluationResult scQtEvaluationResult = getManagedBean().getRecommendedSupplier();
 		if (scQtEvaluationResult != null) {
