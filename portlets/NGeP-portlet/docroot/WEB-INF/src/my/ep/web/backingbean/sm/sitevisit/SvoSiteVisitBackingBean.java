@@ -34,7 +34,6 @@ import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
@@ -56,6 +55,7 @@ import my.ep.persistence.entity.sm.SmSvLicenseInsurance;
 import my.ep.persistence.entity.sm.SmSvMachine;
 import my.ep.persistence.entity.sm.SmSvManufacturingDoc;
 import my.ep.persistence.entity.sm.SmSvOffice;
+import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvPrintmachine;
 import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
@@ -1417,8 +1417,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			addr = svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
 			
 		}
-		
-		
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		if(svTask.getSmSvOfficers() != null && !svTask.getSmSvOfficers().isEmpty()){
+			for(SmSvOfficer offcr : svTask.getSmSvOfficers()){
+				sb.append(++i + ". ");
+				sb.append(offcr.getPmUser().getUserName());
+				sb.append("<br/>");
+			}
+		}else{
+			sb.append("");
+		}
+		context.put("svOfficers", sb.toString());
 		context.put("addrLiines",getAddressLines(addr));
 		context.put("postCode", (addr.getPostcode() != null && addr.getPostcode().length() > 0)? addr.getPostcode() : "");
 		context.put("townDtls", (addr.getPmCity() != null && addr.getPmCity().getCityName() !=null && addr.getPmCity().getCityName().length() > 0)? addr.getPmCity().getCityName() : "");
