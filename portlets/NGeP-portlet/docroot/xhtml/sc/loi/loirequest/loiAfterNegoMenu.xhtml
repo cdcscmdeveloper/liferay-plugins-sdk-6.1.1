@@ -27,7 +27,7 @@
 				<ui:fragment>
 					<h:outputText value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" />
 					<p:commandButton oncomplete="loiSuppAttmPopupDlg.show();"
-						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
+						value="#{lbl['lbl.txt.attachment']}"
 						partialSubmit="true" process="@this"
 						update="@([id$=loiSuppAttmPopup])">
 						<f:setPropertyActionListener
@@ -45,13 +45,13 @@
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
-				update="suppDocTbl" icon="ui-icon-add"
+				update="suppDocTbl"
 				rendered="#{isEditableStatus}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs, lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs)}"
-				icon="ui-icon-delete" update="suppDocTbl"
+				update="suppDocTbl"
 				rendered="#{isEditableStatus}" />
 		</div>
 	</p:panel>

@@ -53,11 +53,11 @@
       <br /> <br />
       
 	   <p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.reset']}" style="float:right;" action="#{simpleQuoteBackingBean.reset}" update="@([id$=cloneItemSpecId])"
-		    icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+		    resetValues="true" partialSubmit="true"
 		    process="@this" />
 
 	   <p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.search']}" style="float:right;" action="#{simpleQuoteMB.searchCloneItemSpec}"
-				update="scQuoteDataModel" icon="ui-icon-search" process="@this ,cloneItemSpecId"/>
+				update="scQuoteDataModel" process="@this ,cloneItemSpecId"/>
 				
 	 
 	</p:panel>

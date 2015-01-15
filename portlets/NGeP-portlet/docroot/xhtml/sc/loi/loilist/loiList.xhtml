@@ -54,7 +54,7 @@
 
 	            <p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
 					style="width:30%">
-					<p:commandButton icon="ui-icon-add" value="Create LOI" rendered="#{!loiLoa.loiCreated}" 
+					<p:commandButton  value="Create LOI" rendered="#{!loiLoa.loiCreated}" 
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 				</p:column>
 			</p:dataTable>
@@ -78,7 +78,7 @@
 				</p:column>
 
 				<p:column headerText="Item" style="width:15%">
-					<p:commandButton icon="ui-icon-evaluate" value="view"
+					<p:commandButton  value="view"
 						partialSubmit="true" process="@this"
 						action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
 						update=":form:ItemDetailsPopup"
