@@ -64,7 +64,7 @@
 						listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
 					<p:column selectionMode="multiple" width="5%"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}" />
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit and shareBean.recordStatusFlg ne 8}" />
 
 
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}"
