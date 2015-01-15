@@ -49,7 +49,7 @@
 						<td><p:selectOneRadio id="accountstatus" required="false"
 								value="#{smPersonnelBackingBean.managedBean.accountStatus}" disabled="#{smPersonnelBackingBean.managedBean.disabledActivateAndDeactivate}"
 								rendered="#{smPersonnelBackingBean.managedBean.editMode}">
-								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
+								<f:selectItem itemLabel="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole?lbl['lbl.sm.accountstatus.reactivate']:lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.terminate']}" itemValue="9" />
 							</p:selectOneRadio></td>

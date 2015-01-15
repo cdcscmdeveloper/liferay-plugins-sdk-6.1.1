@@ -238,10 +238,20 @@ public class SmPersonnelBackingBean extends
 			// Basic or Draft MOF
 			if (getManagedBean().getSmPersonnelList() == null
 					|| getManagedBean().getSmPersonnelList().isEmpty()) {
-
+				validPerCount = true;
 			} else {
-				// disabled add button if authorized personnel already 3
-				if (getManagedBean().getSmPersonnelList().size() >= 3) {
+				// disabled add button if authorized personnel that activated
+				// already 3
+				int count = 0;
+				for (SmPersonnel smPersonnel : getManagedBean()
+						.getSmPersonnelList()) {
+					if (smPersonnel.getPmUser() != null
+							&& smPersonnel.getEpRole() != null
+							&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+						count++;
+					}
+				}
+				if (count >= 3) {
 					validPerCount = true;
 				}
 			}
@@ -1542,8 +1552,8 @@ public class SmPersonnelBackingBean extends
 				&& getManagedBean().getBasicSmPersonnel().getPmUser() != null
 				&& StringUtils.isBlank(getManagedBean().getBasicSmPersonnel()
 						.getEpRole())) {
-			getManagedBean()
-			.setAccountStatus(DbValueConst.RECORD_STATUS_SUSPENDED);
+			getManagedBean().setAccountStatus(
+					DbValueConst.RECORD_STATUS_SUSPENDED);
 		}
 	}
 
@@ -1761,12 +1771,15 @@ public class SmPersonnelBackingBean extends
 
 	private void setDisabledActivateDeactivateRadioButton() {
 		getManagedBean().setDisabledActivateAndDeactivate(false);
-		if (getManagedBean().getBasicSmPersonnel().getEpRole()
-				.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getManagedBean().getBasicSmPersonnel().getEpRole()
-						.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getManagedBean().isUpgradeMofDraftAppl()) {
-			getManagedBean().setDisabledActivateAndDeactivate(true);
+		if (getManagedBean().getBasicSmPersonnel() != null
+				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null) {
+			if (getManagedBean().getBasicSmPersonnel().getEpRole()
+					.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+					|| getManagedBean().getBasicSmPersonnel().getEpRole()
+							.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
+					|| getManagedBean().isUpgradeMofDraftAppl()) {
+				getManagedBean().setDisabledActivateAndDeactivate(true);
+			}
 		}
 	}
 
