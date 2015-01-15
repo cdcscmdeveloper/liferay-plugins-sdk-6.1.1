@@ -133,7 +133,7 @@
 					</p:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-					    partialSubmit="true" icon="ui-icon-submit" process="@this itemDetailsID"
+					    partialSubmit="true" process="@this itemDetailsID"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
@@ -144,7 +144,7 @@
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 						process="@this,requestListDataTable" partialSubmit="true"
 						action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
-						update="@([id$=requestListDataTable])" icon="ui-icon-delete" />
+						update="@([id$=requestListDataTable])" />
 				</c:if>
 				</p:column>
 			</p:row>

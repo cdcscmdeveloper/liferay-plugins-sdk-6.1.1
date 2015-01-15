@@ -125,7 +125,7 @@
 					</p:outputPanel>
 					<p:spacer width="10px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-						partialSubmit="true" icon="ui-icon-submit"
+						partialSubmit="true" 
 						process="@this supplierRecId"
 						action="#{requestNoteBackingBean.applyRecSupplierForSupplierRecList(requestNoteBackingBean.managedBean.supplierId)}"
 						update="@([id$=supplierRecDataTable])" />

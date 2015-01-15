@@ -140,10 +140,10 @@
 					<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" process="@form" partialSubmit="true" 
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
 						onstart="popupBlockWidget.show();" oncomplete="popupBlockWidget.hide();"
-						icon="ui-icon-submit" update="addToCartId ,@([id$=btnId])"/>
+						update="addToCartId ,@([id$=btnId])"/>
 						
 					 <p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
-						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-cancel" oncomplete="addToCartPopup.hide();"
+						action="#{requestNoteBackingBean.closeListener}" oncomplete="addToCartPopup.hide();"
 						partialSubmit="true" />
 				</p:column>
 			</p:row>
