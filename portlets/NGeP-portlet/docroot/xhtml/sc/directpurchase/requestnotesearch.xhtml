@@ -79,13 +79,12 @@
 		    
 		    <div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" 
-					icon="ui-icon-search" 
 					action="#{requestNoteBackingBean.searchAction}"
 					update="reqNoteTbl" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
 					action="#{requestNoteBackingBean.resetAction}" update="@form"
-					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+				    resetValues="true" partialSubmit="true"
 					process="@this" />					
 			</div>
     	</p:panel>
