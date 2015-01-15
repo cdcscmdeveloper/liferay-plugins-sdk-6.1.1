@@ -333,7 +333,7 @@ public class ReportConst {
 		public static final String SM_DETAILS_OF_APPLICATION_RPT_NAME = "lbl.rpt.sm.SM_DETAILS_OF_APPLICATION_RPT_NAME";
 		public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";*/
 		//jsp
-		public static final String SM_LST_OF_APP_RPT_JSP = "List_of_Application.jsp";
+		/*public static final String SM_LST_OF_APP_RPT_JSP = "List_of_Application.jsp";
 		public static final String SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_JSP = "List_of_Company_Based_on_Type_and_Capital.jsp";
 		public static final String SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_JSP = "List_of_Company_Sorted_Alphabetically.jsp";
 		public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_JSP = "List_of_Company_Supplrtype_Sts_Catogry_Wise.jsp";
@@ -345,14 +345,14 @@ public class ReportConst {
 		public static final String SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_JSP = "List_of_Personnel_Staff_Belong_to_Many_Company.jsp";
 		public static final String SM_LST_PRE_EXP_COMP_RPT_JSP = "List_of_PreExpiry_Expired_Company.jsp";
 		public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP = "List_offline_Supportg_Doc_Pendg_Submission.jsp";
-		public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";
+		public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";*/
 		//SM Module report end
 	
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
 	public static final String SM_VIRTUAL_VERIFICATION_BUMI_jsp = "SM_VIRTUAL_VERIFICATION_BUMI.jsp";
 	
-	//CM Module reports start	
+	//CT Module reports start	
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
 	public static final String CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL = "CT_002";	
 	public static final String CT_LST_OF_CONTRACT_ALL_RPT_VAL = "CT_003";	
@@ -447,6 +447,7 @@ public class ReportConst {
 	//	
 	public static final String EMPTY_VAL = "";
 	public static final String ZERO_VAL = "0";
+	
 	public static final String AMP_REPORT_NAME = "&report=";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
 	public static final String AMP_ITM_ID_EQ = "&itemid=";
@@ -503,6 +504,19 @@ public class ReportConst {
 	public static final String AMP_PUB_TO_DT_EQ = "&PUBTODT=";
 	public static final String AMP_PREPORT_ID_EQ = "&PREPORTID=";
 	public static final String AMP_PUSER_ID_EQ = "&PUSER=";
+	//cm
+	public static final String CM_AMP_TO_DATE_EQ = "&PTODATE=";
+	public static final String CM_AMP_FROM_DATE_EQ = "&PFROMDATE=";
+	public static final String CM_AMP_COMP_NAME_EQ = "&PCOMPANYNAME=";
+	public static final String CM_AMP_EXT_CODE_EQ = "&PEXTENSIONCODE=";
+	public static final String CM_AMP_ITEM_TYPE_EQ = "&PITEMTYPE=";
+	public static final String CM_AMP_REG_TYPE_EQ = "&PREGISTRATIONTYPE=";
+	public static final String CM_AMP_SUPPOR_ADMIN_EQ = "&PSUPPORADMIN=";
+	public static final String CM_AMP_ITEM_STATUS_EQ = "&PITEMSTATUS=";
+	public static final String CM_AMP_REPORTID_EQ = "&PREPORTID=";
+	public static final String CM_AMP_USER_EQ = "&PUSER=";
+	public static final String CM_AMP_UNSPSC_CODE_EQ = "&PUNSPSCCODE=";
+	public static final String CM_AMP_UNSPSC_TITLE_EQ = "&PUNSPSCTITLE=";
 	//sc
 	public static final String SC_AMP_REQUISENER_EQ = "&REQUIUSRID=";
 	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";
