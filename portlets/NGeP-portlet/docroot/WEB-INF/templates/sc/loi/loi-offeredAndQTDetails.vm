@@ -32,11 +32,11 @@
 	<tr>
 		<td>
 			<p>1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA</p>
-			<ol type="1"> 1.1 Perkara <br/> $title</ol>
-			<ol>1.2 Tempoh Perjanjian / Tempoh Penyiapan <br/> $fulfilmentType </ol>
-			<ol>1.3	Jabatan Pengguna <br/> $ptj </ol>
-			<ol>1.4	Bilangan Pembekal Dipanggil Untuk Rundingan: <br/> </ol>
-			<ol>1.5	Bilangan Pembekal Yang Mengesahkan Surat Niat: <br/> </ol>
+			<ol type="1"> 1.1 Perkara : $title</ol>
+			<ol>1.2 Tempoh Perjanjian / Tempoh Penyiapan : $fulfilmentType </ol>
+			<ol>1.3	Jabatan Pengguna : $ptj </ol>
+			<ol>1.4	Bilangan Pembekal Dipanggil Untuk Rundingan: $supplierSize </ol>
+			<ol>1.5	Bilangan Pembekal Yang Mengesahkan Surat Niat: $statusSupplierSize </ol>
 		</td>
 	</tr>
 </table>

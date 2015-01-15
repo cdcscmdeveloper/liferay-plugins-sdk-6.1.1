@@ -41,14 +41,16 @@
 					<td>Jabatan</td>
 					<td>Peranan</td>
 				</tr>
+				#foreach( $activityList in $activityLists )
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>$activityList.scCommitteeMember.memberName</td>
+					<td>$activityList.scCommitteeMember.designation</td>
+					<td>$activityList.scCommitteeMember.grade</td>
+					<td>$activityList.scCommitteeMember.icPassport</td>
+					<td>$activityList.scCommitteeMember.pmOrgProfile.orgName</td>
+					<td>$bean.getParameterDesc($activityList.scCommitteeMember.memberRole)</td>
 				</tr>
+				#end
 			</table>
 		</td>
 	</tr>
