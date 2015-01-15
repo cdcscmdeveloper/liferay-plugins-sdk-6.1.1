@@ -402,7 +402,7 @@ public class EvaluationBackingBean extends
 		try {
 
 			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
-			// getManagedBean().setSelectedZone(specZoneDtl);
+			getManagedBean().setSelectedZone(specZoneDtl);
 
 			for (int i = 0; i < this.getManagedBean()
 					.getEvaluationStageZonesSummary().size(); i++) {
@@ -442,6 +442,10 @@ public class EvaluationBackingBean extends
 			reqDTO.setResultStages(resultStg);
 			// reqDTO.setAwardBy(QTConstants.AWARD_TYPE_ITEM);
 			reqDTO.setRequestItemId(requestItem.getRequestNoteItemId());
+			if (null != getManagedBean().getSelectedZone()) {
+				reqDTO.setSpeZoneId(getManagedBean().getSelectedZone()
+						.getSpecZoneId());
+			}
 			evalResDTO = evaluationSO
 					.retrieveSummaryDtlsByZoneNAwardNItem(reqDTO);
 			this.getManagedBean().setItemSummaryDisQualSuppliers(null);
