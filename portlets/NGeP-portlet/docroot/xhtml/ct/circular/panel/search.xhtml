@@ -70,7 +70,7 @@
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:10%;white-space:normal;">
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqApproved or 
-						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" 
+						((data.status.statusId == CtStatusConst.pqRejected or data.status.statusId == CtStatusConst.pqCancelled) and data.ctCircular.latestCircularVer != null)}" 
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>

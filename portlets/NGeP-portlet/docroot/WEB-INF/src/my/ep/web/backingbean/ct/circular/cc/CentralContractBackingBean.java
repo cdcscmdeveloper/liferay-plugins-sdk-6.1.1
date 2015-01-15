@@ -463,7 +463,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 //				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 //			}
 			
-			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))
+			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
 			       validateCircular(action);
 			
 			CtCircular circular = getManagedBean().getCircular();
