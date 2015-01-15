@@ -86,7 +86,10 @@
 	  <p:panel id="letterOfAcceptance" header="#{lbl['lbl.ct.menu.loa']}" toggleable="true" toggleSpeed="500">
 	     <h:panelGroup id="uploadLoaPg">
 			  <h:panelGrid columns="4">
+			     <h:panelGrid columns="2">
+			      <h:outputText value="* " styleClass="mandatory" />
 			  	  <p:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+			  	  </h:panelGrid>
 				  <p:commandButton icon="iconAttachment" 
 				       oncomplete="uploadLoaDlg.show();return false;" value="#{lbl['lbl.btn.upload']}" update="uploadLoaPg, uploadLoaDlg" />
 				 <p:spacer width="1" />
