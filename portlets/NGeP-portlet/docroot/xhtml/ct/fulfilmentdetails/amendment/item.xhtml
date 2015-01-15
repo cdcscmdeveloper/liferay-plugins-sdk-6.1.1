@@ -70,7 +70,8 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</p:inputText>
 					<p:spacer width="5"/>
-					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
+					<p:commandLink update=":form:dlgItemMaxQty,itemTable" 
+					    disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" style="margin-bottom: -4px;" />
 					</p:commandLink>
@@ -95,7 +96,7 @@
 					     
 					       <p:column headerText="#{lbl['lbl.ct.max.order.qty']}">
 					        	<p:inputText value="#{itemMaxQtiesVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;width:119px;" rendered="#{itemMaxQtiesVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
-					        		disabled="#{amendmentBackingBean.bpkApprover}">
+					        		disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 							         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemMaxQtiesVar.ctContractItem.uom.uomCode)}" />
 							         <p:ajax process="@this"/>
 						        </p:inputText>
@@ -117,7 +118,7 @@
 					       </p:column>
 				
 				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" rendered="#{!amendmentBackingBean.bpkApprover}">
-						        <p:commandLink update=":form:ctItemMaxQtyTable" process="@form" 
+						        <p:commandLink update=":form:ctItemMaxQtyTable" process="@form" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							       <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 							       <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
@@ -252,8 +253,8 @@
 								
 								<p:column headerText="#{lbl['lbl.ct.action']}" rendered="#{!amendmentBackingBean.bpkApprover}"
 								    styleClass="column-align-center" style="width:10%; white-space:normal;">
-									<p:commandLink update=":form:itemId" process="@form" rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}"
-										action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
+									<p:commandLink update=":form:itemId" process="@form"  disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
+									   rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 									</p:commandLink>
@@ -301,7 +302,7 @@
 	               		 </f:facet>
 					     <h:panelGroup style="float:right;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
-						  	disabled="#{amendmentBackingBean.bpkApprover}">
+						  	disabled="#{amendmentBackingBean.bpkApprover or  amendmentBackingBean.managedBean.disableAmendDetails}" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
@@ -321,7 +322,8 @@
 						</h:outputText>
 					</p:column>
 					<p:column rendered="false" headerText="#{lbl['lbl.ct.action']}" style="width:5%; white-space:normal;" styleClass="column-align-center">
-						<p:commandLink update=":form:ceilingTable" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
+						<p:commandLink update=":form:ceilingTable"  disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
+						   rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
@@ -412,7 +414,7 @@
 					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
 					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">
 					    	<p:inputText value="#{ItemPricesVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
-					    		disabled="#{amendmentBackingBean.bpkApprover}">
+					    		disabled="#{amendmentBackingBean.bpkApprover or  amendmentBackingBean.managedBean.disableAmendDetails}" >
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
@@ -433,7 +435,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" rendered="#{!amendmentBackingBean.bpkApprover}">
 						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
-							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}">
+							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
