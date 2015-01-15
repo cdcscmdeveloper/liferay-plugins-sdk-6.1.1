@@ -65,7 +65,7 @@
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>
-				 <p:column style="width: 15%" rendered="#{(amendmentBackingBean.managedBean.committetype eq 'QCA') or (amendmentBackingBean.managedBean.committetype eq 'QCB')}">
+				 <p:column style="width: 15%" rendered="#{(amendmentBackingBean.managedBean.committetype == ParameterConst.committeeTypeProcurementBoardA) or (amendmentBackingBean.managedBean.committetype eq ParameterConst.committeeTypeProcurementBoardB)}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
