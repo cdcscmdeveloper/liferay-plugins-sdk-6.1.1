@@ -39,6 +39,39 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 		return cmUnspsc;
 	}
 
+	public String getSearchDocumentNoValue() {
+		return searchDocumentNoValue;
+	}
+
+	public void setSearchDocumentNoValue(String searchDocumentNoValue) {
+		this.searchDocumentNoValue = searchDocumentNoValue;
+	}
+
+	public String getSearchSupplierValue() {
+		return searchSupplierValue;
+	}
+
+	public void setSearchSupplierValue(String searchSupplierValue) {
+		this.searchSupplierValue = searchSupplierValue;
+	}
+
+	public String getSearchUNSPSCExtensionCodeValue() {
+		return searchUNSPSCExtensionCodeValue;
+	}
+
+	public void setSearchUNSPSCExtensionCodeValue(
+			String searchUNSPSCExtensionCodeValue) {
+		this.searchUNSPSCExtensionCodeValue = searchUNSPSCExtensionCodeValue;
+	}
+
+	public Long getSearchStatusId() {
+		return searchStatusId;
+	}
+
+	public void setSearchStatusId(Long searchStatusId) {
+		this.searchStatusId = searchStatusId;
+	}
+
 	public void setCmUnspsc(CmUnspsc cmUnspsc) {
 		this.cmUnspsc = cmUnspsc;
 	}
@@ -95,38 +128,6 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 			return new SearchResultBean();
 		}
 
-	}
-	public String getSearchDocumentNoValue() {
-		return searchDocumentNoValue;
-	}
-
-	public void setSearchDocumentNoValue(String searchDocumentNoValue) {
-		this.searchDocumentNoValue = searchDocumentNoValue;
-	}
-
-	public String getSearchSupplierValue() {
-		return searchSupplierValue;
-	}
-
-	public void setSearchSupplierValue(String searchSupplierValue) {
-		this.searchSupplierValue = searchSupplierValue;
-	}
-
-	public String getSearchUNSPSCExtensionCodeValue() {
-		return searchUNSPSCExtensionCodeValue;
-	}
-
-	public void setSearchUNSPSCExtensionCodeValue(
-			String searchUNSPSCExtensionCodeValue) {
-		this.searchUNSPSCExtensionCodeValue = searchUNSPSCExtensionCodeValue;
-	}
-
-	public Long getSearchStatusId() {
-		return searchStatusId;
-	}
-
-	public void setSearchStatusId(Long searchStatusId) {
-		this.searchStatusId = searchStatusId;
 	}
 
 

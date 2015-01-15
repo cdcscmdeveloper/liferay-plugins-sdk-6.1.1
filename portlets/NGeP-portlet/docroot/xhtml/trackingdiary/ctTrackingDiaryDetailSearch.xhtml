@@ -32,85 +32,74 @@
 			<tr>
 				<td><p:panel style="width: 100%;" header="Document Details"
 						toggleable="true" id="searchTabId">
+				<table>
+					<tr>
+						<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td width="35%"><p:selectOneMenu
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchTrasactionType}"
+								style="width: 314px;">
+								<f:selectItems
+									value="#{ctTrackingDiaryBackingBean.getContractType()}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel value="View Type"	/></td>
+						<td width="35%"><p:selectOneMenu id="searchViewTypeDD" style="width: 314px;"
+									value="#{ctTrackingDiaryBackingBean.managedBean.searchViewType}">
+									<f:selectItems
+										value="#{ctTrackingDiaryBackingBean.getContractViewType()}" />
+								</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
+						<td width="35%"><p:inputText size="28"
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchContractNo}"></p:inputText>
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
+						<td width="35%"><p:inputText size="28"
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
+						<td width="35%"><p:inputText size="28"
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}"></p:inputText>
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
+						<td width="35%"><p:inputText size="28"
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel
+								value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td>
+						<td width="35%"><p:calendar mode="popup" showOn="button"
+								readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchContractFromDuration}">
+							</p:calendar>
+							<p:spacer width="5" />
+							<p:calendar mode="popup" showOn="button"
+								readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{ctTrackingDiaryBackingBean.managedBean.searchContractToDuration}">
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td width="35%"><p:outputLabel value="Status" /></td>
+						<td width="35%"><p:selectOneMenu style="width: 314px;"
+									value="#{ctTrackingDiaryBackingBean.managedBean.searchViewType}">
+									<f:selectItems
+										value="#{ctTrackingDiaryBackingBean.searchStatusDesc()}" />
+							</p:selectOneMenu></td>
+					</tr>			
+		</table>
 
-						<table style="margin-top: 10px; width: 100%;">
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="Document No." /></td>
-								<td width="25%"><p:inputText size="30"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-								<td width="15%"><p:outputLabel
-										value="Physical Document No." /></td>
-								<td width="35%"><p:inputText size="30"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="LOA No." /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-								<td width="35%"><p:outputLabel
-										value="Physical LOA No." /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Document Title" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Document Type" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Date Range" /></td>
-							<td width="35%">
-
-				<p:column>
-					<p:calendar showOn="button" readonlyInput="true" id="pubFromDt"
-						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10">
-						<p:ajax event="dateSelect" update="pubToDt" />
-					</p:calendar>
-
-					<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						size="10"
-						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}"
-						mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
-					</p:calendar>
-				</p:column>	</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Date Type" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Status" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							
-						</table>
 						</p:panel></td>
 			</tr>
 		</table>

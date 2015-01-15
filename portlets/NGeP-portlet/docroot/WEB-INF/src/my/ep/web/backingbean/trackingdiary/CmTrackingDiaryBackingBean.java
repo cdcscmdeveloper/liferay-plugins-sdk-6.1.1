@@ -20,6 +20,7 @@ import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -40,8 +41,8 @@ import org.apache.log4j.Logger;
 public class CmTrackingDiaryBackingBean extends
 		BaseBackingBean<CmTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(CmTrackingDiaryBackingBean.class);
-	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
-	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cmTrackingDiaryDetailSearch.xhtml";
+	public static final String NAV_TO_CATALOG_SEARCH = "trackingDiary.xhtml";
+	public static final String NAV_TO_CATALOG_DETAIL_SEARCH = "cmTrackingDiaryDetailSearch.xhtml";
 	private SearchFilterBean docTypeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docIdFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean docNoFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -146,17 +147,8 @@ public class CmTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			docTypeFilterBean.setSearchField("docType");
-			docTypeFilterBean.setSearchValue("IN");
-			searchBean.getDataFilterBeans().add(docTypeFilterBean);
-
-//			docIdFilterBean.setSearchField("docId");
-//			docIdFilterBean.setSearchValue("2233");
-//			searchBean.getDataFilterBeans().add(docIdFilterBean);
-//			
-//			docNoFilterBean.setSearchField("docNo");
-//			docNoFilterBean.setSearchValue("2233");
-//			searchBean.getDataFilterBeans().add(docNoFilterBean);
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
+//			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -167,17 +159,17 @@ public class CmTrackingDiaryBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("SearchTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
+//			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
 			return resDTO.getResultBean();
 			
 		}
 	}
 
-	public String goToTrackingDiarySearch(VCmSupplierItem unspscObj) {
-//		log.info("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setVCmSupplierItem(unspscObj);
+	public String goToTrackingDiarySearch(VCtDocument vCtDocument) {
+//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
+//		getManagedBean().setSmSupplier(smSupplier);
 		searchTrackingDiaryDataModel.reloadData();	
-		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
+		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
 	public String reset() {
@@ -216,7 +208,7 @@ public class CmTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_CODIFICATION_SEARCH;
+		return NAV_TO_CATALOG_SEARCH;
 	}
 
 	public IPagingDataModel<VCmSupplierItem> getSearchDataModel() {

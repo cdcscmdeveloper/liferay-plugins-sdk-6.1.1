@@ -54,6 +54,7 @@ public class CdTrackingDiaryBackingBean extends
 		getManagedBean().getCdDocumentDataModel().reloadData();
 	}
 
+
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
 		private static final long serialVersionUID = 1L;
@@ -68,17 +69,8 @@ public class CdTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			docTypeFilterBean.setSearchField("docType");
-			docTypeFilterBean.setSearchValue("IN");
-			searchBean.getDataFilterBeans().add(docTypeFilterBean);
-
-//			docIdFilterBean.setSearchField("docId");
-//			docIdFilterBean.setSearchValue("2233");
-//			searchBean.getDataFilterBeans().add(docIdFilterBean);
-//			
-//			docNoFilterBean.setSearchField("docNo");
-//			docNoFilterBean.setSearchValue("2233");
-//			searchBean.getDataFilterBeans().add(docNoFilterBean);
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
+//			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();

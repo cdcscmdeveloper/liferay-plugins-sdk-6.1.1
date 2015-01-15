@@ -170,9 +170,6 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				/*if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
 				}	*/
-				if(getSearchProcurementTypeId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcurementTypeId()));
-				}			
 				if(getStatusDescId()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getStatusDescId()));
 				}
@@ -181,12 +178,6 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				}
 				if(getSearchSuppName()!=null && getSearchSuppName()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getSearchSuppName(), true));
-				}
-				if(getSearchSuppDoRef()!=null && getSearchSuppDoRef()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierDoRef",SearchOperator.OPERATOR_LIKE.value(),getSearchSuppDoRef(), true));
-				}
-				if(getSearchSuppInvRef()!=null && getSearchSuppInvRef()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierInvRef",SearchOperator.OPERATOR_LIKE.value(),getSearchSuppInvRef(), true));
 				}
 				if(getSearchOrderNo()!=null && getSearchOrderNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("orderNo",SearchOperator.OPERATOR_LIKE.value(),getSearchOrderNo()));

@@ -36,13 +36,13 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	private IPagingDataModel<CmUnspsc> cmDocumentDataModel 	= new SearchPagingDataModel();
 	private SearchFilterBean titleFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 
-	public SearchFilterBean getTitleFilterBean() {
-		return titleFilterBean;
-	}
-
-	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
-		this.titleFilterBean = titleFilterBean;
-	}
+//	public SearchFilterBean getTitleFilterBean() {
+//		return titleFilterBean;
+//	}
+//
+//	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
+//		this.titleFilterBean = titleFilterBean;
+//	}
 
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
 
