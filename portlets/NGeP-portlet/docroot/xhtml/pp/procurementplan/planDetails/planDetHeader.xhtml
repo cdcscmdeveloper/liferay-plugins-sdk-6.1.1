@@ -48,7 +48,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					label="#{lbl['lbl.pp.plan.year']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
 					>
-					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions()}"/>
+					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(pPlanBackingBean.managedBean.selectedPlan.brandNew)}"/>
 					<p:ajax event="change"  update="somVotType"/>
 				</p:selectOneMenu>
 				&#160;&#160;   
@@ -77,7 +77,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					label="#{lbl['lbl.pp.vot.amanah.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
 				>
-					<f:selectItems value="#{pPlanBackingBean.getPlanVotTypeOptions()}"/>
+					<f:selectItems value="#{pPlanBackingBean.getPlanVotTypeOptions(pPlanBackingBean.managedBean.selectedPlan.brandNew)}"/>
 					<p:ajax event="change" listener="#{pPlanBackingBean.changeVotType(pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId)}" />
 				</p:selectOneMenu>
 				&#160;&#160;  
