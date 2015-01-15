@@ -40,12 +40,10 @@
 
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
-					style="float:right;" oncomplete="evaluationreminder.hide();"
-					icon="ui-icon-cancel"></p:commandButton>
+					style="float:right;" oncomplete="evaluationreminder.hide();"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}"
 					style="float:right;" oncomplete="evaluationreminder.hide();"
 					process="@this,evaluationRemainderId" partialSubmit="true"
-					icon="ui-icon-mail"
 					actionListener="#{evaluationBackingBean.secretarySubmitTask}"></p:commandButton>
 
 

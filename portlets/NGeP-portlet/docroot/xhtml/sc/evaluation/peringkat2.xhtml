@@ -31,10 +31,9 @@
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}" style="float:right;"
-				onclick="peringkat2.hide();" icon="ui-icon-cancel"></p:commandButton>
+				onclick="peringkat2.hide();"></p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" style="float:right;" action="#{evaluationBackingBean.stageTwoSaveAction}" process="@all"
-				oncomplete="peringkat2.hide()"
-			 icon="ui-icon-save"></p:commandButton>
+				oncomplete="peringkat2.hide()" ></p:commandButton>
 
 
 		</div>

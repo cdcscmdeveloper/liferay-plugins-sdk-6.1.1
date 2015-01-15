@@ -17,7 +17,7 @@
 		<ui:fragment
 			rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.tabActiveIndex eq 1 and !evaluationBackingBean.managedBean.readOnly and (evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3')) or (evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0  and !evaluationBackingBean.managedBean.readOnly) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0 and !evaluationBackingBean.managedBean.readOnly))}">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
-				style="float:right;" icon="ui-icon-evaluate" update="@form"
+				style="float:right;" update="@form"
 				rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
 				action="#{evaluationBackingBean.generateEvaluationStage}" />
 		</ui:fragment>
@@ -30,14 +30,13 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					style="float:right;" process="@all" partialSubmit="true"
-					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 			</ui:repeat>
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 			style="float:right;" process="@form" update="@form"
-			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
+			action="#{evaluationBackingBean.saveMeetingDtls}"/>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="Revice Confirmation" resizable="false" width="325"
@@ -50,10 +49,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					oncomplete="reviceApprovalDlgs.hide();"
 					action="#{evaluationBackingBean.reviseProposalEvaluation}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>

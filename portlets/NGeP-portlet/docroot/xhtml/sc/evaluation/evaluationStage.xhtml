@@ -97,14 +97,14 @@
 							<p:commandButton value="#{lbl['lbl.sm.prev']}"
 								actionListener="#{evaluationBackingBean.setTabValue('2','1')}"
 								action="#{evaluationBackingBean.updateSmAppl}"
-								icon="ui-icon-prev" update=":form" />
+								update=":form" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
 							<p:commandButton value="#{lbl['lbl.sm.prev']}"
 								actionListener="#{evaluationBackingBean.setTabValue('2','0')}"
 								action="#{evaluationBackingBean.updateSmAppl}"
-								icon="ui-icon-prev" update=":form" />
+								update=":form" />
 						</ui:fragment>
 					</div></td>
 				<td>
@@ -117,7 +117,7 @@
 							<p:commandButton value="#{lbl['lbl.sm.next']}"
 								actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
 								action="#{evaluationBackingBean.updateSmAppl}"
-								icon="ui-icon-next" iconPos="right" update=":form" />
+								iconPos="right" update=":form" />
 
 
 						</ui:fragment>
@@ -129,7 +129,7 @@
 							<p:commandButton value="#{lbl['lbl.sm.next']}"
 								actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
 								action="#{evaluationBackingBean.updateSmAppl}"
-								icon="ui-icon-next" iconPos="right" update=":form" />
+								iconPos="right" update=":form" />
 
 
 						</ui:fragment>
@@ -142,7 +142,7 @@
 							<p:commandButton value="#{lbl['lbl.sm.next']}"
 								actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
 								action="#{evaluationBackingBean.updateSmAppl}"
-								icon="ui-icon-next" iconPos="right" update=":form" />
+								iconPos="right" update=":form" />
 
 
 						</ui:fragment>

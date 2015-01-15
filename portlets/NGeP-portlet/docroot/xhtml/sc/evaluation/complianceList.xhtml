@@ -7,12 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div>
-		<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-			style="float:left;" icon="ui-icon-back"
+		<p:commandButton value="#{lbl['lbl.btn.back']}"
+			style="float:left;"
 			action="#{evaluationBackingBean.evaluationBackaction}" />
 
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-			style="float:right;" icon="ui-icon-save" update="@all"
+			style="float:right;" update="@all"
 			action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 	</div>
 	<p:spacer height="25" />
