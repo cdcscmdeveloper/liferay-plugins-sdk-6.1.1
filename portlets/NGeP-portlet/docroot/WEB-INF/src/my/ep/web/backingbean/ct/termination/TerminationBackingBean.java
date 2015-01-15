@@ -335,7 +335,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					messageId = MessageConst.INFO_700045;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
 					messageId = MessageConst.INFO_700026;
-				}
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messageId = MessageConst.INFO_700010;
+				}	
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getContractVer().getDocType()), 
 								getManagedBean().getContractVer().getCtContract().getContractNo()}, 
