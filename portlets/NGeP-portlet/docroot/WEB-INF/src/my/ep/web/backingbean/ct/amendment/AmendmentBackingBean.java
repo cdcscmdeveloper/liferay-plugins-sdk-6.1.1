@@ -3323,14 +3323,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
                  	
                  	  } else if(parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)){
  		    	    	  members = false;
- 		    	    	  if(committeMember.getRepresentativeType() == null || committeMember.getRepresentativeType().getParameterId() == null) {
- 		    	    		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
- 		    	    		  throw new EpException(MessageConst.ERROR_100022, 
+ 		    	    	  if(!getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
+ 		    	    			  && !getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+ 		    	    	       if(committeMember.getRepresentativeType() == null || committeMember.getRepresentativeType().getParameterId() == null) {
+ 		    	    		       RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+ 		    	    		        throw new EpException(MessageConst.ERROR_100022, 
  		    	    				  new String[]{ResourceBundleUtils.getMessage("lbl.ct.represent.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
- 		    	         } else {
- 		    	        	 representativeCode = ParameterHelper.getInstance().getPmParameterById(committeMember.getRepresentativeType().getParameterId()).getParameterCode();
+ 		    	             } else {
+ 		    	        	     representativeCode = ParameterHelper.getInstance().getPmParameterById(committeMember.getRepresentativeType().getParameterId()).getParameterCode();
  		    	         }
-                 	  }
+ 		    	     }
+                 }
 		    		      
 		    		      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
                      	  if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
@@ -3368,7 +3371,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		      }
 		             }
 	 
-		    	} else if(committeMember.getMemberRole() != null || committeMember.getMemberRole().getParameterId()!=null){
+		    	} else if(committeMember.getMemberRole() == null || committeMember.getMemberRole().getParameterId() ==null){
 		    		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
  	    		  throw new EpException(MessageConst.ERROR_750025);
 		    	 }
