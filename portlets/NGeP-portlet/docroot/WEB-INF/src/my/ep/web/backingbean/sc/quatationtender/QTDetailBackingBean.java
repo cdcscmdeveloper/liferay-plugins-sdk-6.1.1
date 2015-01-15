@@ -2248,13 +2248,15 @@ public class QTDetailBackingBean extends
 				for (BriefingZoneBean briefing : briefingBeans) {
 					briefing.getScQtBsv().getScQtBsvDtls();
 					ScQtBsv bsv = briefing.getScQtBsv();
-					for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
-						bsvDate = bsvDtl.getBsvDate();
-						this.getManagedBean().setBsvDate(bsvDate);
-						getManagedBean().getQt().setClosingDate(
-								DateUtils.addDays(bsvDate, this
-										.getManagedBean().getQt()
-										.getPublishPeriod()));
+					if (bsv.getScQtBsvDtls() != null) {
+						for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
+							bsvDate = bsvDtl.getBsvDate();
+							this.getManagedBean().setBsvDate(bsvDate);
+							getManagedBean().getQt().setClosingDate(
+									DateUtils.addDays(bsvDate, this
+											.getManagedBean().getQt()
+											.getPublishPeriod()));
+						}
 					}
 				}
 			} else {
