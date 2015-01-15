@@ -79,10 +79,10 @@
 				value="#{lbl['lbl.sc.eva.btn.add']}" process="@this,turuthadir"
 				partialSubmit="true" update="turuthadir"
 				oncomplete="tirutWidget.paginator.endLink.click();"
-				icon="ui-icon-add" action="#{evaluationBackingBean.addTurutDetails}" />
+				action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
-				process="@this" partialSubmit="true" icon="ui-icon-delete"
+				process="@this" partialSubmit="true"
 				update="turuthadir"
 				action="#{evaluationBackingBean.markDeleteSelectedRowsAction(evaluationBackingBean.managedBean.meetingAttendanceList,evaluationBackingBean.managedBean.meetingAttendanceRemoveList)}">
 				<f:setPropertyActionListener

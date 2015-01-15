@@ -15,13 +15,13 @@
 		<p:messages id="sampleCompliance" showDetail="true" autoUpdate="true"
 			closable="true" severity="error,info" showSummary="false" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				style="float:left;"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-				style="float:right;" icon="ui-icon-save" update="@all"
+				style="float:right;" update="@all"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
 		</div>
 		<p:spacer height="25" />
