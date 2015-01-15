@@ -75,6 +75,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
@@ -788,7 +789,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
 	}
-	
+
 	/**
 	 * To update digisign data for spki
 	 * 
@@ -798,8 +799,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param docNumber
 	 * @param textBeforeSign
 	 */
-	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
-			Long docId, String docNumber , String textBeforeSign) {
+	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
+			String docType, Long docId, String docNumber, String textBeforeSign) {
 		FacesScopes facesScope = new FacesScopes();
 		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -807,15 +808,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
 		pmDigiSign.setCreatedBy(userId);
-        pmDigiSign.setCreatedDate(date);
-        pmDigiSign.setOrginalData(textBeforeSign);
+		pmDigiSign.setCreatedDate(date);
+		pmDigiSign.setOrginalData(textBeforeSign);
 	}
 
-	
-	 FacesScopes facesScope = new FacesScopes();
-	    Long userId = facesScope.getUserSessionBean().getUserId();
-//	    Long userId = (Long) MDC.get(LogKey.USER_ID);
-		Timestamp date = new Timestamp(System.currentTimeMillis());
+	FacesScopes facesScope = new FacesScopes();
+	Long userId = facesScope.getUserSessionBean().getUserId();
+	// Long userId = (Long) MDC.get(LogKey.USER_ID);
+	Timestamp date = new Timestamp(System.currentTimeMillis());
 
 	protected boolean isDigiSigningRequired(String roleCode) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -1021,4 +1021,49 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return roleCode;
 	}
 
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsActionById(
+			List<ScQtCheckList> list, List<ScQtCheckList> markDeletedList) {
+		List<Integer> toBeRemoveIndx = new ArrayList<Integer>();
+		if (log.isDebugEnabled()) {
+			log.debug("markDeleteSelectedRowsAction");
+		}
+		try {
+			if (list != null) {
+				if (markDeletedList == null) {
+					markDeletedList = new ArrayList<ScQtCheckList>();
+				}
+				for (ScQtCheckList entity : list) {
+					if (entity.isSelected()) {
+						entity.setDeleted(true);
+						markDeletedList.add(entity);
+						if (entity.getIndex() != -1) {
+							toBeRemoveIndx.add(Integer.valueOf(entity.getIndex()));
+						}
+					}
+				}
+				if (markDeletedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteRowsActionById(list, toBeRemoveIndx);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+		} finally {
+
+		}
+	}
+
+	public void deleteRowsActionById(List<? extends BaseEntity> list,
+			List<Integer> toBeRemovedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+
+		if (list != null && toBeRemovedList != null) {
+			for (int i = 0; i < toBeRemovedList.size(); i++) {
+				list.remove(toBeRemovedList.get(i).intValue());
+			}
+		}
+	}
 }
