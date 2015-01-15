@@ -17,14 +17,14 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:left">
-					<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
-						icon="ui-icon-back" action="#{noticeBoardBackingBean.backBtn}"
+					<p:commandButton value="#{lbl['lbl.btn.back']}"
+						action="#{noticeBoardBackingBean.backBtn}"
 						style="float:left;" />
 				</p:column>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.qt.nb.register']}"
 						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
-						style="float:right;" icon="ui-icon-check" process="@all" update="@all"/>
+						style="float:right;" process="@all" update="@all"/>
 				</p:column>
 
 			</p:row>
