@@ -84,12 +84,11 @@
 						process="@this, negoTermList" partialSubmit="true"
 						action="#{lOIDetailBackingBean.addNegotiationTerm}"
 						oncomplete="negoTermListWidget.paginator.endLink.click();"
-						update="negoTermList" icon="ui-icon-add"
+						update="negoTermList"
 						rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}" />
 					
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, negoTermList" partialSubmit="true"
-						icon="ui-icon-delete"
 						action="#{lOADetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scNegoTerms, lOIDetailBackingBean.managedBean.selectedNegoTermsList)}"
 						update="negoTermList"
 						rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}" />

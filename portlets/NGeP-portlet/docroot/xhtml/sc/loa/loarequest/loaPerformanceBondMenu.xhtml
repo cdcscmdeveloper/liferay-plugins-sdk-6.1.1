@@ -181,10 +181,10 @@
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 			process="@this,performancebondtbl" partialSubmit="true"
-			update="performancebondtbl" icon="ui-icon-add" />
+			update="performancebondtbl" />
 
 		<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
-			process="@this" partialSubmit="true" icon="ui-icon-delete" />
+			process="@this" partialSubmit="true"  />
 	</div>
 
 	<p:dialog id="attachDlg" widgetVar="attachDlg" modal="true"
@@ -211,7 +211,7 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.close']}"
-						onclick="bdLetterDlg.hide()" icon="ui-icon-cancel" />
+						onclick="bdLetterDlg.hide()" />
 				</p:column>
 			</p:row>
 		</p:panelGrid>

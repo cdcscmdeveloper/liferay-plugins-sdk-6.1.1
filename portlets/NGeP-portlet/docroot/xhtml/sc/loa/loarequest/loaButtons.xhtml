@@ -11,11 +11,11 @@
 		</p:blockUI>
 		
 	<div class="ppRightBtn">
-	<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" rendered="#{lOADetailBackingBean.managedBean.editFlag}"
-			icon="ui-icon-back" style="float:left;"
+	<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}" rendered="#{lOADetailBackingBean.managedBean.editFlag}"
+		    style="float:left;"
 			action="#{lOADetailBackingBean.backToPervious}" />
 	
-		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
+		<p:commandButton value="#{lbl['lbl.so.save']}"
 			action="#{lOADetailBackingBean.saveAction}" rendered="#{isEditableStatus}"
 			process="@form" update="@form" 
 			onstart="blockWidget.show();"
@@ -23,7 +23,7 @@
 			
 		<c:choose>
 			<c:when test="#{isPendingSubmissionStatus}">
-				<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
+				<p:commandButton value="#{lbl['lbl.so.submit']}"
 					action="#{lOADetailBackingBean.submitAction}" 
 					process="@form" update="@form" 
 					onstart="blockWidget.show();"
@@ -35,7 +35,6 @@
 					<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 						onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
