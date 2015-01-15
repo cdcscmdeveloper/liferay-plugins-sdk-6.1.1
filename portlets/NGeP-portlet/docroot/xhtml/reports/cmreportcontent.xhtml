@@ -27,22 +27,22 @@
 									<p:selectOneMenu value="#{reportBackingBean.cmItemStatus}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmActive']}" itemValue="#{lbl['lbl.rpt.itmActive']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmInactive']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>																							
+										<f:selectItem  itemLabel="#{lbl['lbl.rpt.itmInactive']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>																							
 									</p:selectOneMenu>
 									</c:if>			
 									  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscCodeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText  value="#{reportBackingBean.cmUnspscCode}" style="margin-top:5px;width:140px;" maxlength="8">																		
+									<p:inputText  value="#{reportBackingBean.cmUnspscCode}" style="margin-top:5px;width:140px;" maxlength="40">																		
 									</p:inputText>
 									</c:if>			
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscTitleView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmUnspscTitle}" style="margin-top:5px;width:290px;">									
+									<p:inputText  value="#{reportBackingBean.cmUnspscTitle}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmCompanyNameView}">
 									<p:outputLabel  value="#{lbl['lbl.rpt.cmpName']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmCompanyName}" style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="200" value="#{reportBackingBean.cmCompanyName}" style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>			
 														
@@ -57,21 +57,9 @@
 					 				</p:inputText>
 									</c:if>											
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionCodeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.extType']}" style="margin-top:5px;width:160px;" />
-									<p:inputText value="#{reportBackingBean.cmExtentionType}"  style="margin-top:5px;width:290px;">									
-					 				</p:inputText>
-									
-									<p:outputLabel value="#{lbl['lbl.rpt.extBrand']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmExtentionBrand}"  style="margin-top:5px;width:290px;">									
-					 				</p:inputText>
-									
-									<p:outputLabel value="#{lbl['lbl.rpt.extMeasurment']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmExtentionMeasurment}"  style="margin-top:5px;width:290px;">									
-					 				</p:inputText>
-									
-									<p:outputLabel value="#{lbl['lbl.rpt.extColour']}" style="margin-top:5px;width:160px;" />
-									<p:inputText value="#{reportBackingBean.cmExtentionColour}"  style="margin-top:5px;width:290px;">									
-					 				</p:inputText>
+									<p:outputLabel value="#{lbl['lbl.rpt.extCode']}" style="margin-top:5px;width:160px;" />
+									<p:inputText maxlength="40" value="#{reportBackingBean.cmExtentionCode}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>								
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmProofIdentityView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.proofIdentity']}"  style="margin-top:5px;width:160px;"/>
@@ -81,7 +69,15 @@
 								   <c:if test="#{smReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
 								  <p:outputLabel value="" style="margin-top:5px;width:160px;" />
 									<p:outputLabel value="" style="margin-top:5px;width:290px;" />
-								  </c:if>								
+								  </c:if>
+								  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmSupplOrAdminView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.SUPPORADMIN']}" style="margin-top:5px;width:160px;" />			
+									<p:selectOneMenu value="#{reportBackingBean.cmSupplOrAdmin}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.SUPPLR']}" itemValue="#{lbl['lbl.rpt.SUPPLR']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.CATOLOGUEADMIN']}" itemValue="#{lbl['lbl.rpt.CATOLOGUEADMIN']}"></f:selectItem>													
+									</p:selectOneMenu>
+									</c:if>								
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmRegistrationTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" style="margin-top:5px;width:160px;" />			
 									<p:selectOneMenu value="#{reportBackingBean.cmRegistrationType}" style="margin-top:5px;width:300px;">
