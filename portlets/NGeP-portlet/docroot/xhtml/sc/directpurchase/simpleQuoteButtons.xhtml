@@ -56,7 +56,7 @@
 				</p:commandButton>
 
 				<p:commandButton immediate="true"
-					value="#{lbl['lbl.sc.common.back']}"
+					value="#{lbl['lbl.btn.back']}"
 					partialSubmit="true" process="@this" style="float:left;"
 					rendered="#{!isPendingSubmissionStatus}"
 					action="#{simpleQuoteBackingBean.backToPervious}" />
@@ -120,7 +120,6 @@
 											rendered="#{isPendingSubmissionStatus}"
 											styleClass="ui-button"
 											partialSubmit="true" process="@form"
-											icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 											actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 											update="@form">
 											<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
@@ -132,7 +131,6 @@
 											update="@form"
 											rendered="#{isPendingSubmissionStatus}"
 											styleClass="ui-button"
-											icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
 											actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(bpmAction)}" />
