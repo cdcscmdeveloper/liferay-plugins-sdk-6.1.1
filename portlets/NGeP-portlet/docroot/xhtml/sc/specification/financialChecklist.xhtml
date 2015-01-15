@@ -249,7 +249,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
-				action="#{specificationBackingBean.markDeleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList, specificationBackingBean.managedBean.markDeletedFinChecklist)}"
+				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList, specificationBackingBean.managedBean.markDeletedFinChecklist)}"
 				update="financeProposaltwo">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
