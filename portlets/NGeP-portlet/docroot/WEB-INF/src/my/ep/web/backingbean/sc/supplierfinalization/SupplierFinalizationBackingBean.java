@@ -67,6 +67,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -928,6 +929,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
 		String token = new FacesScopes().getBPMAuthenticationCtxToken();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
 		
 		if (null != digiSign) {
@@ -950,8 +952,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 		}
 		
-		if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(
-				getManagedBean().getScQtFinalization().getDecision().getParameterCode())) {
+		if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(scQtFinalization.getDecision().getParameterCode()) && !scQtFinalization.isHigherAuthReq()) {
 			
 			boolean supplierSelectionFlag = true;
 			
@@ -2161,27 +2162,19 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			
 			Long qtId = getManagedBean().getScQt().getQtId();
+			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setQtId(qtId);
-			
 			reqDTO.setCommitteeType(commType);
-			reqDTO.setFinalizationSecratary(true);
 				
-			CommitteResDTO resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
-			ScQtCommittee scQtCommittee = resDTO.getScQtCommittee();
+			CommitteResDTO resDTO = committeSO.retrieveSecretaryUsersByCommType(reqDTO);
+			List<PmUser> userList = resDTO.getUserList();
 			
-			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-			
-			List<ScCommitteeMember> scCommitteeMembers = scQtCommittee.getScCommittee().getScCommitteeMembers();
-			for(ScCommitteeMember scCommitteeMember : scCommitteeMembers){
-				String secretaryRole = scCommitteeMember.getMemberRole().getParameterCode();
-				if(secretaryRole.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)){
-					scQtFinalization.setHigherSecretary(scCommitteeMember.getPmUser());
-					break;
-				}
+			if (userList != null && userList.size() > 0) {
+				scQtFinalization.setHigherSecretary(userList.get(0));
 			}
-			getManagedBean().setScQtFinalization(scQtFinalization);
+			
 		}finally{
 			committeSO = null;
 		}
