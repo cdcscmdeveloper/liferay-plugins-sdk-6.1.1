@@ -653,10 +653,7 @@ public class SpecificationBackingBean extends
 			for (ScQtCheckList scQtCheckList2 : finSpecCheckLists) {
 
 				if (null != scQtCheckList.getQtScoreWeightage()) {
-					if (this.getManagedBean().getScQt().getEvaluationType()
-							.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
-							&& !this.getManagedBean().getScQt()
-									.isTechEvaluationReq()) {
+					
 						List<ScQtScoreOfferPrice> offerPrice = scQtCheckList
 								.getQtScoreWeightage()
 								.getScQtScoreOfferPrices();
@@ -717,7 +714,7 @@ public class SpecificationBackingBean extends
 												otherofferpriceofferPrice);
 							}
 						}
-					}
+					
 					scQtCheckList2.setQtScoreWeightage(scQtCheckList
 							.getQtScoreWeightage());
 				}
@@ -5106,6 +5103,13 @@ public class SpecificationBackingBean extends
 		SelectItem[] items = getDropdownValuesBySearchBean(
 				ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
 		return items;
+	}
+	
+	public void specTitleChange(AjaxBehaviorEvent event) {
+		// Boolean panel = this.getManagedBean().getScQt().isPanel();
+		String title = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQtChecklist().setTitle(title);
 	}
 
 	public void technicalTitleChange(int index, List<ScQtCheckList> checklist) {
