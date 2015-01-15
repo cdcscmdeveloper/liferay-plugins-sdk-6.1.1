@@ -208,7 +208,7 @@
 		   </h:panelGrid>	
 	    </h:panelGrid>
 	</h:panelGrid>
-	<p:outputPanel id="justificationPanel">
+	<p:outputPanel id="justificationPanel" rendered="#{amendmentBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 	 <h:panelGrid columns="2" style="width:740px;" 
 		rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	 	amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}">
