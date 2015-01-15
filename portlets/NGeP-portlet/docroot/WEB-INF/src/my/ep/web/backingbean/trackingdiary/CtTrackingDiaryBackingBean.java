@@ -14,34 +14,31 @@ import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.constant.MessageConst;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
+import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.CtTrackingDiaryManagedBean;
-import my.ep.web.managedbean.trackingdiary.FlTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.StatusHelper;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -55,7 +52,11 @@ import org.apache.log4j.Logger;
 public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryManagedBean>{
 
 	private static Logger log = Logger.getLogger(CtTrackingDiaryBackingBean.class);
-	
+	public static final String NAV_TO_CONTRACT_SEARCH = "trackingDiary.xhtml";
+	public static final String NAV_TO_CONTRACT_DETAIL_SEARCH = "ctTrackingDiaryDetailSearch.xhtml";
+	private VCtDocument vCtDocument;
+	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
+
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -118,8 +119,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 
 			items = new SelectItem[2];
 
-			items[0] = new SelectItem(new String("Group"), new String("Group Doc Type"));
-			items[1] = new SelectItem(new String("Version"), new String("Version Doc Type"));
+			items[0] = new SelectItem(new String("G"), new String("GROUP DOC TYPE"));
+			items[1] = new SelectItem(new String("V"), new String("VERSION DOC TYPE"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -292,15 +293,44 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		
 		renewSesionObject();
 	}
-	
-//	public void getProcurementTypeList(){
-//		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-//		ParameterReqDTO reqDTO = new ParameterReqDTO();
-//		reqDTO.setLanguageCode("en");
-//		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-//		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-//		resDTO.getParameterDescList();
-////		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
-//	}
-	
+
+	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchTrackingDiaryPagingDataModel() {
+			super("trackingDiaryTableID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
+				ISearchBean<PmTrackingDiary> searchBean) {
+
+			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));
+			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
+
+			reqDTO.setSearchBean(searchBean);
+			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
+			try {
+				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
+				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			System.out.println("resDTO.getResultBean()====================================: "+ resDTO.getResultBean().getTotalRecord());
+			return resDTO.getResultBean();
+			
+		}
+	}
+
+	public String goToTrackingDiarySearch(VCtDocument vCtDocument) {
+//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
+//		getManagedBean().setSmSupplier(smSupplier);
+		searchTrackingDiaryDataModel.reloadData();	
+		return NAV_TO_CONTRACT_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+
 }

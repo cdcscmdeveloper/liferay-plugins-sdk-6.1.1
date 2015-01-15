@@ -69,7 +69,6 @@
 					</f:facet>
 				#{unspscObject.createdDate}
 				</p:column>
-
 				<p:column width="15%">
 					<f:facet name="header">
 					Document No
@@ -80,11 +79,11 @@
 					<f:facet name="header">
 					UNSPSC/Extension Code
 				</f:facet>
-				#{unspscObject.unspscTitle}
+				#{unspscObject.unspscCode}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					UNSPSC/Extension Code Title
+					UNSPSC Title
 				</f:facet>
 				#{unspscObject.unspscTitle}
 				</p:column>
@@ -99,12 +98,6 @@
 					</p:commandLink>
 			</p:column>
 			</p:dataTable>
-
-
 		</p:panel>
-
-
 	</h:panelGroup>		
-
-
 </ui:composition>

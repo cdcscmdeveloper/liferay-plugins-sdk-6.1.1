@@ -69,24 +69,44 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 				System.out.println("ISearchResultBean<VCtDocument>");
 	
 				if(getSearchViewType()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchViewType()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
 				}
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
+					System.out.println("ISearchResultBean<1111>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
 				}
 				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
+					System.out.println("ISearchResultBean<1112>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
 				}
 				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
+					System.out.println("ISearchResultBean<1113>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
 				}
 				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
+					System.out.println("ISearchResultBean<1114>");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
+				}	
+				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
+					System.out.println("ISearchResultBean<1111>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
+				}
+				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
+					System.out.println("ISearchResultBean<1112>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
+				}
+				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
+					System.out.println("ISearchResultBean<1113>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
+				}
+				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
+					System.out.println("ISearchResultBean<1114>");
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
 				}	
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
 				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"RC"));
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"RC"));
 				reqDTO.setCtDocumentSearchBean(searchBean);
 				ContractIntegrationResDTO resDTO = contractIntegrationSO.searchContractDocument(reqDTO);
 				System.out.println("Result : " +resDTO.getCtDocumentSearchResultBean().getTotalRecord());

@@ -26,15 +26,15 @@
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
 								<td width="25%"><p:outputLabel value="MOF Account No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.MOFAccountFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.MOFAccountNo}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
-								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.supplierName}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="25%"><p:outputLabel value="Application No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.applicationNoFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.applicationNo}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel value="Application Type" /></td>
@@ -46,13 +46,13 @@
 							</tr>
 						</table>
 
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{smTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					icon="ui-icon-search" update="resultPanel" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{smTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
-			</div>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.search']}"
+								action="#{smTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								icon="ui-icon-search" update="resultPanel" />
+							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								action="#{smTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
+						</div>
 				</p:panel></td>
 			</tr>
 		</table>
@@ -60,7 +60,7 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 
 
-			<p:dataTable id="smSupplierTableID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
+			<p:dataTable id="smSupplierTableID" lazy="true" value="#{smTrackingDiaryBackingBean.managedBean.smDocumentDataModel}" var="smSupplier" width="100%" rows="10">
 
 				<ac:paginator for="smSupplierTableID"></ac:paginator>
 
@@ -72,11 +72,23 @@
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Business Reg. No.
+					Application No
 					</f:facet>
-				#{smSupplier.regNo}
+				#{smSupplier.smAppl.applNo}
 				</p:column>
 				<p:column width="15%">
+					<f:facet name="header">
+					Application Type
+					</f:facet>
+				#{smSupplier.smAppl.applType}
+				</p:column>
+					<p:column width="15%">
+					<f:facet name="header">
+					MOF Account No
+					</f:facet>
+				#{smSupplier.smAppl.applNo}
+				</p:column>
+				<p:column>
 					<f:facet name="header">
 					Company Name
 					</f:facet>
@@ -84,16 +96,10 @@
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Registration Status
-					</f:facet>
-				#{smSupplier.smAppls}
-				</p:column>
-				<p:column>
-						<f:facet name="header">
 						Action
 					</f:facet>
 						<p:commandLink
-							action="#{SMTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
+							action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 						</p:commandLink>
