@@ -273,17 +273,16 @@
 				update="compilencestageTwo" />
 			<p:commandButton value="Create Specification" process="@this"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-				partialSubmit="true" oncomplete="createOwnerSpec.show();"
-				icon="ui-icon-add" />
+				partialSubmit="true" oncomplete="createOwnerSpec.show();"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,stageTwotechProposal"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
-				update="@all,stageTwotechProposal" icon="ui-icon-add" />
+				update="@all,stageTwotechProposal" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2techProposal, specificationBackingBean.managedBean.markDeletedTechChecklist)}"
 				update="stageTwotechProposal">
 				<f:setPropertyActionListener
