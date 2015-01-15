@@ -44,7 +44,13 @@
 		<managed-bean-class>my.ep.constants.CommonConstants</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
-	
+	<managed-bean>
+		<description>Record Status Constants</description>
+		<managed-bean-name>DbValueConst</managed-bean-name>
+		<managed-bean-class>my.ep.persistence.constant.DbValueConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+		
  	<managed-bean>
 		  <description>Common Utils Class</description>
 		  <managed-bean-name>CommonUtils</managed-bean-name>
