@@ -101,8 +101,7 @@
 							<p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 								process="@this ,locLevels" update="@form"
 								partialSubmit="true" oncomplete="locationPopup.show();"
-								actionListener="#{simpleQuoteBackingBean.showLocationPopup}"
-								icon="ui-icon-add"/>
+								actionListener="#{simpleQuoteBackingBean.showLocationPopup}"/>
 
 								<p:commandButton
 									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
@@ -152,7 +151,7 @@
 								    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 										postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
 										headerText="Business Nature" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
-										buttonIcon="ui-icon-add" selectionMode="multiple"
+									    selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
 										conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}" update="@form"/>
 								   </td>
@@ -208,7 +207,7 @@
 								     <ac:lov id="supplier" lovId="SM_SUPPLIER"
 									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 										headerText="Supplier List" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
-										buttonIcon="ui-icon-add" selectionMode="multiple"
+									    selectionMode="multiple"
 										update="@form"
 										saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
 										conditionField="#{simpleQuoteBackingBean.supplierListCriteria}"/>
@@ -267,7 +266,6 @@
 										postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
 										headerText="Government Seller" 
 										buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
-										buttonIcon="ui-icon-add" 
 										selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
 										conditionField="recordStatus^1|govtSeller^1" update="@form" />
@@ -334,7 +332,7 @@
 								     <ac:lov id="panelSupplierId" lovId="CT_PANEL_SUPPLIER"
 										postUpdateListener="simpleQuoteBackingBean.panelItemListener(simpleQuoteBackingBean.managedBean.ctPanelSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 										headerText="Panel Supplier" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
-										buttonIcon="ui-icon-add" selectionMode="multiple"
+										selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.ctPanelSuppliers"
 										conditionField="recordStatus^1" update="@form" />
 								    </c:if>
