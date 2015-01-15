@@ -87,14 +87,12 @@
 					style="float:right;"
 					action="#{suppFinalMeetingBackingBean.cloneResetAction}"
 					update="cloneSearchPanel" 
-					icon="ui-icon-reset" 
 					resetValues="true"
 					partialSubmit="true" 
 					process="@this" />
 
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					style="float:right;" 
-					icon="ui-icon-search"
 					action="#{suppFinalMeetingBackingBean.cloneSearchAction}"
 					update="cloneCommitteeSearchTbl" 
 					partialSubmit="true"
@@ -184,7 +182,6 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					style="float:right;" 
-					icon="ui-icon-cancel"
 					onclick="cloneMemberWidgetVar.hide();" />
 				
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
@@ -194,7 +191,6 @@
 					actionListener="#{suppFinalMeetingBackingBean.cloneAction}"
 					onclick="committeeMemberWidVar.hide();"
 					oncomplete="committeeMemberWidVar.paginator.endLink.click();"
-					icon="ui-icon-check" 
 					update="memberListTbl" />
 			</div>
 		</p:panel>
