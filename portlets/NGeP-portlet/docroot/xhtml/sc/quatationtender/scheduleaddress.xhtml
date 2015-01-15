@@ -16,10 +16,9 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}" update="@([id$=sampleid])"
 					process="@this, @(.sampleDetails)" 
-					icon="ui-icon-check"
 					action="#{qTScheduleDetailBackingBean.okSubmission}" />
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					icon="ui-icon-cancel"  action="#{qTScheduleDetailBackingBean.closeSampleAddressPopUp}" />
+					 action="#{qTScheduleDetailBackingBean.closeSampleAddressPopUp}" />
 			</div>
 		</c:if>
 	</p:dialog>

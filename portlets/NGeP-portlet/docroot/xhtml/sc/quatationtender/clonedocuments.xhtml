@@ -73,8 +73,8 @@
 					</tr>
 				</table>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" action="#{qTDocumentsBackingBean.cloneSearchDocumentAction}" update="clonesearchdocid" process="@parent, clonedocid" />
-					<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{qTDocumentsBackingBean.resetClone}" update="clonedocid" icon="ui-icon-reset" resetValues="true" partialSubmit="true" process="@this" />
+					<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{qTDocumentsBackingBean.cloneSearchDocumentAction}" update="clonesearchdocid" process="@parent, clonedocid" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{qTDocumentsBackingBean.resetClone}" update="clonedocid"  resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
 			<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
@@ -126,8 +126,8 @@
 					</p:column>
 				</p:dataTable>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{qTDocumentsBackingBean.addDocumentCloneAction}" oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-check" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onclick="screen2.hide();" />
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{qTDocumentsBackingBean.addDocumentCloneAction}" oncomplete="documentWidget.paginator.endLink.click();" update="doctbl"/>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="screen2.hide();" />
 				</div>
 			</p:panel>
 		</p:panel>

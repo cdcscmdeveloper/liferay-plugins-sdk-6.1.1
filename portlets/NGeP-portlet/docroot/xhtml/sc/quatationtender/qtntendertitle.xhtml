@@ -139,11 +139,11 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
-				icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">
+				rendered="#{qTDetailBB.managedBean.editable}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				actionListener="#{qTDetailBB.deleteGoSoDoAction}"
-				update="gosodoList" icon="ui-icon-delete"
+				update="gosodoList" 
 				rendered="#{qTDetailBB.managedBean.editable}" />
 		</div>
 	</p:panel>

@@ -15,16 +15,16 @@
 				<td align="right">
 				<ui:fragment rendered="#{qTDetailBB.managedBean.taskName eq null}">
 					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-						icon="ui-icon-back" action="#{qTDetailBB.gotoQtSearchPage}" />
+						action="#{qTDetailBB.gotoQtSearchPage}" />
 
 				</ui:fragment>
 
 				<p:commandButton value="#{lbl['lbl.so.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form"
-					icon="ui-icon-save" update="@all" />
+					update="@all" />
 				<p:commandButton value="#{lbl['lbl.so.submit']}"
 					action="#{qTDetailBB.submitQtDetailsForApproval}" process="@form"
-					icon="ui-icon-submit" update="@all"
+					update="@all"
 					rendered="#{qTDetailBB.managedBean.currentStatusId ge QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />
 
 
@@ -35,13 +35,12 @@
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button"
-							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 					</ui:repeat>
 				</c:if>
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
 					style="float:right;margin-right: 12px;" 
-					icon="ui-icon-cancel" onclick="cancelQTDlg.show()" />
+					onclick="cancelQTDlg.show()" />
 				</td>
 			</tr>
 			</table>
@@ -57,10 +56,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="cancelQTDlg.hide();" partialSubmit="true" process="@this"
 					action="#{qTDetailBB.cancelQtDetails}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="cancelQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>

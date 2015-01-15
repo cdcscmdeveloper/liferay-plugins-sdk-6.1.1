@@ -31,7 +31,6 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button"
-								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 								onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
@@ -85,10 +84,10 @@
 				</table>
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 						oncomplete="reviceApprovalDlg.hide();"
 						action="#{approvalBackingBean.updateReviceBpmTask}" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="reviceApprovalDlg.hide();" type="button" />
 				</div>
 			</p:dialog>

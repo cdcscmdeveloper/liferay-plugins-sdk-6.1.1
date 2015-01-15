@@ -35,11 +35,9 @@
 				value="#{lbl['lbl.so.searchbtn']}" process="@this"
 				action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
 				oncomplete="searchsupplierdialog.show();"
-				update="@(.restrictSearchSupp)" style="float:right;"
-				icon="ui-icon-search" />
+				update="@(.restrictSearchSupp)" style="float:right;"/>
 
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
 		</div>
 		<br />
 		<h:outputText value="#{lbl['lbl.so.totalsup']}" />

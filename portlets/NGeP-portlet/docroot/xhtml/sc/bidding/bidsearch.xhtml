@@ -91,11 +91,11 @@
 
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
 			process="@this,biddingNo,pickedStatus,docNo,bidTitle,bidFromDate,bidToDate"
-			icon="ui-icon-search" partialSubmit="true"
+			partialSubmit="true"
 			action="#{biddingBB.managedBean.searchForScheduledBids}"
 			update="@([id$=biddingListPanel])" />
 
-		<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+		<p:commandButton value="#{lbl['lbl.btn.reset']}"
 			type="reset" action="#{biddingBB.resetSearchFormAction}"
 			partialSubmit="true" />
 	</div>

@@ -54,7 +54,7 @@
 
 			</h:panelGrid>
 			
-			<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search"
+			<p:commandButton value="#{lbl['lbl.so.searchbtn']}" 
 				style="float:right;" action="#{qTDetailBB.cloneSearchQtAction}"
 				update="cloneQtsearch">
 			</p:commandButton>
@@ -121,11 +121,11 @@
 
 			</h:panelGrid>
 
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" styleClass="apply_button" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" styleClass="apply_button" 
 				style="float:right;" oncomplete="clonebtn.hide()">
 
 			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"  icon="ui-icon-clone" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"   style="float:right;"
 				oncomplete="clonebtn.hide();"></p:commandButton>
 		</p:panel>
 	</p:dialog>

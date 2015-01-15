@@ -63,11 +63,11 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 							action="#{qTBusinessOwnerBackingBean.searchUserAction}"
-							update="existingsearch" icon="ui-icon-search"
+							update="existingsearch"
 							process="@this, usersearchpnlids" />
 						<p:commandButton value="#{lbl['lbl.so.reset']}"
 							action="#{qTBusinessOwnerBackingBean.reset}"
-							update="usersearchpnlids" icon="ui-icon-reset" resetValues="true"
+							update="usersearchpnlids"  resetValues="true"
 							partialSubmit="true" process="@this" />
 					</div>
 
@@ -214,10 +214,10 @@
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this, newProfile, bopanel"
 					action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
-					ajax="true" icon="ui-icon-check" update="businessownerId, bopanel" />
+					ajax="true" update="businessownerId, bopanel" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
-					oncomplete="newbusinessowner.hide();" icon="ui-icon-cancel" />
+					oncomplete="newbusinessowner.hide();" />
 			</div>
 		</p:panel>
 	</p:dialog>

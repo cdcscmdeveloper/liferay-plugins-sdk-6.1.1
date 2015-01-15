@@ -32,7 +32,6 @@
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 									<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}" update="@form"
 										styleClass="ui-button"
-										icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 										action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
 								</ui:repeat>
 		</div>
@@ -103,12 +102,12 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this,contactPersonDetails" partialSubmit="true"
-					action="#{scheduleBiddingBB.addContactAction}" icon="ui-icon-add"
+					action="#{scheduleBiddingBB.addContactAction}"
 					oncomplete="contactDtls.paginator.endLink.click();"
 					update="contactPersonDetails" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this,contactPersonDetails"
-					icon="ui-icon-delete" partialSubmit="true"
+					partialSubmit="true"
 					action="#{scheduleBiddingBB.deleteContactDetails}"
 					update="contactPersonDetails" />
 			</div>
