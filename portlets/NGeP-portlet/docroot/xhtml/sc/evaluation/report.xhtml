@@ -34,7 +34,7 @@
 						value="/resources/ep/images/design/edit.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
 				</p:commandLink>
-				<p:commandButton id="download" icon="ui-icon-download"
+				<p:commandButton id="download"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{evaluationBackingBean.downloadReport(scQtEvaluationReport)}" />
@@ -42,7 +42,7 @@
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton icon="ui-icon-download"
+			<p:commandButton
 				value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				action="#{evaluationBackingBean.downloadAllReports}" />
 		</div>
@@ -122,7 +122,7 @@
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-prev" update=":form" />
+							update=":form" />
 					</ui:fragment>
 
 					<ui:fragment
@@ -130,7 +130,7 @@
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','1')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-prev" update=":form" />
+							update=":form" />
 					</ui:fragment>
 
 					<ui:fragment
@@ -138,28 +138,28 @@
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-prev" update=":form" />
+							update=":form" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and !evaluationBackingBean.managedBean.scQt.demoRequired}">
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-prev" update=":form" />
+							update=":form" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-prev" update=":form" />
+							update=":form" />
 					</ui:fragment>
 				</div></td>
 			<td>
 				<div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{evaluationBackingBean.setTabValue('4','5')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
+						action="#{evaluationBackingBean.updateSmAppl}" 
 						iconPos="right" update=":form" />
 				</div>
 			</td>

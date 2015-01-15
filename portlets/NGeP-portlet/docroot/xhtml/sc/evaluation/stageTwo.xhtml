@@ -95,7 +95,7 @@
 					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 						oncomplete="peringkat2.show();"
 						action="#{evaluationBackingBean.evaluations2TechAction(s2techlist)}"
-						icon="ui-icon-evaluate" update=":form:s2Techpopup"></p:commandButton>
+						update=":form:s2Techpopup"></p:commandButton>
 				</p:column>
 
 
@@ -128,8 +128,7 @@
 					style="width:20%">
 
 					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
-						oncomplete="evaluationPresentation.show();"
-						icon="ui-icon-evaluate"></p:commandButton>
+						oncomplete="evaluationPresentation.show();"></p:commandButton>
 				</p:column>
 
 
@@ -202,7 +201,7 @@
 					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 						oncomplete="peringkat2.show();"
 						action="#{evaluationBackingBean.evaluations2FinAction(s2finchecklist)}"
-						icon="ui-icon-evaluate" update=":form:s2Techpopup"></p:commandButton>
+						update=":form:s2Techpopup"></p:commandButton>
 				</p:column>
 
 
@@ -215,7 +214,7 @@
 			<td><div align="left" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{evaluationBackingBean.setTabValue('2','1')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
+						action="#{evaluationBackingBean.updateSmAppl}"
 						update=":form" />
 				</div></td>
 
@@ -225,14 +224,14 @@
 						<p:commandButton value="#{lbl['lbl.sm.next']}"
 							actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-next" iconPos="right" update=":form" />
+							iconPos="right" update=":form" />
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
 						<p:commandButton value="#{lbl['lbl.sm.next']}"
 							actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
-							icon="ui-icon-next" iconPos="right" update=":form" />
+							iconPos="right" update=":form" />
 					</c:if>
 				</div></td>
 		</tr>

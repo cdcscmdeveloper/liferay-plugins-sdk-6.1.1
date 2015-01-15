@@ -49,7 +49,7 @@
 				<div align="right" style="width: 99%">
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'OC'}">
-						<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+						<p:commandButton value="#{lbl['lbl.sm.next']}" 
 							iconPos="right"
 							actionListener="#{evaluationBackingBean.setTabValue(0,1)}"
 							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
@@ -57,7 +57,7 @@
 
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-						<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
 							iconPos="right"
 							actionListener="#{evaluationBackingBean.setTabValue(0,2)}"
 							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />

@@ -50,8 +50,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
-				update="evaluationmeetingDetails" icon="ui-icon-add"/>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}" icon="ui-icon-delete" />
+				update="evaluationmeetingDetails"/>
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"/>
 
 		</div>
 
@@ -101,7 +101,7 @@
 			<td></td>
 			<td>
 				<div align="right" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+					<p:commandButton value="#{lbl['lbl.sm.next']}" 
 						iconPos="right" actionListener="#{evaluationBackingBean.setTabValue(0,1)}"
 						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</div>

@@ -72,8 +72,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
 				process="@this,manualpopupresults" partialSubmit="true"
 				action="#{evaluationBackingBean.adds1ManualAction}"
-				update="manualpopupresults" icon="ui-icon-add"/>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"   icon="ui-icon-delete"
+				update="manualpopupresults"/>
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 			action="#{evaluationBackingBean.deleteManualSubmission}" update="manualpopupresults"/>
             
 		</div>
@@ -89,11 +89,11 @@
 
 		<div align="left">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
-				style="float:right;" oncomplete="manual.hide();" icon="ui-icon-cancel"></p:commandButton>
+				style="float:right;" oncomplete="manual.hide();"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 				style="float:right;" oncomplete="manual.hide();"
-				 icon="ui-icon-save" action="#{evaluationBackingBean.manualSaveAction}"></p:commandButton>
+				 action="#{evaluationBackingBean.manualSaveAction}"></p:commandButton>
 
 
 		</div>

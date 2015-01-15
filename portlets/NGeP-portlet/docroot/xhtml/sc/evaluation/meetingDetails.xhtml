@@ -126,10 +126,10 @@
 				oncomplete="evaluationMeeting.paginator.endLink.click();"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
-				update="evaluationmeetingDetails" icon="ui-icon-add" />
+				update="evaluationmeetingDetails"/>
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
-				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				update="evaluationmeetingDetails"
 				action="#{evaluationBackingBean.markDeleteSelectedRowsAction(evaluationBackingBean.managedBean.scQtMeetings,evaluationBackingBean.managedBean.meetingRemoveList)}">
 				<f:setPropertyActionListener
