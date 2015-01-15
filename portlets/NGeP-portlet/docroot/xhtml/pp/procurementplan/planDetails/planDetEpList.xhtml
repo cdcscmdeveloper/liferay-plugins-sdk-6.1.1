@@ -65,7 +65,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="7%"  rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+				    <p:column width="7%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.ep.usage.target']}" />
 					    </f:facet>
@@ -121,7 +121,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			id="itBudgetAmt" label="#{lbl['lbl.pp.total.approved.budget']}" 
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-		  				update=":form:hiddenGtBudgetAmt, :form:hiddenGtNonAllocAmt" oncomplete="updateEpFooter();" 
+		  				update=":form:hiddenGtBudgetAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt" oncomplete="updateEpFooter();" 
 		  				 />
 		  		</p:inputText>
 		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
@@ -131,7 +131,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			id="itPlanAmt" label="#{lbl['lbl.pp.budget.spend.ep']}"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
-		  				update=":form:hiddenGtPlanAmt, :form:hiddenGtNonAllocAmt" oncomplete="updateEpFooter();"   />
+		  				update=":form:hiddenGtPlanAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt" oncomplete="updateEpFooter();"   />
 		  		</p:inputText>
 		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
@@ -141,7 +141,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
 			    #{lbl['lbl.pp.no.available']}
 	        </p:column>
-	        <p:column rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+	        <p:column>
 			    #{lbl['lbl.pp.no.available']}
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
@@ -211,7 +211,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	#{lbl['lbl.pp.no.available']}
 					    </f:facet>
 					</p:column>
-					<p:column rendered="#{pPlanBackingBean.managedBean.modeEditable and !pPlanBackingBean.managedBean.selectedPlan.brandNew}">
+					<p:column>
 						<f:facet name="footer">
 					     	#{lbl['lbl.pp.no.available']}
 					    </f:facet>
