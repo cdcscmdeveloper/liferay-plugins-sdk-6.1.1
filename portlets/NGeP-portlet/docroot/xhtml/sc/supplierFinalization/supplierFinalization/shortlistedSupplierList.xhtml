@@ -76,7 +76,7 @@
 						action="#{suppFinalizationBackingBean.showSupplierDetails}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
 					</p:commandLink>
 				</p:column>
 	
@@ -102,10 +102,17 @@
 					</h:outputText>
 				</p:column>
 				
-				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
+				<p:column rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
+								  	 								ne DbValueConst.recordStatusExpired}">
+					<h:outputText value="#{suppFinalizationBackingBean
+											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>							  	 
 				</p:column>
-				
+				<p:column style="background-color:red; color:white; font-weight:bold;" 
+						  rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
+								  	 								eq DbValueConst.recordStatusExpired}">
+					<h:outputText value="#{suppFinalizationBackingBean
+											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>
+				</p:column>				
 				<p:column>
 					<h:outputText value="" />
 				</p:column>
@@ -175,7 +182,7 @@
 						action="#{suppFinalizationBackingBean.showSupplierDetails}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
 					</p:commandLink>
 				</p:column>
 	
@@ -197,9 +204,18 @@
 					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" rendered="#{shortlistedSupp.evaluationResultDtls ne null}"/>
 				</p:column>
 				
-				<p:column>
-					<h:outputText value="Active" />
+				<p:column rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
+								  	 								ne DbValueConst.recordStatusExpired}">
+					<h:outputText value="#{suppFinalizationBackingBean
+											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>							  	 
 				</p:column>
+				
+				<p:column style="background-color:red; color:white; font-weight:bold;" 
+						  rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
+								  	 								eq DbValueConst.recordStatusExpired}">
+					<h:outputText value="#{suppFinalizationBackingBean
+											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>
+				</p:column>	
 				
 				<p:column>
 					<h:outputText value="" />
