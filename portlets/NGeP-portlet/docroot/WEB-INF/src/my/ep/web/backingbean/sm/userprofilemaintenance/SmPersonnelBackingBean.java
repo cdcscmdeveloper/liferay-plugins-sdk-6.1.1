@@ -1095,14 +1095,20 @@ public class SmPersonnelBackingBean extends
 			if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				updateUser(getManagedBean().getBasicSmPersonnel(), fc);
 			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				String[] params = { getManagedBean().getBasicSmPersonnel()
-						.getName() };
-				getManagedBean().setDeactivateTerminateConfirmMsg(
-						SmCommonUtil.getMessage(
-								"lbl.sm.userprofile.deactivate.personnel",
-								params));
-				RequestContext.getCurrentInstance().execute(
-						"confirmDialog.show()");
+				if (getManagedBean().getBasicSmPersonnel().getEpRole() != null
+						&& StringUtils.isNotBlank(getManagedBean()
+								.getBasicSmPersonnel().getEpRole())) {
+					String[] params = { getManagedBean().getBasicSmPersonnel()
+							.getName() };
+					getManagedBean().setDeactivateTerminateConfirmMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.userprofile.deactivate.personnel",
+									params));
+					RequestContext.getCurrentInstance().execute(
+							"confirmDialog.show()");
+				} else {
+					updateUser(getManagedBean().getBasicSmPersonnel(), fc);
+				}
 			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
 				String[] params = { getManagedBean().getBasicSmPersonnel()
 						.getName() };
