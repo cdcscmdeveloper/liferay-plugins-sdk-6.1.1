@@ -56,9 +56,11 @@
 					 </ui:fragment>
 					<ui:fragment rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
 						<p:selectOneMenu id="appaction" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
-						    value="#{ctCommitteeVar.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
+						    value="#{ctCommitteeVar.memberRole.parameterId}" 
+						     style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown(ctCommitteeVar.pnp)}" />
-							<p:ajax process="@this"  update=":form:panelHeaderException, committeRepresentTypeId"
+							<p:ajax event="change" process="@this" partialSubmit="true"  
+							   update=":form:panelHeaderException, committeRepresentId"
 							   listener="#{amendmentBackingBean.listenerForCommitte(ctCommitteeVar.memberRole.parameterId, index)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
@@ -68,16 +70,16 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
 				</f:facet>
-				 <ui:fragment id="committeRepresentTypeId"
-					rendered="#{ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary
-					   and ctCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleChairperson}">
+				<h:panelGroup id="committeRepresentId">
 					<p:selectOneMenu  id="representativeType" required="true"
-						value="#{ctCommitteeVar.representativeType.parameterId}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
+						value="#{ctCommitteeVar.representativeType.parameterId}" 
+						disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
+						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctCommitteeVar.memberRole.parameterId,ctCommitteeVar.pnp)}"
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{amendmentBackingBean.getRepresentativeDropdown()}" />
 					</p:selectOneMenu>
-				</ui:fragment>
+				</h:panelGroup>
 
 			</p:column>
 	         </p:dataTable>
