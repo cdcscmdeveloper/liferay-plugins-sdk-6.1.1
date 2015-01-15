@@ -90,6 +90,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -2959,6 +2960,21 @@ public class LOIDetailBackingBean extends
 		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
 		
+		if (getManagedBean().getRecommendList() != null) {
+			for (ScQtRecommend recommend : getManagedBean().getRecommendList()) {
+				System.out.println("Item Name :" + recommend.getRequestItem().getItemName());
+				for (ScQtRecommendDtl qtRecommendDtl : recommend.getRecommendDtls()) {
+					if (qtRecommendDtl.isRecordStatus()) {
+						System.out.println("Select Supplier Name : " + qtRecommendDtl.getSupplier().getCompanyName());
+					}
+					System.out.println("Supplier Name : " + qtRecommendDtl.getSupplier().getCompanyName());
+					System.out.println("Supplier ID : " + qtRecommendDtl.getSupplier().getSupplierId());
+				}
+			}
+			context.put("recommendList", getManagedBean().getRecommendList());
+			context.put("bean", this);
+		}
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationRecommendation.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
@@ -2978,6 +2994,68 @@ public class LOIDetailBackingBean extends
 		
 		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
+		List<ScQtCommitteeActivity> activityList = new ArrayList<ScQtCommitteeActivity>();
+		
+		if (getManagedBean().getEcActivityList() != null) {
+			for (ScQtCommitteeActivity ecActivity : getManagedBean().getEcActivityList()) {
+				if (ecActivity.isMultiLoiAttended()) {
+					activityList.add(ecActivity);
+				}
+			}
+		}
+		if (getManagedBean().getTecActivityList() != null) {
+			for (ScQtCommitteeActivity tecActivity : getManagedBean().getTecActivityList()) {
+				if (tecActivity.isMultiLoiAttended()) {
+					activityList.add(tecActivity);
+				}
+			}
+		}
+		if (getManagedBean().getFecActivityList() != null) {
+			for (ScQtCommitteeActivity fecActivity : getManagedBean().getFecActivityList()) {
+				if (fecActivity.isMultiLoiAttended()) {
+					activityList.add(fecActivity);
+				}
+			}
+		}
+		if (getManagedBean().getScQtCommittee() != null) {
+			for (ScQtCommitteeActivity activity : getManagedBean().getScQtCommittee().getCommitteeActivities()) {
+				if (activity.isMultiLoiAttended()) {
+					if (activity.getScCommitteeMember() != null) {
+						if (activity.getScCommitteeMember().getMemberName() == null) {
+							activity.getScCommitteeMember().setMemberName("");
+						}
+					} else {
+						activity.setScCommitteeMember(new ScCommitteeMember());
+						activity.getScCommitteeMember().setMemberName("");
+					}
+					if (activity.getScCommitteeMember() != null) {
+						if (activity.getScCommitteeMember().getDesignation() == null) {
+							activity.getScCommitteeMember().setDesignation("");
+						}
+					} else {
+						activity.setScCommitteeMember(new ScCommitteeMember());
+						activity.getScCommitteeMember().setDesignation("");
+					}if (activity.getScCommitteeMember() != null) {
+						if (activity.getScCommitteeMember().getGrade() == null) {
+							activity.getScCommitteeMember().setGrade("");
+						}
+					} else {
+						activity.setScCommitteeMember(new ScCommitteeMember());
+						activity.getScCommitteeMember().setGrade("");
+					}if (activity.getScCommitteeMember() != null) {
+						if (activity.getScCommitteeMember().getIcPassport() == null) {
+							activity.getScCommitteeMember().setIcPassport("");
+						}
+					} else {
+						activity.setScCommitteeMember(new ScCommitteeMember());
+						activity.getScCommitteeMember().setIcPassport("");
+					}
+					activityList.add(activity);
+				}
+			}
+		}
+		context.put("activityLists", activityList);
+		context.put("bean", this);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationCommittee.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
@@ -2988,6 +3066,18 @@ public class LOIDetailBackingBean extends
 		
 		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
+		
+		if (getManagedBean().getLois() != null && !getManagedBean().getLois().isEmpty()) {
+			for(ScLoi loi : getManagedBean().getLois()) {
+				System.out.println("Supplier Name : " + loi.getScLoiLoa().getSupplierName());
+				for (ScLoiNegoLocation location : loi.getScNegoLocations()) {
+					
+					System.out.println("Location : " + location.getNegoLocation());
+					System.out.println("Date : " + location.getNegoDate());
+				}
+			}
+		}
+		context.put("loiList", getManagedBean().getLois());
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationLocation.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
@@ -3003,6 +3093,25 @@ public class LOIDetailBackingBean extends
 		context.put("title", scLoiLoa.getTitle());
 		context.put("fulfilmentType", getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));
 		context.put("ptj", pmOrgProfile.getOrgName());
+		String totalSuppliers = "";
+		if (this.getManagedBean().getLois() != null) {
+			totalSuppliers = String.valueOf(this.getManagedBean().getLois().size());
+		}
+		context.put("supplierSize", totalSuppliers);
+		
+		List<ScLoi> localList = new ArrayList<ScLoi>();
+		if (this.getManagedBean().getLois() != null) {
+			for (ScLoi loi : this.getManagedBean().getLois()) {
+				if ("62405".equals(loi.getScWorkFlowStatus().getPmStatus().getStatusId().toString())) {
+					localList.add(loi);
+				}
+			}
+		}
+		String totalStatusSuppliers = "";
+		if (localList != null) {
+			totalStatusSuppliers = String.valueOf(localList.size());
+		}
+		context.put("statusSupplierSize", totalStatusSuppliers);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-offeredAndQTDetails.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
@@ -3112,7 +3221,6 @@ public class LOIDetailBackingBean extends
 		updateMultiLoiBpmTask(this.getManagedBean().getAction(), digiSign);
 	}
 
-
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
@@ -3123,16 +3231,9 @@ public class LOIDetailBackingBean extends
 
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
-		if(getManagedBean().isMultipleLoiFlag()){
-			if(getManagedBean().getScQtFinalization() != null){
-				sb.append(getManagedBean().getScQtFinalization().getScQt().getQtNo());
-			}
-		} else{
-			if(getManagedBean().getScLoi() != null){
-				sb.append(getManagedBean().getScLoi().getLoiNo());
-			}
+		if(getManagedBean().getScLoi() != null){
+			sb.append(getManagedBean().getScLoi().getLoiNo());
 		}
-
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		textBeforeSign = sb.toString();
 		return textBeforeSign;
