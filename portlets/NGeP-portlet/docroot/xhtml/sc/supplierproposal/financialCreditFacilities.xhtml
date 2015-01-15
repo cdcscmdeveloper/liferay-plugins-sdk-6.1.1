@@ -151,12 +151,12 @@
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				process="@all" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCreditFacilities}"
-				update="@([id$=creditFacilitiesPanel])" icon="ui-icon-add" />
+				update="@([id$=creditFacilitiesPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this"
 				partialSubmit="true"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				icon="ui-icon-delete" update="@([id$=creditFacilitiesPanel])"
+				update="@([id$=creditFacilitiesPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteCreditFacilities}" />
 
 		</div>

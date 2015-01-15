@@ -83,10 +83,9 @@
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					style="float:right;"
 					action="#{evaluationMeetingBackingBean.resetClone}"
-					update="clonesearchpnlid" icon="ui-icon-reset" resetValues="true"
+					update="clonesearchpnlid" resetValues="true"
 					partialSubmit="true" process="@this" />
 				<p:commandButton value="Search" style="float:right;"
-					icon="ui-icon-search"
 					action="#{evaluationMeetingBackingBean.cloneSearchCommitteAction}"
 					update="clonesearchCommitteid" partialSubmit="true"
 					process="@parent" />
@@ -191,13 +190,13 @@
 			<p:spacer height="30"></p:spacer>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					style="float:right;" icon="ui-icon-cancel"
+					style="float:right;"
 					onclick="screen2.hide();" />
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this,committeedtlsid" partialSubmit="true"
 					actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 					oncomplete="prepareCommittee.paginator.endLink.click();"
-					icon="ui-icon-check" update="evaluationpreparecommittee" />
+				    update="evaluationpreparecommittee" />
 
 			</div>
 		</p:panel>

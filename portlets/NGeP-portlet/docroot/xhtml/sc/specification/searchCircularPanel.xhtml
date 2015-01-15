@@ -35,10 +35,10 @@
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 			action="#{specificationBackingBean.searchCircularList}"
-			update="circularList,panelItemGroupList" icon="ui-icon-search" />
+			update="circularList,panelItemGroupList"/>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 			action="#{specificationBackingBean.resetCircular}"
-			update="circular,panelItemGroupList" icon="ui-icon-reset"
+			update="circular,panelItemGroupList"
 			resetValues="true" partialSubmit="true" process="@this" />
 	</div>
 

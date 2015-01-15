@@ -84,11 +84,11 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,restrictedPnlId" partialSubmit="true"
-				update="restrictedPnlId" icon="ui-icon-add"
+				update="restrictedPnlId" 
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete" process="@this,restrictedPnlId"
+				process="@this,restrictedPnlId"
 				partialSubmit="true"
 				action="#{specificationBackingBean.deleteCategoryCodes}"
 				update="restrictedPnlId"

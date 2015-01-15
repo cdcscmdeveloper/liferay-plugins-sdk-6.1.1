@@ -63,10 +63,10 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 				action="#{committeBackingBean.searchQTAction}" update="searchQTs"
-				icon="ui-icon-search" process="@this, qtsearchid" />
+				process="@this, qtsearchid" />
 			<p:commandButton value="#{lbl['lbl.so.reset']}"
 				action="#{committeBackingBean.resetSearchDetails}"
-				update="qtsearchid" icon="ui-icon-reset" resetValues="true"
+				update="qtsearchid" resetValues="true"
 				partialSubmit="true" process="@this" />
 		</div>
 	</p:panel>

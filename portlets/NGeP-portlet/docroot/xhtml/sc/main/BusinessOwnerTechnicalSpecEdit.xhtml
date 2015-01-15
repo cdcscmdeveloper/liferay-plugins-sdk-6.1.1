@@ -17,18 +17,18 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				style="float:left;" immediate="true"
 				action="#{specificationBackingBean.backAction}" />
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel"
+				style="float:right;"
 				onclick="createTechnicalDialog.show();" immediate="true"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				style="float:right;" icon="ui-icon-check" update="@all"
+				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 
@@ -36,7 +36,7 @@
 				style="float:right;"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
-				icon="ui-icon-save" update="@all" />
+				update="@all" />
 
 		</div>
 		<p:spacer height="25" />
@@ -129,9 +129,9 @@
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
-						icon="ui-icon-accept" oncomplete="createTechnicalDialog.hide();"
+					    oncomplete="createTechnicalDialog.hide();"
 						action="#{specificationBackingBean.cancelSpecAction('BO')}" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="createTechnicalDialog.hide();" type="button" />
 				</div>
 			</p:dialog>

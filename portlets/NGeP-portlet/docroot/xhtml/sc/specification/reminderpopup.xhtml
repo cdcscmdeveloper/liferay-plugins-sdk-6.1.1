@@ -44,14 +44,11 @@
 
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-					style="float:right;" onclick="reminder.hide();"
-					icon="ui-icon-cancel"></p:commandButton>
+					style="float:right;" onclick="reminder.hide();"></p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					partialSubmit="true" process="@this,signOffreminder"
-					actionListener="#{specificationBackingBean.secretarySubmitTask}"
-					style="float:right;" onclick="reminder.hide();"
-					icon="ui-icon-submit"></p:commandButton>
+					actionListener="#{specificationBackingBean.secretarySubmitTask}"></p:commandButton>
 			</div>
 		</p:panel>
 	</p:dialog>

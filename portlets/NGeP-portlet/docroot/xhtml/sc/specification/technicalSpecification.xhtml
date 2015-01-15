@@ -46,7 +46,7 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				process="@this" icon="ui-icon-add"
+				process="@this"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval' or specificationBackingBean.managedBean.panelItemCategory eq 'Specific'}"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />

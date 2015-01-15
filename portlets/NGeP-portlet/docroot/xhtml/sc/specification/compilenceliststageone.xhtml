@@ -25,11 +25,11 @@
 
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
-			onclick="compliance.hide();" icon="ui-icon-cancel"></p:commandButton>
+			onclick="compliance.hide();"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}" style="float:right;" process="@all"
 			partialSubmit="true"
 			action="#{specificationBackingBean.stageOneTechProposal}"
-			oncomplete="compliance.hide();" update="compilence" icon="ui-icon-accept" ></p:commandButton>
+			oncomplete="compliance.hide();" update="compilence"></p:commandButton>
 
 
 	</p:dialog>

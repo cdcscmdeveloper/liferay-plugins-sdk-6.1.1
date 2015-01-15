@@ -71,11 +71,11 @@
 					<p:commandButton value="#{lbl['lbl.so.reset']}"
 						style="float:right;"
 						action="#{evaluationMeetingBackingBean.reset}"
-						update="newCommitteeProfile" icon="ui-icon-reset"
+						update="newCommitteeProfile"
 						resetValues="true" partialSubmit="true" process="@this" />
 
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-						style="float:right;" icon="ui-icon-search"
+						style="float:right;"
 						action="#{evaluationMeetingBackingBean.existingCommitteeSearchAction}"
 						update="@(.existingCommitteeResults)" partialSubmit="true"
 						process="@parent" />
@@ -252,13 +252,12 @@
 			</p:panel>
 			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 				styleClass="apply_button" style="float:right;" process="@this"
-				oncomplete="newspecificationcommittee.hide();" icon="ui-icon-cancel" />
+				oncomplete="newspecificationcommittee.hide();" />
 
 			<p:commandButton value="Ok" style="float:right;"
 				oncomplete="prepareCommittee.paginator.endLink.click();"
 				update="evaluationpreparecommittee,addexistingNewId"
 				process="@this, newCommitteeProfile,addexistingNewId"
-				icon="ui-icon-check"
 				actionListener="#{evaluationMeetingBackingBean.okCommitteeAction}" />
 
 		</p:panel>
