@@ -135,6 +135,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Map<String, PmUser> userMap;
 	private List<SelectItem> representativesTypeslist;
 	private String committetype;
+	private boolean disableAmendDetails;
 
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -824,5 +825,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setCommittetype(String committetype) {
 		this.committetype = committetype;
+	}
+
+	public boolean isDisableAmendDetails() {
+		return disableAmendDetails;
+	}
+
+	public void setDisableAmendDetails(boolean disableAmendDetails) {
+		this.disableAmendDetails = disableAmendDetails;
 	}
 }

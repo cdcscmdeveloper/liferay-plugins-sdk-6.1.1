@@ -16,7 +16,7 @@
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{amendmentBackingBean.invalidContractExtendPeriod()
-								or amendmentBackingBean.bpkApprover}">
+								or amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction" process="@all"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
@@ -31,7 +31,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
-					disabled="#{amendmentBackingBean.bpkApprover}">
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 					 <p:ajax event="change" update=":form"  process="@form" 
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
@@ -45,7 +45,7 @@
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
-					disabled="#{amendmentBackingBean.bpkApprover}">
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
@@ -59,7 +59,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
 				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange
-				    or amendmentBackingBean.bpkApprover}"
+				    or amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
 					<p:ajax event="change"  update=":form:amend" process="@form" 
 					  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
@@ -72,7 +72,7 @@
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.bpkApprover}"
+				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
 					<p:ajax event="change"  update=":form:typesOfAmend" process="@form"
 					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
@@ -92,7 +92,7 @@
 			<h:panelGrid columns="5">
 				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" 
-					disabled="#{amendmentBackingBean.bpkApprover}" />
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
 			    <p:spacer width="1"/>
@@ -105,7 +105,7 @@
 			<h:panelGrid columns="2">
 				<p:inputTextarea id="txtname" style="width:650px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="100"
-					disabled="#{amendmentBackingBean.bpkApprover}" autoResize="false" />
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}" autoResize="false" />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -122,7 +122,7 @@
 				<p:inputTextarea id="txtdesc" rows="5"  label="#{lbl['lbl.ct.amendment.desc']}"
 					style="width:650px;margin-bottom: 5px;"  autoResize="false" maxlength="200"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"
-					disabled="#{amendmentBackingBean.bpkApprover}" />
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}" />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -137,7 +137,7 @@
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
-					disabled="#{amendmentBackingBean.bpkApprover}">
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 					<p:ajax event="blur" update="extStartDate, extEndDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" 
 					 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 					</p:inputText>
@@ -167,7 +167,7 @@
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
 				<p:inputText id="addValueTxt" style="width:70px;" required="true" label="#{lbl['lbl.ct.additional.contract.amt']}"  
 				   styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
-				   disabled="#{amendmentBackingBean.bpkApprover}">
+				   disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="addValueTxt, addValue" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
@@ -198,7 +198,7 @@
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
 				    mindate="#{amendmentBackingBean.currentDate}"
-				    disabled="#{amendmentBackingBean.bpkApprover}">
+				    disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
 				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
 				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
 				</p:calendar>
