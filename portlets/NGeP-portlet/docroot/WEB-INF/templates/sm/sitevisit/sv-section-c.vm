@@ -30,7 +30,7 @@
     	<br /><br />
     	#parse("/sm/sitevisit/shared/manufacturing-additional-documents.vm")
     	<br /><br />
-    	#parse("/sm/sitevisit/shared/machine.vm")
+    	#parse("/sm/sitevisit/shared/manufacturing-machine.vm")
     #end
 
 #include("/sm/sitevisit/shared/footer.vm")

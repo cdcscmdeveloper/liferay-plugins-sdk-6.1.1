@@ -91,8 +91,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private int lastIndex;
 
-	private List<String> higherManagementNames;
-	private List<String> managementNames;
+	private List<String> higherManagementNames = new ArrayList<String>();
+	private List<String> managementNames = new ArrayList<String>();
 	
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
