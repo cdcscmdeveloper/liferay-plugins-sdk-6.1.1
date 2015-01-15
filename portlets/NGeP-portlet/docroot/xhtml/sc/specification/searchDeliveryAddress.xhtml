@@ -95,9 +95,9 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchDeliveryAddress}"
-					update="deliveryAddress" icon="ui-icon-search" />
+					update="deliveryAddress"/>
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+					resetValues="true" partialSubmit="true"
 					process="@this" update="searDelivery"
 					action="#{specificationBackingBean.deliveryAddressReset}" />
 			</div>
@@ -124,11 +124,10 @@
 		</p:panel>
 
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-			style="float:right;" onclick="deliveryAddress.hide();"
-			icon="ui-icon-cancel"></p:commandButton>
+			style="float:right;" onclick="deliveryAddress.hide();"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
-			icon="ui-icon-accept" update="@(.deliveryUpdate)"
+			update="@(.deliveryUpdate)"
 			oncomplete="deliveryService.paginator.endLink.click();"
 			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
 

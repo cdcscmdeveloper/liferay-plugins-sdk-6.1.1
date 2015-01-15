@@ -138,11 +138,11 @@
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				process="@all" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.addCashOnHand}"
-				update="@([id$=cashOnHandPanel])" icon="ui-icon-add" />
+				update="@([id$=cashOnHandPanel])" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				icon="ui-icon-delete" partialSubmit="true" process="@this"
+				partialSubmit="true" process="@this"
 				update="@([id$=cashOnHandPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
 

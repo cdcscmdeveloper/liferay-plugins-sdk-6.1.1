@@ -131,13 +131,11 @@
 		</table>
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-			style="float:right;" onclick="stageTwoFinance.hide();"
-			icon="ui-icon-cancel"></p:commandButton>
+			style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.stageTwoFinanceCheckList}"
-			oncomplete="stageTwoFinance.hide();" update="financeProposaltwo"
-			icon="ui-icon-accept"></p:commandButton>
+			oncomplete="stageTwoFinance.hide();" update="financeProposaltwo" ></p:commandButton>
 
 
 	</p:dialog>

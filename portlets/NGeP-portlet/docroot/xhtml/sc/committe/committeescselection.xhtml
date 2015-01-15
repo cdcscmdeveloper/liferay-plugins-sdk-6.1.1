@@ -55,10 +55,10 @@
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{committeBackingBean.addCommitteMember}"
-				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)" icon="ui-icon-add"
+				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)"
 				 disabled="#{!committeBackingBean.managedBean.editable}"></p:commandButton>
 
-			<p:commandButton value="Clone" onclick="screen2.show();" process="@this" icon="ui-icon-clone"
+			<p:commandButton value="Clone" onclick="screen2.show();" process="@this"
 			disabled="#{!committeBackingBean.managedBean.editable}"></p:commandButton>
 		</div>
 		<br />

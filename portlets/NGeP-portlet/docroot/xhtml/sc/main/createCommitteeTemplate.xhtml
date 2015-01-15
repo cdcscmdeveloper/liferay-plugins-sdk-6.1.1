@@ -127,9 +127,9 @@
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchScqtDocAction}"
 					process="@this commiteeCreationSpec"
-					update="commiteeCreationSpec,createList" icon="ui-icon-search" />
+					update="commiteeCreationSpec,createList" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+					resetValues="true" partialSubmit="true"
 					update="commiteeCreationSpec" process="@this"
 					action="#{specificationBackingBean.resetTemplate}" />
 			</div>
@@ -187,15 +187,13 @@
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="Create" process="@all"
 								update=":form:commiteeCreationSpec"
-								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}"
-								icon="ui-icon-add"></p:commandButton>
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}" ></p:commandButton>
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 							<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
 								process="@all" update=":form:commiteeCreationSpec"
-								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}"
-								icon="ui-icon-clone"></p:commandButton>
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}" ></p:commandButton>
 						</ui:fragment>
 					</p:column>
 

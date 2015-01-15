@@ -17,13 +17,13 @@
 		<p:messages id="TotalEmployees" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true"></p:messages>
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				style="float:left;" immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-				style="float:right;" icon="ui-icon-save"
+				style="float:right;"
 				action="#{specificationBackingBean.acceptCompanyScoring}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
@@ -108,10 +108,10 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								update="#{scoringPnlId}" icon="ui-icon-add"
+								update="#{scoringPnlId}"
 								actionListener="#{specificationBackingBean.addScoring(21)}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								process="@this" partialSubmit="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
 								update="#{scoringPnlId}">

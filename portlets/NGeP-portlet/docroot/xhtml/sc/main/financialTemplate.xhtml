@@ -17,12 +17,12 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				style="float:left;" immediate="true"
 				action="#{specificationBackingBean.backAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				style="float:right;" icon="ui-icon-check" update="@all"
+				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',2)}" />
 
@@ -30,8 +30,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}"
-				icon="ui-icon-save" />
+				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}"/>
 
 
 		</div>

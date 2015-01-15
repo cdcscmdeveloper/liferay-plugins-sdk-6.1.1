@@ -18,21 +18,20 @@
 			severity="error, info" />
 
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				style="float:left;"  immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel" immediate="true"
+				style="float:right;"  immediate="true"
 				onclick="createTechnicalDialog.show();"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				style="float:right;" icon="ui-icon-check"
+				style="float:right;" 
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
 				update="@all" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"
-				icon="ui-icon-save" />
+				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"/>
 
 		</div>
 		<div class="clear"></div>
@@ -113,9 +112,9 @@
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
-						icon="ui-icon-accept" oncomplete="createTechnicalDialog.hide();"
+						oncomplete="createTechnicalDialog.hide();"
 						action="#{specificationBackingBean.committeeBackAction}" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="createTechnicalDialog.hide();" type="button" />
 				</div>
 			</p:dialog>

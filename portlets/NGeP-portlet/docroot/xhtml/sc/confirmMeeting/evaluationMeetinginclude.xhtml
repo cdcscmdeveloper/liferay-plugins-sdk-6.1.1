@@ -14,7 +14,7 @@
 
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" process="@all"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
-			update="@all" icon="ui-icon-save" />
+			update="@all" />
 
 		<ui:repeat var="bpmAction"
 			value="#{evaluationMeetingBackingBean.managedBean.outComes}">
@@ -23,7 +23,6 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					style="float:right;" process="@all" partialSubmit="true"
-					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}" />
 			</ui:fragment>
 		</ui:repeat>
@@ -96,9 +95,9 @@
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.addMeetingAction}"
 				oncomplete="meetingDtls.paginator.endLink.click();"
-				update="evaluationmeetingDetails" icon="ui-icon-add" />
+				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings,evaluationMeetingBackingBean.managedBean.meetingRemoveList)}"
 				update="evaluationmeetingDetails">
 				<f:setPropertyActionListener
@@ -202,16 +201,16 @@
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.clone']}"
 				process="@this" partialSubmit="true" oncomplete="screen2.show();"
 				actionListener="#{evaluationMeetingBackingBean.addCloneCommittee}"
-				update="form:cloneid" icon="ui-icon-clone" />
+				update="form:cloneid" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}" process="@this"
 				partialSubmit="true"
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeDetails}"
-				icon="ui-icon-add" update=":form:newspecificationcommitteeid"
+				update=":form:newspecificationcommitteeid"
 				oncomplete="newspecificationcommittee.show();" />
 
 
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.committeeMemberActivity,evaluationMeetingBackingBean.managedBean.removeCommitteeList)}"
 				update="evaluationpreparecommittee">
 				<f:setPropertyActionListener

@@ -17,13 +17,13 @@
 			showDetail="true" showSummary="false" closable="true"></p:messages>
 
 		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-				style="float:right;" icon="ui-icon-save"
+				style="float:right;"
 				action="#{specificationBackingBean.acceptCompanyScoring}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
@@ -164,10 +164,10 @@
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoring(17)}"
-								update="#{scoringPnlId}" icon="ui-icon-add" />
+								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								process="@this" partialSubmit="true" 
 								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
 								update="#{scoringPnlId}">
 								<f:setPropertyActionListener

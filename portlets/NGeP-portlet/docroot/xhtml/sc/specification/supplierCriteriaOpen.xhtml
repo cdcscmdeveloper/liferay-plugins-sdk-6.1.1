@@ -80,11 +80,10 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,openPnlId" partialSubmit="true" update="openPnlId"
-				icon="ui-icon-add"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
+				process="@this,openPnlId" partialSubmit="true"
 				action="#{specificationBackingBean.deleteCategoryCodes}"
 				update="openPnlId"
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
@@ -229,10 +228,9 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
-						icon="ui-icon-add" />
+						actionListener="#{specificationBackingBean.showZoneLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						update="zoneLocationDataTable" icon="ui-icon-delete"
+						update="zoneLocationDataTable" 
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
@@ -308,9 +306,6 @@
 									<h:outputText value="#{location.pmDistrict.districtName}" />
 								</p:treeNode>
 
-
-
-
 							</p:tree>
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
@@ -325,7 +320,6 @@
 							</p:commandLink>
 						</p:column>
 
-
 					</p:dataTable>
 
 				</h:panelGrid>
@@ -333,17 +327,13 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupGeneral])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
-						icon="ui-icon-add" />
+						actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"/>
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						icon="ui-icon-delete"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteTreeNode}"
 						update="zoneyesDataTable" />
 				</div>
-
 			</p:panel>
-
 
 			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
 				widgetVar="ZoneLocation" modal="true" width="490" position="top"
@@ -351,7 +341,6 @@
 				<p:panel id="zonePopupPanel">
 					<table border="0">
 						<TR>
-
 							<TD width="80%">
 								<div style="height: 300px; overflow-y: scroll;">
 									<p:tree id="treeZoneLocationPopup"
@@ -380,17 +369,14 @@
 				</p:panel>
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-					style="float:right;" onclick="ZoneLocation.hide();"
-					icon="ui-icon-cancel" />
+					style="float:right;" onclick="ZoneLocation.hide();" />
 					&#160;&#160;
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
 					update="@this, zoneLocationDataTable,zonePopupPanel"
-					action="#{specificationBackingBean.updateZoneLocation}"
-					icon="ui-icon-accept">
+					action="#{specificationBackingBean.updateZoneLocation}">
 				</p:commandButton>
-
 
 			</p:dialog>
 
@@ -408,8 +394,6 @@
 									value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel> <p:outputLabel
 									value="*" styleClass="mandatory" /></TD>
 
-
-
 							<td width="70%">
 								<table>
 									<tr>
@@ -423,7 +407,6 @@
 								</table>
 							</td>
 						</TR>
-
 
 						<TR>
 							<TD valign="top"><p:outputLabel
@@ -458,13 +441,11 @@
 
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-					style="float:right;" onclick="ZoneGeneral.hide();"
-					icon="ui-icon-cancel" />
+					style="float:right;" onclick="ZoneGeneral.hide();"/>
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 					style="float:right;" process="@all"
 					update="@this, zoneyesDataTable,zonePopupGeneral"
-					icon="ui-icon-accept"
 					action="#{specificationBackingBean.updateZoneGeneralLocation}">
 				</p:commandButton>
 				<p:ajax event="close"
@@ -488,13 +469,13 @@
 						update="businessOwnerTotalSuppliers"
 						action="#{specificationBackingBean.searchForSupplierCount}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						icon="ui-icon-search" partialSubmit="true" process="@this" /></td>
+						partialSubmit="true" process="@this" /></td>
 			</tr>
 		</table>
 	</p:panel>
 	<!-- <p:panelGrid columns="1" style="width:50%;"
 		styleClass="noBorders tr,noBorders td">
 		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			icon="ui-icon-search" style="float:right;" partialSubmit="true" />
+			style="float:right;" partialSubmit="true" />
 	</p:panelGrid> -->
 </ui:composition>

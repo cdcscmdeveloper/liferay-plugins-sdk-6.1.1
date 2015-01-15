@@ -13,14 +13,14 @@
 			<tr>
 				<td width="100%"><p:messages id="speccreatemessages"
 						showDetail="true" autoUpdate="true" closable="true" /> 
-						<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-							style="float:left;" icon="ui-icon-back"
+						<p:commandButton value="#{lbl['lbl.btn.back']}"
+							style="float:left;"
 							update="@form"
 							action="#{specificationBackingBean.businessOwnerBackAction}" />
 						<div align="right">
 						<p:commandButton
-						value="#{lbl['lbl.btn.submit']}"
-						icon="ui-icon-submit" action="#{specificationBackingBean.cancelQt}"/> 
+						   value="#{lbl['lbl.btn.submit']}"
+						   action="#{specificationBackingBean.cancelQt}"/> 
 						</div>
 						<ui:include
 						src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>

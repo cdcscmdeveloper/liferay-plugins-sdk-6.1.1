@@ -30,12 +30,11 @@
 
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-			style="float:right;" onclick="stageTwoTech.hide();"
-			icon="ui-icon-cancel"></p:commandButton>
+			style="float:right;" onclick="stageTwoTech.hide();"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.stageTwoTechProposal}"
-			update="stageTwotechProposal" icon="ui-icon-accept"></p:commandButton>
+			update="stageTwotechProposal"></p:commandButton>
 
 
 	</p:dialog>

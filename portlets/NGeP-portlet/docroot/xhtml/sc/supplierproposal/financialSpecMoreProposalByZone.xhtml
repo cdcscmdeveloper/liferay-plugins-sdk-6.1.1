@@ -57,7 +57,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 					action="#{supplierProposalDetailBackingBean.deleteMultipleProposal}"
-					icon="ui-icon-delete" update="@([id$=proposalid])"
+					update="@([id$=proposalid])"
 					process="@this" partialSubmit="true" />
 
 			</div>
