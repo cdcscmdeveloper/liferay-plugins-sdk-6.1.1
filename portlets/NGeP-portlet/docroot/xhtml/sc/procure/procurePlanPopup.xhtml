@@ -70,9 +70,8 @@
 					<p:commandButton process="@this" value="Ok"
 						action="#{procurementPlanBackingBean.updatePlannedInfo}"
 						oncomplete="procurePlanPopup.hide();" partialSubmit="true"
-						icon="ui-icon-check" update="dtPlanResult" />
-					<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()"
-						icon="ui-icon-cancel" />
+						update="dtPlanResult" />
+					<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()"/>
 				</div>
 			</p:column>
 		</h:panelGrid>

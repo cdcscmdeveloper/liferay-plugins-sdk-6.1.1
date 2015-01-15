@@ -22,16 +22,16 @@
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
-							icon="ui-icon-back" action="#{bsvAttendanceBackingBean.backBtn}"
+						<p:commandButton value="#{lbl['lbl.btn.back']}"
+							action="#{bsvAttendanceBackingBean.backBtn}"
 							style="float:left;" />
 					</p:column>
 					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save"
+						<p:commandButton value="#{lbl['lbl.ss.save']}"
 							process="@form" 
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('null')}" />
 						<p:commandButton value="#{lbl['lbl.btn.complete']}"
-							icon="ui-icon-check" process="@form" 
+							process="@form" 
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" />
 					</p:column>
 				</p:row>
@@ -85,15 +85,14 @@
 											postUpdateListener="bsvAttendanceBackingBean.bsvRegistationListner(bsvAttendanceBackingBean.managedBean.mofAccounts)"
 											headerText="Supplier MOF No Lov"
 											buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
-											buttonIcon="ui-icon-add" selectionMode="multiple"
+											selectionMode="multiple"
 											saveObject="bsvAttendanceBackingBean.managedBean.mofAccounts"
 											update="@form" /></td>
 									<td><p:commandButton
 											value="#{lbl['lbl.sc.action.delete']}"
 											process="@this,complisttbl" partialSubmit="true"
 											update="@all"
-											action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"
-											icon="ui-icon-delete" /></td>
+											action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"/></td>
 								</tr>
 							</table>
 						</td>
@@ -199,14 +198,12 @@
 				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
 					process="@this,attendanceDetailstbl" partialSubmit="true"
 					update="attendanceDetailstbl"
-					action="#{bsvAttendanceBackingBean.addAttendanceForBSV}"
-					icon="ui-icon-add" />
+					action="#{bsvAttendanceBackingBean.addAttendanceForBSV}"  />
 
 				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
 					process="@this,attendanceDetailstbl" partialSubmit="true"
 					update="attendanceDetailstbl"
-					action="#{bsvAttendanceBackingBean.deleteBsvAttandances}"
-					icon="ui-icon-delete" />
+					action="#{bsvAttendanceBackingBean.deleteBsvAttandances}" />
 			</div>
 
 
