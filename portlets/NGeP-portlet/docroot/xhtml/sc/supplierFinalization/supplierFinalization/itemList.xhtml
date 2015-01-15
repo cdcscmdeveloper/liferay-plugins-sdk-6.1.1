@@ -96,7 +96,7 @@
 						<p:dataList var="qty" value="#{item.recommendDtls}" type="none">						
 							<p:column>
 								<h:inputText value="#{qty.awardQty}" maxlength="13" size="10" required="true" 
-											 style="text-align: right;" label="#{lbl['lbl.sc.quantity']}" styleClass="ppDisplayTextS">
+											 style="text-align:right; width:120px;" label="#{lbl['lbl.sc.quantity']}">
 									<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
 										maxIntegerDigits="10" maxFractionDigits="3"/>								
