@@ -516,6 +516,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						messageId = MessageConst.INFO_700007;
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+						messageId = MessageConst.INFO_700010;
 					} 
 				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
