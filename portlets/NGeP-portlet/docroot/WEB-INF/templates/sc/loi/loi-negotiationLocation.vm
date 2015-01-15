@@ -38,11 +38,15 @@
 					<td>Lokasi Rundingan</td>
 					<td>Tarikh</td>
 				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
+				#foreach( $scLoi in $loiList )
+					<tr>
+						<td>$scLoi.scLoiLoa.supplierName</td>
+						#foreach( $scNegoLocation in $scLoi.scNegoLocations )
+							<td>$scNegoLocation.negoLocation</td>
+							<td>Date :$scNegoLocation.negoDate</td>
+						#end
+					</tr>
+				#end
 			</table>
 		</td>
 	</tr>
