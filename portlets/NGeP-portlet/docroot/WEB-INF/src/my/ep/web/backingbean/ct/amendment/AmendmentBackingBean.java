@@ -1067,12 +1067,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	                    }
 		      	              }
 		              }
-	            }	 else if(parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)){
-	            	CtCommitteeMember committeMember = getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().get(index);
-	            	committeMember.getMemberRole().setParameterCode(parametercode);
-	            	getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
-	            	getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, committeMember);
-	            }
+	            }	
      }
 
 	public SelectItem[] getMinistryDropdown() {
@@ -3424,5 +3419,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Ketua Pengarah JKR"});
 		    	    }
 		     }
+	}
+	
+	public boolean chkBooleanRepresentType(Long parameterId, boolean temp){
+		
+		if((parameterId == null || parameterId == 0) && !temp)
+			return true;
+		
+		if(parameterId != null && parameterId != 0 && 
+				  ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)){
+			   return true;
+		  } 
+		  return false;
 	}
 }
