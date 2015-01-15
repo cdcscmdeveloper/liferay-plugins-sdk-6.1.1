@@ -99,7 +99,8 @@ public class ReportsGenerateBean {
 		private boolean cmExtentionColourView = false;
 		private boolean cmProofIdentityView = false;
 		private boolean cmBasicRegView = false;
-		private boolean cmMofRegView = false;		
+		private boolean cmMofRegView = false;
+		private boolean cmSupplOrAdminView = false;
 		//SM module
 		private boolean smCompanyNameView = false;
 		private boolean smApplicationNoView = false;
@@ -284,7 +285,9 @@ public class ReportsGenerateBean {
 		private String pmoTotVar=ReportConst.EMPTY_VAL;
 		private String fromDateVar=ReportConst.EMPTY_VAL;
 		private String toDateVar=ReportConst.EMPTY_VAL;		
-		
+		//cm
+		private String cmSupplOrAdminVar=ReportConst.EMPTY_VAL;	
+		private String cmExtentionCodeVar=ReportConst.EMPTY_VAL;	
 		
 		//sm
 		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
@@ -409,6 +412,24 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public String getCmExtentionCodeVar() {
+			return cmExtentionCodeVar;
+		}
+		public void setCmExtentionCodeVar(String cmExtentionCodeVar) {
+			this.cmExtentionCodeVar = cmExtentionCodeVar;
+		}
+		public boolean isCmSupplOrAdminView() {
+			return cmSupplOrAdminView;
+		}
+		public void setCmSupplOrAdminView(boolean cmSupplOrAdminView) {
+			this.cmSupplOrAdminView = cmSupplOrAdminView;
+		}
+		public String getCmSupplOrAdminVar() {
+			return cmSupplOrAdminVar;
+		}
+		public void setCmSupplOrAdminVar(String cmSupplOrAdminVar) {
+			this.cmSupplOrAdminVar = cmSupplOrAdminVar;
+		}
 		public boolean isSmMandatoryBothSupplierTypeView() {
 			return smMandatoryBothSupplierTypeView;
 		}
