@@ -340,6 +340,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 				             getManagedBean().setLetterOfAcceptance(true);
 				             getManagedBean().setPrepareLOA(true);
+				             getManagedBean().setPbQcApproved(getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
 				             getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.agency.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				             getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.agency.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				             if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
