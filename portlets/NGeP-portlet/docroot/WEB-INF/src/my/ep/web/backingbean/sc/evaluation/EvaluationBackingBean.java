@@ -273,8 +273,8 @@ public class EvaluationBackingBean extends
 				&& !ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-			award = QTConstants.AWARD_TYPE_PACKAGE;
-			resultStg.add(this.getManagedBean().getSummaryViewBy());
+			//award = QTConstants.AWARD_TYPE_PACKAGE;
+			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 			summaryReqDTO.setResultStages(resultStg);
 			this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE
@@ -292,7 +292,7 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 
-			resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+			resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
 			summaryReqDTO.setResultStages(resultStg);
 			if (!this.getManagedBean().getScQt().isZonal()) {
 				award = SourcingConstants.AWARD_BY_ITEM;
@@ -311,12 +311,9 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.PREFERENCE_MARGIN.equalsIgnoreCase(this
 				.getManagedBean().getSummaryViewBy())) {
-			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-				resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
-			} else {
-				resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
-			}
+
+			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
+
 			summaryReqDTO.setResultStages(resultStg);
 			this.getManagedBean().setSummaryZoneBean(null);
 		}
@@ -437,7 +434,7 @@ public class EvaluationBackingBean extends
 				resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-				resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
+				resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
 			}
 			reqDTO.setResultStages(resultStg);
 			// reqDTO.setAwardBy(QTConstants.AWARD_TYPE_ITEM);
