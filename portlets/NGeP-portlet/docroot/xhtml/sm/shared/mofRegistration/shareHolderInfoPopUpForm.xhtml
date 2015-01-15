@@ -314,8 +314,8 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.activation.status']}"/></td>
 					<td>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.activation.status.activated']}" rendered="#{backingBean.managedBean.selectedShareHolder.recordStatusFlg eq 1}"/>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.activation.status.pending']}" rendered="#{backingBean.managedBean.selectedShareHolder.recordStatusFlg eq 8}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.activation.status.activated']}" rendered="#{not empty backingBean.managedBean.selectedShareHolder.pmUser}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.activation.status.pending']}" rendered="#{empty backingBean.managedBean.selectedShareHolder.pmUser}"/>
 					</td>
 				</tr>
 			</p:outputPanel>
