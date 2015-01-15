@@ -413,7 +413,7 @@
 							listener="#{backingBean.unSelectAdmin}"
 							update=":form:tt:persInfPan"></p:ajax>
 						<p:column selectionMode="multiple" width="5%"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}" />
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg ne 8)}" />
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"
 							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
