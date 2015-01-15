@@ -64,12 +64,10 @@
 							process="@this,meetingDtlTbl" 
 							partialSubmit="true"
 							action="#{suppFinalizationBackingBean.addMeetingDtls}"
-							update="meetingDtlTbl" 
-							icon="ui-icon-add" />
+							update="meetingDtlTbl" />
 							
 						<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							process="@this, meetingDtlTbl" partialSubmit="true"
-							icon="ui-icon-delete"
 							action="#{suppFinalizationBackingBean.deleteMeetingDetails(suppFinalizationBackingBean.managedBean.selectedMeetingList)}"
 							update="meetingDtlTbl" />
 	

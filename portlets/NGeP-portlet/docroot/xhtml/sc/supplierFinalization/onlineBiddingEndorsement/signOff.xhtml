@@ -21,15 +21,13 @@
 			<p:commandButton 
 				value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" 
-				onclick="signOffPopUp.hide();"
-				icon="ui-icon-cancel"/>
+				onclick="signOffPopUp.hide();" />
 
 			<p:commandButton 
 				value="#{lbl['lbl.btn.submit']}"
 				style="float:right;" 
 				action="#{suppFinalBiddingBackingBean.signOff}"
-				oncomplete="signOffPopUp.hide();"
-				icon="ui-icon-submit"/>
+				oncomplete="signOffPopUp.hide();"/>
 		</div>
 	</p:dialog>
 

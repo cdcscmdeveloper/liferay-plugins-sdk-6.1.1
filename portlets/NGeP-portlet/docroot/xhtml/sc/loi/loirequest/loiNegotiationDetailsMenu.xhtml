@@ -42,13 +42,13 @@
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 				process="@this,negoloctbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationLocation}"
-				update="negoloctbl" icon="ui-icon-add" 
+				update="negoloctbl"
 				rendered="#{!afterNegotiation and isEditableStatus}"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
 			    action="#{lOIDetailBackingBean.deleteNegoLocations}" 
 			    update="negoloctbl" rendered="#{!afterNegotiation and isEditableStatus}"
-				process="@this negoloctbl" partialSubmit="true" icon="ui-icon-delete" />
+				process="@this negoloctbl" partialSubmit="true" />
 		</div>
 
 	</p:panel>
@@ -115,11 +115,11 @@
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 				process="@this negoTermstbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationTerm}"
-				update="negoTermstbl" icon="ui-icon-add" rendered="#{!afterNegotiation and isEditableStatus}"/>
+				update="negoTermstbl" rendered="#{!afterNegotiation and isEditableStatus}"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}" rendered="#{!afterNegotiation and isEditableStatus}"
 			   action="#{lOIDetailBackingBean.deleteNegoTerm}" update="negoTermstbl"
-				process="@this negoTermstbl" partialSubmit="true" icon="ui-icon-delete" />
+				process="@this negoTermstbl" partialSubmit="true" />
 		</div>
 
 	</p:panel>

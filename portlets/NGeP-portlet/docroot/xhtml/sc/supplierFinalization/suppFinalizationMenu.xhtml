@@ -19,15 +19,13 @@
 				process="@all"
 				partialSubmit="true"
 				update="@form"
-				action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
-				icon="ui-icon-save" />
+				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" />
 					
 			<ui:repeat var="bpmAction" value="#{suppFinalizationBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								
 				<p:commandButton value="#{lbl[buttonLabel]}"  
 					styleClass="ui-button"
-					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
 					partialSubmit="true"
 					process="@form"

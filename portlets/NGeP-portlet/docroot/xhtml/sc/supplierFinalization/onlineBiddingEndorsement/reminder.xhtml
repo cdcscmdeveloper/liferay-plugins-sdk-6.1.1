@@ -36,14 +36,12 @@
 			<p:commandButton 
 				value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" 
-				onclick="reminder.hide();"
-				icon="ui-icon-cancel"/>
+				onclick="reminder.hide();" />
 			<p:commandButton 
 				value="#{lbl['lbl.btn.submit']}"
 				style="float:right;" 
 				action="#{suppFinalBiddingBackingBean.sendReminder}"
-				oncomplete="reminder.hide();"
-				icon="ui-icon-submit"/>
+				oncomplete="reminder.hide();"/>
 		</div>
 	</p:dialog>
 	

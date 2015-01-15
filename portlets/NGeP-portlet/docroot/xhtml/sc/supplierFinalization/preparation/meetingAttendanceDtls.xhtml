@@ -34,12 +34,10 @@
 							process="@this,meetingAttDtlTbl" 
 							partialSubmit="true"
 							action="#{suppFinalizationBackingBean.addMeetingAttendance}"
-							update="meetingAttDtlTbl" 
-							icon="ui-icon-add" />
+							update="meetingAttDtlTbl" />
 							
 						<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							process="@this, meetingAttDtlTbl" partialSubmit="true"
-							icon="ui-icon-delete"
 							action="#{suppFinalizationBackingBean.deleteRowsAction(suppFinalizationBackingBean.managedBean.meetingAttendanceList, suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}"
 							update="meetingAttDtlTbl" />
 	
