@@ -710,7 +710,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					         messageId = MessageConst.INFO_700026;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
 								messageId = MessageConst.INFO_700001;
-					      }
+					     } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+							messageId = MessageConst.INFO_700010;
+						 }	
 				    
 			      	     log.info("Record saved successfully");
 				         FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
