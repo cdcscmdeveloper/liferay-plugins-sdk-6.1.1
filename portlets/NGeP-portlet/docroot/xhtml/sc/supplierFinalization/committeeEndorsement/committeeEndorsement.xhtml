@@ -42,7 +42,9 @@
 				value="#{lbl['lbl.btn.send.reminder']}"
 				action="#{suppFinalizationBackingBean.showReminder}"
 				update=":form:reminderPopup"
-				oncomplete="reminder.show();" />
+				oncomplete="reminder.show();" 
+				rendered="#{(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.sfPendingEndorsement) || 
+													(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.sfPendingSignOff)}" />
 		</div>
 	</p:panel>
 	
