@@ -83,7 +83,7 @@
     	
     	<tr>
     		<td width="30%" valign="top"><b>Visiting Officers</b></td>
-    		<td>1.<br />2.</td>
+    		<td>$svOfficers</td>
     	</tr>
     	
     	<tr>
