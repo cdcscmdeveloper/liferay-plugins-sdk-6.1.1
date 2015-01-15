@@ -88,7 +88,7 @@
 		</p:outputPanel>
 
 		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg"
-			height="272px" width="1005px" left="253px" top="23.5px" visibility="visible">
+			      style="height: 341px; width: 1120px;">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table>
 				<tr>				
@@ -106,7 +106,7 @@
 					<td>#{lbl['lbl.sm.supportingdoc.inquiry']}</td>
 				</tr>
 				<tr>
-					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="150" autoResize="false" maxlength="2500"
+					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="150" autoResize="false" maxlength="2500" style="width: 1100px;"
 					value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
 				</tr>
 			</table>
