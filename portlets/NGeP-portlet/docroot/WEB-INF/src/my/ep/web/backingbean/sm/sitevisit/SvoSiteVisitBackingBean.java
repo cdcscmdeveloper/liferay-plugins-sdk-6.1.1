@@ -774,7 +774,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				this.getManagedBean().getMgmtLs().add(personnel);
 
-			}		
+			}
+			
+			if(personnel.isHigherManagement()){
+				this.getManagedBean().getHigherManagementNames().add(personnel.getName());
+			}
+			if(personnel.isManagement()) {
+				this.getManagedBean().getManagementNames().add(personnel.getName());
+			}
 
 			if(personnel.isClerical()){
 				ttlWorker++;
@@ -1502,6 +1509,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("workerNonMalaysianPct", calculateWorkerPercentage(this.getManagedBean().getWrkNonMalaysian()));
 		
 		context.put("templateType",templateDesc);
+
+		// SIR #3108
+		context.put("higherManagementNames", this.getManagedBean().getHigherManagementNames());
+		context.put("managementNames", this.getManagedBean().getManagementNames());
+		context.put("equityCompanies", svTask.getSmAppl().getSmEquityCompanies());
 		
 		String fileName = fileInitName + "sectionA.pdf";
 		String file = generateToPdf(vmEquity, context, fileName);
