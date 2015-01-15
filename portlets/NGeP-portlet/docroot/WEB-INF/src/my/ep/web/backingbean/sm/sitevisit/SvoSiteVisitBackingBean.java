@@ -1750,4 +1750,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return address.toString();
 	}
 	
+	public void submitDialogShow(){
+		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
+	}
+	
 }
