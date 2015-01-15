@@ -547,6 +547,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  extResDTO = contractSO.retrieveExtensionHistory(reqDTO);
 			  getManagedBean().setAmendHistoryList(extResDTO.getExtensionHistoryList());
 		      getManagedBean().setCommittetype(getCommitteTye());
+		      getManagedBean().setDisableAmendDetails(false);
+		      if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+		    	  getManagedBean().setDisableAmendDetails(true);
+		      }
 	   	    } finally {
 		     	contractSO = null;
 		     	reqDTO = null;
