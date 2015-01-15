@@ -747,7 +747,7 @@
 	</portlet>	
 	<portlet>
 		<portlet-name>pCreateProcurementPlan</portlet-name>
-		<display-name>Create Procurement Plan</display-name>
+		<display-name>Create Plan</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -759,7 +759,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Create Procurement Plan</title>
+			<title>Create Plan</title>
 			<short-title>CreateProcurementPlan</short-title>
 			<keywords></keywords>
 		</portlet-info>
