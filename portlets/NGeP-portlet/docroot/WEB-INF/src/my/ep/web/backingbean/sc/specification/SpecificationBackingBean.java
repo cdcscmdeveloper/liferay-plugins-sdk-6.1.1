@@ -2263,7 +2263,7 @@ public class SpecificationBackingBean extends
 				resDto = specSO.retrieveSpecDetails(reqDTO);
 
 				this.getManagedBean().setScQtCheckSt2techProposal(
-						resDto.getSpecResultBean().getResultList());
+						new ArrayList<ScQtCheckList>(resDto.getSpecResultBean().getResultList()));
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDto.getFinSpecResultBean().getResultList());
 			}
@@ -2398,7 +2398,8 @@ public class SpecificationBackingBean extends
 					}
 				} else {
 					// Collections.sort(resDTO.getTechnicalCheckList());
-					localcheckList.addAll(resDTO.getTechnicalCheckList());
+					localcheckList= new ArrayList<ScQtCheckList>(resDTO.getTechnicalCheckList());
+					//localcheckList.addAll(resDTO.getTechnicalCheckList());
 				}
 
 				this.getManagedBean().setScQtCheckSt2techProposal(
@@ -2533,8 +2534,8 @@ public class SpecificationBackingBean extends
 
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 
-				this.getManagedBean().setScQtCheckSt2techProposal(
-						resDTO.getTechnicalCheckList());
+				this.getManagedBean().setScQtCheckSt2techProposal(new ArrayList<ScQtCheckList>(
+						resDTO.getTechnicalCheckList()));
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 			}
@@ -12868,6 +12869,14 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setDivisionList(divisions);
 				}
 			}
+		}
+	}
+
+	public void updateSelectedCheckListIndx(ScQtCheckList checkList, int index) {
+		if (checkList.isSelected()) {
+			checkList.setIndex(index);
+		} else {
+			checkList.setIndex(-1);
 		}
 	}
 
