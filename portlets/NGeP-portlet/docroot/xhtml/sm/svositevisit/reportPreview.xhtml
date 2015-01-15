@@ -9,7 +9,7 @@
 	<ui:param name="viewFlag" value="true" />
 
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" onclick="submissionConfirmDlg.show();"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}"></p:commandButton>
 	</div>
 	
 
@@ -77,5 +77,7 @@
 		</c:if>
 										
 	</p:dialog>
+	
+	<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 	
 </ui:composition>
