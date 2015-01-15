@@ -91,6 +91,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private int lastIndex;
 
+	private List<String> higherManagementNames;
+	private List<String> managementNames;
+	
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
 	}
@@ -503,6 +506,22 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setEquityOwnerLs(List<SmPersonnel> equityOwnerLs) {
 		this.equityOwnerLs = equityOwnerLs;
+	}
+
+	public List<String> getHigherManagementNames() {
+		return higherManagementNames;
+	}
+
+	public void setHigherManagementNames(List<String> higherManagementNames) {
+		this.higherManagementNames = higherManagementNames;
+	}
+
+	public List<String> getManagementNames() {
+		return managementNames;
+	}
+
+	public void setManagementNames(List<String> managementNames) {
+		this.managementNames = managementNames;
 	}
 
 
