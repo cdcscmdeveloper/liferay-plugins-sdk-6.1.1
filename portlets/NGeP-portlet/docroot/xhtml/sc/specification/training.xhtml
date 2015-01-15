@@ -15,12 +15,12 @@
 	<ui:define name="contentSection">
 
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				style="float:left;" 
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save"
+				style="float:right;"
 				actionListener="#{specificationBackingBean.acceptTrainingScore}" />
 
 
@@ -75,10 +75,9 @@
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
 							oncomplete="scoreWidget.paginator.endLink.click();"
-							update="#{scoringPnlId}" icon="ui-icon-add"
+							update="#{scoringPnlId}"
 							action="#{specificationBackingBean.addTrainingScoring}" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete"
 							action="#{specificationBackingBean.deleteScoring}"
 							update="#{scoringPnlId}" />
 					</div>

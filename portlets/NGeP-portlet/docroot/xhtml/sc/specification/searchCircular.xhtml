@@ -52,10 +52,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="reviceApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate"
 					action="#{specificationBackingBean.panelChangeValue}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					actionListener="#{specificationBackingBean.panelNoConformation}"
 					oncomplete="reviceApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate" />
 			</div>
@@ -73,7 +73,7 @@
 	<div align="right" style="width: 100%;">
 
 		<p:commandButton value="#{lbl['lbl.sm.next']} " process="@form"
-			partialSubmit="true" style="float-right;" icon="ui-icon-next"
+			partialSubmit="true" style="float-right;"
 			action="#{specificationBackingBean.newProceedAction}" />
 	</div>
 

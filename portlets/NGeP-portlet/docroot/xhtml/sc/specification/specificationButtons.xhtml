@@ -20,7 +20,7 @@
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval' and specificationBackingBean.managedBean.readOnly eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.spec.back.search.panel.Item']}"
-							style="float:left;" icon="ui-icon-back" immediate="true"
+							style="float:left;" immediate="true"
 							update="@([id$=panelItemGroupList])"
 							action="#{specificationBackingBean.businessOwnerBackAction}" />
 
@@ -33,7 +33,6 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" style="float:right;"
-								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 								action="#{specificationBackingBean.updateBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat>
@@ -41,8 +40,7 @@
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
 							style="float:right;"
-							action="#{specificationBackingBean.saveSpecificationDtls}"
-							icon="ui-icon-save">
+							action="#{specificationBackingBean.saveSpecificationDtls}">
 
 						</p:commandButton>
 					</c:if>
@@ -62,9 +60,9 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					oncomplete="reviceApprovalDlgs.hide();" action="#{specificationBackingBean.reviseMinistrySpecApproval}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>

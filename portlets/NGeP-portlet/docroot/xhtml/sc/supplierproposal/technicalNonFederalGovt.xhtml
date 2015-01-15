@@ -179,10 +179,10 @@
 				process="@all"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
-				update="@([id$=nonFedExpPanel])" icon="ui-icon-add" />
+				update="@([id$=nonFedExpPanel])"/>
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}" partialSubmit="true"
-				process="@this" icon="ui-icon-delete"
+				process="@this"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				update="@([id$=nonFedExpPanel])"
 				action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />

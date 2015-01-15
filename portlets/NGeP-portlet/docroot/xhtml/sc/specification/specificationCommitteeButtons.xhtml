@@ -19,8 +19,7 @@
 					<ui:fragment
 						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION)) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION)))}">
 						<p:commandButton value="Save" update="@all"
-							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"
-							icon="ui-icon-save">
+							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}">
 							<f:setPropertyActionListener
 								target="#{specificationBackingBean.managedBean.buttonOutCome}"
 								value="save" />
@@ -35,7 +34,6 @@
 
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" style="float:right;"
-								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat>
@@ -55,10 +53,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					oncomplete="reviceApprovalDlgs.hide();"
 					action="#{specificationBackingBean.reviseSpecificationCommittee}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>

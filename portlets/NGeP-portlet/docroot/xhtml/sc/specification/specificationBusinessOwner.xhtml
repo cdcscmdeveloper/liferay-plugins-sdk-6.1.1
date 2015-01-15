@@ -285,9 +285,8 @@
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
-					icon="ui-icon-add" />
+					/>
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					action="#{specificationBackingBean.deleteTreeNode}"
 					update="zoneGeneralDataTable" />
@@ -358,13 +357,11 @@
 
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-			style="float:right;" onclick="ZoneGeneral.hide();"
-			icon="ui-icon-cancel" />
+			style="float:right;" onclick="ZoneGeneral.hide();"/>
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 			style="float:right;" process="@all"
 			update="@this, zoneGeneralDataTable,zonePopupGeneral"
-			icon="ui-icon-accept"
 			action="#{specificationBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
 		<p:ajax event="close"

@@ -243,12 +243,12 @@
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
-				update="@all,financeProposaltwo" icon="ui-icon-add" />
+				update="@all,financeProposaltwo" />
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.markDeleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList, specificationBackingBean.managedBean.markDeletedFinChecklist)}"
 				update="financeProposaltwo">
 				<f:setPropertyActionListener

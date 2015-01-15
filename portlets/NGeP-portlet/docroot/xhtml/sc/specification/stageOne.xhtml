@@ -71,8 +71,8 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this" partialSubmit="true"
-				oncomplete="compliance.show();"  icon="ui-icon-add" actionListener="#{specificationBackingBean.stageOnecompilenceList}" update="compilencestageone" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete" action="#{specificationBackingBean.deleteS1Tech}" update="compilence"/>
+				oncomplete="compliance.show();"  actionListener="#{specificationBackingBean.stageOnecompilenceList}" update="compilencestageone" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  action="#{specificationBackingBean.deleteS1Tech}" update="compilence"/>
 
 		</div>
 
@@ -140,8 +140,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,additionaltech"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneAdditionalAdd}"
-				update="additionaltech"  icon="ui-icon-add" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" icon="ui-icon-delete" action="#{specificationBackingBean.deleteS1TechAdd}" update="additionaltech"/>
+				update="additionaltech" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  action="#{specificationBackingBean.deleteS1TechAdd}" update="additionaltech"/>
 
 		</div>
 
@@ -208,8 +208,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financeProposal"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiProposalAdd}"
-				update="financeProposal" icon="ui-icon-add"/>
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" icon="ui-icon-delete" action="#{specificationBackingBean.deleteS1Fin}" update="financeProposal"/>
+				update="financeProposal"/>
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  action="#{specificationBackingBean.deleteS1Fin}" update="financeProposal"/>
 
 		</div>
 
@@ -274,8 +274,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financeAdditional"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiAdditioalProposalAdd}"
-				update="financeAdditional" icon="ui-icon-add"/>
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" icon="ui-icon-delete" action="#{specificationBackingBean.deleteS1FinAdd}" update="financeAdditional"/>
+				update="financeAdditional" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  action="#{specificationBackingBean.deleteS1FinAdd}" update="financeAdditional"/>
 
 		</div>
 		<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">

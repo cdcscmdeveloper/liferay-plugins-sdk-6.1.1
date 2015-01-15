@@ -58,11 +58,11 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 							action="#{committeBackingBean.searchUserAction}"
-							update="userexistid" icon="ui-icon-search"
+							update="userexistid"
 							process="@parent, userTblid" />
 						<p:commandButton value="#{lbl['lbl.so.reset']}"
 							action="#{committeBackingBean.reset}" update="userTblid"
-							icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+						    resetValues="true" partialSubmit="true"
 							process="@this" />
 					</div>
 					<p:spacer height="5" />
@@ -234,11 +234,11 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					 process="@this, newProfile"
-					update="@(.committeMemberDtls)" icon="ui-icon-check"
+					update="@(.committeMemberDtls)"
 					actionListener="#{committeBackingBean.okQCCommitteeAction}" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
-					oncomplete="screen3.hide();" icon="ui-icon-cancel" />
+					oncomplete="screen3.hide();"/>
 			</div>
 		</p:panel>
 	</p:dialog>

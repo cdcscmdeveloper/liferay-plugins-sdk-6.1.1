@@ -31,12 +31,12 @@
 			</p:tree>
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-			style="float:right;" onclick="ctZone.hide();" icon="ui-icon-cancel"></p:commandButton>
+			style="float:right;" onclick="ctZone.hide();"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
 			update="ctZoneList"
 			actionListener="#{specificationBackingBean.updateContractZoneLocation}"
-			oncomplete="ctZone.hide();" icon="ui-icon-accept"></p:commandButton>
+			oncomplete="ctZone.hide();"></p:commandButton>
 
 
 	</p:dialog>

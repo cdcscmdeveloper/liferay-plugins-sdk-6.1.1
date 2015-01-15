@@ -83,13 +83,13 @@
 				<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
 					action="#{committeBackingBean.cloneCommitteMembersAcition(committeBackingBean.managedBean.headerTitle)}"
 					oncomplete="clonecommittee.show();" process="@this"
-					icon="ui-icon-clone" update="@(.cloneMember)" />
+					update="@(.cloneMember)" />
 				<p:commandButton id="committeeadd" value="#{lbl['lbl.so.addbtn']}"
-					process="@this" icon="ui-icon-add"
+					process="@this"
 					action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 					oncomplete="newcommittees.show();" update="@(.addCommitteeMember)" />
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" process="@this, committeMembersListId"
+					process="@this, committeMembersListId"
 					action="#{committeBackingBean.deleteCommitteeAction}"
 					update="committeMembersListId" />
 			</div>
