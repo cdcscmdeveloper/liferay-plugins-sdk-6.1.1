@@ -1466,14 +1466,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("effEndDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
 				if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
 					context.put("extendMonths",getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + " bulan");
-					context.put("amendEffExpDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
-							+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
+					context.put("extStartDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()));
+					context.put("extEndDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
 				}
 				else {
 					context.put("extendMonths","");
-					context.put("amendEffExpDate", "");
+					context.put("extStartDate", "");
+					context.put("extEndDate", "");
 				}
-				context.put("effDate", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+				context.put("amendEffExpDate", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
 													
 				context.put("bondValue",getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null  
 						?  amountDF.format(getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt())
