@@ -21,7 +21,6 @@
 								process="@all"
 								partialSubmit="true"
 								action="#{suppFinalMeetingBackingBean.saveAction}"
-								icon="ui-icon-save" 
 								update="@form"/>
 							
 							<ui:repeat var="bpmAction" value="#{suppFinalMeetingBackingBean.managedBean.outComes}">
@@ -32,7 +31,6 @@
 										style="float:right;" 
 										process="@all" 
 										partialSubmit="true"
-										icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 										action="#{suppFinalMeetingBackingBean.submitAction(bpmAction)}" />
 								</ui:fragment>
 							</ui:repeat>
@@ -89,11 +87,10 @@
 									partialSubmit="true"
 									action="#{suppFinalMeetingBackingBean.meetingAddAction}"
 									oncomplete="meetingDtls.paginator.endLink.click();"
-									update="meetingTbl" 
-									icon="ui-icon-add" />
+									update="meetingTbl" />
 									
 								<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-									icon="ui-icon-delete" process="@this"
+									process="@this"
 									partialSubmit="true"
 									action="#{suppFinalMeetingBackingBean.meetingDeleteAction}"
 									update="@([id$=meetingDetailPanel])"/>
@@ -166,18 +163,15 @@
 									process="@this" 
 									oncomplete="cloneMemberWidgetVar.show();"
 									actionListener="#{suppFinalMeetingBackingBean.clonePopupAction}"
-									update="form:cloneDialogId" 
-									icon="ui-icon-clone" />
+									update="form:cloneDialogId"  />
 								
 								<p:commandButton value="#{lbl['lbl.btn.add']}" 
 									process="@this"
 									actionListener="#{suppFinalMeetingBackingBean.addPopupAction}"
-									icon="ui-icon-add" 
 									update=":form:newMemberDialogId"
 									oncomplete="newMemberWidgetVar.show();" />
 								
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
-									icon="ui-icon-delete"
 									action="#{suppFinalMeetingBackingBean.committeeDeleteAction}"
 									update="memberListTbl" />
 							</div>

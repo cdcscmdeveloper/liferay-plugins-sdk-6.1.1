@@ -24,15 +24,13 @@
 				partialSubmit="true"
 				update="@form"
 				rendered="#{isPendingNegotiationStatus}"
-				action="#{lOIDetailBackingBean.saveMultipleLoiAction}"
-				icon="ui-icon-save" />
+				action="#{lOIDetailBackingBean.saveMultipleLoiAction}" />
 					
 			<ui:repeat var="bpmAction" value="#{lOIDetailBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								
 				<p:commandButton value="#{lbl[buttonLabel]}"  
 					styleClass="ui-button"
-					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 					action="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(bpmAction)}"
 					partialSubmit="true"
 					process="@form"

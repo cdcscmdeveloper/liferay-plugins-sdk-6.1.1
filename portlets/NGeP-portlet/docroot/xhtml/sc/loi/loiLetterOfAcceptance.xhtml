@@ -29,7 +29,7 @@
 				<ui:fragment rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
-						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
+						value="#{lbl['lbl.txt.attachment']}" 
 						partialSubmit="true" process="@this">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}" value="#{scLoaReport}" />
 					</p:commandButton>
@@ -37,25 +37,24 @@
 			</p:column>
 
 			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.download']}">				
-				<p:commandButton id="download" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
+				<p:commandButton id="download"  style="background-color:transparent !important; border:0px none;"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true}" />
 			</p:column>
 		</p:dataTable>
 		
 		<div class="ppRightBtn">
-			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}"	
+			<p:commandButton  value="#{lbl['lbl.btn.download.all']}"	
 				action="#{lOADetailBackingBean.downloadAllReports}" />
 				
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, contentsTbl" partialSubmit="true"
 				action="#{lOADetailBackingBean.addLoaContentAction}"
 				oncomplete="contentsTblWidget.paginator.endLink.click();"
-				update="contentsTbl" icon="ui-icon-add" />
+				update="contentsTbl"/>
 				
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, contentsTbl" partialSubmit="true"
-				icon="ui-icon-delete"
 				action="#{templateSpecBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.scLoa.scLoaReports, lOADetailBackingBean.managedBean.selectedScLoaReports)}"
 				update="contentsTbl" />
 		</div>

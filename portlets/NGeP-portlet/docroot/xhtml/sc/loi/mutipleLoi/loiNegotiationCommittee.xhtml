@@ -214,12 +214,10 @@
 				partialSubmit="true"
 				action="#{lOIDetailBackingBean.addMeetingAttendance}"
 				update="meetingAttDtlTbl" 
-				rendered="#{isPendingNegotiationStatus}"
-				icon="ui-icon-add" />
+				rendered="#{isPendingNegotiationStatus}" />
 							
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, meetingAttDtlTbl" partialSubmit="true"
-				icon="ui-icon-delete"
 				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances, lOIDetailBackingBean.managedBean.selectedMeetingAttList)}"
 				rendered="#{isPendingNegotiationStatus}"
 				update="meetingAttDtlTbl" />

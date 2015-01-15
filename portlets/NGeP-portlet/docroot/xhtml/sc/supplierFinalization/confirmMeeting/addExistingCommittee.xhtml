@@ -56,14 +56,12 @@
 						style="float:right;"
 						action="#{suppFinalMeetingBackingBean.committeeResetAction}"
 						update="newMemberPanel" 
-						icon="ui-icon-reset"
 						resetValues="true" 
 						partialSubmit="true" 
 						process="@this" />
 
 					<p:commandButton value="#{lbl['lbl.btn.search']}" 
 						style="float:right;"
-						icon="ui-icon-search"
 						action="#{suppFinalMeetingBackingBean.committeeSearchAction}"
 						update="@(.existingCommitteeResults)" 
 						partialSubmit="true"
@@ -117,13 +115,12 @@
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					process="@this, newMemberPanel, addPanel"
 					action="#{suppFinalMeetingBackingBean.committeeOkAction}"
-					icon="ui-icon-check" 
 					update=":form:memberListTbl"/>
 	
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" 
 					process="@this"
 					action="#{suppFinalMeetingBackingBean.committeeCancelAction}"
-					ajax="true" icon="ui-icon-cancel" />
+					ajax="true" />
 			</div>
 		</p:panel>
 
