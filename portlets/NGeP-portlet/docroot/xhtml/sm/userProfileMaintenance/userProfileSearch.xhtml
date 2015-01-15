@@ -46,8 +46,9 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
-						<h:outputText value="#{lbl['lbl.sm.userprofile.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
-						<h:outputText value="#{lbl['lbl.sm.userprofile.inactive']}" rendered="#{personnel.recordStatusFlg ne '1'}" />
+						<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1' and not empty personnel.epRole}" />
+						<h:outputText value="#{lbl['lbl.sm.accountstatus.deactivate']}" rendered="#{personnel.recordStatusFlg eq '1' and empty personnel.epRole}" />
+						<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg ne '1'}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
