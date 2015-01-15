@@ -65,6 +65,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -96,6 +97,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
@@ -571,11 +573,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				
 			case 3: 
 				//Committee Endorsement Tab
-				//no validation
+				reqDTO.setScQtFinalization(scQtFinalization);
 				break;
 			}
 			return reqDTO;
 		} finally {
+			
 		}
 	}
 	
@@ -744,13 +747,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	private void saveByPackage(ScQtFinalization scQtFinalization){
-		List<ScQtRecommend> scQtRecommendList = new ArrayList<ScQtRecommend>();
-		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
-		
 		String recommendByStr = getManagedBean().getRecommendBy();
 		if (StringUtils.isBlank(recommendByStr)) {
 			throw new EpException(MessageConst.ERROR_760211);
 		}
+		
+		List<ScQtRecommend> scQtRecommendList = new ArrayList<ScQtRecommend>();
+		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
 		PmParameter recommendBy = getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, recommendByStr);
 		ScQtEvaluationResult scQtEvaluationResult = getManagedBean().getRecommendedSupplier();
 		if (scQtEvaluationResult != null) {
@@ -2946,6 +2949,25 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 		}
 		
+	}
+	
+	public String getMofAccountStatus(SmMofAccount mofAccount) {
+		switch (mofAccount.getRecordStatusFlg()) {
+			case DbValueConst.RECORD_STATUS_ACTIVE : 
+					return "ACTIVE";
+			case DbValueConst.RECORD_STATUS_CANCELLED : 
+					return "CANCELLED";
+			case DbValueConst.RECORD_STATUS_DELETED : 
+					return "DELETED";
+			case DbValueConst.RECORD_STATUS_EXPIRED : 
+					return "EXPIRED";
+			case DbValueConst.RECORD_STATUS_PENDING_ACTIVATION : 
+					return "PENDING ACTIVATION";
+			case DbValueConst.RECORD_STATUS_SUSPENDED : 
+					return "SUSPENDED";
+		}
+		
+		return StringUtils.EMPTY;
 	}
 	
 	public void selectSupplierDropDownEvent() {
