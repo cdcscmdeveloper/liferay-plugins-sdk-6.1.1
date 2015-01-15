@@ -473,7 +473,7 @@
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit)}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg ne 8)}">
 							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignSelShareHolder(person)}"
