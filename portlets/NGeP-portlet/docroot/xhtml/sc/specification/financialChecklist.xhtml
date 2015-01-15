@@ -40,19 +40,20 @@
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					rendered="#{stageTwofunctional.manditory !='true' and stageTwofunctional.definationType.parameterCode ne 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this"  listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}"/>
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
 					disabled="true"
 					rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				<p:ajax partialSubmit="true" process="@this" update="@this"  listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}"/>
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
 					disabled="true"
 					rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				
+					<p:ajax partialSubmit="true" process="@this" update="@this"  listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 
