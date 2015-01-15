@@ -32,38 +32,23 @@
 			<tr>
 				<td><p:panel style="width: 100%;" header="Document Details"
 						toggleable="true" id="searchTabId">
-
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
-								<td width="25%"><p:outputLabel value="Business Reg. No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.businessRegNoFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
 								<td width="25%"><p:outputLabel value="MOF Account No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.MOFAccountFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier.smAppl}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel value="Company Name" /></td>
-								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.companyNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
+								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier.companyName}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel value="Business Type" /></td>
-							
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
+								<td width="25%"><p:outputLabel value="Application No." /></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier}"></p:inputText></td>
 							</tr>
-<!-- 							<tr> -->
-<!-- 								<td width="35%"><p:outputLabel value="Registration Status" /></td> -->
-<!-- 								<td width="35%">					 -->
-<!-- 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}"> -->
-<!-- 										<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('PT')}" /> -->
-<!-- 									</p:selectOneMenu> -->
-<!-- 								</td>						 -->
-<!-- 							</tr> -->
-							
+							<tr>
+								<td width="35%"><p:outputLabel value="Application Type" /></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier}"></p:inputText></td>
+							</tr>
 						</table>
 						</p:panel></td>
 			</tr>
