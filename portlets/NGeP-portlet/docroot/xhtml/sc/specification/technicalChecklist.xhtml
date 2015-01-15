@@ -40,19 +40,19 @@
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}"/>
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="true"
 					rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}"/>
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="true"
 					rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this"  listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -284,7 +284,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
-				action="#{specificationBackingBean.markDeleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2techProposal, specificationBackingBean.managedBean.markDeletedTechChecklist)}"
+				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2techProposal, specificationBackingBean.managedBean.markDeletedTechChecklist)}"
 				update="stageTwotechProposal">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
