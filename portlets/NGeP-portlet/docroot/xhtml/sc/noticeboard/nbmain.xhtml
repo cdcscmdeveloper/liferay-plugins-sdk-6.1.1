@@ -156,7 +156,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						style="float:right;width:25px"
 						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
-						icon="ui-icon-reset" update="locations,@(.resetBtnCLS)"
+						update="locations,@(.resetBtnCLS)"
 						actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
 					</p:commandButton>
 				</h:panelGroup>
@@ -380,12 +380,11 @@
 			<tr>
 				<td colspan="2" class="ppRightBtn"><p:commandButton
 						id="nbSearchButton" value="#{lbl['lbl.btn.search']}"
-						icon="ui-icon-search"
 						action="#{noticeBoardBackingBean.searchNoticeBoard}"
 						update="@(.nbsrhresultsStyleClass)" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();">
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
-						icon="ui-icon-reset" update="nbpanel" process="@this"
+						update="nbpanel" process="@this"
 						action="#{noticeBoardBackingBean.reset}">
 					</p:commandButton></td>
 			</tr>
