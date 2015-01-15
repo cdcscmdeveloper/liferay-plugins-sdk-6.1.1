@@ -292,7 +292,7 @@
 					</h:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-					    partialSubmit="true" icon="ui-icon-submit" process="@this prepareBy"
+					    partialSubmit="true"  process="@this prepareBy"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
@@ -302,7 +302,7 @@
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 						process="@this" partialSubmit="true" onsuccess="sqConformDlg.show();"
-						update="@([id$=requestListDataTable])" icon="ui-icon-delete" />
+						update="@([id$=requestListDataTable])" />
 				</c:if>
 				</p:column>
 			</p:row>
@@ -325,11 +325,11 @@
 						<p:column width="100%" style="text-align:right">
 							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@([id$=requestListDataTable])" 
 								onstart="promptWidget.show()" onsuccess="sqConformDlg.hide();" partialSubmit="true" process="@this"
-								icon="ui-icon-accept" oncomplete="promptWidget.hide();"
+								oncomplete="promptWidget.hide();"
 								actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
 						 
 						  <p:commandButton value="#{lbl['lbl.btn.no']}" 
-								partialSubmit="true" process="@this" icon="ui-icon-reject"
+								partialSubmit="true" process="@this"
 								onclick="sqConformDlg.hide();" type="button" />
 								
 						</p:column>

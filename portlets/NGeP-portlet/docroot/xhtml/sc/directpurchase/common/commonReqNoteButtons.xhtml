@@ -9,25 +9,24 @@
 	   <c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" 
 	           	   id="backButton"
-	               icon="ui-icon-back" partialSubmit="true" process="@this"
+	               partialSubmit="true" process="@this" 
 				   immediate="true" action="#{requestNoteBackingBean.backToPervious}"  
 				   rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"
 				   title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 				</p:commandButton>
 						
-				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@this"
+				<p:commandButton value="#{lbl['lbl.sc.common.save']}" process="@this"
 				   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				   action="#{requestNoteBackingBean.saveAction('')}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])"
 				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					icon="ui-icon-submit"  
 					action="#{requestNoteBackingBean.submitAction('')}" process="@all"/>
 					
 			    <p:commandButton value="#{lbl['lbl.sc.common.cancel']}"  action="#{requestNoteBackingBean.cancel}"
 			      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			      style="float:right;" 
-			      icon="ui-icon-cancel" process="@this"  partialSubmit="true"/>
+			      process="@this"  partialSubmit="true"/>
 	    </c:if>
 	    </div>
 	   <div>
@@ -37,7 +36,7 @@
 						<td align="right">
 						      
 						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
-					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" process="@this" icon="ui-icon-back" partialSubmit="true" 
+					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" process="@this" partialSubmit="true" 
 						           style="float:left;"  immediate="true" 
 						           action="#{requestNoteBackingBean.backToPervious}"   
 						           rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"/>
@@ -46,7 +45,7 @@
 						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
-                              <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{requestNoteBackingBean.saveAction('Save')}"
+                              <p:commandButton value="#{lbl['lbl.sc.common.save']}" action="#{requestNoteBackingBean.saveAction('Save')}"
                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        process="@this" />
 
@@ -59,7 +58,6 @@
 						    <p:commandButton value="#{lbl[buttonLabel]}" process="@form" partialSubmit="true"
 								 rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
 								 styleClass="ui-button"
-								 icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 								 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								 actionListener="#{requestNoteBackingBean.approverAction(bpmAction)}" />
 
@@ -67,7 +65,6 @@
 
 						    <p:commandButton value="#{lbl[buttonLabel]}" 
 								rendered="#{unspscCodeBackingBean.isRequisitioner()}"
-								icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 							    partialSubmit="true"
 							    styleClass="ui-button"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

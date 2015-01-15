@@ -20,14 +20,14 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
   <p:panel id="mainPanel">
      <div class="ppRightBtn">
 	     <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}">
-	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" 
+	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" 
 	                partialSubmit="true" process="@this"
 				    style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 
 					<p:commandButton value="#{lbl['lbl.sc.common.submit']}"  partialSubmit="true" process="@form"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					icon="ui-icon-submit"  update="@form"/>
+					update="@form"/>
 	    </c:if>
 
 	 
@@ -38,7 +38,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	          
 			      <p:commandButton immediate="true" process="@this" partialSubmit="true"
 						 rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"
-					     value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+					     value="#{lbl['lbl.sc.common.back']}"
 						 style="float:left;"
 						 action="#{purchaseInquiryBackingBean.backToPervious}" />
 								
@@ -50,13 +50,12 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								<p:commandButton
 								    rendered="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable eq 1}"
 									value="#{lbl['lbl.sc.common.proceed.btn']}"
-									icon="ui-icon-submit"
 									partialSubmit="true" process="@form"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
 	
 								<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
-									icon="ui-icon-cancel" style="float:right;"
+									style="float:right;"
 									partialSubmit="true" process="@form"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}" />
@@ -68,7 +67,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	
 	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}">
 	                       <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-							        icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 							        styleClass="ui-button"
 									partialSubmit="true"
 								    update="@form"

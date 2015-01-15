@@ -26,19 +26,19 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	       <p:commandButton  immediate="true" 
 	          partialSubmit="true" process="@this"
-	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
+	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 	          rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 			  style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}"  />
 			  
 		     <p:commandButton immediate="true"  
-				  value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+				  value="#{lbl['lbl.sc.common.back']}"
 				  partialSubmit="true" process="@this" style="float:left;"
 				  rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 				  action="#{purchaseInDefaultBackingBean.backToPervious}" />
 					 
 		    <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 		      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			  icon="ui-icon-submit" update="@form" process="@all"  partialSubmit="true"
+			  update="@form" process="@all"  partialSubmit="true"
 			  rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
 	  </div>
@@ -55,7 +55,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				      <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 						onstart="blockWidget.show();" 
 						oncomplete="blockWidget.hide();"
-						icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 						styleClass="ui-button"
 						update="#{isReject ? '@form' : ''}"
 						partialSubmit="true"
