@@ -51,14 +51,14 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
 						value="#{lbl['lbl.sc.common.proceed.btn']}"
-						icon="ui-icon-submit"  process="@all"
+						process="@all"
 						update="@this, zoneLocationDataTable"
 						partialSubmit="true"
 						actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
 					<p:commandButton
-						value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" partialSubmit="true" process="@this"
-						icon="ui-icon-cancel" action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
+						value="#{lbl['lbl.sc.cancel']}" partialSubmit="true" process="@this"
+						action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
 
 				</p:column>
 			</p:row>

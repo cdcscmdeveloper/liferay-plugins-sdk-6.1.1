@@ -102,9 +102,9 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.ok']}" action="#{simpleQuoteBackingBean.addCloneItemSpec(simpleQuoteBackingBean.managedBean.productOrService)}"
 					partialSubmit="true" process="@this citemId" update="@([id$=itemListMainId])" 
-					icon="ui-icon-submit" oncomplete="cloneItemSpec.hide()" />
+					oncomplete="cloneItemSpec.hide()" />
 
-				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.cancel']}" onclick="cloneItemSpec.hide()" icon="ui-icon-cancel"
+				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.cancel']}" onclick="cloneItemSpec.hide()"
 					immediate="true" />
 			</div>
 

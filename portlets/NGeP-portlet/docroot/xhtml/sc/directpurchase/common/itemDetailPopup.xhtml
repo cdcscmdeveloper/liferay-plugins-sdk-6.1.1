@@ -110,14 +110,13 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
 						value="#{lbl['lbl.sc.ok']}"
-						icon="ui-icon-submit"  process="@this qtyId"
+						process="@this qtyId"
 						update="itemDetailsId" 
 						action="#{requestNoteBackingBean.editQuantity}"
 						partialSubmit="true"/>
 
 					<p:commandButton value="#{lbl['lbl.sc.close']}"
-						partialSubmit="true" process="@this" action="#{requestNoteBackingBean.cancelItemDetailPopup}"
-						icon="ui-icon-cancel" />
+						partialSubmit="true" process="@this" action="#{requestNoteBackingBean.cancelItemDetailPopup}"/>
 				</p:column>
 			</p:row>
 		 </p:panelGrid>

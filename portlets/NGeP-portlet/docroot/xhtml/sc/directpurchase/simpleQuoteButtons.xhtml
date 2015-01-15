@@ -26,14 +26,14 @@
 						<p:column width="100%" style="text-align:right">
 							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
 								onstart="promptWidget.show()" oncomplete="promptWidget.hide();"
-								icon="ui-icon-accept" onsuccess="sqConformDlg.hide()"
+								onsuccess="sqConformDlg.hide()"
 								actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
 						  <p:commandButton value="#{lbl['lbl.btn.no']}" rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-								partialSubmit="true" process="@this" icon="ui-icon-reject"
+								partialSubmit="true" process="@this"
 								onclick="sqConformDlg.hide();" type="button" />
 								
 						   <p:commandButton value="#{lbl['lbl.sc.ok']}" rendered="#{!simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-								partialSubmit="true" process="@this" icon="ui-icon-accept"
+								partialSubmit="true" process="@this"
 								onclick="sqConformDlg.hide();" type="button" />
 								
 						</p:column>
@@ -47,7 +47,7 @@
 				<p:commandButton immediate="true"
 					id="backButton"
 					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
-					icon="ui-icon-back" partialSubmit="true" process="@this"
+					partialSubmit="true" process="@this"
 					style="float:left;"
 					rendered="#{isPendingSubmissionStatus}"
 					action="#{simpleQuoteBackingBean.backToPervious}" 
@@ -56,13 +56,13 @@
 				</p:commandButton>
 
 				<p:commandButton immediate="true"
-					value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+					value="#{lbl['lbl.sc.common.back']}"
 					partialSubmit="true" process="@this" style="float:left;"
 					rendered="#{!isPendingSubmissionStatus}"
 					action="#{simpleQuoteBackingBean.backToPervious}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
-					icon="ui-icon-save" onstart="blockWidget.show();"
+					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
 					process="@all" update="@form"
@@ -70,7 +70,7 @@
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-					update="@form" process="@all" icon="ui-icon-submit"
+					update="@form" process="@all"
 					rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 
 					<ui:param name="action" value=""></ui:param>
@@ -82,7 +82,7 @@
 				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-					icon="ui-icon-cancel" process="@this" partialSubmit="true"
+					process="@this" partialSubmit="true"
 					rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
 			</c:if>
 		</div>
@@ -95,7 +95,7 @@
 								test="#{isPendingSubmissionStatus}">
 								<p:commandButton immediate="true"
 									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
-									icon="ui-icon-back" partialSubmit="true" process="@this"
+									partialSubmit="true" process="@this"
 									style="float:left;"
 									action="#{simpleQuoteBackingBean.backToPervious}" />
 							</c:if> <!-- to view simple Quote from the request note header  Icon    -->
@@ -104,7 +104,7 @@
 									test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
 									  or isPendingSubmissionStatus}">
 									<p:commandButton value="#{lbl['lbl.sc.common.save']}"
-										icon="ui-icon-save" onstart="blockWidget.show();"
+										onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();"
 										action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
 										update="@form" process="@all" />

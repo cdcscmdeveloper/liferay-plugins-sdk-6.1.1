@@ -108,7 +108,7 @@
 									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 									process="@all, locationDataTable" partialSubmit="true"
 									action="#{simpleQuoteBackingBean.deleteLocationTreeNode()}"
-									update="@([id$=locationDataTable])" icon="ui-icon-delete" />
+									update="@([id$=locationDataTable])" />
 
 							</c:if>
 						</div>
@@ -161,7 +161,7 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,byBusNatureDtl" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deleteBusinessNature}"
-										update="@form" icon="ui-icon-delete"/>
+										update="@form"/>
 									</td>
 								</tr></table>
 							</td>
@@ -218,7 +218,7 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,supplierItemDt" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deleteSupplier}"
-										update="@form" icon="ui-icon-delete"/>
+										update="@form"/>
 									</td>
 								</tr></table>
 							</td>
@@ -277,7 +277,7 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,govtSellerId" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deleteGovtSeller}"
-										update="govtSellerId" icon="ui-icon-delete"/>
+										update="govtSellerId"/>
 									</td>
 								</tr></table>
 							</td>
@@ -344,7 +344,7 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,bypanelItemId" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deletePanelSupplier}"
-										update="bypanelItemId" icon="ui-icon-delete" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
+										update="bypanelItemId" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 									</td>
 								</tr></table>
 							</td>
