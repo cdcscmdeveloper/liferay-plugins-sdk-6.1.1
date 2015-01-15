@@ -2730,6 +2730,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	for(JadualHargaBean product : productList){
 	        		if(!product.getZone().equals("N/A")){
 	        			zoneExist = true;
+	        			break;
 	        		}
 	        	}
 	        	for(JadualHargaBean product : productList){
@@ -2781,8 +2782,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        	}
 	        	
 	          	for(JadualHargaBean service : serviceList){
-	        		if(!service.equals("N/A")){
+	        		if(!service.getZone().equals("N/A")){
 	        			zoneExist = true;
+	        			break;
 	        		}
 	        	}
 	          	
