@@ -932,7 +932,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 										throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
 									}
 								 
-								    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+								    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null 
 								    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
 								    	if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null ||
 								    			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName() == null ||
