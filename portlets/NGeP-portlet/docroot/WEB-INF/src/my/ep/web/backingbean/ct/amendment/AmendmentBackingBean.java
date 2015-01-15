@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -847,7 +846,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    				            ResourceBundleUtils.getMessage("lbl.ct.menu.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			    	
 			    	                 } else {
-			    		
+			    		                      int counter=0;
 			    	                	      for (CtMeeting ctMeeting : getManagedBean().getContractVer().getCtAmendment().getCtMeetings()) {
 			    			                          if (ctMeeting.getMeetingDate() == null) {
 											    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
@@ -868,8 +867,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    			                        		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 													    	  throw new EpException(MessageConst.ERROR_750027);
 			    			                        	  }
+										    		  }if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+			    			                        	  if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_PENDING)) {
+			    			                        		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+													    	  throw new EpException(MessageConst.ERROR_750027);
+			    			                        	  }
+										    		  }if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+			    			                        	  if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_APPROVE)) {
+			    			                        		  counter++;
+			    			                        	  }
 										    		  }
 			    		                      }
+			    	                	      if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+	    			                        	  if (counter == 0) {
+	    			                        		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+	    									    	  throw new EpException(MessageConst.ERROR_750028);
+	    			                        	  }
+								    		  }
+			    	                	     
 			    	               }
 			    	                 if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 			    	                	   if(getManagedBean().getPbQcApproved() == null ||getManagedBean().getPbQcApproved().equalsIgnoreCase("")){
@@ -914,6 +929,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 										throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
 									}
 								 
+								    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+								    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
+								    	if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null ||
+								    			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName() == null ||
+								    			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName().equalsIgnoreCase("")){
+								    	    RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+										throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of acceptance attachment"});
+								    }
+							 }
 			   
 						   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 			                      || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))  || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
@@ -3199,6 +3223,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void validateMeetingDetails(){
 		        boolean secratoryRole = true;
 		        boolean chairmanRole = true;
+		        boolean members = true;
 		        boolean ReresentativeJ = true;
 		        boolean ReresentativeBpk = true;
 		        boolean ReresentativeS = true;
@@ -3211,8 +3236,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				                chairmanRole = false;
     	                 } else if(committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				               secratoryRole = false;
-		                 } 
-    	  
+		             
+    	                 } else if(committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)){
+    	                	 members = false;
+    	                 }
+		                 
     	                if(committeObj.getRepresentativeType() != null && committeObj.getRepresentativeType().getParameterCode() != null){
    		  
     	                      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
@@ -3262,6 +3290,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				    	   throw new EpException(MessageConst.ERROR_100022, 
 				    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.attendance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				  
+				       }
+				       
+				       if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
+		                		 getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
+				    	   if(members){
+					    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					    	   throw new EpException(MessageConst.ERROR_100022, 
+					    			   new String[]{ResourceBundleUtils.getMessage("lbl.ct.member.attendance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				    	   }
 				       }
 				       
 				       if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
