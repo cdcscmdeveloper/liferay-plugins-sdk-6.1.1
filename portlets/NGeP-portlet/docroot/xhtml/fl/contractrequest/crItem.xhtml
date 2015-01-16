@@ -102,7 +102,7 @@
 					value="true" />
 					</p:commandButton>
 			<p:commandButton id="deleteAddrBtn" value="#{lbl['lbl.fl.btn.delete']}"
-				icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
+				onsuccess="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 				title="#{lbl['lbl.fl.tooltip.delete']}"
 				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide or contractRequestBackingBean.managedBean.buttonVal=='View'}">
@@ -120,7 +120,7 @@
 					cols="48" styleClass="ui-inputtextarea" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" icon="ui-icon-accept"
+				<p:commandButton value="Yes" 
 					partialSubmit="true"
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{contractRequestBackingBean.removeAddRow()}"
@@ -199,13 +199,13 @@
 			</p:dataTable>
 			<p:spacer height="2px"></p:spacer>
 			<div style="width: 100%; text-align: right">
-				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
 					action="#{contractRequestBackingBean.addContractedItems}"
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) }"
 					process="@this" update="resultPanel,searchPanel"
 					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					oncomplete="addItems.show();" />
-				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" icon="ui-icon-delete"
+				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" 
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}"
 					onsuccess="delItemDlg.show()" title="#{lbl['lbl.fl.tooltip.delete']}"
 					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
@@ -216,12 +216,12 @@
 			severity="alert" widgetVar="delItemDlg" closable="true"
 			appendToBody="true" header="Delete Confirmation">
 			<h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept"
+				<p:commandButton value="Yes" 
 					partialSubmit="true"
 					action="#{contractRequestBackingBean.removeItemRow}"
 					update="itemDataTable"
 					oncomplete="delItemDlg.hide();" />
-				<p:commandButton value="No" icon="ui-icon-reject"
+				<p:commandButton value="No" 
 					onclick="delItemDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>		
@@ -465,7 +465,7 @@
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 				process="@this addManualDelAddrDialog"
 				action="#{contractRequestBackingBean.updateManualDeliveryAddrDt}"
 				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)"
@@ -653,7 +653,7 @@
 					action="#{contractRequestBackingBean.searchContractItemList}" 
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					process="searchPanel"
-					icon="ui-icon-search" update="resultPanel,messages2" />
+					update="resultPanel,messages2" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{contractRequestBackingBean.searchReset}" 
 					process="@this" update="searchPanel,resultPanel,messages2"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
