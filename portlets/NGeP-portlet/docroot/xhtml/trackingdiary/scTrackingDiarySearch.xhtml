@@ -20,52 +20,46 @@
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
-								<td width="15%"><p:outputLabel
-										value="Document No." /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-
-							<tr>
 								<td width="35%"><p:outputLabel
-										value="Document Title" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Date Range" /></td>
-								<td width="35%">
-								<p:column>
-									<p:calendar showOn="button" readonlyInput="true" id="pubFromDt"
-										value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-										size="10">
-										<p:ajax event="dateSelect" update="pubToDt" />
-									</p:calendar>
-				
-									<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-										size="10"
-										value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}"
-										mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
-									</p:calendar>
-								</p:column>	</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Date Type" /></td>
+										value="Document Type" /></td>
 								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
+									<p:selectOneMenu value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentType}">
 										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
 							<tr>
+								<td width="15%"><p:outputLabel
+										value="Document No." /></td>
+								<td width="35%"><p:inputText size="50"
+										value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
+							</tr>
+							<tr>
+								<td width="35%"><p:outputLabel
+										value="Document Title" /></td>
+								<td width="65%"><p:inputText size="50"
+										value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
+							</tr>
+							<tr>
+								<td width="35%"><p:outputLabel
+										value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td>
+								<td width="35%"><p:calendar mode="popup" showOn="button"
+										readonlyInput="true"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentFromDuration}">
+									</p:calendar>
+									<p:spacer width="5" />
+									<p:calendar mode="popup" showOn="button"
+										readonlyInput="true"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentToDuration}">
+									</p:calendar></td>
+							</tr>
+							<tr>
 								<td width="35%"><p:outputLabel
 										value="Status" /></td>
 								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
+									<p:selectOneMenu value="#{smTrackingDiaryBackingBean.managedBean.applicationType}">
 										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
 									</p:selectOneMenu>
 								</td>						
@@ -74,16 +68,14 @@
 						</table>
 
 
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{scTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					icon="ui-icon-search" update="resultPanel" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{scTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
-			</div>
-					</p:panel>
-			
-			
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.search']}"
+								action="#{scTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								icon="ui-icon-search" update="resultPanel" />
+							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								action="#{scTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
+						</div>
+		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"

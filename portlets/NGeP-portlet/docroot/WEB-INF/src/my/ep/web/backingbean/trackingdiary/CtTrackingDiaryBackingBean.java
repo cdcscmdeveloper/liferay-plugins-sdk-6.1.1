@@ -97,9 +97,9 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			items[1] = new SelectItem(new String("CC"), new String("Central Contract"));
-			items[2] = new SelectItem(new String("CC"), new String("Ministry Contract"));
-			items[3] = new SelectItem(new String("CC"), new String("Central Circular"));
-			items[4] = new SelectItem(new String("CC"), new String("Panel Circular"));
+			items[2] = new SelectItem(new String("MC"), new String("Ministry Contract"));
+			items[3] = new SelectItem(new String("CQ"), new String("Central Circular"));
+			items[4] = new SelectItem(new String("PQ"), new String("Panel Circular"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -119,8 +119,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 
 			items = new SelectItem[2];
 
-			items[0] = new SelectItem(new String("G"), new String("GROUP DOC TYPE"));
-			items[1] = new SelectItem(new String("V"), new String("VERSION DOC TYPE"));
+			items[0] = new SelectItem(new String("TRUE"), new String("GROUP DOC TYPE"));
+			items[1] = new SelectItem(new String("FALSE"), new String("VERSION DOC TYPE"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
