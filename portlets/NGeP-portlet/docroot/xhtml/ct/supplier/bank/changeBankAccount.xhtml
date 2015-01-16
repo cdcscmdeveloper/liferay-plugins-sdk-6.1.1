@@ -32,7 +32,7 @@
 	width: 300px;
 }
 </style>
-		<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:blockUI block=":form" widgetVar="blockUIWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<ac:gpkiPopup
@@ -50,22 +50,26 @@
 			<table style="width: 100%;">
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
-							immediate="true" 
-							oncomplete="window.history.back();" rendered="false" /></td>
+							immediate="true" onstart="blockUIWidget.show();"
+							oncomplete="window.history.back();blockUIWidget.hide();" rendered="false" /></td>
 					<td class="ppRightBtn"><ui:repeat var="outcome"
 							value="#{supplierBackingBean.managedBean.action}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
-								styleClass="ui-button" process="@form"								
+								styleClass="ui-button" process="@form"
+								onstart="blockUIWidget.show();"		
+								oncomplete="blockUIWidget.hide();" 						
 								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
 								actionListener="#{spkiBackingBean.getChallengeQuestions}"
 								rendered="#{supplierBackingBean.isSupplierRole()}"/>
 							<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
 								styleClass="ui-button" process="@form"
+								onstart="blockUIWidget.show();"		
+								oncomplete="blockUIWidget.hide();" 	
 								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
 								rendered="#{not supplierBackingBean.isSupplierRole()}"
-								/>
+							/>
 						</ui:repeat></td>
 				</tr>
 			</table>
@@ -118,7 +122,7 @@
 						required="true" label="#{lbl['lbl.ct.contract.no']}">
 						<f:selectItems value="#{supplierBackingBean.populateContractList}" />
 						<p:ajax update=":form" event="change" process="@this"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							onstart="blockUIWidget.show();" oncomplete="blockUIWidget.hide();"
 							listener="#{supplierBackingBean.changeContractActionListener}" />
 					</p:selectOneMenu>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
