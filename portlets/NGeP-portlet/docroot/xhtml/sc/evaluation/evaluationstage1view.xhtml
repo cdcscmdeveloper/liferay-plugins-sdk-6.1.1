@@ -36,7 +36,7 @@
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 			style="float:right;" process="@form" update="@form"
-			action="#{evaluationBackingBean.saveMeetingDtls}"/>
+			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="Revice Confirmation" resizable="false" width="325"
