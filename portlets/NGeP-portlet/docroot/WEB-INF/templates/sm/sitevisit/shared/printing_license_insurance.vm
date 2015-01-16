@@ -1,0 +1,16 @@
+<u><b>License/Insurance</b></u>
+<table>
+	#if($licenseInsuranceLs.size() > 0)
+		#foreach($licenseIns in $licenseInsuranceLs)
+		<tr>
+			<td class="txtBold"><br /></td>
+			<td width="40%" class="txtBold">
+			$licenseIns.codeName
+			#if($licenseIns.pmParameter.parameterCode != "C")
+				, Closing Date
+			#end
+			</td>
+		</tr>
+		#end
+	#end
+</table>
