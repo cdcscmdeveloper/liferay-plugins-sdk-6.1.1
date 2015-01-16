@@ -36,12 +36,11 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 				style="width:15%">
-				<p:commandLink onclick="uploadDlg.show();return false;"
+
+				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					update="demoSupplierId">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
-
-
 					<f:setPropertyActionListener value="#{demoSupplier}"
 						target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
 
@@ -90,10 +89,8 @@
 						</tr>
 						<tr>
 							<td />
-							<td><p:dataGrid id="attachedIdsDemo"
-									value="#{evaluationBackingBean.managedBean.scQtChecklist.scQtCheckListAttachment}"
-									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-									style="width:100%">
+							<td><p:dataGrid id="attachedIdsDemo" var="attachFile"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
@@ -114,7 +111,7 @@
 													action="#{evaluationBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
 													action="#{evaluationBackingBean.deleteDemoUploadFile}"
-													immediate="true" update="attachedIdsDemo">
+													immediate="true" update="@form">
 													<h:graphicImage library="ep/images/design" name="trash.png"
 														styleClass="tasklist_title1" />
 												</p:commandLink></td>
