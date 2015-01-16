@@ -10,7 +10,7 @@
 </table>
 
 #if($templateCode == "I" || $templateCode == "BP" || $templateCode == "RM" || $templateCode == "A" || $templateCode == "PG")
-	#include("/sm/sitevisit/shared/recommendation.vm")
+	#parse("/sm/sitevisit/shared/recommendation.vm")
 #elseif($templateCode == "L" || $templateCode == "B" || $templateCode == "M")
 	#parse("/sm/sitevisit/shared/category-applicable.vm")
 #end
