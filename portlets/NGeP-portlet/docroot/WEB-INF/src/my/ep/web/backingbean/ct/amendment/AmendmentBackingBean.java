@@ -1511,22 +1511,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context = new VelocityContext();	
 				context.put("hostUrl", hostUrl);
 				vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
+				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				context.put("amendmentTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
+				context.put("contractNo", getManagedBean().getCtContract().getContractNo());
+				context.put("amendmentRefNo", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+				context.put("supplierName", "________________");
+				context.put("supplierMofRegNo", "________________");
+				context.put("supplierAddress","");
+				context.put("supplierPhoneNo","");
+				context.put("supplierFaxNo","");
+				context.put("supplierUserName", "________________");
+				context.put("supplierUserIcNo", "________________");
+				context.put("supplier",false);
 				
-				if(ContractStatusConst.FA_PENDING_LOA_SUBMISSION.equals(getManagedBean().getContractVer().getStatus().getStatusId())){
-					context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-					context.put("amendmentTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
-					context.put("contractNo", getManagedBean().getCtContract().getContractNo());
-					context.put("amendmentRefNo", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
-					context.put("supplierName", "________________");
-					context.put("supplierMofRegNo", "________________");
-					context.put("supplierAddress","");
-					context.put("supplierPhoneNo","");
-					context.put("supplierFaxNo","");
-					context.put("supplierUserName", "________________");
-					context.put("supplierUserIcNo", "________________");
-					context.put("supplier",false);
-				}
-		
 			}else if(ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)){
 				vmFile = ContractConst.DOCPATH_CT_LOA_BOND_LETTER;
 				context = new VelocityContext();
