@@ -90,9 +90,9 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right" id="deductionButton">
 			<p:commandButton id="addButton" rendered="#{paymentMatchBackingBean.managedBean.buttonVal != 'View'}"
-			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update="@form" />
+			value="Add" action="#{paymentMatchBackingBean.addDeductionRow()}" update="@form" />
 			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.buttonVal != 'View'}"
-			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete" action="#{paymentMatchBackingBean.removeAddRow()}" update="@form"/>
+			id="deleteDeductionBtn" value="Delete" action="#{paymentMatchBackingBean.removeAddRow()}" update="@form"/>
 		</div>
 	</p:panel>
 	
@@ -107,7 +107,7 @@
 			</p:column>
 		</p:dataTable>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.fl.btn.close']}" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.fl.btn.close']}" 
 				oncomplete="clauses.hide();" >
 			</p:commandButton>
 		</div>
