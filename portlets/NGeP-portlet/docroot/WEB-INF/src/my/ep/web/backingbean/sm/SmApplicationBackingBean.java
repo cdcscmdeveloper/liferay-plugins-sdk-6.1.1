@@ -4976,7 +4976,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignMissingDocsList() {
 		log.info("*** Send Inquiry **** ");
-		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
+		SmApplicationUtil.validateSupportingDocsDecision(getManagedBean());
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
