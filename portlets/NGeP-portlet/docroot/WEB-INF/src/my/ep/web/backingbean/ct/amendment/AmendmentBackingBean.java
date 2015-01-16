@@ -574,10 +574,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		       if(getManagedBean().getAckFA() == null) {
 			         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
 			         
-			         if(isApproverSetting() && !getManagedBean().isPrepareLOA()) {
-			        	 getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
-			         }
-			         
 			         if(getManagedBean().getContractVer() != null && getManagedBean().getContractVer().getCtAmendment() != null &&
 			        		  (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 			        	   if(getManagedBean().getCtContract().isZonalPricing())
@@ -609,6 +605,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	  getManagedBean().setConfirmMeeting(true);
 		    	      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 		         }
+			      
+			      if(isApproverSetting() && !getManagedBean().isPrepareLOA()) {
+			        	 getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
+			         }
 		   
 		     } else if(this.getManagedBean().getAckFA().equalsIgnoreCase("Ack")){
 			      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
