@@ -37,6 +37,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvTask smSvTask;
 	private SmSvAddress selectedSmSvAddress;
 	private Map<String,SmSvTemplate> smSvTemplateMap;
+	private Map<String,List<SmSvAddress>> smSvAddressMap;
 	private SmSvTemplate selectedSvTemplate;
 	private SmSvInterviewee[] selectedInterviewees;
 	private SmSvWorker[] selectedWorkers;
@@ -522,6 +523,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setManagementNames(List<String> managementNames) {
 		this.managementNames = managementNames;
+	}
+
+	public Map<String, List<SmSvAddress>> getSmSvAddressMap() {
+		return smSvAddressMap;
+	}
+
+	public void setSmSvAddressMap(Map<String, List<SmSvAddress>> smSvAddressMap) {
+		this.smSvAddressMap = smSvAddressMap;
 	}
 
 

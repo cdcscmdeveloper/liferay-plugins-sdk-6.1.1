@@ -109,6 +109,80 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
+	private void populateSmSvAddresses(){
+		List<SmSvAddress> workshopAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> transportAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> insuranceAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> dockyardAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> manufacturingAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> printingAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> travelAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> bumiAddress = new ArrayList<SmSvAddress>();
+		List<SmSvAddress> readMaterialAddress = new ArrayList<SmSvAddress>();
+		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteVisitSO.class);
+		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+		SiteVisitResDTO resDTO = new SiteVisitResDTO();
+		
+		for(SmSvAddress smSvAddress:getManagedBean().getSmSvTask().getSmSvAddresses()){
+			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
+			resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
+			
+			if(resDTO.getSmFacilityType()!=null){
+				if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)){
+					workshopAddress.add(smSvAddress);
+				}	
+				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)){
+					dockyardAddress.add(smSvAddress);
+				}
+				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)){
+					manufacturingAddress.add(smSvAddress);
+				}
+				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)){
+					workshopAddress.add(smSvAddress);
+					dockyardAddress.add(smSvAddress);
+					transportAddress.add(smSvAddress);
+					insuranceAddress.add(smSvAddress);
+					manufacturingAddress.add(smSvAddress);
+					printingAddress.add(smSvAddress);
+					travelAddress.add(smSvAddress);
+					bumiAddress.add(smSvAddress);
+					readMaterialAddress.add(smSvAddress);
+				}
+				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)){
+					workshopAddress.add(smSvAddress);
+					dockyardAddress.add(smSvAddress);
+					transportAddress.add(smSvAddress);
+					insuranceAddress.add(smSvAddress);
+					manufacturingAddress.add(smSvAddress);
+					printingAddress.add(smSvAddress);
+					travelAddress.add(smSvAddress);
+					bumiAddress.add(smSvAddress);
+					readMaterialAddress.add(smSvAddress);
+				}
+				else{
+					insuranceAddress.add(smSvAddress);
+					printingAddress.add(smSvAddress);
+					readMaterialAddress.add(smSvAddress);
+				}
+			}
+		}
+		getManagedBean().setSmSvAddressMap(new HashMap<String, List<SmSvAddress>>());
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_TRANSPORTATION, transportAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_BUMIPUTERA, bumiAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_DOCKYARD, dockyardAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_INSURANCE, insuranceAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_MANUFACTURING, manufacturingAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_PRINTING, printingAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_TRAVEL, travelAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_WORKSHOP, workshopAddress);
+		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA, readMaterialAddress);
+	}
+	
+	private void setSelectedSvTemplateAddresses(String templateType){
+		List<SmSvAddress> selectedAddress = getManagedBean().getSmSvAddressMap().get(templateType);
+		getManagedBean().getSmSvTask().setSmSvAddresses(selectedAddress);
+	}
+	
 	public void retrieveSiteVisitInfo(String viewMode){
 		//this.getManagedBean().setAppId(1256995);
 		//this.getManagedBean().setAppId(1256752);
@@ -208,6 +282,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					}
 				}
 			}
+			
+			populateSmSvAddresses();
 		}
 	}
 	
@@ -425,6 +501,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					}
 				}
 			}
+			
+			setSelectedSvTemplateAddresses(svTemplate.getPmParameter().getParameterCode());
 			
 			//log.info("printingParamMap>>>>>>" + this.getManagedBean().getPrintingParamMap().size());
 		}
