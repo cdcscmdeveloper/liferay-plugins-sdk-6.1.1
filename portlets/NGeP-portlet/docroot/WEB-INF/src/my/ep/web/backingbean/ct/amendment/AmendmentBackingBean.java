@@ -1693,6 +1693,26 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						bankAddress = bankAddress.replaceAll("&", "&#38;");
 					}
 					context.put("bankAddress", bankAddress);
+					
+					// Supplier User
+					context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("supplierUserID", getFacesScopes().getUserSessionBean().getIdentificationNo());
+					context.put("supplierUserDesignation", getFacesScopes().getUserSessionBean().getDesignation()!=null?getFacesScopes().getUserSessionBean().getDesignation():"");
+					context.put("supplierTelNo", getFacesScopes().getUserSessionBean().getPhoneNo()!=null?getFacesScopes().getUserSessionBean().getPhoneNo():"");
+					context.put("supplierFaxNo", getFacesScopes().getUserSessionBean().getFaxNo()!=null?getFacesScopes().getUserSessionBean().getFaxNo():"");
+					context.put("supplierMobileNo", getFacesScopes().getUserSessionBean().getMobileNo()!=null?getFacesScopes().getUserSessionBean().getMobileNo():"");
+					context.put("supplierEmail", getFacesScopes().getUserSessionBean().getEmail()!=null?getFacesScopes().getUserSessionBean().getEmail():"");
+					
+					// Witness
+					context.put("witnessName", getManagedBean().getScLoaWitness().getWitnessName());
+					context.put("witnessID", getManagedBean().getScLoaWitness().getIdentificationNo());
+					context.put("witnessDesignation", getManagedBean().getScLoaWitness().getDesignation());
+					context.put("witnessAddress", getManagedBean().getScLoaWitness().getAddress());
+					context.put("witnessTelNo", getManagedBean().getScLoaWitness().getPhoneNo());
+					context.put("witnessFaxNo", getManagedBean().getScLoaWitness().getFaxNo());
+					context.put("witnessMobileNo", getManagedBean().getScLoaWitness().getMobileNo());
+					context.put("witnessEmail", getManagedBean().getScLoaWitness().getEmail());
+					
 					context.put("pendingAck", true);
 				}else{
 					context.put("pendingAck", false);
