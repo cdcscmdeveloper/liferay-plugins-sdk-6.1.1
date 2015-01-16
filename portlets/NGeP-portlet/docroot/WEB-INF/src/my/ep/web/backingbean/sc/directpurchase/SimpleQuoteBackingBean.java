@@ -530,6 +530,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		CmItem cmItem = null;
 		PmUom uom = null;
 		String ItemName ="";
+		String itemSpec = "";
 		// TODO check flag for panel item or non contract item
 		if(ctPanelItem != null){
 			if(ctPanelItem.getScRequestItem() != null){
@@ -544,9 +545,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				} else{
 					// panel item  - product by default when the cmItem is null
 					itemCode = 2;
-					if(ctPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
-						ItemName= ctPanelItem.getItemName();
-					}
+				}
+				if(ctPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
+					ItemName= ctPanelItem.getItemName();
+					itemSpec = ctPanelItem.getSpecification();
 				}
 				uom = ctPanelItem.getPmUom();
 			}
@@ -591,6 +593,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						  specQuestion.setClUom(uom);
 						  specQuestion.setCmItem(cmItem);
 						  specQuestion.setClItem(ItemName);
+						  specQuestion.setClSpecDetail(itemSpec);
 					  } 
 				  }
 				serviceTpl.setTplSpecQuestions(tplSpecQuestions);
@@ -621,6 +624,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							prodQuestion.setClUom(uom);
 							prodQuestion.setCmItem(cmItem);
 							prodQuestion.setClItem(ItemName);
+							prodQuestion.setClSpecDetail(itemSpec);
 						}
 					}
 				}

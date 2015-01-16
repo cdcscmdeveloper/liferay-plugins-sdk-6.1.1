@@ -25,7 +25,7 @@ import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -48,8 +48,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.SourcingIntegrationReqDTO;
+import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -690,16 +690,16 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	private List<PmUser> retrieveScApprovers(Integer docId, Integer statusCode){
 		log.info("retrieveScApprovers");
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
-		IQTDetailSO reqSO = null;
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		QuationTenderResDTO resDTO = new QuationTenderResDTO();
+		ISourcingIntegrationSO reqSO = null;
+		SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
+		SourcingIntegrationResDTO resDTO = new SourcingIntegrationResDTO();
 		try{
 			log.info("statusCode: " + statusCode);
 			log.info("docId: " + docId);
 			
 			reqDTO.setStatusId(statusCode.longValue());
 			reqDTO.setDocId(docId.longValue());
-			reqSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			reqSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 			resDTO = reqSO.retrieveApprovalsByStatusId(reqDTO);
 			
 			if(resDTO.isSuccessful()){
