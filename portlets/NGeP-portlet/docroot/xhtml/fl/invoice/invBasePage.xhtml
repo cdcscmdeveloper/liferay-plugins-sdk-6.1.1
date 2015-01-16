@@ -33,7 +33,7 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
-						icon="ui-icon-back" action="#{invoiceBackingBean.backToPervious}" /></td>
+						action="#{invoiceBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
