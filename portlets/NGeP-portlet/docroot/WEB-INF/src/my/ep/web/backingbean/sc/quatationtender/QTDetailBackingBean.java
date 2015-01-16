@@ -2931,40 +2931,14 @@ public class QTDetailBackingBean extends
 					.retrieveParameterById(parameterReqDTO);
 			String commType = parameterResDTO.getPmParameter()
 					.getParameterCode();
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setCommitteeType(commType);
-			reqDTO.setFinalizationSecratary(true);
-			CommitteResDTO resDTO = null;
-			ICommitteSO committeSO;
-			try {
-				committeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
-				if (commType
-						.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
-						|| commType
-								.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
-					if (null != resDTO.getCommittee()) {
-						ScCommittee scCommittee = resDTO.getCommittee();
-						List<ScCommitteeMember> commMembers = scCommittee
-								.getScCommitteeMembers();
-						for (ScCommitteeMember member : commMembers) {
-							this.getManagedBean()
-									.getQt()
-									.setFinalizationSecratery(
-											member.getPmUser());
-						}
-					}
-				} else if (commType
-						.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-						|| commType
-								.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-					List<PmUser> pmUsers = retrievePmUserSecratryDtl(commType);
-					log.info("List : " + pmUsers.size());
-					// this.getManagedBean().setPmUsersSecretaryList(pmUsers);
+			
+			if (!commType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) && 
+					!commType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+				
+				List<PmUser> userList = retrievePmUserSecratryDtl(commType);
+				if (userList != null && userList.size() > 0) {
+					getManagedBean().getQt().setFinalizationSecratery(userList.get(0));
 				}
-			} finally {
-				committeSO = null;
 			}
 		} else {
 			this.getManagedBean().getQt().setFinalizationSecratery(null);
@@ -2981,20 +2955,22 @@ public class QTDetailBackingBean extends
 
 	public List<PmUser> retrievePmUserSecratryDtl(String committeeType) {
 		debugLogger("retrievePmUserSecratryDtl");
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		// long orgProfileId =
-		// this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId();
-		UserReqDTO userReqDTO = new UserReqDTO();
-		if (committeeType
-				.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-			userReqDTO.setRoleCode(RoleCode.QCA_SECRETARY.value());
-		} else {
-			userReqDTO.setRoleCode(RoleCode.QCB_SECRETARY.value());
+		
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setCommitteeType(committeeType);
+				
+			CommitteResDTO resDTO = committeSO.retrieveFcSecretaryUsersByCommType(reqDTO);
+			return resDTO.getUserList();
+			
+		} finally {
+			committeSO = null;
 		}
-		// userReqDTO.setOrgProfileId(orgProfileId);
-		UserResDTO resDto = userSO.retrieveUserListByRole(userReqDTO);
-		return resDto.getUserList();
 	}
 
 	public void committeTabChangeAction(Integer selectedZoneTabIndex) {
@@ -3496,40 +3472,19 @@ public class QTDetailBackingBean extends
 	public void retrieveFinalizationCommitteeSecretaryName(
 			AjaxBehaviorEvent event) {
 		debugLogger("retrieveFinalizationCommitteeSecretaryName");
-		String code = (String) event.getComponent().getAttributes()
+		String commType = (String) event.getComponent().getAttributes()
 				.get("value");
-		if (null != code) {
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setCommitteeType(code);
-			reqDTO.setFinalizationSecratary(true);
-			CommitteResDTO resDTO = null;
-			ICommitteSO committeSO;
-			try {
-				committeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
-				if (code.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
-						|| code.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
-					if (null != resDTO.getCommittee()) {
-						ScCommittee scCommittee = resDTO.getCommittee();
-						List<ScCommitteeMember> commMembers = scCommittee
-								.getScCommitteeMembers();
-						for (ScCommitteeMember member : commMembers) {
-							this.getManagedBean().getSelectedApprovalTabBean()
-									.getScQtApproval().getApproverSettings()
-									.get(0).setApprover(member.getPmUser());
-						}
-					}
-				} else if (code
-						.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-						|| code.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-					List<PmUser> pmUsers = retrievePmUserSecratryDtl(code);
-					log.info("List : " + pmUsers.size());
-					// this.getManagedBean().setPmUsersSecretaryList(pmUsers);
+		if (null != commType) {
+			if (!commType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) && 
+					!commType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+				
+				List<PmUser> userList = retrievePmUserSecratryDtl(commType);
+				if (userList != null && userList.size() > 0) {
+					getManagedBean().getSelectedApprovalTabBean()
+					.getScQtApproval().getApproverSettings()
+					.get(0).setApprover(userList.get(0));
 				}
-			} finally {
-				committeSO = null;
-			}
+			} 
 		} else {
 			this.getManagedBean().getQt().setFinalizationSecratery(null);
 			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(getManagedBean()
