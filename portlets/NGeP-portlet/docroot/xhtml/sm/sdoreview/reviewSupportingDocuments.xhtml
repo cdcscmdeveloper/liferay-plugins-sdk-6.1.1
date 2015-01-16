@@ -19,10 +19,8 @@
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
 		<ui:param name="applType" value="#{sdoReviewBackingBean.getsupplierApplTypeDesc(sdoReviewBackingBean.managedBean.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
-		
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" disabled="#{empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" disabled="#{empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs or (empty sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate)}" 
 				update="inquiryDlg" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" 
@@ -261,13 +259,15 @@
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent"><p:calendar id="receiveCalId" navigator="true"
 							label="#{lbl['lbl.sm.receivedate']}" required="#{!empty param['disableValidation']}"
-							value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
+							value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"							
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
-							size="30" showOn="button" /> <p:message id="receiveCalIdMsg"
+							size="30" showOn="button" ><p:ajax event="dateSelect" update=":form:btnInquiryId"/>
+							</p:calendar>
+							<p:message id="receiveCalIdMsg"
 							for="receiveCalId" display="icon" /></td>
 					<td><p:outputLabel value="&#160;" /></td>
-					<td><p:outputLabel value="&#160;" /></td>
+					<td><p:outputLabel value="&#160;" /></td> 
 				</tr>
 			</table><br />
 			
