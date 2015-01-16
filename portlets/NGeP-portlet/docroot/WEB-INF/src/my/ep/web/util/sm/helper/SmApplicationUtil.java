@@ -1744,6 +1744,16 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static void validateSupportingDocsDecision(
+			SmApplicationManagedBean managedBean) {
+		for (SmApplSupportDoc doc : managedBean.getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (doc.getVerifiedFlg() == null) {
+				throw new EpException(MessageConst.ERROR_722559);
+			}
+		}
+	}
+
 	public static void validateCategoryAndDocsDecision(
 			SmApplicationManagedBean managedBean) {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
@@ -1763,13 +1773,7 @@ public class SmApplicationUtil {
 
 			}
 		}
-
-		for (SmApplSupportDoc doc : managedBean.getSmAppl()
-				.getSmApplSupportDocs()) {
-			if (doc.getVerifiedFlg() == null) {
-				throw new EpException(MessageConst.ERROR_722559);
-			}
-		}
+		validateSupportingDocsDecision(managedBean);
 
 	}
 
