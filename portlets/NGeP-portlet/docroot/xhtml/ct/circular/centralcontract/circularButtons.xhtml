@@ -5,29 +5,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<ac:gpkiPopup 
+		textBeforeSign="#{centralContractBackingBean.managedBean.textBeforeSign}"
+		postSignAction="#{centralContractBackingBean.preSubmitCircular(gpkiBackingBean.pmDigiSign)}" />
 	<table style="width: 100%;">
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 					immediate="true" 
 					action="#{centralContractBackingBean.backAction}"
-					rendered="#{centralContractBackingBean.managedBean.action != null}" /></td>
+					rendered="#{centralContractBackingBean.managedBean.action != null}"
+					onstart="blockUIWidget.show();" 
+					oncomplete="blockUIWidget.hide();" /></td>
 			<td class="ppRightBtn"><ui:repeat var="action"
 					value="#{centralContractBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						update="@form"
+						onstart="blockUIWidget.show();" 
+						oncomplete="blockUIWidget.hide();"
 						action="#{centralContractBackingBean.saveCircular(action)}"
 						rendered="#{action != 'SUBMIT' and action != 'REJECT' and action != 'APPROVE'}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						process="@form"
 						update="@form,@([id$=messages])"
+						onstart="blockUIWidget.show();" 
 						actionListener="#{centralContractBackingBean.validateCircular(action)}"
 						action="#{centralContractBackingBean.disableUpdate}"
-						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
+						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show();blockUIWidget.hide(); "
 						rendered="#{action == 'SUBMIT' or action == 'REJECT' or action == 'APPROVE'}" />
-				</ui:repeat> <ac:gpkiPopup
-					textBeforeSign="#{centralContractBackingBean.managedBean.textBeforeSign}"
-					postSignAction="#{centralContractBackingBean.preSubmitCircular(gpkiBackingBean.pmDigiSign)}" /></td>
+				</ui:repeat> </td>
 		</tr>
 	</table>
 </ui:composition>
