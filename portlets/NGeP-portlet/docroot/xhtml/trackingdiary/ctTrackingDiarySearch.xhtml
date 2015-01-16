@@ -116,7 +116,7 @@
 					<f:facet name="header">
 					Document Title
 				</f:facet>
-				#{ctDocument.docNo}
+				#{ctDocument.title}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
@@ -128,7 +128,7 @@
 					<f:facet name="header">
 					Status
 				</f:facet>
-				#{ctDocument.statusId}
+				#{ctTrackingDiaryBackingBean.getStatusDescById(ctDocument.statusId)}
 				</p:column>				
 				<p:column>
 					<f:facet name="header">

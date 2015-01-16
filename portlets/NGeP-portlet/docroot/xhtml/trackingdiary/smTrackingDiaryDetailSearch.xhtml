@@ -32,25 +32,23 @@
 			<tr>
 				<td><p:panel style="width: 100%;" header="Document Details"
 						toggleable="true" id="searchTabId">
-						<table style="margin-top: 10px; width: 100%;">
+						<table>
 							<tr>
-								<td width="25%"><p:outputLabel value="MOF Account No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier.smAppl}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
-								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier.companyName}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="25%"><p:outputLabel value="Application No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel value="Application Type" /></td>
-								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.smSupplier}"></p:inputText></td>
+				<p:column width="15%">
+					<f:facet name="header">
+					Application No
+					</f:facet>
+				#{smSupplier.smAppl.applNo}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Application Type
+					</f:facet>
+				#{smSupplier.smAppl.applType}
+				</p:column>
 							</tr>
 						</table>
-						</p:panel></td>
+					</p:panel></td>
 			</tr>
 		</table>
 		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include>

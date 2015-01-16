@@ -114,26 +114,26 @@
 					<f:facet name="header">
 					Document Title
 				</f:facet>
-				#{flDocument.docNo}
+				#{flDocument.title}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Document Type
 				</f:facet>
-				#{flDocument.docNo}
+				#{flDocument.docType}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Status
 				</f:facet>
-				#{flDocument.docNo}
+				#{flTrackingDiaryBackingBean.getStatusDescById(flDocument.statusId)}
 				</p:column>				
 				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(flDocument)}">
+						action="#{flTrackingDiaryBackingBean.goToTrackingDiarySearch(flDocument)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>
