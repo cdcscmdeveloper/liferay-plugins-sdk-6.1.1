@@ -14,9 +14,11 @@
 		<p:messages id="messages" showDetail="true"
 			autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true"
 			showSummary="false" />
-		
-		<ui:include src="/xhtml/sm/approverDecisionPages/approverCompanyInfo.xhtml" />
-		<ui:include src="/xhtml/sm/approverDecisionPages/approverContactInfo.xhtml" />
+
+		<ui:include
+			src="/xhtml/sm/approverDecisionPages/approverCompanyInfo.xhtml" />
+		<ui:include
+			src="/xhtml/sm/approverDecisionPages/approverContactInfo.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sm.pending.app.desc.header']}">
 			<table style="width: 50%; table-layout: fixed">
@@ -44,7 +46,8 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.reason.supplier']}" /></td>
-					<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view"
+					<td style="word-wrap: break-word"><p:outputLabel
+							styleClass="outputLabel-view"
 							value="#{backingBean.managedBean.supplierRemarks}" /></td>
 				</tr>
 				<tr height="10">
@@ -72,7 +75,8 @@
 		</p:panel>
 
 
-		<p:dialog width="800px" header="#{lbl['lbl.sm.approve.application']}"
+		<p:dialog width="800px" height="200px;"
+			header="#{lbl['lbl.sm.approve.application']}" closable="false"
 			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
@@ -86,9 +90,10 @@
 					onclick="approveAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
-		<p:dialog width="800px" header="#{lbl['lbl.sm.reject.application']}"
-			id="rejectAppCanDialog" widgetVar="rejectAppCanDialog"
-			resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+		<p:dialog width="800px" height="200px;"
+			header="#{lbl['lbl.sm.reject.application']}" id="rejectAppCanDialog"
+			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
+			closable="false" hideEffect="fade" modal="true">
 
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedDelPendingApplPopUpForm.xhtml" />
