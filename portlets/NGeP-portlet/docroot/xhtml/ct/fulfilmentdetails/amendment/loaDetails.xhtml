@@ -18,10 +18,10 @@
 	   }
 	</style>
 	<p:panel id="panelLOA" header="#{lbl['lbl.ct.menu.loa.details']}" toggleable="true" toggleSpeed="500">
-		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
+		<h:panelGrid columns="2" columnClasses="columnWidth225">
 			<p:outputLabel value="#{lbl['lbl.ct.file.no']}" />
 			<h:panelGrid columns="3">
-				<p:inputText style="width:200px;" disabled="false"
+				<p:inputText style="width:270px;" disabled="false"
 					value="#{amendmentBackingBean.managedBean.ctContract.quotationTender.fileNo}"  />
 				<p:spacer width="2" />
 				<p:inputText style="width:20px;"
@@ -36,15 +36,15 @@
 				</p:selectOneRadio>
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.type']}" />
-			<p:inputText style="width:200px;" disabled="true"
+			<p:inputText style="width:300px;" disabled="true"
 				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractType)}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.menu.agency']}" />
-			<p:inputTextarea rows="2"  autoResize="false" style="width:200px; margin-bottom: 5px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
+			<p:inputTextarea rows="2"  autoResize="false" style="width:300px; margin-bottom: 5px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmOrgProfile.orgName}" />
-			<p:inputText style="width:200px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}"
+			<p:inputText style="width:300px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}"
 				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmParameter)}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.contract.admin']}" />
-			<p:inputText style="width:200px;" disabled="true"
+			<p:inputText style="width:300px;" disabled="true"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userName}" />				
 			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
 			<h:panelGrid columns="3">
@@ -73,7 +73,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.extension.effective.date']}" />
-			<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth20,columnWidth30,columnWidth30">
+			<h:panelGrid columns="3" style="width:500px;"	columnClasses="columnWidth20,columnWidth30,columnWidth30">
 				<p:calendar id="popupButtonCal4" showOn="button" disabled="true" styleClass="calanderWidth1"
 				    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -95,7 +95,7 @@
 			    <p:outputLabel value="#{lbl['lbl.ct.contract.signer']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-			   <p:selectOneMenu id="signer" style="width:280px" required="true" label="#{lbl['lbl.ct.contract.signer']}"
+			   <p:selectOneMenu id="signer" style="width:310px" required="true" label="#{lbl['lbl.ct.contract.signer']}"
 			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}" />
 		     	</p:selectOneMenu>
