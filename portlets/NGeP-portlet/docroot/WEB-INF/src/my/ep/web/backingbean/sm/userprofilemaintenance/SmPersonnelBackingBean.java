@@ -1230,6 +1230,9 @@ public class SmPersonnelBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		FacesScopes fs = new FacesScopes();
+		reqDTO.setServerName(fs.getRequest().getServerName());
+		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
