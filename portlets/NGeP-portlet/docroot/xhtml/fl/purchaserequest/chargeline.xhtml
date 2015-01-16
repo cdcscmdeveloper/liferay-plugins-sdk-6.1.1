@@ -223,7 +223,7 @@
 			<tr>
 
 				<td colspan="4" style="text-align: right"><p:commandButton title="#{lbl['lbl.fl.btn.bulk.update']}"
-						value="#{lbl['lbl.fl.bulk.update']}" icon="ui-icon-add" ajax='true'
+						value="#{lbl['lbl.fl.bulk.update']}" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
 						update="chargeLineTbl,chargeAss,chargeLineSection,messages"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
@@ -255,7 +255,7 @@
 		</table>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" icon="ui-icon-close"
+			<p:commandButton value="Close" 
 				oncomplete="addQuery.hide();">
 			</p:commandButton>
 		</div>

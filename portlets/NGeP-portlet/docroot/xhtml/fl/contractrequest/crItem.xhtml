@@ -85,13 +85,13 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" 
 				action="#{contractRequestBackingBean.flDeliveryAddrList}"
 				disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				title="#{lbl['lbl.fl.tooltip.ptj.address']}"
 				oncomplete="addDeliveryAddr.show();" />
-			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
 				disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) " process="@this,delAddr"
@@ -125,7 +125,7 @@
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{contractRequestBackingBean.removeAddRow()}"
 					oncomplete="delAddrDlg.hide();" />
-				<p:commandButton value="No" icon="ui-icon-reject"
+				<p:commandButton value="No" 
 					partialSubmit="true"
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{contractRequestBackingBean.notRemoveAddressRow()}"
@@ -249,7 +249,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" 
 				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();" update="addressDataTable,itemDetPanelGroup">
 			</p:commandButton>
@@ -471,7 +471,7 @@
 				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)"
 				widgetVar="addManualDelAddrBtn" >
 			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 				action="#{contractRequestBackingBean.closeListener}"
 				partialSubmit="true">
 			</p:commandButton>
@@ -497,7 +497,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.fl.close']}" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.fl.close']}" 
 				oncomplete="addOfficer.hide();" update="addressDataTable"
 				process="@this,receivingOfficerDt">
 			</p:commandButton>
@@ -655,7 +655,7 @@
 					process="searchPanel"
 					icon="ui-icon-search" update="resultPanel,messages2" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{contractRequestBackingBean.searchReset}" icon="ui-icon-reset"
+					action="#{contractRequestBackingBean.searchReset}" 
 					process="@this" update="searchPanel,resultPanel,messages2"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
@@ -706,10 +706,10 @@
 							onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>
 				</h:panelGrid>
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+					<p:commandButton value="#{lbl['lbl.btn.search']}"  
 							 action="#{contractRequestBackingBean.retrieveMeasurement}"
 						     update="measurementSR" process="measurementPanel" widgetVar="uomSearch"/>
-            		<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+            		<p:commandButton value="#{lbl['lbl.btn.reset']}" 
             				 action="#{contractRequestBackingBean.resetMeasurementSearch}"
             				 process="@this" update="measurementPanel,uomResultPanel" />
 	  			</div>

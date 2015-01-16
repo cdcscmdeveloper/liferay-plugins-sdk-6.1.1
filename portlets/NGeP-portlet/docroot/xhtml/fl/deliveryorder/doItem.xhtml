@@ -272,10 +272,10 @@
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 				oncomplete="addRemarks.hide();" process="@this">
 			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
 				oncomplete="addRemarks.hide();" process="@this">
 			</p:commandButton>
 		</div>
@@ -332,7 +332,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.btn.close']}" 
 				oncomplete="rejectionDialog.hide();">
 			</p:commandButton>
 		</div>
@@ -367,7 +367,7 @@
 					update="lampiran"
 					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"
 					 />
-				<p:commandButton value="No" icon="ui-icon-reject"
+				<p:commandButton value="No" 
 					onclick="delFileDlg.hide();" type="button" />
 			</div>
 		</p:dialog>
@@ -384,10 +384,10 @@
 						onkeypress="if (event.keyCode == 13) { uomSearch.jq.click(); return false; }"/>
 				</h:panelGrid>
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+					<p:commandButton value="#{lbl['lbl.btn.search']}"  
 							 action="#{createDOBackingBean.retrieveMeasurement}"
 						     update="measurementSR" process="measurementPanel" widgetVar="uomSearch"/>
-            		<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+            		<p:commandButton value="#{lbl['lbl.btn.reset']}" 
             				 action="#{createDOBackingBean.resetMeasurementSearch}"
             				 process="@this" update="measurementPanel,resultPanel" />
 	  			</div>

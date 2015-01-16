@@ -12,7 +12,7 @@
 			<td class="TableFieldRight"><p:commandButton
 					oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
 					disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"
-					update="lampiran" partialSubmit="true" value="#{lbl['lbl.fl.attach.files']}" /></td>
+					update="lampiran,uploadDlg" partialSubmit="true" value="#{lbl['lbl.fl.attach.files']}" /></td>
 		</tr>
 		<tr>
 			<td />
@@ -51,7 +51,6 @@
 				</p:dataGrid></td>
 		</tr>
 	</table>
-
 	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false"
 		hideEffect="explode" resizable="false" width="700px"
 		height="350" styleClass="pop_up_top"
@@ -59,10 +58,11 @@
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
-			mode="advanced" id="upload" fileLimit="2" sizeLimit="15000000"
+			mode="advanced" multiple="true" id="upload" fileLimit="2" sizeLimit="15000000"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV, DOCX files are accepted"
-			update="lampiran">
+			widgetVar="fileUplaod"
+			update="lampiran,uploadDlg">
 		</p:fileUpload>
 	</p:dialog>
 	
@@ -79,12 +79,12 @@
 					cols="48" styleClass="ui-inputtextarea" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" icon="ui-icon-accept"
+				<p:commandButton value="Yes" 
 					partialSubmit="true"
 					update="lampiran"
 					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"
 					 />
-				<p:commandButton value="No" icon="ui-icon-reject"
+				<p:commandButton value="No" 
 					onclick="delFileDlg.hide();" type="button" />
 			</div>
 		</p:dialog>
