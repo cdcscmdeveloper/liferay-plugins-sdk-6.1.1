@@ -370,14 +370,41 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					  	  String content = null;
 					  	  
 					  	  getManagedBean().setEditorValue("");
-				  		  context.put("supplierUserName", getFacesScopes().getUserScreenName());
-				  		  context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-				  		  context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				  		  context.put("supplierMofRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-				  		  context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-				  		  context.put("loaTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
+						  FacesScopes fs = new FacesScopes();
+						  String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();				
+						  context = new VelocityContext();	
+						  context.put("hostUrl", hostUrl);
+						  context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+						  context.put("amendmentTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
+						  context.put("contractNo", getManagedBean().getCtContract().getContractNo());
+						  context.put("amendmentRefNo", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+						  context.put("supplierUserName", getFacesScopes().getUserScreenName());
+						  context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+						  context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+						  context.put("supplierMofRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+						  StringBuilder sb = new StringBuilder();
+						  if(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() !=null){
+							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress1());
+							 sb.append(", <br/>");
+							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress2());
+							 sb.append(", <br/>");
+							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() !=null ?
+									 getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
+							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
+							 sb.append(", <br/>");
+							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() !=null 
+									 ? getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
+							  
+						  }
+						  
+						  context.put("supplierAddress",sb.toString());
+						  context.put("supplierPhoneNo",getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() !=null 
+								  ? getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() : "");
+						  context.put("supplierFaxNo",getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() !=null 
+								  ? getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() : "");
+						  context.put("supplier",true);
 						
-					  	  if (vmFile != null && context != null) {
+					  	if (vmFile != null && context != null) {
 							content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 						}
 						getManagedBean().setEditorValue(content);
@@ -1479,14 +1506,26 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				}
 			}
 			else if(ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equalsIgnoreCase(docDefinitionKey)) {
+				FacesScopes fs = new FacesScopes();
+				String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();				
 				context = new VelocityContext();	
+				context.put("hostUrl", hostUrl);
 				vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
-				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-				context.put("loaTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
-				context.put("supplierUserName", getFacesScopes().getUserScreenName());
-				context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
-				context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				context.put("supplierMofRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+				
+				if(ContractStatusConst.FA_PENDING_LOA_SUBMISSION.equals(getManagedBean().getContractVer().getStatus().getStatusId())){
+					context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+					context.put("amendmentTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
+					context.put("contractNo", getManagedBean().getCtContract().getContractNo());
+					context.put("amendmentRefNo", getManagedBean().getContractVer().getCtAmendment().getFileRefNo());
+					context.put("supplierName", "________________");
+					context.put("supplierMofRegNo", "________________");
+					context.put("supplierAddress","");
+					context.put("supplierPhoneNo","");
+					context.put("supplierFaxNo","");
+					context.put("supplierUserName", "________________");
+					context.put("supplierUserIcNo", "________________");
+					context.put("supplier",false);
+				}
 		
 			}else if(ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)){
 				vmFile = ContractConst.DOCPATH_CT_LOA_BOND_LETTER;
