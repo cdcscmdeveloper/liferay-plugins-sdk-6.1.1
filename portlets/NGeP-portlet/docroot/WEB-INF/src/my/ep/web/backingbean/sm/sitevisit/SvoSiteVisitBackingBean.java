@@ -543,7 +543,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 			if(svTemplate.getPmParameter()!=null && svTemplate.getPmParameter().getParameterCode()!=null){
-				setSelectedSvTemplateAddresses(svTemplate.getPmParameter().getParameterCode());
+//				setSelectedSvTemplateAddresses(svTemplate.getPmParameter().getParameterCode());
 				setSelectedSmSvFacility(svTemplate.getPmParameter().getParameterCode());
 			}
 			
