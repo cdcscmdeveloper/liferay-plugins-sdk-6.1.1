@@ -57,11 +57,11 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{organisationBackingBean.searchOrganisation}"
 							update="searchOrganisation" process="orgSearchPanel"
-							icon="ui-icon-search"
+							
 							 />
 						&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" partialSubmit="true" process="@this"
-							update="orgSearchPanel,:form:searchOrganisation" icon="ui-icon-reset"
+							update="orgSearchPanel,:form:searchOrganisation" 
 							action="#{organisationBackingBean.resetOrganisationSearchBean}" />
 					</div>
 
