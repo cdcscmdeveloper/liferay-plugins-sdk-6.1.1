@@ -202,7 +202,7 @@
 					: 
 				</td>
 				<td colspan="3">
-					$supplierName
+					$supplierCompName
 				</td>
 			</tr>
 			<tr valign="top">
@@ -213,7 +213,7 @@
 					: 
 				</td>
 				<td style="white-space: normal;">
-					$supplierAddress
+					$supplierCompAddress
 				</td>
 				<td>
 					Alamat
