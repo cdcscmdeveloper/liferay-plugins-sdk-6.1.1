@@ -610,7 +610,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        	 getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
 			         }
 		   
-		     } else if(this.getManagedBean().getAckFA().equalsIgnoreCase("Ack")){
+		     } else if(getManagedBean().getAckFA().equalsIgnoreCase("Ack")){
 			      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
 		     }
 		
@@ -1765,7 +1765,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    }
 	}
 	
-	public void letterOfAcceptenceUpload(FileUploadEvent event) throws Exception{
+	/*public void letterOfAcceptenceUpload(FileUploadEvent event) throws Exception{
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
@@ -1789,7 +1789,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setDocType(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setScLoa(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
-	}
+	}*/
 	
 	public void chkJustificationAction(){
 		  try {
