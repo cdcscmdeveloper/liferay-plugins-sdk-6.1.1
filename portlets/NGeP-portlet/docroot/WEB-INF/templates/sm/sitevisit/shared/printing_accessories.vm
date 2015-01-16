@@ -1,0 +1,32 @@
+<u>Accesories/Apparatus</u>
+<br /><br />
+<table class="descTable" width="100%">
+	<tr style="background-color:#99ccff;" align="center">
+		<td>No.</td>
+		<td>Apparatus/ Machine</td>
+		<td>Brand</td>
+		<td>Qty/ Set</td>
+		<td>Req. Method</td>
+		<td>Req. Year</td>
+		<td>Guarantor</td>
+	</tr>
+	
+	#if($printingCat.size() > 0)
+		#foreach($pCat in $printingCat.keySet())
+				<tr><td colspan="7"><b>$pCat</b></td></tr>
+				#foreach($category in $printingCat.get($pCat))
+					<tr>
+						<td>$velocityCount</td>
+						<td>$category.codeName</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				#end
+		#end
+	#end
+
+</table>	
+

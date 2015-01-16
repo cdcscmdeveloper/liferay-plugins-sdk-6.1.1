@@ -1,0 +1,21 @@
+<u><b>Premise Location</b></u>
+<table>
+	<tr>
+		<td width="40%" class="txtBold">Ownership</td>
+		<td  width="40%" class="txtBold">Private, Purchasing Price (RM)</td>
+	</tr>
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Rent, Monthly Rate (RM)</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Documents</td>
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Agreement Letter</td>
+	</tr>
+</table>
