@@ -147,7 +147,7 @@
 			<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 					value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
-					maxlength="200" id="poRemarksToSvc"
+					maxlength="200" id="poRemarksToSvc" rows="10"
 					validatorMessage="#{lbl['lbl.sm.po.svc.Remarks']}"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}">
 					<f:validateLength maximum="200" />
@@ -164,7 +164,7 @@
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
-							maxlength="200" id="apprRemarks"
+							maxlength="200" id="apprRemarks" rows="10"
 							validatorMessage="#{lbl['lbl.sm.remarks.recommendAppr']}"
 							value="#{backingBean.managedBean.poSecReview.remarkToApprover}">
 							<f:validateLength maximum="200" />

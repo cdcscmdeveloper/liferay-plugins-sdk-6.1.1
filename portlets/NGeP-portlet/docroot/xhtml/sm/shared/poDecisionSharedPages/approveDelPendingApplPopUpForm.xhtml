@@ -10,9 +10,14 @@
 		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approval']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approval']}" />
+			</td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-					id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}" /></td>
+					value="#{backingBean.managedBean.applnRejectionRemarks}"
+					id="rmrksForCanApprovalTxtArea" rows="10"
+					label="#{lbl['lbl.sm.remarks.rejection']}" maxlength="1000" /> <p:message
+					id="rmrksForCanApprovalTxtAreaMsg" for="rmrksForCanApprovalTxtArea"
+					showSummary="true" showDetail="false" display="icon" />
 		</tr>
 	</table>
 
