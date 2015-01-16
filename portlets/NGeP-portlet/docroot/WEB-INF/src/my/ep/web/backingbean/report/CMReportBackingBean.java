@@ -175,7 +175,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 					rptGenBean.setCmRegistrationTypeView(true);					
 				//};
 				break;
-	        case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
+	       /* case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);							
@@ -213,7 +213,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_ITM_CODE_RPT_NAME));
-	            break;	       
+	            break;*/	       
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
