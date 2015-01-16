@@ -118,8 +118,7 @@
 					<ui:include src="loaBondDetails.xhtml" />
 			    </p:outputPanel>
 			    
-			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content'] 
-			    	and amendmentBackingBean.managedBean.ackFA != CtConst.supplierAckLoa }">
+			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content']}">
 					<ui:include src="letterOfAcceptance.xhtml" />
 			    </p:outputPanel>
 			    

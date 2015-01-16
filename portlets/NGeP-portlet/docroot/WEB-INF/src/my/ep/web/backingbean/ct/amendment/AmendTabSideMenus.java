@@ -80,6 +80,7 @@ public class AmendTabSideMenus {
 		  if(menuWithAmendSupplier == null){
 			  menuWithAmendSupplier =  new ArrayList<String>(Arrays.asList(
 						ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 						ResourceBundleUtils.getMessage("lbl.ct.menu.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 						ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
