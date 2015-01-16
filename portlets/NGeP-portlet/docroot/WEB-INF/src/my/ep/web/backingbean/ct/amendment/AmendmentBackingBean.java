@@ -1477,13 +1477,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				}
 				context.put("amendEffExpDate", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
 													
-				context.put("bondValue",getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null  
-						?  amountDF.format(getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt())
-								: amountDF.format(BigDecimal.ZERO));
-				context.put("amendBondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() !=null 
+				if(getManagedBean().getContractVer().getCtContract().isBondReq()) {
+					context.put("bondValue",getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null  
+							?  amountDF.format(getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt())
+									: amountDF.format(BigDecimal.ZERO));					
+					context.put("amendBondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() !=null 
 						? amountDF.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()) 
 								: amountDF.format(BigDecimal.ZERO));
-		
+				} else {
+					context.put("bondValue","N/A");
+					context.put("amendBondValue","N/A");
+				}
 			}
 			else if(ContractConst.DOC_DEF_KEY_INTEGRITY_PACT.equalsIgnoreCase(docDefinitionKey)) {
 				context = new VelocityContext();	
