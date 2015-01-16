@@ -1120,6 +1120,8 @@ public class SmPersonnelBackingBean extends
 						"confirmDialog.show()");
 			}
 		}
+		
+		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 		getManagedBean().setDisableAddNewUser(
 				validatePersonLimit(getManagedBean().getSmSupplier()));
 	}
@@ -1127,12 +1129,7 @@ public class SmPersonnelBackingBean extends
 	public void deactivateOrTerminate() throws Exception {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		updateUser(getManagedBean().getBasicSmPersonnel(), fc);
-
-		if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
-			getManagedBean().getSmPersonnelList().remove(
-					getManagedBean().getBasicSmPersonnel());
-		}
-
+		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 		getManagedBean().setDisableAddNewUser(
 				validatePersonLimit(getManagedBean().getSmSupplier()));
 		getManagedBean().setDeactivateTerminateConfirmMsg("");
@@ -1721,6 +1718,10 @@ public class SmPersonnelBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
+	}
+	
+	public void onChangeAccntStatus(AjaxBehaviorEvent e){
+		
 	}
 
 	private SmAppl getCurrActiveSmAppl(SmSupplier smSupplier) {
