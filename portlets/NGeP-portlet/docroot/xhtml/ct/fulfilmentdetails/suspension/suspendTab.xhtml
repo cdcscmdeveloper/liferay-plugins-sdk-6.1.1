@@ -31,24 +31,36 @@
 	        width: 210px;
          }
 		</style>
+		<p:blockUI id="blockUiId" block=":form" widgetVar="blockUIWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
 		<p:panel>
 			<f:event listener="#{suspensionBackingBean.preRenderView}" type="preRenderView" />
 			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{suspensionBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+			
 			<table style="width: 100%;">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{suspensionBackingBean.managedBean.taskId==null}" action="#{suspensionBackingBean.backAction}"/></td>
+					<td><p:commandButton value="#{lbl['lbl.btn.back']}" 
+						immediate="true" 
+						rendered="#{suspensionBackingBean.managedBean.taskId==null}" 
+						action="#{suspensionBackingBean.backAction}"
+						onstart="blockUIWidget.show();" 
+						oncomplete="blockUIWidget.hide();"/>
+					</td>
 					<td class="ppRightBtn">
 						<c:if test="#{!suspensionBackingBean.managedBean.viewOnly}">	
 						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />		
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
-								styleClass="ui-button" 
+								styleClass="ui-button" onstart="blockUIWidget.show();" 
+					  			oncomplete="blockUIWidget.hide();" 
 								action="#{suspensionBackingBean.saveContractSuspension(outcome)}" 
 								rendered="#{outcome != 'SUBMIT' and outcome != 'REJECT' and outcome != 'APPROVE'}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 								process="@form" update="@form,@([id$=messages])"
+								onstart="blockUIWidget.show();" 
 								actionListener="#{suspensionBackingBean.validateSuspensionDetails(outcome)}" action="#{suspensionBackingBean.disableUpdate}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
+								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); blockUIWidget.hide();"
 								rendered="#{outcome == 'SUBMIT' or outcome == 'REJECT' or outcome == 'APPROVE'}"  />
 						</ui:repeat> 
 						</c:if>
