@@ -11,10 +11,10 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.ownership']}" /></td>
 			<td>
-				<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="#{viewFlag}">
+				<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="true">
 					<f:selectItem itemLabel = "#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItem itemLabel = "#{lbl['lbl.sm.officeloc.ownership.prvt']}" itemValue="P" />
-					<f:selectItem itemLabel = "#{lbl['lbl.sm.officeloc.ownership.rent']}" itemValue="R" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}" itemValue="R" />
 				</p:selectOneMenu>
 			</td>
 			
@@ -22,7 +22,7 @@
 			<td>
 		    <p:inputText size="35" id="pmPriceRate" maxlength="17"
 								label="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}"
-								disabled="#{viewFlag}"
+								disabled="true"
 								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}"
 								required="true">
@@ -42,10 +42,10 @@
 		<tr>
 		
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.overall.sqft']}" /></td>
-			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" maxlength="20" disabled="true" /></td>
 			
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.enclsd.sqft']}" /></td>
-			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" maxlength="20" disabled="true" /></td>
 		</tr>
 		
 		<tr>
