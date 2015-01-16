@@ -129,6 +129,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			Long qtId = Long.valueOf(dataType.getQtId());
 			String committeeType = String.valueOf(dataType.getCommitteeType());
 			getManagedBean().setCommitteeType(committeeType);
+			getManagedBean().setPayLoad(dataType);
 
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
