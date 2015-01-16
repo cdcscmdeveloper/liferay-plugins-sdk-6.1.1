@@ -67,6 +67,7 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvoSiteVisitManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1491,7 +1492,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("**********commonSiteVisitCompanyInfo*************");
 		VelocityContext context = new VelocityContext();
 		String vmCompInfo= "/sm/sitevisit/sv-companyinfo.vm";
-		
+		String accptDate = "";
 		
 		SmMofAccount mofAccount =  SmApplicationUtil.getActiveMofAccount(svTask.getSmAppl().getSmSupplier().getSmMofAccounts(),
 				svTask.getSmAppl().getSupplierType());
@@ -1510,9 +1511,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				sb.append(offcr.getPmUser().getUserName());
 				sb.append("<br/>");
 			}
+			accptDate = DateUtils.dateToString("dd/mm/yyyy", svTask.getSmSvOfficers().get(0).getCreatedDate()) ;
 		}else{
 			sb.append("");
 		}
+		context.put("accptDate", accptDate);
 		context.put("svOfficers", sb.toString());
 		context.put("addrLiines",getAddressLines(addr));
 		context.put("postCode", (addr.getPostcode() != null && addr.getPostcode().length() > 0)? addr.getPostcode() : "");
