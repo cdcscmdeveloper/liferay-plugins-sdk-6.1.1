@@ -9,9 +9,9 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +38,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -124,20 +125,30 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SiteVisitResDTO resDTO = new SiteVisitResDTO();
+		getManagedBean().setSmSvFacilityMap(new HashMap<String, SmFacility>());
 		
 		for(SmSvAddress smSvAddress:getManagedBean().getSmSvTask().getSmSvAddresses()){
 			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
 			resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
 			
-			if(resDTO.getSmFacilityType()!=null){
+			if(resDTO.getSmFacility()!=null && resDTO.getSmFacilityType()!=null){
 				if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)){
 					workshopAddress.add(smSvAddress);
+					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_WORKSHOP)==null){
+						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_WORKSHOP, resDTO.getSmFacility());
+					}
 				}	
 				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)){
 					dockyardAddress.add(smSvAddress);
+					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_DOCKYARD)==null){
+						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_DOCKYARD, resDTO.getSmFacility());
+					}
 				}
-				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)){
-					manufacturingAddress.add(smSvAddress);
+				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_STORE)){
+					printingAddress.add(smSvAddress);
+					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_PRINTING)==null){
+						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_PRINTING, resDTO.getSmFacility());
+					}
 				}
 				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)){
 					workshopAddress.add(smSvAddress);
@@ -163,7 +174,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 				else{
 					insuranceAddress.add(smSvAddress);
-					printingAddress.add(smSvAddress);
+					manufacturingAddress.add(smSvAddress);
 					readMaterialAddress.add(smSvAddress);
 				}
 			}
@@ -183,6 +194,33 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private void setSelectedSvTemplateAddresses(String templateType){
 		List<SmSvAddress> selectedAddress = getManagedBean().getSmSvAddressMap().get(templateType);
 		getManagedBean().getSmSvTask().setSmSvAddresses(selectedAddress);
+	}
+	
+	private void setSelectedSmSvFacility(String templateType){
+		SmFacility smFacility = getManagedBean().getSmSvFacilityMap().get(templateType);
+		SmSvFacility smSvFacility = null;
+		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility()!=null 
+				&& getManagedBean().getSelectedSvTemplate().getSmSvFacility().getSvFacilityId()!=null){
+			log.info("***already set smsvfacility***");
+		}else{
+			if(smFacility!=null){
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				smSvFacility = new SmSvFacility();
+				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
+				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+				if(smFacility.getAreaSquareFeet()!=null){
+					smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
+					smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
+				}
+				if(smFacility.getOwnershipType().equals("R")){
+					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+				}else{
+					smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
+				}
+				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
+			}
+		}
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
@@ -504,7 +542,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 			
-			setSelectedSvTemplateAddresses(svTemplate.getPmParameter().getParameterCode());
+			if(svTemplate.getPmParameter()!=null && svTemplate.getPmParameter().getParameterCode()!=null){
+				setSelectedSvTemplateAddresses(svTemplate.getPmParameter().getParameterCode());
+				setSelectedSmSvFacility(svTemplate.getPmParameter().getParameterCode());
+			}
 			
 			//log.info("printingParamMap>>>>>>" + this.getManagedBean().getPrintingParamMap().size());
 		}
