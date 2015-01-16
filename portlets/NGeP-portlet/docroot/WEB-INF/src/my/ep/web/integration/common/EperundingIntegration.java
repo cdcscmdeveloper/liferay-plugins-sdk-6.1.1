@@ -340,7 +340,7 @@ public class EperundingIntegration {
 		
 		reqDTO.setCreateDate(date);
 		
-		SupplierSearchResDTO resDTO = supplierSearchSO.getCompanyOwnerInformationByCreatedDate(reqDTO);
+		SupplierSearchResDTO resDTO = supplierSearchSO.getSmSupplierforEperundingByCreatedDate(reqDTO);
 		return resDTO;
 	}
 	
