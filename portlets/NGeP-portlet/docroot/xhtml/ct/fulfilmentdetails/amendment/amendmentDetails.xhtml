@@ -45,7 +45,8 @@
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
-					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails
+					or !amendmentBackingBean.managedBean.itemProductExist}">
 					<p:ajax event="change" update=":form" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
