@@ -11,10 +11,11 @@
 		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}" /> <p:outputLabel
-					value="*" styleClass="mandatory" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-					id="rmrksForRejectTxtArea" label="#{lbl['lbl.sm.remarks.rejection']}"
+					rows="10" maxlength="1000" id="rmrksForRejectTxtArea"
+					label="#{lbl['lbl.sm.remarks.rejection']}"
 					required="#{backingBean.managedBean.valueReqd}" /> <p:message
 					id="rmrksForRejectTxtAreaMsg" for="rmrksForRejectTxtArea"
 					showSummary="true" showDetail="false" display="icon" /></td>

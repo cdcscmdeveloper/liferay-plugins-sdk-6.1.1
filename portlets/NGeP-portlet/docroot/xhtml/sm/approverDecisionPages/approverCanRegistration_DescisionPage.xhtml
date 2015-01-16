@@ -19,7 +19,8 @@
 		<ui:include src="approverDecisionPage.xhtml" />
 
 
-		<p:dialog width="800px" header="#{lbl['lbl.sm.approve.application']}"
+		<p:dialog width="800px" height="250px" closable="false"
+			header="#{lbl['lbl.sm.approve.application']}"
 			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
@@ -33,9 +34,10 @@
 					onclick="approveAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
-		<p:dialog width="800px" header="#{lbl['lbl.sm.reject.application']}"
-			id="rejectAppCanDialog" widgetVar="rejectAppCanDialog"
-			resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+		<p:dialog width="800px" height="250px" closable="false"
+			header="#{lbl['lbl.sm.reject.application']}" id="rejectAppCanDialog"
+			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
+			hideEffect="fade" modal="true">
 
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
