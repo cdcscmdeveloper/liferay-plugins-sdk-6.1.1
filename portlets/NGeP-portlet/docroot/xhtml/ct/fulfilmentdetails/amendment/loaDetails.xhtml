@@ -21,10 +21,10 @@
 		<h:panelGrid columns="2" columnClasses="columnWidth225">
 			<p:outputLabel value="#{lbl['lbl.ct.file.no']}" />
 			<h:panelGrid columns="3">
-				<p:inputText style="width:270px;" disabled="false"
+				<p:inputText style="width:270px;" disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 					value="#{amendmentBackingBean.managedBean.ctContract.quotationTender.fileNo}"  />
 				<p:spacer width="2" />
-				<p:inputText style="width:20px;"
+				<p:inputText style="width:20px;" disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.insurance.warranty']}" />
@@ -96,6 +96,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 			   <p:selectOneMenu id="signer" style="width:310px" required="true" label="#{lbl['lbl.ct.contract.signer']}"
+			        disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}" />
 		     	</p:selectOneMenu>
