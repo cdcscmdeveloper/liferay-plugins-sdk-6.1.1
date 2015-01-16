@@ -49,10 +49,10 @@
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
 					style="width:10%">
-					<p:commandButton style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+					<p:commandButton  icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
 						rendered="#{scPurchaseRequest.scLoa.brandNew}" />
-					<p:commandButton style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+					<p:commandButton  icon="ui-icon-edit" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
 						rendered="#{!scPurchaseRequest.scLoa.brandNew}" />
 				</p:column>
