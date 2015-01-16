@@ -2570,7 +2570,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		} 
 		
 		if(rulesType==1) { // extend
-			if(getManagedBean().getAmendHistoryList().size()>0 || getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()>=24) {
+			if((getManagedBean().getContractVer().getCtAmendment().isContractExtend() && getManagedBean().getAmendHistoryList().size()>0) 
+				|| getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()>=24) {
 				return true;
 			}
 		} else if(rulesType==2) { // quantity
@@ -3220,8 +3221,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void selectAll(){
 	    if(getManagedBean().isSelectAll()) {
-	    	  for(CtCommitteeMember  CtCommiteMembers : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-	    		  CtCommiteMembers.setSelectedCheckBox(true);
+	    	  for(CtCommitteeMember  ctCommiteMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+	    		  if(ctCommiteMember.getMemberRole()!=null && ctCommiteMember.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+	    			  continue;
+	    		  } else {
+	    			  ctCommiteMember.setSelectedCheckBox(true);
+	    		  }
 	    	  }
 	    }
 }
