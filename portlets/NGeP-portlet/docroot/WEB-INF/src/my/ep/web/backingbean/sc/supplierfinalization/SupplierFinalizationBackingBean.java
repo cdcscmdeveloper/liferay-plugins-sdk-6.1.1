@@ -19,6 +19,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -1146,29 +1147,39 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		
 		ScQtFinalizationReportAttachment reportAttachment = null;
-		
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
 			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-			
 			reportAttachment = new ScQtFinalizationReportAttachment();
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
 			ScAttachment attachment = (ScAttachment)reportAttachment;
+			StringBuilder filename = new StringBuilder();
+			//replace white space due to firefox 
+			filename.append(scQtFinalizationReport.getTitle().replaceAll("\\s","_"));
 			
 			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());
 				generateCoverPdf(attachment, getManagedBean().getScQt());
 			
 			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());
 				generateOfferedAndQTDtlsPdf(attachment, getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT.equals(docDefinitionKey)) {
-				//FIXME - get from evaluation report
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());
 				generateAnalysisEvaluationReportPdf(attachment, getManagedBean().getScQt());
 				
 			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());
 				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());
 				generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
@@ -1189,20 +1200,27 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	private void generateAnalysisEvaluationReportPdf(ScAttachment attachment, ScQt scQt) throws Exception {
-		attachment.setFileName("AnalysisOfEvaluation.pdf");
+		//attachment.setFileName("AnalysisOfEvaluation.pdf");
 		populateAttachmentDetails(attachment);
-
+		
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = scQt.getQtId();
+		String reportId = "";
 		String reportName = ReportConst.SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP;
+		reportId = "SC_037";
+		
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
 	public void generateCoverPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateCoverPdf");
-		attachment.setFileName("finalization-Cover.pdf");
+		//attachment.setFileName("finalization-Cover.pdf");
 		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
@@ -1251,15 +1269,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			meeting.setMeetTimeStr(formatter.format(meeting.getMeetingDate()));
 		}
 		context.put("scQtMeetings", scQtMeetings);
-		
-     	String velocityTemplate = "/sc/supplierfinalization/finalization-cover.vm";
-    	DocumentGenerator.getInstance().generatePdfFromVelocity(velocityTemplate, context, new FileOutputStream(getActualFilePath(attachment)));
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_COVER, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	public void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateOfferedAndQTDtlsPdf");
 
-		attachment.setFileName("finalization-offeredAndQTDetails.pdf");
+		//attachment.setFileName("finalization-offeredAndQTDetails.pdf");
 		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
@@ -1315,15 +1331,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
 						BriefingResDTO briefingResDTO = qTBriefingSO.getTotalAttendedSupplier(reqDTO);
 						list = briefingResDTO.getTotalAttendedSupplier();
-						System.out.println("list: " + list.size());
 						for(Object[] object : list){
 							TplSpecZoneDtl tplSpecZoneDtl = (TplSpecZoneDtl) object[0];
 							Long totalAttended = (Long) object[1];
 							ScQtBsvDtl scQtBsvDtl = (ScQtBsvDtl) object[2];
-							
-							System.out.println(" tplSpecZoneDtl.getZoneName() : "+ tplSpecZoneDtl.getZoneName());
-							System.out.println(" totalAttended : "+ totalAttended);
-							System.out.println(" scQtBsvDtl.getBsvDesc() : "+ scQtBsvDtl.getBsvDesc());
+							log.info("tplSpecZoneDtl.getZoneName() : "+ tplSpecZoneDtl.getZoneName());
+							log.info("totalAttended : "+ totalAttended);
+							log.info("scQtBsvDtl.getBsvDesc() : "+ scQtBsvDtl.getBsvDesc());
 						}
 					}
 				}
@@ -1373,7 +1387,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			qTProposalSO = null;
 		}
 		context.put("totalSuppliers", totalSuppliers);
-		
 		
 		context.put("validityDays", scQt.getQtValidityPeriod());
 		StringBuilder openType = new StringBuilder();
@@ -1458,24 +1471,19 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 		context.put("committeeActivities", committeeActivities);
 		context.put("bean", this);
-		
-		String velocityTemplate = "/sc/supplierfinalization/finalization-offeredAndQTDetails.vm";
-		DocumentGenerator.getInstance().generatePdfFromVelocity(velocityTemplate, context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_OFFERED_QT_DTLS, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	public void generateNoticeBoardPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateNoticeBoardPdf");
 		
-		attachment.setFileName("finalization-noticeBoard.pdf");
+		//attachment.setFileName("finalization-noticeBoard.pdf");
 		populateAttachmentDetails(attachment);
 		
-		//ScQt scQt = scQtFinalization.getScQt();
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		//DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 		
-		//TODO
 		context.put("title", scQt.getQtTitle());
 		context.put("qtNo", scQt.getQtNo());
 		context.put("ministry", scQt.getPmOrgProfile().getParentOrgProfile().getOrgName());
@@ -1600,27 +1608,52 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
     		contactPersonsList.add(contactPerson);
     	}
     	context.put("contactPersons", contactPersonsList);
-    	
-		String velocityTemplate = "/sc/supplierfinalization/finalization-noticeBoard.vm";
-		DocumentGenerator.getInstance().generatePdfFromVelocity(velocityTemplate, context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_NOTICE_BOARD, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	public void generatePriceSchedulePdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateNoticeBoardPdf");
 		
-		attachment.setFileName("finalization-priceSchedule.pdf");
+		//attachment.setFileName("finalization-priceSchedule.pdf");
 		populateAttachmentDetails(attachment);
 		
-		//ScQt scQt = scQtFinalization.getScQt();
-		//CommonUtils commonUtils = new CommonUtils();
-		//SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		//DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 		
-		//TODO
-		
-		String velocityTemplate = "/sc/supplierfinalization/finalization-priceSchedule.vm";
-		DocumentGenerator.getInstance().generatePdfFromVelocity(velocityTemplate, context, new FileOutputStream(getActualFilePath(attachment)));
+		List<TplSpecZoneDtl> list = new ArrayList<TplSpecZoneDtl>();
+		List<SupplierQualificationBean> beans = new ArrayList<SupplierQualificationBean>();
+		boolean isZone = false;
+		IQTNoticeBoardSO qtNoticeBoardSO = null;
+		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+		try {
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			reqDTO.setQtId(scQt.getQtId());
+			NoticeBoardResDTO resDTO = qtNoticeBoardSO
+					.retrieveOfferedPriceDtls(reqDTO);
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			if (resDTO.getScQt().isZonal()) {
+				List<TplSpecZoneDtl> zones = resDTO.getZones();
+				if (null != zones) {
+					isZone = true;
+					NoticeBoardReqDTO boardReqDTO = new NoticeBoardReqDTO();
+					boardReqDTO.setQtId(scQt.getQtId());
+					list.addAll(resDTO.getZones());
+					context.put("zones", list);
+					for (TplSpecZoneDtl zoneDtl : zones) {
+						boardReqDTO.setZoneId(zoneDtl.getSpecZoneId());
+						NoticeBoardResDTO boardResDTO = qtNoticeBoardSO.retrieveOfferedPriceDtlsByZone(reqDTO);
+						beans.addAll(boardResDTO.getQualificationBean());
+					}
+				}
+			} else {
+				beans.addAll(resDTO.getQualificationBean());
+			}
+		} finally {
+			qtNoticeBoardSO = null;
+		}
+		context.put("isZone", isZone);
+		context.put("supplierBeans", beans);
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_PRICE_SCHEDULE, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	//Kertas Taklimat
