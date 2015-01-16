@@ -80,7 +80,8 @@
 					       <h:outputText value="#{lbl['lbl.ct.attendance']}"  />
 				        </f:facet>
 				        <p:selectBooleanCheckbox value="#{data.attended}" 
-				              disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}" />
+				              disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary or
+				               amendmentBackingBean.managedBean.disableAmendDetails}" />
 				    </p:column> 
            </p:dataTable>
       </h:panelGrid>
