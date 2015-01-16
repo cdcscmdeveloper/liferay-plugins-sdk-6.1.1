@@ -10,7 +10,7 @@
 	<table class="infoTable">
 		<tr>
 	        <td width="30%"><b>Accepted Application Date</b></td>
-	        <td></td>
+	        <td>$accptDate</td>
     	</tr>
     	
     	<tr>
