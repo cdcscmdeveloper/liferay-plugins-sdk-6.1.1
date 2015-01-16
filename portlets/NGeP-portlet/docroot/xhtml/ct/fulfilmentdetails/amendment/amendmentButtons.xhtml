@@ -9,12 +9,16 @@
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 					immediate="true" 
+					onstart="blockUIWidget.show();" 
+					oncomplete="blockUIWidget.hide();"
 					rendered="#{amendmentBackingBean.managedBean.taskId==null}"
 					action="#{amendmentBackingBean.backAction}" /></td>
 			<td class="ppRightBtn"><ui:repeat var="outcome"
 					value="#{amendmentBackingBean.managedBean.action}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+						onstart="blockUIWidget.show();" 
+					  	oncomplete="blockUIWidget.hide();"
 						styleClass="ui-button" 
 						action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
 						rendered="#{!amendmentBackingBean.managedBean.memberSignOff}" />				

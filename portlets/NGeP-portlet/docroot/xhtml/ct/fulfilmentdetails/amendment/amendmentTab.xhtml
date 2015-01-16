@@ -64,7 +64,7 @@
     	});
 	 </script> 	
 	  <ui:param name="isPendingLoaSubmission" value="#{amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission}" />
-	  <p:blockUI block=":form" widgetVar="blockWidget">
+	  <p:blockUI block=":form" widgetVar="blockUIWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
