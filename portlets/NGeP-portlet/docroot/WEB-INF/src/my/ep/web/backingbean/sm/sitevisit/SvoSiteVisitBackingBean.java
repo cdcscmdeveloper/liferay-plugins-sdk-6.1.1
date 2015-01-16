@@ -1404,7 +1404,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		if(templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
-				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING) || 
+				templateType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING)) {
 			isSectionE = true;
 		}
 		
@@ -1746,8 +1747,36 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("financialDocLs", manufacturingTemplate.getFinancialDocLs());
 			context.put("additionalDocLs", manufacturingTemplate.getAdditionalDocLs());
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
+		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
+			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
+			context.put("licenseInsuranceLs", licenseInsuranceLs);
+			
+			if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
+				Map<String, List<PmParameterDesc>> printingCatMap = new HashMap<String,List<PmParameterDesc>>();
+				for(SmSvCategory svCat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
+					String lv1 = svCat.getPmCategoryL1().getCategoryL1Code();
+					String lv2 = svCat.getPmCategoryL2().getCategoryL2Code();
+					String lv3 = svCat.getPmCategoryL3().getCategoryL3Code();
+
+					String catCodeStr = lv1 + lv2 + lv3;
+					log.info("-----Section C - ------" + catCodeStr);
+					if(printingCodeLs.contains(catCodeStr)){
+						log.info("-----Section C - Contain printing cat------");
+						
+						List<PmParameterDesc> pmDescList = retrievePrintingAcc(catCodeStr);
+						Locale locale = new Locale("en");
+						String lblCategoryCodeDesc= "lbl.sm.sitevisit.printing." + catCodeStr;
+						String categoryCodeDesc = ResourceBundleUtils.getMessage(lblCategoryCodeDesc,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+						
+						printingCatMap.put(categoryCodeDesc, pmDescList);
+					}
+				}
+				
+				context.put("printingCat", printingCatMap);
+			}
 		}
 		
+		log.info("****Template Type****" + templateType);
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
 		
@@ -1785,7 +1814,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("officeRentalRate", svOfficeRentalRate);
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
-				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING) || templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			List<SmSupplierCategory> catLs = retrieveActiveCategoryCode(svTask.getSmAppl().getSmSupplier().getSmAppl().getApplId());
 			context.put("categoryCodeLs", catLs);
 		}
