@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1163,8 +1164,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				generateCoverPdf(attachment, getManagedBean().getScQt());
 			
 			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
 				generateOfferedAndQTDtlsPdf(attachment, getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT.equals(docDefinitionKey)) {
@@ -1275,7 +1274,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateOfferedAndQTDtlsPdf");
 
-		//attachment.setFileName("finalization-offeredAndQTDetails.pdf");
+		attachment.setFileName("Keterangan_Tawaran_dan_Maklumat_Tender_Sebut_Harga_.pdf");
 		populateAttachmentDetails(attachment);
 		
 		//ScQt scQt = scQtFinalization.getScQt();
@@ -1482,6 +1481,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 		
 		context.put("title", scQt.getQtTitle());
@@ -1504,7 +1504,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
     	context.put("tier", scQt.getEvaluationType());
 		
     	context.put("openFor", scQt.getOpenFor());
-    	context.put("paidupcapital", scQt.getScQtSupplierCriteria().getMinPaidUpCapital());
+    	
+    	String paidupcapital = "";
+    	if (scQt.getScQtSupplierCriteria().getMinPaidUpCapital() != null) {
+    		paidupcapital = amountDF.format(scQt.getScQtSupplierCriteria().getMinPaidUpCapital());	
+    	}
+    	context.put("paidupcapital", paidupcapital);
     	
     	context.put("categoryList", scQt.getScQtCategorys());
     	context.put("bean", this);
