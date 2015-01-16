@@ -364,27 +364,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721005);
 
 		}
-
-		
-		try {
-			
-			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getIdentificationNo()) != null) {
-//			if(UserLocalServiceUtil.getUserByScreenName(1, "user011") != null) {
-//				FacesContext.getCurrentInstance().addMessage(null,
-//						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
-//				return null;
-				throw new EpException(MessageConst.ERROR_721016);
-			}
-		} catch (NumberFormatException e) {
-//			e.printStackTrace();
-			log.info(e.getMessage());
-		} catch (PortalException e) {
-//			e.printStackTrace();
-			log.info(e.getMessage());
-		} catch (SystemException e) {
-//			e.printStackTrace();
-			log.info(e.getMessage());
-		}
 		
 		//check Exist email in smPersonnel
 		//this.checkExistEmailInPersonnel(smPersonnel.getEmail());
