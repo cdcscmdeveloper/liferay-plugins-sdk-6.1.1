@@ -109,7 +109,6 @@
 			$contractSignerDesignation			
 		</td>
 	</tr>
-	#if ( $pendingAck == 'true' )
 	<tr>
 		<td>
 			Dengan ini yang bertandatangan di bawah ini mengakui penerimaan surat tersebut dan mengesahkan tiada apa apa terma, syarat atau stipulasi tambahan telah dikenakan dengan keluaran surat tersebut oleh yang bertandatangan di bawah ini.
@@ -357,9 +356,7 @@
 			</tr>
 			</table>
 		</td>
-	</tr>
-	#end
-		
+	</tr>		
 	</table>
 </body>
 </html>

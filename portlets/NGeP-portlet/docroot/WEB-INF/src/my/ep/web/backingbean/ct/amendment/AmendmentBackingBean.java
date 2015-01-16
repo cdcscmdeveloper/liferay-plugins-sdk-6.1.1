@@ -1705,62 +1705,143 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 							.getDesignation());
 				}
 				
+				String ackDate = "";
+				String bankAccNo = "";
+				String bankName = "";
+				String bankBranch = "";
+				String bankAddress = "";
+				
+				String supplierUserName = "";
+				String supplierUserID = "";
+				String supplierUserDesignation = "";
+				String supplierTelNo = "";
+				String supplierFaxNo = "";
+				String supplierMobileNo = "";
+				String supplierEmail = "";
+				String supplierCompName = "";
+				String supplierCompAddress = "";
+				
+				String witnessName = "";
+				String witnessID = "";
+				String witnessDesignation = "";
+				String witnessAddress = "";
+				String witnessTelNo = "";
+				String witnessFaxNo = "";
+				String witnessMobileNo = "";
+				String witnessEmail = "";
+				
 				if(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(getManagedBean().getContractVer().getStatus().getStatusId())){
-					String ackDate = "";
 					ackDate = dateSDF.format(new Date());
-					context.put("ackDate", ackDate);
 	
 					// Bank account details.
-					String bankAccNo = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+					bankAccNo = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
 					if (bankAccNo == null) {
 						bankAccNo = "";
 					}
-					context.put("bankAccNo", bankAccNo);
-					
-					String bankName = getManagedBean().getContractVer().getCtContractValue().getBankName();
+					bankName = getManagedBean().getContractVer().getCtContractValue().getBankName();
 					if (bankName == null) {
 						bankName = "";
 					}
-					context.put("bankName", bankName.replaceAll("&", "&#38;"));
-					String bankBranch = getManagedBean().getContractVer().getCtContractValue().getBankBranch();
+					bankBranch = getManagedBean().getContractVer().getCtContractValue().getBankBranch();
 					if (bankBranch == null) {
 						bankBranch = "";
 					}
-					context.put("bankBranch", bankBranch);
-					String bankAddress = "";
 					if (getManagedBean().getContractVer().getCtContractValue().getBankAddress() != null) {
 						bankAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getBankAddress());
 						bankAddress = bankAddress.replaceAll("\r\n", "<br />");
 						bankAddress = bankAddress.replaceAll("&", "&#38;");
 					}
-					context.put("bankAddress", bankAddress);
-					
 					// Supplier User
-					context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
-					context.put("supplierUserID", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					context.put("supplierUserDesignation", getFacesScopes().getUserSessionBean().getDesignation()!=null?getFacesScopes().getUserSessionBean().getDesignation():"");
-					context.put("supplierTelNo", getFacesScopes().getUserSessionBean().getPhoneNo()!=null?getFacesScopes().getUserSessionBean().getPhoneNo():"");
-					context.put("supplierFaxNo", getFacesScopes().getUserSessionBean().getFaxNo()!=null?getFacesScopes().getUserSessionBean().getFaxNo():"");
-					context.put("supplierMobileNo", getFacesScopes().getUserSessionBean().getMobileNo()!=null?getFacesScopes().getUserSessionBean().getMobileNo():"");
-					context.put("supplierEmail", getFacesScopes().getUserSessionBean().getEmail()!=null?getFacesScopes().getUserSessionBean().getEmail():"");
-					
+					supplierUserName = getFacesScopes().getUserSessionBean().getUserName();
+					supplierUserID = getFacesScopes().getUserSessionBean().getIdentificationNo();
+					supplierUserDesignation = getFacesScopes().getUserSessionBean().getDesignation()!=null?getFacesScopes().getUserSessionBean().getDesignation():"";
+					supplierTelNo = getFacesScopes().getUserSessionBean().getPhoneNo()!=null?getFacesScopes().getUserSessionBean().getPhoneNo():"";
+					supplierFaxNo = getFacesScopes().getUserSessionBean().getFaxNo()!=null?getFacesScopes().getUserSessionBean().getFaxNo():"";
+					supplierMobileNo = getFacesScopes().getUserSessionBean().getMobileNo()!=null?getFacesScopes().getUserSessionBean().getMobileNo():"";
+					supplierEmail = getFacesScopes().getUserSessionBean().getEmail()!=null?getFacesScopes().getUserSessionBean().getEmail():"";
+					supplierCompName = scLoiLoa.getSupplierName();
+					supplierCompAddress = supplierAddress;
 					// Witness
-					context.put("witnessName", getManagedBean().getScLoaWitness().getWitnessName());
-					context.put("witnessID", getManagedBean().getScLoaWitness().getIdentificationNo());
-					context.put("witnessDesignation", getManagedBean().getScLoaWitness().getDesignation());
-					context.put("witnessAddress", getManagedBean().getScLoaWitness().getAddress());
-					context.put("witnessTelNo", getManagedBean().getScLoaWitness().getPhoneNo());
-					context.put("witnessFaxNo", getManagedBean().getScLoaWitness().getFaxNo());
-					context.put("witnessMobileNo", getManagedBean().getScLoaWitness().getMobileNo());
-					context.put("witnessEmail", getManagedBean().getScLoaWitness().getEmail());
-					
-					context.put("pendingAck", true);
-				}else{
-					context.put("pendingAck", false);
+					witnessName = getManagedBean().getScLoaWitness().getWitnessName();
+					witnessID = getManagedBean().getScLoaWitness().getIdentificationNo();
+					witnessDesignation = getManagedBean().getScLoaWitness().getDesignation();
+					witnessAddress = getManagedBean().getScLoaWitness().getAddress();
+					witnessTelNo = getManagedBean().getScLoaWitness().getPhoneNo();
+					witnessFaxNo = getManagedBean().getScLoaWitness().getFaxNo();
+					witnessMobileNo = getManagedBean().getScLoaWitness().getMobileNo();
+					witnessEmail = getManagedBean().getScLoaWitness().getEmail();
+				} else if(ContractStatusConst.FA_PENDING_VERIFICATION.equals(getManagedBean().getContractVer().getStatus().getStatusId())) {
+					ackDate = dateSDF.format(scLoa.getAckDate());
+
+					// Bank account details.
+					bankAccNo = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+					if (bankAccNo == null) {
+						bankAccNo = "";
+					}
+					bankName = getManagedBean().getContractVer().getCtContractValue().getBankName();
+					if (bankName == null) {
+						bankName = "";
+					}
+					bankBranch = getManagedBean().getContractVer().getCtContractValue().getBankBranch();
+					if (bankBranch == null) {
+						bankBranch = "";
+					}
+					if (getManagedBean().getContractVer().getCtContractValue().getBankAddress() != null) {
+						bankAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getBankAddress());
+						bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+						bankAddress = bankAddress.replaceAll("&", "&#38;");
+					}
+					// Supplier User
+					supplierUserName = scLoa.getAckBy().getUserName();
+					supplierUserID = scLoa.getAckBy().getIdentificationNo();
+					supplierUserDesignation = scLoa.getAckBy().getDesignation()!=null?scLoa.getAckBy().getDesignation():"";
+					supplierTelNo = scLoa.getAckBy().getPhoneNo()!=null?scLoa.getAckBy().getPhoneNo():"";
+					supplierFaxNo = scLoa.getAckBy().getFaxNo()!=null?scLoa.getAckBy().getFaxNo():"";
+					supplierMobileNo = scLoa.getAckBy().getMobileNo()!=null?scLoa.getAckBy().getMobileNo():"";
+					supplierEmail = scLoa.getAckBy().getEmail()!=null?scLoa.getAckBy().getEmail():"";
+					supplierCompName = scLoiLoa.getSupplierName();
+					supplierCompAddress = supplierAddress;					
+					// Witness
+					ScLoaWitness supplierWitness = null;
+					for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+						if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(scLoaWitness.getPartyType())) {
+							supplierWitness = scLoaWitness;
+							break;
+						}
+					}
+					witnessName = supplierWitness.getWitnessName();
+					witnessID = supplierWitness.getIdentificationNo();
+					witnessDesignation = supplierWitness.getDesignation();
+					witnessAddress = supplierWitness.getAddress();
+					witnessTelNo = supplierWitness.getPhoneNo();
+					witnessFaxNo = supplierWitness.getFaxNo();
+					witnessMobileNo = supplierWitness.getMobileNo();
+					witnessEmail = supplierWitness.getEmail();					
 				}
-
-
-			
+				context.put("ackDate", ackDate);
+				context.put("bankAccNo", bankAccNo);
+				context.put("bankName", bankName.replaceAll("&", "&#38;"));
+				context.put("bankBranch", bankBranch);
+				context.put("bankAddress", bankAddress);
+				// Supplier User
+				context.put("supplierUserName", supplierUserName);
+				context.put("supplierUserID", supplierUserID);
+				context.put("supplierUserDesignation", supplierUserDesignation);
+				context.put("supplierTelNo", supplierTelNo);
+				context.put("supplierFaxNo", supplierFaxNo);
+				context.put("supplierMobileNo", supplierMobileNo);
+				context.put("supplierEmail", supplierEmail);
+				context.put("supplierCompName", supplierCompName);
+				context.put("supplierCompAddress", supplierCompAddress);
+				// Witness
+				context.put("witnessName", witnessName);
+				context.put("witnessID", witnessID);
+				context.put("witnessDesignation", witnessDesignation);
+				context.put("witnessAddress", witnessAddress);
+				context.put("witnessTelNo", witnessTelNo);
+				context.put("witnessFaxNo", witnessFaxNo);
+				context.put("witnessMobileNo", witnessMobileNo);
+				context.put("witnessEmail", witnessEmail);				
 			}
 			if (vmFile != null && context != null) {
 				content = DocumentGenerator.getInstance().getHtmlFromVelocity(
