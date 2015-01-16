@@ -9,9 +9,9 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvCategory;
@@ -38,6 +38,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvAddress selectedSmSvAddress;
 	private Map<String,SmSvTemplate> smSvTemplateMap;
 	private Map<String,List<SmSvAddress>> smSvAddressMap;
+	private Map<String,SmFacility> smSvFacilityMap;
 	private SmSvTemplate selectedSvTemplate;
 	private SmSvInterviewee[] selectedInterviewees;
 	private SmSvWorker[] selectedWorkers;
@@ -531,6 +532,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSmSvAddressMap(Map<String, List<SmSvAddress>> smSvAddressMap) {
 		this.smSvAddressMap = smSvAddressMap;
+	}
+
+	public Map<String, SmFacility> getSmSvFacilityMap() {
+		return smSvFacilityMap;
+	}
+
+	public void setSmSvFacilityMap(Map<String, SmFacility> smSvFacilityMap) {
+		this.smSvFacilityMap = smSvFacilityMap;
 	}
 
 
