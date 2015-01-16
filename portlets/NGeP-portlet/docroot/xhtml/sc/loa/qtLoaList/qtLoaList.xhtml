@@ -73,10 +73,10 @@
 					#{qtLOABackingBean.getStatusDescById(loiloa.status.statusId)}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
-						<p:commandButton title="edit" rendered="#{loiloa.type eq 'LOI'}"
+						<p:commandButton title="edit" icon="ui-icon-edit" rendered="#{loiloa.type eq 'LOI'}"
 						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}" />
-					<p:commandButton  title="edit"  rendered="#{loiloa.type eq 'LOA'}"
+					<p:commandButton  title="edit" icon="ui-icon-edit" rendered="#{loiloa.type eq 'LOA'}"
 						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
 				</p:column>
