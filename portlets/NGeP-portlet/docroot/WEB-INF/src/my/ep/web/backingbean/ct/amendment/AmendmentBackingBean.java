@@ -551,7 +551,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      if(getManagedBean().getTaskName() != null && 
 		    		  (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 		    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
-		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME))) {
+		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
+		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME))) {
 		    	  getManagedBean().setDisableAmendDetails(true);
 		      }
 	   	    } finally {
@@ -599,6 +600,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	   getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
 			    	   
 			       }
+			       
+			       getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
+			       
 			       if(getManagedBean().isPbConfirmMeeting()){
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			       }
@@ -873,11 +877,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 												    		throw new EpException(MessageConst.ERROR_100022, new String[]{"Meeting Status"});
 										    		
 			    			                          } if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
-			    			                        	  if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_PENDING)) {
-			    			                        		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-													    	  throw new EpException(MessageConst.ERROR_750027);
-			    			                        	  }
-										    		  }if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 			    			                        	  if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_PENDING)) {
 			    			                        		  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 													    	  throw new EpException(MessageConst.ERROR_750027);
