@@ -5,6 +5,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style type="text/css">
+		th > span {
+			font-size: 15px;
+		}
+	</style>
 
 	<table style="border: 0px;width:100%; align:center">
 		<tr>
@@ -12,10 +18,10 @@
 				<p:panel header="#{suppFinalizationBackingBean.managedBean.committeeTabLabel}" toggleable="true">
 					<p:dataTable id="committeeDtlTbl" var="committeeDtl"
 						value="#{suppFinalizationBackingBean.managedBean.committeeList}" rows="10"
-						rowKey="#{committeeDtl}" rowIndexVar="rowIndex" resizableColumns="true">
+						rowKey="#{committeeDtl}" rowIndexVar="rowIndex" resizableColumns="false">
 						<ac:paginator for="committeeDtlTbl" />
 
-						<p:column headerText="#{lbl['lbl.sc.name']}">
+						<p:column headerText="#{lbl['lbl.sc.name']}" style="width:25%; white-space:normal;">
 							<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
 						</p:column>
 			
@@ -23,7 +29,7 @@
 							<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
 						</p:column>
 			
-						<p:column headerText="#{lbl['lbl.sc.designation']}">
+						<p:column headerText="#{lbl['lbl.sc.designation']}" style="width:25%; white-space:normal;">
 							<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
 						</p:column>
 						
@@ -36,7 +42,8 @@
 						</p:column>
 			
 						<p:column headerText="#{lbl['lbl.sc.pnp']}">
-							<h:outputText value="#{committeeDtl.scCommitteeMember.PNP}"></h:outputText>
+							<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+								fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}" />
 						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sc.role']}">
@@ -101,15 +108,3 @@
 		</tr>
 	</table>
 </ui:composition>
-
-
-
-
-
-
-
-
-
-
-
-
