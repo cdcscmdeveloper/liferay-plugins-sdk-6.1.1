@@ -17,7 +17,8 @@
 							update="committeTable" listener="#{amendmentBackingBean.selectAll()}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{ctCommitteeVar.selectedCheckBox}" styleClass="myCustomChekBox">
+				<p:selectBooleanCheckbox value="#{ctCommitteeVar.selectedCheckBox}" styleClass="myCustomChekBox"
+					disabled="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}" >
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 		      </p:column>
