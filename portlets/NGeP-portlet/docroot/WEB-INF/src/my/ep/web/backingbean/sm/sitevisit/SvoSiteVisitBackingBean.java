@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1511,7 +1512,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				sb.append(offcr.getPmUser().getUserName());
 				sb.append("<br/>");
 			}
-			accptDate = DateUtils.dateToString("dd/mm/yyyy", svTask.getSmSvOfficers().get(0).getCreatedDate()) ;
+			accptDate = DateUtils.dateToString("dd/MM/yyyy", svTask.getSmSvOfficers().get(0).getCreatedDate()) ;
 		}else{
 			sb.append("");
 		}
