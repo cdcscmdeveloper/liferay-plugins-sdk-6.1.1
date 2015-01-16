@@ -10,5 +10,5 @@
 </table>
 
 
-#include("/sm/sitevisit/shared/recommendation.vm")
+#parse("/sm/sitevisit/shared/recommendation.vm")
 #include("/sm/sitevisit/shared/footer.vm")

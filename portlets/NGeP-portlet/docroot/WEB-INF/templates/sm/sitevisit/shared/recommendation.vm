@@ -1,12 +1,24 @@
 <table width='100%'>
 	<tr>
-		<td width="40%" class="txtBold">Bank Information</td>
-		<td width="60%" class="txtBold">Private, Purchasing Price (RM)</td>
+		<td width="40%" class="txtBold"><u>Office Location</u></td>
+	</tr>
+
+	<tr>
+		<td width="40%" class="txtBold">Office Ownership</td>
+		<td width="20%" class="txtBold">Private, Purchasing Price (RM)</td>
+		<td width="20%">$!officePrice</td>
 	</tr>
 	
 	<tr>
-		<td></td>
+		<td>
+			#if($officeOwnership == "O")
+				Owned
+			#elseif($officeOwnership == "R")
+				Rented
+			#end
+		</td>
 		<td class="txtBold">Rent, Monthly Rate (RM)</td>
+		<td width="20%">$!officeRentalRate</td>
 	</tr>
 	
 	<tr>
@@ -20,17 +32,33 @@
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Office Arrangement</td>
-		<td width="60%"></td>
+		<td class="txtBold">Office Arrangement</td>
+		<td></td>
 	</tr>
 </table>
 <br /><br /><br /><br /><br /><br />
 
+
+#if($templateCode == "M")
+<table>
+	<tr><td class="txtBold"><u>Comments</u></td></tr>
+	<tr><td class="txtBold">Operation Stage</td></tr>
+	<tr><br /><br /><br /><br /><br /></tr>
+	
+	<tr><td class="txtBold">Production Capability</td></tr>
+	<tr><br /><br /><br /><br /><br /></tr>
+	
+	<tr><td class="txtBold">Factory/Machine Ownership and Ownership Method</td></tr>
+</table>
+#else
 <table>
 	<tr><td class="txtBold"><u>Comments</u></td></tr>
 	<tr><td class="txtBold">Comments</td></tr>
 </table>
-<br /><br /><br /><br /><br />
+#end
+<tr><br /><br /><br /><br /><br /></tr>
+
+
 
 <table>
 	<tr><td class="txtBold"><u>Company Information Update(If any changes)</u></td></tr>
