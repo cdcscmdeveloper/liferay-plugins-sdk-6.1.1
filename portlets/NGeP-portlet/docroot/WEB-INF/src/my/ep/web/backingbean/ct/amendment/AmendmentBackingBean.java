@@ -127,7 +127,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -932,16 +931,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 										 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 										throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
 									}
-								 
-								    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null 
-								    		&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)){
-								    	if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null ||
-								    			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName() == null ||
-								    			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName().equalsIgnoreCase("")){
-								    	    RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-										throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of acceptance attachment"});
-								    }
-							 }
 			   
 						   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 			                      || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))  || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
