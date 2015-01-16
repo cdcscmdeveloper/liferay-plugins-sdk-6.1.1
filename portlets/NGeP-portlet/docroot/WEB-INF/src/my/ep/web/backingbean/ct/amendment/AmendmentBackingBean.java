@@ -551,7 +551,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		  (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 		    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
-		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME))) {
+		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME))) {
 		    	  getManagedBean().setDisableAmendDetails(true);
 		      }
 	   	    } finally {
