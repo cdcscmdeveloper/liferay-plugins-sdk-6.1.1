@@ -366,7 +366,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				          this.getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.supplier.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				          
 				          VelocityContext context = new VelocityContext();
-				          String vmFile = "/ct/loaContent/integrity-pact.vm";
+				          String vmFile = ContractConst.DOCPATH_CT_INTEGRITY_PACT;
 					  	  String content = null;
 					  	  
 					  	  getManagedBean().setEditorValue("");
@@ -390,6 +390,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 							 sb.append(", <br/>");
 							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() !=null ?
 									 getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
+							 sb.append(" ");
 							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
 							 sb.append(", <br/>");
 							 sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() !=null 
