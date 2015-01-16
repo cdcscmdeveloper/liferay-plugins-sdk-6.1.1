@@ -42,9 +42,9 @@
 		<p:dataTable var="bankInfo" rowIndexVar="index" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
-		    <p:column headerText="#{lbl['lbl.sm.bankDtls.No']}" style="width : 5%;">
+		    <p:column headerText="#{lbl['lbl.sm.bankDtls.no']}" style="width : 5%;">
 					<p:outputLabel value="#{index + 1}"
-						style="float: left;white-space: normal;" />.						
+						style="float: left;padding: 0px;" /> .						
 		    </p:column>
 				
 			<p:column>
@@ -60,7 +60,7 @@
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.bankDtls.cheSign.name']}</f:facet>
 				<ui:repeat var="cheqSign" value="#{bankInfo.smSupplierBank.smChequeSignatories}" varStatus="loop">
-					<p:outputLabel value="#{loop.index + 1}" style="float : left;padding: 0px;"/> . #{cheqSign.smPersonnel.name}<br/>
+					<p:outputLabel value="#{loop.index + 1}" style="float : left;padding: 0px;"/>.#{cheqSign.smPersonnel.name}<br/>
 				</ui:repeat>
 			</p:column>
 
