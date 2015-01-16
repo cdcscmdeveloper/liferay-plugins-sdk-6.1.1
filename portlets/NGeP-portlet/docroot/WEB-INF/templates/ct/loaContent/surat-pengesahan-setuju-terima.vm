@@ -143,7 +143,7 @@
 					: 
 				</td>
 				<td width="32%">
-				
+					$supplierUserName
 				</td>
 				<td width="17%">
 					Nama Penuh
@@ -152,7 +152,7 @@
 					: 
 				</td>
 				<td width="32%">
-				
+					$witnessName
 				</td>
 			</tr>
 			<tr>
@@ -163,7 +163,7 @@
 					: 
 				</td>
 				<td>
-			
+					$supplierUserID
 				</td>
 				<td>
 					No KP
@@ -172,7 +172,7 @@
 					: 
 				</td>
 				<td>
-				
+					$witnessID
 				</td>
 			</tr>
 			<tr>
@@ -183,7 +183,7 @@
 					: 
 				</td>
 				<td>
-				
+					$supplierUserDesignation
 				</td>
 				<td>
 					Jawatan
@@ -192,7 +192,7 @@
 					: 
 				</td>
 				<td>
-					
+					$witnessDesignation
 				</td>
 			</tr>
 			<tr>
@@ -203,7 +203,7 @@
 					: 
 				</td>
 				<td colspan="3">
-					
+					$supplierName
 				</td>
 			</tr>
 			<tr valign="top">
@@ -214,7 +214,7 @@
 					: 
 				</td>
 				<td style="white-space: normal;">
-			
+					$supplierAddress
 				</td>
 				<td>
 					Alamat
@@ -223,7 +223,7 @@
 					: 
 				</td>
 				<td style="white-space: normal;">
-				
+					$witnessAddress
 				</td>
 			</tr>
 			<tr>
@@ -234,7 +234,7 @@
 					: 
 				</td>
 				<td>
-				
+					$supplierTelNo
 				</td>
 				<td>
 					No Tel
@@ -243,7 +243,7 @@
 					: 
 				</td>
 				<td>
-				
+					$witnessTelNo
 				</td>
 			</tr>
 			<tr>
@@ -254,7 +254,7 @@
 					: 
 				</td>
 				<td>
-				
+					$supplierFaxNo
 				</td>
 				<td>
 					No Faks
@@ -263,7 +263,7 @@
 					: 
 				</td>
 				<td>
-					
+					$witnessFaxNo
 				</td>
 			</tr>
 			<tr>
@@ -274,7 +274,7 @@
 					: 
 				</td>
 				<td>
-				
+					$supplierMobileNo
 				</td>
 				<td>
 					Tel Bimbit
@@ -283,7 +283,7 @@
 					: 
 				</td>
 				<td>
-					
+					$witnessMobileNo
 				</td>
 			</tr>
 			<tr>
@@ -294,7 +294,7 @@
 					: 
 				</td>
 				<td>
-				
+					$supplierEmail
 				</td>
 				<td>
 					Alamat emel
@@ -303,7 +303,7 @@
 					: 
 				</td>
 				<td>
-					
+					$witnessEmail
 				</td>
 			</tr>	
 			<tr>
