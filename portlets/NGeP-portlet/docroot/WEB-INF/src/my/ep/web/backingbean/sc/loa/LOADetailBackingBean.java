@@ -831,6 +831,7 @@ public class LOADetailBackingBean extends
 						deductionClause = new ScQtDeductionClause();
 						deductionClause.setPmClause(pmClause);
 						deductionClause.setScQtDeduction(scQtDeduction);
+						deductionClause.setClauseDesc(pmClause.getClauseDesc());
 						deductionClauseList.add(deductionClause);
 					}
 					scQtDeduction.setScQtDeductionClauses(deductionClauseList);
