@@ -75,7 +75,6 @@
 								process="@form"
 								update="@form,@([id$=messages])"
 								onstart="blockUIWidget.show();" 
-					  			oncomplete="blockUIWidget.hide();"
 								actionListener="#{terminationBackingBean.validateContractTermination(outcome)}"
 								action="#{terminationBackingBean.disableUpdate}"
 								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show();blockUIWidget.hide(); "
