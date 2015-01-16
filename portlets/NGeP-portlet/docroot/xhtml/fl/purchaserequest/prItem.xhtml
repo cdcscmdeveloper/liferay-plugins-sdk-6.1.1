@@ -94,7 +94,7 @@
 					value="true" />
 			</p:commandButton>
 			<p:commandButton id="deleteAddrBtn" value="#{lbl['lbl.fl.btn.delete']}"
-				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
+				onclick="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
 				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}"
 				title="#{lbl['lbl.fl.tooltip.delete']}">
