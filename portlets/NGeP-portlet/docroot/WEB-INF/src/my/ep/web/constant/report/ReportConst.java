@@ -653,7 +653,7 @@ public class ReportConst {
 	public static final String PARAM_UOM_ID = "PUOMID";
 	public static final String PARAM_EP_NO = "PEPNO";
 	public static final String PARAM_SUPP_ITEM_ID = "PSUPPITEMID";
-	public static final String NO_REPORT_ID = "This Report, still not developed...";
+	public static final String NO_REPORT_ID = "This Report, is not available...";
 	public static final String SLASH_REPRT_VIEW_SERVLET = "/ReportViewServlet";
 	public static final String GENERATED_URL = "generatedUrl";
 	public static final String REPORT_VIEW_URL = "reportViewUrl";
