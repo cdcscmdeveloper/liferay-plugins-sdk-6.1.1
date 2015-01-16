@@ -728,6 +728,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(params.getValue());
 		}
 		reportUrl.append(excNextUrl);
+		log.info("reportUrl: " + reportUrl);
 
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
