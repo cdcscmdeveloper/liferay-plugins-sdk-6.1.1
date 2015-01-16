@@ -3677,6 +3677,14 @@ public class SmApplicationBackingBean extends
 									"BASIC_SUPPLIER_ADMIN"))) {
 				throw new EpException(MessageConst.ERROR_722553);
 			}
+			if (SmApplicationUtil.isPersonnelBankSignatory(shr,
+					getManagedBean().getSmAppl().getSmSupplierBanks())) {
+				throw new EpException(MessageConst.ERROR_722585);
+			}
+			if (SmApplicationUtil.isPersonnelBranchPointOfContact(shr,
+					getManagedBean().getSmAppl().getSmSupplierBranches())) {
+				throw new EpException(MessageConst.ERROR_722586);
+			}
 		}
 		log.info("*** Delete Share Holders ******* "
 				+ getManagedBean().getSelectedShareHolders().size());

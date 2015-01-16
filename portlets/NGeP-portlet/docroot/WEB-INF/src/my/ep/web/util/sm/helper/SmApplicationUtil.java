@@ -75,7 +75,6 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -115,6 +114,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -152,10 +152,7 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
@@ -1369,8 +1366,9 @@ public class SmApplicationUtil {
 		appl = null;
 	}
 
-	public static void validatePersonnelICandEmailLiferayAndPm(SmPersonnel smPersonnel) {
-		
+	public static void validatePersonnelICandEmailLiferayAndPm(
+			SmPersonnel smPersonnel) {
+
 	}
 
 	public static boolean isExistEmailInPmUser(String email) {
@@ -1441,11 +1439,11 @@ public class SmApplicationUtil {
 					throw new EpException(MessageConst.ERROR_722524,
 							new String[] { pers.getIdentificationNo() });
 				}
-//				if (per.getEmail() != null
-//						&& per.getEmail().equalsIgnoreCase(pers.getEmail())) {
-//					validUser = false;
-//					throw new EpException(MessageConst.ERROR_722540);
-//				}
+				// if (per.getEmail() != null
+				// && per.getEmail().equalsIgnoreCase(pers.getEmail())) {
+				// validUser = false;
+				// throw new EpException(MessageConst.ERROR_722540);
+				// }
 			}
 		}
 		if (pers.getPmUser() == null
@@ -3409,5 +3407,49 @@ public class SmApplicationUtil {
 				.getServiceObject("sm", ISmRemarksSO.class);
 		reqSO.saveSmRemarks(reqDTO);
 
+	}
+
+	public static boolean isPersonnelBankSignatory(SmPersonnel smPersonnel,
+			List<SmSupplierBank> smSupplierBanks) {
+		boolean retVal = false;
+		if (smSupplierBanks != null && !smSupplierBanks.isEmpty()
+				&& smPersonnel != null && smPersonnel.getPersonnelId() != null) {
+			for (SmSupplierBank smSupplierBank : smSupplierBanks) {
+				if (smSupplierBank.getSmChequeSignatories() != null
+						&& !smSupplierBank.getSmChequeSignatories().isEmpty()) {
+					for (SmChequeSignatory smChequeSignatory : smSupplierBank
+							.getSmChequeSignatories()) {
+						if (smChequeSignatory.getSmPersonnel() != null
+								&& smChequeSignatory.getSmPersonnel()
+										.getPersonnelId() != null
+								&& smChequeSignatory
+										.getSmPersonnel()
+										.getPersonnelId()
+										.compareTo(smPersonnel.getPersonnelId()) == 0) {
+							retVal = true;
+						}
+					}
+				}
+			}
+		}
+		return retVal;
+
+	}
+
+	public static boolean isPersonnelBranchPointOfContact(
+			SmPersonnel smPersonnel, List<SmSupplierBranch> smSupplierBranches) {
+		boolean retVal = false;
+		if (smSupplierBranches != null && !smSupplierBranches.isEmpty()
+				&& smPersonnel != null && smPersonnel.getPersonnelId() != null) {
+			for (SmSupplierBranch smSupplierBranch : smSupplierBranches) {
+				if (smSupplierBranch.getSmPersonnel() != null
+						&& smSupplierBranch.getSmPersonnel().getPersonnelId() != null
+						&& smSupplierBranch.getSmPersonnel().getPersonnelId()
+								.compareTo(smPersonnel.getPersonnelId()) == 0) {
+					retVal = true;
+				}
+			}
+		}
+		return retVal;
 	}
 }
