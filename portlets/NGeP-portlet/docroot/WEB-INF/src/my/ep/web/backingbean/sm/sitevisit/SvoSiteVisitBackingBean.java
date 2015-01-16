@@ -1720,6 +1720,24 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(templateType.equals(SupplierManagementConst.CAT_TYPE_INSURANCE) || templateType.equals(SupplierManagementConst.CAT_TYPE_BUMIPUTERA) || 
 				templateType.equals(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA) || templateType.equals(SupplierManagementConst.CAT_TYPE_TRANSPORTATION) || 
 				templateType.equals(templateType.equals(SupplierManagementConst.CAT_TYPE_TRAVEL))){
+
+			//context.put("escapeTool", new EscapeTool()); 
+			String officeOwnership = this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getOwnershipType();
+			BigDecimal officePrice =  this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getPurchasePrice();
+			BigDecimal officeRentalRate = this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getRentalRate();
+
+			log.info("officePrice------->" + officePrice);
+			log.info("officeRentalRate------->" + officeRentalRate);
+			
+			DecimalFormat formatter = new DecimalFormat("###,##0.00");
+			String svOfficePurchasePrice = officePrice != null ? formatter.format(officePrice).toString() : null;
+			String svOfficeRentalRate = officeRentalRate != null ? formatter.format(officeRentalRate).toString() : null;
+			
+			context.put("templateType",templateDesc);
+			context.put("templateCode", templateType);
+			context.put("officeOwnership", officeOwnership);
+			context.put("officePrice", svOfficePurchasePrice);
+			context.put("officeRentalRate", svOfficeRentalRate);
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
 				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
@@ -1742,10 +1760,22 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String vmSectionD = "/sm/sitevisit/sv-section-e.vm";
 		
 		//context.put("escapeTool", new EscapeTool()); 
-	
+		String officeOwnership = this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getOwnershipType();
+		BigDecimal officePrice =  this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getPurchasePrice();
+		BigDecimal officeRentalRate = this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getRentalRate();
+
+		log.info("officePrice------->" + officePrice);
+		log.info("officeRentalRate------->" + officeRentalRate);
+		
+		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		String svOfficePurchasePrice = officePrice != null ? formatter.format(officePrice).toString() : null;
+		String svOfficeRentalRate = officeRentalRate != null ? formatter.format(officeRentalRate).toString() : null;
 		
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
+		context.put("officeOwnership", officeOwnership);
+		context.put("officePrice", svOfficePurchasePrice);
+		context.put("officeRentalRate", svOfficeRentalRate);
 		
 		String fileName = fileInitName + "sectionE.pdf";
 		String file = generateToPdf(vmSectionD, context, fileName);
