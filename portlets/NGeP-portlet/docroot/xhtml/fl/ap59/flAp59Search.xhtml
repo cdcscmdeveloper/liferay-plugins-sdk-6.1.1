@@ -54,9 +54,9 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					 icon="ui-icon-search" update="resultPanel" action="#{invoiceBackingBean.searchDocument}"/>
+					 update="resultPanel" action="#{invoiceBackingBean.searchDocument}"/>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					 icon="ui-icon-reset" update=":form" action="#{invoiceBackingBean.searchReset}"/>
+					 update=":form" action="#{invoiceBackingBean.searchReset}"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
