@@ -1893,6 +1893,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private	List<ScRequestNoteApprovalUser> createTargetApprover(ScRequestNote requestNote){
 		List<ScRequestNoteApprovalUser> results = new ArrayList<ScRequestNoteApprovalUser>();
+		List<ScRequestNoteApprovalUser> approvers = new ArrayList<ScRequestNoteApprovalUser>();
 		List<Long> userIds = new ArrayList<Long>();
 		if(requestNote.getApprovalUsers() != null && requestNote.getApprovalUsers().size()>0){
 			for (ScRequestNoteApprovalUser scRequestNoteApprovalUser : requestNote.getApprovalUsers() ) {
@@ -1916,8 +1917,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						results.add(approver);
 					} 
 				}
+				
+				if(requestNote.getApprovalUsers() != null && requestNote.getApprovalUsers().size()>0){
+					for (ScRequestNoteApprovalUser approver : requestNote.getApprovalUsers()) {
+						if(approver.getPmUser().equals(pmUser)){
+							approvers.add(approver);
+						}
+					}
+				}
 			}
 		}
+		
+		if(!approvers.isEmpty()){
+			requestNote.setApprovalUsers(approvers);
+		}
+		
 		return results;
 	}
 
