@@ -65,7 +65,7 @@
          </td>
          <td>Jadual Penghantaran
          </td>
-         <td>Refer Attachment
+         <td>Seperti dilampiran
          </td>
       </tr>
       <tr>
@@ -73,7 +73,7 @@
          </td>
          <td>Potongan Pembayaran
          </td>
-         <td>$deductionAmount **applicable for fixed deduction only
+         <td>$deductionAmount **tertakluk kepada potongan tetap sahaja
          </td>
       </tr>
       <tr>
@@ -145,7 +145,7 @@
          </td>
          <td>Spesifikasi Tugas / Skop Kerja
          </td>
-         <td>Attachment
+         <td>Seperti dilampiran
          </td>
       </tr>
       <tr>
@@ -161,7 +161,7 @@
          </td>
          <td>Lain-lain Terma
          </td>
-         <td>Refer Attachment
+         <td>Seperti dilampiran
          </td>
       </tr>
       </table>
