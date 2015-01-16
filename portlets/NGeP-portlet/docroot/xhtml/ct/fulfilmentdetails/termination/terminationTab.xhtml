@@ -45,7 +45,9 @@
 	padding: 10px;
 }
 </style>
-
+		<p:blockUI id="blockUiId" block=":form" widgetVar="blockUIWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
 		<p:panel>
 			<f:event listener="#{terminationBackingBean.preRenderView}"
 				type="preRenderView" />
@@ -53,7 +55,9 @@
 				autoUpdate="#{terminationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"							
+					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+							onstart="blockUIWidget.show();" 
+					  		oncomplete="blockUIWidget.hide();"							
 							rendered="#{terminationBackingBean.managedBean.taskId==null}"
 							action="#{terminationBackingBean.backAction}" /></td>
 					<td class="ppRightBtn">
@@ -62,15 +66,19 @@
 							value="#{terminationBackingBean.managedBean.action}">							
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
+								onstart="blockUIWidget.show();" 
+					  			oncomplete="blockUIWidget.hide();"
 								styleClass="ui-button" ajax="false" validateClient="true"
 								action="#{terminationBackingBean.saveContractTermination(outcome)}"
 								rendered="#{outcome != 'ENDORSE' and outcome != 'SUBMIT'}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 								process="@form"
 								update="@form,@([id$=messages])"
+								onstart="blockUIWidget.show();" 
+					  			oncomplete="blockUIWidget.hide();"
 								actionListener="#{terminationBackingBean.validateContractTermination(outcome)}"
 								action="#{terminationBackingBean.disableUpdate}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
+								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show();blockUIWidget.hide(); "
 								rendered="#{outcome == 'ENDORSE' or outcome == 'SUBMIT'}" />
 						</ui:repeat>
 						</c:if>
