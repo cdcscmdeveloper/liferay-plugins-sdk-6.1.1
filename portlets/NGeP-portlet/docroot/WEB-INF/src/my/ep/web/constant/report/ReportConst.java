@@ -101,6 +101,9 @@ public class ReportConst {
 		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_4D.jsp";
 		public static final String SC_AKPTPH_EC_RPT_JSP = "SC_EC_PRICE_EVAL_4E.jsp";
 		
+		//FC
+		public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
+		
 		public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
 		public static final String SC_AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
 		public static final String SC_TECSPEC_TEC_RPT_JSP = "sc_tec_spec_techpapers_2d.jsp";
@@ -126,7 +129,6 @@ public class ReportConst {
 		public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
 		public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";
 		
-		public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "sc_fc_analysis_eval_rep_8a.jsp";
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	public static final String SC_MARKET_RESEARCH_RPT_JSP = "SC_ITEM_PRICING_SUM.jsp";
 	//SC Module reports start
