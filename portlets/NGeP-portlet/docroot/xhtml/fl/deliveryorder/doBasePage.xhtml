@@ -32,7 +32,7 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-						icon="ui-icon-back" action="#{createDOBackingBean.backAction}" /></td>
+						action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton
