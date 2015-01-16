@@ -4,11 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
@@ -16,15 +14,10 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
-import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -56,30 +49,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private PmOrgProfile parentOrgProfile;
 	// Office Address
 	private List<PmAddressType> officeAddressTypeList;
-	private List<PmContact> contactList;
+	
 	private PmAddressType pmAddressType;
 	private PmAddress officeAddress;
 	private PmContact officeContactPerson;
-	private List<PmCountry> countryList;
-	private List<PmState> stateList;
-	private List<PmDivision> divisionList;
-	private List<PmCity> cityList;
-	private List<PmDistrict> districtList;
+	
 
 	// Delivery Address
 	private List<PmAddressType> deliveryAddressList;
 	private PmAddressType selectedDeliveryAddress;
 	private PmAddressType deliveryAddress;
 	private List<PmAddressType> addressTypesList;
-	private Map<Long, List<PmAddressType>> manualAddressMap;
-	private List<PmCountry> deliveryCountryList;
-	private List<PmState> deliveryStateList;
-	private List<PmDivision> deliveryDivisionList;
-	private List<PmCity> deliveryCityList;
-	private List<PmDistrict> deliveryDistrictList;
-	private List<PmAddressType> manualAddressList;
-	private List<SelectItem> manualAddrList;
-	private List<PmContact> deliveryContactList;
+	
+	
+
 	private PmContact deliveryContactPerson;
 	private List<PmAddressType> selectedAddressTypes;
 	
@@ -131,111 +114,16 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		parentOrgProfile= new PmOrgProfile();
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
-		officeAddressTypeList = new ArrayList<PmAddressType>();
-		contactList = new ArrayList<PmContact>();
-		
+		officeAddressTypeList = new ArrayList<PmAddressType>();		
 		agOffice = new ArrayList<PmAgOffice>();
 		orgProfile.setPmAgOffice(new PmAgOffice());
 		orgProfile.setPmPtjGroup(new PmPtjGroup());
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
 		deliveryAddress.setPmAddress(new PmAddress());
-		deliveryContactPerson = new PmContact();
-		deliveryContactList =  new ArrayList<PmContact>();
+		deliveryContactPerson = new PmContact();	
 		
 
-	}
-
-	/**
-	 * @return the contactList
-	 */
-	public List<PmContact> getContactList() {
-		return contactList;
-	}
-
-	/**
-	 * @param contactList
-	 *            the contactList to set
-	 */
-	public void setContactList(List<PmContact> contactList) {
-		this.contactList = contactList;
-	}
-
-	
-
-	/**
-	 * @return the countryList
-	 */
-	public List<PmCountry> getCountryList() {
-		return countryList;
-	}
-
-	/**
-	 * @param countryList
-	 *            the countryList to set
-	 */
-	public void setCountryList(List<PmCountry> countryList) {
-		this.countryList = countryList;
-	}
-
-	/**
-	 * @return the stateList
-	 */
-	public List<PmState> getStateList() {
-		return stateList;
-	}
-
-	/**
-	 * @param stateList
-	 *            the stateList to set
-	 */
-	public void setStateList(List<PmState> stateList) {
-		this.stateList = stateList;
-	}
-
-	/**
-	 * @return the divisionList
-	 */
-	public List<PmDivision> getDivisionList() {
-		return divisionList;
-	}
-
-	/**
-	 * @param divisionList
-	 *            the divisionList to set
-	 */
-	public void setDivisionList(List<PmDivision> divisionList) {
-		this.divisionList = divisionList;
-	}
-
-	/**
-	 * @return the cityList
-	 */
-	public List<PmCity> getCityList() {
-		return cityList;
-	}
-
-	/**
-	 * @param cityList
-	 *            the cityList to set
-	 */
-	public void setCityList(List<PmCity> cityList) {
-		this.cityList = cityList;
-	}
-
-	/**
-	 * @return the districtList
-	 */
-	public List<PmDistrict> getDistrictList() {
-		return districtList;
-	}
-
-	/**
-	 * @param districtList
-	 *            the districtList to set
-	 */
-	public void setDistrictList(List<PmDistrict> districtList) {
-		this.districtList = districtList;
-	}
+	}	
 
 	/**
 	 * @return the officeAddress
@@ -661,20 +549,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.addressTypesList = addressTypesList;
 	}
 
-	/**
-	 * @return the manualAddressMap
-	 */
-	public Map<Long, List<PmAddressType>> getManualAddressMap() {
-		return manualAddressMap;
-	}
-
-	/**
-	 * @param manualAddressMap the manualAddressMap to set
-	 */
-	public void setManualAddressMap(Map<Long, List<PmAddressType>> manualAddressMap) {
-		this.manualAddressMap = manualAddressMap;
-	}
-
+	
 	/**
 	 * @return the parentOrgProfile
 	 */
@@ -890,75 +765,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.deletedSmPersonnelList = deletedSmPersonnelList;
 	}
 
-	/**
-	 * @return the deliveryCountryList
-	 */
-	public List<PmCountry> getDeliveryCountryList() {
-		return deliveryCountryList;
-	}
-
-	/**
-	 * @param deliveryCountryList the deliveryCountryList to set
-	 */
-	public void setDeliveryCountryList(List<PmCountry> deliveryCountryList) {
-		this.deliveryCountryList = deliveryCountryList;
-	}
-
-	/**
-	 * @return the deliveryStateList
-	 */
-	public List<PmState> getDeliveryStateList() {
-		return deliveryStateList;
-	}
-
-	/**
-	 * @param deliveryStateList the deliveryStateList to set
-	 */
-	public void setDeliveryStateList(List<PmState> deliveryStateList) {
-		this.deliveryStateList = deliveryStateList;
-	}
-
-	/**
-	 * @return the deliveryDivisionList
-	 */
-	public List<PmDivision> getDeliveryDivisionList() {
-		return deliveryDivisionList;
-	}
-
-	/**
-	 * @param deliveryDivisionList the deliveryDivisionList to set
-	 */
-	public void setDeliveryDivisionList(List<PmDivision> deliveryDivisionList) {
-		this.deliveryDivisionList = deliveryDivisionList;
-	}
-
-	/**
-	 * @return the deliveryCityList
-	 */
-	public List<PmCity> getDeliveryCityList() {
-		return deliveryCityList;
-	}
-
-	/**
-	 * @param deliveryCityList the deliveryCityList to set
-	 */
-	public void setDeliveryCityList(List<PmCity> deliveryCityList) {
-		this.deliveryCityList = deliveryCityList;
-	}
-
-	/**
-	 * @return the deliveryDistrictList
-	 */
-	public List<PmDistrict> getDeliveryDistrictList() {
-		return deliveryDistrictList;
-	}
-
-	/**
-	 * @param deliveryDistrictList the deliveryDistrictList to set
-	 */
-	public void setDeliveryDistrictList(List<PmDistrict> deliveryDistrictList) {
-		this.deliveryDistrictList = deliveryDistrictList;
-	}
+	
 
 	/**
 	 * @return the addressList
@@ -974,33 +781,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.addressList = addressList;
 	}
 
-	/**
-	 * @return the manualAddressList
-	 */
-	public List<PmAddressType> getManualAddressList() {
-		return manualAddressList;
-	}
-
-	/**
-	 * @param manualAddressList the manualAddressList to set
-	 */
-	public void setManualAddressList(List<PmAddressType> manualAddressList) {
-		this.manualAddressList = manualAddressList;
-	}
-
-	/**
-	 * @return the manualAddrList
-	 */
-	public List<SelectItem> getManualAddrList() {
-		return manualAddrList;
-	}
-
-	/**
-	 * @param manualAddrList the manualAddrList to set
-	 */
-	public void setManualAddrList(List<SelectItem> manualAddrList) {
-		this.manualAddrList = manualAddrList;
-	}
+	
 
 	/**
 	 * @return the deliveryContactPerson
@@ -1016,19 +797,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.deliveryContactPerson = deliveryContactPerson;
 	}
 
-	/**
-	 * @return the deliveryContactList
-	 */
-	public List<PmContact> getDeliveryContactList() {
-		return deliveryContactList;
-	}
-
-	/**
-	 * @param deliveryContactList the deliveryContactList to set
-	 */
-	public void setDeliveryContactList(List<PmContact> deliveryContactList) {
-		this.deliveryContactList = deliveryContactList;
-	}
+	
 
 	/**
 	 * @return the selectedAddressTypes

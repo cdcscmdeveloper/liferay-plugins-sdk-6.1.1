@@ -9,83 +9,99 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td width="120"><p:outputLabel
+				<td width="120">
+					<p:outputLabel
 						value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td width="220"><p:selectOneMenu id="manCountry"
-						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.address.country']}"
+						value="*" styleClass="mandatory" />
+				</td>
+				<td width="220">
+					<p:selectOneMenu id="facCountry" styleClass="ppDropDownWidthL"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.address.country']}" disabled="true"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmCountry.countryId}"
-						style="width: 276px;margin-bottom: 5px;"
-						styleClass="ppDropDownWidthL">
+						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems var="countryList"
-							value="#{organisationBackingBean.managedBean.countryList}"
-							itemLabel="#{countryList.countryName}"
-							itemValue="#{countryList.countryId}" />
-						<p:ajax event="change"
-							listener="#{organisationBackingBean.retrieveStateList}"
-							update="manState" />
-					</p:selectOneMenu></td>
-				<td><p:message for="manCountry" id="manCountryMsg"
-						display="icon" /></td>
-				<td width="150"><p:outputLabel
-						value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td width="220"><p:selectOneMenu id="manState" required="#{!empty param['disableValidation']}"
+						<f:selectItems value="#{organisationBackingBean.getCountryList()}"
+							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />
+					</p:selectOneMenu>
+				</td>
+				<td><p:message for="facCountry" id="facCountryMsg" display="icon" /></td>
+				<td width="150">
+					<p:outputLabel
+						value="#{lbl['lbl.pm.address.state']}" /> 
+					<p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td width="220">
+					<p:selectOneMenu id="facState" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmState.stateId}"
-						style="width: 207px;margin-bottom: 5px;"
-						styleClass="ppDropDownWidthL">
+						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems var="stateList"
-							value="#{organisationBackingBean.managedBean.stateList}"
-							itemLabel="#{stateList.stateName}"
-							itemValue="#{stateList.stateId}" />
-						<p:ajax event="change"
-							listener="#{organisationBackingBean.retrieveDivisionList}"
-							update="manDistrict" />
+						<f:selectItems
+						  value="#{organisationBackingBean.getStateList(organisationBackingBean.managedBean.officeAddress.pmCountry.countryId)}" 
+						  var="state" itemLabel="#{state.stateName}"
+						  itemValue="#{state.stateId}"/>
+						<p:ajax event="change" update="facDistrict, facDivision, facCity" 
+						 	listener="#{organisationBackingBean.retrievePmState(organisationBackingBean.managedBean.officeAddress.pmState)}"/>
 					</p:selectOneMenu></td>
-				<td><p:message for="manState" id="manStateMsg" display="icon" /></td>
+				<td><p:message for="facState" id="facStateMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td width="126"><p:outputLabel
-						value="#{lbl['lbl.pm.address.address']}" /> <p:outputLabel
+				<td width="126">
+					<p:outputLabel
+						value="#{lbl['lbl.pm.address.address']}" /> 
+					<p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="address1" styleClass="ppDisplayTextL"
+				<td><p:inputText id="address1" 
 						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
-						required="#{!empty param['disableValidation']}"
+						required="#{!empty param['disableValidation']}" styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.address1}"
 						size="40" /></td>
 				<td><p:message for="address1" id="address1Msg" display="icon" /></td>
-
+				<td width="150">
+					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
+				</td>
+				<td width="220">
+					<p:selectOneMenu id="facDivision" 
+						disabled="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
+						required="#{!empty param['disableValidation']
+							and organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
+						styleClass="ppDropDownWidthL"
+						label="#{lbl['lbl.pm.address.state']}"
+						value="#{organisationBackingBean.managedBean.officeAddress.pmDivision.divisionId}"
+						style="width: 275px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems
+						  value="#{organisationBackingBean.getDivisionList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}" 
+						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
+					</p:selectOneMenu>
+				</td>
+				<td><p:message for="facDivision" id="facDivisionMsg" display="icon" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText maxlength="255" styleClass="ppDisplayTextL"
+				<td><p:inputText styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.address2}"
-						size="40" /></td>
+						size="40" maxlength="255" /></td>
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="manDistrict" required="#{!empty param['disableValidation']}"
+				<td>
+					<p:selectOneMenu id="facDistrict" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.district']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmDistrict.districtId}"
-						style="width: 207px;margin-bottom: 5px;"
-						styleClass="ppDropDownWidthL">
+						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems var="districtList"
-							value="#{organisationBackingBean.managedBean.districtList}"
-							itemValue="#{districtList.districtId}"
-							itemLabel="#{districtList.districtName}" />
-						<p:ajax event="change"
-							listener="#{organisationBackingBean.retrieveCityList}"
-							update="manCity" />
-
+						<f:selectItems 
+							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}"
+							var="district" itemLabel="#{district.districtName}"
+							itemValue="#{district.districtId}"/>
+						<p:ajax event="change" update="facCity" />
 					</p:selectOneMenu></td>
-				<td><p:message for="manDistrict" id="manDistrictMsg"
+				<td><p:message for="facDistrict" id="facDistrictMsg"
 						display="icon" /></td>
 			</tr>
 			<tr>
@@ -96,56 +112,57 @@
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="manCity" required="#{!empty param['disableValidation']}"
+				<td><p:selectOneMenu id="facCity" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.city']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmCity.cityId}"
-						style="width: 207px;margin-bottom: 5px;"
-						styleClass="ppDropDownWidthL">
+						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems var="cityList"
-							value="#{organisationBackingBean.managedBean.cityList}"
-							itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
+						<f:selectItems 
+							value="#{organisationBackingBean.getCityList(organisationBackingBean.managedBean.officeAddress.pmDistrict.districtId)}"
+							var="city" itemLabel="#{city.cityName}"
+							itemValue="#{city.cityId}"/>
 					</p:selectOneMenu></td>
-				<td><p:message id="manCityMsg" for="manCity" display="icon" /></td>
+				<td><p:message id="facCityMsg" for="facCity" display="icon" /></td>
 
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText maxlength="255" styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.address4}"
-						size="35" /></td>
+						size="40" /></td>
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="postCode" required="#{!empty param['disableValidation']}"
-						styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.address.postcode']}" maxlength="10"
-						value="#{organisationBackingBean.managedBean.officeAddress.postcode}"
-						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}"
-						size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+						value="#{organisationBackingBean.managedBean.officeAddress.postcode}" styleClass="ppDisplayTextL"
+						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 				<td><p:message for="postCode" id="postCodeMsg" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="telNo" required="#{!empty param['disableValidation']}"
-						styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.address.tel']}"
-						maxlength="20"
+						label="#{lbl['lbl.pm.address.tel']}" maxlength="12" styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.phoneNo}"
-						 validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}"
-						size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+						  validatorMessage="#{lbl['lbl.pm.address.tel']} - #{lbl['lbl.pm.profiles.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText></td>
 				<td><p:message for="telNo" id="telNoMsg" display="icon" /></td>
+
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
-				<td><p:inputText id="addressFax" maxlength="20" styleClass="ppDisplayTextL"
+				<td><p:inputText id="faxNo" maxlength="12" styleClass="ppDisplayTextL"
 						value="#{organisationBackingBean.managedBean.officeAddress.faxNo}"
-						 validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}">
-						 <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
-						 <td><p:message for="addressFax" id="addressFaxMsg" display="icon" /></td>
+						  validatorMessage="#{lbl['lbl.pm.address.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						  </p:inputText></td>
+						  	<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Contact Person" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="Contact Person" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:commandLink
 						action="#{organisationBackingBean.addContacePerson}"
 						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
@@ -159,15 +176,15 @@
 	</p:panel>
 	<p:dialog id="contactPerson" header="Contact Person" closable="false"
 		widgetVar="contactPersonPopup" modal="true" width="600" height="200">
-		<p:messages id="messagesRoleMsg" showDetail="true" autoUpdate="true"
+		<p:messages id="OrgContactMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 		<p:panel id="contactPersond">
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="contactName" styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.contact.name']}" required="#{!empty param['disableValidation']}"
+					<td><p:inputText id="contactName"  styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.contact.name']}" required="#{!empty param['disableValidation'] || !empty param['dialogValidation']}"
 							value="#{organisationBackingBean.managedBean.officeContactPerson.contactName}"
 							size="50" /></td>
 					<td><p:message id="contactNameMsg" for="contactName"
@@ -176,15 +193,15 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="contactEmail"
-							label="#{lbl['lbl.pm.contact.email']}" 
-							styleClass="ppDisplayTextL"
+					<td>
+						<p:inputText id="contactEmail" styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.contact.email']}" required="#{!empty param['disableValidation'] || !empty param['dialogValidation']}" maxlength="80"
 							value="#{organisationBackingBean.managedBean.officeContactPerson.email}"
-							size="50"
-							validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
-							<f:validateRegex required="#{!empty param['disableValidation']}"
+							validatorMessage="#{lbl['lbl.pm.contact.email']} - #{lbl['lbl.pm.profiles.invalidEmail']}" >
+							<f:validateRegex disabled="#{empty param['disableValidation']}"
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-						</p:inputText></td>
+						</p:inputText>
+					</td>
 					<td><p:message id="contactEmailMsg" for="contactEmail"
 							display="icon" /></td>
 				</tr>
@@ -192,8 +209,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.phone']}" /></td>
 					<td><p:inputText id="contactPhone" styleClass="ppDisplayTextL"
 							value="#{organisationBackingBean.managedBean.officeContactPerson.phoneNo}"
-							validatorMessage="#{lbl['lbl.pm.contact.phone']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
-						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							 validatorMessage="#{lbl['lbl.pm.contact.phone']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							</p:inputText></td>
 							<td><p:message id="contactPhoneMsg" for="contactPhone"
 							display="icon" /></td>
 				</tr>
@@ -201,7 +219,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.fax']}" /></td>
 					<td><p:inputText id="contactFax" styleClass="ppDisplayTextL"
 							value="#{organisationBackingBean.managedBean.officeContactPerson.faxNo}"
-							validatorMessage="#{lbl['lbl.pm.contact.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+							 validatorMessage="#{lbl['lbl.pm.contact.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
 						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 							<td><p:message id="contactFaxMsg" for="contactFax"
 							display="icon" /></td>
@@ -210,7 +228,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.mobile']}" /></td>
 					<td><p:inputText id="contactMobile" styleClass="ppDisplayTextL"
 							value="#{organisationBackingBean.managedBean.officeContactPerson.mobileNo}"
-							validatorMessage="#{lbl['lbl.pm.contact.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
+							 validatorMessage="#{lbl['lbl.pm.contact.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
 						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 							<td><p:message id="contactMobileMsg" for="contactMobile"
 							display="icon" /></td>
@@ -222,11 +240,13 @@
 			<div align="right">
 				<p:commandButton value="OK" process="@this, contactPerson"
 					action="#{organisationBackingBean.okContacePerson}" ajax="true"
-					icon="ui-icon-check" update="@([id$=Msg])" />
+					update="@([id$=Msg])" >
+					<f:param name="dialogValidation" value="true" />   
+				</p:commandButton>
 				&#160;&#160;
 				<p:commandButton value="Cancel" process="@this"
 					action="#{organisationBackingBean.closeContacePerson}"
-					icon="ui-icon-cancel" />
+					 />
 
 			</div>
 		</p:panel>
