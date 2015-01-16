@@ -44,7 +44,7 @@
 			
 		    <p:column headerText="#{lbl['lbl.sm.bankDtls.no']}" style="width : 5%;">
 					<p:outputLabel value="#{index + 1}"
-						style="float: left;padding: 0px;" /> .						
+						style="float: left;padding: 0px;" />.						
 		    </p:column>
 				
 			<p:column>
@@ -59,9 +59,11 @@
 
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.bankDtls.cheSign.name']}</f:facet>
+				<ol>
 				<ui:repeat var="cheqSign" value="#{bankInfo.smSupplierBank.smChequeSignatories}" varStatus="loop">
-					<p:outputLabel value="#{loop.index + 1}" style="float : left;padding: 0px;"/>.#{cheqSign.smPersonnel.name}<br/>
+					<p:outputLabel value="#{loop.index + 1}" style="float : left;padding: 0px;"/>. #{cheqSign.smPersonnel.name}<br/>
 				</ui:repeat>
+				</ol>
 			</p:column>
 
 			<p:column>
