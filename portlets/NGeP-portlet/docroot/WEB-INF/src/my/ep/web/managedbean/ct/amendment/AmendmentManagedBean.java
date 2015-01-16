@@ -136,6 +136,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<SelectItem> representativesTypeslist;
 	private String committetype;
 	private boolean disableAmendDetails;
+	private boolean disablefinalAmendDetails;
 
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -834,4 +835,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setDisableAmendDetails(boolean disableAmendDetails) {
 		this.disableAmendDetails = disableAmendDetails;
 	}
+
+	public boolean isDisablefinalAmendDetails() {
+		return disablefinalAmendDetails;
+	}
+
+	public void setDisablefinalAmendDetails(boolean disablefinalAmendDetails) {
+		this.disablefinalAmendDetails = disablefinalAmendDetails;
+	}
+	
 }
