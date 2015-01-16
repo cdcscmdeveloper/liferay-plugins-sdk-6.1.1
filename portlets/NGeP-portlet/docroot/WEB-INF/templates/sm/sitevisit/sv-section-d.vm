@@ -11,7 +11,7 @@
 
 #if($templateCode == "I" || $templateCode == "BP" || $templateCode == "RM" || $templateCode == "A" || $templateCode == "PG")
 	#parse("/sm/sitevisit/shared/recommendation.vm")
-#elseif($templateCode == "L" || $templateCode == "B" || $templateCode == "M")
+#elseif($templateCode == "L" || $templateCode == "B" || $templateCode == "M" || $templateCode == "PC")
 	#parse("/sm/sitevisit/shared/category-applicable.vm")
 #end
 

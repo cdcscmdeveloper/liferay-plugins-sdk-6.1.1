@@ -25,12 +25,18 @@
 		
 		#parse("/sm/sitevisit/shared/machine.vm")
     #elseif($templateCode == "M")
-    
     	#parse("/sm/sitevisit/shared/manufacturing-documents.vm")
     	<br /><br />
     	#parse("/sm/sitevisit/shared/manufacturing-additional-documents.vm")
     	<br /><br />
     	#parse("/sm/sitevisit/shared/manufacturing-machine.vm")
+    	
+    #elseif($templateCode == "PC")
+    	#parse("/sm/sitevisit/shared/printing_license_insurance.vm")
+    	<br /><br />
+    	#parse("/sm/sitevisit/shared/printing_premise_location.vm")
+    	<br /><br />
+    	#parse("/sm/sitevisit/shared/printing_accessories.vm")
     #end
 
 #include("/sm/sitevisit/shared/footer.vm")
