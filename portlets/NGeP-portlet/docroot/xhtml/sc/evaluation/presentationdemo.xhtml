@@ -38,6 +38,7 @@
 				style="width:15%">
 
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					update="demoSupplierId">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
@@ -55,7 +56,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.user.scores']}"
 				style="width:15%">
-				<p:inputText value="#{demoSupplier.totalScore}"></p:inputText>
+				<p:inputText value="#{demoSupplier.totalScore}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"></p:inputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
@@ -81,6 +83,7 @@
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
+									disabled="#{evaluationBackingBean.managedBean.readOnly}"
 									oncomplete="demoAttachDlg.show();"
 									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 									partialSubmit="true" process="@this"
@@ -90,6 +93,7 @@
 						<tr>
 							<td />
 							<td><p:dataGrid id="attachedIdsDemo" var="attachFile"
+									value="#{evaluationBackingBean.managedBean.scQtChecklist.scQtCheckListAttachment}"
 									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 									<table>
 										<tr>
@@ -110,6 +114,7 @@
 													styleClass="blue_font" immediate="true"
 													action="#{evaluationBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
+													disabled="#{evaluationBackingBean.managedBean.readOnly}"
 													action="#{evaluationBackingBean.deleteDemoUploadFile}"
 													immediate="true" update="@form">
 													<h:graphicImage library="ep/images/design" name="trash.png"
