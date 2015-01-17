@@ -104,4 +104,33 @@ public class AddressUtils {
 		return address.toString();
 	}
 	
+	/**
+	 * Get Full Address based on SmAddress
+	 * @param smAddress
+	 * @return full address without postcode, state, district and city 
+	 */
+	public static String getAddress(SmAddress smAddress) {
+		StringBuilder address = new StringBuilder();
+		
+		if(smAddress!=null) {
+			if (smAddress.getAddress1() != null && smAddress.getAddress1().length() > 0) {
+				address.append(smAddress.getAddress1());
+				address.append(separator);
+			}
+			if (smAddress.getAddress2() != null && smAddress.getAddress2().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(smAddress.getAddress2());
+				address.append(separator);
+			}
+			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(smAddress.getAddress3());
+				address.append(separator);
+			}
+			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
+				address.append(smAddress.getAddress4());
+			}
+		}
+		return address.toString();
+	}
 }
