@@ -242,9 +242,9 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 				+ SCProcessNameConst.REVISE_QT_SCHEDULE, "qtdetails");
 		temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_BUDGET, "qtapprovals");
+				+ SCProcessNameConst.APPROVE_BUDGET, SourcingConstants.QT_APPROVAL_PAGE);
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_BPK, "qtapprovals");
+				+ SCProcessNameConst.APPROVE_BPK, SourcingConstants.QT_APPROVAL_PAGE);
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
 				+ SCProcessNameConst.UPDATE_SCORING, "specpreparation");
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
@@ -257,7 +257,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.VIEW_SCORING, "specpreparation");
 
 		temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_PCB, "qtapprovals");
+				+ SCProcessNameConst.APPROVE_PCB, SourcingConstants.QT_APPROVAL_PAGE);
 		temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.REVISE_PCB, "qtdetails");
 
@@ -266,7 +266,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_QT_SCHEDULE, "qtdetails");
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_COMMITTEE, "qtapprovals");
+				+ SCProcessNameConst.APPROVE_COMMITTEE, SourcingConstants.QT_APPROVAL_PAGE);
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.REVISE_COMMITTEE, "qtdetails");
 
@@ -289,7 +289,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.LOA_PTJ_PAGE);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_PUBLICATION, "qtapprovals");
+				+ SCProcessNameConst.APPROVE_PUBLICATION, SourcingConstants.QT_APPROVAL_PAGE);
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, "qtdetails");
@@ -432,6 +432,10 @@ public class BPMTaskListBackingBean extends
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_FC_MEMBER, "appoint-fc-committee");
+		
+		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
+				+ "Assign Reevaluate Committee",
+				SourcingConstants.QT_APPROVAL_PAGE);
 
 		this.getManagedBean().setBpmMap(temp);
 
