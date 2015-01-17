@@ -27,7 +27,7 @@
 	<tr>
 		<td>#{lbl['lbl.sm.sitevisit.recommdeclaration']}</td>
 		<td>
-			<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" required="true" 
+			<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" required="#{!empty param['disableValidation']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.recommended}">
 	            <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 	            <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
@@ -38,7 +38,7 @@
 	<tr>
 		<td>#{lbl['lbl.sm.sitevisit.bumirecommend']}</td>
 		<td>
-			<p:selectOneRadio id="bumiRecommendId" label="#{lbl['lbl.sm.sitevisit.bumirecommend']}" required="true"
+			<p:selectOneRadio id="bumiRecommendId" label="#{lbl['lbl.sm.sitevisit.bumirecommend']}" required="#{!empty param['disableValidation']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.bumiRecommended}">
 	            <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 	            <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
