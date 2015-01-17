@@ -244,6 +244,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}else{
 					smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
 				}
+				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}
 		}
