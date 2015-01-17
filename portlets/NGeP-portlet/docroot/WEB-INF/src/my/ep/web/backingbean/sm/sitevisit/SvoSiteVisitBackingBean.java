@@ -69,6 +69,7 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvoSiteVisitManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -105,6 +106,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private String tmpFolder = "SiteVistTemplate" + "/";
 	private String fileInitName;
 	private String templateDesc;
+	private Locale locale = new Locale("en");
 	
 	private StreamedContent file;
 	
@@ -189,6 +191,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_TRAVEL, travelAddress);
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_WORKSHOP, workshopAddress);
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA, readMaterialAddress);
+		
 	}
 	
 	private void setSelectedSvTemplateAddresses(String templateType){
@@ -224,11 +227,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-		//this.getManagedBean().setAppId(1256995);
-		//this.getManagedBean().setAppId(1256752);
-		//this.getManagedBean().setAppId(1256816);
-		//this.getManagedBean().setAppId(1257091);
 		//this.getManagedBean().setAppId(1257118);
+		//this.getManagedBean().setAppId(1257442);
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -1374,7 +1374,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void downloadSiteVisitTemplate(String templateType) throws Exception{
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
         
-		Locale locale = new Locale("en");
+		//Locale locale = new Locale("en");
 		
 		tmpPath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		
@@ -1484,7 +1484,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		log.info(">>>>>>" + svTask.getSvTaskId());
 		String lblApplType = SmCommonUtil.getApplTypeDesc(svTask.getSmAppl().getApplType());
-		Locale locale = new Locale("en");
+		//Locale locale = new Locale("en");
 		String applType = ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
@@ -1522,6 +1522,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("contactPersonName", this.getManagedBean().getContactPerson().getName());
 		context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
 		context.put("templateType",templateDesc);
+		context.put("svAddresses", this.getManagedBean().getSmSvAddressMap().get(templateType));
+		context.put("addressFormatter", new AddressUtils());
 
 		String fileName = fileInitName + "predetails.pdf";
 		
@@ -1679,7 +1681,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		context.put("templateType",templateDesc);
 		
-		
 		String fileName = fileInitName + "sectionB.pdf";
 		String file = generateToPdf(vmEquity, context, fileName);
 		
@@ -1704,12 +1705,23 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			//context.put("templateCode", templateType);
 			//context.put("templateDesc", value);
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
-
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.DOCKYARD_WORKSHOP_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
 //			List<PmParameterDesc>  equipmentMaintLs = new ArrayList<PmParameterDesc>();
 //			List<PmParameterDesc>  equipmentBeatingLs = new ArrayList<PmParameterDesc>();
 			String eqMaintParam = null;
 			String eqBeatingParam = null;
+			
+			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
+			String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
+			String preLocOwnerShip = ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+
+			DecimalFormat formatter = new DecimalFormat("###,##0.00");
+			String preLocPurchasePrice = smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
+			String preLocRentalRate = smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()).toString() : null;
+			
+			context.put("ownerShipType", preLocOwnerShip);
+			context.put("preLocPurchasePrice", preLocPurchasePrice);
+			context.put("preLocRentalRate", preLocRentalRate);
 			
 			if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
 				eqMaintParam = ParameterTypeConst.DOCKYARD_EQUIPMENT_MAINTENANCE;
@@ -1749,6 +1761,20 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
+			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
+			log.info("smFacility address==========" + smFacility.getSmAddress().getAddress1());
+			log.info("smFacility ID==========" + smFacility.getFacilityId());
+			String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
+			String preLocOwnerShip = ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+
+			DecimalFormat formatter = new DecimalFormat("###,##0.00");
+			String preLocPurchasePrice = smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
+			String preLocRentalRate = smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()).toString() : null;
+			
+			context.put("ownerShipType", preLocOwnerShip);
+			context.put("preLocPurchasePrice", preLocPurchasePrice);
+			context.put("preLocRentalRate", preLocRentalRate);
+			
 			context.put("licenseInsuranceLs", licenseInsuranceLs);
 			
 			if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
@@ -1764,7 +1790,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 						log.info("-----Section C - Contain printing cat------");
 						
 						List<PmParameterDesc> pmDescList = retrievePrintingAcc(catCodeStr);
-						Locale locale = new Locale("en");
+						//Locale locale = new Locale("en");
 						String lblCategoryCodeDesc= "lbl.sm.sitevisit.printing." + catCodeStr;
 						String categoryCodeDesc = ResourceBundleUtils.getMessage(lblCategoryCodeDesc,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 						
