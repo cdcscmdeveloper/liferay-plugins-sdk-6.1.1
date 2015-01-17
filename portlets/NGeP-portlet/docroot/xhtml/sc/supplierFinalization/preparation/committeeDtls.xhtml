@@ -21,7 +21,7 @@
 						rowKey="#{committeeDtl}" rowIndexVar="rowIndex" resizableColumns="false">
 						<ac:paginator for="committeeDtlTbl" />
 
-						<p:column headerText="#{lbl['lbl.sc.name']}" style="width:25%; white-space:normal;">
+						<p:column headerText="#{lbl['lbl.sc.name']}" style="width:100%; white-space:normal;">
 							<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
 						</p:column>
 			
@@ -29,7 +29,7 @@
 							<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
 						</p:column>
 			
-						<p:column headerText="#{lbl['lbl.sc.designation']}" style="width:25%; white-space:normal;">
+						<p:column headerText="#{lbl['lbl.sc.designation']}" style="width:100%; white-space:normal;">
 							<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
 						</p:column>
 						
@@ -92,7 +92,9 @@
 											<td></td>
 											<td>
 												<p:inputTextarea cols="40" value="#{remarkVar.remark}"
-													rendered="#{remarkVar.remarkId eq null}" /> 
+													rendered="#{remarkVar.remarkId eq null}">
+													<p:ajax partialSubmit="true" process="@this" update="@this"/>
+												</p:inputTextarea> 
 												<h:outputText value="#{remarkVar.remark}"
 													rendered="#{remarkVar.remarkId ne null}"
 													style="display: inline-block; width:220px;word-wrap: break-word;" />
