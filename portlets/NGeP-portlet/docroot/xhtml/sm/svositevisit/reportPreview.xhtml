@@ -9,7 +9,9 @@
 	<ui:param name="viewFlag" value="true" />
 
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}">
+			<f:param name="disableValidation" value="true" />
+		</p:commandButton>
 	</div>
 	
 
