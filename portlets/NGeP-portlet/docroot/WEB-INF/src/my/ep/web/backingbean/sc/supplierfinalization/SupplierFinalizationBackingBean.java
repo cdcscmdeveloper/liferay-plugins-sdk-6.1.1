@@ -1170,8 +1170,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				generateAnalysisEvaluationReportPdf(attachment, getManagedBean().getScQt());
 				
 			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
 				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE.equals(docDefinitionKey)) {
