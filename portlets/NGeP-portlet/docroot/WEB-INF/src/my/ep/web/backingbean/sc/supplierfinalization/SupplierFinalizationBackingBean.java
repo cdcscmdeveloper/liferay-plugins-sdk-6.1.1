@@ -243,6 +243,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	private void biefingPaperRetrival(){
 		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_REPORT);
+		retrieveSupplierFinalizationDtls(getManagedBean().getScQt());
 		retrieveBriefingPaper();
 	}
 	
@@ -349,6 +350,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				if (scQtCommittee.getMeetingAttendances() != null && !scQtCommittee.getMeetingAttendances().isEmpty()) {
 					this.getManagedBean().setMeetingAttendanceList(scQtCommittee.getMeetingAttendances());
 				}
+
+				ScQtCommittee committee = this.getManagedBean().getScQtCommittee();
+				getManagedBean().setScQtCommittee(committee);
+				
+				List<ScQtCommitteRemarks> remarks = initializeRemarks(
+						committee, null, committee.getQtCommitteRemarks(), ScQtCommitteRemarks.class);
+				committee.setQtCommitteRemarks(remarks);
+				
+				// Committee Remarks list 
+				this.getManagedBean().setCommitteeRemarkList(remarks);
 			}
 			retrieveCommitteeType(committeeType);
 		} finally {
@@ -646,18 +657,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			scQtCommittee.setCommitteeActivities(new ArrayList<ScQtCommitteeActivity>());
 			scQtCommittee.setCommitteeActivities(committeeList);
 		}
-	
-		List<ScQtCommitteRemarks> remarksList=	getManagedBean().getCommitteeRemarkList();
-		List<ScQtCommitteRemarks> committeeRemarks = null;
-		if (isNotNullOREmpty(remarksList)) {
-			committeeRemarks = new ArrayList<ScQtCommitteRemarks>();
-			for (ScQtCommitteRemarks remarks : remarksList) {
-				if (remarks.getRemark() != null && "" != remarks.getRemark()) {
-					committeeRemarks.add(remarks);
-				}
-			}
-		}
-		scQtCommittee.setQtCommitteRemarks(committeeRemarks);
+
+		List<ScQtCommitteRemarks> remarksList = finalizeRemarks(this.getManagedBean().getCommitteeRemarkList());
+		scQtCommittee.setQtCommitteRemarks(remarksList);
 		
 		//Meeting Attendance Details
 		List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean().getMeetingAttendanceList();
