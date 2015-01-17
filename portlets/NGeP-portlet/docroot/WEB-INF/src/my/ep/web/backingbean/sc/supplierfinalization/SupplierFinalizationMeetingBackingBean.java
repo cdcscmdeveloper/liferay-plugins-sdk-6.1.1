@@ -980,6 +980,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		SCEvaluationDataType evalDataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
 		
 		renewSesionObject();
 		
@@ -991,6 +992,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
+		this.getManagedBean().setPayLoad(evalDataType);
 	}
 
 	public void submitAction(String outCome) {
