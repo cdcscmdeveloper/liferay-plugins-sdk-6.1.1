@@ -12,7 +12,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -39,7 +38,9 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -75,8 +76,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author Viswanath
@@ -247,30 +246,15 @@ public class ApprovalBackingBean extends
 	}
 
 	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		this.getManagedBean().setOutComes(res.getAction());
-		String taskName = res.getTaskName();
-		Object obj = null;
+		Object obj = getBpmTaskDetails(SCAwardSupplierDataType.class);
+		String taskName = getManagedBean().getTaskName();
+		
 		Long qtId = null;
-		if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
-			obj = (SCCommitteeDataType) res.getPojo();
+		if (obj instanceof SCCommitteeDataType) {
 			qtId = ((SCCommitteeDataType) obj).getQtId().longValue();
+		} else if (obj instanceof SCEvaluationDataType) {
+			qtId = ((SCEvaluationDataType) obj).getQtId().longValue();
 		} else {
-			obj = (SCQuotationTenderDataType) res.getPojo();
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
 		}
 		this.getManagedBean().setQuotationTenderDataType(obj);
@@ -307,6 +291,8 @@ public class ApprovalBackingBean extends
 			scQtApproval.setApproverSettings(null);
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
+				.equalsIgnoreCase(taskName) ||
+				"Assign Reevaluate Committee"
 				.equalsIgnoreCase(taskName)) {
 
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
@@ -519,6 +505,8 @@ public class ApprovalBackingBean extends
 			// QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(taskName)
+					|| "Assign Reevaluate Committee"
 							.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -544,8 +532,14 @@ public class ApprovalBackingBean extends
 							committeStatus
 									.setStatusId(QTStatusConst.CMT_PENDING_REVISION);
 						} else {
-							committeStatus
-									.setStatusId(QTStatusConst.CMT_COMPLETED);
+							if ("Assign Reevaluate Committee"
+									.equalsIgnoreCase(taskName)) {
+								committeStatus
+								.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+							} else {
+								committeStatus
+								.setStatusId(QTStatusConst.CMT_COMPLETED);	
+							}
 						}
 						qtCommittee.getScCommittee().setCommitteStatus(
 								committeStatus);
