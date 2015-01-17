@@ -9,13 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import my.com.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type;
-import my.com.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type;
-import my.com.integration.phis.ptj.deliveryaddress.EPMFRq_Type;
-import my.com.integration.phis.ptj.deliveryaddress.EPMFRs_Type;
-import my.com.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeProxy;
-import my.com.integration.phis.ptj.deliveryaddress.RqHeader_Type;
-import my.com.integration.phis.ptj.deliveryaddress.RqUID_Type;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
@@ -61,6 +54,13 @@ import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
 import my.ep.web.integration.phis.MaterialColor;
 import my.ep.web.integration.phis.MaterialMeasurement;
+import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type;
+import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type;
+import my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type;
+import my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type;
+import my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeProxy;
+import my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type;
+import my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 public class PhisIntegration {
