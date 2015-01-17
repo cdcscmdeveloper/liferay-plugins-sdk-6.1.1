@@ -19,8 +19,12 @@ import my.ep.web.integration.eperunding.EquityOwner;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.gfmas.BankAccountInformation;
+import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.gfmas.MasterDataVendor;
+import my.ep.web.integration.gfmas.ProgramActivity;
+import my.ep.web.integration.gfmas.Project;
 import my.ep.web.integration.gfmas.SSTInformation;
+import my.ep.web.integration.gfmas.VotFund;
 import my.ep.web.integration.phis.ItemType;
 import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
@@ -934,6 +938,231 @@ public class FileUtility {
 			}
 		}
 	}
+	// PHIS PM Modules
+	public void votFundFileOutPutStream(List<VotFund> content, String filePath) {
+		String SERVICE_CODE = "PHS-090";
+
+		String fileName = createFileNamePhis(SERVICE_CODE);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				for (VotFund votFund : content) {
+					line = new StringBuffer();
+					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
+					line.append(formatStringField(
+							votFund.getCode() + votFund.getPtjCode(), 5, "L"));
+					line.append(formatStringField(votFund.getDescription(),
+							255, "L"));
+					line.append(formatStringField(votFund.getStatus(), 1, "L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+				}
+
+				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+
+			}
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+
+	public void votFundDanaFileOutPutStream(List<VotFund> content,
+			String filePath) {
+		String SERVICE_CODE = "PHS-100";
+
+		String fileName = createFileNamePhis(SERVICE_CODE);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				for (VotFund votFund : content) {
+					line = new StringBuffer();
+					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
+					line.append(formatStringField(votFund.getCode(), 4, "L"));
+					line.append(formatStringField(votFund.getDescription(),
+							255, "L"));
+					line.append(formatStringField(votFund.getStatus(), 1, "L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+				}
+
+				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+
+			}
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+
+	public void programActivityFileOutPutStream(List<ProgramActivity> content,
+			String filePath) {
+		String SERVICE_CODE = "PHS-110";
+
+		String fileName = createFileNamePhis(SERVICE_CODE);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				for (ProgramActivity prgActivity : content) {
+					line = new StringBuffer();
+					line.append(formatIntegerField(prgActivity.getYear(), 4,
+							"R"));
+					line.append(formatStringField(prgActivity.getVotCode()
+							+ prgActivity.getCode(), 9, "L"));
+					line.append(formatStringField(prgActivity.getDescription(),
+							255, "L"));
+					line.append(formatStringField(prgActivity.getStatus(), 1,
+							"L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+				}
+
+				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+
+			}
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+
+	public void projectFileOutPutStream(List<Project> content, String filePath) {
+		String SERVICE_CODE = "PHS-120";
+
+		String fileName = createFileNamePhis(SERVICE_CODE);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				for (Project project : content) {
+					line = new StringBuffer();
+					line.append(formatIntegerField(project.getYear(), 4, "R"));
+					line.append(formatStringField(project.getVotCode()+project.getCode()+project.getSetiaCode()+project.getSubSetiaCode(), 16, "L"));
+					line.append(formatStringField(project.getDescription(),
+							255, "L"));
+					line.append(formatStringField(project.getStatus(), 1, "L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+				}
+
+				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+
+			}
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+
+	public void glAccountFileOutPutStream(List<GlAccount> content,
+			String filePath) {
+		String SERVICE_CODE = "PHS-140";
+
+		String fileName = createFileNamePhis(SERVICE_CODE);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				for (GlAccount glAccount : content) {
+					line = new StringBuffer();
+					line.append(formatIntegerField(glAccount.getYear(), 4, "R"));
+					line.append(formatStringField(glAccount.getCode(), 8, "L"));
+					line.append(formatStringField(glAccount.getPtjCode(), 2,
+							"L"));
+					line.append(formatStringField(glAccount.getDescription(),
+							255, "L"));
+					line.append(formatStringField(glAccount.getStatus(), 1, "L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+				}
+
+				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,
+						IntegrationConstants.ENCRYPTED_FILE_PATH,  fileName, SERVICE_CODE);
+
+			}
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	//End of PHIS PM
 	
 	public String formatString(String input) {
 
