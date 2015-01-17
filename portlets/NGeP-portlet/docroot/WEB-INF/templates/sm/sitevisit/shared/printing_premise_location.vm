@@ -3,10 +3,12 @@
 	<tr>
 		<td width="40%" class="txtBold">Ownership</td>
 		<td  width="40%" class="txtBold">Private, Purchasing Price (RM)</td>
+		<td>$!preLocPurchasePrice</td>
 	</tr>
 	<tr>
-		<td width="40%" class="txtBold"><br /></td>
+		<td width="40%">$!ownerShipType</td>
 		<td class="txtBold" width="40%">Rent, Monthly Rate (RM)</td>
+		<td>$!preLocRentalRate</td>
 	</tr>
 	
 	<tr>
