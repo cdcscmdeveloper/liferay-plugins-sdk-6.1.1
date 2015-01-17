@@ -129,11 +129,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SiteVisitResDTO resDTO = new SiteVisitResDTO();
 		getManagedBean().setSmSvFacilityMap(new HashMap<String, SmFacility>());
 		
+		Map<String, SmFacility> facilityMap = new HashMap<String,SmFacility>();
+		
 		for(SmSvAddress smSvAddress:getManagedBean().getSmSvTask().getSmSvAddresses()){
 			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
 			resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
 			
 			if(resDTO.getSmFacility()!=null && resDTO.getSmFacilityType()!=null){
+				facilityMap.put(resDTO.getSmFacilityType(), resDTO.getSmFacility());
+				
 				if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)){
 					workshopAddress.add(smSvAddress);
 					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_WORKSHOP)==null){
@@ -181,6 +185,25 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 		}
+		
+		//added by Andrew : to set default to those without premise location
+		for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
+			if(svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
+					svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING) || 
+					svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
+				
+				if(getManagedBean().getSmSvFacilityMap().get(svTemplate.getKey()) == null){
+					if(facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) != null){
+						getManagedBean().getSmSvFacilityMap().put(svTemplate.getKey(), facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
+					}else{
+						if(facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) != null){
+							getManagedBean().getSmSvFacilityMap().put(svTemplate.getKey(), facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
+						}
+					}
+				}
+			}
+		}
+		
 		getManagedBean().setSmSvAddressMap(new HashMap<String, List<SmSvAddress>>());
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_TRANSPORTATION, transportAddress);
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_BUMIPUTERA, bumiAddress);
@@ -1762,8 +1785,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
 			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
-			log.info("smFacility address==========" + smFacility.getSmAddress().getAddress1());
-			log.info("smFacility ID==========" + smFacility.getFacilityId());
 			String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
 			String preLocOwnerShip = ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 
