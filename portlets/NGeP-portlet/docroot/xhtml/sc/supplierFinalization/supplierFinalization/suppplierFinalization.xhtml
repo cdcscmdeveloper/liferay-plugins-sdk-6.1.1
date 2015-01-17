@@ -240,7 +240,9 @@
 								<td>
 									<p:inputTextarea cols="40"
 										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> 
+										rendered="#{remarkVar.remarkId eq null}" >
+										<p:ajax partialSubmit="true" process="@this" update="@this"/>
+									</p:inputTextarea> 
 									<h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
