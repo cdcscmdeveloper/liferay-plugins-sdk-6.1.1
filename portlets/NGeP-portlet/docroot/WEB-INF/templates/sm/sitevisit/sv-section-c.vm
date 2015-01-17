@@ -13,7 +13,7 @@
     #elseif($templateCode == "L" || $templateCode == "B")
     	#parse("/sm/sitevisit/shared/commLicenseInsurance.vm")
     	<br /><br />
-    	#include("/sm/sitevisit/shared/premiseLocation.vm")
+    	#parse("/sm/sitevisit/shared/premiseLocation.vm")
     	<br /><br />
 		#parse("/sm/sitevisit/shared/equipmentMaintenanceBeating.vm")
 		<br /><br />
