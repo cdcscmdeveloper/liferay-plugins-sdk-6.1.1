@@ -740,6 +740,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		IUserSO userSO = null;
 		List<String> sourceList = new ArrayList<String>();
 		try {
+			if(getFacesScopes().getUserSessionBean().getUserId()==null) {
+				return sourceList;
+			}
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
