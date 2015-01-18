@@ -23,6 +23,8 @@ public class CircularManagedBean extends BaseManagedBean {
 	private String searchCircularNo;
 	private String searchCircularName;
 	private String searchPhysicalCircularNo;
+	private String searchCircularDocType;
+	private String searchStatus;
 	
 	public String getSearchCircularNo() {
 		return searchCircularNo;
@@ -41,6 +43,18 @@ public class CircularManagedBean extends BaseManagedBean {
 	}
 	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
 		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
+	}
+	public String getSearchCircularDocType() {
+		return searchCircularDocType;
+	}
+	public void setSearchCircularDocType(String searchCircularDocType) {
+		this.searchCircularDocType = searchCircularDocType;
+	}
+	public String getSearchStatus() {
+		return searchStatus;
+	}
+	public void setSearchStatus(String searchStatus) {
+		this.searchStatus = searchStatus;
 	}
 	
 	
