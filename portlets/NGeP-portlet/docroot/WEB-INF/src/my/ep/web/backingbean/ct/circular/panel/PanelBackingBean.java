@@ -349,8 +349,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		   if(getManagedBean().isChkCancelPage()) {
 			   getManagedBean().setChkCancelPage(false);
 			   return "cancelCircularBase.xhtml?faces-redirect=true";
-		   }
-		   else {
+		   } else if(getManagedBean().isFromCircularNotice()) {
+			   return "../portal/circularListing.xhtml?faces-redirect=true";
+		   } else {
 			   return "search.xhtml?faces-redirect=true";
 		   }
 	   }
