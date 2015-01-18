@@ -746,25 +746,43 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	private void addComplianceScoringAction(TplSpecQuestion tplSpecQuestion) {
 		
 		if (tplSpecQuestion.getAnswerTypeCode() != null && tplSpecQuestion.getScoreTypeCode() != null &&
-				ParameterConst.ANSWER_TYPE_DROPDOWN.equals(tplSpecQuestion.getAnswerTypeCode().getParameterCode()) &&
 				ParameterConst.SCORE_TYPE_AUTO.equals(tplSpecQuestion.getScoreTypeCode().getParameterCode())) {
 			
-			List<TplSpecScoring> specScorings = tplSpecQuestion.getTplSpecScorings();
+			String answerType = tplSpecQuestion.getAnswerTypeCode().getParameterCode();
 			
-			if (specScorings == null || specScorings.size() == 0) {
-				specScorings = new ArrayList<TplSpecScoring>();
+			if (ParameterConst.ANSWER_TYPE_DROPDOWN.equals(answerType)) {
+				List<TplSpecScoring> specScorings = tplSpecQuestion.getTplSpecScorings();
 				
-				TplSpecScoring specScoring = new TplSpecScoring();
-				specScoring.setTplSpecQuestion(tplSpecQuestion);
-				specScoring.setCompliance(true);
-				specScorings.add(specScoring);
+				if (specScorings == null || specScorings.size() == 0) {
+					specScorings = new ArrayList<TplSpecScoring>();
+					
+					TplSpecScoring specScoring = new TplSpecScoring();
+					specScoring.setTplSpecQuestion(tplSpecQuestion);
+					specScoring.setCompliance(true);
+					specScorings.add(specScoring);
+					
+					specScoring = new TplSpecScoring();
+					specScoring.setTplSpecQuestion(tplSpecQuestion);
+					specScoring.setCompliance(false);
+					specScorings.add(specScoring);
+					
+					tplSpecQuestion.setTplSpecScorings(specScorings);
+				}
 				
-				specScoring = new TplSpecScoring();
-				specScoring.setTplSpecQuestion(tplSpecQuestion);
-				specScoring.setCompliance(false);
-				specScorings.add(specScoring);
+			} else if (ParameterConst.ANSWER_TYPE_NUMERIC.equals(answerType) && 
+					ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecQuestion.getTplSpecMaster().getSpecTypeCode().getParameterCode())) {
 				
-				tplSpecQuestion.setTplSpecScorings(specScorings);
+				List<TplSpecScoring> specScorings = tplSpecQuestion.getTplSpecScorings();
+				
+				if (specScorings == null || specScorings.size() == 0) {
+					specScorings = new ArrayList<TplSpecScoring>();
+					
+					TplSpecScoring specScoring = new TplSpecScoring();
+					specScoring.setTplSpecQuestion(tplSpecQuestion);
+					specScorings.add(specScoring);
+					
+					tplSpecQuestion.setTplSpecScorings(specScorings);
+				}
 			}
 		}
 		

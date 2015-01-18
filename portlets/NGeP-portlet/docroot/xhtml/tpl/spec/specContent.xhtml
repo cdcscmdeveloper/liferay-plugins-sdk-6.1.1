@@ -200,7 +200,7 @@
 			</c:if>
 		</p:dialog>
 
-		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" width="630" height="490" rendered="#{isScoringReq}" closable="false">
+		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" width="800" height="490" rendered="#{isScoringReq}" closable="false">
 			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<h:panelGroup id="scoreSettPnl">
