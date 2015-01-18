@@ -87,6 +87,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean buttonHideActive;
 	private boolean selectionOfZone;
 	private boolean chkCancelPage;
+	private boolean fromCircularNotice;
 	private int index = -1;
 	
 	private TreeNode[] selectedGeneralTreeNodes;
@@ -545,6 +546,14 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.circularVerPagingDataModel = circularVerPagingDataModel;
 	}
 	
+	public boolean isFromCircularNotice() {
+		return fromCircularNotice;
+	}
+
+	public void setFromCircularNotice(boolean fromCircularNotice) {
+		this.fromCircularNotice = fromCircularNotice;
+	}
+
 	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
