@@ -938,8 +938,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	   if(getManagedBean().isChkCancelPage()) {
 		   getManagedBean().setChkCancelPage(false);
 		   return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
-	   }
-	   else {
+	   } else if(getManagedBean().isFromCircularNotice()) {
+		   return "../portal/circularListing.xhtml?faces-redirect=true";
+	   } else {
 		   return "search.xhtml?faces-redirect=true";
 	   }
 	}
