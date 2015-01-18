@@ -93,6 +93,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean itemCeilingQuantity;
 	private boolean confirmMeeting;
 	private boolean selectAll;
+	private boolean showPrintButton;
+	private boolean bpmActionFlag = true;
 	private String pbQcApproved;
 	
 	private List<CtItemPrice> itemPriceList;
@@ -842,6 +844,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setDisablefinalAmendDetails(boolean disablefinalAmendDetails) {
 		this.disablefinalAmendDetails = disablefinalAmendDetails;
+	}
+
+	public boolean isShowPrintButton() {
+		return showPrintButton;
+	}
+
+	public void setShowPrintButton(boolean showPrintButton) {
+		this.showPrintButton = showPrintButton;
+	}
+
+	public boolean isBpmActionFlag() {
+		return bpmActionFlag;
+	}
+
+	public void setBpmActionFlag(boolean bpmActionFlag) {
+		this.bpmActionFlag = bpmActionFlag;
 	}
 	
 }
