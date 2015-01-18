@@ -82,6 +82,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean chkItemZone;
 	private boolean chkItemPrice;
 	private boolean chkCancelPage;
+	private boolean fromCircularNotice;
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -395,6 +396,13 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.circularVerPagingDataModel = circularVerPagingDataModel;
 	}
 	
+	public boolean isFromCircularNotice() {
+		return fromCircularNotice;
+	}
+	public void setFromCircularNotice(boolean fromCircularNotice) {
+		this.fromCircularNotice = fromCircularNotice;
+	}
+
 	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
