@@ -5,27 +5,36 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"	
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<table style="width: 100%;">
-		<tr>
-			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
-					immediate="true" 
-					onstart="blockUIWidget.show();" 
-					oncomplete="blockUIWidget.hide();"
-					rendered="#{amendmentBackingBean.managedBean.taskId==null}"
-					action="#{amendmentBackingBean.backAction}" /></td>
-			<td class="ppRightBtn"><ui:repeat var="outcome"
-					value="#{amendmentBackingBean.managedBean.action}">
-					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+	<p:panel id="btnPnl">
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true" 
 						onstart="blockUIWidget.show();" 
-					  	oncomplete="blockUIWidget.hide();"
+						oncomplete="blockUIWidget.hide();"
+						rendered="#{amendmentBackingBean.managedBean.taskId==null}"
+						action="#{amendmentBackingBean.backAction}" /></td>
+				<td class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
+						onclick="showCompleteBtn();"
 						styleClass="ui-button" 
-						action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
-						rendered="#{!amendmentBackingBean.managedBean.memberSignOff}" />				
-				</ui:repeat> <ac:gpkiPopup
-					textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
-					postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}" /></td>
-
-		</tr>
-	</table>
+						action="#{amendmentBackingBean.downloadAll()}"
+						rendered="#{amendmentBackingBean.managedBean.showPrintButton}" />			
+					<ui:repeat var="outcome"
+						value="#{amendmentBackingBean.managedBean.action}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
+							onstart="blockUIWidget.show();" 
+						  	oncomplete="blockUIWidget.hide();"
+							styleClass="ui-button" 
+							disabled="#{!amendmentBackingBean.managedBean.bpmActionFlag}"
+							action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
+							rendered="#{!amendmentBackingBean.managedBean.memberSignOff}" />				
+					</ui:repeat> <ac:gpkiPopup
+						textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
+						postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:remoteCommand update="btnPnl" actionListener="#{amendmentBackingBean.showCompleteButton}" name="showCompleteBtn" />
 </ui:composition>
