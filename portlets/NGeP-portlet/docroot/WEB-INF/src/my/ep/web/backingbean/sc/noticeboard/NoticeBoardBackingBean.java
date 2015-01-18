@@ -373,7 +373,6 @@ public class NoticeBoardBackingBean extends
 				|| selectedObject instanceof PmDistrict
 				|| selectedObject instanceof PmCity) {
 			root = consturctTreeNode(node);
-
 			if (this.getManagedBean().getTempLocationRootNode() == null) {
 				this.getManagedBean().setTempLocationRootNode(
 						this.getManagedBean().getLocationRootNode());
@@ -442,9 +441,12 @@ public class NoticeBoardBackingBean extends
 		TreeNode root = new EpDefaultTreeNode("Root", null);
 		TreeNode immediateParent = selectedNode.getParent();
 		selectedNode.setExpanded(true);
+		// selectedNode.setSelected(true);
 		if (immediateParent.equals(root)) {
-			new EpDefaultTreeNode(selectedNode.getType(),
-					selectedNode.getData(), root).setExpanded(true);
+			TreeNode tempNode = new EpDefaultTreeNode(selectedNode.getType(),
+					selectedNode.getData(), root);
+			tempNode.setExpanded(true);
+			tempNode.setSelected(true);
 		} else {
 			TreeNode parent = immediateParent.getParent();
 			if (parent.getParent() == null) {
@@ -452,8 +454,12 @@ public class NoticeBoardBackingBean extends
 						immediateParent.getType(), immediateParent.getData(),
 						root);
 				nextParent.setExpanded(true);
-				new EpDefaultTreeNode(selectedNode.getType(),
-						selectedNode.getData(), nextParent).setExpanded(true);
+				nextParent.setSelected(true);
+				TreeNode nexTempNode = new EpDefaultTreeNode(
+						selectedNode.getType(), selectedNode.getData(),
+						nextParent);
+				nexTempNode.setExpanded(true);
+				nexTempNode.setSelected(true);
 
 			} else {
 
@@ -464,8 +470,12 @@ public class NoticeBoardBackingBean extends
 						immediateParent.getType(), immediateParent.getData(),
 						nextParent);
 				subParent.setExpanded(true);
-				new DefaultTreeNode(selectedNode.getType(),
-						selectedNode.getData(), subParent).setExpanded(true);
+				subParent.setSelected(true);
+				TreeNode subTempNode = new DefaultTreeNode(
+						selectedNode.getType(), selectedNode.getData(),
+						subParent);
+				subTempNode.setExpanded(true);
+				subTempNode.setSelected(true);
 
 			}
 		}
@@ -962,6 +972,10 @@ public class NoticeBoardBackingBean extends
 					while (treeNode != null
 							&& treeNode.getChildren().size() > 0) {
 						treeNode = treeNode.getChildren().iterator().next();
+						if(treeNode.isSelected()){
+							treeNode= treeNode;
+							break;
+						}
 					}
 
 					if (treeNode != null) {
@@ -996,7 +1010,10 @@ public class NoticeBoardBackingBean extends
 
 					}
 				}
-				searchBean.getSortColumns().add(new  SearchOrderBean("to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')",false)); 
+				searchBean
+						.getSortColumns()
+						.add(new SearchOrderBean(
+								"to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')", false));
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtSearchBean(searchBean);
 
@@ -1363,27 +1380,29 @@ public class NoticeBoardBackingBean extends
 
 	public NoticeBoardBackingBean() {
 		reset();
-		
+
 	}
-	
+
 	public String getClosingDays(String clsDate) throws Exception {
 		if (log.isDebugEnabled()) {
 			log.debug("getClosingDays");
 		}
 		String closingDays = "0 Days";
-		
-		Date closingDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss.S", clsDate);
-		
+
+		Date closingDate = DateUtils.convertStringToDate(
+				"yyyy-MM-dd HH:mm:ss.S", clsDate);
+
 		if (new Date(System.currentTimeMillis()).after(closingDate)) {
-			//closed
-		}else{
+			// closed
+		} else {
 			Date today = new Date();
 			long days = DateUtils.getDaysDifference(today, closingDate);
 			DecimalFormat df = new DecimalFormat("#00");
 			closingDays = df.format(days) + " Days";
-			
+
 			if (days == 0) {
-				Long durationInMills = DateUtils.getDateDiffInMillis(DateUtils.getCurrentDate(),closingDate);
+				Long durationInMills = DateUtils.getDateDiffInMillis(
+						DateUtils.getCurrentDate(), closingDate);
 				if (durationInMills > 0) {
 					closingDays = DateUtils.durationFormatter(durationInMills);
 				}
@@ -1505,7 +1524,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
 	}
-	
+
 	public boolean isShowHours(String clsDate) throws Exception {
 		if (!StringUtils.isEmpty(clsDate)) {
 			Date closingDate = DateUtils.convertStringToDate(
