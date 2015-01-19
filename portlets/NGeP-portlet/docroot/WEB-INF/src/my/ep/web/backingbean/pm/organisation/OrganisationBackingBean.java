@@ -988,7 +988,7 @@ public class OrganisationBackingBean extends
 					addrExist = true;
 				}			
 				
-				/*if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
+				if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(address.getPmContacts().get(0));
 				} 
 				else{
@@ -998,7 +998,7 @@ public class OrganisationBackingBean extends
 				contact.setPmAddressType(address);
 				contactLst.add(contact);
 				address.setPmContacts(contactLst);
-				}*/
+				}
 			
 		}
 		if (!addrExist) {
@@ -1024,17 +1024,17 @@ public class OrganisationBackingBean extends
 			getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
 			PmAddress officeAddress = getManagedBean().getOfficeAddress();
 			addressTypet.setPmAddress(officeAddress);
-			/*List<PmContact> contactLst = new ArrayList<PmContact>();
+			List<PmContact> contactLst = new ArrayList<PmContact>();
 			getManagedBean().setDeliveryContactPerson(new PmContact());
 			PmContact contact = getManagedBean().getDeliveryContactPerson();
 			contact.setPmAddressType(addressTypet);
 			contactLst.add(contact);
-			addressTypet.setPmContacts(contactLst);*/
+			addressTypet.setPmContacts(contactLst);
 			addressTypet.setPmOrgProfile(this.getManagedBean().getOrgProfile());
 			//orgProfile.setPmAddressTypes(orgAddressTypes);
 			
 			//orgAddressTypes.add(addressTypet);
-			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);
+			//this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);
 		}		
 		 if(address.getPmAddress().isBrandNew()){
 			 address.getPmAddress().setModified(true);
