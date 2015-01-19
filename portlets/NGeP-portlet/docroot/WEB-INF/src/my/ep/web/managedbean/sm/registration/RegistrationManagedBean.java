@@ -88,6 +88,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private SmAssociationBody[] selectedAssociationBodies;
 	
+	private Long myCountryId;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -477,6 +479,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSelectedAssociationBodies(SmAssociationBody[] selectedAssociationBodies) {
 		this.selectedAssociationBodies = selectedAssociationBodies;
+	}
+
+	public Long getMyCountryId() {
+		return myCountryId;
+	}
+
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
 	}
 
 }
