@@ -292,7 +292,7 @@ public class ApprovalBackingBean extends
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName) ||
-				"Assign Reevaluate Committee"
+				SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
 
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
@@ -506,7 +506,7 @@ public class ApprovalBackingBean extends
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(taskName)
-					|| "Assign Reevaluate Committee"
+					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -532,7 +532,7 @@ public class ApprovalBackingBean extends
 							committeStatus
 									.setStatusId(QTStatusConst.CMT_PENDING_REVISION);
 						} else {
-							if ("Assign Reevaluate Committee"
+							if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 									.equalsIgnoreCase(taskName)) {
 								committeStatus
 								.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);

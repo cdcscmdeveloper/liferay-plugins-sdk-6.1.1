@@ -434,7 +434,7 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.ASSIGN_FC_MEMBER, "appoint-fc-committee");
 		
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-				+ "Assign Reevaluate Committee",
+				+ SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE,
 				SourcingConstants.QT_APPROVAL_PAGE);
 
 		this.getManagedBean().setBpmMap(temp);
