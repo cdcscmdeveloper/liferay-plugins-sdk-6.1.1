@@ -209,6 +209,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal withInVarieance;
 	private String checkListType;
 	private List<TplSpecZoneDtl> evaluationStageZonesSummary;
+	private boolean complianceOnly;
   
 	/**
 	 * @return the today
@@ -2044,6 +2045,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationStageZonesSummary(
 			List<TplSpecZoneDtl> evaluationStageZonesSummary) {
 		this.evaluationStageZonesSummary = evaluationStageZonesSummary;
+	}
+
+	/**
+	 * @return the complianceOnly
+	 */
+	public boolean isComplianceOnly() {
+		return complianceOnly;
+	}
+
+	/**
+	 * @param complianceOnly the complianceOnly to set
+	 */
+	public void setComplianceOnly(boolean complianceOnly) {
+		this.complianceOnly = complianceOnly;
 	}
 
 	
