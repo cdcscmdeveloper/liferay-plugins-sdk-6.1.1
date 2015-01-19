@@ -633,7 +633,7 @@
 								  </c:if>
 								  
 								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDistrictView}">
-									<p:outputLabel id="smDistrict" value="#{lbl['lbl.rpt.district']}" style="margin-top:5px;width:160px;" />									
+									<p:outputLabel  value="#{lbl['lbl.rpt.district']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="smDistrict" value="#{reportBackingBean.smDistrict}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.districtLst}"></f:selectItems>																				
