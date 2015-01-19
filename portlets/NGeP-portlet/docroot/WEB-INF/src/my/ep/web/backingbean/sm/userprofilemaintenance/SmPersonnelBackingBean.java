@@ -1120,7 +1120,7 @@ public class SmPersonnelBackingBean extends
 						"confirmDialog.show()");
 			}
 		}
-		
+
 		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 		getManagedBean().setDisableAddNewUser(
 				validatePersonLimit(getManagedBean().getSmSupplier()));
@@ -1722,9 +1722,9 @@ public class SmPersonnelBackingBean extends
 			throw new EpException(MessageConst.ERROR_721112);
 		}
 	}
-	
-	public void onChangeAccntStatus(AjaxBehaviorEvent e){
-		
+
+	public void onChangeAccntStatus(AjaxBehaviorEvent e) {
+
 	}
 
 	private SmAppl getCurrActiveSmAppl(SmSupplier smSupplier) {
@@ -1794,6 +1794,10 @@ public class SmPersonnelBackingBean extends
 					|| getManagedBean().isUpgradeMofDraftAppl()) {
 				getManagedBean().setDisabledActivateAndDeactivate(true);
 			}
+		}
+		if (getManagedBean().isDisableAddNewUser()
+				&& getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			getManagedBean().setDisabledActivateAndDeactivate(true);
 		}
 	}
 
