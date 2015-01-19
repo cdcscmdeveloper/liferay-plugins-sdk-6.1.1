@@ -2697,7 +2697,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setSmDistrict(null);		
 		this.setSmReportType(null);		
 		this.setSmCompanyName(null);		
-		this.setSmRegistrationType(null);		
+		this.setSmRegistrationType(null);	
+		this.setSmCreatedFromYear(null);
+		this.setSmCreatedToYear(null);
 		this.setFlContractOrder(null);
 		this.setFlContractRequest(null);
 		this.setFlPurchaseOrderNo(null);
