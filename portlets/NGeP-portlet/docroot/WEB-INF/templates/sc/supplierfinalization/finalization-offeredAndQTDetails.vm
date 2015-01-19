@@ -1,60 +1,102 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.descTable{
+		 	border-collapse: collapse;
+		}
+		
+		.descTable td, .descTable tr, .descTable th {
+		 	border: 1px solid black;
+		}
+		
+		body{
+			
+		}
+		
+		.txtBold{
+			font-weight : bold;
+		}
+		
+		.sTable{
+			width : 80%;
+		}
+		
+		.sColTwentyPerc{
+			width : 20%;
+		}
+		
+		.infoTable{
+			border-collapse: collapse;
+			width: 100%;
+		}
+		.infoTable td {
 			border: 1px solid black;
 		}
-		 th{
-			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		.tdInfoTable {
+			border: 1px solid black;
+			font-family: Verdana;
+			font-size: 12px;
+			font-weight: normal;
+			font-style: inherit;
+		}
+	</style>
 </head>
 <body>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td align="center">
 			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS TAKLIMAT TENDER/SEBUT HARGA UNTUK PERTIMBANGAN </span>
-            <br/>
+            <br/><br/>
         </td>
     </tr>
     <tr>
 		<td align="center">
 			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $commType</span>
-			<br/>
+			<br/><br/>
         </td>
     </tr>
     <tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $ptj/$jabatan </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $ptj <br/> $jabatan </span>
 			<br/>
         </td>
     </tr>
-    <tr>
-		<td>
-			<p>1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA</p>
-			<ol type="1"> 1.1 Perkara <br/> $title</ol>
-			
-			<ol>1.2 Amaun Tender / Sebut Harga <br/> $estimatedAmount </ol>
-			<ol>1.3 Peruntukan
-				<table class="table2" width='100%'>
+</table>
+<br/>
+<table width='100%'>
+	<tr>
+		<td align="left">
+			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA </span>
+			<br/>
+		</td>
+	</tr>
+</table>
+<table class="infoTable">
+	<tr>
+		<td class="tdInfoTable">1.1</td>
+		<td class="tdInfoTable">Perkara</td>
+		<td class="tdInfoTable">$title</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.2</td>
+		<td class="tdInfoTable">Amaun Tender / Sebut Harga</td>
+		<td class="tdInfoTable">$estimatedAmount</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.3</td>
+		<td class="tdInfoTable">Peruntukan</td>
+		<td class="tdInfoTable">
+			#if ($isPlanned == "true")
+				<table class="infoTable">
 					<tr>
 						<td>Budget Amount</td>
 					</tr>
@@ -63,78 +105,136 @@
 						<td>$budgetDtls.budgetAmt</td>
 					</tr>
 					#end
-				</table> 
-			</ol>
-			<ol>1.4	Tempoh Perjanjian  (Bermasa) / Tempoh Penyiapan (for One-Off) </ol>
-			<ol>1.5	Jabatan Pengguna <br/> $ptj </ol>
-			<ol>1.6	Pengiklanan <br/>
-				Tarikh Iklan : $publishDate <br/>
-				Tarikh Tutup Iklan :  $closingDate
-			</ol>
-			<ol>1.7 Bilangan Pembekal Menyertai Taklimat Bagi <br/>
-				<table class="table2" width='100%'>
-					<tr>
-						<td>Zone Name</td>
-						<td>Total Suppliers</td>
-						<td>Description</td>
-					</tr>
-					#foreach( $briefingList in $list )
-					<tr>
-						<td></td>
-					</tr>
-					#end
 				</table>
-			</ol>
-			<ol>1.8	Jumlah Pembekal Yang Layak Menyertai Tender/Sebut Harga: $totalQualifiedSuppliers <br/>
-			</ol>
-			<ol>1.9	Jumlah Pembekal Yang Menghantar Cadangan: $totalSuppliers<br/>
-			</ol>
-			<ol>1.10 Maklumat Penyerahan Sampel <br/>
+			#end
+			#if ($isPlanned == "false")
+			#end
+		</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.4</td>
+		<td class="tdInfoTable">Tempoh Perjanjian  (Bermasa) / Tempoh Penyiapan (for One-Off)</td>
+		<td class="tdInfoTable">$fulfilmentType</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.5</td>
+		<td class="tdInfoTable">Jabatan Pengguna</td>
+		<td class="tdInfoTable">$ptj</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.6</td>
+		<td class="tdInfoTable">Pengiklanan</td>
+		<td class="tdInfoTable">
+			Tarikh Iklan : $publishDate <br/>
+			Tarikh Tutup Iklan : $closingDate
+		</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.7</td>
+		<td class="tdInfoTable">Bilangan Pembekal Menyertai Taklimat Bagi</td>
+		<td class="tdInfoTable">
+			#if ($isZone == "true")
+				#foreach( $zoneList in $zoneBeans )
+					Zone Name : $zoneList.tplSpecZoneDtl.zoneName
+				#end
+					Total Suppliers : $supplierSize
+			#end
+			#if ($isZone == "false")
+			#end
+		</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.8</td>
+		<td class="tdInfoTable">Jumlah Pembekal Yang Layak Menyertai Tender/Sebut Harga</td>
+		<td class="tdInfoTable">$totalQualifiedSuppliers</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.9</td>
+		<td class="tdInfoTable">Jumlah Pembekal Yang Menghantar Cadangan</td>
+		<td class="tdInfoTable">$totalSuppliers</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.10</td>
+		<td class="tdInfoTable">Maklumat Penyerahan Sampel</td>
+		<td class="tdInfoTable">
+			#if ($isSample == "true")
 				Tarikh Pembukaan: <br/>
 				Bil. Penghantaran Sample: <br/>
 				Bil. Sample Yang Ditolak: <br/>
 				Bil. Sample Yang Diterima: <br/>
-			</ol>
-			<ol>1.11 Tempoh Sah Laku Tender/Sebut Harga: $validityDays</ol>
-			<ol>1.12 Jenis Tender/ Sebut Harga: $openType </ol>
-			<ol>1.13 Bumiputra Status: 
-				#if ($openType == "Open")
-					#if ($openFor == "B")
-						Yes
-					#else
-						No 
-					#end
+			#end
+			#if ($isSample == "false")
+			#end			
+		</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.11</td>
+		<td class="tdInfoTable">Tempoh Sah Laku Tender/Sebut Harga</td>
+		<td class="tdInfoTable">$validityDays</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.12</td>
+		<td class="tdInfoTable">Jenis Tender/ Sebut Harga</td>
+		<td class="tdInfoTable">$openType</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.13</td>
+		<td class="tdInfoTable">Bumiputra Status</td>
+		<td class="tdInfoTable">
+			#if ($openType == "Open")
+				#if ($openFor == "B")
+					Yes
+				#else
+					No 
 				#end
-			</ol>
-			<ol>1.14 PEMBEKAL SEMASA <br/>
-				$sp Nama Pembekal : $contract.smSupplier.companyName <br/>
+			#end
+		</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.14</td>
+		<td class="tdInfoTable">PEMBEKAL SEMASA</td>
+		<td class="tdInfoTable">
+			#if ($existingContract == "")
+				$existingContract
+			#else
+				Nama Pembekal : $contract.smSupplier.companyName <br/>
 				Nilai Perjanjian Asal : $contract.quotationTender.estimatedAmount <br/>
 				Harga Tawaran : <br/>
 				Tempoh Perjanjian : $contract.quotationTender.contractDuration <br/>
-			</ol>
-			<p>2. Ahli-Ahli Jawatankuasa Akhir</p>
-			<table class="table2" width='100%'>
-				<tr>
-					<td>Nama</td>
-					<td>Jawatan</td>
-					<td>Gred</td>
-					<td>Kad Pengenalan No.</td>
-					<td>Jabatan </td>
-					<td>Peranan</td>
-				</tr>
-				#foreach( $committeeMember in $committeeActivities )
-				<tr>
-					<td>$committeeMember.scCommitteeMember.memberName</td>
-					<td>$committeeMember.scCommitteeMember.designation</td>
-					<td>$committeeMember.scCommitteeMember.grade</td>
-					<td>$committeeMember.scCommitteeMember.icPassport</td>
-					<td></td>
-					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
-				</tr>
-				#end
-			</table>
+			#end
+			
 		</td>
 	</tr>
+</table>
+<br/>
+<table width='100%'>
+	<tr>
+		<td align="left">
+			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			2. Ahli-Ahli Jawatankuasa Akhir </span>
+			<br/>
+		</td>
+	</tr>
+</table>
+<table class="infoTable">
+	<tr>
+		<td class="tdInfoTable">Nama</td>
+		<td class="tdInfoTable">Jawatan</td>
+		<td class="tdInfoTable">Gred</td>
+		<td class="tdInfoTable">Kad Pengenalan No.</td>
+		<td class="tdInfoTable">Jabatan </td>
+		<td class="tdInfoTable">Peranan</td>
+	</tr>
+	#foreach( $committeeMember in $committeeActivities )
+	<tr>
+		<td class="tdInfoTable">$committeeMember.scCommitteeMember.memberName</td>
+		<td class="tdInfoTable">$committeeMember.scCommitteeMember.designation</td>
+		<td class="tdInfoTable">$committeeMember.scCommitteeMember.grade</td>
+		<td class="tdInfoTable">$committeeMember.scCommitteeMember.icPassport</td>
+		<td class="tdInfoTable">$committeeMember.scCommitteeMember.pmOrgProfile.orgName</td>
+		<td class="tdInfoTable">$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
+	</tr>
+	#end
 </table>
 </body>
 </html>
