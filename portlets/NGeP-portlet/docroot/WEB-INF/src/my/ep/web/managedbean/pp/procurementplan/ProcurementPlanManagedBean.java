@@ -45,6 +45,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private String bpmStatusCreator;
 	private Timestamp bpmStatusDate;
 	private Long bpmStatusId;
+	private String invitationYear;
 	
 	private PpPlan selectedPlan;
 	private List<PpExpenditureItem> deleteEpItems;
@@ -69,6 +70,21 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	
 
+
+
+	/**
+	 * @return the invitationYear
+	 */
+	public String getInvitationYear() {
+		return invitationYear;
+	}
+
+	/**
+	 * @param invitationYear the invitationYear to set
+	 */
+	public void setInvitationYear(String invitationYear) {
+		this.invitationYear = invitationYear;
+	}
 
 	/**
 	 * @return the bpmStatusCreator
