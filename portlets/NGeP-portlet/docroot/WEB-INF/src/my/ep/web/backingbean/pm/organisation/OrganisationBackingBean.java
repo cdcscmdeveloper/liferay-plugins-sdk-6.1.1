@@ -515,8 +515,7 @@ public class OrganisationBackingBean extends
 		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
 		PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();		
 		List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
-		if (orgProfile.isBrandNew()) {
-			//checkBpkOrgStatus(parameterResDTO.getPmParameter().getParameterCode());
+		if (orgProfile.isBrandNew()) {			
 			orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
 			orgValidity.setEffDate(new Date());			
 			PmAddressType addressType = this.getManagedBean()
@@ -538,11 +537,6 @@ public class OrganisationBackingBean extends
 			orgProfile.setPmOrgValidity(orgValidity);
 		}	
 		
-		//address
-		log.info("Office Address"+getManagedBean().getOfficeAddress().getAddress1());
-		log.info("Office Contact Person"+getManagedBean().getOfficeContactPerson().getContactName());
-		
-		// end of address
 		if (parameterResDTO.getPmParameter().getParameterCode().equalsIgnoreCase(
 				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
 		|| getManagedBean().getOrgType().equalsIgnoreCase(
@@ -587,7 +581,7 @@ public class OrganisationBackingBean extends
 						.createPTJSupplier(regReqDTO);
 				regResDTO.setSuccessful(true);
 				//Update User Role
-				for(PmUser user:getManagedBean().getSupplierUsers()){
+				/*for(PmUser user:getManagedBean().getSupplierUsers()){
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IUserSO.class);
@@ -603,7 +597,7 @@ public class OrganisationBackingBean extends
 				userReqDTO.setNewRoleList(pmUserRoles);
 				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
 				userResDTO.setSuccessful(true);
-				}
+				}*/
 				//Fee Exemption
 				IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
 						.getInstance().getServiceObject(
