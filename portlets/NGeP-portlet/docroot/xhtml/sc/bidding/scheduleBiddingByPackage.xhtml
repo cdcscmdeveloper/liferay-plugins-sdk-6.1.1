@@ -15,7 +15,7 @@
 					<td><p:outputLabel id="startDateByPackage"
 							value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
-					<td><p:calendar showOn="button" readonlyInput="true"
+					<td><p:calendar showOn="button" readonlyInput="true" required="true"
 							id="scheduleBidPackageStartDate"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
@@ -36,7 +36,7 @@
 							value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
 					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate"
-							readonlyInput="true"
+							readonlyInput="true" required="true"
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"

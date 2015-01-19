@@ -50,6 +50,9 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private boolean selected;
 	private List<Integer>	selectedIndexes;
 	
+	private boolean selectedAllBidContacts;
+	private boolean selectedBidContact;
+	
 	private ScBidSchedule rowSelectedBid;
 	
 	private Date minStartDate;
@@ -264,6 +267,10 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	 * @return the multiSelectContact
 	 */
 	public List<ScBidContactPerson> getMultiSelectContact() {
+		if(multiSelectContact == null){
+			multiSelectContact = new ArrayList<ScBidContactPerson>();
+		}
+		
 		return multiSelectContact;
 	}
 
@@ -352,4 +359,38 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	public void setSelectedIndexes(List<Integer> selectedIndexes) {
 		this.selectedIndexes = selectedIndexes;
 	}
+
+
+	/**
+	 * @return the selectedAllBidContacts
+	 */
+	public boolean isSelectedAllBidContacts() {
+		return selectedAllBidContacts;
+	}
+
+
+	/**
+	 * @param selectedAllBidContacts the selectedAllBidContacts to set
+	 */
+	public void setSelectedAllBidContacts(boolean selectedAllBidContacts) {
+		this.selectedAllBidContacts = selectedAllBidContacts;
+	}
+
+
+	/**
+	 * @return the selectedBidContact
+	 */
+	public boolean isSelectedBidContact() {
+		return selectedBidContact;
+	}
+
+
+	/**
+	 * @param selectedBidContact the selectedBidContact to set
+	 */
+	public void setSelectedBidContact(boolean selectedBidContact) {
+		this.selectedBidContact = selectedBidContact;
+	}
+	
+	
 }
