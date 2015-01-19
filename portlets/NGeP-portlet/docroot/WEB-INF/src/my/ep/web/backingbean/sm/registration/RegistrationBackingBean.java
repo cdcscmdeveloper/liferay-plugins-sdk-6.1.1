@@ -129,6 +129,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}*/
 		
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
 		if (pmUser != null && pmUser.getUserId() != null) {
 			log.info("***userId: " + pmUser.getUserId());
 
