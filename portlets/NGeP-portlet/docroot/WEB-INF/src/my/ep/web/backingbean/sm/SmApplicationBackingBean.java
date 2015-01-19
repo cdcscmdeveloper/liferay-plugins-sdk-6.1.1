@@ -1387,7 +1387,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void setTabValue(int currentTab, int outputTab) {
-		System.out.println("**** SET TAB CALLED *******");
+		log.info("**** SET TAB CALLED *******");
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
 
@@ -5613,10 +5613,13 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					StringUtils
-							.replace(event.getFile().getFileName(), " ", "-");
-					doc.getSmApplDocFiles().get(0)
-							.setFileName(event.getFile().getFileName());
+					// StringUtils.replace(event.getFile().getFileName(), " ",
+					// "-");
+					doc.getSmApplDocFiles()
+							.get(0)
+							.setFileName(
+									StringUtils.replace(event.getFile()
+											.getFileName(), " ", "-"));
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
 							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
 							+ "/SD/";
@@ -5636,9 +5639,12 @@ public class SmApplicationBackingBean extends
 					.contains(getManagedBean().getSupportDoc())) {
 				log.info("******* Contains selected file ****");
 				SmApplSupportDoc doc = getManagedBean().getSupportDoc();
-				StringUtils.replace(event.getFile().getFileName(), " ", "-");
-				doc.getSmApplDocFiles().get(0)
-						.setFileName(event.getFile().getFileName());
+				// StringUtils.replace(event.getFile().getFileName(), " ", "-");
+				doc.getSmApplDocFiles()
+						.get(0)
+						.setFileName(
+								StringUtils.replace(event.getFile()
+										.getFileName(), " ", "-"));
 				getManagedBean()
 						.getSmAppl()
 						.getSmApplSupportDocs()
@@ -5663,13 +5669,16 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void handleCancelMofRegFileAttachment(FileUploadEvent event) {
-		log.info("********handleFileAttachment********");
 		if (event.getFile() != null) {
 			log.info("***** File attached *******"
 					+ event.getFile().getFileName());
 			StringUtils.replace(event.getFile().getFileName(), " ", "-");
 			getManagedBean().getCancellationAttachment().setFileName(
-					event.getFile().getFileName());
+					StringUtils
+							.replace(event.getFile().getFileName(), " ", "-"));
+			log.info("***** File attached name to DB *******"
+					+ getManagedBean().getCancellationAttachment()
+							.getFileName());
 
 			String filePath = Calendar.getInstance().get(Calendar.YEAR)
 					+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
@@ -6963,7 +6972,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public boolean checkIfPendingCategoryStatus(Integer recordStatusFlg) {
-		System.out.println("****** checkIfPendingCategoryStatus *********"
+		log.info("****** checkIfPendingCategoryStatus *********"
 				+ recordStatusFlg);
 		if (recordStatusFlg != null && recordStatusFlg.compareTo(8) == 0) {
 			return true;
