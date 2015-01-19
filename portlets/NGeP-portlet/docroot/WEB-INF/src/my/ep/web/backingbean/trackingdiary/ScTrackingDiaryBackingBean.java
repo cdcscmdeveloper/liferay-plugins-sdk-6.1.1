@@ -46,9 +46,8 @@ public class ScTrackingDiaryBackingBean extends
 //			throw new EpException(MessageConst.ERROR_716006);
 //		}
 		System.out.println("ScTrackingDiaryBackingBean search");
-		getManagedBean().getScDocumentDataModel().reloadData();
-
-		}
+		getManagedBean().getScRNDocumentDataModel().reloadData();
+	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
