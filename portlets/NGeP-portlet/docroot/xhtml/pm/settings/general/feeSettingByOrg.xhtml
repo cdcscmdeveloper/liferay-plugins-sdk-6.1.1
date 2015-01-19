@@ -11,9 +11,9 @@
 	<div style="text-align: right; min-height: 40px;">
 
 
-		<p:commandButton value="#{lbl['lbl.cm.save']}"
-			action="#{ruleCatalogueBackingBean.saveFeeExemptionForOrgItem}"
-			update="@form"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.save']}" partialSubmit="true" process=":form:settingTabId:feeSettingId"
+			update=":form:settingTabId:feeSettingId"
+			action="#{ruleCatalogueBackingBean.saveFeeExemptionForOrgItem}"></p:commandButton>
 
 
 
@@ -119,8 +119,8 @@
 	<br />
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" 
-			partialSubmit="true" process=":form:settingTabId"
-			update=":form:settingTabId"
+			partialSubmit="true" process=":form:settingTabId:feeSettingId"
+			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.addMoreOrgAndItemFee()}"></p:commandButton>
 
 	</div>
