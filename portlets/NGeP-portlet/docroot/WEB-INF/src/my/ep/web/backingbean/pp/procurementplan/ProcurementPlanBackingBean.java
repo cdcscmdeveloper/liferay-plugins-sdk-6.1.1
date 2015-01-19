@@ -196,14 +196,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setBackAllow(false);
 		generatePageModeForProcess(res.getTaskName());
+		
+		this.getManagedBean().setBpmStatusCreator(res.getCreator());
+		this.getManagedBean().setBpmStatusDate(new Timestamp(res.getCreateDate().getTimeInMillis()));
+		this.getManagedBean().setBpmStatusId(res.getDocStatus().longValue());
+
 		System.out.println("res.getCreator()" + res.getCreator());
 		System.out.println("res.getCreateDateString()" + res.getCreateDate().getTime());
 		System.out.println("res.getDocStatus()" + res.getDocStatus());
 		
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
-		this.loadPlanDetails(planObj.getPlanId().longValue(), false, 
-				res.getCreator(), new Timestamp(res.getCreateDate().getTimeInMillis()),  res.getDocStatus().longValue());
+		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
@@ -236,7 +240,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
-			loadPlanDetails(id, true, null, null, null);
+			loadPlanDetails(id, true);
 			loadDefaultButtons();
 		}
 //		else{
@@ -421,11 +425,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setApproverModel(null);
 		this.getManagedBean().setVerifierModel(null);
 		this.getManagedBean().setSelectedRejectReasons(null);
+		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedRemarks(null);
 		this.getManagedBean().setCurrentActiveOrg(null);
 		this.getManagedBean().setFilterOrgCondition(null);
-	
-	
+		this.getManagedBean().setPpWorkflowStatus(null);
+		this.getManagedBean().setBpmStatusCreator(null);
+		this.getManagedBean().setBpmStatusDate(null);
+		this.getManagedBean().setBpmStatusId(null);
 	}
 	
 
@@ -437,7 +444,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param statusDate
 	 * @param statusId
 	 */
-	private void loadPlanDetails(Long id, boolean fromList, String statusLoginId, Timestamp statusDate, Long statusId){
+	private void loadPlanDetails(Long id, boolean fromList){
 		log.info("loadPlanDetails - Start");
 		PpPlan ppPlan = null;
 		ProcurementPlanReqDTO reqDTO = null;
@@ -472,25 +479,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							log.info("load BPM status");
 							//get BPM status instead
 							PmStatus bpmStatus = new PmStatus();
-							bpmStatus.setStatusId(statusId);
-							ppPlan.setStatus(bpmStatus);
-							ppPlan.getCurrentStatus().setCreatedDate(statusDate);
-							ppPlan.getCurrentStatus().setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(statusLoginId, null).getUserName());
+							bpmStatus.setStatusId(this.getManagedBean().getBpmStatusId());
+							PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
+							ppWorkflowStatus.setPmStatus(bpmStatus);
+							ppWorkflowStatus.setCreatedDate(this.getManagedBean().getBpmStatusDate());
+							ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(this.getManagedBean().getBpmStatusCreator(), null).getUserName());
+							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
 						}else{
 							// PP20150108-0012
 							log.info("load default status");
 							PmStatus bpmStatus = new PmStatus();
+							PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
 							if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 								bpmStatus.setStatusId(ProcurementPlanConst.PPP_PENDING_SUBMISSION);
-								ppPlan.setStatus(bpmStatus);
+								ppWorkflowStatus.setPmStatus(bpmStatus);
 							}else{
 								bpmStatus.setStatusId(ProcurementPlanConst.PPE_PENDING_SUBMISSION);
-								ppPlan.setStatus(bpmStatus);
+								ppWorkflowStatus.setPmStatus(bpmStatus);
 							}
-							ppPlan.getCurrentStatus().setCreatedDate(ppPlan.getCreatedDate());
-							ppPlan.getCurrentStatus().setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(null, ppPlan.getCreatedBy()).getUserName());
+							ppWorkflowStatus.setCreatedDate(ppPlan.getCreatedDate());
+							ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(null, ppPlan.getCreatedBy()).getUserName());
+							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
 						}
 						
+					}else{
+						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());
 					}
 					
 					this.getManagedBean().setSelectedPlan(ppPlan);
@@ -742,6 +755,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadPpItemRemarks - Start");
 		this.getManagedBean().setConfirmRemark(false);
 		this.getManagedBean().setSelectedItemRemarkDesc("");
+		this.getManagedBean().setSelectedItemRemarks(null);
 		boolean newRemark = false;
 		
 		
@@ -786,7 +800,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	
 		this.getManagedBean().setSelectedItemRemarks(ppItem.getPpRemarks());
-		this.getManagedBean().setSelectedItemRemarkDesc(ppItem.getPpRemarks().get(0).getRemark());
+		this.getManagedBean().setSelectedItemRemarkDesc(ppItem.getPpRemarks().isEmpty() ? "": ppItem.getPpRemarks().get(0).getRemark());
 		
 		
 		log.info("loadPpItemRemarks - End");
@@ -800,6 +814,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadEpItemRemarks - Start");
 		this.getManagedBean().setConfirmRemark(false);
 		this.getManagedBean().setSelectedItemRemarkDesc("");
+		this.getManagedBean().setSelectedItemRemarks(null);
 		boolean newRemark = false;
 		
 		
@@ -846,7 +861,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	
 		this.getManagedBean().setSelectedItemRemarks(epItem.getPpRemarks());
-		this.getManagedBean().setSelectedItemRemarkDesc(epItem.getPpRemarks().get(0).getRemark());
+		this.getManagedBean().setSelectedItemRemarkDesc(epItem.getPpRemarks().isEmpty() ? "": epItem.getPpRemarks().get(0).getRemark());
 		
 		
 		log.info("loadEpItemRemarks - End");
@@ -866,6 +881,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			}
 		}
+		this.getManagedBean().setSelectedItemRemarks(null);
 	}
 	
 	public void retrieveJustification(PpExpenditureItem epItem){
@@ -886,11 +902,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void loadJustification(PpExpenditureItem epItem) {
 		log.info("loadJustification - Start");
 		this.getManagedBean().setConfirmJustification(false);
+		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
 		
 		
 		if(epItem.getJustifications()==null){
+			System.out.println("it is null");
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
 		/* enable for phase 2
@@ -903,11 +921,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		// if reason is empty
 		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {//|| !compareUserName(epItem.getJustifications().get(0).getUserId())
+			System.out.println("it is empty or 0");
 			newRemark = true;
 		}
 		
 		// filter by current view mode	
 		if(!this.getManagedBean().isModeEditable()){
+			System.out.println("it is not editable so false");
 			newRemark = false;
 		}
 	
@@ -929,8 +949,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
-		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().get(0).getRemark());
-		System.out.println("epItem.getJustifications()" + epItem.getJustifications().get(0).getRemark());
+		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
+		System.out.println("epItem.getJustifications()" + (epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark()));
 		
 		
 		log.info("loadJustification - End");
@@ -950,7 +970,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			}
 		}
-		
+		this.getManagedBean().setSelectedJustifications(null);
+	}
+	
+	/**
+	 * Handle justification confirm button for dialog
+	 */
+	public void confirmJustificationCloseDialog(){
+		log.info("confirmJustificationCloseDialog");
+		this.getManagedBean().setConfirmJustification(true);
 	}
 	
 	public void retrieveEpRejectReasons(PpExpenditureItem epItem){
@@ -981,6 +1009,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadRejectReasons - Start");
 		this.getManagedBean().setConfirmReason(false);
 		this.getManagedBean().setSelectedReasonDesc("");
+		this.getManagedBean().setSelectedRejectReasons(null);
 		boolean newReason = false;
 		if(ppRejectReasons==null){
 			ppRejectReasons = new ArrayList<PpRejectReason>();
@@ -1013,8 +1042,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	
 		this.getManagedBean().setSelectedRejectReasons(ppRejectReasons);
-		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.get(0).getReasonDesc());
-		
+		this.getManagedBean().setSelectedReasonDesc(ppRejectReasons.isEmpty() ? "": ppRejectReasons.get(0).getReasonDesc());
 		
 		log.info("loadRejectReasons - End");
 		
@@ -1033,6 +1061,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			}
 		}
+		this.getManagedBean().setSelectedRejectReasons(null);
 	}
 	
 	/**
@@ -1051,13 +1080,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setConfirmRemark(true);
 	}
 	
-	/**
-	 * Handle justification confirm button for dialog
-	 */
-	public void confirmJustificationCloseDialog(){
-		log.info("confirmJustificationCloseDialog");
-		this.getManagedBean().setConfirmJustification(true);
-	}
+
 	
 	/**
 	 * retrieve user portrait, return default portrait if liferay return null
@@ -1455,18 +1478,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanYearOptions(boolean brandNew) {
 		log.info("getPlanYearOptions");
 		//TODO comment this for testing 
-		if(brandNew){			
-			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
-				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
-				return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-			}else{
-				SelectItem[] items = new SelectItem[1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				return items;
-			}
-		}else{
-			
+//		if(brandNew){			
+//			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
+//				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
+//			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
+//				return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
+//			}else{
+//				SelectItem[] items = new SelectItem[1];
+//				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+//				return items;
+//			}
+//		}else{
+//			
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
 			SelectItem[] items = new SelectItem[3];
@@ -1474,7 +1497,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
 			items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
 			return items;
-		}
+//		}
 	}
 	
 	/**
@@ -1485,45 +1508,45 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanVotTypeOptions(boolean brandNew) {
 		log.info("getPlanVotTypeOptions");
 		//TODO comment this for testing
-		if(brandNew){
-			List<Long> votTypeIds = null;
-			List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
-			
-			if(this.getManagedBean().getSelectedPlan().getPlanType().getParameterId()!=null 
-					&& this.getManagedBean().getSelectedPlan().getPlanYear()!=null){
-				votTypeIds = PpCommonUtil.existingPlannedVotTypes(
-						this.getCurrentActiveOrg().getOrgProfileId(), 
-						this.getManagedBean().getSelectedPlan().getPlanYear());
-
-				SearchBean<PmParameterDesc> searchBean = null;
-				if(votTypeIds!=null && !votTypeIds.isEmpty()){
-					log.info("filter VOT: ");
-					searchBean = new SearchBean<PmParameterDesc>();
-					//not included parameterId
-					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
-					bean.setSearchField("pmParameter.parameterId");
-					bean.setSearchValue(votTypeIds);
-					searchBean.getDataFilterBeans().add(bean);
-				}
-				parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, searchBean);
-			}
-		
-				
-			SelectItem[] items = null;
-			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale()));
-			int i = 1;
-			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterId(), parameterDesc.getCodeName());
-			}
-			return items; 
-		}else{
+//		if(brandNew){
+//			List<Long> votTypeIds = null;
+//			List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
+//			
+//			if(this.getManagedBean().getSelectedPlan().getPlanType().getParameterId()!=null 
+//					&& this.getManagedBean().getSelectedPlan().getPlanYear()!=null){
+//				votTypeIds = PpCommonUtil.existingPlannedVotTypes(
+//						this.getCurrentActiveOrg().getOrgProfileId(), 
+//						this.getManagedBean().getSelectedPlan().getPlanYear());
+//
+//				SearchBean<PmParameterDesc> searchBean = null;
+//				if(votTypeIds!=null && !votTypeIds.isEmpty()){
+//					log.info("filter VOT: ");
+//					searchBean = new SearchBean<PmParameterDesc>();
+//					//not included parameterId
+//					SearchFilterBean bean = new SearchFilterBean();
+//					bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+//					bean.setSearchField("pmParameter.parameterId");
+//					bean.setSearchValue(votTypeIds);
+//					searchBean.getDataFilterBeans().add(bean);
+//				}
+//				parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, searchBean);
+//			}
+//		
+//				
+//			SelectItem[] items = null;
+//			items = new SelectItem[parameterDescs.size() + 1];
+//			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+//					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//					getFacesScopes().getUserLocale()));
+//			int i = 1;
+//			for (PmParameterDesc parameterDesc : parameterDescs) {
+//				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+//						.getParameterId(), parameterDesc.getCodeName());
+//			}
+//			return items; 
+//		}else{
 			return getVotTypeOptions();
-		}
+//		}
 		
 		
 	}
@@ -1647,6 +1670,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}else if(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
 						|| ProcurementPlanConst.PPE_APPROVED.equals(statusId)){
 				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
+			}
+		}else{
+			//pending submission or new
+			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(plan.getPlanType().getParameterCode())){
+				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
+			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(plan.getPlanType().getParameterCode())){
+				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
 			}
 		}
 		return roleCode;
@@ -1870,16 +1900,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("getAllJustifications");
 		List <PpRemark> justifications = null;
 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+			System.out.println("EP");
+			if(ppPlan.getStatus()==null){
+				System.out.println("ppPlan.getStatus()==null");
+			}else{
+				System.out.println("ppPlan.getStatus().getStatusId()=" +ppPlan.getStatus().getStatusId());
+			}
+			
+			System.out.println(ppPlan.getStatus());
 			if(ppPlan.getStatus()==null
+					|| ppPlan.getStatus().getStatusId()==null
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
 							|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
-							|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId()))){
+//							|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
+							)){
+				System.out.println(1);
 				justifications = new ArrayList<PpRemark>();
 				int itemIndex = 0;
 				for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
+					System.out.println(2);
 					if(ppExpenditureItem.getJustifications()!=null && !ppExpenditureItem.getJustifications().isEmpty()){
+						System.out.println(3);
 						PpRemark justification = ppExpenditureItem.getJustifications().get(0);
 						if(justification!=null && !StringUtils.isBlank(justification.getRemark())){ //&& itemRemark.isBrandNew() add this for phase 2
+							System.out.println(4);
 							justification.setItemSeq(itemIndex);
 							justification.setDocId(ppExpenditureItem.getExpenditureItemId());
 							justification.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
@@ -2145,7 +2189,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			validationPlanSubmit(action, ppPlan);
 			if(ppPlan.isBrandNew()){
 				//TODO: comment this for testing purpose only
-				validationPlanAvailability(ppPlan);  
+//				validationPlanAvailability(ppPlan);  
 			}
 			
 			//Get All Values
@@ -2187,6 +2231,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully"); 
+				if(this.getManagedBean().getTaskId()!=null){
+					loadPlanDetails(resDTO.getPlan().getPlanId(), false);
+				}else{
+					loadPlanDetails(resDTO.getPlan().getPlanId(), true);
+				}
+				
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;

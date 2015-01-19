@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pp.procurementplan;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -8,11 +9,13 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
+import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -38,6 +41,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean modeEditable;
 	private boolean isSearch;
 	private boolean backAllow;
+	private PpWorkflowStatus ppWorkflowStatus;
+	private String bpmStatusCreator;
+	private Timestamp bpmStatusDate;
+	private Long bpmStatusId;
 	
 	private PpPlan selectedPlan;
 	private List<PpExpenditureItem> deleteEpItems;
@@ -61,8 +68,63 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private BigDecimal ppTotalEst;
 	
 	
-	
-	
+
+
+	/**
+	 * @return the bpmStatusCreator
+	 */
+	public String getBpmStatusCreator() {
+		return bpmStatusCreator;
+	}
+
+	/**
+	 * @param bpmStatusCreator the bpmStatusCreator to set
+	 */
+	public void setBpmStatusCreator(String bpmStatusCreator) {
+		this.bpmStatusCreator = bpmStatusCreator;
+	}
+
+	/**
+	 * @return the bpmStatusDate
+	 */
+	public Timestamp getBpmStatusDate() {
+		return bpmStatusDate;
+	}
+
+	/**
+	 * @param bpmStatusDate the bpmStatusDate to set
+	 */
+	public void setBpmStatusDate(Timestamp bpmStatusDate) {
+		this.bpmStatusDate = bpmStatusDate;
+	}
+
+	/**
+	 * @return the bpmStatusId
+	 */
+	public Long getBpmStatusId() {
+		return bpmStatusId;
+	}
+
+	/**
+	 * @param bpmStatusId the bpmStatusId to set
+	 */
+	public void setBpmStatusId(Long bpmStatusId) {
+		this.bpmStatusId = bpmStatusId;
+	}
+
+	/**
+	 * @return the ppWorkflowStatus
+	 */
+	public PpWorkflowStatus getPpWorkflowStatus() {
+		return ppWorkflowStatus;
+	}
+
+	/**
+	 * @param ppWorkflowStatus the ppWorkflowStatus to set
+	 */
+	public void setPpWorkflowStatus(PpWorkflowStatus ppWorkflowStatus) {
+		this.ppWorkflowStatus = ppWorkflowStatus;
+	}
 
 	/**
 	 * @return the backAllow
