@@ -75,8 +75,8 @@
 				</p:column> -->
 			 <p:column>
 				<f:facet name="header">#{lbl['lbl.sm.bankDtls.cheSign.name']}</f:facet>					
-				<p:dataList var="cheqSign" value="#{bankInfo.smSupplierBank.smChequeSignatories}"  type="ordered" varStatus="loop">				
-					     <p:outputLabel value="#{loop.index + 1}" style="float : left;padding: 0px;" />. #{cheqSign.smPersonnel.name}  					
+				<p:dataList var="cheqSign" value="#{bankInfo.smSupplierBank.smChequeSignatories}" type="ordered">				
+					     <p:outputLabel value="#{index + 1}" style="float : left;padding: 0px;" />. #{cheqSign.smPersonnel.name}  					
 				</p:dataList>			
 			
 			</p:column>
