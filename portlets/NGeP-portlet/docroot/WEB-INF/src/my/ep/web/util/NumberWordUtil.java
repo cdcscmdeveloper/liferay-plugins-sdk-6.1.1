@@ -51,13 +51,13 @@ public class NumberWordUtil {
 		}
 
 		if (dollars == 0 && cent != 0) {
-			return convert(cent) + " SENS";
+			return convert(cent) + " SEN";
 		} else if (cent == 0 && dollars != 0) {
 			return convert(dollars);
 		} else if(cent == 0 && dollars == 0){
 			return "";
 		} else{
-			return convert(dollars) + " DAN " + convert(cent) + " SENS";
+			return convert(dollars) + " DAN " + convert(cent) + " SEN";
 		}
 
 	}
