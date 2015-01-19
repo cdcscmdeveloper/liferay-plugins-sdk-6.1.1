@@ -98,16 +98,15 @@ public class ScheduleBiddingBackingBean extends
 
 		if (getManagedBean().getSelectedIndexes() != null
 				&& getManagedBean().getSelectedIndexes().size() > 0) {
-			
-			Date startDate = getManagedBean().getRowSelectedBid().getStartDate();
+
+			Date startDate = getManagedBean().getRowSelectedBid()
+					.getStartDate();
 			Date endDate = getManagedBean().getRowSelectedBid().getEndDate();
-			String duration = getManagedBean().getRowSelectedBid().getDuration();
+			String duration = getManagedBean().getRowSelectedBid()
+					.getDuration();
 			for (Integer index : getManagedBean().getSelectedIndexes()) {
-				getManagedBean()
-						.getBidScheduleList()
-						.get(index)
-						.setStartDate(
-								startDate);
+				getManagedBean().getBidScheduleList().get(index)
+						.setStartDate(startDate);
 				getManagedBean().getBidScheduleList().get(index)
 						.setEndDate(endDate);
 				getManagedBean().getBidScheduleList().get(index)
@@ -135,6 +134,9 @@ public class ScheduleBiddingBackingBean extends
 			this.getManagedBean().setScBidContactPersonList(contactList);
 			log.info(" **** ScBidContactPersonList Size *** "
 					+ getManagedBean().getScBidContactPersonList().size());
+			getManagedBean().getMultiSelectContact().clear();
+			getManagedBean().setSelectedBidContact(false);
+			getManagedBean().setSelectedAllBidContacts(false);
 		}
 
 		catch (Exception e) {
@@ -145,21 +147,27 @@ public class ScheduleBiddingBackingBean extends
 
 	public void deleteContactDetails() {
 		try {
+
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
-			log.info(" **** contact list *** " + contactList.size());
 			List<ScBidContactPerson> multiSelectContacts = getManagedBean()
 					.getMultiSelectContact();
-			log.info(" **** multiSelectContacts *** "
-					+ multiSelectContacts.size());
-
-			if (contactList.size() == multiSelectContacts.size()) {
-				contactList.clear();
-			} else {
-				for (ScBidContactPerson contact : multiSelectContacts) {
-					contactList.remove(contact);
+			if (contactList != null && multiSelectContacts != null) {
+				log.info(" **** contact list *** " + contactList.size());
+				log.info(" **** multiSelectContacts *** "
+						+ multiSelectContacts.size());
+				if (contactList.size() == multiSelectContacts.size()) {
+					contactList.clear();
+				} else {
+					for (ScBidContactPerson contact : multiSelectContacts) {
+						contactList.remove(contact);
+					}
 				}
 			}
+			getManagedBean().getMultiSelectContact().clear();
+			getManagedBean().setSelectedBidContact(false);
+			getManagedBean().setSelectedAllBidContacts(false);
+
 		} catch (Exception e) {
 
 		}
@@ -232,7 +240,6 @@ public class ScheduleBiddingBackingBean extends
 
 	public void bidStartDateSelectListener(ScBidSchedule scBidSchedule) {
 		Date date = scBidSchedule.getStartDate();
-		System.out.println("*****start date on each event*****" + date);
 		getManagedBean().setMinEndDate(date);
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
@@ -267,7 +274,21 @@ public class ScheduleBiddingBackingBean extends
 		getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 	}
 
-	public void multiSelectEndDateSelectListener(ScBidSchedule bidSchedule) {
+	public void multiSelectStartDateListener(ScBidSchedule scBidSchedule) {
+		Date date = scBidSchedule.getStartDate();
+		getManagedBean().setMinEndDate(date);
+		Calendar maxEndDate = Calendar.getInstance();
+		maxEndDate.setTime(date);
+		maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
+		getManagedBean().setMaxEndDate(maxEndDate.getTime());
+		if (getManagedBean().getRowSelectedBid().getEndDate() != null) {
+			getManagedBean().getRowSelectedBid().setEndDate(null);
+
+			getManagedBean().setRowSelectedBid(scBidSchedule);
+		}
+	}
+
+	public void multiSelectEndDateListener(ScBidSchedule bidSchedule) {
 		ScBidSchedule scBidSchedule = bidSchedule;
 		if (scBidSchedule.getStartDate() == null) {
 			scBidSchedule.setEndDate(null);
@@ -386,6 +407,41 @@ public class ScheduleBiddingBackingBean extends
 
 		}
 
+	}
+
+	public void selectAllBidContacts() {
+		if (getManagedBean().isSelectedAllBidContacts()) {
+			getManagedBean().setSelectedBidContact(true);
+			List<ScBidContactPerson> multiSelectContact = getManagedBean()
+					.getMultiSelectContact();
+			multiSelectContact.clear();
+			for (ScBidContactPerson contactPerson : getManagedBean()
+					.getScBidContactPersonList()) {
+				multiSelectContact.add(contactPerson);
+			}
+			getManagedBean().setMultiSelectContact(multiSelectContact);
+		} else {
+			getManagedBean().getMultiSelectContact().clear();
+		}
+	}
+
+	public void selectBidContact(int index) {
+
+		List<ScBidContactPerson> multiSelectContact = getManagedBean()
+				.getMultiSelectContact();
+
+		if (getManagedBean().isSelectedBidContact()) {
+			multiSelectContact.add(getManagedBean().getScBidContactPersonList()
+					.get(index));
+		} else {
+			if (multiSelectContact != null
+					&& multiSelectContact.contains(getManagedBean()
+							.getScBidContactPersonList().get(index))) {
+				multiSelectContact.remove(getManagedBean()
+						.getScBidContactPersonList().get(index));
+			}
+		}
+		getManagedBean().setMultiSelectContact(multiSelectContact);
 	}
 
 }
