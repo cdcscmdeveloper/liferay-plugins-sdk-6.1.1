@@ -10,10 +10,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -33,7 +36,7 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	private Date searchCreatedFromDuration;
 	private Date searchCreatedToDuration;
 
-	private IPagingDataModel<CmUnspsc> cmDocumentDataModel 	= new SearchPagingDataModel();
+	private IPagingDataModel<CmSupplierItem> cmDocumentDataModel 	= new SearchPagingDataModel();
 	private SearchFilterBean titleFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 
 //	public SearchFilterBean getTitleFilterBean() {
@@ -44,7 +47,7 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 //		this.titleFilterBean = titleFilterBean;
 //	}
 
-	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
+	private class SearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -54,42 +57,38 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<CmUnspsc> pageChangeListener(
-				ISearchBean<CmUnspsc> searchBean) {
+		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
+				ISearchBean<CmSupplierItem> searchBean) {
 
-			ICodificationSO unspscSO = null;
+			ICatalogueSO catSO = null;
 			try {
 				System.out.println("pageChangeListener");
-				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
-						.getServiceObject("cm", ICodificationSO.class);
+				catSO = (ICatalogueSO) BusinessDelegate.getInstance()
+						.getServiceObject("cm", ICatalogueSO.class);
 
-				titleFilterBean.setSearchField("unspscTitle");
-				titleFilterBean.setSearchValue("aa");
-				searchBean.getDataFilterBeans().add(titleFilterBean);
-
-
-				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setSearchBean(searchBean);
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+				reqDTO.setItemCode(getSearchItemCodeValue());
+//				reqDTO.setItemCode(getSearchSupplierValue());
 				System.out.println("*********b4***********");
-				CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
+				CatalogueResDTO resDTO = catSO.searchSupplierItemByStatus(reqDTO);
 
-				System.out.println("*********after***********" + resDTO.getResultBean().getTotalRecord());
-				return resDTO.getResultBean();
+				System.out.println("*********after***********" + resDTO.getSuppItemResultBean().getTotalRecord());
+				return resDTO.getSuppItemResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				unspscSO = null;
+				catSO = null;
 			}
 			return new SearchResultBean();
 		}
 
 	}
 
-	public IPagingDataModel<CmUnspsc> getCmDocumentDataModel() {
+	public IPagingDataModel<CmSupplierItem> getCmDocumentDataModel() {
 		return cmDocumentDataModel;
 	}
 
-	public void setCmDocumentDataModel(IPagingDataModel<CmUnspsc> cmDocumentDataModel) {
+	public void setCmDocumentDataModel(IPagingDataModel<CmSupplierItem> cmDocumentDataModel) {
 		this.cmDocumentDataModel = cmDocumentDataModel;
 	}
 
