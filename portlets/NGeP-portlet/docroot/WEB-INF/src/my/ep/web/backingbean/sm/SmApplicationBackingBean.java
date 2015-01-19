@@ -3658,18 +3658,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedShareHolders(String personType) {
-		// if (!personType
-		// .equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
-		// for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
-		// if (shr.isEquityOwner()) {
-		// throw new EpException(MessageConst.ERROR_722536);
-		// }
-		// if(shr.getEpRole().equalsIgnoreCase("MOF_SUPPLIER_ADMIN")
-		// ||shr.getEpRole().equalsIgnoreCase("BASIC_SUPPLIER_ADMIN")){
-		// throw new EpException(MessageConst.ERROR_722553);
-		// }
-		// }
-		// }
 		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
 			if (shr.getEpRole() != null
 					&& (shr.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
