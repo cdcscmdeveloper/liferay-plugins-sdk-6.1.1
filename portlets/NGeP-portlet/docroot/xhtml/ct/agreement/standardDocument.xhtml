@@ -84,7 +84,7 @@
 		</h:panelGrid>
 		  <div class="ppRightBtn"> 
               <p:commandButton id="addContentBtn" value="#{lbl['lbl.btn.add']}" process="@form"  
-                  icon="ui-icon-add" update=":form:contentTable" action="#{agreementBackingBean.addAgreementContents}">
+                   update=":form:contentTable" action="#{agreementBackingBean.addAgreementContents}">
              		<p:tooltip for="addContentBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agreement.content']}" escape="false" />
 					</p:tooltip>
@@ -115,9 +115,9 @@
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:contentTable" 
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:contentTable" 
 				process="@form"  actionListener="#{agreementBackingBean.delAgreementContents()}" onclick="dlgDocumentDel.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDocumentDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 	</p:panel>

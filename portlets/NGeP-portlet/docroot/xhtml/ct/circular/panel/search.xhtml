@@ -38,8 +38,8 @@
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
 				<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}" action="#{panelBackingBean.searchCircularVer}"
-				    onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();"  icon="ui-icon-search" update="circularVerDt" />
-				<p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{panelBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
+				    onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();"   update="circularVerDt" />
+				<p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{panelBackingBean.searchReset}" update=":form" />
 			</div>		
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">

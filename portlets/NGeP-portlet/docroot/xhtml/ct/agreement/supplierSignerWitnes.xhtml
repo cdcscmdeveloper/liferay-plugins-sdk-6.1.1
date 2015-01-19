@@ -50,7 +50,7 @@
                 </p:dataTable>
 		    </h:panelGrid>
 		    <div class="ppRightBtn"> 
-		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" 
 		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" 
 		            onstart="blockWidget.show();" oncomplete="blockWidget.hide();" update=":form:agSupplierSigner">
 		    	   <p:tooltip for="addSupplierSignerBtn">
@@ -58,7 +58,7 @@
 				   </p:tooltip>
 		        </p:commandButton>
 		        <p:commandButton id="delSupplierSignerBtn" process="@form" 
-		           value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" onsuccess="dlgAgSupplierDel.show()">
+		           value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgAgSupplierDel.show()">
 		    	   <p:tooltip for="delSupplierSignerBtn">
 				       <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.signer']}" escape="false" />
 			        </p:tooltip>
@@ -74,9 +74,9 @@
                        <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                    </h:panelGrid>
                    <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form" 
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form" 
 				            update=":form:agSupplierSigner"  actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
-			            <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSupplierDel.hide();" type="button" />
 		           </div>
                 </p:dialog>  
       
@@ -112,7 +112,7 @@
                    </p:dataTable>
               </h:panelGrid>
               <div class="ppRightBtn"> 
-		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
+		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" 
 		                 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  process="@form" 
 		                 action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable">
 		    	        <p:tooltip for="addSupplierWitnessBtn">
@@ -120,7 +120,7 @@
 				        </p:tooltip>
 		            </p:commandButton>
 		            <p:commandButton id="delSupplierWitnessBtn" value="#{lbl['lbl.btn.delete']}" 
-		                 icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()">
+		                  process="@form" onsuccess="dlgSupplierWitnesDel.show()">
 		         	     <p:tooltip for="delSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.witness']}" escape="false" />
 				         </p:tooltip>
@@ -135,9 +135,9 @@
                          <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                     </h:panelGrid>
                     <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:supplierWitnesTable" 
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:supplierWitnesTable" 
 				             process="@form"   actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
-			            <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSupplierWitnesDel.hide();" type="button" />
 		            </div>
                </p:dialog>  
        </p:panel>

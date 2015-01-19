@@ -42,10 +42,10 @@
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   partialSubmit="true" 
-				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" icon="ui-icon-add"
+				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" 
 				oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
-			   icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
+			    onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
 		</div>
 		
 		<p:dialog id="delCtPersonDlg" resizable="false"
@@ -56,9 +56,9 @@
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=contactPersonDt])"
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=contactPersonDt])"
 		       process="@all" actionListener="#{panelBackingBean.deleteContactPerson()}" onclick="delCtPersonDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="delCtPersonDlg.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCtPersonDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  		
 		
@@ -80,10 +80,10 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
 				actionListener="#{panelBackingBean.addCancelCircularListener()}" 
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" icon="ui-icon-delete"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" 
 				action="#{panelBackingBean.deleteCancelCircular()}" update="cancelCircularDt" 
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
 		</div>	
@@ -105,10 +105,10 @@
 			</p:dataTable>
 			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
-				<p:commandButton value="#{lbl['lbl.btn.select']}" icon="ui-icon-accept" process="cancelCircularDlg" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}"  process="cancelCircularDlg" 
 					action="#{panelBackingBean.addCancelledCircular}"
 					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"  type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
 		</p:panel>
 	</p:dialog>
