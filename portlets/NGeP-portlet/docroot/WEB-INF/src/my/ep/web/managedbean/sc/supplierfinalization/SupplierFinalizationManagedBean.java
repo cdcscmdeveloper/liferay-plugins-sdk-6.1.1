@@ -113,6 +113,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> shortlistedPackageList;
 	private List<ScQtEvaluationResult> shortlistedItemList;
 	private List<ScQtEvaluationResult> shortlistedSupplierList;
+	private List<ScQtEvaluationResult> shortlistedItemSupplierList;
 	private List<ScQtEvaluationResult> recommendedSupplierList;
 	private List<ScQtEvaluationResult> unRecommendedSupplierList;
 	private List<ScQtRecommend> selectedRecommendList; 
@@ -489,6 +490,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setShortlistedSupplierList(
 			List<ScQtEvaluationResult> shortlistedSupplierList) {
 		this.shortlistedSupplierList = shortlistedSupplierList;
+	}
+
+	/**
+	 * @return the shortlistedItemSupplierList
+	 */
+	public List<ScQtEvaluationResult> getShortlistedItemSupplierList() {
+		return shortlistedItemSupplierList;
+	}
+
+	/**
+	 * @param shortlistedItemSupplierList the shortlistedItemSupplierList to set
+	 */
+	public void setShortlistedItemSupplierList(
+			List<ScQtEvaluationResult> shortlistedItemSupplierList) {
+		this.shortlistedItemSupplierList = shortlistedItemSupplierList;
 	}
 
 	/**
