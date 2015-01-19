@@ -76,7 +76,7 @@
 								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}">
-								<f:validateRegex pattern="^([a-zA-Z0-9]+[\sa-zA-Z0-9]{1,50})?$" />
+								<f:validateRegex pattern="^([\S]+[\s\S]{1,80})?$" />
 							</p:inputText>
 							<p:message id="itUserNameMsg" for="itUserName" display="icon" />
 						</td>
