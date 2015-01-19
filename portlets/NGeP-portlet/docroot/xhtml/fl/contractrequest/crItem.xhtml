@@ -116,7 +116,7 @@
 				<p:graphicImage styleClass="ui-icon-complain" />
 				<p:spacer width="10" />
 				<p:inputTextarea disabled="true"
-					value="Are you sure you want to delete this record?" rows="2"
+					value="#{lbl['lbl.msg.confirm.delete']}" rows="2"
 					cols="48" styleClass="ui-inputtextarea" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
@@ -212,10 +212,10 @@
 					update="itemDataTable" partialSubmit="true" />
 			</div>
 		</h:panelGroup>
-		<p:confirmDialog message="Are you sure you want to delete this record?"
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
 			severity="alert" widgetVar="delItemDlg" closable="true"
 			appendToBody="true" header="Delete Confirmation">
-			<h:panelGrid columns="2">
+			<div class="ppRightBtn">
 				<p:commandButton value="Yes" 
 					partialSubmit="true"
 					action="#{contractRequestBackingBean.removeItemRow}"
@@ -223,10 +223,9 @@
 					oncomplete="delItemDlg.hide();" />
 				<p:commandButton value="No" 
 					onclick="delItemDlg.hide()" type="button" />
-			</h:panelGrid>
+			</div>
 		</p:confirmDialog>		
 	</p:panel>
-
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
 		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
 		modal="true" width="600" resizable="false">
