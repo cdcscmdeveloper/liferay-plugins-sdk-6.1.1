@@ -52,6 +52,7 @@ import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -433,7 +434,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	
 	public void checkValidity(FlFulfilmentRequest flRequest) {
 		Date date = new Date();
-		if(flRequest.getCtContract().isRecordStatus()){
+		if(flRequest.getCtContract().getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE){
 			if(date.compareTo(flRequest.getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) >= 0 ){
 				throw new EpException(MessageConst.ERROR_745064,new String[]{flRequest.getCtContract().getContractNo()});
 			}
