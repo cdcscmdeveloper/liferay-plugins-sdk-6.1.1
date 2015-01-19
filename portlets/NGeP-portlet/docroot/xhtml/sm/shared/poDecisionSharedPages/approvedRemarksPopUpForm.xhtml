@@ -34,7 +34,11 @@
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 					rows="10" value="#{backingBean.managedBean.applnApprovalRemarks}"
 					id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
-					maxlength="1000" /></td>
+					validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+					maxlength="1000">
+					<f:validateLength maximum="1000" />
+				</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
 			<tr>
@@ -43,13 +47,16 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
-				<td style="padding-top: 5px;"><p:inputTextarea cols="90" rows="10"
-						id="rmrksForSplApprTxtArea" maxlength="1000"
+				<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+						rows="10" id="rmrksForSplApprTxtArea" maxlength="1000"
 						value="#{backingBean.managedBean.applnOverLapRemarks}"
 						label="#{lbl['lbl.sm.remarks.overLapping']}"
-						required="#{backingBean.managedBean.valueReqd}" /> <p:message
-						id="rmrksForSplApprTxtAreaMsg" for="rmrksForSplApprTxtArea"
-						showSummary="true" showDetail="false" display="icon" /></td>
+						validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+						required="#{backingBean.managedBean.valueReqd}">
+						<f:validateLength maximum="1000" />
+					</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
+						for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td colspan="2"><p:outputLabel
