@@ -49,7 +49,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
 					>
 					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(pPlanBackingBean.managedBean.selectedPlan.brandNew)}"/>
-					<p:ajax event="change"  update="somVotType"/>
+					<p:ajax event="change" listener="#{pPlanBackingBean.updatePlanYearControl(pPlanBackingBean.managedBean.selectedPlan.planYear)}" 
+						update="@form"/>
 				</p:selectOneMenu>
 				&#160;&#160;   
                 <p:graphicImage id="giPlanYear" value="/css/images/design/tooltips.png" />
