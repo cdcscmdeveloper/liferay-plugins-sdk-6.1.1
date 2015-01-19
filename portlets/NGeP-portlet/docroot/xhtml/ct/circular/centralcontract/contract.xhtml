@@ -52,12 +52,12 @@
 		         </p:dataTable>
 		         <p:spacer height="2" />
 		         <div class="ppRightBtn">
-			           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
+			           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 				           oncomplete="contractDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
 				           actionListener="#{centralContractBackingBean.addCircularContractListener()}"
 				           update="contractDlg"/>
 			              <p:commandButton id="deleteContractBtn" value="#{lbl['lbl.btn.delete']}" process="@this"
-				              icon="ui-icon-delete" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
+				              rendered="#{!centralContractBackingBean.managedBean.viewContract}"
 				              disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}" onsuccess="delCtContractDlg.show()" />
 		           </div>
 
@@ -74,12 +74,11 @@
 			</h:panelGrid>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					icon="ui-icon-accept" update="@([id$=contractListPnl])"
+					 update="@([id$=contractListPnl])"
 					process="@all"
 					actionListener="#{centralContractBackingBean.deleteCircularContract()}"
 					onclick="delCtContractDlg.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					icon="ui-icon-reject" onclick="delCtContractDlg.hide();"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="delCtContractDlg.hide();"
 					type="button" />
 			</div>
 		</p:dialog>
@@ -230,7 +229,7 @@
 					<p:inputText id="contractName" maxlength="1000" 
 						value="#{centralContractBackingBean.managedBean.searchContractName}"/>
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
-						process="contractDlg,contractNo,contractName" icon="ui-icon-search" 
+						process="contractDlg,contractNo,contractName" 
 						update="contractDt" actionListener="#{centralContractBackingBean.searchContract()}" />
 				</h:panelGrid>
 				<p:dataTable id="contractDt" var="contractListVar" rowIndexVar="index"
@@ -256,11 +255,11 @@
 				<p:spacer height="2" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						process="contractDlg" icon="ui-icon-accept"
+						process="contractDlg" 
 						action="#{centralContractBackingBean.addSelectedContract}"
 						update="centralContractDt"/>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						icon="ui-icon-cancel" type="button" ajax="false"
+						 type="button" ajax="false"
 						onclick="contractDlg.hide();" />
 				</div>
 			</p:panel>

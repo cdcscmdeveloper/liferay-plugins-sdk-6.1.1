@@ -65,13 +65,13 @@
            <div class="ppRightBtn"> 
 		      <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}" 
 		          action="#{agreementBackingBean.addAgencySignerParty()}" process="@form" 
-		          icon="ui-icon-add" update=":form:AgSignerTable"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+		           update=":form:AgSignerTable"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 		          <p:tooltip for="addAgencySignerBtn">
 			 	     <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.signer']}" escape="false" />
 			      </p:tooltip>
 		      </p:commandButton>
 		      <p:commandButton id="delAgencySignerBtn" process="@form" 
-		          value="#{lbl['lbl.btn.delete']}"  icon="ui-icon-delete" onsuccess="dlgAgSignerDel.show()">
+		          value="#{lbl['lbl.btn.delete']}"   onsuccess="dlgAgSignerDel.show()">
 		  	       <p:tooltip for="delAgencySignerBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.signer']}" escape="false" />
 			       </p:tooltip>
@@ -87,9 +87,9 @@
                    <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                 </h:panelGrid>
                 <div class="ppRightBtn">
-		           <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:AgSignerTable" 
+		           <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:AgSignerTable" 
 		               process="@form" actionListener="#{agreementBackingBean.deleteAgencySignerParty()}" onclick="dlgAgSignerDel.hide();"/>
-			       <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAgSignerDel.hide();" type="button" />
+			       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSignerDel.hide();" type="button" />
 		        </div>
              </p:dialog>  
 	 
@@ -130,7 +130,7 @@
       
              <div class="ppRightBtn"> 
 		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
-		           icon="ui-icon-add" action="#{agreementBackingBean.addAgencyWitnes(2)}" 
+		            action="#{agreementBackingBean.addAgencyWitnes(2)}" 
 		           process="@form" onstart="blockWidget.show();"
 		           oncomplete="blockWidget.hide();" update=":form:AgWitnessTable">
 		           <p:tooltip for="addAgencyWitnessBtn">
@@ -138,7 +138,7 @@
 			       </p:tooltip>
 		       </p:commandButton>
 		       <p:commandButton id="delAgencyWitnessBtn" process="@form"
-		            value="#{lbl['lbl.btn.delete']}"  icon="ui-icon-delete"  onsuccess="dlgAgWitnessDel.show()">
+		            value="#{lbl['lbl.btn.delete']}"    onsuccess="dlgAgWitnessDel.show()">
 		            <p:tooltip for="delAgencyWitnessBtn">
 			             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.witness']}" escape="false" />
 			        </p:tooltip>
@@ -153,9 +153,9 @@
                    <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                 </h:panelGrid>
                <div class="ppRightBtn">
-		          <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:AgWitnessTable"  
+		          <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:AgWitnessTable"  
 		              process="@form"  actionListener="#{agreementBackingBean.deleteAgencyWitnes()}" onclick="dlgAgWitnessDel.hide();"/>
-			      <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAgWitnessDel.hide();" type="button" />
+			      <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgAgWitnessDel.hide();" type="button" />
 		       </div>
            </p:dialog>  
 	   </p:panel>		
