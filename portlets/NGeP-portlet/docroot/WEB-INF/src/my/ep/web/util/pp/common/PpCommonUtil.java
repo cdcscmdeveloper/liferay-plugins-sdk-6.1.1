@@ -224,7 +224,44 @@ public class PpCommonUtil {
 		log.info("retrievePlanById - End");
 		return ppPlan;
 	}
-
+	/**
+	 * retriever user by loginId or userId
+	 * @param loginId
+	 * @param userId
+	 * @return pmUser
+	 */
+	public static PmUser retrieveUserByLoginIdOrUserId(String loginId, Long userId){
+		log.info("retrieveUserByLoginIdOrUserId - Start");
+		PmUser pmUser = new PmUser();
+		IUserSO userSO  = null;
+		try{
+			if(loginId!=null || userId!=null){
+				UserReqDTO reqDTO = new UserReqDTO();
+				UserResDTO resDTO = new UserResDTO();
+				
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				if(loginId!=null){
+					reqDTO.setLoginId(loginId);
+					resDTO = userSO.retrieveUserByLoginId(reqDTO);
+				}else{
+					reqDTO.setUserId(userId);
+					resDTO = userSO.retrieveUserDtlById(reqDTO);
+				}
+				
+				
+				
+				if(resDTO.isSuccessful()){
+					pmUser = resDTO.getPmUser();
+				}
+			}
+	
+		}finally{
+			userSO = null;
+		}
+		log.info("retrieveUserByLoginIdOrUserId - End");
+		return pmUser;
+	}
+	
 	/**
 	 * retriever user org by user id
 	 * @param userId
@@ -702,7 +739,7 @@ public class PpCommonUtil {
 		sb.append(" ");
 		sb.append(plan.getOrgProfile().getPmOrgValidity().getOrgName());
 		sb.append(" ");
-		sb.append(getYear(0));
+		sb.append(plan.getPlanYear());
 
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
 //			sb.append(" ");
