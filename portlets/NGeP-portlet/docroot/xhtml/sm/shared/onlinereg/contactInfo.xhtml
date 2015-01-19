@@ -165,13 +165,17 @@
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:inputText size="40" maxlength="10"
-						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.postcode']}"
-						value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}"
-						id="conPostCode" /> <p:message id="conPostCodeMsg"
-						for="conPostCode" display="icon" /></td>
+				<td class="tdContent">
+					<p:inputText maxlength="5" required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.postcode']}" id="conPostCodeMy" disabled="#{registrationBackingBean.managedBean.sameAddress}"
+								value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="40">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="conPostCodeMyMsg" for="conPostCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+				</td>
 			</tr>
 
 			<tr>

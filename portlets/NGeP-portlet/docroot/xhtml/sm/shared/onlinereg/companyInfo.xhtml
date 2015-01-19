@@ -27,7 +27,7 @@
 			  });
 			  $("input[id$=compAdd4]").keydown(function(e){
 				 if(e.which==9 || e.keycode==9){
-					$("input[id$=compPostCode]").focus();
+					$("input[id$=compPostCodeMy]").focus();
 					e.preventDefault();
 				} 
 			  });
@@ -207,7 +207,7 @@
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateStateByAddType('business')}"
-							update="busState" />
+							update="busState,compPostCodePanelId" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
 			</tr>
@@ -287,11 +287,33 @@
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:inputText id="compPostCode"
-						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.postcode']}"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
-						size="40" maxlength="10" /> <p:message id="compPostCodeMsg"
-						for="compPostCode" display="icon" /></td>
+				<td class="tdContent">
+					<p:outputPanel id="compPostCodePanelId">
+						<p:outputPanel
+							rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId==registrationBackingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeMy"
+								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="40">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="compPostCodeMyMsg" for="compPostCodeMy"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId!=registrationBackingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeForeign"
+								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="compPostCodeForeignMsg"
+								for="compPostCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</td>
 			</tr>
 
 			<tr>
