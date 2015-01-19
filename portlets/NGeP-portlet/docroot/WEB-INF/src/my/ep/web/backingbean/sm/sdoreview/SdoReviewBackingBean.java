@@ -52,7 +52,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//this.getManagedBean().setAppId(1006);
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
 		//this.getManagedBean().setAppId(2765); 
-		//this.getManagedBean().setAppId(3654);
+		//this.getManagedBean().setAppId(1257436);
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -108,13 +108,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		if(resAction != null || resAction != ""){
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
 				if(this.getManagedBean().getSmApplInquiry().getInquirySubject() == null 
-						|| this.getManagedBean().getSmApplInquiry().getInquirySubject() == ""){ 
+						|| this.getManagedBean().getSmApplInquiry().getInquirySubject().equals("")){ 
 					RequestContext.getCurrentInstance().update("inquiryMessageId");
 					throw new EpException(MessageConst.ERROR_721104);
 				}
 
 				if(this.getManagedBean().getSmApplInquiry().getInquiryText() == null 
-						|| this.getManagedBean().getSmApplInquiry().getInquiryText() == ""){
+						|| this.getManagedBean().getSmApplInquiry().getInquiryText().equals("")){
 					RequestContext.getCurrentInstance().update("inquiryMessageId");
 					throw new EpException(MessageConst.ERROR_721105);
 
