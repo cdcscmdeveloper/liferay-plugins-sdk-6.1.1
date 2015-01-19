@@ -33,10 +33,13 @@
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 					value="#{backingBean.managedBean.applnRejectionRemarks}"
 					id="rmrksForRejectTxtArea" rows="10"
+					validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 					label="#{lbl['lbl.sm.remarks.rejection']}"
-					required="#{backingBean.managedBean.valueReqd}" maxlength="1000" />
-				<p:message id="rmrksForRejectTxtAreaMsg" for="rmrksForRejectTxtArea"
-					showSummary="true" showDetail="false" display="icon" /></td>
+					required="#{backingBean.managedBean.valueReqd}" maxlength="1000">
+					<f:validateLength maximum="1000" />
+				</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
+					for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
+					display="icon" /></td>
 		</tr>
 	</table>
 
