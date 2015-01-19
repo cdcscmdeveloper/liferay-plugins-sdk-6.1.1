@@ -31,6 +31,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -54,6 +55,10 @@ public class ScheduleBiddingBackingBean extends
 			.getLogger(ScheduleBiddingBackingBean.class);
 
 	public ScheduleBiddingBackingBean() {
+		if (getManagedBean().getSelectedBidBidScheduleList() == null) {
+			getManagedBean().setSelectedBidBidScheduleList(
+					new ArrayList<ScBidSchedule>());
+		}
 
 	}
 
@@ -70,17 +75,15 @@ public class ScheduleBiddingBackingBean extends
 			dpDataType.setBidEscalate(true);
 			this.getManagedBean().setPayLoad(dpDataType);
 			Long qtId = Long.valueOf(dpDataType.getQtId());
-			List<String> supplierIds = dpDataType.getGroupkeyBa();
-			List<Long> supplierDtls = new ArrayList<Long>();
-			
-			for (String str : supplierIds) {
-				supplierDtls.add(Long.parseLong(str));
+			List<String> recommandIds = dpDataType.getGroupkeyBa();
+			List<Long> recommendDtls = new ArrayList<Long>();
+
+			for (String str : recommandIds) {
+				recommendDtls.add(Long.parseLong(str));
 			}
-			// Need to call the backing bean method the with the params qtId and
-			// supplierdtls..
-			
-			retriveItemsToBid(qtId, supplierDtls);
-			
+
+			retriveItemsToBid(qtId, recommendDtls);
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -91,35 +94,25 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
-
 	public void applyBidDates() {
 
-		log.info(" ****  Selected list values *** "
-				+ getManagedBean().getSelectedBidBidScheduleList().size());
-		if(getManagedBean().getRowSelectedBid().getStartDate() == null || getManagedBean().getRowSelectedBid().getEndDate() == null){
-			throw new EpException("Please Select Both Dates");
-		}
-
-		if (getManagedBean().getSelectedBidBidScheduleList().size() > 0)
-		{
-			for (ScBidSchedule bidSchedule : getManagedBean()
-					.getSelectedBidBidScheduleList()) {
-
-				if (getManagedBean().getBidScheduleList().contains(bidSchedule)) {
-
-					bidSchedule.setStartDate(getManagedBean().getRowSelectedBid().getStartDate());
-					bidSchedule.setEndDate(getManagedBean().getRowSelectedBid().getEndDate());
-					bidSchedule.setDuration(getManagedBean().getRowSelectedBid().getDuration());
-
-					getManagedBean().getSelectedBidBidScheduleList().set(
-							getManagedBean().getBidScheduleList().indexOf(
-									bidSchedule), bidSchedule);
-				}
+		if (getManagedBean().getSelectedIndexes() != null
+				&& getManagedBean().getSelectedIndexes().size() > 0) {
+			
+			Date startDate = getManagedBean().getRowSelectedBid().getStartDate();
+			Date endDate = getManagedBean().getRowSelectedBid().getEndDate();
+			String duration = getManagedBean().getRowSelectedBid().getDuration();
+			for (Integer index : getManagedBean().getSelectedIndexes()) {
+				getManagedBean()
+						.getBidScheduleList()
+						.get(index)
+						.setStartDate(
+								startDate);
+				getManagedBean().getBidScheduleList().get(index)
+						.setEndDate(endDate);
+				getManagedBean().getBidScheduleList().get(index)
+						.setDuration(duration);
 			}
-			getManagedBean().getRowSelectedBid().setStartDate(null);
-			getManagedBean().getRowSelectedBid().setEndDate(null);
-		} else {
-			log.info(" **** Please select at-least one item *** ");
 		}
 
 	}
@@ -160,15 +153,14 @@ public class ScheduleBiddingBackingBean extends
 			log.info(" **** multiSelectContacts *** "
 					+ multiSelectContacts.size());
 
-			if (contactList.size() == multiSelectContacts.size()){
+			if (contactList.size() == multiSelectContacts.size()) {
 				contactList.clear();
 			} else {
-				for (ScBidContactPerson contact : multiSelectContacts){
+				for (ScBidContactPerson contact : multiSelectContacts) {
 					contactList.remove(contact);
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 
 		}
 	}
@@ -187,11 +179,12 @@ public class ScheduleBiddingBackingBean extends
 			reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
 					.getFinalizationId());
 
-			SuppFinalizationResDTO resDTO =
-			suppFinalizationSO.retrieveRecommendDtlList(reqDTO);
+			SuppFinalizationResDTO resDTO = suppFinalizationSO
+					.retrieveRecommendDtlList(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				getManagedBean().setBidParticipants(resDTO.getScQtRecommendDtlList());
+				getManagedBean().setBidParticipants(
+						resDTO.getScQtRecommendDtlList());
 			}
 		} finally {
 			suppFinalizationSO = null;
@@ -199,8 +192,8 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	public void retriveItemsToBid(Long qtId, List<Long> recommandIds) {
-		// TODO temporary hard coded
 
+		debugLogger("retriveItemsToBid");
 		IScheduleBiddingSO scheduleBiddingSO = null;
 
 		try {
@@ -219,15 +212,16 @@ public class ScheduleBiddingBackingBean extends
 						resDTO.getScQtFinalization());
 				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
 				getManagedBean().setScBid(resDTO.getScBid());
-				if(resDTO.getScQT().isZonal()){
-					getManagedBean().setRowSelectedBid(resDTO.getBidSchedules().get(0));
+				if (resDTO.getScQT().isZonal()) {
+					getManagedBean().setRowSelectedBid(
+							resDTO.getBidSchedules().get(0));
 				}
 				if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
 						.getScQtFinalization().getRecommendedTypeId()
-						.getParameterCode())){
+						.getParameterCode())) {
 					getManagedBean().setRowSelectedBid(new ScBidSchedule());
 				}
-				
+
 			}
 		}
 
@@ -236,19 +230,18 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
-	
-
 	public void bidStartDateSelectListener(ScBidSchedule scBidSchedule) {
 		Date date = scBidSchedule.getStartDate();
-		System.out.println("*****start date on each event*****"+date);
+		System.out.println("*****start date on each event*****" + date);
 		getManagedBean().setMinEndDate(date);
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
 		maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
 		getManagedBean().setMaxEndDate(maxEndDate.getTime());
-		if(scBidSchedule.getEndDate() != null){
+		if (scBidSchedule.getEndDate() != null) {
 			scBidSchedule.setEndDate(null);
-			int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+			int index = getManagedBean().getBidScheduleList().indexOf(
+					scBidSchedule);
 			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 		}
 	}
@@ -256,31 +249,36 @@ public class ScheduleBiddingBackingBean extends
 	public void bidEndDateSelectListener(ScBidSchedule bidSchedule) {
 
 		ScBidSchedule scBidSchedule = bidSchedule;
-		if(scBidSchedule.getStartDate() == null){
+		if (scBidSchedule.getStartDate() == null) {
 			scBidSchedule.setEndDate(null);
-			int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+			int index = getManagedBean().getBidScheduleList().indexOf(
+					scBidSchedule);
 			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 			throw new EpException("Please Select Start Date");
 		}
-		long durationInMills = scBidSchedule.getEndDate().getTime() - scBidSchedule.getStartDate().getTime();
-		if(durationInMills == 0){
+		long durationInMills = scBidSchedule.getEndDate().getTime()
+				- scBidSchedule.getStartDate().getTime();
+		if (durationInMills == 0) {
 			throw new EpException("Please Select Proper End Date");
 		}
 		scBidSchedule.setDuration(durationFormatter(durationInMills));
-		int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+		int index = getManagedBean().getBidScheduleList()
+				.indexOf(scBidSchedule);
 		getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 	}
-	
-	public void multiSelectEndDateSelectListener(ScBidSchedule bidSchedule){
+
+	public void multiSelectEndDateSelectListener(ScBidSchedule bidSchedule) {
 		ScBidSchedule scBidSchedule = bidSchedule;
-		if(scBidSchedule.getStartDate() == null){
+		if (scBidSchedule.getStartDate() == null) {
 			scBidSchedule.setEndDate(null);
-			int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+			int index = getManagedBean().getBidScheduleList().indexOf(
+					scBidSchedule);
 			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 			throw new EpException("Please Select Start Date");
 		}
-		long durationInMills = scBidSchedule.getEndDate().getTime() - scBidSchedule.getStartDate().getTime();
-		if(durationInMills == 0){
+		long durationInMills = scBidSchedule.getEndDate().getTime()
+				- scBidSchedule.getStartDate().getTime();
+		if (durationInMills == 0) {
 			throw new EpException("Please Select Proper End Date");
 		}
 		bidSchedule.setDuration(durationFormatter(durationInMills));
@@ -288,7 +286,7 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	private String durationFormatter(long durationInMills) {
-		
+
 		long diffMinutes = durationInMills / (60 * 1000) % 60;
 		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
 		DecimalFormat durationFormat = new DecimalFormat("#00");
@@ -296,8 +294,6 @@ public class ScheduleBiddingBackingBean extends
 				+ durationFormat.format(diffMinutes);
 		return duration;
 	}
-
-	
 
 	public String submitBiddingDetails(String outCome) {
 
@@ -315,7 +311,16 @@ public class ScheduleBiddingBackingBean extends
 			biddingReqDTO.setTaskId(taskId);
 			biddingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			// Need to call prepare save details method..
-			getManagedBean().getScBid().setScBidContactPersons(getManagedBean().getScBidContactPersonList());
+			if (getManagedBean().getScBidContactPersonList() != null
+					&& getManagedBean().getScBidContactPersonList().size() != 0) {
+				getManagedBean().getScBid().setScBidContactPersons(
+						getManagedBean().getScBidContactPersonList());
+			} else {
+				// TODO update the message
+				throw new EpException(
+						"please enter at least one Bid COntact Person");
+			}
+
 			biddingReqDTO.setScBid(this.getManagedBean().getScBid());
 			biddingReqDTO.setBidSchedules(this.getManagedBean()
 					.getBidScheduleList());
@@ -349,6 +354,38 @@ public class ScheduleBiddingBackingBean extends
 			scheduleBiddingSO = null;
 		}
 		return null;
+	}
+
+	public void selectAll() {
+
+		if (getManagedBean().isSelectedAll()) {
+			getManagedBean().setSelected(true);
+			getManagedBean().getSelectedIndexes().clear();
+			for (int i = 0; i < getManagedBean().getBidScheduleList().size(); i++) {
+				getManagedBean().getSelectedIndexes().add(i);
+			}
+		} else {
+			getManagedBean().setSelected(false);
+			getManagedBean().getSelectedIndexes().clear();
+		}
+
+	}
+
+	public void selected(int index) {
+		if (getManagedBean().isSelected()
+				&& getManagedBean().getSelectedIndexes() != null) {
+
+			getManagedBean().getSelectedIndexes().add(index);
+		} else {
+			if (getManagedBean().getSelectedIndexes() != null
+					&& getManagedBean().getSelectedIndexes().contains(
+							new Integer(index))) {
+				getManagedBean().getSelectedIndexes()
+						.remove(new Integer(index));
+			}
+
+		}
+
 	}
 
 }
