@@ -89,7 +89,7 @@
 								  <table style="width: 100%">
 									<tr>
 										<td style="width:84%">																
-									<p:selectOneMenu id="smManRegStatus" value="#{reportBackingBean.smRegistrationStatus}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="smManRegStatus" value="#{reportBackingBean.smRegistrationStatus}" required="true"  style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiputera']}" itemValue="#{lbl['lbl.rpt.rgstBumiputera']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstDaftar']}" itemValue="#{lbl['lbl.rpt.rgstDaftar']}"></f:selectItem>
@@ -200,7 +200,7 @@
 								  <table style="width: 100%">
 									<tr>
 										<td style="width:84%">																
-									<p:inputText id="CompanyName"  maxlength="400" value="#{reportBackingBean.smCompanyName}" style="margin-top:5px;width:290px;" >									
+									<p:inputText id="CompanyName"  maxlength="400" value="#{reportBackingBean.smCompanyName}" required="true"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</td>									
 									<td>
@@ -344,7 +344,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="MainCategory" value="#{reportBackingBean.smMainCategory}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="MainCategory" value="#{reportBackingBean.smMainCategory}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{smReportBackingBean.managedBean.rptGenBean.levOneCatLst}"></f:selectItems>
 										<p:ajax event="change" listener="#{reportBackingBean.retrieveCategoryLevTwo}" process="@this" partialSubmit="true" update="subManCategory" />																					
@@ -373,7 +373,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="subManCategory" value="#{reportBackingBean.smSubCategory}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="subManCategory" value="#{reportBackingBean.smSubCategory}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.levTwoCatLst}"></f:selectItems>
 										<p:ajax event="change" listener="#{reportBackingBean.retrieveCategoryLevThree}" process="@this" partialSubmit="true" update="subManCategoryDivision" />																				
@@ -401,7 +401,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="subManCategoryDivision" value="#{reportBackingBean.smSubCategoryDivision}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="subManCategoryDivision" value="#{reportBackingBean.smSubCategoryDivision}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.levThreeCatLst}"></f:selectItems>																				
 									</p:selectOneMenu>
@@ -500,7 +500,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="smReportType" value="#{reportBackingBean.smReportType}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="ReportType" value="#{reportBackingBean.smReportType}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.recieved']}" itemValue="#{lbl['lbl.rpt.recieved']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
@@ -508,7 +508,7 @@
 									</p:selectOneMenu>
 									</td>
 									<td>
-									<p:message id="smReportTypeMsg" for="smReportType" display="icon" />	
+									<p:message id="smReportTypeMsg" for="ReportType" display="icon" />	
 									</td>
 									</tr>
 									</table>													
@@ -546,7 +546,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="RegistrationType" value="#{reportBackingBean.smRegistrationType}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="RegistrationType" value="#{reportBackingBean.smRegistrationType}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>																					
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}" itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
@@ -579,7 +579,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="smManStatByState" value="#{reportBackingBean.smState}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="smManStatByState" value="#{reportBackingBean.smState}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>	
 										<f:selectItems value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>																															
 									</p:selectOneMenu>
@@ -618,7 +618,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="ManState" value="#{reportBackingBean.smState}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="ManState" value="#{reportBackingBean.smState}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>	
 										<f:selectItems value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
 										<p:ajax event="change" listener="#{reportBackingBean.retrieveDistrict}" process="@this" partialSubmit="true" update="ManDistrict" />																					
@@ -660,7 +660,7 @@
 								  	<table style="width: 100%">
 									<tr>
 										<td style="width:84%">															
-									<p:selectOneMenu id="ManDistrict" value="#{reportBackingBean.smDistrict}" style="margin-top:5px;width:300px;">
+									<p:selectOneMenu id="ManDistrict" value="#{reportBackingBean.smDistrict}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.districtLst}"></f:selectItems>																				
 									</p:selectOneMenu>
@@ -690,7 +690,7 @@
 								  <table style="width: 100%">
 									<tr>
 										<td style="width:84%">																
-									<p:selectOneMenu id="MonthlyRptByYear" value="#{reportBackingBean.smMonthlyRptByYear}"  style="margin-top:5px;width:80px;">										
+									<p:selectOneMenu id="MonthlyRptByYear" value="#{reportBackingBean.smMonthlyRptByYear}" required="true" style="margin-top:5px;width:80px;">										
 										<f:selectItems value="#{reportBackingBean.scYearList}"  ></f:selectItems>																																
 									</p:selectOneMenu>
 									</td>									
@@ -736,7 +736,7 @@
 								</TD>
 								
 								<TD>
-									<p:calendar id="MandatoryFromDate" showOn="button" value="#{reportBackingBean.fromDate}" 
+									<p:calendar id="MandatoryFromDate" showOn="button" value="#{reportBackingBean.fromDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
 									</p:calendar>
 									</TD>
@@ -744,7 +744,7 @@
 									<p:message id="MandatoryFromDateMsg" for="MandatoryFromDate" display="icon" />
 								</TD>				
 								<TD>
-									<p:calendar id="MandatoryToDate" showOn="button" value="#{reportBackingBean.toDate}"
+									<p:calendar id="MandatoryToDate" showOn="button" value="#{reportBackingBean.toDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
 									</p:calendar>
 									</TD>
@@ -768,7 +768,7 @@
 								</TD>
 								
 								<TD>
-									<p:selectOneMenu id="MandatoryFromYear" value="#{reportBackingBean.smCreatedFromYear}" style="margin-top:5px;width:80px;">										
+									<p:selectOneMenu id="MandatoryFromYear" value="#{reportBackingBean.smCreatedFromYear}" required="true" style="margin-top:5px;width:80px;">										
 										<f:selectItems value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>																																									
 									</p:selectOneMenu>
 								</TD>
@@ -782,7 +782,7 @@
 								    <p:outputLabel value="*" styleClass="mandatory"  style="width:5px;"/>
 								</TD>				
 								<TD>
-									<p:selectOneMenu id="MandatoryToYear" value="#{reportBackingBean.smCreatedToYear}"  style="margin-top:5px;width:80px;">										
+									<p:selectOneMenu id="MandatoryToYear" value="#{reportBackingBean.smCreatedToYear}" required="true" style="margin-top:5px;width:80px;">										
 										<f:selectItems value="#{reportBackingBean.managedBean.rptGenBean.yearList}"  ></f:selectItems>																																
 									</p:selectOneMenu>
 								</TD>
