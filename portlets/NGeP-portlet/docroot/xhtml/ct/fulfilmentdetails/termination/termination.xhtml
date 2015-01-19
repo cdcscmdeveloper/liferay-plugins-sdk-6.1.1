@@ -404,9 +404,9 @@
 		   <div class="ppRightBtn"> 
 		      <p:commandButton value="#{lbl['lbl.btn.add']}"  process="@form" partialSubmit="true"
 		      	 rendered="#{!terminationBackingBean.managedBean.viewContract}"
-		         icon="ui-icon-add" action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason"/>
+		         action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason"/>
 		      <p:spacer width="2"/>
-		        <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgTerminationReason.show()"
+		        <p:commandButton value="#{lbl['lbl.btn.delete']}"  process="@form" onclick="dlgTerminationReason.show()"
 		        	rendered="#{!terminationBackingBean.managedBean.viewContract}">
 			  </p:commandButton> 
 	   	  </div>
@@ -419,9 +419,9 @@
                <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
              </h:panelGrid>
              <div class="ppRightBtn">
-		        <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="terminationReason" process="@form" 
+		        <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="terminationReason" process="@form" 
 			      action="#{terminationBackingBean.deleteTerminateReason}" onclick="dlgTerminationReason.hide();"/>
-			    <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgTerminationReason.hide();" type="button" />
+			    <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgTerminationReason.hide();" type="button" />
 		    </div>
          </p:dialog>
      </p:panel>

@@ -79,13 +79,13 @@
 			</p:dataTable> 
        	<div class="ppRightBtn" style="padding-top:8px;">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
-       	        icon="ui-icon-add" partialSubmit="true" process="@this"	action="#{contractDetailsBackingBean.resetAgencyDetails}" 
+       	         partialSubmit="true" process="@this"	action="#{contractDetailsBackingBean.resetAgencyDetails}" 
        	        update=":form:agencyies" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton> 
-			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"
+			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}"  process="@form" onclick="dlgDel.show();"
 				rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" >
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
@@ -102,10 +102,10 @@
              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl"
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl"
 		         process="@form" actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"
 		         onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 	   </p:panel>  
@@ -133,7 +133,7 @@
                         <p:message id="ptjMsg" for="ptjCodeVaue" display="icon"/>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
-       		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency" icon="ui-icon-search" 
+       		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
        		            action="#{contractDetailsBackingBean.searchAgencyDetails}" 
        		                onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
@@ -161,7 +161,7 @@
              <f:facet name="footer">
 			  <h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-				    action="#{contractDetailsBackingBean.addAgencyDetails()}" icon="ui-icon-accept" onclick="dlgAgency.hide();"/>
+				    action="#{contractDetailsBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
 			  </h:panelGrid>
 			</f:facet>
            </p:panel>
@@ -275,10 +275,10 @@
             <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
      	</h:panelGrid>
 		<div class="ppRightBtn">
-	     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="lampiran1" process="@form" 
+	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiran1" process="@form" 
 	     	actionListener="#{contractDetailsBackingBean.deleteAttachmentAction(contractDetailsBackingBean.managedBean.attachFileIndex)}" 
 	     	onclick="deleteAttachmentDlg1.hide();"/>
-		 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="deleteAttachmentDlg1.hide();" type="button" />
+		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
 	   </div>
  	</p:dialog>	
 				</td>

@@ -104,9 +104,9 @@
 		<p:spacer height="10"/>
 		    <div class="ppRightBtn">
 		         <p:commandButton value="#{lbl['lbl.btn.create']}" process="@this"  
-		              icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
+		              action="#{associationBackingBean.gotoAssociatePage}"/>
 	             <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
-	                  partialSubmit="true" onsuccess="dlgAssociateDel.show()" icon="ui-icon-delete"/>
+	                  partialSubmit="true" onsuccess="dlgAssociateDel.show()" />
 	         </div>
 		
 		  <p:spacer height="4"/>
@@ -119,9 +119,9 @@
                        <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                    </h:panelGrid>
                    <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form" 
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form" 
 		                     update=":form:associateSearch" action="#{associationBackingBean.deleteAssociation()}" onclick="dlgAssociateDel.hide();"/>
-			            <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAssociateDel.hide();" type="button" />
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAssociateDel.hide();" type="button" />
 		          </div>
               </p:dialog>  
 	     </p:panel>

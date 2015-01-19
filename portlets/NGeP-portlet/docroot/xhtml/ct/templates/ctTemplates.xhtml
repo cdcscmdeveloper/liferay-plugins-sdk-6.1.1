@@ -29,7 +29,7 @@
 	    <p:spacer width="5"/>
         <p:inputText id="searchTxt" value="#{contractTemplateBackingBean.searchValue}" style="width:150px;"/>
         <p:commandButton value="#{lbl['lbl.btn.search']}" action="#{contractTemplateBackingBean.searchActionListener}"
-          process="@this,searchTxt,searchid"  icon="ui-icon-search"  update="dataTable"/>
+          process="@this,searchTxt,searchid"   update="dataTable"/>
       </h:panelGrid>
      </p:panel>
      <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500">
@@ -57,9 +57,9 @@
 	    </p:dataTable>
 	   </h:panelGrid>
 		<div class="ppRightBtn"> 
-		    <p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add" icon="ui-icon-add" ajax="false"/>
+		    <p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add"  ajax="false"/>
 		       <p:spacer width="1"/>
-             <p:commandButton value="#{lbl['lbl.btn.delete']}"" partialSubmit="true" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />
+             <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" process="@form" onsuccess="dlgDel.show()"  />
 		 </div>
 		  <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
                resizable="false" modal="true" width="330">  
@@ -70,9 +70,9 @@
              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:dataTable" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:dataTable" process="@form" 
 				actionListener="#{contractTemplateBackingBean.deleteTemplate()}" onclick="dlgDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 		 </p:panel>

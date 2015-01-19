@@ -90,7 +90,7 @@
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this,tableBond" 
 				  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" 
-				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="@all,tableBond">
+				     action="#{contractDetailsBackingBean.addBondDetails}" update="@all,tableBond">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -98,7 +98,7 @@
 				<p:spacer width="1" />
 		  
 			     <p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" 
-			          icon="ui-icon-delete" process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
+			          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
 				      rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
 				      disabled="#{contractDetailsBackingBean.managedBean.buttonHideActive}" >
 					<p:tooltip for="delPdBtn">
@@ -128,11 +128,11 @@
 				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 			</h:panelGrid>
 			<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="tableBond" 
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="tableBond" 
 		         process="@this" actionListener="#{contractDetailsBackingBean.removeAddRow()}" onclick="dlgPerformDel.hide();">
 		         <f:setPropertyActionListener
 					target="#{contractDetailsBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgPerformDel.hide();" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
 			</div>
 		</p:dialog>
 	</p:panel>
