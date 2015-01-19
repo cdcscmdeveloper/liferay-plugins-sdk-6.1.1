@@ -11,6 +11,8 @@
 	<ui:define name="contentSection">
 		<ui:param name="isPendingNegotiationStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
+			<ui:param name="isEditableStatus"
+			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
 			
 		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
@@ -67,13 +69,28 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
-							
-						<p:menuitem value="#{lbl['lbl.sc.report']}"
-							process="@form" update="@form">
+						
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="4"  />
+						</p:menuitem>
+						
+						<p:menuitem value="#{lbl['lbl.sc.report']}"
+							process="@form" update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="5" />
+						</p:menuitem>
+						
 					</p:tabMenu>
 				</td>
 				
@@ -86,10 +103,18 @@
 					</c:if> 
 					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
 						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml"></ui:include>
-					</c:if> 
-					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
-						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml"></ui:include>
-					</c:if> 
+					</c:if> <c:if
+						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3' }">
+						<ui:include src="/xhtml/sc/loi/loirequest/loiDeductionPaymentMenu.xhtml" />
+					</c:if> <c:if
+						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '4' }">
+						<ui:include src="/xhtml/sc/loi/loirequest/loiFulfilmentSchedule.xhtml" />
+					</c:if> <c:if
+						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '5'}">
+						<ui:include
+							src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml"></ui:include>
+					</c:if>
+
 				</td>
 			</tr>
 		</table>

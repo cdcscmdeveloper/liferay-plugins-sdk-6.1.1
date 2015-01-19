@@ -334,6 +334,9 @@ public class LOIDetailBackingBean extends
 				List<ScQtRecommend> scQtRecommendList = resDTO.getScQtRecommendList();
 				
 				getManagedBean().setScQtFinalization(scQtFinalization);
+				if(scQtFinalization.getScQt() != null){
+					getManagedBean().setScQt(scQtFinalization.getScQt());
+				}
 				getManagedBean().setCommitteeType(committeeType);
 				getManagedBean().setLois(resDTO.getScLois());
 				getManagedBean().setRecommendList(scQtRecommendList);
@@ -631,7 +634,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPervious() {
 		log.info("backToPervious");
-		//retrieveLOIList(getManagedBean().getSourceId());
+		retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -1939,6 +1942,8 @@ public class LOIDetailBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
+			saveScheduleList(); // Prepare Fulfilment Schedule
+			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
