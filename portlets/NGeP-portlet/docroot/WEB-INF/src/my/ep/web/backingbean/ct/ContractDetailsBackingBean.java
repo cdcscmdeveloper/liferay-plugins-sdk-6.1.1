@@ -852,8 +852,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				}	
 			}
 		 
-			if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) 
-					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+			if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 
 				if(getManagedBean().getCtContract().isFrequencySchedule()){
 					getManagedBean().getContractVer().setCtProgressivePayments(null);
@@ -862,7 +861,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				}
 
 				if(getManagedBean().getCtContract().isFrequencySchedule()) {
-			           	if(contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2) {
+			           	if(contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2 
+			           		 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 					          RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					          throw new EpException(MessageConst.ERROR_750022);
 			           	}
@@ -877,8 +877,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			           			     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			           			  throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule end date"});
 			           		    }
+			           		    
+			           		 if(schedules.getScheduleNo() == null) {
+		           			     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+		           			  throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule no"});
+		           		    }
+			           		 
+			           		if(schedules.getScheduleType() == null || schedules.getScheduleType().getParameterId() == null) {
+		           			     RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+		           			  throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule type"});
+		           		    }
 			             }     	
-				} else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()) {
+				} else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()
+						&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_750022);
 				}
@@ -908,7 +919,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		           		    }     	
 					}
 					int value = Float.compare(percentage,100);
-					if(value != 0) {
+					if(value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Percentage 100%" });
 					}
