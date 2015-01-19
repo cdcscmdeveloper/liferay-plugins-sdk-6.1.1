@@ -32,7 +32,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
 		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
 		     rowIndexVar="index" rowKey="#{epItem}">
-		
+			
 	    	<p:columnGroup type="header">
 				<p:row>
 				 	<p:column selectionMode="multiple"  style="width:2%" />
@@ -150,21 +150,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
-			    	disabled="#{!epItem.rejected}" id="clEpReason" update=":form:dlRejectReason" immediate="true">
+			    	disabled="#{!epItem.rejected}" id="clEpReason" update=":form:dgReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
-	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
-			    	 id="clEpJustification" update=":form:dlItemJustification" immediate="true">
+	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" update=":form:dgJustication" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
+			    	 id="clEpJustification">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+					<f:param name="disableValidation" value="" />
 				</p:commandLink>
-   			 	<p:inputTextarea id="itaRemark" value="#{epItem.remark}" required="#{epItem.nonEpAmt>0}" rendered="false"
-   			 		
-					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
-			 		style="width:90%" maxlength="1000">
-			 		<p:ajax event="change"  process="@this"/>
-			 	</p:inputTextarea>
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.updatable}">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"

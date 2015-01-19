@@ -60,13 +60,13 @@
 					<p:outputLabel value="#{lbl['lbl.pp.status']}"/>
 				</td>
 				<td class="header-info-text">
-					#{pPlanBackingBean.getStatusDescById(pPlanBackingBean.managedBean.selectedPlan.status.statusId)}
+					#{pPlanBackingBean.getStatusDescById(pPlanBackingBean.managedBean.ppWorkflowStatus.pmStatus.statusId)}
 				</td>
 				<td width="8%">
 					<p:outputLabel value="#{lbl['lbl.pp.status.date']}"/>
 				</td>
 				<td class="header-info-text">
-					<h:outputText value="#{pPlanBackingBean.managedBean.selectedPlan.currentStatus.createdDate}" >
+					<h:outputText value="#{pPlanBackingBean.managedBean.ppWorkflowStatus.createdDate}" >
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText> 
@@ -75,7 +75,7 @@
 					<p:outputLabel value="#{lbl['lbl.pp.status.by']}"/>
 				</td>
 				<td class="header-info-text">
-					 #{pPlanBackingBean.managedBean.selectedPlan.currentStatus.createdUsername}  
+					 #{pPlanBackingBean.managedBean.ppWorkflowStatus.createdUsername}  
 				</td>
 			</tr>
 		</table>
