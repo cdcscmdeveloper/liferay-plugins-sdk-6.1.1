@@ -53,7 +53,7 @@
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />		
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 								styleClass="ui-button" onstart="blockUIWidget.show();" 
-					  			oncomplete="blockUIWidget.hide();" 
+					  			oncomplete="blockUIWidget.hide();"  
 								action="#{suspensionBackingBean.saveContractSuspension(outcome)}" 
 								rendered="#{outcome != 'SUBMIT' and outcome != 'REJECT' and outcome != 'APPROVE'}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"

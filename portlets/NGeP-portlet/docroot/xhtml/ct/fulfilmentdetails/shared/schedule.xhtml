@@ -88,7 +88,7 @@
 	      
 	                <p:spacer height="2"  />
 		               <div class="ppRightBtn"> 
-		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" update=":form:payScheduleTableId"
+		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}"  update=":form:payScheduleTableId"
 		                        action="#{contractDetailsBackingBean.addScheduleDetails}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
 		                        disabled="#{contractDetailsBackingBean.managedBean.progSchedButtonDeactive}"
 		                        oncomplete="scheduleObj.paginator.endLink.click();" >
@@ -97,7 +97,7 @@
 						      </p:tooltip>
 		       		       </p:commandButton>
 		 	               <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.btn.delete']}" process="@form" 
-		 	        	       rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" onclick="dlgSchedule.show()" icon="ui-icon-delete">
+		 	        	       rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" onclick="dlgSchedule.show()" >
 		 	        	       <p:tooltip for="deleteScheduleBtn">
 						            <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
 						       </p:tooltip>
@@ -113,9 +113,9 @@
                           </h:panelGrid>
                  
                          <div class="ppRightBtn">
-		                     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form" 
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form" 
 		                         update="payScheduleTableId" action="#{contractDetailsBackingBean.deleteScheduleDetails}" onclick="dlgSchedule.hide();"/>
-			                 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSchedule.hide();" type="button" />
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSchedule.hide();" type="button" />
 		                 </div>
                       </p:dialog>
             </h:panelGroup>
@@ -202,11 +202,11 @@
 		           <p:commandButton id="proAddButtionId" value="#{lbl['lbl.btn.add']}" 
 		                partialSubmit="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
 			            process="@form"  disabled="#{contractDetailsBackingBean.managedBean.progSchedButtonDeactive}"
-			            icon="ui-icon-add" update="progPaymentTableId" action="#{contractDetailsBackingBean.addFrequencyDetails()}"
+			            update="progPaymentTableId" action="#{contractDetailsBackingBean.addFrequencyDetails()}"
 			             oncomplete="wdgtProgObj.paginator.endLink.click();" >
 			       </p:commandButton>
 		           <p:spacer width="2"/>
-		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" icon="ui-icon-delete"
+		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" 
 			             rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" process="@this"  onclick="progDlgObj.show()">
 			       </p:commandButton>
 		        </div>
@@ -219,10 +219,10 @@
                         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                     </h:panelGrid>
                     <div class="ppRightBtn">
-		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form"  onclick="progDlgObj.hide();"
+		               <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form"  onclick="progDlgObj.hide();"
 		                   update=":form:progPaymentTableId,:form:proAddButtionId" action="#{contractDetailsBackingBean.deleteFrequencyDetails}" >
 		               </p:commandButton>
-			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="progDlgObj.hide();" type="button" />
+			           <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="progDlgObj.hide();" type="button" />
 		            </div>
                </p:dialog>
 	       </h:panelGroup>    

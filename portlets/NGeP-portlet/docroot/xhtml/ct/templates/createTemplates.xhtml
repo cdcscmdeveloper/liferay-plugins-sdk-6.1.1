@@ -20,7 +20,7 @@
                  <p:editor id="editor" value="#{contractTemplateBackingBean.editorValue}" width="1020" height="400" />
               </h:panelGrid>
               <div class="ppRightBtn"> 
-			      <p:commandButton id="submitButton" value="#{lbl['lbl.btn.submit']}"  action="#{contractTemplateBackingBean.createTemplate()}" icon="ui-icon-submit" />
+			      <p:commandButton id="submitButton" value="#{lbl['lbl.btn.submit']}"  action="#{contractTemplateBackingBean.createTemplate()}" />
 			      <p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="window.history.back();" />
 		    	</div>
          </p:panel>

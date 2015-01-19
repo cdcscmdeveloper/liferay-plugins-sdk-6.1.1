@@ -32,10 +32,10 @@
            </p:dataTable>
     
             <div class="ppRightBtn"> 
-		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
+		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"/>
 		       <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true"  
-		          onclick="dlgMeetingDetails.show();" icon="ui-icon-delete" update="meetingTable"/>
+		          onclick="dlgMeetingDetails.show();" update="meetingTable"/>
 		    </div>
 		    
 		    <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" styleClass="screen-title" 
@@ -49,9 +49,9 @@
                   </h:panelGrid>
                  
                   <div class="ppRightBtn">
-		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="meetingTable" 
+		               <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="meetingTable" 
 		                    process="@form"  action="#{amendmentBackingBean.delPbQccMeetingDetails}" onclick="dlgMeetingDetails.hide();"/>
-			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
+			           <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgMeetingDetails.hide();" type="button" />
 		           </div>
              </p:dialog>
       	</p:panel>

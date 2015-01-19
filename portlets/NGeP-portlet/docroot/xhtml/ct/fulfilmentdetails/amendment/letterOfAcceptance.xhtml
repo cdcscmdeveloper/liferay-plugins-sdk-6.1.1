@@ -52,11 +52,11 @@
 		  </p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"  process="@form"  rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
-			    icon="ui-icon-add"	update=":form:loaContentDt" action="#{amendmentBackingBean.addLoaContents}" 
+			    update=":form:loaContentDt" action="#{amendmentBackingBean.addLoaContents}" 
 			    disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"/>
 			<p:spacer width="1" />
 			<p:commandButton id="delLoaContentBtn" value="#{lbl['lbl.btn.delete']}" 
-			icon="ui-icon-delete" process="@form" onclick="dlgDocumentDel.show();" rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
+			  process="@form" onclick="dlgDocumentDel.show();" rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
 			    disabled="#{amendmentBackingBean.managedBean.selectedScLoaReports == null or  (amendmentBackingBean.managedBean.selectedScLoaReports != null  and 
 			            amendmentBackingBean.managedBean.selectedScLoaReports.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined)
 			            or amendmentBackingBean.managedBean.disablefinalAmendDetails}"/>
@@ -80,10 +80,10 @@
 				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 			 </h:panelGrid>
 			 <div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"  update=":form:loaContentDt" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:loaContentDt" 
 				    process="@form"  actionListener="#{amendmentBackingBean.deleteLoaContents()}" onclick="dlgDocumentDel.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-				    icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
+				     onclick="dlgDocumentDel.hide();" type="button" />
 			</div>
 		</p:dialog>
 	  </p:panel>

@@ -69,12 +69,12 @@
                                 contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
         	                    ParameterConst.deductionTypeAdvancePayment}">
         	                <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
-        	                    icon="ui-icon-add" action="#{contractDetailsBackingBean.addDeductionClause()}" update=":form:tableClause">
+        	                    action="#{contractDetailsBackingBean.addDeductionClause()}" update=":form:tableClause">
         	                  	<p:tooltip for="addDeductionBtn">
 							    	<h:outputText value="#{lbl['lbl.ct.tooltip.add.clause']}" escape="false" />
 								</p:tooltip>
 							</p:commandButton>
-		  	                <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDeduction.show()">
+		  	                <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgDeduction.show()">
 		  	                	<p:tooltip for="delDeductionBtn">
 							    	<h:outputText value="#{lbl['lbl.ct.tooltip.delete.clause']}" escape="false" />
 								</p:tooltip>
@@ -93,9 +93,9 @@
                      <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
              </h:panelGrid>
              <div class="ppRightBtn">
-		            <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tableClause" 
+		            <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableClause" 
 		                 process="@form"  actionListener="#{contractDetailsBackingBean.deleteClauseDetails()}" onclick="dlgDeduction.hide();"/>
-			        <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
+			        <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeduction.hide();" type="button" />
 		      </div>
         </p:dialog>  
 	    <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">

@@ -132,9 +132,9 @@
 				
 				     <p:spacer height="10"/>
 				     <div class="ppRightBtn">
-					       <p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept" update=":form:itemTable" rendered="#{!amendmentBackingBean.bpkApprover}"
+					       <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form:itemTable" rendered="#{!amendmentBackingBean.bpkApprover}"
 					          process="@form" action="#{amendmentBackingBean.setNewMaxQty()}" onclick="dlgItemMaxQty.hide();" />
-					       <p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-reject" onclick="dlgItemMaxQty.hide();" type="button" />
+					       <p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="dlgItemMaxQty.hide();" type="button" />
 				      </div>
 		   	     </p:dialog>	
 				
@@ -147,9 +147,9 @@
 					     <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 				     </h:panelGrid>
 				     <div class="ppRightBtn">
-					     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:ctItemMaxQtyTable" 
+					     <p:commandButton value="#{lbl['lbl.btn.yes']}" update=":form:ctItemMaxQtyTable" 
 					         process="@form" action="#{amendmentBackingBean.deleteItemMaxQtyOnIndexs()}" onclick="dlgDelItemMaxQty.hide();" />
-					     <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDelItemMaxQty.hide();" type="button" />
+					     <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDelItemMaxQty.hide();" type="button" />
 				     </div>
 			     </p:dialog>					
 		       </h:panelGrid>
@@ -275,9 +275,9 @@
 					        </h:panelGrid>
 				
 				  	        <div class="ppRightBtn">
-						       <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"	update=":form:itemPriceTable" 
+						       <p:commandButton value="#{lbl['lbl.btn.yes']}" 	update=":form:itemPriceTable" 
 						        	process="@form" action="#{amendmentBackingBean.deleteItemPriceOnIndexs()}" onclick="dlgItemPrices.hide();" />
-						       <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgItemPrices.hide();" type="button" />
+						       <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgItemPrices.hide();" type="button" />
 					       </div>
 				      </p:dialog>
 			    </p:outputPanel>
@@ -345,10 +345,10 @@
 					<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 				</h:panelGrid>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:ceilingTable" process="@form"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:ceilingTable" process="@form"
 						action="#{amendmentBackingBean.deleteCeilingQuantityOnIndexs()}"
 						onclick="dlgCeilQuantity.hide();" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgCeilQuantity.hide();" type="button" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgCeilQuantity.hide();" type="button" />
 				</div>
 			</p:dialog>
 		</p:outputPanel>
@@ -455,9 +455,9 @@
 						<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 					</h:panelGrid>
 					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"	update=":form:servicePriceTable" process="@form"
+						<p:commandButton value="#{lbl['lbl.btn.yes']}" update=":form:servicePriceTable" process="@form"
 							action="#{amendmentBackingBean.deleteServiceItemPriceOnIndexs()}" onclick="dlgSvcItemPrices.hide();" />
-						<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSvcItemPrices.hide();" type="button" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSvcItemPrices.hide();" type="button" />
 					</div>
 				</p:dialog>			
 			</h:panelGrid>

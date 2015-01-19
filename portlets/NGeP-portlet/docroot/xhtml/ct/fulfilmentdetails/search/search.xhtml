@@ -58,8 +58,8 @@
 	  	<div class="ppRightBtn"> 
         	<p:commandButton
         	 id="searchButtonId" value="#{lbl['lbl.btn.search']}" validateClient="true"  action="#{contractDetailsBackingBean.searchContract}" 
-        	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();"  icon="ui-icon-search"   update="contractTbl"/>
-             <p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{contractDetailsBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
+        	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();"    update="contractTbl"/>
+             <p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{contractDetailsBackingBean.searchReset}"    update=":form"/>
 	  	</div>	
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.result']}" toggleable="true"	toggleSpeed="500">
