@@ -54,7 +54,7 @@
 				  });
 				  $("input[id$=cmbPermCity_focus]").keydown(function(e){
 					 if(e.which==9 || e.keycode==9){
-						$("input[id$=txtPermPostcode]").focus();
+						$("input[id$=txtPermPostcodeMy]").focus();
 						e.preventDefault();
 					} 
 				  });
@@ -235,7 +235,7 @@
 								itemValue="#{counLs.countryId}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateStateByAddType('permenant')}"
-								update="cmbPermState" />
+								update="cmbPermState,txtPermPostcodePanelId" />
 						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
 							display="icon" /></td>
 				</tr>
@@ -304,8 +304,33 @@
 				</tr>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.postcode']}" maxlength="10"
-					value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" id="txtPermPostcode" /></td>
+					<td class="tdContent">
+						<p:outputPanel id="txtPermPostcodePanelId">
+							<p:outputPanel
+								rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId==registrationBackingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeMy"
+									value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
+									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+									size="40">
+									<f:validator validatorId="postcodeValidator" />
+								</p:inputText>
+								<p:message id="txtPermPostcodeMyMsg" for="txtPermPostcodeMy"
+									showSummary="true" showDetail="false" display="icon" />
+							</p:outputPanel>
+							<p:outputPanel
+								rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId!=registrationBackingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeForeign"
+									value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
+									size="35">
+								</p:inputText>
+								<p:message id="txtPermPostcodeForeignMsg"
+									for="txtPermPostcodeForeign" showSummary="true"
+									showDetail="false" display="icon" />
+							</p:outputPanel>
+						</p:outputPanel>
+					</td>
 				</tr>
 
 

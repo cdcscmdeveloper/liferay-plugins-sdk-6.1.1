@@ -182,11 +182,18 @@
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:inputText size="40" required="#{!empty param['disableValidation']}" maxlength="10"
-						label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcode"
-						value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" />
-					<p:message id="txtPermPostcodeMsg" for="txtPermPostcode"
-						display="icon" /></td>
+				<td class="tdContent">
+					<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeMy"
+								value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="40">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="txtPermPostcodeMyMsg" for="txtPermPostcodeMy"
+								showSummary="true" showDetail="false" display="icon" />	
+					
+				</td>
 
 
 			</tr>
