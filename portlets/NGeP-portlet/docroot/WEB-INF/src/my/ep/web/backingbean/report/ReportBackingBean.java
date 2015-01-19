@@ -2032,7 +2032,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate SM module report  
 	 */	
 	public void generateSMReport(){	
-		if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))){
+		if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))){
 			if((this.getSmCreatedFromYear()!=null)&&(this.getSmCreatedFromYear()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setSmMandatoryCreatedFromYearVar(ReportConst.AMP_SM_YEAR_FROM_EQ+this.getSmCreatedFromYear());
 			}
@@ -2052,6 +2052,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			rptGenBean.setUrlReportJSPName(reportFileNameJSP);	
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getSmMandatoryCreatedFromYearVar()+rptGenBean.getSmMandatoryCreatedToYearVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportTypeTotVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+			}else{				
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}	
+		}else if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))){
+			
+			rptGenBean.setUrlReportJSPName(reportFileNameJSP);	
+			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{				
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}	
