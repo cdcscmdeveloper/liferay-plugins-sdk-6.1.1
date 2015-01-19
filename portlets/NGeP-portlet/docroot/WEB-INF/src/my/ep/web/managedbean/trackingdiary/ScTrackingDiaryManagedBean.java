@@ -4,8 +4,12 @@
 package my.ep.web.managedbean.trackingdiary;
 
 import java.util.Date;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -31,6 +35,8 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -52,23 +58,20 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Date searchDocumentFromDuration;
 	private Date searchDocumentToDuration;
-	private IPagingDataModel<ScRequestNote> scRNDocumentDataModel = new ScDocumentPagingDataModel();
-	private IPagingDataModel<ScPurchaseInDefault> scPDDocumentDataModel = new ScPDDocumentPagingDataModel();
-	private IPagingDataModel<ScPrInquiry> scPIDocumentDataModel = new ScPIDocumentPagingDataModel();
-	private IPagingDataModel<ScQuote> scSQDocumentDataModel = new ScSQDocumentPagingDataModel();
+	private IPagingDataModel<Object[]> scRNDocumentDataModel = new ScDocumentPagingDataModel();
 //	  Doctype    table
 //	   RN         ScRequestNote
 //	   PD         ScPurchaseInDefault
 //	   PI          ScPrInquiry
 //	   SQ         ScQuote	
-	private class ScDocumentPagingDataModel extends PagingDataModel<ScRequestNote> {
+	private class ScDocumentPagingDataModel extends PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
 		public ScDocumentPagingDataModel() {
 			super("scDocumentTableID",false);
 		}
 		@Override
-		public ISearchResultBean<ScRequestNote> pageChangeListener(ISearchBean<ScRequestNote> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
@@ -82,253 +85,35 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
 					System.out.println("transactionType");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
 				}
 				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
 					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentNo()));
 				}
 				if(getSearchStatusId()!=null) {
 					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentNo()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),getSearchStatusId()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate",SearchOperator.OPERATOR_BETWEEN.value(), 
+							new SearchBetweenValue<Date>(
+							new Date(System.currentTimeMillis() + (30*24*60*60*1000)),
+							new Date(System.currentTimeMillis()))));
 				}
-				if(getSearchDocumentTitle()!=null && getSearchDocumentTitle()!="") {
-					System.out.println("getSearchDocumentTitle");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentTitle()));
-				}
-				if(getSearchDocumentFromDuration()!=null ) {
-					System.out.println("getSearchDocumentFromDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentFromDuration()));
-				}
-				if(getSearchDocumentToDuration()!=null ) {
-					System.out.println("getSearchDocumentToDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentToDuration()));
-				}	
 				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("sc", ISourcingIntegrationSO.class);
 				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
-				ISearchBean<Object[]> searchBeana = new SearchBean<Object[]>();
-				searchBeana.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SQ"));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"SQ15000000000"));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),"60850"));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),"TELEFON NOKIO"));
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate",SearchOperator.OPERATOR_BETWEEN.value(), 
-//						new SearchBetweenValue<Date>(
+//				ISearchBean<Object[]> searchBeana = new SearchBean<Object[]>();
+//				searchBeana.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SQ"));
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"SQ15000000000"));
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),"60850"));
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),"TELEFON NOKIO"));
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("",SearchOperator.OPERATOR_BETWEEN.value(), 
+//						new SearchBetweenValue<Date>(createdDate
 //								new Date(System.currentTimeMillis() + (30*24*60*60*1000)),
 //								new Date(System.currentTimeMillis()))));
-				reqDTO.setSourcingDocSearchBean(searchBeana);
+				reqDTO.setSourcingDocSearchBean(searchBean);
 				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 				System.out.println("Result : "+resDTO.getSourcingDocSearchResultBean().getResultList().size());
-//				return (ISearchResultBean<ScRequestNote>)resDTO.getSourcingDocSearchResultBean();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-	private class ScPDDocumentPagingDataModel extends PagingDataModel<ScPurchaseInDefault> {
-		private static final long serialVersionUID = 1L;
-
-		public ScPDDocumentPagingDataModel() {
-			super("scDocumentTableID",false);
-		}
-		@Override
-		public ISearchResultBean<ScPurchaseInDefault> pageChangeListener(ISearchBean<ScPurchaseInDefault> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {
-//				if(null == getSearchTrasactionType()){ 
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}else if(null ==getSearchViewType() ){
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}
-				System.out.println("ISearchResultBean<ScRequestNote>");
-	
-				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
-					System.out.println("transactionType");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
-				}
-				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
-					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
-				}
-				if(getSearchStatusId()!=null) {
-					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentNo()));
-				}
-				if(getSearchDocumentTitle()!=null && getSearchDocumentTitle()!="") {
-					System.out.println("getSearchDocumentTitle");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentTitle()));
-				}
-				if(getSearchDocumentFromDuration()!=null ) {
-					System.out.println("getSearchDocumentFromDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentFromDuration()));
-				}
-				if(getSearchDocumentToDuration()!=null ) {
-					System.out.println("getSearchDocumentToDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentToDuration()));
-				}	
-//				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
-//					System.out.println("searchContractFromDuration");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
-//				}
-//				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
-//					System.out.println("searchContractToDuration");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
-//				}	
-//				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
-//					System.out.println("statusId");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
-//				}
-//				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
-//				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
-//				
-////				searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"RC"));
-//				reqDTO.setScDocumentSearchBean(searchBean);
-//				ContractIntegrationResDTO resDTO = contractIntegrationSO.searchContractDocument(reqDTO);
-//				System.out.println("Result : " +resDTO.getScDocumentSearchResultBean().getTotalRecord());
-//				System.out.println("pageChangeListener"+ resDTO.getScDocumentSearchResultBean().getTotalRecord());
-//				return resDTO.getScDocumentSearchResultBean();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-	private class ScPIDocumentPagingDataModel extends PagingDataModel<ScPrInquiry> {
-		private static final long serialVersionUID = 1L;
-
-		public ScPIDocumentPagingDataModel() {
-			super("scDocumentTableID",false);
-		}
-		@Override
-		public ISearchResultBean<ScPrInquiry> pageChangeListener(ISearchBean<ScPrInquiry> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {
-//				if(null == getSearchTrasactionType()){ 
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}else if(null ==getSearchViewType() ){
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}
-				System.out.println("ISearchResultBean<ScRequestNote>");
-	
-				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
-					System.out.println("transactionType");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
-				}
-				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
-					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
-				}
-				if(getSearchStatusId()!=null) {
-					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentNo()));
-				}
-				if(getSearchDocumentTitle()!=null && getSearchDocumentTitle()!="") {
-					System.out.println("getSearchDocumentTitle");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentTitle()));
-				}
-				if(getSearchDocumentFromDuration()!=null ) {
-					System.out.println("getSearchDocumentFromDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentFromDuration()));
-				}
-				if(getSearchDocumentToDuration()!=null ) {
-					System.out.println("getSearchDocumentToDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentToDuration()));
-				}	
-//				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
-//					System.out.println("searchContractFromDuration");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
-//				}
-//				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
-//					System.out.println("searchContractToDuration");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
-//				}	
-//				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
-//					System.out.println("statusId");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
-//				}
-//				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
-//				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
-//				
-////				searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"RC"));
-//				reqDTO.setScDocumentSearchBean(searchBean);
-//				ContractIntegrationResDTO resDTO = contractIntegrationSO.searchContractDocument(reqDTO);
-//				System.out.println("Result : " +resDTO.getScDocumentSearchResultBean().getTotalRecord());
-//				System.out.println("pageChangeListener"+ resDTO.getScDocumentSearchResultBean().getTotalRecord());
-//				return resDTO.getScDocumentSearchResultBean();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-	private class ScSQDocumentPagingDataModel extends PagingDataModel<ScQuote> {
-		private static final long serialVersionUID = 1L;
-
-		public ScSQDocumentPagingDataModel() {
-			super("scDocumentTableID",false);
-		}
-		@Override
-		public ISearchResultBean<ScQuote> pageChangeListener(ISearchBean<ScQuote> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {
-//				if(null == getSearchTrasactionType()){ 
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}else if(null ==getSearchViewType() ){
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}
-				System.out.println("ISearchResultBean<ScRequestNote>");
-	
-				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
-					System.out.println("transactionType");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
-				}
-				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
-					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
-				}
-				if(getSearchStatusId()!=null) {
-					System.out.println("getSearchDocumentNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentNo()));
-				}
-				if(getSearchDocumentTitle()!=null && getSearchDocumentTitle()!="") {
-					System.out.println("getSearchDocumentTitle");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentTitle()));
-				}
-				if(getSearchDocumentFromDuration()!=null ) {
-					System.out.println("getSearchDocumentFromDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentFromDuration()));
-				}
-				if(getSearchDocumentToDuration()!=null ) {
-					System.out.println("getSearchDocumentToDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentToDuration()));
-				}	
-//				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
-//					System.out.println("searchContractFromDuration");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
-//				}
-//				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
-//					System.out.println("searchContractToDuration");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
-//				}	
-//				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
-//					System.out.println("statusId");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
-//				}
-//				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
-//				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
-//				
-////				searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"RC"));
-//				reqDTO.setScDocumentSearchBean(searchBean);
-//				ContractIntegrationResDTO resDTO = contractIntegrationSO.searchContractDocument(reqDTO);
-//				System.out.println("Result : " +resDTO.getScDocumentSearchResultBean().getTotalRecord());
-//				System.out.println("pageChangeListener"+ resDTO.getScDocumentSearchResultBean().getTotalRecord());
-//				return resDTO.getScDocumentSearchResultBean();
+				return resDTO.getSourcingDocSearchResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -384,36 +169,12 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchDocumentToDuration = searchDocumentToDuration;
 	}
 
-	public IPagingDataModel<ScRequestNote> getScRNDocumentDataModel() {
+	public IPagingDataModel<Object[]> getScRNDocumentDataModel() {
 		return scRNDocumentDataModel;
 	}
 
-	public void setScRNDocumentDataModel(IPagingDataModel<ScRequestNote> scRNDocumentDataModel) {
+	public void setScRNDocumentDataModel(IPagingDataModel<Object[]> scRNDocumentDataModel) {
 		this.scRNDocumentDataModel = scRNDocumentDataModel;
-	}
-
-	public IPagingDataModel<ScPurchaseInDefault> getScPDDocumentDataModel() {
-		return scPDDocumentDataModel;
-	}
-
-	public void setScPDDocumentDataModel(IPagingDataModel<ScPurchaseInDefault> scPDDocumentDataModel) {
-		this.scPDDocumentDataModel = scPDDocumentDataModel;
-	}
-
-	public IPagingDataModel<ScPrInquiry> getScPIDocumentDataModel() {
-		return scPIDocumentDataModel;
-	}
-
-	public void setScPIDocumentDataModel(IPagingDataModel<ScPrInquiry> scPIDocumentDataModel) {
-		this.scPIDocumentDataModel = scPIDocumentDataModel;
-	}
-
-	public IPagingDataModel<ScQuote> getScSQDocumentDataModel() {
-		return scSQDocumentDataModel;
-	}
-
-	public void setScSQDocumentDataModel(IPagingDataModel<ScQuote> scSQDocumentDataModel) {
-		this.scSQDocumentDataModel = scSQDocumentDataModel;
 	}
 
 }
