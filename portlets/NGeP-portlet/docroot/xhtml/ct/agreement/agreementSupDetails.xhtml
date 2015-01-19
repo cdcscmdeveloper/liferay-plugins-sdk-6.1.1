@@ -21,6 +21,30 @@
 			</h:panelGrid>
 		</h:panelGrid>
 		
+		<f:verbatim/>
+	     <h:panelGrid columns="3">
+		    <p:selectBooleanCheckbox disabled="true"
+			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.clauseChange}">
+			</p:selectBooleanCheckbox>
+		    <p:spacer width="2" />				
+		    <h:panelGrid columns="2">
+				<p:outputLabel value="#{lbl['lbl.ct.change.clause']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
+			</h:panelGrid>	
+	  	</h:panelGrid>
+	  	
+	  	<f:verbatim/>
+	     <h:panelGrid columns="3">
+		    <p:selectBooleanCheckbox disabled="true"
+			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.itemPriceChange}" >
+			</p:selectBooleanCheckbox>
+		    <p:spacer width="2" />
+		    <h:panelGrid columns="2">
+				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
+			</h:panelGrid>
+		</h:panelGrid>
+		
 		 <f:verbatim/>
 	     <h:panelGrid columns="3">
 		    <p:selectBooleanCheckbox disabled="true"
@@ -30,18 +54,6 @@
 		    <h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.ct.change.contract.value']}" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.contract.amount']}" />
-			</h:panelGrid>
-		</h:panelGrid>
-		
-		<f:verbatim/>
-	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox disabled="true"
-			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.itemPriceChange}" >
-			</p:selectBooleanCheckbox>
-		    <p:spacer width="2" />
-		    <h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
 			</h:panelGrid>
 		</h:panelGrid>
 		
@@ -57,27 +69,27 @@
 			</h:panelGrid>
 		</h:panelGrid>
 		
-		<f:verbatim/>
-	     <h:panelGrid columns="3">
-		    <p:selectBooleanCheckbox disabled="true"
-			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.clauseChange}">
-			</p:selectBooleanCheckbox>
-		    <p:spacer width="2" />				
-		    <h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.ct.change.clause']}" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
-			</h:panelGrid>	
-	  	</h:panelGrid>
 	  </h:panelGrid>
-	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15" styleClass="top-aligned-columns">
+	   <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" styleClass="top-aligned-columns">
+	   <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}"/>  
+        <h:panelGrid columns="3" style="width:580px;">
+             <h:panelGrid columns="3">
+         	      <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.fileRefNo}" style="width:170px;" disabled="true" /> 
+      		      <p:spacer width="1"/>
+			      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}"  />
+		     </h:panelGrid>
+	        <p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />  
+           <h:panelGrid columns="3">
+         	<p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.amendmentEffDate}" style="width:100px;"  disabled="true" >
+         		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+         	</p:inputText>
+         	<p:spacer width="1"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+	  	</h:panelGrid>
+	  	 </h:panelGrid>
+	  	
          <p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />  
-         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:170px;" disabled="true" />
-         <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}"/>  
-         <h:panelGrid columns="3">
-         	<p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.fileRefNo}" style="width:170px;" disabled="true" /> 
-      		<p:spacer width="1"/>
-			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
-		 </h:panelGrid>
+         <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:520px;" disabled="true" />
 	     <h:panelGroup>
 		   <div style="height: 40px; vertical-align: top;">
 		      <p:outputLabel for="amendmentD" value="#{lbl['lbl.ct.description']}" />
@@ -86,17 +98,8 @@
 		 <h:panelGrid>
 		    <p:inputTextarea id="amendmentD" 
 		    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  
-		    disabled="true" rows="3" style="width:170px;"  autoResize="false" />
+		    disabled="true" rows="3" style="width:520px;"  autoResize="true" />
 		 </h:panelGrid>
-
-         <p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />  
-         <h:panelGrid columns="3">
-         	<p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.amendmentEffDate}" style="width:170px;"  disabled="true" >
-         		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-         	</p:inputText>
-         	<p:spacer width="1"/>
-			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
-	  	</h:panelGrid>
 	  </h:panelGrid>
 	</p:panel>
 </ui:composition>
