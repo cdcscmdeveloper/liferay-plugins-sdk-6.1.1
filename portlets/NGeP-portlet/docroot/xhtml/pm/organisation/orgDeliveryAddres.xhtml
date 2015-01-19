@@ -7,7 +7,7 @@
 	<p:panel styleClass="sampleDetails" >
 
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.addressTypesList}"
+			value="#{organisationBackingBean.managedBean.orgProfile.pmAddressTypes}"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
 			<p:column selectionMode="multiple"
@@ -221,7 +221,7 @@
 		<p:panel header="#{lbl['lbl.pm.header.general.org.contactPerson']}"
 			toggleable="true">
 			<table style="width: 100%">
-				<tr>
+				<!-- <tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="dcontactName" styleClass="ppDisplayTextL"
@@ -258,7 +258,7 @@
 						  <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 							<td><p:message id="dcontactMobileMsg" for="dcontactMobile"
 							display="icon" /></td>
-				</tr>
+				</tr> -->
 			</table>
 		</p:panel>
 

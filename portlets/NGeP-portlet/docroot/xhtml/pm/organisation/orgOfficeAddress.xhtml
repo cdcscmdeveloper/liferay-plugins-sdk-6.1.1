@@ -15,7 +15,7 @@
 						value="*" styleClass="mandatory" />
 				</td>
 				<td width="220">
-					<p:selectOneMenu id="facCountry" styleClass="ppDropDownWidthL"
+					<p:selectOneMenu id="orgCountry" styleClass="ppDropDownWidthL"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.address.country']}" disabled="true"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmCountry.countryId}"
 						style="width: 275px;margin-bottom: 5px;">
@@ -25,7 +25,7 @@
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />
 					</p:selectOneMenu>
 				</td>
-				<td><p:message for="facCountry" id="facCountryMsg" display="icon" /></td>
+				<td><p:message for="orgCountry" id="orgCountryMsg" display="icon" /></td>
 				<td width="150">
 					<p:outputLabel
 						value="#{lbl['lbl.pm.address.state']}" /> 
@@ -33,7 +33,7 @@
 						value="*" styleClass="mandatory" />
 				</td>
 				<td width="220">
-					<p:selectOneMenu id="facState" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
+					<p:selectOneMenu id="orgState" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmState.stateId}"
 						style="width: 275px;margin-bottom: 5px;">
@@ -43,10 +43,10 @@
 						  value="#{organisationBackingBean.getStateList(organisationBackingBean.managedBean.officeAddress.pmCountry.countryId)}" 
 						  var="state" itemLabel="#{state.stateName}"
 						  itemValue="#{state.stateId}"/>
-						<p:ajax event="change" update="facDistrict, facDivision, facCity" 
+						<p:ajax event="change" update="orgDistrict, orgDivision, orgCity" 
 						 	listener="#{organisationBackingBean.retrievePmState(organisationBackingBean.managedBean.officeAddress.pmState)}"/>
 					</p:selectOneMenu></td>
-				<td><p:message for="facState" id="facStateMsg" display="icon" /></td>
+				<td><p:message for="orgState" id="orgStateMsg" display="icon" /></td>
 			</tr>
 			<tr>
 				<td width="126">
@@ -64,7 +64,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
 				</td>
 				<td width="220">
-					<p:selectOneMenu id="facDivision" 
+					<p:selectOneMenu id="orgDivision" 
 						disabled="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
 						required="#{!empty param['disableValidation']
 							and organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
@@ -78,7 +78,7 @@
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
 					</p:selectOneMenu>
 				</td>
-				<td><p:message for="facDivision" id="facDivisionMsg" display="icon" /></td>
+				<td><p:message for="orgDivision" id="orgDivisionMsg" display="icon" /></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -89,7 +89,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:selectOneMenu id="facDistrict" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
+					<p:selectOneMenu id="orgDistrict" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.district']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmDistrict.districtId}"
 						style="width: 275px;margin-bottom: 5px;">
@@ -99,9 +99,9 @@
 							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="facCity" />
+						<p:ajax event="change" update="orgCity" />
 					</p:selectOneMenu></td>
-				<td><p:message for="facDistrict" id="facDistrictMsg"
+				<td><p:message for="orgDistrict" id="orgDistrictMsg"
 						display="icon" /></td>
 			</tr>
 			<tr>
@@ -112,7 +112,7 @@
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="facCity" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
+				<td><p:selectOneMenu id="orgCity" required="#{!empty param['disableValidation']}" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.city']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmCity.cityId}"
 						style="width: 275px;margin-bottom: 5px;">
@@ -123,7 +123,7 @@
 							var="city" itemLabel="#{city.cityName}"
 							itemValue="#{city.cityId}"/>
 					</p:selectOneMenu></td>
-				<td><p:message id="facCityMsg" for="facCity" display="icon" /></td>
+				<td><p:message id="orgCityMsg" for="orgCity" display="icon" /></td>
 
 			</tr>
 			<tr>
