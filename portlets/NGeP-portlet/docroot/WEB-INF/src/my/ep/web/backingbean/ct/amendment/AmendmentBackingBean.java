@@ -741,11 +741,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					         messageId = MessageConst.INFO_700007;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 				        		 && ContractConst.DOC_TYPE_CONTRACT_AMENDMENT.equals(getManagedBean().getContractVer().getDocType())) {
-				        	 if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
-				        		messageId = MessageConst.INFO_700007; 
-				        	 }else{
-						         messageId = getManagedBean().getContractVer().getCtAmendment().isComplyAP201() 
-						        		 ? MessageConst.INFO_700051 : MessageConst.INFO_700050;
+				        	 if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
+				        		messageId = MessageConst.INFO_700060; 
+				        	 } else {
+					        	 if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
+					        		messageId = MessageConst.INFO_700007; 
+					        	 }else{
+							         messageId = getManagedBean().getContractVer().getCtAmendment().isComplyAP201() 
+							        		 ? MessageConst.INFO_700051 : MessageConst.INFO_700050;
+					        	 }
 				        	 }
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					         messageId = MessageConst.INFO_700008;
@@ -2753,9 +2757,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				return true;
 			}			
 			for(CtContractItem ctContractItem : getManagedBean().getCtItemList()) {
-				for(CtItemCeilingQty ctItemCeilingQty : ctContractItem.getCtItemCeilingQties()) {
-					if(ctItemCeilingQty.isChangeCeilQuantity()) {
-						if(ctItemCeilingQty.getCeilingQuantity().doubleValue() > ctItemCeilingQty.getAssociateCtItemCeilingQty().getCeilingQuantity().doubleValue() * 1.5) {
+				for(CtItemMaxQty ctItemMaxQty : ctContractItem.getCtItemMaxQties()) {
+					if(ctItemMaxQty.isChangeQuantity()) {
+						if(ctItemMaxQty.getMaxQuantity().doubleValue() > ctItemMaxQty.getAssociateCtItemMaxQty().getMaxQuantity().doubleValue() * 1.5) {
 							return true;
 						}
 					}
