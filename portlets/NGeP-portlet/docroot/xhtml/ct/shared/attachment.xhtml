@@ -66,9 +66,9 @@
             <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
      	</h:panelGrid>
 		<div class="ppRightBtn">
-	     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="lampiran" process="@form" 
+	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiran" process="@form" 
 	     	actionListener="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}" onclick="deleteAttachmentDlg.hide();"/>
-		 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="deleteAttachmentDlg.hide();" type="button" />
+		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg.hide();" type="button" />
 	   </div>
  	</p:dialog>	
 		
