@@ -15,8 +15,7 @@
 		<p:panel>
 			<h:panelGroup>
 				<div>
-					<p:commandButton value="#{lbl['lbl.btn.back']}"
-						style="float:left;"
+					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 						action="#{evaluationBackingBean.evaluationBackaction}" />
 
 				</div>
@@ -36,32 +35,31 @@
 			</h:panelGroup>
 
 			<h:panelGroup>
-				<p:panel styleClass="specZones">
-					<p:tabView var="zones" orientation="left" id="tabview"
-						cache="false"
-						activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
-						value="#{evaluationBackingBean.managedBean.specZoneDtls}">
-						<p:ajax event="tabChange" update="@(.finSpecsupplierList)"
-							listener="#{evaluationBackingBean.specTabChange}" />
-						<p:tab title="#{zones.zoneName}"
-							id="tab#{evaluationBackingBean.managedBean.specZoneTabIndex}">
-							<h:panelGroup styleClass="finSpecsupplierList">
-								<ui:param name="finSpecsupplierList"
-									value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
-								<ui:param name="finSpecofferPrice"
-									value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
 
-								<ui:param name="finSpecSupplierId"
-									value="withZone#{zones.zoneName}"></ui:param>
+				<p:tabView var="zones" orientation="left" id="tabview" cache="false"
+					activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
+					value="#{evaluationBackingBean.managedBean.specZoneDtls}">
+					<p:ajax event="tabChange" update="@(.finSpecsupplierList)"
+						listener="#{evaluationBackingBean.specTabChange}" />
+					<p:tab title="#{zones.zoneName}"
+						id="tab#{evaluationBackingBean.managedBean.specZoneTabIndex}">
+						<h:panelGroup styleClass="finSpecsupplierList">
+							<ui:param name="finSpecsupplierList"
+								value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
+							<ui:param name="finSpecofferPrice"
+								value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
 
-								<ui:include
-									src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
-							</h:panelGroup>
-						</p:tab>
+							<ui:param name="finSpecSupplierId"
+								value="withZone#{zones.zoneName}"></ui:param>
 
-					</p:tabView>
+							<ui:include
+								src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
 
-				</p:panel>
+				</p:tabView>
+
+
 			</h:panelGroup>
 		</p:panel>
 
