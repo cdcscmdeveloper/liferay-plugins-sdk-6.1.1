@@ -35,8 +35,8 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onclick="delCancelCircular.show()"/>				
+			<p:commandButton value="#{lbl['lbl.btn.add']}" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true"  onclick="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
@@ -71,9 +71,9 @@
                   <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton icon="ui-icon-accept" update=":form:cancelCcrDt,:form:cancelCcrPnl" process="@all"
+		     <p:commandButton  update=":form:cancelCcrDt,:form:cancelCcrPnl" process="@all"
 		        value="#{lbl['lbl.btn.yes']}" actionListener="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="delCancelCircular.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCancelCircular.hide();" type="button" />
 		  </div>
         </p:dialog>  		
 	</p:panel>

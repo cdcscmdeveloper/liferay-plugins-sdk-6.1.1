@@ -48,9 +48,9 @@
 			
 			<div class="ppRightBtn"> 
 				<p:commandButton id="centralSearchId"  onstart="blkCentralSearchTable.show();" 
-				    oncomplete="blkCentralSearchTable.hide();"  icon="ui-icon-search"  value="#{lbl['lbl.btn.search']}"
+				    oncomplete="blkCentralSearchTable.hide();"    value="#{lbl['lbl.btn.search']}"
 				    action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" />
-				<p:commandButton value="#{lbl['lbl.ct.reset']}" icon="ui-icon-reset"
+				<p:commandButton value="#{lbl['lbl.ct.reset']}" 
 				   action="#{centralContractBackingBean.searchReset}"  update=":form" />
 			</div>		
 		</p:panel>
