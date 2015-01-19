@@ -21,7 +21,7 @@
 				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{contentsVar}">
 				<p:ajax event="rowSelect" update=":form:delContentBtn" />
 				
-				<p:column style="width:60%;">
+				<p:column style="width:50%;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.contents']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
@@ -30,7 +30,7 @@
 					<p:inputText value="#{contentsVar.title}" style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				
-				<p:column style="width:20%px;">
+				<p:column style="width:40%px;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.type']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
@@ -39,7 +39,7 @@
 						value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.parameterType,contentsVar.contentType.parameterCode)}" />
 				</p:column>
 				
-				<p:column style="width:20%;" styleClass="column-align-center">
+				<p:column style="width:10%;" styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.action']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
