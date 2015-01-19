@@ -78,10 +78,9 @@
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
+			<p:dataTable id="scDocumentTableID" lazy="true"
+				value="#{scTrackingDiaryBackingBean.managedBean.scRNDocumentDataModel}" var="unspscObj"
 				width="100%" rows="10">
-
 
 
 				<ac:paginator for="unspscTableID"></ac:paginator>
@@ -89,11 +88,9 @@
 				<p:column width="15%">
 					<f:facet name="header">
 					Creation Date
-				</f:facet>"C:/Users/User/AppData/Local/Temp/rjlcp2ni.bmp"
-							#{unspscObj.unspscCode}
-
+				</f:facet>
+					#{unspscObj.unspscCode}
 				</p:column>
-
 				<p:column width="15%">
 					<f:facet name="header">
 					Document No.
