@@ -9,46 +9,49 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define  name="resourceSection">
+	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:messages id="ScheduleBiddingMainnMessage" showDetail="true"
 			autoUpdate="true" closable="true" />
 
-		<ui:param  name="isRecommendByPackage"
-			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'  }"  />
+		<ui:param name="isRecommendByPackage"
+			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'  }" />
 		<ui:param name="isRecommendByItem"
 			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'I' }" />
 		<ui:param name="isQtZonalAndRecommendTypeAny"
 			value="#{scheduleBiddingBB.managedBean.scQt.zonal}" />
-			
+
 
 		<div align="right" style="width: 100%">
-			
-				
-				<ui:repeat var="bpmAction"
-									value="#{scheduleBiddingBB.managedBean.outComes}">
-									<ui:param name="buttonLabel"
-										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}" update="@form"
-										styleClass="ui-button"
-										action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
-								</ui:repeat>
+
+
+			<ui:repeat var="bpmAction"
+				value="#{scheduleBiddingBB.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}"
+					update="@form" styleClass="ui-button"
+					action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
+			</ui:repeat>
 		</div>
-		
+
 		<div align="left" class="header-info" style="width: 100%">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel id="docNoMain" value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:outputLabel id="docNoMain"
+							value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td class="header-info-text">
 						#{scheduleBiddingBB.managedBean.scQt.qtNo}</td>
 
-					<td><p:outputLabel id="ptjNameMain" value="#{lbl['lbl.sc.ptj.name']}" /></td>
+					<td><p:outputLabel id="ptjNameMain"
+							value="#{lbl['lbl.sc.ptj.name']}" /></td>
 
 					<td class="header-info-text">
-						 #{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
+						#{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
 
-					<td><p:outputLabel id="statusMain" value="#{lbl['lbl.sc.status']}" /></td>
+					<td><p:outputLabel id="statusMain"
+							value="#{lbl['lbl.sc.status']}" /></td>
 
 					<td class="header-info-text">#{scheduleBiddingBB.getStatusDescById(scheduleBiddingBB.managedBean.currentStatusId)}
 					</td>
@@ -74,25 +77,43 @@
 
 
 			<p:dataTable var="contact" id="contactPersonDetails"
-				widgetVar="contactDtls"
+				Var="contact"
 				value="#{scheduleBiddingBB.managedBean.scBidContactPersonList}"
-				selection="#{scheduleBiddingBB.managedBean.multiSelectContact}"
-				editable="true" rowIndexVar="index" style="width:100%"
-				rowKey="#{contact}">
+				rowIndexVar="index" rows="10" rowKey="#{contact.bidContactPersonId}">
 				<ac:paginator for="contactPersonDetails" />
-				<p:column  selectionMode="multiple" style="width:2%"></p:column>
-				<p:column  headerText="#{lbl['lbl.sc.name']}"
-					style="width:68%">
-					<p:inputText id="contactName" value="#{contact.contactName}" size="40">
-						<p:message id="contactNameMsg" for="contactName" display="icon" />
+				<p:column style="width:2% ;">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox
+							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=contactPersonDetails])"
+								listener="#{scheduleBiddingBB.selectAllBidContacts}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox
+						value="#{scheduleBiddingBB.managedBean.selectedBidContact}">
+						<p:ajax partialSubmit="true" process="@this" update="@this"
+							listener="#{scheduleBiddingBB.selectBidContact(index)}" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.name']}" style="width:68%">
+					<p:inputText id="contactName" value="#{contact.contactName}"
+						required="true" size="40">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@([id$=contactNameMsg])" />
 					</p:inputText>
+					<p:message id="contactNameMsg" for="contactName" display="icon" />
 
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.telephone.no']}"
 					style="width:30%">
-					<p:inputText id="phoneNo" value="#{contact.phoneNo}" size="40">
-						<p:message id="contactPhoneNoMsg" for="phoneNo" display="icon" />
+					<p:inputText required="true" id="phoneNo"
+						value="#{contact.phoneNo}" size="40">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@([id$=contactPhoneNoMsg])" />
 					</p:inputText>
+					<p:message id="contactPhoneNoMsg" for="phoneNo" display="icon" />
 				</p:column>
 
 			</p:dataTable>
@@ -102,14 +123,13 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this,contactPersonDetails" partialSubmit="true"
-					action="#{scheduleBiddingBB.addContactAction}"
-					oncomplete="contactDtls.paginator.endLink.click();"
-					update="contactPersonDetails" />
+					action="#{scheduleBiddingBB.addContactAction}" immediate="true"
+					update="@([id$=contactPersonDetails])" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this,contactPersonDetails"
-					partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" immediate="true"
+					process="@this,contactPersonDetails" partialSubmit="true"
 					action="#{scheduleBiddingBB.deleteContactDetails}"
-					update="contactPersonDetails" />
+					update="@([id$=contactPersonDetails])" />
 			</div>
 		</p:panel>
 

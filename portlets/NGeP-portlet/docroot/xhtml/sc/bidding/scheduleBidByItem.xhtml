@@ -13,7 +13,7 @@
 			rowKey="#{bidSchedule.bidNo}" rowIndexVar="index"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList}">
 
-			<p:column style="width:2% ;" rendered="#{!statusHide}">
+			<p:column style="width:2% ;" >
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{scheduleBiddingBB.managedBean.selectedAll}">
@@ -123,11 +123,11 @@
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 							<p:ajax event="dateSelect" process="multiSelectStartDateByItem"
 								partialSubmit="true"
-								listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
+								listener="#{scheduleBiddingBB.multiSelectStartDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
 								update="@([id$=multiSelectEndDateByItem])" />
 							<p:ajax event="change" process="multiSelectStartDateByItem"
 								partialSubmit="true"
-								listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
+								listener="#{scheduleBiddingBB.multiSelectStartDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
 								update="@([id$=multiSelectEndDateByItem])" />
 
 						</p:calendar></td>
@@ -141,10 +141,10 @@
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 							<p:ajax event="dateSelect" process="multiSelectEndDateByItem"
 								partialSubmit="true"
-								listener="#{scheduleBiddingBB.multiSelectEndDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
+								listener="#{scheduleBiddingBB.multiSelectEndDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
 							<p:ajax event="change" process="multiSelectEndDateByItem"
 								partialSubmit="true"
-								listener="#{scheduleBiddingBB.multiSelectEndDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
+								listener="#{scheduleBiddingBB.multiSelectEndDateListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
 
 						</p:calendar></td>
 
