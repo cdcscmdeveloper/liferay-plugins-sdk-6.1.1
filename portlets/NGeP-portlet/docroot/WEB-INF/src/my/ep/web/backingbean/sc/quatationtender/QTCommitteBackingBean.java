@@ -739,6 +739,10 @@ public class QTCommitteBackingBean extends
 						}
 						if (null != member1) {
 							member1.setCommitteeMemberId(null);
+							member1.setChangedDate(null);
+							member1.setCreatedBy(null);
+							member1.setCreatedDate(null);
+							member1.setChangedBy(null);
 							member1.setScCommittee(null);
 							member1.setScCommittee(tabBean.getScQtCommittee()
 									.getScCommittee());
