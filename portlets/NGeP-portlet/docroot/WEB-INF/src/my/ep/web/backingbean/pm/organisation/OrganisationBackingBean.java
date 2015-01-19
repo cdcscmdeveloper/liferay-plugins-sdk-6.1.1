@@ -17,8 +17,10 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
@@ -33,10 +35,14 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
@@ -65,6 +71,7 @@ import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -73,6 +80,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -87,7 +95,7 @@ public class OrganisationBackingBean extends
 	private static Logger log = Logger.getLogger(OrganisationBackingBean.class);
 
 	private IPagingDataModel<PmOrgProfile> searchOrganisation = new SearchOrgPagingDataModel();
-	private boolean flag;
+	
 	boolean result = false;
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
@@ -95,15 +103,24 @@ public class OrganisationBackingBean extends
 	public static final int PROFILE_DETAIL = 0;
 	public static final int GOV_SELLER = 1;
 	public static final int RESPONSIBLE_PROFILE = 2;
+	// Navigation Details
 	public static final String NAV_TO_SEARCH = "organisationMain";
 	public static final String NAV_TO_MAINTAIN = "maintainOrganisation";
 
 	public OrganisationBackingBean() {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			log.info("userID--" + pmUser.getUserId());
+
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
+		}
 
 	}
 
 	public void preLoadingOrg() {
-
+		log.info("preLodingOrg");
 		this.resetOrganisationSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -129,10 +146,10 @@ public class OrganisationBackingBean extends
 	}
 	public String redirectToOrganisation(Long id) throws Exception {
 		log.info("..............redirectToOrganisation.......id=" + id);
-		
+		resetInitialOrg();
 		retrieveFinancialOrgList();
 		
-this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
+           this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
 
 		if (id != null && id > 0) {
 			maintainOrganisation(id);
@@ -146,19 +163,33 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 	}
 
 	public void initialOrganisation() {
-		this.getManagedBean().setOrgTypeId(null);
-		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);		
-		getManagedBean().setOrgProfile(new PmOrgProfile());		
-		getManagedBean().getOrgProfile().setPmOrgValidity(new PmOrgValidity());
-		getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());		
 		
+		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);	
+		PmOrgProfile orgProifle= new PmOrgProfile();			
+		orgProifle.setPmOrgValidity(new PmOrgValidity());
+		getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());		
 		getManagedBean().setOfficeContactPerson(new PmContact());
-		//getManagedBean().getOrgProfile().setPmZone(new PmZone());
+		
 		getManagedBean().setOrgType(null);		
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());
+		getManagedBean().setOrgProfile(orgProifle);
 	}
-
+	private void resetInitialOrg(){
+		
+		this.getManagedBean().setFinancialOrg(null);
+		this.getManagedBean().setProfileGroup(null);
+		this.getManagedBean().setSupplierUserList(null);
+		this.getManagedBean().setSupplierUsers(null);
+		this.getManagedBean().setSelectedSupplierUsers(null);
+		//this.getManagedBean().setDeliveryAddress(null);
+		this.getManagedBean().setDeliveryContactPerson(null);
+		this.getManagedBean().setOfficeContactPerson(null);
+		this.getManagedBean().setOfficeAddress(null);
+		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);		
+		this.getManagedBean().setOrgTypeId(null);
+	}
+	/* -- ORG PROFILE SERACH--  */
 	public void searchOrganisation() {
 
 		searchOrganisation.reloadData();
@@ -246,6 +277,32 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		}
 
 	}
+	/**
+	 * @return the searchOrganisation
+	 */
+	public IPagingDataModel<PmOrgProfile> getSearchOrganisation() {
+		return searchOrganisation;
+	}
+
+	/**
+	 * @param searchOrganisation
+	 *            the searchOrganisation to set
+	 */
+	public void setSearchOrganisation(
+			IPagingDataModel<PmOrgProfile> searchOrganisation) {
+		this.searchOrganisation = searchOrganisation;
+	}
+	/**
+	 * reset search bean fields
+	 */
+	public void resetOrganisationSearchBean() {
+		log.info("resetOrgSearchBean");
+		this.getManagedBean().setOrganisationSearchBean(null);
+		searchOrganisation = new SearchOrgPagingDataModel();
+	}
+	
+	
+	/* -- END ORG PROFILE SERACH--  */
 
 	public String maintainOrganisation(Long id) {
 		log.info(".......maintainOrganisation......");
@@ -287,8 +344,8 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
-			retrieveOrgProfileList();
-			orgDeliveryAddrList(orgProfile);
+			retrieveMinistryList();
+			//orgDeliveryAddrList(orgProfile);
 			this.getManagedBean().setProfileGroup(
 					orgProfile.getMainProfileGroups());
 
@@ -327,7 +384,7 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 			}
 		}
 		// Org Address
-		List<PmAddressType> orgAddressTypes = this.getManagedBean().getOrgProfile().getPmAddressTypes();
+		List<PmAddressType> orgAddressTypes = getManagedBean().getOrgProfile().getPmAddressTypes();
 
 		boolean addrExist = false;
 		if (orgAddressTypes != null && !orgAddressTypes.isEmpty()) {
@@ -345,27 +402,34 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 					log.info("Contact Exist");
 				} 
 				else{
-					List<PmContact> contactLst = new ArrayList<PmContact>();
-					contactLst.add(this.getManagedBean().getOfficeContactPerson());
-					pmAddressType.setPmContacts(contactLst);
+					
 					log.info("Contact not Exist");
+					List<PmContact> contactLst = new ArrayList<PmContact>();
+					getManagedBean().setOfficeContactPerson(new PmContact());
+					PmContact contact = getManagedBean().getOfficeContactPerson();					
+					contact.setPmAddressType(pmAddressType);
+					contactLst.add(contact);
+					pmAddressType.setPmContacts(contactLst);
 				}
 			}
 		}
 		if (!addrExist) {
-			log.info("address not Exist");
-			this.getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());			
-			this.getManagedBean().setOfficeContactPerson(new PmContact());			
+			
+			log.info("address not Exist");			
+			PmAddressType addressTypet = getManagedBean().getPmAddressType();
+			orgAddressTypes.add(addressTypet);
+			addressTypet.setAddressType(AddressType.BILLING_ADDRESS.value());
+			getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
+			PmAddress address = getManagedBean().getOfficeAddress();
+			addressTypet.setPmAddress(address);
 			List<PmContact> contactLst = new ArrayList<PmContact>();
-			PmAddressType addressType = new PmAddressType();
-			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-			addressType.setPmAddress(this.getManagedBean().getPmAddress());
-			addressType.setPmOrgProfile(this.getManagedBean().getOrgProfile());			
-			this.getManagedBean().getOfficeContactPerson().setPmAddressType(addressType);
-			contactLst.add(this.getManagedBean().getOfficeContactPerson());
-			addressType.setPmContacts(contactLst);		
-			orgAddressTypes.add(addressType);
-			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);		
+			getManagedBean().setOfficeContactPerson(new PmContact());
+			PmContact contact = getManagedBean().getOfficeContactPerson();
+			contact.setPmAddressType(addressTypet);
+			contactLst.add(contact);
+			addressTypet.setPmContacts(contactLst);
+			addressTypet.setPmOrgProfile(orgProfile);
+			orgProfile.setPmAddressTypes(orgAddressTypes);
 		}		
 		return NAV_TO_SEARCH;
 
@@ -375,6 +439,7 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		// check govSeller
 		log.info("................this.getManagedBean().getSmSupplierBanks()="
 				+ this.getManagedBean().getSmSupplierBanks());
+		
 		if (this.getManagedBean().getOrgProfile().isGovtSeller()) {
 			List<SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>();
 			if (this.getManagedBean().getSmSupplierBanks() == null) {
@@ -445,17 +510,17 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
 
 		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
-		PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();
-		List<PmAddressType> pmAddressTypes = this.getManagedBean().getOrgProfile().getPmAddressTypes();
-				
+		PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();		
 		List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
 		if (orgProfile.isBrandNew()) {
+			checkOrgStatus(parameterResDTO.getPmParameter().getParameterCode());
 			orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
-			orgValidity.setEffDate(new Date());
+			orgValidity.setEffDate(new Date());			
 			PmAddressType addressType = this.getManagedBean()
 					.getPmAddressType();
 			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-		
+			List<PmAddressType> pmAddressTypes = this.getManagedBean()
+					.getOfficeAddressTypeList();
 			pmAddressTypes.add(addressType);
 			PmAddress address = this.getManagedBean().getOfficeAddress();
 			PmContact contact = this.getManagedBean().getOfficeContactPerson();
@@ -465,10 +530,10 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 			addressType.setPmContacts(contactLst);
 			addressType.setPmAddress(address);
 			addressType.setPmOrgProfile(orgProfile);
-			orgProfile.setPmAddressTypes(pmAddressTypes);
+			orgProfile.setPmAddressTypes(pmAddressTypes);	
 			orgValidity.setPmOrgProfile(orgProfile);
 			orgProfile.setPmOrgValidity(orgValidity);
-		}
+		}	
 		
 		//address
 		log.info("Office Address"+getManagedBean().getOfficeAddress().getAddress1());
@@ -606,14 +671,14 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			//getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
 			
 			//orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
 			if (getManagedBean().getOrgProfile().isGroupOrg()) {
-				
 				List<PmProfileGroup> profileGrp = getManagedBean()
 						.getProfileGroup();
+				
 				for (PmProfileGroup proGroup : profileGrp) {
 					if(proGroup.isBrandNew()){
 						proGroup.setMainOrgProfile(orgProfile);
@@ -624,9 +689,19 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 				
 			}
 			else{
-				orgProfile.setMainProfileGroups(null);				
+				orgProfile.setMainProfileGroups(null);
+				/*if(getManagedBean().getProfileGroup()!=null && getManagedBean().getProfileGroup().isEmpty()){
+					for (PmProfileGroup proGroup : profileGrp) {
+						
+							proGroup.getMainOrgProfile().setRecordStatusFlg(9);
+						
+					}	
+				}*/
+								
 			}
+			
 		}
+		
 		validateOrgProfiel(orgProfile);
 		validateOrgAddress(this.getManagedBean().getOfficeAddress());
 		validateContactPerson(this.getManagedBean().getOfficeContactPerson());
@@ -786,10 +861,16 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
 			retrievePmZoneList();			
 			getManagedBean().getOrgProfile().setPmZone(new PmZone());
+			checkOrgStatus(getManagedBean().getOrgType());
 
 		}
+		
+
+	}
+	public void checkOrgStatus(String orgCode){
+		
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
-		orgReqDTO.setOrgType(getManagedBean().getOrgType());
+		orgReqDTO.setOrgType(orgCode);
 		
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -813,7 +894,6 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 			throw new EpException(MessageConst.ERROR_775104);
 			
 		}
-
 	}
 
 	public void addContacePerson() {
@@ -821,7 +901,6 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 				.execute("contactPersonPopup.show()");
 		getManagedBean().setShowParentMsg(false);
 	}
-
 	public void okContacePerson() {
 
 		RequestContext.getCurrentInstance()
@@ -852,10 +931,10 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		PmAddressType addressType = new PmAddressType();
 		addressType.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		addressType.setPmAddress(PmCommonUtil.getNewPmAddress());	
-		List<PmContact> contactList= new ArrayList<PmContact>();
-		PmContact deliveryContactPerson = getManagedBean().getDeliveryContactPerson();
+		/*List<PmContact> contactList= new ArrayList<PmContact>();
+		PmContact deliveryContactPerson = new PmContact();
 		contactList.add(deliveryContactPerson);
-		addressType.setPmContacts(contactList);		
+		addressType.setPmContacts(contactList);	*/	
 		getManagedBean().setDeliveryAddress(addressType);
 	}
 	public void updateDeliveryAddrDt() {	
@@ -864,18 +943,30 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		PmAddress manualAddr = deliveryAddr.getPmAddress();	
 		deliveryAddr.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
-		deliveryAddr.setPmAddress(manualAddr);		
+		deliveryAddr.setPmAddress(manualAddr);	
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(manualAddr.getPmState().getStateId());
+		StateResDTO resDTO = reqSO.retriveStateByID(reqDTO);
+		manualAddr.setPmState(resDTO.getPmState());	
+		
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+		districtReqDTO.setDistrictId(manualAddr.getPmDistrict().getDistrictId());
+		DistrictResDTO districtResDTO = districtSO.retriveDistrictByID(districtReqDTO);		
+		manualAddr.setPmDistrict(districtResDTO.getPmDistrict());	
+			
 		if(manualAddr.isBrandNew() && !manualAddr.isModified()){
-			getManagedBean().getAddressTypesList().add(deliveryAddr);
+			getManagedBean().getOrgProfile().getPmAddressTypes().add(deliveryAddr);
 			deliveryAddr.setPmAddress(manualAddr);
 		}else{
-			for(int i =0; i < getManagedBean().getAddressTypesList().size(); i++){
+			for(int i =0; i < getManagedBean().getOrgProfile().getPmAddressTypes().size(); i++){
 				PmAddressType adressType = getManagedBean().getAddressTypesList().get(i);
 				PmAddress address = adressType.getPmAddress();
 				
 				
 				if( (!manualAddr.isBrandNew()) && address.getAddressId() != null && address.getAddressId().equals(manualAddr.getAddressId())){					
-					getManagedBean().getAddressTypesList().set(i, adressType);
+					getManagedBean().getOrgProfile().getPmAddressTypes().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
 				}else if(address.getAddressName().equals(manualAddr.getAddressName())){
 					getManagedBean().getAddressTypesList().set(i, adressType);
@@ -883,7 +974,7 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 				}
 			}
 		}
-		validateDeliveryAddress(manualAddr);
+		//validateDeliveryAddress(manualAddr);
 			
 	}
 	
@@ -897,14 +988,22 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 					addrExist = true;
 				}			
 				
-				if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
+				/*if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(address.getPmContacts().get(0));
 				} 
+				else{
+				List<PmContact> contactLst = new ArrayList<PmContact>();
+				this.getManagedBean().setDeliveryContactPerson(new PmContact());
+				PmContact contact = this.getManagedBean().getOfficeContactPerson();					
+				contact.setPmAddressType(address);
+				contactLst.add(contact);
+				address.setPmContacts(contactLst);
+				}*/
 			
 		}
 		if (!addrExist) {
 			
-			this.getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());			
+			/*this.getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());			
 			this.getManagedBean().setDeliveryContactPerson(new PmContact());			
 			List<PmContact> contactLst = new ArrayList<PmContact>();
 			PmAddressType addressType = new PmAddressType();
@@ -916,7 +1015,26 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 			addressType.setPmContacts(contactLst);	
 			List<PmAddressType> orgAddressTypes = this.getManagedBean().getAddressTypesList();
 			orgAddressTypes.add(addressType);
-			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);	
+			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);*/	
+//
+			List<PmAddressType> orgAddressTypes = this.getManagedBean().getOrgProfile().getPmAddressTypes();
+			PmAddressType addressTypet = getManagedBean().getPmAddressType();
+			orgAddressTypes.add(addressTypet);
+			addressTypet.setAddressType(AddressType.DELIVERY_ADDRESS.value());
+			getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
+			PmAddress officeAddress = getManagedBean().getOfficeAddress();
+			addressTypet.setPmAddress(officeAddress);
+			/*List<PmContact> contactLst = new ArrayList<PmContact>();
+			getManagedBean().setDeliveryContactPerson(new PmContact());
+			PmContact contact = getManagedBean().getDeliveryContactPerson();
+			contact.setPmAddressType(addressTypet);
+			contactLst.add(contact);
+			addressTypet.setPmContacts(contactLst);*/
+			addressTypet.setPmOrgProfile(this.getManagedBean().getOrgProfile());
+			//orgProfile.setPmAddressTypes(orgAddressTypes);
+			
+			//orgAddressTypes.add(addressTypet);
+			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);
 		}		
 		 if(address.getPmAddress().isBrandNew()){
 			 address.getPmAddress().setModified(true);
@@ -1011,7 +1129,7 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		FinancialOrgResDTO resDTO = financialOrgSO
 				.retrieveFinancialOrgListByServiceType(reqDTO);
 
-		this.getManagedBean().setPmFinancialOrg(resDTO.getFinancialOrgList());
+		this.getManagedBean().setFinancialBanks(resDTO.getFinancialOrgList());
 	}
 
 	public void addSupplierBank() {
@@ -1042,7 +1160,7 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 
 	}
 
-	private void retrieveOrgProfileList() {
+	private void retrieveMinistryList() {
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1240,44 +1358,7 @@ this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAdd
 		}
 	}
 	
-	/**
-	 * @return the searchOrganisation
-	 */
-	public IPagingDataModel<PmOrgProfile> getSearchOrganisation() {
-		return searchOrganisation;
-	}
 
-	/**
-	 * @param searchOrganisation
-	 *            the searchOrganisation to set
-	 */
-	public void setSearchOrganisation(
-			IPagingDataModel<PmOrgProfile> searchOrganisation) {
-		this.searchOrganisation = searchOrganisation;
-	}
-
-	/**
-	 * reset search bean fields
-	 */
-	public void resetOrganisationSearchBean() {
-		log.info("resetOrgSearchBean");
-		this.getManagedBean().setOrganisationSearchBean(null);
-		searchOrganisation = new SearchOrgPagingDataModel();
-	}
-
-	/**
-	 * @return the flag
-	 */
-	public boolean isFlag() {
-		return flag;
-	}
-
-	/**
-	 * @param flag
-	 *            the flag to set
-	 */
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
+	
 
 }
