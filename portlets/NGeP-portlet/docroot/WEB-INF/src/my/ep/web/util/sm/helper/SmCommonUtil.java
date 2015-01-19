@@ -15,6 +15,7 @@ import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
@@ -27,8 +28,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -970,5 +971,26 @@ public class SmCommonUtil {
 
 	public static void closeBlockUI() {
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+	}
+
+	public static boolean isPersonnelCreatedInPreviousApprovedAppl(
+			SmAppl smAppl, SmPersonnel smPersonnel) {
+		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
+		boolean retVal = false;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		String prevApplNo = smAppl.getApprovedSerFile() == null ? "" : smAppl
+				.getApprovedSerFile().substring(
+						smAppl.getApprovedSerFile().lastIndexOf('/') + 1,
+						smAppl.getApprovedSerFile().indexOf("_APP"));
+		reqDTO.setPrevApprovedApplNo(prevApplNo);
+		if (smPersonnel.getPersonnelId() != null
+				&& StringUtils.isNotBlank(prevApplNo)) {
+			reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
+			retVal = reqSO
+					.isPersonnelCreatedInPreviousApprovedApplication(reqDTO);
+		}
+		return retVal;
 	}
 }
