@@ -554,7 +554,7 @@ public class QTCommitteBackingBean extends
 								setUserDetails(member1);
 								member1.setChangedDate(null);
 								member1.setScCommittee(cloneCommitte);
-								//tabs.get(beanCount).getMembers().add(member1);
+								// tabs.get(beanCount).getMembers().add(member1);
 								memberList.add(member1);
 							} else {
 								memberList.clear();
@@ -569,7 +569,7 @@ public class QTCommitteBackingBean extends
 					}
 					tabs.get(beanCount).getMembers().addAll(memberList);
 				}
-				
+
 			}
 		}
 		// updating the memebers into sccommitte object if no error..
@@ -738,6 +738,7 @@ public class QTCommitteBackingBean extends
 							e.printStackTrace();
 						}
 						if (null != member1) {
+							member1.setCommitteeMemberId(null);
 							member1.setScCommittee(null);
 							member1.setScCommittee(tabBean.getScQtCommittee()
 									.getScCommittee());
@@ -928,7 +929,7 @@ public class QTCommitteBackingBean extends
 									.retrieveParameterById(reqDTO);
 							committeeMember.setMemberRole(resDTO
 									.getPmParameter());
-						}else{
+						} else {
 							committeeMember.setMemberRole(new PmParameter());
 						}
 						/*
