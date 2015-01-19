@@ -4,6 +4,7 @@
 
 package my.ep.web.managedbean.sc.bidding;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,11 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	
 	private List<ScBidSchedule> bidScheduleList;
 	private List<ScBidSchedule> selectedBidBidScheduleList;
+	
+	private boolean selectedAll;
+	private boolean selected;
+	private List<Integer>	selectedIndexes;
+	
 	private ScBidSchedule rowSelectedBid;
 	
 	private Date minStartDate;
@@ -294,4 +300,56 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.payLoad = payLoad;
 	}
 
+
+	/**
+	 * @return the selectedAll
+	 */
+	public boolean isSelectedAll() {
+		return selectedAll;
+	}
+
+
+	/**
+	 * @param selectedAll the selectedAll to set
+	 */
+	public void setSelectedAll(boolean selectedAll) {
+		this.selectedAll = selectedAll;
+	}
+
+
+	/**
+	 * @return the selected
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+
+
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+
+	/**
+	 * @return the selectedIndexes
+	 */
+	public List<Integer> getSelectedIndexes() {
+		
+		if(selectedIndexes == null ){
+			selectedIndexes = new ArrayList<Integer>();
+		}
+			
+		return selectedIndexes;
+	}
+
+
+	/**
+	 * @param selectedIndexes the selectedIndexes to set
+	 */
+	public void setSelectedIndexes(List<Integer> selectedIndexes) {
+		this.selectedIndexes = selectedIndexes;
+	}
 }
