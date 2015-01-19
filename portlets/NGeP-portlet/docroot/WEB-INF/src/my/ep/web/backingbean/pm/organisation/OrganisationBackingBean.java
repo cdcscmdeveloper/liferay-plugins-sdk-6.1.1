@@ -54,7 +54,9 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -75,6 +77,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -513,7 +516,7 @@ public class OrganisationBackingBean extends
 		PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();		
 		List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
 		if (orgProfile.isBrandNew()) {
-			checkOrgStatus(parameterResDTO.getPmParameter().getParameterCode());
+			//checkBpkOrgStatus(parameterResDTO.getPmParameter().getParameterCode());
 			orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
 			orgValidity.setEffDate(new Date());			
 			PmAddressType addressType = this.getManagedBean()
@@ -591,6 +594,13 @@ public class OrganisationBackingBean extends
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setPmUser(user);
 				userReqDTO.isSupplierUser();
+				List<PmUserRole> pmUserRoles = new ArrayList<PmUserRole>();
+				PmUserRole pmUserRole = new PmUserRole();				
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode(RoleCode.APPROVER.value());
+				pmUserRole.setPmRole(pmRole);
+				pmUserRoles.add(pmUserRole);
+				userReqDTO.setNewRoleList(pmUserRoles);
 				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
 				userResDTO.setSuccessful(true);
 				}
@@ -633,9 +643,9 @@ public class OrganisationBackingBean extends
 								supBank.setSmAppl(supplier.getSmAppl());								
 								supplier.getSmAppl().getSmSupplierBanks().add(supBank);
 								}
+								
 		                }
 					}
-					
 					
 					regReqDTO.setSmSupp(supplier);
 					RegistrationResDTO regResDTO = registrationSO
@@ -645,17 +655,29 @@ public class OrganisationBackingBean extends
 			}
 		}
 		else{
-			/*IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
+			/*ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierSearchSO.class);
+			SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
+			SupplierSearchResDTO supResDTO;
+			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
+			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
+			if (supResDTO.getSmSupplier() != null) {*/
+				
+		
+			IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IFeeExemptionSO.class);
 			FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
 			PmFeeExemption feeEx = new PmFeeExemption();				
 			feeEx.setOrgProfileId(orgProfile);
-			FeeExemptionResDTO feeResDTO = exemptionSO.retrieveFeeExemptionByOrgProifle(feeReqDTO);			
+			log.info("Org ProifleId--"+orgProfile.getOrgProfileId());
+			FeeExemptionResDTO feeResDTO = exemptionSO.deleteFeeExemptionByOrgProfile(feeReqDTO);			
 			feeReqDTO.setFeeExemption(feeResDTO.getFeeExemption());
 			feeResDTO = exemptionSO.deleteFeeExemption(feeReqDTO);
-			feeResDTO.setSuccessful(true);*/
+			feeResDTO.setSuccessful(true);
 			/*for(PmUser user:getManagedBean().getSupplierUsers()){
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -663,11 +685,19 @@ public class OrganisationBackingBean extends
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setPmUser(user);
 				userReqDTO.isSupplierUser();
+				List<PmUserRole> pmUserRoles = new ArrayList<PmUserRole>();
+				PmUserRole pmUserRole = new PmUserRole();				
+				PmRole pmRole = new PmRole();
+				//pmRole.setRoleCode(RoleCode.APPROVER.value());
+				pmUserRole.setPmRole(pmRole);
+				pmUserRoles.add(pmUserRole);
+				userReqDTO.setRemoveRoleList(pmUserRoles);
 				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
 				userResDTO.setSuccessful(true);
 				}*/
 			log.info("not GoveSeller");
-		}
+			}
+		//}
 		
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
@@ -861,13 +891,13 @@ public class OrganisationBackingBean extends
 						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
 			retrievePmZoneList();			
 			getManagedBean().getOrgProfile().setPmZone(new PmZone());
-			checkOrgStatus(getManagedBean().getOrgType());
+			
 
 		}
 		
 
 	}
-	public void checkOrgStatus(String orgCode){
+	public void checkBpkOrgStatus(String orgCode){
 		
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
 		orgReqDTO.setOrgType(orgCode);
@@ -921,9 +951,7 @@ public class OrganisationBackingBean extends
 						IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
-	}
-
-	
+	}	
 	
 	public void addDeliveryAddr() {
 	log.info("Add Delivery Address");
