@@ -663,10 +663,10 @@ public class SpecificationBackingBean extends
 							offerPrice.add(this.getManagedBean()
 									.getOfferPricePackage());
 						}
-						if (null != this.getManagedBean().getOfferPriceItem()) {
+						/*if (null != this.getManagedBean().getOfferPriceItem()) {
 							offerPrice.add(this.getManagedBean()
 									.getOfferPriceItem());
-						}
+						}*/
 						scQtCheckList.getQtScoreWeightage()
 								.setScQtScoreOfferPrices(offerPrice);
 					} else {
@@ -693,7 +693,7 @@ public class SpecificationBackingBean extends
 												.getOfferPricePackage());
 									}
 								}
-								if (localOfferprice
+							/*	if (localOfferprice
 										.getOfferPriceType()
 										.equalsIgnoreCase(
 												ParameterConst.RECOMMEND_TYPE_ITEM)) {
@@ -706,7 +706,7 @@ public class SpecificationBackingBean extends
 												.getManagedBean()
 												.getOfferPriceItem());
 									}
-								}
+								}*/
 
 							}
 							scQtCheckList.getQtScoreWeightage()
@@ -2798,7 +2798,7 @@ public class SpecificationBackingBean extends
 									pkgOfferPrice);
 							offerPrice.add(pkgOfferPrice);
 						}
-						if (null == this.getManagedBean().getOfferPriceItem()) {
+						/*if (null == this.getManagedBean().getOfferPriceItem()) {
 							ScQtScoreOfferPrice itemOfferPrice = new ScQtScoreOfferPrice();
 							itemOfferPrice.setScQtScoreWeightage(tmpCheckList
 									.getQtScoreWeightage());
@@ -2809,7 +2809,7 @@ public class SpecificationBackingBean extends
 									itemOfferPrice);
 							offerPrice.add(itemOfferPrice);
 
-						}
+						}*/
 						tmpCheckList.getQtScoreWeightage()
 								.setScQtScoreOfferPrices(offerPrice);
 
@@ -2826,7 +2826,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setOfferPricePackage(
 											scoreOfferPrice);
 								}
-							} else if (ParameterConst.RECOMMEND_TYPE_ITEM
+							}/* else if (ParameterConst.RECOMMEND_TYPE_ITEM
 									.equalsIgnoreCase(scoreOfferPrice
 											.getOfferPriceType())) {
 								if (null == this.getManagedBean()
@@ -2834,7 +2834,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setOfferPriceItem(
 											scoreOfferPrice);
 								}
-							}
+							}*/
 						}
 
 					}
