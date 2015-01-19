@@ -190,6 +190,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break; 
 		 case ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL:
 			    rptGenBean.retrieveCategoryLevOne();
+			    rptGenBean.retrieveState();
 				rptGenBean.setSmMandatoryCategoryView(true);
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
 	        	rptGenBean.setSmMandatoryCompanyNameView(true);
@@ -199,6 +200,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryApplicationNoView(true);
 	            break;
 		 case ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL:
+			    rptGenBean.retrieveState();
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
 	        	rptGenBean.setSmMandatoryCompanyNameView(true);
 	        	rptGenBean.setSmMandatoryFromDateView(true);
@@ -208,6 +210,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryApplicationNoView(true);
 	            break;
 		 case ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL:
+			    rptGenBean.retrieveState();
 	        	rptGenBean.setSmMandatoryZoneView(true);
 	        	rptGenBean.setSmMandatoryFromDateView(true);
 	        	rptGenBean.setSmMandatoryStateView(true);
