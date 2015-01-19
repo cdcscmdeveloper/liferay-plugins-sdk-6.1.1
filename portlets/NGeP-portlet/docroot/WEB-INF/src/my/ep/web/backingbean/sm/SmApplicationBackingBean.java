@@ -3672,9 +3672,9 @@ public class SmApplicationBackingBean extends
 		// }
 		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
 			if (shr.getEpRole() != null
-					&& (shr.getEpRole().equalsIgnoreCase("MOF_SUPPLIER_ADMIN") || shr
+					&& (shr.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
 							.getEpRole().equalsIgnoreCase(
-									"BASIC_SUPPLIER_ADMIN"))) {
+									RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 				throw new EpException(MessageConst.ERROR_722553);
 			}
 			if (SmApplicationUtil.isPersonnelBankSignatory(shr,
