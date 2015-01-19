@@ -115,17 +115,16 @@
 			<p:column rendered="#{contractRequestBackingBean.managedBean.queryDisplay}">
 			<f:facet name="header" style="width:8%;">
 			<h:outputText style="text-align:right" />
-				
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
 			</f:facet>
 			<p:commandLink oncomplete="addQuery.show();"
 					action="#{contractRequestBackingBean.showItemQuery(chargeLineNode)}"
-					 rendered="#{contractRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'true'}"
+					rendered="#{contractRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'false' and chargeLineNode.flFulfilmentItem.flQuery != null}"
 					update=":form:queryDialog,@(.orderSummaryChange)">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
 						value="/resources/ep/images/design/exclamation.png"
 						title="Query" />
-				</p:commandLink>
+			</p:commandLink>
 			</p:column>
 		</p:treeTable>		
 		<br />
