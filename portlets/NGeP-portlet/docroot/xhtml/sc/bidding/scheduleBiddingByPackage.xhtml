@@ -27,7 +27,7 @@
 							<p:ajax event="change" process="scheduleBidPackageStartDate"
 								partialSubmit="true"
 								listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
-								update="scheduleBidPackageEndDate" />
+								update="scheduleBidPackageEndDate,byPackageStartDateMsg" />
 						</p:calendar> <p:message id="byPackageStartDateMsg"
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<TD><p:spacer width="10"></p:spacer></TD>
@@ -48,7 +48,7 @@
 							<p:ajax event="change" process="scheduleBidPackageEndDate"
 								partialSubmit="true"
 								listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
-								update="bidSchedulePackageDuration" />
+								update="bidSchedulePackageDuration,byPackageEndDateMsg" />
 						</p:calendar> <p:message id="byPackageEndDateMsg"
 							for="scheduleBidPackageEndDate" display="icon" /></td>
 					<TD><p:spacer width="10"></p:spacer></TD>
