@@ -26,6 +26,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -7330,5 +7331,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	public void setFile(StreamedContent file) {
 		this.file = file;
+	}
+	
+	/**
+	 * to return the all Supplier Item's status as a SelectItem list. 
+	 * @return
+	 */
+	public List<SelectItem> getItemStatusOptions() {
+		List<SelectItem> options = new ArrayList<SelectItem>();
+		
+		options.add(new SelectItem(CmConst.ITEM_STATUS_DRAFT, "Draf"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_PENDING_APPROVAL, "Menunggu Kelulusan"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_APPROVED, "Diluluskan"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_REJECTED, "Ditolak"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_PUBLISHED, "Diiklankan"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_EXPIRED, "Tamat Tempoh"));
+		
+		return options;
 	}
 }
