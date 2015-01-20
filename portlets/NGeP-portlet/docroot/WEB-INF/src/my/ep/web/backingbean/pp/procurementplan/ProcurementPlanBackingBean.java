@@ -122,6 +122,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return facesScopes;
 	}
 	
+	public boolean compareUserNameInsensitive(String username) {
+		FacesScopes facesScopes = new FacesScopes();
+		if (username != null
+				&& username.equalsIgnoreCase(facesScopes.getUserScreenName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Pre-loading from Search Plan
@@ -179,8 +188,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
 
-		//only for PLAN OFFICER
-		if(isRolePlanner()){
+		//only for PLAN OFFICER/ PLAN APPROVER/ PLAN VERIFIER (from tasklist)
+		if(isRolePlanner() || isRoleApprover() || isRoleVerifier()){
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
@@ -188,9 +197,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				outcome[i++] = action;
 			}
 			this.getManagedBean().setOutComes(outcome);
-		}else{
-			this.getManagedBean().setOutComes(res.getAction());
 		}
+//		else{
+//			this.getManagedBean().setOutComes(res.getAction());
+//		}
+		
+		
 		
 		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setTaskId(taskId);
@@ -723,7 +735,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 
 		// if remarks is empty
-		if (this.getManagedBean().getSelectedRemarks().isEmpty() || this.getManagedBean().getSelectedRemarks().size() == 0) {//|| !compareUserName(this.getManagedBean().getSelectedRemarks().get(0).getUserId())
+		if (this.getManagedBean().getSelectedRemarks().isEmpty() || this.getManagedBean().getSelectedRemarks().size() == 0) {
 			newRemark = true;
 		}
 		
@@ -734,7 +746,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		if(newRemark){
+			if(!this.getManagedBean().getSelectedRemarks().isEmpty() && compareUserNameInsensitive(this.getManagedBean().getSelectedRemarks().get(0).getUserId())){
+				this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
+				newRemark = false;
+			}
+		}
+
+		if(newRemark){
 			PpRemark remark = new PpRemark();
+			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -1518,7 +1538,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				return items;
 			}
 		}else{
-			
+//			
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
 			SelectItem[] items = new SelectItem[3];
@@ -1908,7 +1928,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpRemark remark = null;
 		if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
 			PpRemark ppRemark = this.getManagedBean().getSelectedRemarks().get(0);
-			if(ppRemark.isBrandNew() && !StringUtils.isBlank(ppRemark.getRemark())){
+			if((ppRemark.isBrandNew() && !StringUtils.isBlank(ppRemark.getRemark())) 
+					|| !ppRemark.isBrandNew() && ppRemark.isEditable()){
 				ppRemark.setDocId(ppPlan.getPlanId());
 				ppRemark.setDocType(ParameterConst.DOCTYPE_PLAN_PLANLEVEL);
 				if(ppRemark.getRoleCode() ==null || StringUtils.isBlank(ppRemark.getRoleCode().getRoleCode())){
