@@ -562,11 +562,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					messageId = MessageConst.INFO_700009;
 				} 
 				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST), 
-								reqDTO.getDocType()+"-"+resDTO.getCancelCircularReq().getCancelCircularReqId().toString()}, 
+								resDTO.getCancelCircularReq().getCancelCircularReqNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
