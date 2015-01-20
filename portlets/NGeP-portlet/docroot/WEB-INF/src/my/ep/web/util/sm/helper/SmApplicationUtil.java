@@ -73,6 +73,7 @@ import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -102,6 +103,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -3455,5 +3457,51 @@ public class SmApplicationUtil {
 			}
 		}
 		return retVal;
+	}
+
+	public static SmTrackingDairyVO assignTrackingDairyValues(
+			SmApplicationManagedBean managedBean, String actionDesc,
+			PmStatus status) {
+		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue(managedBean));
+		trckVO.setDocId(managedBean.getSmAppl().getApplId());
+		trckVO.setDocNo(managedBean.getSmAppl().getApplNo());
+		trckVO.setDocType("SR");
+		trckVO.setGroupId(null);
+		trckVO.setStatus(status);
+		trckVO.setGroupDocType(null);
+		return trckVO;
+
+	}
+
+	private static String getUserRoleValue(SmApplicationManagedBean managedBean) {
+		if (managedBean.isPoUser()) {
+			return RoleCode.UPS_PO.value();
+		} else if (managedBean.isApproverUser()) {
+			return RoleCode.UPS_APPROVER.value();
+		} else {
+			FacesScopes sc = new FacesScopes();
+			if (sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+			} else if (sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+				return RoleCode.MOF_SUPPLIER_ADMIN.value();
+			} else if (sc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+				return RoleCode.BASIC_SUPPLIER_USER.value();
+			} else if (sc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				return RoleCode.MOF_SUPPLIER_USER.value();
+			} else {
+				if (managedBean.getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+					return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+				} else {
+					return RoleCode.MOF_SUPPLIER_ADMIN.value();
+				}
+
+			}
+
+		}
 	}
 }
