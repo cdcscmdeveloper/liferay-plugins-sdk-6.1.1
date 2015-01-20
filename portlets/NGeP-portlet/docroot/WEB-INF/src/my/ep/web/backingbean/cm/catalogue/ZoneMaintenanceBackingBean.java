@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
@@ -50,6 +51,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class ZoneMaintenanceBackingBean extends
 BaseBackingBean<ZoneMaintenanceManagedBean> {
 
+	private static Logger log = Logger.getLogger(ZoneMaintenanceBackingBean.class);
+	
 	public ZoneMaintenanceBackingBean() {
 		System.out.println("********************ZoneMaintenanceBackingBean Constructor***************");
 	}
@@ -335,12 +338,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	public void updateZoneListOnPopUpClose(){
 		System.out.println("********************ZoneMaintenanceBackingBean updateZoneListOnPopUpClose***************");
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
-		if(selZone.getSuppZoneName().isEmpty())
+		if(selZone.getSuppZoneName().isEmpty()) {
+			log.info(111);
 			throw new EpException(MessageConst.ERROR_716003);
-		else{
+		} else {
 			if(!getManagedBean().getCmSupplierZoneList().contains(selZone)){
 				for(CmSupplierZone zone : getManagedBean().getCmSupplierZoneList()){
 					if(selZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
+						log.info(222);
 						throw new EpException(MessageConst.ERROR_716004);
 					}
 				}
@@ -348,12 +353,15 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		}
 			
 		if(selZone.getSuppZoneId() == 0 && !getManagedBean().getCmSupplierZoneList().contains(selZone)){
+			log.info(333);
 			selZone = new CmSupplierZone();
 			selZone.setSuppZoneName(getManagedBean().getSelectedSupplierZone().getSuppZoneName());
 			if(selZone.getSmSupplier() == null){
+				log.info(444);
 				selZone.setSmSupplier(getManagedBean().getCurrentSupplier());
 			}
 			if(selZone.getSuppZoneDesc() == null){
+				log.info(555);
 				selZone.setSuppZoneDesc(selZone.getSuppZoneName());
 			}
 		}
@@ -364,8 +372,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		List<Long> existingDivisions = new ArrayList<Long>();
 		List<CmSupplierZoneDTL> cmDtls = new ArrayList<CmSupplierZoneDTL>(); 
 		if(selZone.getCmSupplierZoneDtls() != null)
+			log.info(666);
 			cmDtls.addAll(selZone.getCmSupplierZoneDtls()); 
 		for(CmSupplierZoneDTL cmDtl : cmDtls){
+			log.info(777);
 			if(cmDtl.getPmState() != null)
 				existingStates.add(cmDtl.getPmState().getStateId());
 			if(cmDtl.getPmDistrict() != null)
@@ -381,11 +391,15 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		List<Long> selectedDistricts = new ArrayList<Long>();
 		List<Long> selectedDivisions = new ArrayList<Long>();
 		for(TreeNode selectedNode : selectedNodes) {
+			log.info(888);
 			if(selectedNode.getType().equals("state") && selectedNode.getChildCount() == 0) {
+				log.info(999);
 				CmSupplierZoneStateDistrictDTO stateNodeDto = (CmSupplierZoneStateDistrictDTO) selectedNode.getData();
 				if(stateNodeDto.getState() != null){
+					log.info(1010);
 					selectedStates.add(stateNodeDto.getState().getStateId());
 					if(!existingStates.contains(stateNodeDto.getState().getStateId())){
+						log.info(1111);
 						CmSupplierZoneDTL cmDtl = new CmSupplierZoneDTL();
 						cmDtl.setCmSupplierZone(selZone);
 						IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
@@ -398,11 +412,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					}
 				}
 			} else if(selectedNode.getType().equals("division") && selectedNode.getChildCount() == 0){
+				log.info(1212);
 				CmSupplierZoneStateDistrictDTO stateNodeDto2 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getData();
 				CmSupplierZoneDTL cmDtl5 = new CmSupplierZoneDTL();
 				cmDtl5.setCmSupplierZone(selZone);
 				PmState newState2 = new PmState();
 				if(stateNodeDto2.getState() != null){
+					log.info(1313);
 					selectedStates.add(stateNodeDto2.getState().getStateId());
 					if(!existingStates.contains(stateNodeDto2.getState().getStateId())){
 						IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
@@ -414,8 +430,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 				}
 				CmSupplierZoneStateDistrictDTO divisionNodeDto2 = (CmSupplierZoneStateDistrictDTO) selectedNode.getData();
 				if(divisionNodeDto2.getDivision() != null){
+					log.info(1414);
 					selectedDivisions.add(divisionNodeDto2.getDivision().getDivisionId());
 					if(!existingDivisions.contains(divisionNodeDto2.getDivision().getDivisionId())){
+						log.info(1515);
 						CmSupplierZoneDTL cmDtl6 = new CmSupplierZoneDTL();
 						cmDtl6.setCmSupplierZone(selZone);
 						cmDtl6.setPmState(newState2);
@@ -425,12 +443,16 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 						DivisionResDTO resDivisionDTO = divisionSO.retrieveDivisionDtlById(reqDivisionDTO);
 						PmDivision newDivision2 = resDivisionDTO.getPmDivision();
 						if(selectedNode.getChildren() != null){
+							log.info(1616);
 							for(TreeNode dCh : selectedNode.getChildren()){
 								if(dCh.getType().equals("district")){
+									log.info(1717);
 									CmSupplierZoneStateDistrictDTO districtNodeDto3 = (CmSupplierZoneStateDistrictDTO) dCh.getData();
 									if(districtNodeDto3.getDistrict() != null){
+										log.info(1818);
 										selectedDistricts.add(districtNodeDto3.getDistrict().getDistrictId());
 										if(!existingDistricts.contains(districtNodeDto3.getDistrict().getDistrictId())){
+											log.info(1919);
 											CmSupplierZoneDTL cmDtl7 = new CmSupplierZoneDTL();
 											cmDtl7.setCmSupplierZone(selZone);
 											cmDtl7.setPmState(newState2);
@@ -447,20 +469,25 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 								}
 							}
 						} else {
+							log.info(2020);
 							cmDtl6.setPmDivision(newDivision2);
 							newCmSupplierZoneDTLs.add(cmDtl6);
 						}
 					}
 				}
 			} else if(selectedNode.getType().equals("district")) {
+				log.info(2121);
 				if(selectedNode.getParent().getType().equals("state")){
+					log.info(2222);
 					CmSupplierZoneStateDistrictDTO stateNodeDto3 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getData();
 					CmSupplierZoneDTL cmDtl8 = new CmSupplierZoneDTL();
 					cmDtl8.setCmSupplierZone(selZone);
 					PmState newState3 = new PmState();
 					if(stateNodeDto3.getState() != null){
+						log.info(2323);
 						selectedStates.add(stateNodeDto3.getState().getStateId());
 						if(!existingStates.contains(stateNodeDto3.getState().getStateId())){
+							log.info(2424);
 							IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
 							StateReqDTO reqStateDTO = new StateReqDTO();
 							reqStateDTO.setStateId(stateNodeDto3.getState().getStateId());
@@ -470,14 +497,17 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					}
 					CmSupplierZoneStateDistrictDTO districtNodeDto4 = (CmSupplierZoneStateDistrictDTO) selectedNode.getData();
 					if(districtNodeDto4.getDistrict() != null){
+						log.info(2525);
 						selectedDistricts.add(districtNodeDto4.getDistrict().getDistrictId());
 						if(!existingDistricts.contains(districtNodeDto4.getDistrict().getDistrictId())){
+							log.info(2626);
 							IDistrictSO districtSO = (IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 							DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 							reqDistrictDTO.setDistrictId(districtNodeDto4.getDistrict().getDistrictId());
 							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 							PmDistrict newDistrict4 = resDistrictDTO.getPmDistrict();
 							if(newState3.getStateId() == null){
+								log.info(2727);
 								newState3 = newDistrict4.getPmState();
 							}
 							CmSupplierZoneDTL cmDtl9 = new CmSupplierZoneDTL();
@@ -487,17 +517,21 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							newCmSupplierZoneDTLs.add(cmDtl9);
 						}
 					} else {
+						log.info(2828);
 						cmDtl8.setPmState(newState3);
 						newCmSupplierZoneDTLs.add(cmDtl8);
 					}
 				} else if(selectedNode.getParent().getType().equals("division")){
+					log.info(2929);
 					CmSupplierZoneStateDistrictDTO stateNodeDto4 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getParent().getData();
 					CmSupplierZoneDTL cmDtl10 = new CmSupplierZoneDTL();
 					cmDtl10.setCmSupplierZone(selZone);
 					PmState newState4 = new PmState();
 					if(stateNodeDto4.getState() != null){
+						log.info(3030);
 						selectedStates.add(stateNodeDto4.getState().getStateId());
 						if(!existingStates.contains(stateNodeDto4.getState().getStateId())){
+							log.info(3131);
 							IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
 							StateReqDTO reqStateDTO = new StateReqDTO();
 							reqStateDTO.setStateId(stateNodeDto4.getState().getStateId());
@@ -509,8 +543,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					CmSupplierZoneStateDistrictDTO divisionNodeDto3 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getData();
 					PmDivision newDivision3 = new PmDivision();
 					if(divisionNodeDto3.getDivision() != null){
+						log.info(3232);
 						selectedDivisions.add(divisionNodeDto3.getDivision().getDivisionId());
 						if(!existingDivisions.contains(divisionNodeDto3.getDivision().getDivisionId())){
+							log.info(3333);
 							IDivisionSO divisionSO = (IDivisionSO)BusinessDelegate.getInstance().getServiceObject("pm",IDivisionSO.class);
 							DivisionReqDTO reqDivisionDTO = new DivisionReqDTO();
 							reqDivisionDTO.setDivisionId(divisionNodeDto3.getDivision().getDivisionId());
@@ -520,14 +556,17 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					}
 					CmSupplierZoneStateDistrictDTO districtNodeDto5 = (CmSupplierZoneStateDistrictDTO) selectedNode.getData();
 					if(districtNodeDto5.getDistrict() != null){
+						log.info(3434);
 						selectedDistricts.add(districtNodeDto5.getDistrict().getDistrictId());
 						if(!existingDistricts.contains(districtNodeDto5.getDistrict().getDistrictId())){
+							log.info(3535);
 							IDistrictSO districtSO = (IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 							DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 							reqDistrictDTO.setDistrictId(districtNodeDto5.getDistrict().getDistrictId());
 							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 							PmDistrict newDistrict5 = resDistrictDTO.getPmDistrict();
 							if(newState4.getStateId() == null){
+								log.info(3636);
 								newState4 = newDistrict5.getPmState();
 							}
 							CmSupplierZoneDTL cmDtl11 = new CmSupplierZoneDTL();
@@ -538,6 +577,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							newCmSupplierZoneDTLs.add(cmDtl11);
 						}
 					} else {
+						log.info(3737);
 						cmDtl10.setPmDivision(newDivision3);
 						cmDtl10.setPmState(newState4);
 						newCmSupplierZoneDTLs.add(cmDtl10);
@@ -556,9 +596,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		 * Add new details to the current list of details and then remove unselected details
 		 */		
 		if(selZone.getCmSupplierZoneDtls() != null){
+			log.info(3838);
 			System.out.println("Count Before add" + selZone.getCmSupplierZoneDtls().size());
 			selZone.getCmSupplierZoneDtls().addAll(newCmSupplierZoneDTLs);
 		} else {
+			log.info(3939);
 			selZone.setCmSupplierZoneDtls(newCmSupplierZoneDTLs);
 		}
 		for(Long st : existingStates){
@@ -578,8 +620,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		}
 		System.out.println("Size sel lists:" + selectedStates.size() + ":" + selectedDistricts.size());
 		if(unSelectedStates.size() > 0 || unSelectedDistricts.size() > 0 || unSelectedDivisions.size() > 0){
+			log.info(4040);
 			System.out.println("Size rem lists:" + existingStates.size() + ":" + existingDistricts.size());
 				if(selZone.getCmSupplierZoneDtls() != null){
+					log.info(4141);
 					Iterator<CmSupplierZoneDTL> ite = selZone.getCmSupplierZoneDtls().iterator();
 					while(ite.hasNext()){
 						CmSupplierZoneDTL cmDtl = ite.next();
