@@ -1850,13 +1850,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 			log.info("officePrice------->" + officePrice);
 			log.info("officeRentalRate------->" + officeRentalRate);
+			log.info("OfficeOwnership----->" + officeOwnership);
 			
 			DecimalFormat formatter = new DecimalFormat("###,##0.00");
 			String svOfficePurchasePrice = officePrice != null ? formatter.format(officePrice).toString() : null;
 			String svOfficeRentalRate = officeRentalRate != null ? formatter.format(officeRentalRate).toString() : null;
 			
-			context.put("templateType",templateDesc);
-			context.put("templateCode", templateType);
+//			context.put("templateType",templateDesc);
+//			context.put("templateCode", templateType);
 			context.put("officeOwnership", officeOwnership);
 			context.put("officePrice", svOfficePurchasePrice);
 			context.put("officeRentalRate", svOfficeRentalRate);
