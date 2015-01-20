@@ -1962,7 +1962,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					|| ppPlan.getStatus().getStatusId()==null
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
 							|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
-//							|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
+							|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
 							)){
 				System.out.println(1);
 				justifications = new ArrayList<PpRemark>();
