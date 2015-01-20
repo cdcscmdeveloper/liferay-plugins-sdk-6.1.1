@@ -554,20 +554,33 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * showMultipleLOIItemDetails method to view item details in multiple loi
+	 * showMultiLOIItemDetails method to view item details in multiple loi
 	 */
-	public void showMultipleLOIItemDetails(ScLoi scLoi) {
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-
-		reqDTO = new AwardSupplierReqDTO();
-
-		reqDTO.setScLoi(scLoi);
-
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
-
-		if (resDTO.getScLoi() != null) {
-			getManagedBean().setScLoi(resDTO.getScLoi());
+	public void showMultiLOIItemDetails() {
+		/*
+		 * AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		 * getManagedBean().setScLoi(null); reqDTO = new AwardSupplierReqDTO();
+		 * reqDTO.setScLoi(scLoi); AwardSupplierResDTO resDTO =
+		 * getQtAwardSO().retrieveLOIDtl(reqDTO);
+		 * 
+		 * if (resDTO.getScLoi().getScLoiLoaItems() != null &&
+		 * resDTO.getScLoi().getScLoiLoaItems().size()>0) {
+		 * getManagedBean().setScLoiLoaItems
+		 * (resDTO.getScLoi().getScLoiLoaItems());
+		 * getManagedBean().setScLoi(scLoi); }
+		 */
+		boolean termPriceFound = true;
+		getManagedBean().setItemDetailsFlag(true);
+		ScLoi scLoi = getManagedBean().getScLoi();
+		
+		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
+				if(term.getTermDesc().equals("Price")){
+					termPriceFound = false;
+				}
+			}
 		}
+		getManagedBean().setHideColumnFlag(termPriceFound);
 	}
 	
 	private IQTAwardSO getQtAwardSO() {

@@ -14,7 +14,7 @@
 			selection="#{lOIDetailBackingBean.managedBean.scLoi}"
 			selectionMode="single" rowKey="#{scLoi}">
 			
-			<p:ajax event="rowSelect" update=":form:negoTermPG" />
+			<p:ajax event="rowSelect" update=":form:ItemDetAndNegoTerm" listener="#{lOIDetailBackingBean.showMultiLOIItemDetails}"/>
 
 			<ac:paginator for="negoSuppList" />
 
@@ -24,30 +24,88 @@
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				#{scLoi.scLoiLoa.supplierName}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item']}">
-				<p:commandLink
-					actionListener="#{lOIDetailBackingBean.showMultipleLOIItemDetails(scLoi)}"
-					oncomplete="ItemDetailsPopup.show()" update=":form:ItemDetailsPopup"
-					process="@this">
-					<p:graphicImage library="ep/images/design" name="document.png"
-						title="Item Detail"
-						value="/resources/ep/images/design/document.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
-			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
 				#{lOIDetailBackingBean.getStatusDescById(scLoi.scWorkFlowStatus.pmStatus.statusId)}
 			</p:column>
 		</p:dataTable>
 		
 		<br />
-	
-		<p:panel toggleable="true">
+       <h:panelGroup id="ItemDetAndNegoTerm">
+			<p:panel header="Item Details" id="itemDetailsId" toggleable="true"
+				rendered="#{lOIDetailBackingBean.managedBean.itemDetailsFlag}"> 
+
+				<p:dataTable id="itemDtlID" var="loiloaItem"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
+					rowKey="#{itemPrice}" rowIndexVar="index">
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column rowspan="3"
+								headerText="#{lbl['lbl.sc.loiloa.loi.item']}" />
+							<p:column rowspan="3"
+								headerText="#{lbl['lbl.sc.loiloa.loi.qty']}" />
+							<p:column rowspan="3"
+								headerText="#{lbl['lbl.sc.loiloa.loi.uom']}" />
+							<p:column colspan="2" headerText="#{lbl['lbl.sc.loiloa.loi.original.offer.price']}" rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}" />
+							<p:column colspan="2" rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}"
+								headerText="#{lbl['lbl.sc.loiloa.loi.after.nego.offer.price']}" />
+
+						</p:row>
+						<p:row rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}"> 
+							<p:column headerText="#{lbl['lbl.sc.loiloa.loi.per.unit']}" />
+							<p:column headerText="#{lbl['lbl.sc.loiloa.loi.total.price']}" />
+							<p:column headerText="#{lbl['lbl.sc.loiloa.loi.per.unit']}" />
+							<p:column headerText="#{lbl['lbl.sc.loiloa.loi.total.price']}" />
+						</p:row>
+					</p:columnGroup>
+
+					<p:column>
+                        #{loiloaItem.scRequestItem.itemName}
+                   </p:column>
+					<p:column>
+						<h:outputText value="#{loiloaItem.qty}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+                       #{loiloaItem.scRequestItem.uom.uomCode}
+                    </p:column>
+
+
+					<p:column style="width:10%; text-align:right;"
+						rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
+						<h:outputText
+							value="#{loiloaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" />
+					</p:column>
+
+					<p:column style="width:10%; text-align:right;"
+						rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
+						<h:outputText
+							value="#{loiloaItem.qty * loiloaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" />
+					</p:column>
+
+					<p:column style="width:10%; text-align:right;"
+						rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
+						<h:outputText
+							value="#{loiloaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" />
+					</p:column>
+					<p:column style="width:10%; text-align:right;"
+						rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
+						<h:outputText
+							value="#{loiloaItem.qty * loiloaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
+			<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.loiloa.loi.result.of.negotiation']}" />
 			</f:facet>
 			
-			<h:panelGroup id="negoTermPG">
+			
 				<p:dataTable id="negoTermList" var="scLoiTerm"
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
 					selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
@@ -93,10 +151,8 @@
 						update="negoTermList"
 						rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}" />
 				</div>
-			
-			</h:panelGroup>
 		</p:panel>
+		</h:panelGroup>
 	</p:panel>
 	
-	<ui:include src="/xhtml/sc/loi/mutipleLoi/multipleLoiItemDetPopup.xhtml"/> 
 </ui:composition>

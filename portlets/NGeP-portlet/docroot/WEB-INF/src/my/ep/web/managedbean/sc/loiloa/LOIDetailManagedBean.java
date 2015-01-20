@@ -147,6 +147,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private Long awardSupplierId;
 	private String committeeType;
 	private boolean multipleLoiFlag;
+	private boolean itemDetailsFlag;
+	private boolean hideColumnFlag = true;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1174,5 +1176,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setMultipleLoiFlag(boolean multipleLoiFlag) {
 		this.multipleLoiFlag = multipleLoiFlag;
 	}
-	
+
+	public boolean isItemDetailsFlag() {
+		return itemDetailsFlag;
+	}
+
+	public void setItemDetailsFlag(boolean itemDetailsFlag) {
+		this.itemDetailsFlag = itemDetailsFlag;
+	}
+
+	public boolean isHideColumnFlag() {
+		return hideColumnFlag;
+	}
+
+	public void setHideColumnFlag(boolean hideColumnFlag) {
+		this.hideColumnFlag = hideColumnFlag;
+	}
 }
