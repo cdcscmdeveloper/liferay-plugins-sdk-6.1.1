@@ -23,9 +23,14 @@
 			</tr>
 			<tr>
 				<td valign="top"><h:outputLabel
-						value="#{lbl['lbl.sc.spec.request.proceed.central.contract']} " /></td>
+						value="#{lbl['lbl.sc.spec.request.proceed.central.contract']} " />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputTextarea rows="2" cols="100" maxlength="1000"
-						value="#{specificationBackingBean.managedBean.contractremark.remark}"></p:inputTextarea></td>
+						id="panelCentralcontractid" required="true"
+						label="#{lbl['lbl.sc.spec.request.proceed.central.contract']}"
+						value="#{specificationBackingBean.managedBean.contractremark.remark}"></p:inputTextarea>
+					<p:message id="centaralContractpanelMsg"
+						for="panelCentralcontractid"></p:message></td>
 			</tr>
 
 		</table>
