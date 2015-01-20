@@ -43,8 +43,14 @@
 				<ui:include src="/xhtml/sc/supplierproposal/category.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab7" title="Scores" rendered="#{statusHide}"
+
+			<p:tab  rendered="#{statusHide}"
 				styleClass="noBorders tr,noBorders td">
+				<f:facet name="title">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText
+						value="#{lbl['lbl.sc.eva.cmpny.score.tot.supplier.financial.scores']} " />
+				</f:facet>
 				<p:spacer height="15"></p:spacer>
 				<ui:include
 					src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
