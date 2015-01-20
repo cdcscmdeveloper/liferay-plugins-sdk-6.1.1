@@ -39,6 +39,7 @@
 
 		<script>
 			function DigiSign() {
+				gpkiBlockWidget.show();
 				var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
 						.val();
 				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
@@ -119,6 +120,7 @@
 											value : subjectDN
 										} ]);
 										gpki_dlg.hide();
+										gpkiBlockWidget.hide();
 
 										/* put your logic to handle the result here */
 										// 									} else if (statusCode == "50") {
@@ -137,6 +139,7 @@
 											name : 'statusMsg',
 											value : statusMsg
 										} ]);
+										gpkiBlockWidget.hide();
 									}
 								});
 			}
@@ -144,7 +147,7 @@
 
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
 			resizable="false" modal="true">
-		<p:blockUI block="gpkiPopup" trigger="signButtonId" widgetVar="blockWidget">
+		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 
@@ -162,7 +165,7 @@
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
-				<p:commandButton id="signButtonId" value="Sign" onstart="DigiSign();" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				<p:commandButton id="signButtonId" value="Sign" onstart="DigiSign();" />
 				
 			</h:panelGrid>
 			<c:if test="#{not empty cc.getValueExpression('postCancelAction')} ">
