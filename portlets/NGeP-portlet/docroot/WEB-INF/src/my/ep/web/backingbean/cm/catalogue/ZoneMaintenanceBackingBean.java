@@ -371,9 +371,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		List<Long> existingDistricts = new ArrayList<Long>();
 		List<Long> existingDivisions = new ArrayList<Long>();
 		List<CmSupplierZoneDTL> cmDtls = new ArrayList<CmSupplierZoneDTL>(); 
-		if(selZone.getCmSupplierZoneDtls() != null)
+		if(selZone.getCmSupplierZoneDtls() != null) {
 			log.info(666);
 			cmDtls.addAll(selZone.getCmSupplierZoneDtls()); 
+		}
 		for(CmSupplierZoneDTL cmDtl : cmDtls){
 			log.info(777);
 			if(cmDtl.getPmState() != null)
