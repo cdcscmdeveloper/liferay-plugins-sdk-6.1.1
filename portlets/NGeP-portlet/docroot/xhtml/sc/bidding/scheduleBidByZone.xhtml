@@ -6,40 +6,44 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="scheduleBidByZonePanel" header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true">
+	<p:panel id="scheduleBidByZonePanel"
+		header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true">
 
 		<p:dataTable id="bidScheduleByZonal" rows="10"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
-			var="scheduleZoneBid" 
+			var="scheduleZoneBid" rowIndexVar="index" rowKey="#{scheduleZoneBid}"
 			selection="#{scheduleBiddingBB.managedBean.rowSelectedBid}">
 			<ac:paginator for="bidScheduleByZonal"></ac:paginator>
 			<p:ajax event="rowSelect" update="@([id$=bidScheduleByZoneBidItems])" />
 
 			<p:column headerText="#{lbl['lbl.sc.zone.name']}">
-				<p:commandLink id="zoneNameByZone" value="#{scheduleZoneBid.tplSpecZoneDtl.zoneName}"
+				<p:commandLink id="zoneNameByZone"
+					value="#{scheduleZoneBid.tplSpecZoneDtl.zoneName}"
 					onclick="participants.show();"
 					action="#{scheduleBiddingBB.getParticipantsListAction(scheduleZoneBid)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
-				<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button"
-					readonlyInput="true" id="zoneBidStartDate"
+				<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button" label="#{lbl['lbl.sc.bidding.start']}"
+					required="true" readonlyInput="true" id="zoneBidStartDate"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}">
 					<p:ajax event="dateSelect" process="zoneBidStartDate"
 						partialSubmit="true"
 						listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
 						update="@([id$=zoneBidEndDate])" />
-						<p:ajax event="change" process="zoneBidStartDate"
+					<p:ajax event="change" process="zoneBidStartDate"
 						partialSubmit="true"
 						listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
 						update="@([id$=zoneBidEndDate])" />
 				</p:calendar>
+				<p:message id="startDateByZoneMsg" for="zoneBidStartDate"
+					showDetail="false" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
 
 				<p:calendar value="#{scheduleZoneBid.endDate}" showOn="button"
-					id="zoneBidEndDate"
+					id="zoneBidEndDate" required="true" label="#{lbl['lbl.sc.bidding.end']}"
 					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -52,9 +56,12 @@
 						listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleZoneBid)}"
 						update="@([id$=bidDurationByZone])" />
 				</p:calendar>
+				<p:message id="endDateByZoneMsg" for="zoneBidEndDate"
+					showDetail="false" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
-				<p:outputLabel id="bidDurationByZone" value="#{scheduleZoneBid.duration}" />
+				<p:outputLabel id="bidDurationByZone"
+					value="#{scheduleZoneBid.duration}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -66,13 +73,16 @@
 
 			<ac:paginator for="bidScheduleByZoneBidItems"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<h:outputText id="itemNameByZone" value="#{item.scRequestItem.itemName}" />
+				<h:outputText id="itemNameByZone"
+					value="#{item.scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-				<h:outputText id="itemDescByZone" value="#{item.scRequestItem.itemDesc}" />
+				<h:outputText id="itemDescByZone"
+					value="#{item.scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.uom']}">
-				<h:outputText id="uomNameByZone" value="#{item.scRequestItem.uom.uomName}" />
+				<h:outputText id="uomNameByZone"
+					value="#{item.scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.quantity']}">
 				<h:outputText id="quantityByZone" style="float : right"
@@ -83,7 +93,8 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<h:outputText id="decrementAmtByZone" style="float : right" value="#{item.decrementAmt}">
+				<h:outputText id="decrementAmtByZone" style="float : right"
+					value="#{item.decrementAmt}">
 					<f:convertNumber for="decrementAmt"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>

@@ -113,6 +113,9 @@ public class ScheduleBiddingBackingBean extends
 						.setDuration(duration);
 			}
 		}
+		getManagedBean().getSelectedIndexes().clear();
+		getManagedBean().setSelectedAll(false);
+		getManagedBean().setSelected(false);
 
 	}
 
@@ -316,7 +319,7 @@ public class ScheduleBiddingBackingBean extends
 		return duration;
 	}
 
-	public String submitBiddingDetails(String outCome) {
+	public void submitBiddingDetails(String outCome) {
 
 		String taskId = this.getManagedBean().getTaskId();
 		String token = new FacesScopes().getBPMAuthenticationCtxToken();
@@ -339,7 +342,7 @@ public class ScheduleBiddingBackingBean extends
 			} else {
 				// TODO update the message
 				throw new EpException(
-						"please enter at least one Bid COntact Person");
+						"please enter at least one Bid Contact Person");
 			}
 
 			biddingReqDTO.setScBid(this.getManagedBean().getScBid());
@@ -349,32 +352,32 @@ public class ScheduleBiddingBackingBean extends
 					.updateBPMAction(biddingReqDTO);
 
 			if (resDTO.isSuccessful()) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								getManagedBean().getScQt().getQtNo(),
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										getManagedBean().getScQt().getQtNo(),
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700026,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_BIDDING),
-																resDTO.getScBid()
-																		.getDocType() },// TODO
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+				String variable1 = getMessageCommon("lbl.rpt.qtNo");
+				String variable2 = resDTO.getScBid().getDocNo();
+				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
+						variable1, variable2);
 			}
 
 		} finally {
 			scheduleBiddingSO = null;
 		}
-		return null;
+	}
+
+	private void commonMessageAcknowledmentPage(String messageId,
+			String variable1, String variable2) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(messageId, new String[] { variable1,
+								variable2 },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		// clear data
+		super.renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
 	public void selectAll() {

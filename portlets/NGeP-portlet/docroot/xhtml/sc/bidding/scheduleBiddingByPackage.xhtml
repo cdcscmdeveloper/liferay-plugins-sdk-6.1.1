@@ -16,7 +16,7 @@
 							value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
 					<td><p:calendar showOn="button" readonlyInput="true" required="true"
-							id="scheduleBidPackageStartDate"
+							id="scheduleBidPackageStartDate" label="#{lbl['lbl.sc.bidding.start']}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -28,7 +28,7 @@
 								partialSubmit="true"
 								listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 								update="scheduleBidPackageEndDate,byPackageStartDateMsg" />
-						</p:calendar> <p:message id="byPackageStartDateMsg"
+						</p:calendar> <p:message id="byPackageStartDateMsg" showDetail="false"
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<TD><p:spacer width="10"></p:spacer></TD>
 
@@ -36,7 +36,7 @@
 							value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
 					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate"
-							readonlyInput="true" required="true"
+							readonlyInput="true" required="true" label="#{lbl['lbl.sc.bidding.end']}"
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
@@ -49,7 +49,7 @@
 								partialSubmit="true"
 								listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 								update="bidSchedulePackageDuration,byPackageEndDateMsg" />
-						</p:calendar> <p:message id="byPackageEndDateMsg"
+						</p:calendar> <p:message id="byPackageEndDateMsg" showDetail="false"
 							for="scheduleBidPackageEndDate" display="icon" /></td>
 					<TD><p:spacer width="10"></p:spacer></TD>
 					<td><p:outputLabel id="durationByPackage"
