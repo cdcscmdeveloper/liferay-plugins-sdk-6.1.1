@@ -351,8 +351,8 @@ public class SupplierManagementConst {
 	public static final int RECORD_STATUS_SUSPENDED = 0;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
-	
-	//Revision Application Type
+
+	// Revision Application Type
 	public static final String ORIGINAL_APPLICATION = "O";
 	public static final String PREVIOUS_APPLICATION = "P";
 
@@ -399,6 +399,19 @@ public class SupplierManagementConst {
 	
 	public static final String VALID_PARAMETER_TYPE = "Valid";
 	
+
+	// SM Action description for sm tracking dairy
+	public static final String SUPP_SAVE_APPL_DRAFT = "Supplier saved application as draft";
+	public static final String SUPP_SUBMIT_NORM_APPL = "Supplier submit application for approval";
+	public static final String SUPP_SUBMIT_CANCREG_APPL = "Supplier submit cancel registration with mof for approval";
+	public static final String SUPP_SUBMIT_DELDRFT_APPL = "Supplier submit delete pending application for approval";
+	public static final String PO_RECOM_SITE_VISIT = "PO Recommend for site visit";
+	public static final String PO_REJECT_APPL = "Application rejected by PO";
+	public static final String APPROVER_REJECT_APPL = "Application Rejeceted by Approver";
+	public static final String PO_APPROVE_APPL = "Application approved by PO";
+	public static final String APPROVER_APPROVE_APPL = "Application approved by Approver";
+	public static final String PO_SEND_INQUIRY_SUPP = "PO sent inquiry to supplier";
+	public static final String PO_ESCALATE_APPROVER = "PO esclated the application to Approver for final decision";
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 
