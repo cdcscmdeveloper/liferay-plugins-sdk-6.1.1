@@ -188,8 +188,11 @@ public class BPMTaskListBackingBean extends
 		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
 				+ FLProcessNameConst.CO_ACK_HT, "contract-order");
 		temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION
-				+ FLProcessNameConst.SUBMIT_FAILED_ORDER_CANCELLATION_HT_NAME,
+				+ ParameterConst.DOCTYPE_CONTRACT_ORDER,
 				"contract-order");
+		temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION
+				+ ParameterConst.DOCTYPE_PURCHASE_ORDER,
+				"purchase-order");
 
 		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 				+ FLProcessNameConst.CREATE_INVOICE, "invoice");
