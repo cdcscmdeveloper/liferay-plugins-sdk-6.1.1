@@ -63,6 +63,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -146,39 +147,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}else{
 				flOrderId = getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
-			}
-			if(getManagedBean().getFulfilmentRequest().getCtContract() != null){
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-					Calendar calendar = Calendar.getInstance();
-					for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-						if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
-							Date currentDate = new Timestamp(System.currentTimeMillis());
-							Date startDate = flDeliveryAddress.getStartDate();
-							int deliveryTerm = 0;
-							deliveryTerm = getManagedBean().getFulfilmentRequest().getCtContract().getLatestContractVer().getCtSetting().getSupplierDoDays();
-							calendar.setTime(currentDate);
-							calendar.add(Calendar.DATE, deliveryTerm);
-							Date newDate = calendar.getTime();
-							
-							if(newDate.before(startDate)){
-								throw new EpException(MessageConst.ERROR_745057, new String[]{getFullAddress(flDeliveryAddress.getPmAddress())});
-							}
-						}
-					}
-				}
-			}
 			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				reValidateRetrieveDelAmt();
-			}
-			
-			// do validation for selected address have items with delmount and delQty or not....
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				checkItemsWithDoAddress(actionName);
 			}
 			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -235,6 +206,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setUserRole(getUserRole());
+			if(null != getManagedBean().getPmDigiSign()){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 				if(null == getManagedBean().getSupplierDoRef()){
 					//TODO
@@ -244,10 +218,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				}
 				if(null != getManagedBean().getTaskId()){
 					reqDTO.setTaskId(getManagedBean().getTaskId());
-				}
-				
-				if(null != getManagedBean().getPmDigiSign()){
-					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				}
 				
 				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
@@ -576,7 +546,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
+		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	
 	public void onTabChange(int selectedTabIndex){
@@ -674,17 +648,30 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return "flDocSearch";
 	}
 	
-	public String gpkiSignAction(String outcome) throws Exception{
+	public String signingAction(String outcome) throws Exception{
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		}
+		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
-			// Temp setTextBeforeSign : DocNo+Outcome
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
+			validateDeliveryOrder();
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			spkiBackingBean.getChallengeQuestions();
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
 		}else{
 			return createDeliveryOrder(outcome);
@@ -692,10 +679,65 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	
+	private void validateDeliveryOrder() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if(getManagedBean().getFulfilmentRequest().getCtContract() != null){
+			Calendar calendar = Calendar.getInstance();
+			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+					Date currentDate = new Timestamp(System.currentTimeMillis());
+					Date startDate = flDeliveryAddress.getStartDate();
+					int deliveryTerm = 0;
+					deliveryTerm = getManagedBean().getFulfilmentRequest().getCtContract().getLatestContractVer().getCtSetting().getSupplierDoDays();
+					calendar.setTime(currentDate);
+					calendar.add(Calendar.DATE, deliveryTerm);
+					Date newDate = calendar.getTime();
+
+					if(newDate.before(startDate)){
+						throw new EpException(MessageConst.ERROR_745057, new String[]{getFullAddress(flDeliveryAddress.getPmAddress())});
+					}
+				}
+			}
+		}
+		reValidateRetrieveDelAmt();
+
+		// do validation for selected address have items with delmount and delQty or not....
+		checkItemsWithDoAddress(getManagedBean().getButtonAction());
+	}
+
+	private String getDeliveryOrderAmt() {
+		String doAmt = "";
+		BigDecimal totalAmt = new BigDecimal(0);
+		
+		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				totalAmt = totalAmt.add(itemAddr.getDeliveredAmt());
+			}
+		}
+		doAmt = totalAmt.toString();
+		return doAmt;
+	}
+
 	public String preSubmitDeliveryOrder(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
+			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+				sb.append(getManagedBean().getButtonAction());
+				getManagedBean().setTextBeforeSign(sb.toString());
+			}else if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("DO-");
+				sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
+				sb.append(getFacesScopes().getUserSessionBean().getUserId());//USERID
+				sb.append(getDeliveryOrderAmt());//DO AMT
+				getManagedBean().setTextBeforeSign(sb.toString());
+			}
+			updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), ParameterConst.DOCTYPE_DELIVERY_ORDER, 
+					getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
+					getManagedBean().getTextBeforeSign());
 		}
 		
 		return createDeliveryOrder(getManagedBean().getButtonAction());
@@ -796,4 +838,22 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getUnitOfMeasurementDataModel().resetData();
 		unitOfMeasurementDataModel.reloadData();		
 	}	
+	
+	// To update digisign data for spki
+	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+			Long docId, String docNumber , String textBeforeSign) {
+		FacesScopes facesScope = new FacesScopes();
+		Long userId = facesScope.getUserSessionBean().getUserId();
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		pmDigiSign.setDocId(new BigDecimal(docId));
+		pmDigiSign.setDocNo(docNumber);
+		pmDigiSign.setDocType(docType);
+		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedDate(date);
+		pmDigiSign.setOrginalData(textBeforeSign);
+		// spki 
+		SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+		String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+		pmDigiSign.setSignedData(signedData);
+	}
 }

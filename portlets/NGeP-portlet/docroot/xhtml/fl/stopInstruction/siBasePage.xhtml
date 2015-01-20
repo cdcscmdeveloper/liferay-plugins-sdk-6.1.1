@@ -21,6 +21,8 @@
 			postSignAction="#{stopInstrBB.preSubmitStopInstruction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{stopInstrBB.enableAutoUpdate()}" />
 		<f:event listener="#{stopInstrBB.preRenderView}" type="preRenderView" />
+		<ac:spkiPopup textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
+			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"/>
 		<p:messages id="messages" showDetail="true" autoUpdate="#{stopInstrBB.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
@@ -35,12 +37,12 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" styleClass="ui-button"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{stopInstrBB.gpkiSignAction(bpmAction)}"  update="@form"  />
+							action="#{stopInstrBB.signingAction(bpmAction)}"  update="@form"  />
 					</ui:repeat> 
 					<c:if test='#{stopInstrBB.managedBean.stopInstr.brandNew}'>
 						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{stopInstrBB.gpkiSignAction('STOP FULFILMENT')}"  update="@form">
+							action="#{stopInstrBB.signingAction('STOP FULFILMENT')}"  update="@form">
 						</p:commandButton>
 					</c:if>
 				</td>
