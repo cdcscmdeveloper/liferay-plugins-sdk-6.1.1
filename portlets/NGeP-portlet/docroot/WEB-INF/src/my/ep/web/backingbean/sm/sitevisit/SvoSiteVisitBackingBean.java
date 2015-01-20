@@ -253,6 +253,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void retrieveSiteVisitInfo(String viewMode){
 		//this.getManagedBean().setAppId(1257118);
 		//this.getManagedBean().setAppId(1257442);
+		//this.getManagedBean().setAppId(1257394);
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -1777,12 +1778,24 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 
+			//retrieve Purchase Method && apply puchase method to map
+			Map<String, String> purchaseMethodMap = new HashMap<String,String>();
+			List<PmParameterDesc> purchaseMethodLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PURCHASING_METHOD, "en");
+			
+			if(purchaseMethodLs.size() > 0){
+				for(PmParameterDesc pmDesc : purchaseMethodLs){
+					purchaseMethodMap.put(pmDesc.getPmParameter().getParameterCode(),pmDesc.getCodeName());
+				}
+			}
+			
 			this.prepareFinancialDoc(manufacturingTemplate);
 			manufacturingTemplate.getFinancialDocParamMap();
+			context.put("smCommonUtil", new SmCommonUtil());
 			context.put("financialDocParamMap", manufacturingTemplate.getFinancialDocParamMap());
 			context.put("financialDocLs", manufacturingTemplate.getFinancialDocLs());
 			context.put("additionalDocLs", manufacturingTemplate.getAdditionalDocLs());
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
+			context.put("purchaseMethodMap", purchaseMethodMap);
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
 			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
