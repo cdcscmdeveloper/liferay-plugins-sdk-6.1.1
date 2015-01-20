@@ -140,6 +140,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	
 	private int selectedZoneTabIndex = 0;
 	private MenuModel zoneMenuModel;
+	
+	private String companyName;
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -688,6 +690,14 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneMenuModel(MenuModel zoneMenuModel) {
 		this.zoneMenuModel = zoneMenuModel;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 

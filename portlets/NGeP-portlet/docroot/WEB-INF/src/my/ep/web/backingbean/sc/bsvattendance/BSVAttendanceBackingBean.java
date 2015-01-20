@@ -203,7 +203,8 @@ public class BSVAttendanceBackingBean extends
 		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
 		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
 			SimpleDateFormat sdf = new SimpleDateFormat(
-					new CommonUtils().getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
+					new CommonUtils()
+							.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
 			throw new EpException(MessageConst.ERROR_760209,
 					new String[] { sdf.format(closeDate) });
 		}
@@ -309,11 +310,18 @@ public class BSVAttendanceBackingBean extends
 
 				List<ScQtBsvAttendance> bsvAttandance = registration
 						.getBsvAttendance();
+				if (null != bsvAttandance
+						&& bsvAttandance.size() > scQtBrief
+								.getMaxNoOfAttendance()) {
+					throw new EpException(MessageConst.ERROR_760230,
+							new String[] { ""
+									+ scQtBrief.getMaxNoOfAttendance() });
+				}
 				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
 
 				if (flag) {
 					registration.setAttended(true);
-					
+
 				} else {
 					throw new EpException(MessageConst.ERROR_760043,
 							new String[] { "1" });
@@ -334,9 +342,9 @@ public class BSVAttendanceBackingBean extends
 			if ("complete".equalsIgnoreCase(status)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
 				Long qtId = this.getManagedBean().getScQt().getQtId();
-				
+
 				renewSessionWithPreviousValues();
-				
+
 				retrieveBriefingSiteVisitList(qtId);
 				url = previousPage + ".xhtml?faces-redirect=true";
 			}
@@ -344,9 +352,9 @@ public class BSVAttendanceBackingBean extends
 				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);
 				String previousPage = this.getManagedBean().getPreviousPage();
 				ScQt scQt = this.getManagedBean().getScQt();
-				
+
 				renewSessionWithPreviousValues();
-				
+
 				this.getManagedBean().setPreviousPage(previousPage);
 				this.getManagedBean().setScQt(scQt);
 
@@ -376,8 +384,8 @@ public class BSVAttendanceBackingBean extends
 		return url;
 
 	}
-	
-	private void renewSessionWithPreviousValues() {		
+
+	private void renewSessionWithPreviousValues() {
 		String taskId = getManagedBean().getTaskId();
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
@@ -486,63 +494,7 @@ public class BSVAttendanceBackingBean extends
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
 
-		this.getManagedBean()
-				.setSelectedbriefRegistration(briefingRegistration);
-
-		List<ScQtBsvAttendance> attanedList = briefingRegistration
-				.getBsvAttendance();
-
-		if (null == attanedList && null != briefingRegistration
-				&& null != briefingRegistration.getBsvRegistrationId()) {
-			IQTBriefingSO briefingSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTBriefingSO.class);
-			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-			briefingReqDTO.setQtBriefingId(briefingRegistration
-					.getBsvRegistrationId());
-			briefingReqDTO.setSupplierId(briefingRegistration.getSupplier()
-					.getSupplierId());
-			BriefingResDTO resDto = briefingSO
-					.retrieveBriefingAttendanceList(briefingReqDTO);
-			attanedList = resDto.getBriefingAttResultBean().getResultList();
-		}
-
-		if (null == attanedList || attanedList.isEmpty()) {
-			attanedList = new ArrayList<ScQtBsvAttendance>();
-			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTBriefingSO.class);
-			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			reqDTO.setSupplierId(briefingRegistration.getSupplier()
-					.getSupplierId());
-			BriefingResDTO resDTO = bsvSo
-					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
-			List<SmPersonnel> personals = resDTO.getPersonals();
-			log.debug("Personal list size**************" + personals.size());
-
-			/**
-			 * Below code to add the smpersonal to attandance list if alredy
-			 * attanded persons mark it.
-			 */
-
-			for (SmPersonnel personnel : personals) {
-				ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
-				briefingAttendance.setName(personnel.getName());
-				briefingAttendance.setIcPassPort(personnel
-						.getIdentificationNo());
-				briefingAttendance.setContactNo(personnel.getMobileNo());
-				briefingAttendance.setEmail(personnel.getEmail());
-				briefingAttendance.setBsvRegistration(briefingRegistration);
-				briefingAttendance.setAuthorized(true);
-				attanedList.add(briefingAttendance);
-			}
-		}
-
-		this.getManagedBean().getSelectedbriefRegistration()
-				.setBsvAttendance(attanedList);
-
-		// this.getManagedBean().setBriefingAttendanceList(attanedList);
-
+		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
 	}
 
 	/**
@@ -608,7 +560,8 @@ public class BSVAttendanceBackingBean extends
 		}
 
 		if (mofAccounts != null) {
-			for (SmMofAccount mofAccount : mofAccounts) {
+			for (int i = 0; i < mofAccounts.size(); i++) {
+				SmMofAccount mofAccount = mofAccounts.get(i);
 				ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
 				bsvRegistration.setSupplier(mofAccount.getSmSupplier());
 				bsvRegistration.setBsvDtl(this.getManagedBean()
@@ -619,6 +572,11 @@ public class BSVAttendanceBackingBean extends
 				}
 				getManagedBean().getBriefingRegistrationList().add(
 						bsvRegistration);
+				if (i == mofAccounts.size() - 1) {
+					this.getManagedBean().setSelectedbriefRegistration(
+							bsvRegistration);
+					getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
+				}
 			}
 
 		}
@@ -672,7 +630,8 @@ public class BSVAttendanceBackingBean extends
 			List<ScQtBsvDtl> bsvDtls = zoneBean.getBriefingList();
 			return isBsvStatusComplete(bsvDtls);
 		} else {
-			List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>(zoneBean.getBriefingList());
+			List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>(
+					zoneBean.getBriefingList());
 			bsvDetails.addAll(zoneBean.getSitevisitList());
 			return isBsvStatusComplete(bsvDetails);
 		}
@@ -757,5 +716,66 @@ public class BSVAttendanceBackingBean extends
 				break;
 			}
 		}
+	}
+
+	private void getAttandanceDtlsBySelectedRegistartion(
+			ScQtBsvRegistration briefingRegistration) {
+		this.getManagedBean()
+				.setSelectedbriefRegistration(briefingRegistration);
+
+		List<ScQtBsvAttendance> attanedList = briefingRegistration
+				.getBsvAttendance();
+
+		if (null == attanedList && null != briefingRegistration
+				&& null != briefingRegistration.getBsvRegistrationId()) {
+			IQTBriefingSO briefingSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+			briefingReqDTO.setQtBriefingId(briefingRegistration
+					.getBsvRegistrationId());
+			briefingReqDTO.setSupplierId(briefingRegistration.getSupplier()
+					.getSupplierId());
+			BriefingResDTO resDto = briefingSO
+					.retrieveBriefingAttendanceList(briefingReqDTO);
+			attanedList = resDto.getBriefingAttResultBean().getResultList();
+		}
+
+		if (null == attanedList || attanedList.isEmpty()) {
+			attanedList = new ArrayList<ScQtBsvAttendance>();
+			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			reqDTO.setSupplierId(briefingRegistration.getSupplier()
+					.getSupplierId());
+			BriefingResDTO resDTO = bsvSo
+					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
+			List<SmPersonnel> personals = resDTO.getPersonals();
+			log.debug("Personal list size**************" + personals.size());
+
+			/**
+			 * Below code to add the smpersonal to attandance list if alredy
+			 * attanded persons mark it.
+			 */
+
+			for (SmPersonnel personnel : personals) {
+				ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
+				briefingAttendance.setName(personnel.getName());
+				briefingAttendance.setIcPassPort(personnel
+						.getIdentificationNo());
+				briefingAttendance.setContactNo(personnel.getMobileNo());
+				briefingAttendance.setEmail(personnel.getEmail());
+				briefingAttendance.setBsvRegistration(briefingRegistration);
+				briefingAttendance.setAuthorized(true);
+				attanedList.add(briefingAttendance);
+			}
+		}
+
+		this.getManagedBean().getSelectedbriefRegistration()
+				.setBsvAttendance(attanedList);
+
+		// this.getManagedBean().setBriefingAttendanceList(attanedList);
+
 	}
 }

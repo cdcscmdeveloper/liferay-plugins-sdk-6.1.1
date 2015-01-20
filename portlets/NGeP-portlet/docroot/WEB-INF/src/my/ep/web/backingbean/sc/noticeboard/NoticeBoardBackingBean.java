@@ -972,8 +972,8 @@ public class NoticeBoardBackingBean extends
 					while (treeNode != null
 							&& treeNode.getChildren().size() > 0) {
 						treeNode = treeNode.getChildren().iterator().next();
-						if(treeNode.isSelected()){
-							treeNode= treeNode;
+						if (treeNode.isSelected()) {
+							// treeNode= treeNode;
 							break;
 						}
 					}
@@ -1109,6 +1109,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setSelectedBsvAttandance(null);
 		this.getManagedBean().setAttendanceList(null);
 		this.getManagedBean().setSmSupplier(supplier);
+		this.getManagedBean().setCompanyName(null);
 		if (null != mofNo) {
 			List<SmMofAccount> accounts = this.getManagedBean()
 					.getMofAccounts();
@@ -1119,6 +1120,7 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 			this.getManagedBean().setSmSupplier(supplier);
+			this.getManagedBean().setCompanyName(supplier.getCompanyName());
 			ISupplierSearchSO supplierSearchSo = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							ISupplierSearchSO.class);
@@ -1222,6 +1224,7 @@ public class NoticeBoardBackingBean extends
 		List<ScQtBsvAttendance> attandance = this.getManagedBean()
 				.getSelectedBsvAttandance();
 		List<ScQtBsvRegistration> registrations = new ArrayList<ScQtBsvRegistration>();
+		boolean isRegisterd = false;
 		if (!bsvDetails.isEmpty()) {
 
 			for (ScQtBsvDtl bsvDetail : bsvDetails) {
@@ -1247,36 +1250,53 @@ public class NoticeBoardBackingBean extends
 					bsvRegistration.setBsvAttendance(attandance);
 					registrations.add(bsvRegistration);
 				} else {
-					if (null != attandance && !attandance.isEmpty()) {
-						for (ScQtBsvAttendance bsvAttendance : attandance) {
-							bsvAttendance.setBsvRegistration(registrations
-									.get(0));
-						}
-					} else {
-						throw new EpException(MessageConst.ERROR_760184);
-					}
+
+					isRegisterd = true;
+					break;
+
+					/*
+					 * if (null != attandance && !attandance.isEmpty()) { for
+					 * (ScQtBsvAttendance bsvAttendance : attandance) {
+					 * bsvAttendance.setBsvRegistration(registrations .get(0));
+					 * } } else { throw new
+					 * EpException(MessageConst.ERROR_760184); }
+					 */
 				}
 				bsvDetail.setQtBsvRegistrations(registrations);
+			}
+			if (!isRegisterd) {
+				reqDTO.setQtBriefingList(bsvDetails);
+				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
+						.getSupplierId());
+
+				BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
+				if (resDto.isSuccessful()) {
+					String prvPage = this.getManagedBean().getPreviousPage();
+					ScQt currentQt = this.getManagedBean().getScQt();
+					SmSupplier supplier = this.getManagedBean().getSmSupplier();
+					renewSesionObject();
+					this.getManagedBean().setScQt(currentQt);
+					this.getManagedBean().setSmSupplier(supplier);
+					this.getManagedBean().setPreviousPage(prvPage);
+					retriveBsvDetails(currentQt.getQtId());
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO, null,
+											"You have successfully registered for the briefing/site visit"));
+				}
+
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								"You have registered for the briefing/site visit"));
 			}
 
 		} else {
 			throw new EpException(MessageConst.ERROR_760185);
-		}
-		reqDTO.setQtBriefingList(bsvDetails);
-		BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
-		if (resDto.isSuccessful()) {
-			String prvPage = this.getManagedBean().getPreviousPage();
-			ScQt currentQt = this.getManagedBean().getScQt();
-			SmSupplier supplier = this.getManagedBean().getSmSupplier();
-			renewSesionObject();
-			this.getManagedBean().setScQt(currentQt);
-			this.getManagedBean().setSmSupplier(supplier);
-			this.getManagedBean().setPreviousPage(prvPage);
-			retriveBsvDetails(currentQt.getQtId());
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							"Successfully registerd"));
 		}
 
 	}
