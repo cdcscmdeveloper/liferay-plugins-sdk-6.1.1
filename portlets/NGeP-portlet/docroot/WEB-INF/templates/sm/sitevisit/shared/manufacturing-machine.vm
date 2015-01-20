@@ -18,13 +18,19 @@
 			#foreach($machine in $machineLs)
 			<tr>
 				<td>$velocityCount</td>
-				<td>$machine.machineType</td>
-				<td>$machine.brandName</td>
-				<td>$machine.machineFunction</td>
-				<td>$machine.qty</td>
-				<td>$machine.value</td>
-				<td>$machine.purchaseMethod</td>
-				<td>$machine.guarantorName</td>
+				<td>$!machine.machineType</td>
+				<td>$!machine.brandName</td>
+				<td>$!machine.machineFunction</td>
+				<td>$!machine.qty</td>
+				<td style="text-align:right">
+				#if($machine.value) 
+					$smCommonUtil.formatToTwoDecimalPoint($machine.value)
+				#end
+				</td>
+				<td>
+					$purchaseMethodMap.get($machine.purchaseMethod)
+				</td>
+				<td>$!machine.guarantorName</td>
 			</tr>
 			#end
 		#else
