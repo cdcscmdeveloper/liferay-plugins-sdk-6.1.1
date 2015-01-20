@@ -566,6 +566,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
 		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
 		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+		BigDecimal grandTotalDanAmt = new BigDecimal(0);
+		BigDecimal grandTotalCanAmt = new BigDecimal(0);
 		for(Entry<String, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
 		//for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
 			List<FlPaymentItem> paymentItems = itemEntry.getValue();
@@ -592,6 +594,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				totalInvAmt=totalInvAmt.add(chargeLineItem.getFlInvoiceItem().getInvAmt());
 				if(chargeLineItem.getFlAdjustmentItem()!=null) {
 					totalDanAmt=totalDanAmt.add(chargeLineItem.getFlAdjustmentItem().getAdjustedAmt());
+					if(null != chargeLineItem.getFlAdjustmentItem().getFlAdjustment()){
+						if(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE.equalsIgnoreCase(chargeLineItem.getFlAdjustmentItem().getFlAdjustment().getDocType())){
+							grandTotalCanAmt = grandTotalCanAmt.add(totalDanAmt);
+						}else if(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE.equalsIgnoreCase(chargeLineItem.getFlAdjustmentItem().getFlAdjustment().getDocType())){
+							grandTotalDanAmt = grandTotalDanAmt.add(totalDanAmt);
+						}
+					}
 				}
 			}			
 
@@ -614,6 +623,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
 		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
+		getManagedBean().setCanAmtGrandTotal(grandTotalCanAmt);
+		getManagedBean().setDanAmtGrandTotal(grandTotalDanAmt);
 	}
 	
 	public void calPmSummary(){
