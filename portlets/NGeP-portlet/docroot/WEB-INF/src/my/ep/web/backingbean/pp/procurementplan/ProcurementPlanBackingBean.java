@@ -1255,7 +1255,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					throw new EpException(MessageConst.ERROR_730005);
 				}
 				if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
-					throw new EpException(MessageConst.ERROR_730006);
+					throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
 				}
 				if(epItem.getNonEpAmt().intValue()>0){
 					if(epItem.getJustifications()==null 
