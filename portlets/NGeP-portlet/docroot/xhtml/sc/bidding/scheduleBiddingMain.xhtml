@@ -12,7 +12,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:messages id="ScheduleBiddingMainnMessage" showDetail="true"
+		<p:messages id="ScheduleBiddingMainnMessage" showDetail="true"  showSummary="false"
 			autoUpdate="true" closable="true" />
 
 		<ui:param name="isRecommendByPackage"
@@ -83,14 +83,14 @@
 				<ac:paginator for="contactPersonDetails" />
 				<p:column style="width:2% ;">
 					<f:facet name="header">
-						<p:selectBooleanCheckbox
+						<p:selectBooleanCheckbox id="multiSelectContactCB"
 							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}">
 							<p:ajax partialSubmit="true" process="@this"
 								update="@([id$=contactPersonDetails])"
 								listener="#{scheduleBiddingBB.selectAllBidContacts}" />
 						</p:selectBooleanCheckbox>
 					</f:facet>
-					<p:selectBooleanCheckbox
+					<p:selectBooleanCheckbox id="selectCOntactCB"
 						value="#{scheduleBiddingBB.managedBean.selectedBidContact}">
 						<p:ajax partialSubmit="true" process="@this" update="@this"
 							listener="#{scheduleBiddingBB.selectBidContact(index)}" />
@@ -98,22 +98,24 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.name']}" style="width:68%">
-					<p:inputText id="contactName" value="#{contact.contactName}"
+					<p:inputText id="contactName" value="#{contact.contactName}" label="#{lbl['lbl.sc.name']}"
 						required="true" size="40">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@([id$=contactNameMsg])" />
 					</p:inputText>
-					<p:message id="contactNameMsg" for="contactName" display="icon" />
+					<p:message id="contactNameMsg" for="contactName" showDetail="false" display="icon" />
 
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.telephone.no']}"
 					style="width:30%">
-					<p:inputText required="true" id="phoneNo"
+					<p:inputText required="true" id="phoneNo" label="#{lbl['lbl.sc.telephone.no']}"
 						value="#{contact.phoneNo}" size="40">
+						<f:validateLength minimum="7" maximum="16" />
+						<f:validateLongRange minimum="1" maximum="9999999999999999" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@([id$=contactPhoneNoMsg])" />
 					</p:inputText>
-					<p:message id="contactPhoneNoMsg" for="phoneNo" display="icon" />
+					<p:message id="contactPhoneNoMsg" showDetail="false" for="phoneNo" display="icon" />
 				</p:column>
 
 			</p:dataTable>
@@ -121,19 +123,19 @@
 			<p:spacer height="10"></p:spacer>
 
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" id="addContact"
 					process="@this,contactPersonDetails" partialSubmit="true"
 					action="#{scheduleBiddingBB.addContactAction}" immediate="true"
 					update="@([id$=contactPersonDetails])" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" immediate="true"
+				<p:commandButton id="deleteContact" value="#{lbl['lbl.btn.delete']}" immediate="true"
 					process="@this,contactPersonDetails" partialSubmit="true"
 					action="#{scheduleBiddingBB.deleteContactDetails}"
 					update="@([id$=contactPersonDetails])" />
 			</div>
 		</p:panel>
 
-		<p:dialog closeOnEscape="true"
+		<p:dialog closeOnEscape="true" 
 			header="#{lbl['lbl.sc.participant.list']}" widgetVar="participants"
 			resizable="true" showEffect="fade" hideEffect="fade" modal="true"
 			id="participants">

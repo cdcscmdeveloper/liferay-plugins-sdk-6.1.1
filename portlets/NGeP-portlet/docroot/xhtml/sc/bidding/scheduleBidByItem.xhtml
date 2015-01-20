@@ -15,14 +15,14 @@
 
 			<p:column style="width:2% ;" >
 				<f:facet name="header">
-					<p:selectBooleanCheckbox
+					<p:selectBooleanCheckbox id="selectAllItemsByItem"
 						value="#{scheduleBiddingBB.managedBean.selectedAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=bidScheduleByItem])"
 							listener="#{scheduleBiddingBB.selectAll}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox
+				<p:selectBooleanCheckbox id="selectItemByItem"
 					value="#{scheduleBiddingBB.managedBean.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{scheduleBiddingBB.selected(index)}" />
@@ -55,7 +55,7 @@
 			<p:column headerText="#{lbl['lbl.sc.bidding.start']}"
 				style="width : 10%;">
 				<p:calendar value="#{bidSchedule.startDate}" showOn="button" style="width:92%"
-					required="true" id="bidStartDateByItem" readonlyInput="true"
+					required="true" id="bidStartDateByItem" readonlyInput="true" label="#{lbl['lbl.sc.bidding.start']}"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
@@ -69,13 +69,13 @@
 						update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])" />
 				</p:calendar>
 				<p:message id="byItemStartDateMsg" for="bidStartDateByItem"
-					display="icon" />
+					showDetail="false" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}"
 				style="width : 10%;">
 
 				<p:calendar id="bidEndDateByItem" value="#{bidSchedule.endDate}" style="width:92%"
-					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
+					mindate="#{scheduleBiddingBB.managedBean.minEndDate}" label="#{lbl['lbl.sc.bidding.end']}"
 					showOn="button" readonlyInput="true" required="true"
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -89,7 +89,7 @@
 						listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
 						update="@([id$=bidDurationByItem],[id$=byItemEndDateMsg])" />
 				</p:calendar>
-				<p:message id="byItemEndDateMsg" for="bidEndDateByItem"
+				<p:message id="byItemEndDateMsg" for="bidEndDateByItem" showDetail="false"
 					display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.duration.hours']}"
@@ -148,7 +148,7 @@
 
 						</p:calendar></td>
 
-					<TD><p:commandButton value="#{lbl['lbl.btn.apply']}"
+					<TD><p:commandButton value="#{lbl['lbl.btn.apply']}" id="applyDates"
 							process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
 							partialSubmit="true" style="float:center;" 
 							action="#{scheduleBiddingBB.applyBidDates}"
