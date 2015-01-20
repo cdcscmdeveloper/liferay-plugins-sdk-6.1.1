@@ -78,6 +78,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private BigDecimal orderedAmtGrandTotal;
 	private BigDecimal receivedAmtGrandTotal;
 	private BigDecimal invAmtGrandTotal;
+	private BigDecimal canAmtGrandTotal;
+	private BigDecimal danAmtGrandTotal;
 	private String serviceCharge;
 
 	private BigDecimal deductionAmt;
@@ -961,5 +963,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setShowDeductionTab(boolean showDeductionTab) {
 		this.showDeductionTab = showDeductionTab;
+	}
+
+	/**
+	 * @return the canAmtGrandTotal
+	 */
+	public BigDecimal getCanAmtGrandTotal() {
+		return canAmtGrandTotal;
+	}
+
+	/**
+	 * @return the danAmtGrandTotal
+	 */
+	public BigDecimal getDanAmtGrandTotal() {
+		return danAmtGrandTotal;
+	}
+
+	/**
+	 * @param canAmtGrandTotal the canAmtGrandTotal to set
+	 */
+	public void setCanAmtGrandTotal(BigDecimal canAmtGrandTotal) {
+		this.canAmtGrandTotal = canAmtGrandTotal;
+	}
+
+	/**
+	 * @param danAmtGrandTotal the danAmtGrandTotal to set
+	 */
+	public void setDanAmtGrandTotal(BigDecimal danAmtGrandTotal) {
+		this.danAmtGrandTotal = danAmtGrandTotal;
 	}
 }
