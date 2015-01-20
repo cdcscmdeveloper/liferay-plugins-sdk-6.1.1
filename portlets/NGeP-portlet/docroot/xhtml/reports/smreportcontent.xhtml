@@ -476,9 +476,9 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.reportType']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.smReportType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.recieved']}" itemValue="#{lbl['lbl.rpt.recieved']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>																						
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperecieved']}" itemValue="#{lbl['lbl.rpt.rpttyperecieved']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttypeapproved']}" itemValue="#{lbl['lbl.rpt.rpttypeapproved']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperejected']}" itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>																						
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryReportTypeView}">
@@ -502,9 +502,9 @@
 										<td style="width:84%">															
 									<p:selectOneMenu id="ReportType" value="#{reportBackingBean.smReportType}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.recieved']}" itemValue="#{lbl['lbl.rpt.recieved']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>																						
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperecieved']}" itemValue="#{lbl['lbl.rpt.rpttyperecieved']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttypeapproved']}" itemValue="#{lbl['lbl.rpt.rpttypeapproved']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperejected']}" itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>																						
 									</p:selectOneMenu>
 									</td>
 									<td>
