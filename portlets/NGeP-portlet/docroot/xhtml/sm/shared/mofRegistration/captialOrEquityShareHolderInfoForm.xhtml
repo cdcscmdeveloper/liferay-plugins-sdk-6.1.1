@@ -97,7 +97,7 @@
 							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.label.action']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg ne 8}">
 						<p:commandLink
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
