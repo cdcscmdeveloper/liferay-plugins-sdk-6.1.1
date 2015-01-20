@@ -348,7 +348,7 @@ public class OrganisationBackingBean extends
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
 			retrieveMinistryList();
-			//orgDeliveryAddrList(orgProfile);
+			orgDeliveryAddrList(orgProfile);
 			this.getManagedBean().setProfileGroup(
 					orgProfile.getMainProfileGroups());
 
@@ -366,30 +366,16 @@ public class OrganisationBackingBean extends
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.LOCAL_AUTHORITY.value())) {
 			
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
-			SupplierSearchResDTO supResDTO;
-			log.info("Org Profile ID-----"+orgProfile.getOrgProfileId());
-			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
-			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
-			if (supResDTO.getSmSupplier() != null) {
-				log.info("Supplier info----->"+supReqDTO.getSupplierId());
-				supResDTO = supplierSearchSO
-						.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);
-				SmSupplier supplier = supResDTO.getSmSupplier();
-				log.info("Supplier Name----->"+supplier.getCompanyName());
-				if (supplier != null) {
+				if (orgProfile.getSmSupplier() != null) {
+					log.info("Supplier Test");
 					this.getManagedBean().setSmSupplierBanks(
-							supplier.getSmAppl().getSmSupplierBanks());
-					log.info("Supplier Bank-----> "+supplier.getSmAppl().getSmSupplierBanks().size());
+							orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks());
+					log.info("Supplier Bank-----> "+orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().size());
 					this.getManagedBean().setSmPersonnels(
-							supplier.getSmAppl().getSmPersonnels());
-					log.info("Supplier Users ---->"+supplier.getSmAppl().getSmPersonnels().size());
+							orgProfile.getSmSupplier().getSmAppl().getSmPersonnels());
+					log.info("Supplier Users ---->"+orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().size());
 				}
-			}
+			
 			log.info("End of Supplier ----");
 		}
 		// Org Address
@@ -991,7 +977,7 @@ public class OrganisationBackingBean extends
 		manualAddr.setPmDistrict(districtResDTO.getPmDistrict());	
 			
 		if(manualAddr.isBrandNew() && !manualAddr.isModified()){
-			getManagedBean().getOrgProfile().getPmAddressTypes().add(deliveryAddr);
+			getManagedBean().getAddressTypesList().add(deliveryAddr);
 			deliveryAddr.setPmAddress(manualAddr);
 		}else{
 			for(int i =0; i < getManagedBean().getOrgProfile().getPmAddressTypes().size(); i++){
