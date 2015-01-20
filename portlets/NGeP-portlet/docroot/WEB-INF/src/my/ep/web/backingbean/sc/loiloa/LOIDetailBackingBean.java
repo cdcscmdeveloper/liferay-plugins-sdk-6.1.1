@@ -2981,14 +2981,14 @@ public class LOIDetailBackingBean extends
 		
 		if (getManagedBean().getRecommendList() != null) {
 			for (ScQtRecommend recommend : getManagedBean().getRecommendList()) {
-				System.out.println("Item Name :" + recommend.getRequestItem().getItemName());
-				for (ScQtRecommendDtl qtRecommendDtl : recommend.getRecommendDtls()) {
+				log.info("Item Name :" + recommend.getRequestItem().getItemName());
+				/*for (ScQtRecommendDtl qtRecommendDtl : recommend.getRecommendDtls()) {
 					if (qtRecommendDtl.isRecordStatus()) {
 						System.out.println("Select Supplier Name : " + qtRecommendDtl.getSupplier().getCompanyName());
 					}
 					System.out.println("Supplier Name : " + qtRecommendDtl.getSupplier().getCompanyName());
 					System.out.println("Supplier ID : " + qtRecommendDtl.getSupplier().getSupplierId());
-				}
+				}*/
 			}
 			context.put("recommendList", getManagedBean().getRecommendList());
 			context.put("bean", this);
@@ -3003,7 +3003,22 @@ public class LOIDetailBackingBean extends
 		
 		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
-		
+		if (getManagedBean().getLois() != null && !getManagedBean().getLois().isEmpty()) {
+			for(ScLoi loi : getManagedBean().getLois()) {
+				log.info("Supplier Name : " + loi.getScLoiLoa().getSupplierName());
+				/*for (ScLoiTerm scLoiTerm : loi.getScNegoTerms()) {
+					System.out.println("Location : " + scLoiTerm.getTermDesc());
+				}
+				for (ScLoiLoaItem loiLoaItem : loi.getScLoiLoaItems()) {
+					System.out.println("Item name : " + loiLoaItem.getScRequestItem().getItemName());
+					System.out.println("Offer Price : " + loiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+					System.out.println("Final Price : " + loiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
+				}*/
+			}
+		}
+		context.put("scLois", getManagedBean().getLois());
+		context.put("bean", this);
+			
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationResult.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
@@ -3088,12 +3103,12 @@ public class LOIDetailBackingBean extends
 		
 		if (getManagedBean().getLois() != null && !getManagedBean().getLois().isEmpty()) {
 			for(ScLoi loi : getManagedBean().getLois()) {
-				System.out.println("Supplier Name : " + loi.getScLoiLoa().getSupplierName());
-				for (ScLoiNegoLocation location : loi.getScNegoLocations()) {
+				log.info("Supplier Name : " + loi.getScLoiLoa().getSupplierName());
+				/*for (ScLoiNegoLocation location : loi.getScNegoLocations()) {
 					
 					System.out.println("Location : " + location.getNegoLocation());
 					System.out.println("Date : " + location.getNegoDate());
-				}
+				}*/
 			}
 		}
 		context.put("loiList", getManagedBean().getLois());
