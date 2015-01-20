@@ -40,9 +40,11 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -58,10 +60,10 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
-import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -83,6 +85,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -633,7 +636,8 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				getManagedBean().getSmAppl().setApplCategoryType("N");
 			}
-			updateSmAppl(applicationType, "", "");
+			// updateSmAppl(applicationType, "", "");
+			saveOrUpdateAppl();
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			if (smAppl.getSmFacilities() != null
@@ -3660,7 +3664,8 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedShareHolders(String personType) {
 		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
 			if (shr.getEpRole() != null
-					&& (shr.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
+					&& (shr.getEpRole().equalsIgnoreCase(
+							RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
 							.getEpRole().equalsIgnoreCase(
 									RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 				throw new EpException(MessageConst.ERROR_722553);
@@ -4475,8 +4480,15 @@ public class SmApplicationBackingBean extends
 			if (!bpmAppl.isActiveAppl()) {
 				bpmAppl.setActiveAppl(true);
 			}
+			String s = "";
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				s = SupplierManagementConst.SUPP_SUBMIT_CANCREG_APPL;
+			} else {
+				s = SupplierManagementConst.SUPP_SUBMIT_NORM_APPL;
+			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
-					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
+					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
 			log.info(" ****** The task list id ss *********"
 					+ getManagedBean().getTaskId());
 			if (getManagedBean().getTaskId() != null
@@ -4839,7 +4851,7 @@ public class SmApplicationBackingBean extends
 				outcome = "";
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
-					outcome);
+					outcome, SupplierManagementConst.SUPP_SAVE_APPL_DRAFT);
 			List<String> useList = new ArrayList<String>();
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
@@ -4888,7 +4900,7 @@ public class SmApplicationBackingBean extends
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			String outcome = "CANCEL";
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
-					outcome);
+					outcome, SupplierManagementConst.SUPP_SUBMIT_DELDRFT_APPL);
 			List<String> useList = new ArrayList<String>();
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
@@ -4923,7 +4935,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private MofRegistrationReqDTO setMofRegistrationReqDTO(SmAppl bpmAppl,
-			String outcome) {
+			String outcome, String actionDesc) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setOutcome(outcome);
 		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
@@ -4935,6 +4947,9 @@ public class SmApplicationBackingBean extends
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
 				.getSupplierType().toUpperCase());
+		reqDTO.setTrackingDairyVO(SmApplicationUtil.assignTrackingDairyValues(
+				getManagedBean(), actionDesc, getManagedBean().getSmAppl()
+						.getPmStatus()));
 		PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
 				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
 		if (state != null && state.getStateId() != null) {
@@ -5193,12 +5208,13 @@ public class SmApplicationBackingBean extends
 			}
 
 			boolean validSiteVisit = true;
-
+			String actionDesc = "";
 			if (res.equalsIgnoreCase("SITE_VISIT")
 					|| res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
 				SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 				reqDTO.setSvTask(getManagedBean().getSvTask());
+				actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
 
 			}
 			if (res.equalsIgnoreCase("INQUIRY")) {
@@ -5218,13 +5234,16 @@ public class SmApplicationBackingBean extends
 					}
 				}
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER);
+				actionDesc = SupplierManagementConst.PO_SEND_INQUIRY_SUPP;
 			}
 			if (res.equalsIgnoreCase("Reject")) {
 
 				if (getManagedBean().isPoUser()) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER);
+					actionDesc = SupplierManagementConst.PO_REJECT_APPL;
 				} else if (getManagedBean().isApproverUser()) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER);
+					actionDesc = SupplierManagementConst.APPROVER_REJECT_APPL;
 				}
 				if (!getManagedBean()
 						.getSmAppl()
@@ -5246,6 +5265,11 @@ public class SmApplicationBackingBean extends
 								reqDTO);
 
 			} else if (res.equalsIgnoreCase("Approve")) {
+				if (getManagedBean().isPoUser()) {
+					actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
+				} else if (getManagedBean().isApproverUser()) {
+					actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
+				}
 				if (getManagedBean()
 						.getSmAppl()
 						.getApplType()
@@ -5322,7 +5346,6 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getOverLappedCategoryMsg());
 				}
 
-			} else if (res.equalsIgnoreCase("Reject")) {
 			}
 
 			log.info("Before final decision ---"
@@ -5359,6 +5382,7 @@ public class SmApplicationBackingBean extends
 						}
 						msgConst = MessageConst.INFO_700008;
 					} else if (res.equalsIgnoreCase("Escalate")) {
+						actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
 						msgConst = MessageConst.INFO_700014;
 					} else if (res.equalsIgnoreCase("Inquiry")) {
 						msgConst = MessageConst.INFO_700016;
@@ -5369,7 +5393,10 @@ public class SmApplicationBackingBean extends
 					}
 					reqDTO.setPoOrApproverDecision(res);
 					reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-
+					reqDTO.setTrackingDairyVO(SmApplicationUtil
+							.assignTrackingDairyValues(getManagedBean(),
+									actionDesc, getManagedBean().getSmAppl()
+											.getPmStatus()));
 					FacesScopes fs = new FacesScopes();
 					reqDTO.setServerName(fs.getRequest().getServerName());
 					reqDTO.setServerPort(fs.getRequest().getServerPort());
