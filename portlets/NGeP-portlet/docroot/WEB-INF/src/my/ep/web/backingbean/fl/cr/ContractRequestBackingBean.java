@@ -1166,6 +1166,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		setFlSupplierDtl(getManagedBean().getFlRequest());
 //		setOneOffFulfilmentItemAddr(getManagedBean().getFlRequest());
 		setFulfilmentItemAddr(getManagedBean().getFlRequest());
+		if(getManagedBean().getFlRequest().isBrandNew()){
+			getManagedBean().getFlRequest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
+		
+		
 	}
 
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
