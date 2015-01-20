@@ -1,40 +1,139 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.descTable{
+		 	border-collapse: collapse;
+		}
+		
+		.descTable td, .descTable tr, .descTable th {
+		 	border: 1px solid black;
+		}
+		
+		body{
+			
+		}
+		
+		.txtBold{
+			font-weight : bold;
+		}
+		
+		.sTable{
+			width : 80%;
+		}
+		
+		.sColTwentyPerc{
+			width : 20%;
+		}
+		
+		.infoTable{
+			border-collapse: collapse;
+			width: 100%;
+		}
+		.infoTable td {
 			border: 1px solid black;
 		}
-		 th{
-			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		.tdInfoTable {
+			border: 1px solid black;
+			font-family: Arial;
+			font-size: 12px;
+			font-weight: normal;
+			font-style: inherit;
+		}
+	</style>
 </head>
 <body>
-<table>
+<table width='100%'>
+	<tr>
+		<td align="left">
+			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			4. Hasil Rundingan</span>
+			<br/>
+		</td>
+	</tr>
+</table>
+<table width='100%'>
+	<tr>
+		<td align="left">
+			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			4.1 Senarai Pembekal Untuk Hasil Rundingan</span>
+			<br/>
+		</td>
+	</tr>
+</table>
+<table class="infoTable">
+	<tr>
+		<td class="tdInfoTable">Nama Pembekal</td>
+		<td class="tdInfoTable">Terma Rundingan</td>
+		<td class="tdInfoTable">Hasil Rundingan</td>
+	</tr>
+	#foreach( $scLoi in $scLois )
+	<tr>
+		<td class="tdInfoTable">$scLoi.scLoiLoa.supplierName</td>
+		<td class="tdInfoTable">
+			#foreach( $scLoiTerm in $scLoi.scNegoTerms )
+				$scLoiTerm.termDesc <br/>
+			#end
+		</td>
+		<td class="tdInfoTable"></td>
+	</tr>
+	#end
+</table>
+<br/>
+<table width='100%'>
+	<tr>
+		<td align="left">
+			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			4.2 Hasil Rundingan Untuk Harga Tawaran</span>
+			<br/>
+		</td>
+	</tr>
+</table>
+<table width="100%">
 	<tr>
 		<td>
-			<p>4. Hasil Rundingan</p>
-			<ol type="4">4.1 Senarai Pembekal Untuk Hasil Rundingan</ol>
-			
-			<ol type="4">4.2 Hasil Rundingan Untuk Harga Tawaran</ol>
+			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+			#foreach( $scLoi in $scLois )
+				Nama Pembekal : $scLoi.scLoiLoa.supplierName <br/>
+				<table class="infoTable">
+					<tr>
+						<td colspan="3"></td>
+						<td colspan="2">Harga Tawaran Asal</td>
+						<td colspan="2">Harga Tawaran Selepas Rundingan</td>
+					</tr>
+					<tr>
+						<td class="tdInfoTable">Item</td>
+						<td class="tdInfoTable">UOM</td>
+						<td class="tdInfoTable">Kuantiti</td>
+						<td class="tdInfoTable">Per Unit (RM)</td>
+						<td class="tdInfoTable">Jumlah Harga (RM)</td>
+						<td class="tdInfoTable">Per Unit (RM)</td>
+						<td class="tdInfoTable">Jumlah Harga (RM)</td>
+					</tr>
+					#foreach( $loiLoaItem in $scLoi.scLoiLoaItems )	
+					<tr>
+						#set ($offer = $loiLoaItem.qty * $$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice)
+						#set ($final = $loiLoaItem.qty * $$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice)
+						<td class="tdInfoTable">$loiLoaItem.scRequestItem.itemName</td>
+						<td class="tdInfoTable">$loiLoaItem.scRequestItem.uom.uomCode</td>
+						<td class="tdInfoTable">$loiLoaItem.qty</td>
+						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
+						<td class="tdInfoTable">$offer</td>
+						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice</td>
+						<td class="tdInfoTable">$final</td>
+					</tr>
+					#end
+				</table>
+				<br/>
+			#end
+			</span>
 		</td>
 	</tr>
 </table>

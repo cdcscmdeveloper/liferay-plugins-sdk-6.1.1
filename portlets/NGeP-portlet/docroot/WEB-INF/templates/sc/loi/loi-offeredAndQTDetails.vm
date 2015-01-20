@@ -1,43 +1,89 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.descTable{
+		 	border-collapse: collapse;
+		}
+		
+		.descTable td, .descTable tr, .descTable th {
+		 	border: 1px solid black;
+		}
+		
+		body{
+			
+		}
+		
+		.txtBold{
+			font-weight : bold;
+		}
+		
+		.sTable{
+			width : 80%;
+		}
+		
+		.sColTwentyPerc{
+			width : 20%;
+		}
+		
+		.infoTable{
+			border-collapse: collapse;
+			width: 100%;
+		}
+		.infoTable td {
 			border: 1px solid black;
 		}
-		 th{
-			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		.tdInfoTable {
+			border: 1px solid black;
+			font-family: Verdana;
+			font-size: 12px;
+			font-weight: normal;
+			font-style: inherit;
+		}
+	</style>
 </head>
 <body>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<table width='100%'>
 	<tr>
-		<td>
-			<p>1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA</p>
-			<ol type="1"> 1.1 Perkara : $title</ol>
-			<ol>1.2 Tempoh Perjanjian / Tempoh Penyiapan : $fulfilmentType </ol>
-			<ol>1.3	Jabatan Pengguna : $ptj </ol>
-			<ol>1.4	Bilangan Pembekal Dipanggil Untuk Rundingan: $supplierSize </ol>
-			<ol>1.5	Bilangan Pembekal Yang Mengesahkan Surat Niat: $statusSupplierSize </ol>
+		<td align="left">
+			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA </span>
+			<br/>
 		</td>
+	</tr>
+</table>
+<table class="infoTable">
+	<tr>
+		<td class="tdInfoTable">1.1</td>
+		<td class="tdInfoTable">Perkara</td>
+		<td class="tdInfoTable">$title</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.2</td>
+		<td class="tdInfoTable">Tempoh Perjanjian / Tempoh Penyiapan</td>
+		<td class="tdInfoTable">$fulfilmentType</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.3</td>
+		<td class="tdInfoTable">Jabatan Pengguna</td>
+		<td class="tdInfoTable">$ptj</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.4</td>
+		<td class="tdInfoTable">Bilangan Pembekal Dipanggil Untuk Rundingan</td>
+		<td class="tdInfoTable">$supplierSize</td>
+	</tr>
+	<tr>
+		<td class="tdInfoTable">1.5</td>
+		<td class="tdInfoTable">Bilangan Pembekal Yang Mengesahkan Surat Niat</td>
+		<td class="tdInfoTable">$statusSupplierSize</td>
 	</tr>
 </table>
 </body>
