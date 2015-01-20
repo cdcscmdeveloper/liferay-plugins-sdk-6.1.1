@@ -394,6 +394,11 @@ public class SupplierManagementConst {
 	public static final long CATEGORY_TYPE_ID_PRINTING = 209;
 	public static final long CATEGORY_TYPE_ID_TRAVEL = 210;
 	public static final long CATEGORY_TYPE_ID_READING = 1261;
+	
+	public static final String PURCHASE_METHOD_PARAMETER_TYPE = "BM";
+	
+	public static final String VALID_PARAMETER_TYPE = "Valid";
+	
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 
@@ -798,5 +803,12 @@ public class SupplierManagementConst {
 	public Integer getSM_SUPPORTDOCS_FILE_SIZE_LIMIT() {
 		return SM_SUPPORTDOCS_FILE_SIZE_LIMIT;
 	}
-
+	
+	public String getPURCHASE_METHOD_PARAMETER_TYPE() {
+		return PURCHASE_METHOD_PARAMETER_TYPE;
+	}
+	public String getVALID_PARAMETER_TYPE() {
+		return VALID_PARAMETER_TYPE;
+	}
+	
 }
