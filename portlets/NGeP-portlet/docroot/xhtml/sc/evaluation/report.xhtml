@@ -27,8 +27,7 @@
 
 			<p:column style="width:10%;text-align: center;"
 				headerText="#{lbl['lbl.so.action']}">
-				<p:commandLink
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+				<p:commandLink rendered="#{!evaluationBackingBean.managedBean.readOnly}"
 					action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png"
