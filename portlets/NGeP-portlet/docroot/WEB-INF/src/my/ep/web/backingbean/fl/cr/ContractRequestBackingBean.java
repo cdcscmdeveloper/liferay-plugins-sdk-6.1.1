@@ -2975,17 +2975,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			onNodeUnSelect();
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
-			boolean checkValue=(boolean)e.getComponent().getAttributes().get("value");
-			if((boolean) e.getComponent().getAttributes().get("value")){
-				getManagedBean().setChargeLinePanel(true);
-			}else{
-				getManagedBean().setChargeLinePanel(false);
-			}
 			
 			//Poulate chargeline data.
 			//Get the selected chargeline item.
 			updateSelectedTreeNodes();
 			TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
+			if(null!=selectedNodes && selectedNodes.length>0){
+				getManagedBean().setChargeLinePanel(true);
+			}else{
+				getManagedBean().setChargeLinePanel(false);
+			}
 					 
 			//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
 			//Because multiple nodes conflict chargeline data.
