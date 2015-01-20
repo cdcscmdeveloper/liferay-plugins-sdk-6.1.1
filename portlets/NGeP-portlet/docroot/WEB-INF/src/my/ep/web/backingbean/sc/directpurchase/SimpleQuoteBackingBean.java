@@ -198,16 +198,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					QuoteResDTO resDTO= getQuoteSO().getPanelSupplierByPanelItem(reqDTO);
 					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
 					if(selectedPanelItem != null) {
-						if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
-							if(productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
+						if(scQuote.getPanelItem() != null){
 								throw new EpException(MessageConst.ERROR_760160);
-							}
-						}
-
-						if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
-							if(serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
-								throw new EpException(MessageConst.ERROR_760160);
-							}
 						}
 
 						if(selectedPanelItem.getItemCategoryId() != null){
