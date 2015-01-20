@@ -13,11 +13,9 @@ import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -87,12 +85,10 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 		pmAddressType = new PmAddressType();
 		deliveryAddress= new PmAddressType();
-		officeContactPerson = new PmContact();
-		
+		officeContactPerson = new PmContact();		
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
 		officeAddressTypeList = new ArrayList<PmAddressType>();		
-		
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
 		deliveryAddress.setPmAddress(new PmAddress());
 		deliveryContactPerson = new PmContact();	

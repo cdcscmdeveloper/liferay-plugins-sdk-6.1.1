@@ -365,6 +365,7 @@ public class OrganisationBackingBean extends
 						OrganizationType.STATE_GOVERNMENT.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.LOCAL_AUTHORITY.value())) {
+			
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
@@ -375,16 +376,21 @@ public class OrganisationBackingBean extends
 			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
 			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
 			if (supResDTO.getSmSupplier() != null) {
+				log.info("Supplier info----->"+supReqDTO.getSupplierId());
 				supResDTO = supplierSearchSO
 						.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);
 				SmSupplier supplier = supResDTO.getSmSupplier();
+				log.info("Supplier Name----->"+supplier.getCompanyName());
 				if (supplier != null) {
 					this.getManagedBean().setSmSupplierBanks(
 							supplier.getSmAppl().getSmSupplierBanks());
+					log.info("Supplier Bank-----> "+supplier.getSmAppl().getSmSupplierBanks().size());
 					this.getManagedBean().setSmPersonnels(
 							supplier.getSmAppl().getSmPersonnels());
+					log.info("Supplier Users ---->"+supplier.getSmAppl().getSmPersonnels().size());
 				}
 			}
+			log.info("End of Supplier ----");
 		}
 		// Org Address
 		List<PmAddressType> orgAddressTypes = getManagedBean().getOrgProfile().getPmAddressTypes();
@@ -397,15 +403,12 @@ public class OrganisationBackingBean extends
 					this.getManagedBean().setOfficeAddress(pmAddressType.getPmAddress());
 					addrExist = true;
 					log.info("Address Exist");
-				}
-				
-				
+				}				
 				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(pmAddressType.getPmContacts().get(0));
 					log.info("Contact Exist");
 				} 
-				else{
-					
+				else{					
 					log.info("Contact not Exist");
 					List<PmContact> contactLst = new ArrayList<PmContact>();
 					getManagedBean().setOfficeContactPerson(new PmContact());
@@ -618,6 +621,10 @@ public class OrganisationBackingBean extends
 				SmSupplier supplier = supResDTO.getSmSupplier();
 				if (supplier != null) {
 					RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
+					for(SmPersonnel personnelUser:getManagedBean().getSmPersonnels()){
+						log.info("PersonlUser Name"+personnelUser.getIdentificationNo());
+						log.info("PersonlUser Statue"+personnelUser.getRecordStatusFlg());
+					}
 					supplier.getSmAppl().getSmPersonnels()
 							.addAll(getManagedBean().getSmPersonnels());
 					SmSupplierBank supBank = new SmSupplierBank();
@@ -648,8 +655,8 @@ public class OrganisationBackingBean extends
 				}
 			}
 		}
-		else{
-			/*ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+		/*else{
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							ISupplierSearchSO.class);
@@ -657,7 +664,7 @@ public class OrganisationBackingBean extends
 			SupplierSearchResDTO supResDTO;
 			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
 			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
-			if (supResDTO.getSmSupplier() != null) {*/
+			if (supResDTO.getSmSupplier() != null) {
 				
 		
 			IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
@@ -672,7 +679,7 @@ public class OrganisationBackingBean extends
 			feeReqDTO.setFeeExemption(feeResDTO.getFeeExemption());
 			feeResDTO = exemptionSO.deleteFeeExemption(feeReqDTO);
 			feeResDTO.setSuccessful(true);
-			/*for(PmUser user:getManagedBean().getSupplierUsers()){
+			for(PmUser user:getManagedBean().getSupplierUsers()){
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IUserSO.class);
@@ -688,16 +695,16 @@ public class OrganisationBackingBean extends
 				userReqDTO.setRemoveRoleList(pmUserRoles);
 				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
 				userResDTO.setSuccessful(true);
-				}*/
+				}
 			log.info("not GoveSeller");
 			}
-		//}
+		}*/
 		
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			//getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
 			
-			//orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
+			orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
 			if (getManagedBean().getOrgProfile().isGroupOrg()) {
 				List<PmProfileGroup> profileGrp = getManagedBean()
@@ -713,11 +720,15 @@ public class OrganisationBackingBean extends
 				
 			}
 			else{
+				
 				orgProfile.setMainProfileGroups(null);
-				/*if(getManagedBean().getProfileGroup()!=null && getManagedBean().getProfileGroup().isEmpty()){
+				/*List<PmProfileGroup> profileGrp = getManagedBean()
+						.getProfileGroup();
+				if(getManagedBean().getProfileGroup()!=null && getManagedBean().getProfileGroup().isEmpty()){
 					for (PmProfileGroup proGroup : profileGrp) {
 						
 							proGroup.getMainOrgProfile().setRecordStatusFlg(9);
+							log.info("record Status inactive");
 						
 					}	
 				}*/
@@ -953,10 +964,11 @@ public class OrganisationBackingBean extends
 		PmAddressType addressType = new PmAddressType();
 		addressType.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		addressType.setPmAddress(PmCommonUtil.getNewPmAddress());	
-		/*List<PmContact> contactList= new ArrayList<PmContact>();
-		PmContact deliveryContactPerson = new PmContact();
-		contactList.add(deliveryContactPerson);
-		addressType.setPmContacts(contactList);	*/	
+		List<PmContact> contactList= new ArrayList<PmContact>();
+		
+		getManagedBean().setDeliveryContactPerson(new PmContact());
+		contactList.add(this.getManagedBean().getDeliveryContactPerson());
+		addressType.setPmContacts(contactList);	
 		getManagedBean().setDeliveryAddress(addressType);
 	}
 	public void updateDeliveryAddrDt() {	
@@ -1010,7 +1022,7 @@ public class OrganisationBackingBean extends
 					addrExist = true;
 				}			
 				
-				/*if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
+				if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(address.getPmContacts().get(0));
 				} 
 				else{
@@ -1020,7 +1032,7 @@ public class OrganisationBackingBean extends
 				contact.setPmAddressType(address);
 				contactLst.add(contact);
 				address.setPmContacts(contactLst);
-				}*/
+				}
 			
 		}
 		if (!addrExist) {
@@ -1039,19 +1051,20 @@ public class OrganisationBackingBean extends
 			orgAddressTypes.add(addressType);
 			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);*/	
 //
-			List<PmAddressType> orgAddressTypes = this.getManagedBean().getOrgProfile().getPmAddressTypes();
+			List<PmAddressType> orgAddressTypes = this.getManagedBean().getAddressTypesList();
+			//List<PmAddressType> orgAddressTypes = this.getManagedBean().getOrgProfile().getPmAddressTypes();
 			PmAddressType addressTypet = getManagedBean().getPmAddressType();
 			orgAddressTypes.add(addressTypet);
 			addressTypet.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 			getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
 			PmAddress officeAddress = getManagedBean().getOfficeAddress();
 			addressTypet.setPmAddress(officeAddress);
-			/*List<PmContact> contactLst = new ArrayList<PmContact>();
+			List<PmContact> contactLst = new ArrayList<PmContact>();
 			getManagedBean().setDeliveryContactPerson(new PmContact());
 			PmContact contact = getManagedBean().getDeliveryContactPerson();
 			contact.setPmAddressType(addressTypet);
 			contactLst.add(contact);
-			addressTypet.setPmContacts(contactLst);*/
+			addressTypet.setPmContacts(contactLst);
 			addressTypet.setPmOrgProfile(this.getManagedBean().getOrgProfile());
 			//orgProfile.setPmAddressTypes(orgAddressTypes);
 			

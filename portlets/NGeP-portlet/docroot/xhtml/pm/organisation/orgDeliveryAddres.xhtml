@@ -7,7 +7,7 @@
 	<p:panel styleClass="sampleDetails" >
 
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.orgProfile.pmAddressTypes}"
+			value="#{organisationBackingBean.managedBean.addressTypesList}"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
 			<p:column selectionMode="multiple"
