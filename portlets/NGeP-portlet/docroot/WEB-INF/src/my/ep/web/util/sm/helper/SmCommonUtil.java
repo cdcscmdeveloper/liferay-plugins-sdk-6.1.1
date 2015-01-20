@@ -993,4 +993,15 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
+	
+	public static boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel){
+		boolean retVal = false;
+		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
+		retVal = reqSO.isPersonnelAlreadyDeactivate(reqDTO);
+		return retVal;
+	}
 }
