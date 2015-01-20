@@ -5,8 +5,6 @@
 
 	<tr>
 		<td width="40%" class="txtBold">Office Ownership</td>
-		<td width="20%" class="txtBold">Private, Purchasing Price (RM)</td>
-		<td width="20%">$!officePrice</td>
 	</tr>
 	
 	<tr>
@@ -17,8 +15,14 @@
 				Rented
 			#end
 		</td>
-		<td class="txtBold">Rent, Monthly Rate (RM)</td>
-		<td width="20%">$!officeRentalRate</td>
+		
+		#if($officeOwnership == "O")
+			<td width="20%" class="txtBold">Private, Purchasing Price (RM)</td>
+			<td width="20%">$!officePrice</td>
+		#elseif($officeOwnership == "R")
+			<td class="txtBold">Rent, Monthly Rate (RM)</td>
+			<td width="20%">$!officeRentalRate</td>
+		#end
 	</tr>
 	
 	<tr>
