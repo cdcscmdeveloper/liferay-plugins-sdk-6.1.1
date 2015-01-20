@@ -874,12 +874,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		IRegistrationSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
-		RegistrationResDTO resDTO = reqSO.findSupplierByRegNo(reqDTO);
+		RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByRegNo(reqDTO);
 		
-		if(resDTO.getSmSupp() == null){
-			return false;
-		}else{
+		if(resDTO.getSmSuppliers().size() > 0 ){
 			return true;
+		}else{
+			return false;
 		}
 	}
 	
