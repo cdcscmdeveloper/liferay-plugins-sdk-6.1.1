@@ -17,57 +17,44 @@
 			    <p:outputLabel value="*" styleClass="mandatory" />
 			    <p:outputLabel value="#{lbl['lbl.ct.ic.no']}" />
             </h:panelGrid>
-            <h:panelGrid columns="2">
-			   <p:inputText id="icNo"  style="width:300px;" required="true" label="#{lbl['lbl.ct.ic.no']}"
+         	   <p:inputText id="icNo"  style="width:300px;"  label="#{lbl['lbl.ct.ic.no']}"
 			       value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}"
 			       disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}" />
-			   <p:message for="icNo"  display="icon"/>
-			</h:panelGrid>
 			
 		    <h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
 			    <p:outputLabel value="#{lbl['lbl.ct.full.name']}" />
 		    </h:panelGrid>
-		    <h:panelGrid columns="2">
-			   <p:inputText id="fullName"  required="true" label="#{lbl['lbl.ct.full.name']}" style="width:300px;"
+		   <p:inputText id="fullName"  label="#{lbl['lbl.ct.full.name']}" style="width:300px;"
 			        disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}" validator="#{webappBean.checkInputField}"  />
-			    <p:message for="fullName" display="icon"/>
-			</h:panelGrid>
-		    
+		   
 			<h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
 			    <p:outputLabel value="#{lbl['lbl.ct.designation']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="2">
-			    <p:inputText id="designation" style="width:300px;"  required="true"
+			    <p:inputText id="designation" style="width:300px;"  
 			       disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"  label="#{lbl['lbl.ct.designation']}"/>
-			    <p:message for="designation" display="icon"/>
-			</h:panelGrid>
 			
 			<h:panelGrid columns="2" style="float:right;">
 			    	<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.ct.address']}" />
 			</h:panelGrid>
-		   <h:panelGrid columns="2">
-				 	  <p:inputTextarea id="agencyAddress" rows="4" style="width:300px;margin-bottom: 5px;" maxlength="200" required="true"
+		   <p:inputTextarea id="agencyAddress" rows="4" style="width:300px;margin-bottom: 5px;" maxlength="200" 
 				   		value="#{amendmentBackingBean.managedBean.scLoaWitness.address}" autoResize="false" 
 				   		disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 				   		label="#{lbl['lbl.ct.address']}" />
-				   	  <p:message for="agencyAddress" display="icon"/>
-	    </h:panelGrid>
-	      <h:panelGrid columns="2" style="float:right;">
+			
+			   <h:panelGrid columns="2" style="float:right;">
 			                 <p:outputLabel value="*" styleClass="mandatory" />
 				         	 <p:outputLabel value="#{lbl['lbl.ct.tel']}" />
 				        </h:panelGrid>
-				        <h:panelGrid columns="2">
-					         <p:inputText id="tellNo" style="width:150px;" required="true"   label="#{lbl['lbl.ct.tel']}"
+		       <p:inputText id="tellNo" style="width:150px;"  label="#{lbl['lbl.ct.tel']}"
 					             disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"/>
-					         <p:message for="tellNo" display="icon"/>
-		  </h:panelGrid>
-		  <h:panelGrid columns="2" style="float:right;">
+			
+			  <h:panelGrid columns="2" style="float:right;">
 					        <p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 	      </h:panelGrid>
 	     <h:panelGrid columns="3" style="width:420px;" columnClasses="columnWidth30,columnWidth30">
@@ -90,15 +77,13 @@
 			    <p:outputLabel value="*" styleClass="mandatory" />
 			      <p:outputLabel value="#{lbl['lbl.ct.email']}" />
 			 </h:panelGrid>
-			 <h:panelGrid columns="5">
-			     <p:inputText  id="email" style="width:420px;" required="true"   label="#{lbl['lbl.ct.email']}"
+			 <h:panelGrid columns="3">
+			     <p:inputText  id="email" style="width:420px;"  label="#{lbl['lbl.ct.email']}"
 			        disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}" validator="#{webappBean.checkEmail}"/>
 			     <p:spacer width="1"/>
 			     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.email']}" />
-			     <p:spacer width="1"/>
-			     <p:message for="email" display="icon"/>
-		     </h:panelGrid>
+			   </h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>

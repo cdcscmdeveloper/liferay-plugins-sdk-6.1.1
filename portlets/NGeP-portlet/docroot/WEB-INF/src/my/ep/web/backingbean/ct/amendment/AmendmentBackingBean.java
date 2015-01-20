@@ -644,7 +644,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        	 getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
 			         }
 		   
-		     } else if(getManagedBean().getAckFA().equalsIgnoreCase("Ack")){
+		     } else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 			      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
 		     }
 		
@@ -836,38 +836,41 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				             throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Description"});
 			              } 
 			   
-				         if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
-				        	 if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner()==null 
-				        		|| getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId()==null) {
-				        		 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-					             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        	 }
-				        	 if(getManagedBean().getScLoaWitness()!=null) {
-				        		 if(getManagedBean().getScLoaWitness().getIdentificationNo()==null || getManagedBean().getScLoaWitness().getIdentificationNo().length()==0) {
-				        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        		 }
-				        		 if(getManagedBean().getScLoaWitness().getWitnessName()==null || getManagedBean().getScLoaWitness().getWitnessName().length()==0) {
-				        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.full.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        		 }
-				        		 if(getManagedBean().getScLoaWitness().getDesignation()==null || getManagedBean().getScLoaWitness().getDesignation().length()==0) {
-				        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.designation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        		 }
-				        		 if(getManagedBean().getScLoaWitness().getAddress()==null || getManagedBean().getScLoaWitness().getAddress().length()==0) {
-				        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.address", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        		 }
-				        		 if(getManagedBean().getScLoaWitness().getPhoneNo()==null || getManagedBean().getScLoaWitness().getPhoneNo().length()==0) {
-				        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.tel", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        		 }
-				        		 if(getManagedBean().getScLoaWitness().getEmail()==null || getManagedBean().getScLoaWitness().getEmail().length()==0) {
-				        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.email", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				        		 }
-				        	 }
+				         if((!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)  
+				        		 && getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA))
+							  ||(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME))) {
+							       
+				        	          if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner()==null 
+							        		|| getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId()==null) {
+							        		 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+								             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        	 }
+							        	 if(getManagedBean().getScLoaWitness()!=null) {
+							        		 if(getManagedBean().getScLoaWitness().getIdentificationNo()==null || getManagedBean().getScLoaWitness().getIdentificationNo().length()==0) {
+							        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+									             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        		 }
+							        		 if(getManagedBean().getScLoaWitness().getWitnessName()==null || getManagedBean().getScLoaWitness().getWitnessName().length()==0) {
+							        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+									             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.full.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        		 }
+							        		 if(getManagedBean().getScLoaWitness().getDesignation()==null || getManagedBean().getScLoaWitness().getDesignation().length()==0) {
+							        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+									             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.designation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        		 }
+							        		 if(getManagedBean().getScLoaWitness().getAddress()==null || getManagedBean().getScLoaWitness().getAddress().length()==0) {
+							        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+									             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.address", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        		 }
+							        		 if(getManagedBean().getScLoaWitness().getPhoneNo()==null || getManagedBean().getScLoaWitness().getPhoneNo().length()==0) {
+							        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+									             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.tel", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        		 }
+							        		 if(getManagedBean().getScLoaWitness().getEmail()==null || getManagedBean().getScLoaWitness().getEmail().length()==0) {
+							        			 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+									             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.email", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							        		 }
+							        }
 				         }				         
 			
 				         if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
@@ -1007,7 +1010,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 							    
 								    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
 										 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-										throw new EpException(MessageConst.ERROR_750018, new String[]{"contract amendment"});
+										throw new EpException(MessageConst.ERROR_750018, new String[]{"Contract amendment"});
 									}
 			   
 						   if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
