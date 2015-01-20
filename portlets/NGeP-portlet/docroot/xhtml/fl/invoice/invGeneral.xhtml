@@ -24,7 +24,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td colspan="3"><p:inputText size="7" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="32"
+					<p:spacer width="5" /> <p:inputText size="45"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
@@ -43,7 +43,7 @@
 				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
 				
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:inputText disabled="true" size="45" value="#{invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.fulfillmentType)}" 
+				<td><p:inputText disabled="true" size="30" value="#{invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.fulfillmentType)}" 
 				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
 			</tr>
 		</table>
@@ -52,7 +52,7 @@
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table>
 			<tr>
-				<td style="width: 136px;"><p:outputLabel
+				<td style="width: 136px;white-space:nowrap;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
@@ -78,7 +78,7 @@
 						<p:ajax event="change" 
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu> <p:message for="accountId" display="icon" />
-					 <p:inputText disabled="true" size="45" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
+					 <p:inputText disabled="true" size="42" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 		   				value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankAccountNo}  #{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankName}"></p:inputText></td>
 			</tr>
 			<tr>
