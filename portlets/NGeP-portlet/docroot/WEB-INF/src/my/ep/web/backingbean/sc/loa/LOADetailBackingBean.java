@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -395,7 +396,7 @@ public class LOADetailBackingBean extends
 	    if(scQtSchedule.getEndYear() != null && scQtSchedule.getEndMonth() != null){
 	    	EndDate = Calendar.getInstance();
 	    	EndDate.clear();
-	    	EndDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(loa.getContractExpDate())),0,0,0);
+	    	EndDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(contractExpDate)),0,0,0);
 	    }
 	    
 	    if(startDate != null && EndDate != null){
@@ -470,19 +471,19 @@ public class LOADetailBackingBean extends
 		if (null != scheduleList && !scheduleList.isEmpty()) {
 
 			this.getManagedBean().setTotalFrequency(scheduleList.size());
-			String startMonth = "";
-			String endMonth = "";
+			//String startMonth = "";
+			//String endMonth = "";
 			for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
 				String todate = dateFormat.format(scQtSchedule.getToDate());
-				String startdate = fromdate.substring(3, 5);
+				String startMonth = fromdate.substring(3, 5);
 				String startYear = fromdate.substring(6, fromdate.length());
-				String enddate = todate.substring(3, 5);
+				String endMonth = todate.substring(3, 5);
 				String endYear = todate.substring(6, todate.length());
 
-				if (startdate.equalsIgnoreCase("01")) {
+				/*if (startdate.equalsIgnoreCase("01")) {
 					startMonth = "0";
 				}
 				if (startdate.equalsIgnoreCase("02")) {
@@ -556,7 +557,8 @@ public class LOADetailBackingBean extends
 				}
 				if (enddate.equalsIgnoreCase("12")) {
 					endMonth = "11";
-				}
+				}*/
+				
 				int start = Integer.parseInt(startMonth);
 				int end = Integer.parseInt(endMonth);
 				int sYear = Integer.parseInt(startYear);
@@ -2343,28 +2345,37 @@ public class LOADetailBackingBean extends
 
 	public List<SelectItem> getYearDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
+		FacesScopes face = new FacesScopes();
 		try {
-
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			selectItems.add(new SelectItem(0, "January"));
-			selectItems.add(new SelectItem(1, "February"));
-			selectItems.add(new SelectItem(2, "March"));
-			selectItems.add(new SelectItem(3, "April"));
-			selectItems.add(new SelectItem(4, "May"));
-			selectItems.add(new SelectItem(5, "June"));
-			selectItems.add(new SelectItem(6, "July"));
-			selectItems.add(new SelectItem(7, "August"));
-			selectItems.add(new SelectItem(8, "September"));
-			selectItems.add(new SelectItem(9, "October"));
-			selectItems.add(new SelectItem(10, "November"));
-			selectItems.add(new SelectItem(11, "December"));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			selectItems.add(new SelectItem(1, getMonth(1)));
+			selectItems.add(new SelectItem(2, getMonth(2)));
+			selectItems.add(new SelectItem(3, getMonth(3)));
+			selectItems.add(new SelectItem(4, getMonth(4)));
+			selectItems.add(new SelectItem(5, getMonth(5)));
+			selectItems.add(new SelectItem(6, getMonth(6)));
+			selectItems.add(new SelectItem(7, getMonth(7)));
+			selectItems.add(new SelectItem(8, getMonth(8)));
+			selectItems.add(new SelectItem(9, getMonth(9)));
+			selectItems.add(new SelectItem(10,getMonth(10)));
+			selectItems.add(new SelectItem(11,getMonth(11)));
+			selectItems.add(new SelectItem(12,getMonth(12)));
 
 			this.getManagedBean().setYearList(selectItems);
 		} finally {
 
 		}
 		return getManagedBean().getYearList();
+	}
+	
+	private String getMonth(int monthId){
+		Calendar fullMonth = Calendar.getInstance();
+		fullMonth.set(00, monthId, 0000);
+
+		Format formatter = new SimpleDateFormat("MMMM"); 
+		String month = formatter.format(fullMonth.getTime());
+		
+		return month;
 	}
 
 	public void calculateStartMonth(AjaxBehaviorEvent event) {
@@ -2480,10 +2491,10 @@ public class LOADetailBackingBean extends
 				.getScQtSchedules();
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
-			String startMonth = "";
-			String endmonth = "";
+			//String startMonth = "";
+			//String endmonth = "";
 			for (ScQtSchedule schedule : freqschedule) {
-				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+				/*if (schedule.getStartMonth().equalsIgnoreCase("0")) {
 					startMonth = "01";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
 					startMonth = "02";
@@ -2538,16 +2549,16 @@ public class LOADetailBackingBean extends
 					endmonth = "11";
 				} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
 					endmonth = "12";
-				}
-				Date d1 = new Date();
-
+				}*/
+				
+				Date currentDate = new Date();
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(d1);
-				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + startMonth + "/"
+				String localDate = format.format(currentDate);
+				String day = localDate.substring(0, 2);
+				String fromdate = day + "/" + schedule.getStartMonth() + "/"
 						+ schedule.getStartYear();
-				String toDate = date + "/" + endmonth + "/"
+				String toDate = day + "/" + schedule.getEndMonth() + "/"
 						+ schedule.getEndYear();
 
 				schedule.setScheduleNo(schedule.getScheduleNo());
@@ -2560,7 +2571,6 @@ public class LOADetailBackingBean extends
 						schedule.setToDate(df.parse(toDate));
 					}
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					throw new EpException(e.toString());
 				}
 				if (schedule.getScLoa() == null) {
