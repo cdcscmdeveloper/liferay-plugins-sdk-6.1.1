@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -1003,5 +1004,10 @@ public class SmCommonUtil {
 		reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
 		retVal = reqSO.isPersonnelAlreadyDeactivate(reqDTO);
 		return retVal;
+	}
+	
+	public static String formatToTwoDecimalPoint(BigDecimal amount){
+		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		return formatter.format(amount);
 	}
 }
