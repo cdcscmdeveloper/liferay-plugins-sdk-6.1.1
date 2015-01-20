@@ -139,7 +139,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
        			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" 
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}" 
-		  			id="itEstAmt" label="#{lbl['lbl.pp.estimated.amount']}"
+		  			id="itEstAmt" styleClass="amountRight" label="#{lbl['lbl.pp.estimated.amount']}"
 		  			required="#{!empty param['disableValidation']}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}"
 						update=":form:hiddenGtEstAmt" 
