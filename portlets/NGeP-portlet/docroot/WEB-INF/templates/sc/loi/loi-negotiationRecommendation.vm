@@ -1,61 +1,109 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.descTable{
+		 	border-collapse: collapse;
+		}
+		
+		.descTable td, .descTable tr, .descTable th {
+		 	border: 1px solid black;
+		}
+		
+		body{
+			
+		}
+		
+		.txtBold{
+			font-weight : bold;
+		}
+		
+		.sTable{
+			width : 80%;
+		}
+		
+		.sColTwentyPerc{
+			width : 20%;
+		}
+		
+		.infoTable{
+			border-collapse: collapse;
+			width: 100%;
+		}
+		.infoTable td {
 			border: 1px solid black;
 		}
-		 th{
-			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		.tdInfoTable {
+			border: 1px solid black;
+			font-family: Verdana;
+			font-size: 12px;
+			font-weight: normal;
+			font-style: inherit;
+		}
+	</style>
 </head>
 <body>
-<table>
+<table width='100%'>
 	<tr>
-		<td>
-			<p>5. Pengesyoran</p>
-			<table class="table2" width='100%'>
+		<td align="left">
+			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
+			5. Pengesyoran</span>
+			<br/>
+		</td>
+	</tr>
+</table>
+<table class="infoTable">
+	<tr>
+		<td class="tdInfoTable" width='200'>Item</td>
+		<td class="tdInfoTable" width='750'>
+			<table class="infoTable">
 				<tr>
-					<td>Item</td>
-					<td>Recommended Supplier</td>
-					<td>Proposal ID</td>
-					<td>Bumiputra Status</td>
-					<td>Offered Price (RM)</td>
-					<td>Total Score</td>
-					<td>Ranking</td>
-					<td>Qty</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td width='200'>Recommended Supplier</td>
+					<td width='50'>Proposal ID</td>
+					<td width='50'>Bumiputra Status</td>
+					<td width='50'>Offered Price (RM) </td>
+					<td width='50'>Total Score</td>
+					<td width='50'>Ranking</td>
 				</tr>
 			</table>
 		</td>
+		<td class="tdInfoTable" width='50'>Qty</td>
 	</tr>
+	#foreach( $item in $recommendList )
+	<tr>
+		<td class="tdInfoTable" width='200'>$item.requestItem.itemName</td>
+		<td class="tdInfoTable" width='750'>
+			#foreach( $scQtRecommendDtl in $item.recommendDtls )
+			<table class="infoTable">
+					<tr>
+						#if ($scQtRecommendDtl.recordStatus)
+						<td width='200'>$scQtRecommendDtl.supplier.companyName</td>
+						<td width='50'>$scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo</td>
+						<td width='50'>
+							#if ($scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+								Yes
+							#else
+								No
+							#end
+						</td>
+						<td width='50'>$scQtRecommendDtl.scQtProposalItem.offerPrice</td>
+						<td width='50'></td>
+						<td width='50'></td>
+						#end
+					</tr>
+			</table>
+			#end
+		</td>
+		<td class="tdInfoTable" width='50'>$item.requestItem.quantity</td>
+	</tr>
+	#end
 </table>
 </body>
 </html>

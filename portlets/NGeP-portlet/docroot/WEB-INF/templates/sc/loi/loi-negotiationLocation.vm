@@ -43,7 +43,7 @@
 						<td>$scLoi.scLoiLoa.supplierName</td>
 						#foreach( $scNegoLocation in $scLoi.scNegoLocations )
 							<td>$scNegoLocation.negoLocation</td>
-							<td>Date :$scNegoLocation.negoDate</td>
+							<td>$scNegoLocation.negoDate</td>
 						#end
 					</tr>
 				#end
