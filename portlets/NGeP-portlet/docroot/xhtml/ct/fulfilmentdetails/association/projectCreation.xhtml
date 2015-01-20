@@ -106,7 +106,8 @@
         </p:dialog>  
        
          </p:panel>
-		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.search.contract']}" widgetVar="dlg2" modal="true" width="750" height="350">
+		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.search.contract']}" 
+		    widgetVar="dlg2" modal="true" width="800" height="425">
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
                   <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
@@ -122,18 +123,18 @@
 			        <p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:35%;white-space:normal">
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:40%;white-space:normal">
                        	<h:outputText value="#{data.contractName}" />
 					</p:column> 
                     <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:32%;white-space:normal">
                        	<h:outputText value="#{data.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:10%;">
+                    <p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:8%;">
                        <h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
 					    	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
                    	</p:column> 
-					<p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:8%;">
                         <h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
 					    	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
