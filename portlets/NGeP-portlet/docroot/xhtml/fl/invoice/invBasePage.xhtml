@@ -29,6 +29,7 @@
 			textBeforeSign="#{invoiceBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{invoiceBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{invoiceBackingBean.enableAutoUpdate()}" />
+		<ac:spkiPopup postSignAction="#{invoiceBackingBean.preSubmitAction(spkiBackingBean.pmDigiSign)}"/>
 		<table style="width: 100%">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
@@ -39,13 +40,13 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{invoiceBackingBean.gpkiSignAction(bpmAction)}" />
+							action="#{invoiceBackingBean.signingAction(bpmAction)}" />
 					</ui:repeat></td>
 			<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{invoiceBackingBean.submitAction('UPDATE')}">
+							action="#{invoiceBackingBean.signingAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
 				</h:panelGroup>
@@ -53,7 +54,7 @@
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{invoiceBackingBean.submitAction('CANCEL')}">
+							action="#{invoiceBackingBean.signingAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
 				</h:panelGroup>

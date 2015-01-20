@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.fl.po;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,6 +73,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -153,6 +155,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			String messagePrefix = "";
 			String messageSuffix = "";
 			FulfilmentResDTO resDTO = null;
+			if(getManagedBean().getPmDigiSign() != null){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
 			if(getManagedBean().getProcessName() == null && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
@@ -165,9 +170,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				reqDTO.setFulfilmentOrder(flOrder);
 				if(flOrder.getFlFulfilmentRequest().getCtContract() != null){
 					reqDTO.setContractRequest(true);
-				}
-				if(getManagedBean().getPmDigiSign() != null){
-					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				}
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING) 
@@ -709,7 +711,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();			
 		else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
-			return RoleCode.GOVT_SELLER.value();			
+			return RoleCode.GOVT_SELLER.value();
+		else if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()))
+			return RoleCode.FACTORING_ADMIN.value();	
+		else if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value()))
+			return RoleCode.FACTORING_USER.value();	
 		else
 			return null;
 	}
@@ -804,19 +810,29 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 		}
 		
-		public String gpkiSignAction(String outcome) throws Exception{
+		public String signingAction(String outcome) throws Exception{
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				// Temp setTextBeforeSign : DocNo+SAP
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
-				sb.append(getManagedBean().getFulfilmentOrder().getSapOrderNo());
-				sb.append(outcome);
-				getManagedBean().setTextBeforeSign(sb.toString());
+				
 				validateFulfillmentOrder(outcome);
 				// set action
 				getManagedBean().setButtonAction(outcome);
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}else if(getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
+							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+//				|| getUserRole().equalsIgnoreCase(RoleCode.GOVT_SELLER.value())
+				
+				validateFulfillmentOrder(outcome);
+				spkiBackingBean.getChallengeQuestions();
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				return null;
 			}else{
 				return fulfillmentOrderAction(outcome);
@@ -824,10 +840,45 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 		
 		
+		private String getOrderAmt() {
+			String orderAmt = "";
+			BigDecimal totalAmt = new BigDecimal(0);
+			
+			for(FlDeliveryAddress delAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+					totalAmt = totalAmt.add(itemAddr.getOrderedAmt());
+				}
+			}
+			orderAmt = totalAmt.toString();
+			return orderAmt;
+		}
+
 		public String preSubmitFulfillmentOrder(
 				PmDigiSign pmDigiSign) throws Exception {
 			if (pmDigiSign != null) {
 				this.getManagedBean().setPmDigiSign(pmDigiSign);
+				if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					
+					// Temp setTextBeforeSign : DocNo+SAP
+					StringBuilder sb = new StringBuilder();
+					sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
+					sb.append(getManagedBean().getFulfilmentOrder().getSapOrderNo());
+					sb.append(getManagedBean().getButtonAction());
+					getManagedBean().setTextBeforeSign(sb.toString());
+				}else if(getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+						|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
+								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+										|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
+					// Temp setTextBeforeSign : DocNo+SAP
+					StringBuilder sb = new StringBuilder();
+					sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
+					sb.append(getFacesScopes().getUserSessionBean().getUserId());//USERID
+					sb.append(getOrderAmt());//PO AMT
+					getManagedBean().setTextBeforeSign(sb.toString());
+					updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
+							getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
+							getManagedBean().getTextBeforeSign());
+				}
 			}
 			
 			return fulfillmentOrderAction(getManagedBean().getButtonAction());
@@ -837,4 +888,24 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().update("@form");
 		}
+		
+		
+		// To update digisign data for spki
+		private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+				Long docId, String docNumber , String textBeforeSign) {
+			FacesScopes facesScope = new FacesScopes();
+			Long userId = facesScope.getUserSessionBean().getUserId();
+			Timestamp date = new Timestamp(System.currentTimeMillis());
+			pmDigiSign.setDocId(new BigDecimal(docId));
+			pmDigiSign.setDocNo(docNumber);
+			pmDigiSign.setDocType(docType);
+			pmDigiSign.setCreatedBy(userId);
+	        pmDigiSign.setCreatedDate(date);
+	        pmDigiSign.setOrginalData(textBeforeSign);
+	     // spki 
+	     	SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+	     	String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+	        pmDigiSign.setSignedData(signedData);
+		}
+		
 }

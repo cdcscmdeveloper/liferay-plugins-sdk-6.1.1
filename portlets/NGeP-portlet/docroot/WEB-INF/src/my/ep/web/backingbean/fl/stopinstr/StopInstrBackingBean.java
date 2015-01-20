@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.stopinstr;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -82,16 +84,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	
 	public String saveStopInstruction(String action) {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
-			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740026);
-			}
-		}
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
-			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-			}
-		}
+		
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FlStopInstr flStopInstr = getManagedBean().getStopInstr();
@@ -321,22 +314,40 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return "flDocSearch";
 	}
 	
-	public String gpkiSignAction(String outcome) throws Exception{
+	public String signingAction(String outcome) throws Exception{
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
+			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740026);
+			}
+		}
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		}
+		
 		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
 				&&  !isSupplierRole()) {
-			// Temp setTextBeforeSign : DocNo+SAP
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
-			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}else{
+		}else if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
+						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
+			spkiBackingBean.getChallengeQuestions();
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
+		}
+		else{
 			return saveStopInstruction(outcome);
 		}
 	}
@@ -344,8 +355,31 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	
 	public String preSubmitStopInstruction(
 			PmDigiSign pmDigiSign) throws Exception {
+		this.getManagedBean().setPmDigiSign(pmDigiSign);
 		if (pmDigiSign != null) {
-			this.getManagedBean().setPmDigiSign(pmDigiSign);
+			if ((getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
+					getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
+					&&  !isSupplierRole()) {
+				// Temp setTextBeforeSign : DocNo+SAP
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
+				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
+				sb.append(getManagedBean().getButtonAction());
+				getManagedBean().setTextBeforeSign(sb.toString());
+			}else if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
+							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
+				// Temp setTextBeforeSign : DocNo+SAP
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
+				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
+				sb.append(getManagedBean().getButtonAction());
+				getManagedBean().setTextBeforeSign(sb.toString());
+				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocType(), 
+						getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo(), 
+						getManagedBean().getTextBeforeSign());
+			}
 		}
 		
 		return saveStopInstruction(getManagedBean().getButtonAction());
@@ -371,6 +405,22 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return Boolean.FALSE;
 	}
 	
-	
-	
+	// To update digisign data for spki
+	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+			Long docId, String docNumber , String textBeforeSign) {
+		FacesScopes facesScope = new FacesScopes();
+		Long userId = facesScope.getUserSessionBean().getUserId();
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		pmDigiSign.setDocId(new BigDecimal(docId));
+		pmDigiSign.setDocNo(docNumber);
+		pmDigiSign.setDocType(docType);
+		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedDate(date);
+		pmDigiSign.setOrginalData(textBeforeSign);
+		// spki 
+		SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+		String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+		pmDigiSign.setSignedData(signedData);
+	}
+
 }

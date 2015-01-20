@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.invoice;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,6 +77,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -92,6 +94,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -148,33 +151,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
-			}
 			// Need to call this as user may not click on summary menu
 			calInvSummary();
-			
-			// Check is it DAN exist
-			if(action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
-				BigDecimal adjustedAmt = new BigDecimal(0);
-				for(FlInvoiceItem invoiceItem : invoice.getFlInvoiceItem()){
-					adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
-					if(adjustedAmt.doubleValue()>0) {
-						reqDTO.setDan(true);
-					} else if(adjustedAmt.doubleValue()<0) {
-						reqDTO.setCan(true);
-						Map<String, String> paramMap = new HashMap<String, String>();
-						paramMap.put(ReportConst.PARAM_DOC_NO, "TEMP_DOC_NO");
-						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-						reqDTO.setReportUrl(generateReportURL(ReportConst.FL_NGEP_CREDIT_NOTE,paramMap));
-					}
-					if(reqDTO.isDan() && reqDTO.isCan()) {
-						break;
-					}
-				}
-			}
 			
 			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
@@ -186,6 +164,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			
 			reqDTO.setUserRole(getUserRole());
+			if(null != getManagedBean().getPmDigiSign()){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				// dunno what's the purpose of the above code
@@ -196,9 +177,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
 				}
 				
-				if(null != getManagedBean().getPmDigiSign()){
-					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-				}
 				reqDTO.setInvoice(getManagedBean().getInvoice());
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
@@ -1073,19 +1051,58 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return "flAp59Search";
 	}
 	
-	public String gpkiSignAction(String outcome) throws Exception{
+	public String signingAction(String outcome) throws Exception{
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+		IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		}
+
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
-			// Temp setTextBeforeSign : DocNo+Outcome
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}else{
+		}else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
+				(getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
+
+			// Check is it DAN exist
+			BigDecimal adjustedAmt = new BigDecimal(0);
+			for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
+				adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
+				if(adjustedAmt.doubleValue()>0) {
+					reqDTO.setDan(true);
+				} else if(adjustedAmt.doubleValue()<0) {
+					reqDTO.setCan(true);
+					Map<String, String> paramMap = new HashMap<String, String>();
+					paramMap.put(ReportConst.PARAM_DOC_NO, "TEMP_DOC_NO");
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					reqDTO.setReportUrl(generateReportURL(ReportConst.FL_NGEP_CREDIT_NOTE,paramMap));
+				}
+				if(reqDTO.isDan() && reqDTO.isCan()) {
+					break;
+				}
+			}
+
+			reqDTO.setOutcome(outcome);
+			reqDTO.setInvoice(getManagedBean().getInvoice());
+			invoiceSO.validationCheck(reqDTO);
+			spkiBackingBean.getChallengeQuestions();
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
+		}
+		else{
 			return submitAction(outcome);
 		}
 	}
@@ -1095,11 +1112,42 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
+			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
+				// Temp setTextBeforeSign : DocNo+Outcome
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+				sb.append(getManagedBean().getButtonAction());
+				getManagedBean().setTextBeforeSign(sb.toString());
+			}else if(getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()){
+				// Temp setTextBeforeSign : DocNo+Outcome
+				StringBuilder sb = new StringBuilder();
+				sb.append("INV-");
+				sb.append(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocNo());
+				sb.append(getFacesScopes().getUserSessionBean().getUserId());//USERID
+				sb.append(getInvoiceAmt());//Inv AMT
+				getManagedBean().setTextBeforeSign(sb.toString());
+				
+				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), ParameterConst.DOCTYPE_DELIVERY_ORDER, 
+						getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getInvoice().getFlFulfilmentOrder().getDocNo(), 
+						getManagedBean().getTextBeforeSign());
+			}
 		}
 		log.info("######## INVOICE SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
+	private String getInvoiceAmt() {
+		String invAmt = "";
+		BigDecimal totalAmt = new BigDecimal(0);
+		
+		for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
+			totalAmt = totalAmt.add(invoiceItem.getInvAmt());
+		}
+		invAmt = totalAmt.toString();
+		return invAmt;
+	}
+
+
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
@@ -1149,5 +1197,23 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			
 		}
 	}
+	
+	// To update digisign data for spki
+		private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+				Long docId, String docNumber , String textBeforeSign) {
+			FacesScopes facesScope = new FacesScopes();
+			Long userId = facesScope.getUserSessionBean().getUserId();
+			Timestamp date = new Timestamp(System.currentTimeMillis());
+			pmDigiSign.setDocId(new BigDecimal(docId));
+			pmDigiSign.setDocNo(docNumber);
+			pmDigiSign.setDocType(docType);
+			pmDigiSign.setCreatedBy(userId);
+			pmDigiSign.setCreatedDate(date);
+			pmDigiSign.setOrginalData(textBeforeSign);
+			// spki 
+			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+			pmDigiSign.setSignedData(signedData);
+		}
 	
 }

@@ -306,7 +306,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}else{
 				return NAV_TO_MAINTAIN_CR;	
 			}
-		} else if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) { 
+		} else if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) {
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));

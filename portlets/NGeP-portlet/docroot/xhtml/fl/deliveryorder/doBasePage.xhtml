@@ -28,6 +28,7 @@
 			textBeforeSign="#{createDOBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
+		<ac:spkiPopup postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(spkiBackingBean.pmDigiSign)}"/>
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
@@ -42,11 +43,7 @@
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
 							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
-						<p:commandButton value="#{lbl['lbl.btn.Stop.Delivery']}" 
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							rendered="#{false and createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
-							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
+							action="#{createDOBackingBean.signingAction('SUBMIT')}" />
 					</td>
 				</h:panelGroup>
 				<h:panelGroup
@@ -57,7 +54,7 @@
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								action="#{createDOBackingBean.gpkiSignAction(bpmAction)}" />
+								action="#{createDOBackingBean.signingAction(bpmAction)}" />
 						</ui:repeat></td>
 				</h:panelGroup>
 				
@@ -65,7 +62,7 @@
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
+							action="#{createDOBackingBean.signingAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
 				</h:panelGroup>
@@ -73,7 +70,7 @@
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
+							action="#{createDOBackingBean.signingAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
 				</h:panelGroup>
