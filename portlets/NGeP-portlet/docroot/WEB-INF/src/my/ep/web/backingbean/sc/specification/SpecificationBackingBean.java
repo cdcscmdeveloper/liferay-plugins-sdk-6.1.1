@@ -663,10 +663,12 @@ public class SpecificationBackingBean extends
 							offerPrice.add(this.getManagedBean()
 									.getOfferPricePackage());
 						}
-						/*if (null != this.getManagedBean().getOfferPriceItem()) {
-							offerPrice.add(this.getManagedBean()
-									.getOfferPriceItem());
-						}*/
+						/*
+						 * if (null !=
+						 * this.getManagedBean().getOfferPriceItem()) {
+						 * offerPrice.add(this.getManagedBean()
+						 * .getOfferPriceItem()); }
+						 */
 						scQtCheckList.getQtScoreWeightage()
 								.setScQtScoreOfferPrices(offerPrice);
 					} else {
@@ -693,20 +695,18 @@ public class SpecificationBackingBean extends
 												.getOfferPricePackage());
 									}
 								}
-							/*	if (localOfferprice
-										.getOfferPriceType()
-										.equalsIgnoreCase(
-												ParameterConst.RECOMMEND_TYPE_ITEM)) {
-									if (null != this.getManagedBean()
-											.getOfferPriceItem()) {
-										otherofferpriceofferPrice
-												.remove(localOfferprice);
-
-										otherofferpriceofferPrice.add(this
-												.getManagedBean()
-												.getOfferPriceItem());
-									}
-								}*/
+								/*
+								 * if (localOfferprice .getOfferPriceType()
+								 * .equalsIgnoreCase(
+								 * ParameterConst.RECOMMEND_TYPE_ITEM)) { if
+								 * (null != this.getManagedBean()
+								 * .getOfferPriceItem()) {
+								 * otherofferpriceofferPrice
+								 * .remove(localOfferprice);
+								 * 
+								 * otherofferpriceofferPrice.add(this
+								 * .getManagedBean() .getOfferPriceItem()); } }
+								 */
 
 							}
 							scQtCheckList.getQtScoreWeightage()
@@ -1664,7 +1664,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
 				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				retriveTechnicalScoring();
-				
+
 			}
 			break;
 
@@ -1684,7 +1684,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
 				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				retriveFinancialScoring();
-				
+
 			}
 			break;
 
@@ -2798,18 +2798,21 @@ public class SpecificationBackingBean extends
 									pkgOfferPrice);
 							offerPrice.add(pkgOfferPrice);
 						}
-						/*if (null == this.getManagedBean().getOfferPriceItem()) {
-							ScQtScoreOfferPrice itemOfferPrice = new ScQtScoreOfferPrice();
-							itemOfferPrice.setScQtScoreWeightage(tmpCheckList
-									.getQtScoreWeightage());
-							itemOfferPrice
-									.setOfferPriceType(ParameterConst.RECOMMEND_TYPE_ITEM);
-							setUserDetails(itemOfferPrice);
-							this.getManagedBean().setOfferPriceItem(
-									itemOfferPrice);
-							offerPrice.add(itemOfferPrice);
-
-						}*/
+						/*
+						 * if (null ==
+						 * this.getManagedBean().getOfferPriceItem()) {
+						 * ScQtScoreOfferPrice itemOfferPrice = new
+						 * ScQtScoreOfferPrice();
+						 * itemOfferPrice.setScQtScoreWeightage(tmpCheckList
+						 * .getQtScoreWeightage()); itemOfferPrice
+						 * .setOfferPriceType
+						 * (ParameterConst.RECOMMEND_TYPE_ITEM);
+						 * setUserDetails(itemOfferPrice);
+						 * this.getManagedBean().setOfferPriceItem(
+						 * itemOfferPrice); offerPrice.add(itemOfferPrice);
+						 * 
+						 * }
+						 */
 						tmpCheckList.getQtScoreWeightage()
 								.setScQtScoreOfferPrices(offerPrice);
 
@@ -2826,15 +2829,14 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setOfferPricePackage(
 											scoreOfferPrice);
 								}
-							}/* else if (ParameterConst.RECOMMEND_TYPE_ITEM
-									.equalsIgnoreCase(scoreOfferPrice
-											.getOfferPriceType())) {
-								if (null == this.getManagedBean()
-										.getOfferPriceItem()) {
-									this.getManagedBean().setOfferPriceItem(
-											scoreOfferPrice);
-								}
-							}*/
+							}/*
+							 * else if (ParameterConst.RECOMMEND_TYPE_ITEM
+							 * .equalsIgnoreCase(scoreOfferPrice
+							 * .getOfferPriceType())) { if (null ==
+							 * this.getManagedBean() .getOfferPriceItem()) {
+							 * this.getManagedBean().setOfferPriceItem(
+							 * scoreOfferPrice); } }
+							 */
 						}
 
 					}
@@ -4268,27 +4270,53 @@ public class SpecificationBackingBean extends
 		String locationLevel = this.getManagedBean().getStateCode();
 		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
-			for (TreeNode treeNode : getManagedBean()
+		/*	for (TreeNode treeNode : getManagedBean()
 					.getSelectedGeneralTreeNodes()) {
 
 				if (!treeNode.getParent().isSelected()) {
 					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-					/*
+					
 					 * this.getManagedBean().getTotalSuppliersSpecLoc()
 					 * .addAll(locationDTO);
-					 */
+					 
 					allNodes.addAll(locationDTO);
 				}
 
 				else {
 					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-					/*
+					
 					 * this.getManagedBean().getTotalSuppliersSpecLoc()
 					 * .addAll(locationDTO);
-					 */
+					 
 					allNodes.addAll(locationDTO);
 				}
 
+			}*/
+
+			for (TreeNode treeNode : getManagedBean().getSelectedGeneralTreeNodes()) {
+
+				if (locationLevel
+						.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
+					if (treeNode.getType().equals("state")) {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+						if (treeNode.getChildCount() > 0) {
+							break;
+						}
+					} else {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+					}
+				} else {
+
+					if (treeNode.getParent().isSelected()) {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+					} else {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+					}
+				}
 			}
 		}
 
@@ -11134,18 +11162,16 @@ public class SpecificationBackingBean extends
 
 			for (TreeNode treeNode : treeNodes) {
 				if (treeNode.isSelected()) {
-					ScQtLocCriteria loccriteria = (ScQtLocCriteria) treeNode
-							.getData();
+					
 					nodesToRemoved.add(treeNode);
 
-					deleteSupplierLocacriteria(loccriteria);
+					//deleteSupplierLocacriteria(loccriteria);
 				} else {
 					if (treeNode.getChildren() != null
 							&& treeNode.getChildren().size() > 0) {
-						ScQtLocCriteria loccriteria = (ScQtLocCriteria) treeNode
-								.getData();
+					
 						deleteChildTreeNodes(treeNode.getChildren());
-						deleteSupplierLocacriteria(loccriteria);
+						//deleteSupplierLocacriteria(loccriteria);
 						if (treeNode.getChildren().size() == 0) {
 							nodesToRemoved.add(treeNode);
 						}
