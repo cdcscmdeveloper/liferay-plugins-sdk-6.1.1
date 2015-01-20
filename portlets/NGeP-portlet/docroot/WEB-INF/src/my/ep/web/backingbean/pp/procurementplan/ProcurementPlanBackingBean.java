@@ -647,8 +647,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		loadPlanRemark(new ArrayList<PpRemark>());
 		loadPlanActors(ppPlan.getOrgProfile() , null);
 		
-	
-
+		//default status for view
+		PmStatus bpmStatus = new PmStatus();
+		PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
+		bpmStatus.setStatusId(ProcurementPlanConst.PPP_PENDING_SUBMISSION); //PP or PE will do, for display only
+		ppWorkflowStatus.setPmStatus(bpmStatus);
+		ppWorkflowStatus.setCreatedDate(ppPlan.getCreatedDate());
+		ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(null, ppPlan.getCreatedBy()).getUserName());
+		this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
+		
 		log.info("initialPlanDetails - End");
 	}
 	
@@ -1511,7 +1518,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				return items;
 			}
 		}else{
-//			
+			
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
 			SelectItem[] items = new SelectItem[3];
@@ -2034,20 +2041,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 			validatePpItem();
-			
-			if(this.getManagedBean().getVerifierModel().getTarget()==null || this.getManagedBean().getVerifierModel().getTarget().isEmpty()){
-				throw new EpException(MessageConst.ERROR_730017);
+			// PP20150108-0005
+			if(!ppPlan.isBrandNew() 
+					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))
+					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
+				if(this.getManagedBean().getVerifierModel().getTarget()==null || this.getManagedBean().getVerifierModel().getTarget().isEmpty()){
+					throw new EpException(MessageConst.ERROR_730017);
+				}
+				if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
+					throw new EpException(MessageConst.ERROR_730018);
+				}
 			}
-			if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
-				throw new EpException(MessageConst.ERROR_730018);
-			}
+		
 		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 			if(ppPlan.getVotFundType().getParameterId()==null){
 				throw new EpException(MessageConst.ERROR_730019);
 			}
 			validateEpItem();
-			if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
-				throw new EpException(MessageConst.ERROR_730018);
+			// PP20150108-0005
+			if(!ppPlan.isBrandNew() 
+					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))
+					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
+				if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
+					throw new EpException(MessageConst.ERROR_730018);
+				}
 			}
 		}
 
