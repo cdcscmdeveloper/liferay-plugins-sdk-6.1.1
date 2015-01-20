@@ -1550,7 +1550,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				}else{
 					label = pmReport.getReportTitle();
 				}
-				if(!(pmReport.getReportId().equals("SC_064"))&&!(pmReport.getReportId().equals("SC_065"))&&!(pmReport.getReportId().equals("SC_066"))){
+				if(!(pmReport.getReportId().equals(ReportConst.SC_S1_RCNT_PRICE_RPT_VAL))&&!(pmReport.getReportId().equals(ReportConst.SC_ITEM_PRICING_SUM_RPT_VAL))&&!(pmReport.getReportId().equals(ReportConst.SC_S1_REQUEST_NOTE_FINAL_RPT_VAL))){
 				selectItem.setValue(pmReport.getReportId());
 				selectItem.setLabel(label);
 				reportList.add(selectItem);

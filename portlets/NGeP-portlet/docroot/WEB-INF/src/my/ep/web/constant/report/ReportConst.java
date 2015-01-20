@@ -80,6 +80,9 @@ public class ReportConst {
 	public static final String SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL = "SC_061";
 	public static final String SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL = "SC_062";
 	public static final String SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL = "SC_063";
+	public static final String SC_S1_RCNT_PRICE_RPT_VAL = "SC_064";
+	public static final String SC_ITEM_PRICING_SUM_RPT_VAL = "SC_065";
+	public static final String SC_S1_REQUEST_NOTE_FINAL_RPT_VAL = "SC_066";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
 	//S1 Report
