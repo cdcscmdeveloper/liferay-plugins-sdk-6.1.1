@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -324,6 +325,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 			checkHaveAdvancedPayment(paymentAdvice);
 			validateAdvancedPayment();
+			if(getManagedBean().getPaymentAdvice().isBrandNew()){
+				getManagedBean().getPaymentAdvice().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			}
 		}
 	}
 	
