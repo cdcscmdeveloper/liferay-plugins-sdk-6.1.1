@@ -15,11 +15,14 @@
 						rendered="#{amendmentBackingBean.managedBean.taskId==null}"
 						action="#{amendmentBackingBean.backAction}" /></td>
 				<td class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
-						onclick="showCompleteBtn();"
-						styleClass="ui-button" 
-						action="#{amendmentBackingBean.downloadAll()}"
-						rendered="#{amendmentBackingBean.managedBean.showPrintButton}" />			
+					<p:commandButton value="#{lbl['lbl.btn.print']}" 
+						styleClass="ui-button" update="btnPnl"
+						onclick="printBtn.jq.click();"
+						actionListener="#{amendmentBackingBean.showCompleteButton()}"
+						rendered="#{amendmentBackingBean.managedBean.showPrintButton}" />						
+					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false" widgetVar="printBtn"
+						styleClass="ui-button" style="display:none;" 
+						action="#{amendmentBackingBean.downloadAll()}"  />
 					<ui:repeat var="outcome"
 						value="#{amendmentBackingBean.managedBean.action}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
