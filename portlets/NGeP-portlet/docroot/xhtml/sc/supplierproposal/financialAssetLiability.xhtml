@@ -12,7 +12,7 @@
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
 							<span class="mandatory">* </span>
 						</ui:fragment>#{lbl['lbl.sc.sp.current.asset']}</LABEL></td>
-				<td><p:inputText id="currentAsset" style="text-align:right"
+				<td colspan="3"><p:inputText id="currentAsset" style="text-align:right"
 						required="true" label="#{lbl['lbl.sc.sp.current.asset']}"
 						disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
@@ -28,7 +28,7 @@
 				<td><ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
-				<td><p:inputText id="currentLiabilities"
+				<td colspan="3"><p:inputText id="currentLiabilities"
 						style="text-align:right" required="true" disabled="#{statusHide}"
 						label="#{lbl['lbl.sc.sp.current.liability']}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
