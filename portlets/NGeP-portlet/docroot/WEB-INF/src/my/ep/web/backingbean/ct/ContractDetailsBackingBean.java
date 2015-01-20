@@ -1705,13 +1705,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	
 		CtPerformanceBond newBond = new CtPerformanceBond();
 		newBond.setFinancialOrg(new PmFinancialOrg());
-		if(getManagedBean().getCtAmendment() != null && getManagedBean().getCtAmendment().getAmendmentLoa() != null
-				  && getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()){
-			newBond.setEffDate(new Date());  
-			newBond.setChckPerformaceBond(true);
-		} else {
-			newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		}
+		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 	    Calendar cal = Calendar.getInstance();
         cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
         cal.add(Calendar.YEAR, 1); 
