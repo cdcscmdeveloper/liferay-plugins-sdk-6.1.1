@@ -1987,6 +1987,17 @@ table.ppTwoTable td {
 .ui-datatable.dtProcurementPlan thead th, .ui-datatable.dtProcurementPlan tbody td, .ui-datatable.dtProcurementPlan tfoot td{
 	white-space: normal;
 }
+
+.gtBudgetAmt{
+	padding:0;
+}
+
+.gtPlanAmt{
+	padding:0;
+}
+.amountRight{
+	text-align:right;
+}
 /*--------------------------       End PP Related      ------------------------------ */
 
 /*--------------------------       SM Related      ------------------------------ */
