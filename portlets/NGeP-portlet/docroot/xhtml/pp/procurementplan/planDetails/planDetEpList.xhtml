@@ -118,7 +118,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
-		  			id="itBudgetAmt" styleClass="amountright" label="#{lbl['lbl.pp.total.approved.budget']}" 
+		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update=":form:hiddenGtBudgetAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt" oncomplete="updateEpFooter();" 
@@ -128,7 +128,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
    				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
-		  			id="itPlanAmt" styleClass="amountright" label="#{lbl['lbl.pp.budget.spend.ep']}"
+		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update=":form:hiddenGtPlanAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt" oncomplete="updateEpFooter();"   />
