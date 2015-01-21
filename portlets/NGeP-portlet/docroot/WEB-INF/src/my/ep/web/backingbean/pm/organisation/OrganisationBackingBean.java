@@ -146,7 +146,7 @@ public class OrganisationBackingBean extends
 		resetInitialOrg();
 		retrieveFinancialOrgList();
 		
-           this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
+         //  this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
 
 		if (id != null && id > 0) {
 			maintainOrganisation(id);
