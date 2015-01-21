@@ -62,15 +62,9 @@
 								  </c:if>
 								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smRegistrationStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" style="margin-top:5px;width:160px;" />			
-									<p:selectOneMenu value="#{reportBackingBean.smRegistrationStatus}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiputera']}" itemValue="#{lbl['lbl.rpt.rgstBumiputera']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstDaftar']}" itemValue="#{lbl['lbl.rpt.rgstDaftar']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiOprtdFrmHome']}" itemValue="#{lbl['lbl.rpt.rgstBumiOprtdFrmHome']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstNonBumiOprtdFrmHome']}" itemValue="#{lbl['lbl.rpt.rgstNonBumiOprtdFrmHome']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiFrnCompJntVentur']}" itemValue="#{lbl['lbl.rpt.offline']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiNonBumiFrnCompJntVentur']}" itemValue="#{lbl['lbl.rpt.rgstBumiNonBumiFrnCompJntVentur']}"></f:selectItem>				
-									</p:selectOneMenu>
+									
+									<p:inputText maxlength="40" value="#{reportBackingBean.smRegistrationStatus}" style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
 									</c:if>
 									<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryRegistrationStatusView}">
 								  <p:column style="width:160px;">
@@ -89,15 +83,9 @@
 								  <table style="width: 100%">
 									<tr>
 										<td style="width:84%">																
-									<p:selectOneMenu id="smManRegStatus" value="#{reportBackingBean.smRegistrationStatus}" required="true"  style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiputera']}" itemValue="#{lbl['lbl.rpt.rgstBumiputera']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstDaftar']}" itemValue="#{lbl['lbl.rpt.rgstDaftar']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiOprtdFrmHome']}" itemValue="#{lbl['lbl.rpt.rgstBumiOprtdFrmHome']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstNonBumiOprtdFrmHome']}" itemValue="#{lbl['lbl.rpt.rgstNonBumiOprtdFrmHome']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiFrnCompJntVentur']}" itemValue="#{lbl['lbl.rpt.offline']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiNonBumiFrnCompJntVentur']}" itemValue="#{lbl['lbl.rpt.rgstBumiNonBumiFrnCompJntVentur']}"></f:selectItem>				
-									</p:selectOneMenu>
+									
+									<p:inputText id="smManRegStatus"  maxlength="40" value="#{reportBackingBean.smRegistrationStatus}" required="true"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
 									</td>									
 									<td>
 									<p:message id="smManRegStatusMsg" for="smManRegStatus" display="icon" />
