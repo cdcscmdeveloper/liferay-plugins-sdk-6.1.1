@@ -22,20 +22,9 @@
 			<td>
 		    <p:inputText size="35" id="pmPriceRate" maxlength="17"
 								label="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}"
-								disabled="true"
-								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
-								value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}"
-								required="true">
-					            <f:validateDoubleRange
-								     minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-								     maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-				                <f:convertNumber 
-				                     pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				                <p:ajax process="@this" partialSubmit="true"
-								       update="@this,purchasePriceMsg" />
-			</p:inputText>      <p:message id="purchasePriceMsg" for="pmPriceRate"
-								    showSummary="true" showDetail="false" display="icon" />
-						
+								disabled="true">
+				<f:convertNumber  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					
+			</p:inputText>
 			</td>
 		</tr>
 		

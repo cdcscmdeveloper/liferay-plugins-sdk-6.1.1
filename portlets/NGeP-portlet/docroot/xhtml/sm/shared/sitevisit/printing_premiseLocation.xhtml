@@ -12,7 +12,7 @@
 		<tr>
 			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.ownership']}" /></td>
 			<td class="tdContent">
-			<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="#{viewFlag}">
+			<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="true">
 					<f:selectItem itemLabel = "#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItem itemLabel = "#{lbl['lbl.sm.officeloc.ownership.prvt']}" itemValue="P" />
 					<f:selectItem itemLabel = "#{lbl['lbl.sm.officeloc.ownership.rent']}" itemValue="R" />
@@ -21,7 +21,10 @@
 			
 			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}" /></td>
 			<td class="tdContent">
-				<p:inputText  id="pmPriceRate" maxlength="18" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}" />
+				<p:inputText  id="pmPriceRate" maxlength="18" disabled="true" size="35"
+				value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}">
+					<f:convertNumber  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</td>
 		</tr>
 		
