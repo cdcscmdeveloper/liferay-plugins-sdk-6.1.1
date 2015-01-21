@@ -1663,8 +1663,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 		// SIR #3108
 		context.put("higherManagementNames", this.getManagedBean().getHigherManagementNames());
-		context.put("managementNames", this.getManagedBean().getManagementNames());
-		context.put("equityCompanies", svTask.getSmAppl().getSmEquityCompanies());
+		context.put("managementNames", this.getManagedBean().getManagementNames());	
+		log.info("Business type***************>" + svTask.getSmAppl().getSmSupplier().getBusinessType());
+		
+		String businessType = svTask.getSmAppl().getSmSupplier().getBusinessType();
+		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP) 
+				|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+				|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)){
+			log.info("EquityCompanies-------" +  svTask.getSmAppl().getSmEquityCompanies().size());
+			context.put("equityCompanies", svTask.getSmAppl().getSmEquityCompanies());
+		}
 		
 		String fileName = fileInitName + "sectionA.pdf";
 		String file = generateToPdf(vmEquity, context, fileName);
