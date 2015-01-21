@@ -120,6 +120,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
+		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update=":form:hiddenGtBudgetAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt" oncomplete="updateEpFooter();" 
 		  				 />
@@ -130,6 +131,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
    				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
+		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
 		  				update=":form:hiddenGtPlanAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt" oncomplete="updateEpFooter();"   />
 		  		</p:inputText>
@@ -188,12 +190,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-				     		<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" styleClass="gtBudgetAmt"  />
+				     		<p:outputLabel id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" styleClass="gtBudgetAmt"  
+				     			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				     		</p:outputLabel>
 					    </f:facet>
 					</p:column>
 					<p:column>
 					 	<f:facet name="footer">
-					     	<p:outputLabel id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}" styleClass="gtPlanAmt" />
+					     	<p:outputLabel id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}" styleClass="gtPlanAmt" 
+					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					     	</p:outputLabel>
 					    </f:facet>
 					</p:column>
 					 <p:column>
