@@ -5634,11 +5634,32 @@ public class SpecificationBackingBean extends
 	public void fromChange(AjaxBehaviorEvent event) {
 		String formvalue = (String) event.getComponent().getAttributes()
 				.get("value");
-		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		String currentYear = this.getManagedBean().getStartYear();
+		if (null != formvalue && !"".endsWith(formvalue) && null != currentYear) {
+			this.getManagedBean().setFromMonth(formvalue);
+			int year = Integer.parseInt(currentYear);
+			int n = Integer.parseInt(this.getManagedBean().getFromMonth());
+			int j = n + 2;
+			calculateBankMonths(j, year);
+		}
+	}
 
-		this.getManagedBean().setFromMonth(formvalue);
-		int n = Integer.parseInt(this.getManagedBean().getFromMonth());
-		int j = n + 2;
+	public void yearChange(AjaxBehaviorEvent event) {
+		String year = (String) event.getComponent().getAttributes()
+				.get("value");
+
+		int currentYear = Integer.parseInt(year);
+
+		if (currentYear > 0 && null != this.getManagedBean().getFromMonth()
+				&& !"".equals(this.getManagedBean().getFromMonth())) {
+			int n = Integer.parseInt(this.getManagedBean().getFromMonth());
+			int j = n + 2;
+			calculateBankMonths(j, currentYear);
+		}
+
+	}
+
+	private void calculateBankMonths(int j, int currentYear) {
 		String Startmonth = "";
 		if (j == 0) {
 			Startmonth = "January";
@@ -5676,6 +5697,7 @@ public class SpecificationBackingBean extends
 			Startmonth = "February";
 
 		}
+
 		this.getManagedBean().setBankstmntTomonth(Startmonth);
 		this.getManagedBean().setToMonth(String.valueOf(j));
 		this.getManagedBean().setEndYear(String.valueOf(currentYear));
@@ -9310,49 +9332,43 @@ public class SpecificationBackingBean extends
 
 	}
 
-	/*public void specOfferpriceItemFromVarieance(ScQtScoreOfferPrice offerPrice) {
-		if (null != offerPrice) {
-			if (null == offerPrice.getFromVariance()
-					|| offerPrice.getFromVariance().intValue() <= 0) {
-				throw new EpException(MessageConst.ERROR_760226);
-			}
-
-		}
-
-	}
-
-	public void specOfferpriceItemToVarieance(ScQtScoreOfferPrice offerPrice) {
-		if (null != offerPrice) {
-			if (null == offerPrice.getToVariance()
-					|| offerPrice.getToVariance().intValue() <= 0) {
-				throw new EpException(MessageConst.ERROR_760227);
-			}
-
-		}
-
-	}
-
-	public void specOfferpriceItemBelowScore(ScQtScoreOfferPrice offerPrice) {
-		if (null != offerPrice) {
-			if (null == offerPrice.getBelowScore()
-					|| offerPrice.getBelowScore().intValue() <= 0) {
-				throw new EpException(MessageConst.ERROR_760218);
-			}
-
-		}
-
-	}
-
-	public void specOfferpriceItemAboveScore(ScQtScoreOfferPrice offerPrice) {
-		if (null != offerPrice) {
-
-			if (null == offerPrice.getAboveScore()
-					|| offerPrice.getAboveScore().intValue() <= 0) {
-				throw new EpException(MessageConst.ERROR_760219);
-			}
-		}
-
-	}*/
+	/*
+	 * public void specOfferpriceItemFromVarieance(ScQtScoreOfferPrice
+	 * offerPrice) { if (null != offerPrice) { if (null ==
+	 * offerPrice.getFromVariance() || offerPrice.getFromVariance().intValue()
+	 * <= 0) { throw new EpException(MessageConst.ERROR_760226); }
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * public void specOfferpriceItemToVarieance(ScQtScoreOfferPrice offerPrice)
+	 * { if (null != offerPrice) { if (null == offerPrice.getToVariance() ||
+	 * offerPrice.getToVariance().intValue() <= 0) { throw new
+	 * EpException(MessageConst.ERROR_760227); }
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * public void specOfferpriceItemBelowScore(ScQtScoreOfferPrice offerPrice)
+	 * { if (null != offerPrice) { if (null == offerPrice.getBelowScore() ||
+	 * offerPrice.getBelowScore().intValue() <= 0) { throw new
+	 * EpException(MessageConst.ERROR_760218); }
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * public void specOfferpriceItemAboveScore(ScQtScoreOfferPrice offerPrice)
+	 * { if (null != offerPrice) {
+	 * 
+	 * if (null == offerPrice.getAboveScore() ||
+	 * offerPrice.getAboveScore().intValue() <= 0) { throw new
+	 * EpException(MessageConst.ERROR_760219); } }
+	 * 
+	 * }
+	 */
 
 	public void checkTechnicalPassingScore(
 			ScQtScoreSetting technicalScoreSetting) {
@@ -13020,6 +13036,28 @@ public class SpecificationBackingBean extends
 		} else {
 			checkList.setIndex(-1);
 		}
+	}
+
+	public List<SelectItem> getBankYearsDisplayDtls() {
+
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+			int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+			int previousYear = currentYear - 1;
+			int nextYear = currentYear + 1;
+
+			selectItems.add(new SelectItem(previousYear, String
+					.valueOf(previousYear)));
+			selectItems.add(new SelectItem(currentYear, String
+					.valueOf(currentYear)));
+			selectItems.add(new SelectItem(nextYear, String.valueOf(nextYear)));
+			this.getManagedBean().setBankyearsList(selectItems);
+
+		} finally {
+
+		}
+		return this.getManagedBean().getBankyearsList();
 	}
 
 }
