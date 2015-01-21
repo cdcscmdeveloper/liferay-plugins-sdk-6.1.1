@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -37,6 +38,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CTProcessNameConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -208,8 +210,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 					  
 					  ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			          setSuspensionContractVer(contractSO.retrieveContractVerDtls(ctReqDTO));
-			          getManagedBean().setAutoUpdate(true);
-			          
+			          			          
 	     } catch(Exception e){
 			  e.printStackTrace();
 		 }
@@ -404,35 +405,16 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
-				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	      }
 		 
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
 		 
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract suspension"});
-		}
-		 
-		 
-		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
-					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
-					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
-					//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-					StringBuilder sb = new StringBuilder();
-					sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-					sb.append(getManagedBean().getContractVer().getDocType());
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
-					sb.append(outcome);			
-					getManagedBean().setTextBeforeSign(sb.toString());	
-					getManagedBean().setButtonAction(outcome);
+			 throw new EpException(MessageConst.ERROR_750018, new String[]{"contract suspension"});
 		}
 	 }
 		
@@ -518,6 +500,38 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			return true;
 		else 
 			return false;
+	}
+	
+	public String gpkiSignAction(String outcome) throws Exception{
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
+				|| BpmOutcomeConst.BPM_REJECT.equals(outcome)
+				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+			validateSuspensionDetails(outcome);
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(outcome);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else if(BpmOutcomeConst.BPM_CANCEL.equals(outcome)){
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			return null;
+		}
+		else{
+			return saveContractSuspension(outcome);
+		}
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
 	}
 
 }

@@ -85,5 +85,18 @@
 		</tr>
 		</table>
 		<ac:lovPopup />
+		<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true">
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{panelBackingBean.savePanelCircular('CANCEL')}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();"   />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="cancelConfirmDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
 	</ui:define>	    
 </ui:composition>				

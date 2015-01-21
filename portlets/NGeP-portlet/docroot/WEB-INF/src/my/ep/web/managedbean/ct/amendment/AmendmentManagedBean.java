@@ -128,7 +128,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private double performanceBondRuleAmt;
 	
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
 	private int attachFileIndex;

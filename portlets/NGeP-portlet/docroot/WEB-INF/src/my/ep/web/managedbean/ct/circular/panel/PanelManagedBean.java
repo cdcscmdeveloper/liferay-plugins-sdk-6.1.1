@@ -118,7 +118,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	//gpki signing
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();

@@ -60,7 +60,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private SelectItem[] terminationReasonDesc;
 
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;	
 	private DualListModel<String> approverModel;

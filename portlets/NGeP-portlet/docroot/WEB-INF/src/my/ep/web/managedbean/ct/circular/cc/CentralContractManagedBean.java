@@ -107,7 +107,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private TreeNode centralZoneTrees;
 	
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String taskName;
 

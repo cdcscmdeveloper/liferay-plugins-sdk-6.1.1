@@ -45,46 +45,38 @@
 	padding: 10px;
 }
 </style>
-		<p:blockUI id="blockUiId" block=":form" widgetVar="blockUIWidget">
+		<p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<p:panel>
 			<f:event listener="#{terminationBackingBean.preRenderView}"
 				type="preRenderView" />
 			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="#{terminationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+				autoUpdate="#{terminationBackingBean.managedBean.autoUpdate}"
+				closable="true" severity="error, info" />
+			<ac:gpkiPopup
+				textBeforeSign="#{terminationBackingBean.managedBean.textBeforeSign}"
+				postSignAction="#{terminationBackingBean.preSubmitContractTermination(gpkiBackingBean.pmDigiSign)}"
+				enableAutoUpdate="#{terminationBackingBean.enableAutoUpdate()}" />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-							onstart="blockUIWidget.show();" 
-					  		oncomplete="blockUIWidget.hide();"							
+					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+							immediate="true" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
 							rendered="#{terminationBackingBean.managedBean.taskId==null}"
 							action="#{terminationBackingBean.backAction}" /></td>
-					<td class="ppRightBtn">
-						<c:if test="#{!terminationBackingBean.managedBean.viewContract}">
-						<ui:repeat var="outcome"
-							value="#{terminationBackingBean.managedBean.action}">							
-							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
-								onstart="blockUIWidget.show();" 
-					  			oncomplete="blockUIWidget.hide();"
-								styleClass="ui-button" ajax="false" validateClient="true"
-								action="#{terminationBackingBean.saveContractTermination(outcome)}"
-								rendered="#{outcome != 'ENDORSE' and outcome != 'SUBMIT'}" />
-							<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-								process="@form"
-								update="@form,@([id$=messages])"
-								onstart="blockUIWidget.show();" 
-								actionListener="#{terminationBackingBean.validateContractTermination(outcome)}"
-								action="#{terminationBackingBean.disableUpdate}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show();blockUIWidget.hide(); "
-								rendered="#{outcome == 'ENDORSE' or outcome == 'SUBMIT'}" />
-						</ui:repeat>
-						</c:if>
-						<ac:gpkiPopup
-							textBeforeSign="#{terminationBackingBean.managedBean.textBeforeSign}"
-							postSignAction="#{terminationBackingBean.preSubmitContractTermination(gpkiBackingBean.pmDigiSign)}" />
-				</td>
+					<td class="ppRightBtn"><c:if
+							test="#{!terminationBackingBean.managedBean.viewContract}">
+							<ui:repeat var="outcome"
+								value="#{terminationBackingBean.managedBean.action}">
+								<ui:param name="buttonLabel"
+									value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+								<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
+									update="@form" onstart="blockWidget.show();"
+									oncomplete="blockWidget.hide();" styleClass="ui-button" 
+									action="#{terminationBackingBean.gpkiSignAction(outcome)}" />
+							</ui:repeat>
+						</c:if></td>
 				</tr>
 			</table>
 			<div align="left" class="header-info">
@@ -112,5 +104,18 @@
 		<ui:include src="terminationRecord.xhtml" />
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+		<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true">
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{terminationBackingBean.saveContractTermination('CANCEL')}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="cancelConfirmDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
