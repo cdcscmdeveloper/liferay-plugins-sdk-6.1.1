@@ -247,7 +247,8 @@
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
-
+						<p:ajax event="blur" process="@all" partialSubmit="true"
+							listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
 					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>
 		</table>
