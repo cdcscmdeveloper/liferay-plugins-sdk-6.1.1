@@ -16,9 +16,11 @@
 					</h:outputText>
 				</div>
 				<p:spacer width="20px"></p:spacer>
-				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}" style="width:100%">
+				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
+					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:30%;white-space: normal;">
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+						style="width:30%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
@@ -37,7 +39,8 @@
 							<h:outputText value="#{brfsitdtl.location}" />
 						</p:commandLink>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
@@ -62,13 +65,15 @@
 				</h:outputText>
 				<p:spacer width="10px;">
 				</p:spacer>
-				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}" style="width:100%">
+				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
+					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:30%;white-space: normal;">
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+						style="width:30%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-						style="width:18%;white-space: normal;" >
+						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDate}">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
@@ -83,7 +88,8 @@
 							<h:outputText value="#{brfsitdtl.location}" />
 						</p:commandLink>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
@@ -105,13 +111,15 @@
 				<h:outputText value="All Attandence required for SiteVisit"
 					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}">
 				</h:outputText>
-				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}" style="width:100%">
+				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
+					style="width:100%">
 					<ac:paginator for="sitevisitDtls"></ac:paginator>
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:30%;white-space: normal;">
+					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+						style="width:30%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-						style="width:18%;white-space: normal;" >
+						style="width:18%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDate}">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
@@ -127,7 +135,8 @@
 						</p:commandLink>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+					<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+						style="width:18%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
@@ -149,5 +158,5 @@
 
 	</c:if>
 
-
+	<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 </ui:composition>
