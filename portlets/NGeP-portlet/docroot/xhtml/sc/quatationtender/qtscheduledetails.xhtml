@@ -213,7 +213,7 @@
 								<td><p:selectOneMenu styleClass="samplestate"
 										style="width: 218px;margin-bottom: 5px;" id="sampledistrict1"
 										required="true" label="#{lbl['lbl.so.district']}"
-										value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="district"
@@ -222,7 +222,7 @@
 											itemLabel="#{district.districtName}" />
 										<p:ajax event="change"
 											listener="#{qTScheduleDetailBackingBean.retrievePmCityList}"
-											update="@(.sampledistrictCity)" />
+											update="@(.sampledistrictCity)" partialSubmit="true"/>
 									</p:selectOneMenu></td>
 								<td><p:message id="sampledistrict1Msg"
 										for="sampledistrict1" display="icon" /></td>
@@ -243,7 +243,7 @@
 								<td><p:selectOneMenu styleClass="sampledistrictCity"
 										style="width: 218px;margin-bottom: 5px;" id="samplecity1"
 										required="true" label="#{lbl['lbl.so.city']}"
-										value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="city"
@@ -266,7 +266,7 @@
 							<tr>
 								<td><p:inputText id="samplepost1" required="true"
 										label="#{lbl['lbl.so.postcode']}"
-										value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.postcode}"
+										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
 										size="30" maxlength="10" /></td>
 								<td><p:message id="samplepostpost1Msg" for="samplepost1"
 										display="icon" /></td>
