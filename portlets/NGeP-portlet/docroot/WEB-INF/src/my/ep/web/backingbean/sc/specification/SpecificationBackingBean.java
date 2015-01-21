@@ -1838,6 +1838,8 @@ public class SpecificationBackingBean extends
 		retriveCommitteeEndorsment();
 		checktemplateSpecStatus(this.getManagedBean().getScQt());
 		checkFinancialSpecStatus(this.getManagedBean().getScQt());
+		technicalWeightageCalculate();
+		financialWeightageCalculate();
 
 		// this.getManagedBean().setActiveIndex(0);
 
@@ -4270,30 +4272,31 @@ public class SpecificationBackingBean extends
 		String locationLevel = this.getManagedBean().getStateCode();
 		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
-		/*	for (TreeNode treeNode : getManagedBean()
+			/*
+			 * for (TreeNode treeNode : getManagedBean()
+			 * .getSelectedGeneralTreeNodes()) {
+			 * 
+			 * if (!treeNode.getParent().isSelected()) { List<TplSpecZoneLoc>
+			 * locationDTO = getZoneLocations(treeNode);
+			 * 
+			 * this.getManagedBean().getTotalSuppliersSpecLoc()
+			 * .addAll(locationDTO);
+			 * 
+			 * allNodes.addAll(locationDTO); }
+			 * 
+			 * else { List<TplSpecZoneLoc> locationDTO =
+			 * getZoneLocations(treeNode);
+			 * 
+			 * this.getManagedBean().getTotalSuppliersSpecLoc()
+			 * .addAll(locationDTO);
+			 * 
+			 * allNodes.addAll(locationDTO); }
+			 * 
+			 * }
+			 */
+
+			for (TreeNode treeNode : getManagedBean()
 					.getSelectedGeneralTreeNodes()) {
-
-				if (!treeNode.getParent().isSelected()) {
-					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-					
-					 * this.getManagedBean().getTotalSuppliersSpecLoc()
-					 * .addAll(locationDTO);
-					 
-					allNodes.addAll(locationDTO);
-				}
-
-				else {
-					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-					
-					 * this.getManagedBean().getTotalSuppliersSpecLoc()
-					 * .addAll(locationDTO);
-					 
-					allNodes.addAll(locationDTO);
-				}
-
-			}*/
-
-			for (TreeNode treeNode : getManagedBean().getSelectedGeneralTreeNodes()) {
 
 				if (locationLevel
 						.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
@@ -9146,7 +9149,7 @@ public class SpecificationBackingBean extends
 						.isWeightageReq()
 				&& !this.getManagedBean().isReadOnly()) {
 			List<ScQtCheckList> checklist = this.getManagedBean()
-					.getScQtCheckSt2financeProposalList();
+					.getFinancialScoring();
 			if (null == checklist) {
 				checklist = new ArrayList<ScQtCheckList>();
 			}
@@ -9170,7 +9173,53 @@ public class SpecificationBackingBean extends
 							+ weightage.getWeightage().intValue();
 				}
 				if (financialWeightage < 100) {
+					if (this.getManagedBean().getScQt().getEvaluationType()
+							.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+							&& !this.getManagedBean().getScQt()
+									.isTechEvaluationReq()) {
+						this.getManagedBean().setActiveIndex(4);
+					} else {
+						this.getManagedBean().setActiveIndex(5);
+					}
 					throw new EpException(MessageConst.ERROR_760221);
+				}
+			}
+		}
+
+	}
+
+	public void technicalWeightageCalculate() {
+		if (null != this.getManagedBean().getTechnicalScoreSetting()
+				&& this.getManagedBean().getTechnicalScoreSetting()
+						.isWeightageReq()
+				&& !this.getManagedBean().isReadOnly()) {
+			List<ScQtCheckList> checklist = this.getManagedBean()
+					.getTechnicalScoring();
+			if (null == checklist) {
+				checklist = new ArrayList<ScQtCheckList>();
+			}
+			Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
+			int financialWeightage = 0;
+			for (ScQtCheckList checklistlocal : checklist) {
+				if (null != checklistlocal.getQtScoreWeightage()) {
+					map.put(checklistlocal.getQtScoreWeightage()
+							.getQtScoreWeightageId(), checklistlocal
+							.getQtScoreWeightage());
+				}
+			}
+			List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
+					map.values());
+			if (null != list && !list.isEmpty()) {
+				for (ScQtScoreWeightage weightage : list) {
+					if (null == weightage.getWeightage()) {
+						weightage.setWeightage(new BigDecimal(0));
+					}
+					financialWeightage = financialWeightage
+							+ weightage.getWeightage().intValue();
+				}
+				if (financialWeightage < 100) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760220);
 				}
 			}
 		}
@@ -9261,7 +9310,7 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void specOfferpriceItemFromVarieance(ScQtScoreOfferPrice offerPrice) {
+	/*public void specOfferpriceItemFromVarieance(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
 			if (null == offerPrice.getFromVariance()
 					|| offerPrice.getFromVariance().intValue() <= 0) {
@@ -9300,6 +9349,70 @@ public class SpecificationBackingBean extends
 			if (null == offerPrice.getAboveScore()
 					|| offerPrice.getAboveScore().intValue() <= 0) {
 				throw new EpException(MessageConst.ERROR_760219);
+			}
+		}
+
+	}*/
+
+	public void checkTechnicalPassingScore(
+			ScQtScoreSetting technicalScoreSetting) {
+		if (null != technicalScoreSetting) {
+
+			if (null == technicalScoreSetting.getPassingScore()
+					|| technicalScoreSetting.getPassingScore().intValue() < 0) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_760172);
+			} else if (null != technicalScoreSetting.getPassingScore()
+					&& technicalScoreSetting.getPassingScore().intValue() > 100) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_760142);
+			}
+		}
+
+	}
+
+	public void checkFinancialPassingScore(
+			ScQtScoreSetting financialScoreSetting) {
+		if (null != financialScoreSetting) {
+
+			if (null == financialScoreSetting.getPassingScore()
+					|| financialScoreSetting.getPassingScore().intValue() < 0) {
+				if (this.getManagedBean().getScQt().getEvaluationType()
+						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+						&& !this.getManagedBean().getScQt()
+								.isTechEvaluationReq()) {
+					this.getManagedBean().setActiveIndex(4);
+				} else {
+					this.getManagedBean().setActiveIndex(5);
+				}
+				throw new EpException(MessageConst.ERROR_760174);
+			} else if (null != financialScoreSetting.getPassingScore()
+					&& financialScoreSetting.getPassingScore().intValue() > 100) {
+				if (this.getManagedBean().getScQt().getEvaluationType()
+						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+						&& !this.getManagedBean().getScQt()
+								.isTechEvaluationReq()) {
+					this.getManagedBean().setActiveIndex(4);
+				} else {
+					this.getManagedBean().setActiveIndex(5);
+				}
+				throw new EpException(MessageConst.ERROR_760143);
+			}
+		}
+
+	}
+
+	public void checkDemoPassingScore(ScQtScoreSetting demoScoreSetting) {
+		if (null != demoScoreSetting) {
+
+			if (null == demoScoreSetting.getPassingScore()
+					|| demoScoreSetting.getPassingScore().intValue() < 0) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_760173);
+			} else if (null != demoScoreSetting.getPassingScore()
+					&& demoScoreSetting.getPassingScore().intValue() > 100) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_760144);
 			}
 		}
 
@@ -9915,7 +10028,7 @@ public class SpecificationBackingBean extends
 		if (financialScoring != null && !financialScoring.isEmpty()) {
 			ScQtCheckList finalFinSpec = null;
 			finWeightageSum();
-			// financialWeightageCalculate();
+
 			for (ScQtCheckList checkList : financialScoring) {
 
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -10192,16 +10305,7 @@ public class SpecificationBackingBean extends
 				&& technicalScoreSetting.getSettingType() == 1) {
 
 			if (!this.getManagedBean().isReadOnly()) {
-				if (technicalScoreSetting.isWeightageReq()) {
-					techWeightageSum();
-					if (null != this.getManagedBean()
-							.getTechnicalWeightageScore()
-							&& this.getManagedBean()
-									.getTechnicalWeightageScore().intValue() < 100) {
-						// this.getManagedBean().setActiveIndex(4);
-						throw new EpException(MessageConst.ERROR_760220);
-					}
-				}
+
 				if (null == technicalScoreSetting.getPassingScore()) {
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
@@ -10211,15 +10315,13 @@ public class SpecificationBackingBean extends
 						technicalScoreSetting
 								.setPassingScore(new BigDecimal(0));
 					}
-				} else {
-					if (scQt.getEvaluationType().equalsIgnoreCase(
-							QTConstants.EVALUATION_TWO_TIER)) {
-						if (technicalScoreSetting.getPassingScore().intValue() <= 0) {
-							this.getManagedBean().setActiveIndex(4);
-							throw new EpException(MessageConst.ERROR_760172);
-						}
-					}
-				}
+				} /*
+				 * else { if (scQt.getEvaluationType().equalsIgnoreCase(
+				 * QTConstants.EVALUATION_TWO_TIER)) { if
+				 * (technicalScoreSetting.getPassingScore().intValue() <= 0) {
+				 * this.getManagedBean().setActiveIndex(4); throw new
+				 * EpException(MessageConst.ERROR_760172); } } }
+				 */
 			}
 
 			if (null != technicalScoreSetting.getPassingScore()
@@ -10246,20 +10348,24 @@ public class SpecificationBackingBean extends
 						financialScoreSetting
 								.setPassingScore(new BigDecimal(0));
 					}
-				} else {
-					if (scQt.getEvaluationType().equalsIgnoreCase(
-							QTConstants.EVALUATION_TWO_TIER)) {
-						if (financialScoreSetting.getPassingScore().intValue() <= 0) {
-							this.getManagedBean().setActiveIndex(5);
-							throw new EpException(MessageConst.ERROR_760174);
-						}
-					}
-				}
+				} /*
+				 * else { if (scQt.getEvaluationType().equalsIgnoreCase(
+				 * QTConstants.EVALUATION_TWO_TIER)) { if
+				 * (financialScoreSetting.getPassingScore().intValue() <= 0) {
+				 * this.getManagedBean().setActiveIndex(5); throw new
+				 * EpException(MessageConst.ERROR_760174); } } }
+				 */
 			}
 
 			if (null != financialScoreSetting.getPassingScore()
 					&& financialScoreSetting.getPassingScore().intValue() > 100) {
-				this.getManagedBean().setActiveIndex(5);
+				if (scQt.getEvaluationType().equalsIgnoreCase(
+						QTConstants.EVALUATION_ONE_TIER)
+						&& scQt.isTechEvaluationReq()) {
+					this.getManagedBean().setActiveIndex(4);
+				} else {
+					this.getManagedBean().setActiveIndex(5);
+				}
 				throw new EpException(MessageConst.ERROR_760143);
 			}
 			scoreSetting.add(financialScoreSetting);
@@ -10272,10 +10378,8 @@ public class SpecificationBackingBean extends
 					&& scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)
 					&& !this.getManagedBean().isReadOnly()) {
-				if (null == demoScoreSetting.getPassingScore()
-						|| demoScoreSetting.getPassingScore().intValue() <= 0) {
-					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760173);
+				if (null == demoScoreSetting.getPassingScore()) {
+					demoScoreSetting.setPassingScore(new BigDecimal(0));
 				}
 				if (null != demoScoreSetting.getPassingScore()
 						&& demoScoreSetting.getPassingScore().intValue() > 100) {
@@ -10566,6 +10670,7 @@ public class SpecificationBackingBean extends
 					specReqDTO.setCheckLists(financialScoring2);
 					specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 					specReqDTO.setScQt(scoring);
+					financialWeightageCalculate();
 					specSO.validateSCScoreSettings(specReqDTO);
 					specSO.validateSpecOfferPrice(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -10601,6 +10706,7 @@ public class SpecificationBackingBean extends
 					specReqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
 					specReqDTO.setScQt(scoring);
 					specSO.validateSCScoreSettings(specReqDTO);
+					technicalWeightageCalculate();
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -10672,6 +10778,7 @@ public class SpecificationBackingBean extends
 					specReqDTO.setScQt(recommendation);
 					specSO.validateSCScoreSettings(specReqDTO);
 					specSO.validateSpecOfferPrice(specReqDTO);
+					financialWeightageCalculate();
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -11162,16 +11269,16 @@ public class SpecificationBackingBean extends
 
 			for (TreeNode treeNode : treeNodes) {
 				if (treeNode.isSelected()) {
-					
+
 					nodesToRemoved.add(treeNode);
 
-					//deleteSupplierLocacriteria(loccriteria);
+					// deleteSupplierLocacriteria(loccriteria);
 				} else {
 					if (treeNode.getChildren() != null
 							&& treeNode.getChildren().size() > 0) {
-					
+
 						deleteChildTreeNodes(treeNode.getChildren());
-						//deleteSupplierLocacriteria(loccriteria);
+						// deleteSupplierLocacriteria(loccriteria);
 						if (treeNode.getChildren().size() == 0) {
 							nodesToRemoved.add(treeNode);
 						}
