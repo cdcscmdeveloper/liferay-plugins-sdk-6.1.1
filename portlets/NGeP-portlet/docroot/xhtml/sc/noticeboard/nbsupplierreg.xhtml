@@ -18,13 +18,12 @@
 			<p:row>
 				<p:column width="100%" style="text-align:left">
 					<p:commandButton value="#{lbl['lbl.btn.back']}"
-						action="#{noticeBoardBackingBean.backBtn}"
-						style="float:left;" />
+						action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
 				</p:column>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.qt.nb.register']}"
 						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
-						style="float:right;" process="@all" update="@all"/>
+						style="float:right;" process="@all" update="@all" />
 				</p:column>
 
 			</p:row>
@@ -41,23 +40,21 @@
 
 		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<td width="20%" valign="top">
-					<p:tabMenu styleClass="sidemenu"
-						activeIndex="#{noticeBoardBackingBean.managedBean.selectedZoneTabIndex}"
-						style="display : table-caption;"
-						model="#{noticeBoardBackingBean.managedBean.zoneMenuModel}" />
-				</td>
-				<td width="80%">
-					<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" />
-					<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"/>
-				</td>
-			</tr>
+				<tr>
+					<td width="20%" valign="top"><p:tabMenu styleClass="sidemenu"
+							activeIndex="#{noticeBoardBackingBean.managedBean.selectedZoneTabIndex}"
+							style="display : table-caption;"
+							model="#{noticeBoardBackingBean.managedBean.zoneMenuModel}" /></td>
+					<td width="80%"><ui:param name="bsvDetails"
+							value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" /> <ui:include
+							src="/xhtml/sc/noticeboard/supplierregdtls.xhtml" /></td>
+				</tr>
 			</table>
-
+			<ui:include
+				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml" />
 		</c:if>
-		
-		<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"/>
-		
+
+
+
 	</ui:define>
 </ui:composition>
