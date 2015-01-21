@@ -1099,7 +1099,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getPmOrgProfile());
 			getManagedBean().getFlRequest().setChargeOrgProfile(resDTO.getPmOrgProfile());
 			getManagedBean().getFlRequest().setIssuedOrgProfile(resDTO.getPmOrgProfile());
-			getAgAccount();
 			getLoginUserOrg();
 			String[] outcome = new String[2];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
@@ -1166,6 +1165,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		setFlSupplierDtl(getManagedBean().getFlRequest());
 //		setOneOffFulfilmentItemAddr(getManagedBean().getFlRequest());
 		setFulfilmentItemAddr(getManagedBean().getFlRequest());
+		getAgAccount();
 		if(getManagedBean().getFlRequest().isBrandNew()){
 			getManagedBean().getFlRequest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
@@ -1489,9 +1489,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 					getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 				}
-				
-				//end
-				getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2861,6 +2858,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 		initializeApproverGroup();
+		initializeDelAddr();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
@@ -2874,6 +2872,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		return resDTO;
 	}
 	
+	private void initializeDelAddr() {
+		if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
+			getManagedBean().getFlRequest().getFlDeliveryAddresses().clear();
+			getManagedBean().getShowItemAddrList().clear();
+			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+		}
+		
+	}
+
 	private void checkPtjGroupAndInitialize() {
 		getManagedBean().setCurrentPtjGroupId(getManagedBean().getFlRequest().getPreparedOrgProfile().getPmPtjGroup().getPtjGroupId());
 		if(getManagedBean().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId() != getManagedBean().getCurrentPtjGroupId()){
