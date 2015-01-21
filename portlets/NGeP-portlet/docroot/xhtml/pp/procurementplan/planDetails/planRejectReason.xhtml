@@ -33,23 +33,17 @@
 					<td>
 						<!-- for phase 1 -->
 						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" 
-							disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}" maxlength="1000">
+							 maxlength="1000">
 						</p:inputTextarea>
 						
-						<!-- enable this for phase 2 and disable phase 1 section to test
+						<!-- enable this for phase 2 and disable phase 1 section to test 
 						<p:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" 
+							disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}"
 							rendered="#{reason.editable or reason.brandNew}" /> 
 						<h:outputText value="#{reason.reasonDesc}" rendered="#{!reason.editable and !reason.brandNew}" 
 							style="display: inline-block; width:220px;word-wrap: break-word;" />
-							
-							
-							to remove
-						<p:inputTextarea id="itaReason" cols="40" value="#{reason.reasonDesc}" 
-							disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}"
-							rendered="#{reason.brandNew and pPlanBackingBean.managedBean.modeReviewEditable}" maxlength="1000">
-						</p:inputTextarea>
-						<h:outputText value="#{reason.reasonDesc}" rendered="#{!reason.brandNew}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-						 -->
+					-->
+						
 					</td>
 				</tr>
 			</table>
