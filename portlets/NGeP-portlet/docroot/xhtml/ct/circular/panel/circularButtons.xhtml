@@ -5,32 +5,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ac:gpkiPopup
+		textBeforeSign="#{panelBackingBean.managedBean.textBeforeSign}"
+		postSignAction="#{panelBackingBean.preSubmitPanelCircular(gpkiBackingBean.pmDigiSign)}"
+		enableAutoUpdate="#{panelBackingBean.enableAutoUpdate()}" />
 	<table style="width: 100%;">
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
-					immediate="true" 
-					action="#{panelBackingBean.backAction}"
+					immediate="true" action="#{panelBackingBean.backAction}"
 					rendered="#{panelBackingBean.managedBean.action != null}" /></td>
 			<td class="ppRightBtn"><f:event
 					listener="#{panelBackingBean.preRenderView}" type="preRenderView" />
 				<ui:repeat var="action"
 					value="#{panelBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+					<ui:param name="buttonLabel"
+						value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						update="@form"
-						action="#{panelBackingBean.savePanelCircular(action)}"
-						rendered="#{action != 'SUBMIT' and action != 'REJECT' and action != 'APPROVE'}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						process="@form"
-						update="@form,@([id$=messages])"
-						actionListener="#{panelBackingBean.validateCircular(action)}"
-						action="#{panelBackingBean.disableUpdate}"
-						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; !args.epException) gpki_dlg.show(); "
-						rendered="#{action == 'SUBMIT' or action == 'REJECT' or action == 'APPROVE'}" />
-				</ui:repeat> <ac:gpkiPopup
-					textBeforeSign="#{panelBackingBean.managedBean.textBeforeSign}"
-					postSignAction="#{panelBackingBean.preSubmitPanelCircular(gpkiBackingBean.pmDigiSign)}" />
-			</td>
+						onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{panelBackingBean.gpkiSignAction(action)}"/>
+				</ui:repeat></td>
 
 		</tr>
 	</table>

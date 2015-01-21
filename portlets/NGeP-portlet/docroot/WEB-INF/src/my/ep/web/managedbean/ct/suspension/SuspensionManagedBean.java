@@ -50,7 +50,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private double performanceBondRuleAmt;
 	
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
 	private boolean viewOnly = false;

@@ -157,7 +157,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public void preRenderCircular() {			
 			renewSesionObject();
-			getManagedBean().setAutoUpdate(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
@@ -557,17 +556,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}*/
 			
 				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 				}
 				
 				if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
 				}
 				
 				if(getManagedBean().getApproverModel().getTarget().size()==0) {
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 				}
 			//}
@@ -575,7 +571,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String remark = getManagedBean().getRemarkList().get(0).getRemark();
 	 			if((remark == null || remark.length() == 0)) {
-	 				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 	 			}
 			}
@@ -590,31 +585,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					contractReqDTO.setLoaId(scLoa.getLoaId());
 					CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
 					if(ctContract==null || ctContract.getLatestContractVer()==null) { 
-						RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 						throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
 					}
 				}
 			}
 			
 			if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
-					outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-					throw new EpException(MessageConst.ERROR_750018, new String[]{"central circular update"});
-			}
-			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-				// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getCircularVer().getCircularNo());
-				sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
-				sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
-				sb.append(outcome);
-				getManagedBean().setTextBeforeSign(sb.toString());
-				// set action
-				getManagedBean().setAction(outcome);
+				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_750018, new String[]{"central circular update"});
 			}
 		}
 		 finally {
@@ -1088,11 +1066,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return saveCircular(getManagedBean().getAction());
 	}
-	
-	public void disableUpdate(){
-		getManagedBean().setAutoUpdate(false);
-	}
-	
+		
 	public String getStatusDesc(CtCircularVer circularVer) {
 		if(circularVer.getCtCircular()!= null && circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 			return getStatusDescById(ContractStatusConst.CR_APPROVED);
@@ -1120,4 +1094,37 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}	
+	
+	public String gpkiSignAction(String outcome) throws Exception{
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
+				|| BpmOutcomeConst.BPM_REJECT.equals(outcome)
+				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+			validateCircular(outcome);
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else if(BpmOutcomeConst.BPM_CANCEL.equals(outcome)){
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			return null;
+		}
+		else{
+			return saveCircular(outcome);
+		}
+	}
+	
+
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
 }
