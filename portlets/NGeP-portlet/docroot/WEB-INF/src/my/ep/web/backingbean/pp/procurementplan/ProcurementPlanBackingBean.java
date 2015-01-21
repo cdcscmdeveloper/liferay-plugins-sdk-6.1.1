@@ -213,10 +213,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBpmStatusDate(new Timestamp(res.getCreateDate().getTimeInMillis()));
 		this.getManagedBean().setBpmStatusId(res.getDocStatus().longValue());
 
-		System.out.println("res.getCreator()" + res.getCreator());
-		System.out.println("res.getCreateDateString()" + res.getCreateDate().getTime());
-		System.out.println("res.getDocStatus()" + res.getDocStatus());
-		
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
@@ -744,7 +740,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				&& !this.getManagedBean().isModeReviewEditable()){
 			newRemark = false;
 		}
-		
+		for(PpRemark remark  :this.getManagedBean().getSelectedRemarks()){
+			System.out.println(remark.getRemark() + remark.isEditable());
+		}
+		// for user to edit draft remark
 		if(newRemark){
 			if(!this.getManagedBean().getSelectedRemarks().isEmpty() && compareUserNameInsensitive(this.getManagedBean().getSelectedRemarks().get(0).getUserId())){
 				this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
@@ -790,9 +789,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				ppItem.setPpRemarks(PpCommonUtil.retrieveRemark(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
 			}
 		}
-		if(ppItem.getPpRemarks()!=null){
-			System.out.println("ppItem.getPpRemarks().size() " + ppItem.getPpRemarks().size());
-		}
+	
 		loadPpItemRemarks(ppItem);
 	}
 	
@@ -829,10 +826,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				&& !this.getManagedBean().getSelectedPlan().isUpdatable()){
 			newRemark = false;
 		}
-	
+		
+		/* enable for phase 2
+		// for user to edit draft remark
+		if(newRemark){
+			if(!ppItem.getPpRemarks().isEmpty() && compareUserNameInsensitive(ppItem.getPpRemarks().get(0).getUserId())){
+				ppItem.getPpRemarks().get(0).setEditable(true);
+				newRemark = false;
+			}
+		} 
+		*/
+
 		if(newRemark){
 			log.info("new remark added");
 			PpRemark remark = new PpRemark();
+			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -844,7 +852,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
 			ppItem.getPpRemarks().add(0, remark);
-			System.out.println("ppRemarks " + ppItem.getPpRemarks().size());
+
 
 		}
 	
@@ -868,7 +876,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 		if(epItem.getPpRemarks()==null){
-			System.out.println(1);
 			epItem.setPpRemarks(new ArrayList<PpRemark>());
 		}
 		/* enable for phase 2
@@ -880,8 +887,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}*/
 
 		// if reason is empty
-		if (epItem.getPpRemarks().isEmpty() || epItem.getPpRemarks().size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
-			System.out.println(2);
+		if (epItem.getPpRemarks().isEmpty() || epItem.getPpRemarks().size() == 0) {
 			newRemark = true;
 		}
 		
@@ -891,9 +897,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			newRemark = false;
 		}
 	
+		/* enable for phase 2
+		// for user to edit draft remark
+		if(newRemark){
+			if(!epItem.getPpRemarks().isEmpty() && compareUserNameInsensitive(epItem.getPpRemarks().get(0).getUserId())){
+				epItem.getPpRemarks().get(0).setEditable(true);
+				newRemark = false;
+			}
+		} 
+		*/
 		if(newRemark){
 			log.info("new remark added");
 			PpRemark remark = new PpRemark();
+			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -905,7 +921,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
 			epItem.getPpRemarks().add(0, remark);
-			System.out.println("ppRemarks " + epItem.getPpRemarks().size());
 
 		}
 	
@@ -933,6 +948,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedItemRemarks(null);
 	}
 	
+	/**
+	 * retrieve ep's justification
+	 * @param epItem
+	 */
 	public void retrieveJustification(PpExpenditureItem epItem){
 		log.info("retrieveJustification");
 		if(!epItem.isBrandNew()){
@@ -957,7 +976,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 		if(epItem.getJustifications()==null){
-			System.out.println("it is null");
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
 		/* enable for phase 2
@@ -969,20 +987,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}*/
 
 		// if reason is empty
-		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {//|| !compareUserName(epItem.getJustifications().get(0).getUserId())
-			System.out.println("it is empty or 0");
+		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {
 			newRemark = true;
 		}
 		
 		// filter by current view mode	
 		if(!this.getManagedBean().isModeEditable()){
-			System.out.println("it is not editable so false");
 			newRemark = false;
 		}
-	
+		
+		/* enable for phase 2
+		// for user to edit draft remark
+		if(newRemark){
+			if(!epItem.getJustifications().isEmpty() && compareUserNameInsensitive(epItem.getJustifications().get(0).getUserId())){
+				epItem.getJustifications().get(0).setEditable(true);
+				newRemark = false;
+			}
+		} 
+		*/
 		if(newRemark){
 			log.info("new justification added");
 			PpRemark remark = new PpRemark();
+			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_JUSTIFICATION);
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -999,7 +1025,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
 		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
-		System.out.println("epItem.getJustifications()" + (epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark()));
+		
 		
 		
 		log.info("loadJustification - End");
@@ -1043,9 +1069,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ppItem.getPpRejectReasons()==null || ppItem.getPpRejectReasons().isEmpty()){
 			ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
 		}
-		if(ppItem.getPpRejectReasons()!=null){
-			System.out.println("ppItem.getPpRejectReasons().size() " + ppItem.getPpRejectReasons().size());
-		}
 		loadRejectReasons(ppItem.getPpRejectReasons());
 	}
 	
@@ -1072,13 +1095,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}*/
 
 		// if reason is empty
-		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {//|| !compareUserName(remarkList.get(0).getUserId())
+		if (ppRejectReasons.isEmpty() || ppRejectReasons.size() == 0) {
 			newReason = true;
 		}
+		
+		/* enable for phase 2
+		// for user to edit draft reject reason
+		if(newReason){
+			if(!ppRejectReasons.isEmpty() && compareUserNameInsensitive(ppRejectReasons.get(0).getUserId())){
+				ppRejectReasons.get(0).setEditable(true);
+				newReason = false;
+			}
+		} 
+		*/
 		
 		if(newReason && this.getManagedBean().isModeReviewEditable()){
 			log.info("new reason added");
 			PpRejectReason reason = new PpRejectReason();
+			reason.setEditable(true);
 			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			reason.setChangedBy(reason.getCreatedBy());
@@ -1436,7 +1470,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 			}
 			for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
-				System.out.println(procurementItem.getProcurementTitle());
 //				if(procurementItem.isBrandNew()){
 					this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
 //				}
@@ -1747,11 +1780,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			List <Long> existingApprovers = new ArrayList<>();
 			for(PpPlanActor actor:ppPlan.getPpPlanActors()){
 				if(RoleCode.PLAN_VERFICATION_OFFICER.value().equals(actor.getRoleCode().getRoleCode())){
-					System.out.println("Existing VERIFIER: " + actor.getPmUser().getUserId());
 					existingVerifiers.add(actor.getPmUser().getUserId());
 				}
 				if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode().getRoleCode())){
-					System.out.println("Existing Approver: " + actor.getPmUser().getUserId());
 					existingApprovers.add(actor.getPmUser().getUserId());
 				}
 			}
@@ -1804,7 +1835,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				for(PmUser newUser:this.getManagedBean().getApproverModel().getTarget()){
 					newApprovers.add(newUser.getUserId());
 					if(!existingApprovers.contains(newUser.getUserId())){
-						System.out.println("add new approver");
+						log.info("add new approver");
 						//Add
 						PpPlanActor planActor = null;
 						PmRole pmRole = new PmRole();
@@ -1825,7 +1856,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode().getRoleCode())){
 						if(!newApprovers.contains(actor.getPmUser().getUserId())){
 							//Remove
-							System.out.println("remove existing approver");
+							log.info("remove existing approver");
 							actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						}
 					}
@@ -1950,30 +1981,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("getAllJustifications");
 		List <PpRemark> justifications = null;
 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
-			System.out.println("EP");
-			if(ppPlan.getStatus()==null){
-				System.out.println("ppPlan.getStatus()==null");
-			}else{
-				System.out.println("ppPlan.getStatus().getStatusId()=" +ppPlan.getStatus().getStatusId());
-			}
-			
-			System.out.println(ppPlan.getStatus());
-			if(ppPlan.getStatus()==null
-					|| ppPlan.getStatus().getStatusId()==null
+	
+			if(ppPlan.getStatus()==null || ppPlan.getStatus().getStatusId()==null
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
-							|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
-							|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
-							)){
-				System.out.println(1);
+					|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
+					|| ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId()))){
+				log.info("getting justification");
 				justifications = new ArrayList<PpRemark>();
 				int itemIndex = 0;
 				for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
-					System.out.println(2);
 					if(ppExpenditureItem.getJustifications()!=null && !ppExpenditureItem.getJustifications().isEmpty()){
-						System.out.println(3);
+						log.info("justification not null");
 						PpRemark justification = ppExpenditureItem.getJustifications().get(0);
-						if(justification!=null && !StringUtils.isBlank(justification.getRemark())){ //&& itemRemark.isBrandNew() add this for phase 2
-							System.out.println(4);
+						// add this for phase 2 and remove the old one
+//						if(justification!=null && (justification.isBrandNew() && !StringUtils.isBlank(justification.getRemark())) 
+//								|| !justification.isBrandNew() && justification.isEditable()){
+//							
+						if(justification!=null && !StringUtils.isBlank(justification.getRemark())){
 							justification.setItemSeq(itemIndex);
 							justification.setDocId(ppExpenditureItem.getExpenditureItemId());
 							justification.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
@@ -2002,9 +2026,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 			int itemIndex = 0;
 			for(PpProcurementItem ppProcurementItem:ppPlan.getPpProcurementItems()){
-				System.out.println("loop pp item1 ");
 				if(ppProcurementItem.getPpRemarks()!=null && !ppProcurementItem.getPpRemarks().isEmpty()){
-					System.out.println("loop pp item 2");
 					PpRemark itemRemark = ppProcurementItem.getPpRemarks().get(0);
 					if(itemRemark!=null && !StringUtils.isBlank(itemRemark.getRemark())){ //&& itemRemark.isBrandNew() add this for phase 2
 						itemRemark.setItemSeq(itemIndex);
@@ -2027,11 +2049,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			// Reason for update
 //			if(ppPlan.getStatus()==null && ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())){
 				for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
-					System.out.println("loop ep item1 ");
 					if(ppExpenditureItem.getPpRemarks()!=null && !ppExpenditureItem.getPpRemarks().isEmpty()){
 						PpRemark itemRemark = ppExpenditureItem.getPpRemarks().get(0);
 						if(itemRemark!=null && !StringUtils.isBlank(itemRemark.getRemark())){ //&& itemRemark.isBrandNew() add this for phase 2
-							System.out.println("loop ep item2 ");
 							itemRemark.setItemSeq(itemIndex);
 							itemRemark.setDocId(ppExpenditureItem.getExpenditureItemId());
 							itemRemark.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
