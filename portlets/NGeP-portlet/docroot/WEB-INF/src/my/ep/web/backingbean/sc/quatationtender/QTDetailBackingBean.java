@@ -2182,6 +2182,12 @@ public class QTDetailBackingBean extends
 	// To get the scdule tab details from so..
 	public void retrieveScheduleTabDtl() {
 		debugLogger("retrieveScheduleTabDtl");
+		
+		BriefingZoneBean briefingList = this.getManagedBean().getBsvDtlBean();
+		if (briefingList == null) {
+			retrieveBriefingSitevisitTabDtl();
+		}
+		
 		if (this.getManagedBean().getScQtContactPersons() == null) {
 			IQTDetailSO detailSO;
 			try {
@@ -2233,14 +2239,17 @@ public class QTDetailBackingBean extends
 				detailSO = null;
 			}
 		}
-
+		if (this.getManagedBean().getQt().isSampleReq()) {
+			QTScheduleDetailBackingBean backingBean = new QTScheduleDetailBackingBean();
+			backingBean.retrievePmStateList();
+		}
 		Date publishDate = this.getManagedBean().getQt().getPublishDate();
 		Date bsvDate = null;
-		List<BriefingZoneBean> briefingList = this.getManagedBean()
+		/*List<BriefingZoneBean> briefingList = this.getManagedBean()
 				.getBriefingZoneBean();
 		if (briefingList == null || briefingList.size() == 0) {
 			retrieveBriefingSitevisitTabDtl();
-		}
+		}*/
 		if (getManagedBean().getQt().isZonal()) {
 			List<BriefingZoneBean> briefingBeans = getManagedBean()
 					.getBriefingZoneBean();
