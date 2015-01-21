@@ -46,7 +46,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.machine.purMthd']}
 					</f:facet>
-					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(SupplierManagementConst.PURCHASE_METHOD_PARAMETER_TYPE,machineDtl.purchaseMethod)}" style="float: left;white-space: normal;"></h:outputText>						
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.purchasingMethod,machineDtl.purchaseMethod)}" style="float: left;white-space: normal;"></h:outputText>						
 			</p:column>
 			
 			<p:column>
@@ -56,7 +56,7 @@
 					<h:outputText value="#{machineDtl.guarantorName}" style="float: left;white-space: normal;"></h:outputText>			
 			</p:column>
 						
-			<p:column selectionMode="multiple" style="width:2%" headerText="#{SupplierManagementConst.VALID_PARAMETER_TYPE}"/>
+			<p:column selectionMode="multiple" style="width:2%" headerText="#{lbl['lbl.sm.sitevisit.valid']}"/>
 			<p:ajax event="rowSelectCheckbox" />
 		</p:dataTable>
 	</p:panel>
