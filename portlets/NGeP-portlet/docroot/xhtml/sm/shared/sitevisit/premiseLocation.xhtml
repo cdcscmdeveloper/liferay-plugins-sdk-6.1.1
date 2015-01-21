@@ -22,6 +22,7 @@
 			<td>
 		    <p:inputText id="pmPriceRate" maxlength="17"
 								label="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}"
+								value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}"
 								disabled="true">
 				<f:convertNumber  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					
 			</p:inputText>
