@@ -24,6 +24,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 @ManagedBean(name = "smPersonnelMB")
 @SessionScoped
@@ -82,10 +83,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private String selectedPersonnelIdentificationType;
 	private String deactivateTerminateConfirmMsg;
+	private Long myCountryId;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
+		if(myCountryId==null){
+			myCountryId = SmCommonUtil.getMyCountryId();
+		}
 	}
 
 	private class SmPersonnelPagingDataModel extends
@@ -567,6 +572,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setDeactivateTerminateConfirmMsg(
 			String deactivateTerminateConfirmMsg) {
 		this.deactivateTerminateConfirmMsg = deactivateTerminateConfirmMsg;
+	}
+
+	public Long getMyCountryId() {
+		return myCountryId;
+	}
+
+	public void setMyCountryId(Long myCountryId) {
+		this.myCountryId = myCountryId;
 	}
 
 }
