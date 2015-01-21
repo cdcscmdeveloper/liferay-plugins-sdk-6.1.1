@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pp.procurementplan;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -106,6 +107,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public static Map<Long, Object> planTypeMapper;
 	public static Map<Long, Object> votTypeMapper;
 	
+	//Authorization 
+	private ISearchBean<PmParameterDesc> planTypeSearchBean;
+	
+	public ISearchBean<PmParameterDesc> getPlanTypeSearchBean() {
+		log.info("getPlanTypeSearchBean");
+		if (this.planTypeSearchBean == null) {
+			log.info("getPlanTypeSearchBean2");
+			this.planTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "somPlanType");
+		}
+
+		return this.planTypeSearchBean;
+	}
+		
+		
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.info(message);

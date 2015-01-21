@@ -54,10 +54,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somPlanTypeSearch" label="#{lbl['lbl.pp.plan.type']}" 
+					<p:selectOneMenu id="somPlanType" label="#{lbl['lbl.pp.plan.type']}" 
 						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterId}"
 						>
-						<f:selectItems value="#{pPlanBackingBean.getPlanTypeOptions()}"/>
+						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
 						<p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
 							update="somVotSearch"/>
 					</p:selectOneMenu>
