@@ -17,7 +17,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
-import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -29,13 +28,11 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
-import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -96,10 +93,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -255,6 +249,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().getSmPersonnel().getPmCountry().isBrandNew()){
 			PmCountry nationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			this.getManagedBean().getSmPersonnel().setPmCountry(nationality);
+		}
+		
+		//set all business network to false, if do not meet the criterias
+		SmCompanyBasic compBasic = this.getManagedBean().getSmAppl().getSmCompanyBasic();
+		if(!this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) 
+				|| !this.getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+			compBasic.setWithFederal(false);
+			compBasic.setWithGlc(false);
+			compBasic.setWithOthers(false);
+			compBasic.setWithState(false);
+			compBasic.setWithStatutory(false);
+		}else{
+			if(!compBasic.isWithFederal() && !compBasic.isWithGlc() && !compBasic.isWithOthers() && !compBasic.isWithState() && !compBasic.isWithStatutory()){
+				throw new EpException(MessageConst.ERROR_721036);
+			}
 		}
 		
 		return firstUserRegistration;
