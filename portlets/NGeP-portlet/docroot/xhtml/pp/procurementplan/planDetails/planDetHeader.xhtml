@@ -22,7 +22,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pp.plan.type']}"
 					value="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterId}"
 					>
-					<f:selectItems value="#{pPlanBackingBean.getPlanTypeOptions()}"/>
+						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
 					<p:ajax event="change" listener="#{pPlanBackingBean.changePlanType(pPlanBackingBean.managedBean.selectedPlan.planType.parameterId)}" 
 						update=":form:pPlanDet, :form:pPlanActor, somVotType, somPlanYear"/>
 				</p:selectOneMenu>
