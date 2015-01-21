@@ -92,4 +92,41 @@
 			</c:if>
 		</table>
 	</p:panel>
+
+	<p:panel rendered="#{registrationBackingBean.managedBean.smAppl.brandNew 
+					and registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF 
+					and registrationBackingBean.managedBean.smAppl.supplierType == SupplierManagementConst.STYPE_CONTRACTOR}" 
+					header="#{lbl['lbl.sm.busNtw.panHdr']}" id="pnlBusNetwork" toggleable="true">
+		
+		<table style="width:80%;margin-left:auto; margin-right:auto;">
+			<tr>
+				<td>
+					#{lbl['lbl.sm.busNtw.fdrGov']}
+					<p:selectBooleanCheckbox id="chkFdrGovId" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.withFederal}" />
+				</td>
+			
+				<td>
+					#{lbl['lbl.sm.busNtw.stateGov']}
+					<p:selectBooleanCheckbox id="chkstateGovId" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.withState}" />
+				</td>
+			
+				<td>
+					#{lbl['lbl.sm.busNtw.statBody']}
+					<p:selectBooleanCheckbox id="chkstatBodyId" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" />
+				</td>
+		
+				<td>
+					#{lbl['lbl.sm.busNtw.glc']}
+					<p:selectBooleanCheckbox id="chkGlcId" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.withGlc}" />
+				</td>
+				
+				<td>	
+					#{lbl['lbl.sm.busNtw.others']}
+					<p:selectBooleanCheckbox id="chkOthersId" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.withOthers}" />
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+
+
 </ui:composition>
