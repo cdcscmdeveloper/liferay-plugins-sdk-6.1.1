@@ -814,7 +814,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				
+				// Temp setTextBeforeSign : DocNo+SAP
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
+				sb.append(getManagedBean().getFulfilmentOrder().getSapOrderNo());
+				sb.append(getManagedBean().getButtonAction());
+				getManagedBean().setTextBeforeSign(sb.toString());
+			
 				validateFulfillmentOrder(outcome);
 				// set action
 				getManagedBean().setButtonAction(outcome);
@@ -857,15 +863,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				PmDigiSign pmDigiSign) throws Exception {
 			if (pmDigiSign != null) {
 				this.getManagedBean().setPmDigiSign(pmDigiSign);
-				if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					
-					// Temp setTextBeforeSign : DocNo+SAP
-					StringBuilder sb = new StringBuilder();
-					sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
-					sb.append(getManagedBean().getFulfilmentOrder().getSapOrderNo());
-					sb.append(getManagedBean().getButtonAction());
-					getManagedBean().setTextBeforeSign(sb.toString());
-				}else if(getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+				if(getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
 						|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 										|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
