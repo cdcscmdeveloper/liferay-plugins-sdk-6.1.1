@@ -2457,18 +2457,23 @@ public class SpecificationBackingBean extends
 
 	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
 		int i = 0;
-		if (null != checklist && checklist.isEmpty()) {
+		if (null != checklist && !checklist.isEmpty()) {
 			for (ScQtCheckList specChecklist : checklist) {
-				if (null != specChecklist.getScQtDoc()) {
-					if (specChecklist.getScQtDoc().getTplSpecMaster()
-							.getItemTypeCode().getParameterCode()
-							.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-						i++;
-						if (i >= 1) {
-							return true;
-						}
+
+				if (null != specChecklist.getScQtDoc()
+						&& specChecklist
+								.getScQtDoc()
+								.getTplSpecMaster()
+								.getItemTypeCode()
+								.getParameterCode()
+								.equalsIgnoreCase(
+										ParameterConst.ITEM_TYPE_SERVICE)) {
+					i++;
+					if (i >= 1) {
+						return true;
 					}
 				}
+
 			}
 		}
 
@@ -7225,9 +7230,30 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setStageTwoTechComplianceSelect(
 					new ArrayList<PmDocument>());
+			List<PmDocument> localcheckList = new ArrayList<PmDocument>();
+			if (!isAtleastOneSeriveReq(this.getManagedBean()
+					.getScQtCheckSt2techProposal())) {
+				if (null != resDTO.getDocumentList()) {
+					// Collections.sort(resDTO.getTechnicalCheckList());
+					for (PmDocument checklist : resDTO.getDocumentList()) {
 
-			this.getManagedBean().setStageTwoTechComplianceList(
-					resDTO.getDocumentList());
+						if (!checklist
+
+						.getDocDefinitionKey().contains(
+								SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE)) {
+							localcheckList.add(checklist);
+						}
+
+					}
+				}
+			} else {
+				// Collections.sort(resDTO.getTechnicalCheckList());
+				localcheckList = new ArrayList<PmDocument>(
+						resDTO.getDocumentList());
+				// localcheckList.addAll(resDTO.getTechnicalCheckList());
+			}
+
+			this.getManagedBean().setStageTwoTechComplianceList(localcheckList);
 		} finally {
 			documentSo = null;
 		}
@@ -10331,13 +10357,15 @@ public class SpecificationBackingBean extends
 						technicalScoreSetting
 								.setPassingScore(new BigDecimal(0));
 					}
-				} /*
-				 * else { if (scQt.getEvaluationType().equalsIgnoreCase(
-				 * QTConstants.EVALUATION_TWO_TIER)) { if
-				 * (technicalScoreSetting.getPassingScore().intValue() <= 0) {
-				 * this.getManagedBean().setActiveIndex(4); throw new
-				 * EpException(MessageConst.ERROR_760172); } } }
-				 */
+				} else {
+
+					if (technicalScoreSetting.getPassingScore().intValue() < 0) {
+						this.getManagedBean().setActiveIndex(4);
+						throw new EpException(MessageConst.ERROR_760172);
+					}
+
+				}
+
 			}
 
 			if (null != technicalScoreSetting.getPassingScore()
@@ -10364,13 +10392,21 @@ public class SpecificationBackingBean extends
 						financialScoreSetting
 								.setPassingScore(new BigDecimal(0));
 					}
-				} /*
-				 * else { if (scQt.getEvaluationType().equalsIgnoreCase(
-				 * QTConstants.EVALUATION_TWO_TIER)) { if
-				 * (financialScoreSetting.getPassingScore().intValue() <= 0) {
-				 * this.getManagedBean().setActiveIndex(5); throw new
-				 * EpException(MessageConst.ERROR_760174); } } }
-				 */
+				} else {
+
+					if (financialScoreSetting.getPassingScore().intValue() < 0) {
+						if (scQt.getEvaluationType().equalsIgnoreCase(
+								QTConstants.EVALUATION_ONE_TIER)
+								&& !scQt.isTechEvaluationReq()) {
+							this.getManagedBean().setActiveIndex(4);
+						} else {
+							this.getManagedBean().setActiveIndex(5);
+						}
+						throw new EpException(MessageConst.ERROR_760174);
+					}
+
+				}
+
 			}
 
 			if (null != financialScoreSetting.getPassingScore()
@@ -10396,6 +10432,10 @@ public class SpecificationBackingBean extends
 					&& !this.getManagedBean().isReadOnly()) {
 				if (null == demoScoreSetting.getPassingScore()) {
 					demoScoreSetting.setPassingScore(new BigDecimal(0));
+				}
+				if (demoScoreSetting.getPassingScore().intValue() < 0) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760173);
 				}
 				if (null != demoScoreSetting.getPassingScore()
 						&& demoScoreSetting.getPassingScore().intValue() > 100) {
