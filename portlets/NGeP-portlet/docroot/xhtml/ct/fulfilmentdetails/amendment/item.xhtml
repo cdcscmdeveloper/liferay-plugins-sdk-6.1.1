@@ -118,7 +118,8 @@
 					       </p:column>
 				
 				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" rendered="#{!amendmentBackingBean.bpkApprover}">
-						        <p:commandLink update=":form:ctItemMaxQtyTable" process="@form" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
+						        <p:commandLink update=":form:ctItemMaxQtyTable"
+						           process="@form" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.isContractAdmin()}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							       <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 							       <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
