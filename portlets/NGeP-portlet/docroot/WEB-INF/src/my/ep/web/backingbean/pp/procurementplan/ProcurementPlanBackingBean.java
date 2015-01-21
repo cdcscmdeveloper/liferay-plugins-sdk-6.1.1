@@ -144,6 +144,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBackAllow(true);
 		this.resetPageModeFlags();
 		this.resetManagedBean();
+		this.retrievePlanTypeMapper();
 		initialSearchPlan();
 		this.resetPlanSearchBean();
 		
@@ -269,6 +270,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	/* PAGE MODE/VIEW CONTROL - BEGIN */
 	
+
 	/**
 	 * Load and generate default buttons
 	 */
@@ -411,6 +413,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 	}
 	
+
+	/**
+	 * Generate/change plan search view based on selected plan type
+	 * @param planTypeId
+	 */
+	public void changePlanTypeSearch(Long planTypeId){
+		log.info("changePlanTypeSearch");
+		//PP20150108-0023
+		if(planTypeId != null){
+			PmParameter planType = (PmParameter)planTypeMapper.get(planTypeId);
+			this.getManagedBean().getPlanSearchBean().getPlanType().setParameterCode(planType!=null? planType.getParameterCode() : null);
+			if(planType!=null){
+				if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType.getParameterCode())){
+					
+				}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(planType.getParameterCode())){
+					this.getManagedBean().getPlanSearchBean().setVotType(new PmParameter());
+				}
+			}
+		}else{
+			this.getManagedBean().getPlanSearchBean().setPlanType(new PmParameter());
+		}
+	}
 
 	
 	/**
