@@ -328,6 +328,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean isSupplierValidation;
 	private int technicalSpecCount;
 	private int financialSpecCount;
+	private List<SelectItem> bankyearsList;
 
 	/**
 	 * @return the specComplete
@@ -3314,6 +3315,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialSpecCount(int financialSpecCount) {
 		this.financialSpecCount = financialSpecCount;
+	}
+
+	/**
+	 * @return the bankyearsList
+	 */
+	public List<SelectItem> getBankyearsList() {
+		return bankyearsList;
+	}
+
+	/**
+	 * @param bankyearsList the bankyearsList to set
+	 */
+	public void setBankyearsList(List<SelectItem> bankyearsList) {
+		this.bankyearsList = bankyearsList;
 	}
 
 }
