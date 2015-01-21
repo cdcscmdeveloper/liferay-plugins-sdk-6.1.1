@@ -760,17 +760,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		// for user to edit draft remark
 		if(newRemark){
-			// remark list is not null & remark status == plan status
+			// remark list is not null 
 			if(!this.getManagedBean().getSelectedRemarks().isEmpty() && 
 					compareUserNameInsensitive(this.getManagedBean().getSelectedRemarks().get(0).getUserId())){
-				if((this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()!=null &&
+				//if both statuses are null
+				if(this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()==null 
+						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
+					this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
+					newRemark = false;
+				// if remark status == plan status
+				}else if(this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()!=null &&
 						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId()))){
+								this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
 					this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
 					newRemark = false;
 				}
 			}
-			
 		}
 
 		if(newRemark){
@@ -854,13 +859,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(newRemark){
 			// remark list is not null & remark status == plan status
 			if(!ppItem.getPpRemarks().isEmpty() && compareUserNameInsensitive(ppItem.getPpRemarks().get(0).getUserId())){
-				if((ppItem.getPpRemarks().get(0).getPpWorkflowStatus()!=null &&
+				//if both statuses are null
+				if(ppItem.getPpRemarks().get(0).getPpWorkflowStatus()==null 
+						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
+					ppItem.getPpRemarks().get(0).setEditable(true);
+					newRemark = false;
+				// if remark status == plan status
+				}else if(ppItem.getPpRemarks().get(0).getPpWorkflowStatus()!=null &&
 						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								ppItem.getPpRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId()))){
+								ppItem.getPpRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
 					ppItem.getPpRemarks().get(0).setEditable(true);
 					newRemark = false;
 				}
+				
 			}
+			
+			
 		} */
 		
 		if(newRemark){
@@ -927,16 +941,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// for user to edit draft remark
 		if(newRemark){
 			if(!epItem.getPpRemarks().isEmpty() && compareUserNameInsensitive(epItem.getPpRemarks().get(0).getUserId())){
-				if((epItem.getPpRemarks().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								epItem.getPpRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId()))){
+				//if both statuses are null
+				if(epItem.getPpRemarks().get(0).getPpWorkflowStatus()==null 
+						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
 					epItem.getPpRemarks().get(0).setEditable(true);
 					newRemark = false;
-					
+				// if remark status == plan status
+				}else if(epItem.getPpRemarks().get(0).getPpWorkflowStatus()!=null &&
+						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
+								epItem.getPpRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
+					epItem.getPpRemarks().get(0).setEditable(true);
+					newRemark = false;
 				}
-				
 			}
-		}*/ 
+		} */
 		
 		if(newRemark){
 			log.info("new remark added");
@@ -1014,7 +1032,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//if first remark is not new
 		if (!epItem.getJustifications().isEmpty()){
 			if(!epItem.getJustifications().get(0).isBrandNew()){
-				newReason = true;
+				newRemark = true;
 			}
 		}*/
 
@@ -1032,15 +1050,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// for user to edit draft remark
 		if(newRemark){
 			if(!epItem.getJustifications().isEmpty() && compareUserNameInsensitive(epItem.getJustifications().get(0).getUserId())){
-				if((epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
+				//if both statuses are null
+				if(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
+						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
+					epItem.getJustifications().get(0).setEditable(true);
+					newRemark = false;
+				// if remark status == plan status
+				}else if(epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
 						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId()))){
+								epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
 					epItem.getJustifications().get(0).setEditable(true);
 					newRemark = false;
 				}
 			}
-		} 
-		*/
+		} */
+		
 		if(newRemark){
 			log.info("new justification added");
 			PpRemark remark = new PpRemark();
@@ -1139,11 +1163,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// for user to edit draft reject reason
 		if(newReason){
 			if(!ppRejectReasons.isEmpty() && compareUserNameInsensitive(ppRejectReasons.get(0).getUserId())){
-				ppRejectReasons.get(0).setEditable(true);
-				newReason = false;
+
+				//if both statuses are null
+				if(ppRejectReasons.get(0).getPpWorkflowStatus()==null 
+						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
+					ppRejectReasons.get(0).setEditable(true);
+					newReason = false;
+				// if remark status == plan status
+				}else if(ppRejectReasons.get(0).getPpWorkflowStatus()!=null &&
+						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
+								ppRejectReasons.get(0).getPpWorkflowStatus().getWorkflowStatusId())){
+					ppRejectReasons.get(0).setEditable(true);
+					newReason = false;
+				}
 			}
-		} 
-		*/
+		} */
+		
 		
 		if(newReason && this.getManagedBean().isModeReviewEditable()){
 			log.info("new reason added");
