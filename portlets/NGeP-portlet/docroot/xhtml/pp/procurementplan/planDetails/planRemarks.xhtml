@@ -28,8 +28,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<tr>
 					<td></td>
 					<td>
-						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.brandNew}"/> 
-						<h:outputText value="#{remarkVar.remark}" rendered="#{!remarkVar.brandNew}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.editable or remarkVar.brandNew}"
+							/> 
+						<h:outputText value="#{remarkVar.remark}" rendered="#{!remarkVar.editable and !remarkVar.brandNew}" 
+							style="display: inline-block; width:220px;word-wrap: break-word;" />
 					</td>
 				</tr>
 			</table>
