@@ -23,18 +23,26 @@
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtRecommends}"
-			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex">
+			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
+			<p:ajax event="rowSelect" 
+				listener="#{suppFinalizationBackingBean.selectItemEvent}"
+				update="@([id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])" />
+				
+			<p:ajax event="rowUnselect"
+				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
+				update="@([itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
+				
 			<p:column style="width:2%;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl])"
-								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll, suppFinalizationBackingBean.managedBean.scQtFinalization.scQtRecommends)}" />
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblPanel])"
+								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=selectItem],[id$=supplierPanel])" listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -62,10 +70,9 @@
 				<h:column>
 					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" required="false" label="#{lbl['lbl.sc.recommend.by']}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
-						<p:ajax event="change" 
-							update="@([id$=itemListTbl],[id$=supplierPanel])"
-							listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
-							process="@this" partialSubmit="true"/>
+						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
+								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
+								process="@this" partialSubmit="true"/>
 	   				</p:selectOneMenu>	
 				</h:column>
 			</p:column>

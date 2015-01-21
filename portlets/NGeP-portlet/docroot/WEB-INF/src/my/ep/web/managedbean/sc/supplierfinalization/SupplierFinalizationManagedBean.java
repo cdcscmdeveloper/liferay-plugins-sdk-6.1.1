@@ -11,6 +11,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
@@ -113,8 +114,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> shortlistedPackageList;
 	private List<ScQtEvaluationResult> shortlistedItemList;
 	private List<ScQtEvaluationResult> shortlistedSupplierList;
-	private List<ScQtEvaluationResult> shortlistedItemSupplierList;
+	private List<ScQtEvaluationResultDtl> shortlistedItemSupplierList;
 	private List<ScQtEvaluationResult> recommendedSupplierList;
+	private List<ScQtEvaluationResultDtl> recommendedItemSupplierList; 
 	private List<ScQtEvaluationResult> unRecommendedSupplierList;
 	private List<ScQtRecommend> selectedRecommendList; 
 	private List<SmSupplier> awardSupplierList; 
@@ -495,7 +497,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the shortlistedItemSupplierList
 	 */
-	public List<ScQtEvaluationResult> getShortlistedItemSupplierList() {
+	public List<ScQtEvaluationResultDtl> getShortlistedItemSupplierList() {
 		return shortlistedItemSupplierList;
 	}
 
@@ -503,7 +505,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param shortlistedItemSupplierList the shortlistedItemSupplierList to set
 	 */
 	public void setShortlistedItemSupplierList(
-			List<ScQtEvaluationResult> shortlistedItemSupplierList) {
+			List<ScQtEvaluationResultDtl> shortlistedItemSupplierList) {
 		this.shortlistedItemSupplierList = shortlistedItemSupplierList;
 	}
 
@@ -520,6 +522,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setRecommendedSupplierList(
 			List<ScQtEvaluationResult> recommendedSupplierList) {
 		this.recommendedSupplierList = recommendedSupplierList;
+	}
+
+	/**
+	 * @return the recommendedItemSupplierList
+	 */
+	public List<ScQtEvaluationResultDtl> getRecommendedItemSupplierList() {
+		return recommendedItemSupplierList;
+	}
+
+	/**
+	 * @param recommendedItemSupplierList the recommendedItemSupplierList to set
+	 */
+	public void setRecommendedItemSupplierList(
+			List<ScQtEvaluationResultDtl> recommendedItemSupplierList) {
+		this.recommendedItemSupplierList = recommendedItemSupplierList;
 	}
 
 	/**
