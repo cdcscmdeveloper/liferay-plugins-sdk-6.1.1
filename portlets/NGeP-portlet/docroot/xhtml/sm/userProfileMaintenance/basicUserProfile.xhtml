@@ -313,7 +313,7 @@
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
 										<p:ajax event="change"
-											update="basicPermAddStateList, basicPermAddDistrictList, basicPermAddCityList"
+											update="basicPermAddStateList, basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId"
 											listener="#{smPersonnelBackingBean.updatePermAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId,null,null)}" />
 									</p:selectOneMenu>
 									<p:message id="basicPermAddCountryListMsg"
@@ -377,14 +377,33 @@
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-								<td ><p:inputText size="10" maxlength="10" id="basicPermAddPostCode" label="#{lbl['lbl.sm.postcode']}" required="true"
-										value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}" 
-										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-										<f:validator validatorId="postcodeValidator"/>
-									</p:inputText>
-									<p:message id="basicPermAddPostCodeMsg"
-											for="basicPermAddPostCode" showSummary="true"
-											showDetail="false" display="icon" /></td>
+								<td>
+									<p:outputPanel id="basicPermAddPostCodePanelId">
+										<p:outputPanel
+											rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
+											<p:inputText maxlength="5" required="true"
+												label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeMy"
+												value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
+												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+												size="35">
+												<f:validator validatorId="postcodeValidator" />
+											</p:inputText>
+											<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
+												showSummary="true" showDetail="false" display="icon" />
+										</p:outputPanel>
+										<p:outputPanel
+											rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
+											<p:inputText maxlength="10" required="true"
+												label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeForeign"
+												value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
+												size="35">
+											</p:inputText>
+											<p:message id="basicPermAddPostCodeForeignMsg"
+												for="basicPermAddPostCodeForeign" showSummary="true"
+												showDetail="false" display="icon" />
+										</p:outputPanel>
+									</p:outputPanel>
+								</td>
 							</tr>
 						</table>
 					</p:panel>
@@ -469,7 +488,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 											<p:ajax event="change"
-												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList"
+												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null)}" />
 										</p:selectOneMenu>
 										<p:message id="basicMailAddCountryListMsg"
@@ -542,17 +561,37 @@
 									<td><p:outputLabel
 											value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-									<td ><p:inputText size="10" maxlength="10" id="basicMailAddPostCode" label="#{lbl['lbl.sm.postcode']}"
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}" 
-											validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}">
-												<f:validator validatorId="postcodeValidator"/>
-										</p:inputText>
-										<p:message id="basicMailAddPostCodeMsg"
-											for="basicMailAddPostCode" showSummary="true"
-											showDetail="false" display="icon" /></td>
+									<td>
+										<p:outputPanel id="basicMailAddPostCodePanelId">
+											<p:outputPanel
+												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="5" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeMy"
+													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
+													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													size="35">
+													<f:validator validatorId="postcodeValidator" />
+												</p:inputText>
+												<p:message id="basicMailAddPostCodeMyMsg" for="basicMailAddPostCodeMy"
+													showSummary="true" showDetail="false" display="icon" />
+											</p:outputPanel>
+											<p:outputPanel
+												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="10" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeForeign"
+													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
+													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													size="35">
+												</p:inputText>
+												<p:message id="basicMailAddPostCodeForeignMsg"
+													for="basicMailAddPostCodeForeign" showSummary="true"
+													showDetail="false" display="icon" />
+											</p:outputPanel>
+										</p:outputPanel>
+									</td>
 								</tr>
 							</c:otherwise>
 						</c:choose>	

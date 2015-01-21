@@ -224,6 +224,23 @@ public class SmPersonnelBackingBean extends
 		roles.add(role);
 
 		getManagedBean().setRoleList(roles);
+
+		if (getManagedBean().getBasicSmPersonnel() != null
+				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null
+				&& (getManagedBean().getBasicSmPersonnel().getEpRole()
+						.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
+						.getBasicSmPersonnel().getEpRole()
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+			SelectItem adminRole = new SelectItem();
+			adminRole.setLabel(SmCommonUtil.getMessage(
+					"lbl.sm.person.composition.suppAdmin", null));
+			if (getManagedBean().isUpgradeMofDraftAppl()) {
+				adminRole.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			} else {
+				adminRole.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			}
+			getManagedBean().getRoleList().add(adminRole);
+		}
 	}
 
 	private boolean validatePersonLimit(SmSupplier smSupplier) {
@@ -367,19 +384,8 @@ public class SmPersonnelBackingBean extends
 	public String navigateToUpdateUserPage(String personnelId) {
 		getManagedBean().setEditMode(true);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
-		buildRoleList();
-
-		SelectItem role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage(
-				"lbl.sm.person.composition.suppAdmin", null));
-		if (getManagedBean().isUpgradeMofDraftAppl()) {
-			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		} else {
-			role.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		}
-
-		getManagedBean().getRoleList().add(role);
 		getPersonnelInfoById(personnelId);
+		buildRoleList();
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
 		setPersonnelViewOnlyData(getManagedBean().getBasicSmPersonnel());
@@ -395,7 +401,6 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public String cancel() {
-
 		return "userProfileSearch.xhtml";
 
 	}
