@@ -3564,4 +3564,99 @@ public class SmApplicationUtil {
 
 		}
 	}
+
+	/**
+	 * Reset deactivated personnel.
+	 * 
+	 * @return true, if successful
+	 */
+	public static boolean resetDeactivatedPersonnel(
+			SmApplicationManagedBean managedBean) {
+		boolean updateNecessary = false;
+		if (managedBean.getSmAppl().getSmPersonnels() != null
+				&& managedBean.getSmAppl().getSmPersonnels().size() > 0) {
+			for (SmPersonnel personnel : managedBean.getSmAppl()
+					.getSmPersonnels()) {
+				if (personnel.getRecordStatusFlg().equals(
+						SupplierManagementConst.DELETED_RECORD_STATUS)) {
+					personnel
+							.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+					personnel.setEpRole(null);
+					personnel.setAuthorizedFlg(0);
+					updateNecessary = true;
+				}
+			}
+		}
+		return updateNecessary;
+	}
+
+	/**
+	 * Sets the default base office address.
+	 * 
+	 * @param addr
+	 *            the addr
+	 * @return the sm address
+	 */
+	public static SmAddress setDefaultBaseOfficeAddress(SmAddress addr,
+			SmApplicationManagedBean managedBean) {
+		if (managedBean.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& !managedBean.getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().isEmpty()) {
+			SmAddress baseAddr = managedBean.getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress();
+			if (baseAddr != null) {
+				addr = SmApplicationUtil.setDefaultBaseOfficeAddr(baseAddr,
+						addr);
+			} else {
+				addr = SmApplicationUtil.setDefaultAddr(managedBean
+						.getDefPmCountry());
+			}
+		} else {
+			addr = SmApplicationUtil.setDefaultAddr(managedBean
+					.getDefPmCountry());
+		}
+		return addr;
+	}
+
+	/**
+	 * Sets the application category selected.
+	 */
+	public static void setApplicationCategorySelected(
+			SmApplicationManagedBean managedBean) {
+		managedBean.getSmAppl().setCurrentActiveTab(
+				managedBean.getTabActiveIndex());
+		if (managedBean.isPoUser() || managedBean.isApproverUser()) {
+			assignMaxReviewCount(managedBean.getSmAppl().getApplType(),
+					managedBean.getSmAppl().getApplCategoryType(), managedBean
+							.getSmAppl().getSupplierType(),
+					managedBean.getBusinessTypeVal());
+		}
+
+		// added to custom confirm dialog title and msg
+		// based on category type Special or Normal
+		setRegCatCodeConfirmDialog(managedBean);
+	}
+
+	/**
+	 * Sets the reg cat code confirm dialog.
+	 */
+	public static void setRegCatCodeConfirmDialog(
+			SmApplicationManagedBean managedBean) {
+		managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
+				"lbl.sm.regCatCode.confirm.header.normal", null));
+		managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
+				"lbl.sm.regCatCode.confirm.msg.normal", null));
+		if (managedBean.getSmAppl() != null) {
+			if (StringUtils.isNotBlank(managedBean.getSmAppl()
+					.getApplCategoryType())
+					&& managedBean.getSmAppl().getApplCategoryType()
+							.equals("S")) {
+				managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.header.special", null));
+				managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.msg.special", null));
+			}
+		}
+	}
+
 }
