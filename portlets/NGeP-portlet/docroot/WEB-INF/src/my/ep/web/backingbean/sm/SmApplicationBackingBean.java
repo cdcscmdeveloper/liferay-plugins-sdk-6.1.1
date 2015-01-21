@@ -4443,7 +4443,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Adds the shr hldr academic qualification.
+	 *  Add or create a new shr hldr staff academics object
 	 */
 	public void addShrHldrAcademicQualification() {
 
@@ -4457,10 +4457,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign sel shr hldr academics.
+	 * Assign selected staff academics - SmStaffAcademic object to managed bean for editing the information.
 	 * 
-	 * @param aca
-	 *            the aca
+	 * @param aca -SmStaffAcademic
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -4474,7 +4473,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete selected shr hldr academics.
+	 * Delete or remove selected records from the SmStaffAcademics list of the selected SmPersonnel.
 	 */
 	public void deleteSelectedShrHldrAcademics() {
 		if (getManagedBean().getSelectedShrHldrAcademics().size() > 0) {
@@ -4493,7 +4492,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel shr hldr academic.
+	 * Cancel add or update functionality and close the staff academics information dialog
 	 */
 	public void cancelShrHldrAcademic() {
 		assignValReqdToFalse();
@@ -4502,7 +4501,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Adds the or update shr hldr academic.
+	 *  Add or update selected staff academics info to SmStaffAcademic  list of the selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrAcademic() {
 		for (PmEduField edu : getManagedBean().getEduFieldList()) {
@@ -4565,7 +4564,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Adds the shr hldr prof body.
+	 * Add or create a new shr hldr prof body object
 	 */
 	public void addShrHldrProfBody() {
 
@@ -4581,10 +4580,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign sel shr hldr prof body.
+	 * Assign selected professional body - SmAssocication object to managed bean for editing the information.
 	 * 
-	 * @param asb
-	 *            the asb
+	 * @param asb -SmAssociationBody object
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
@@ -4599,7 +4597,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel shr hldr prof body.
+	 *  Cancel add or update functionality and close the professionl body information dialog
 	 */
 	public void cancelShrHldrProfBody() {
 		assignValReqdToFalse();
@@ -4610,7 +4608,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Adds the or update shr hldr prof body.
+	 * Add or update selected prof body info to SmAssocationBody list of the selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrProfBody() {
 		for (PmCertBody cert : getManagedBean().getProfBodyLs()) {
@@ -4637,7 +4635,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete selected shr hldr prof bodies.
+	 * Delete or remove selected prof bodies from the SmAssocationBody list of the selected SmPersonnel.
 	 */
 	public void deleteSelectedShrHldrProfBodies() {
 		if (getManagedBean().getSelectedShrHldrProfBodies().size() > 0) {
@@ -4655,10 +4653,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign person for branch.
+	 * Assign personnel for sm supplier branch.
 	 * 
-	 * @param brn
-	 *            the brn
+	 * @param brn - SmSupplierBranch object
 	 */
 	public void assignPersonForBranch(SmSupplierBranch brn) {
 		SmSupplierBranch br = new SmSupplierBranch();
@@ -4677,10 +4674,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign person ident type.
+	 * Assign selected personnel identity type.
 	 * 
-	 * @param e
-	 *            the e
+	 * @param e - AjaxBehaviorEvent
 	 */
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
@@ -4701,10 +4697,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign person nationality.
+	 * Assign selected personnel nationality.
 	 * 
-	 * @param e
-	 *            the e
+	 * @param e - AjaxBehaviorEvent
 	 */
 	public void assignPersonNationality(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getPmCountry()
@@ -4727,10 +4722,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign sel share holder address.
+	 * Assign selected personnel object to managed bean for editing the information.
 	 * 
-	 * @param shareHolderBean
-	 *            the share holder bean
+	 * @param shareHolderBean - SmPersonnel object
 	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 
@@ -4984,7 +4978,7 @@ public class SmApplicationBackingBean extends
 
 	// Process Bank Info Start
 	/**
-	 * Adds the or update bank info to sm appl.
+	 * Add or update selected bank info to SmSupplierBanks of the application.
 	 */
 	public void addOrUpdateBankInfoToSmAppl() {
 		getManagedBean().getSelectedBank().getSmChequeSignatories().clear();
@@ -5038,7 +5032,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel sm bank functions.
+	 * Cancel add or update functionality and close the bank information dialog
 	 */
 	public void cancelSmBankFunctions() {
 		assignValReqdToFalse();
@@ -5047,10 +5041,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign sel bank.
+	 * Assign selected bank object to managed bean for editing the information.
 	 * 
-	 * @param shareBankBean
-	 *            the share bank bean
+	 * @param shareBankBean - SmSupplierBank object
 	 */
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setChequeSingPerId(null);
@@ -5094,7 +5087,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete selected banks.
+	 * Delete or remove selected banks from the SmSupplierBank list of the applicaiton.
 	 */
 	public void deleteSelectedBanks() {
 		if (getManagedBean().getSelectedBanks().size() > 0) {
@@ -5113,17 +5106,16 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * View signatories.
+	 * View signatories for selected SmSupplierBank.
 	 * 
-	 * @param signAcctBean
-	 *            the sign acct bean
+	 * @param signAcctBean -SmSupplierBank object
 	 */
 	public void viewSignatories(SmSupplierBank signAcctBean) {
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
 	/**
-	 * Assign new bank.
+	 * Add or create a new SmSupplier bank object
 	 */
 	public void assignNewBank() {
 		getManagedBean().setChequeSingPerId(null);
@@ -5143,7 +5135,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Make a call to the BPM for MofRegistration.
+	 * Make a call to the BPM for supplier submitting the application.
 	 */
 	public void initiateSmApplicationTask() {
 		IMofRegistrationSO regSo = null;
@@ -5239,11 +5231,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Resubmit sm appl inquiry to bpm.
+	 * Resubmit sm application inquiry to bpm.
 	 * 
-	 * @param applType
-	 *            the appl type
-	 * @return the string
+	 * @param applType - the appl type
+	 * @return the redirect page
 	 */
 	public String resubmitSmApplInquiryToBpm(String applType) {
 		log.info("*** Resubmit for send inquiry **** ");
@@ -5258,11 +5249,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Submit sm appl to bpm.
+	 * Submit sm application to bpm and save the latest information to DB.
 	 * 
-	 * @param applType
-	 *            the appl type
-	 * @return the string
+	 * @param applType - the appl type
+	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
 		// try {
@@ -5331,9 +5321,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Submit cancel mof appl to bpm.
+	 * Submit cancel mof application to bpm and update the DB.
 	 * 
-	 * @return the string
+	 * @return the redirect page
 	 */
 	public String submitCancelMofApplToBpm() {
 		log.info(" Call Cancel ---------------->>>>>>>>>>");
@@ -5457,9 +5447,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete draft application.
+	 * Delete draft applciation from Db and clear task from BPM if required.
 	 * 
-	 * @return the string
+	 * @return the redirect page
 	 */
 	public String deleteDraftApplication() {
 
@@ -5500,13 +5490,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Save application as draft.
+	 * Save the application as draft in DB and Intialize bpm if required.
 	 * 
-	 * @param applType
-	 *            the appl type
-	 * @param currentPageType
-	 *            the current page type
-	 * @return the string
+	 * @param applType - the appl type
+	 * @param currentPageType - the current page type
+	 * @return the redirect page
 	 */
 	public String saveApplicationAsDraft(String applType, String currentPageType) {
 		log.info("****** Save As Draft **********" + currentPageType
@@ -5558,10 +5546,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Intialize save draft bpm.
+	 * Save the application as draft in DB and Intialize bpm if required.
 	 * 
-	 * @param currentPageType
-	 *            the current page type
+	 * @param currentPageType - the current page type
 	 * @return true, if successful
 	 */
 	private boolean intializeSaveDraftBpm(String currentPageType) {
@@ -5623,7 +5610,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete draft applciation task.
+	 * Delete draft applciation from Db and clear task from BPM if required.
 	 * 
 	 * @return true, if successful
 	 */
