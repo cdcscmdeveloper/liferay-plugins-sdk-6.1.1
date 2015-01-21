@@ -90,32 +90,24 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+						disabledSelection="#{shareBean.prevApprovedEquityOwner}">
 						<h:outputText value="#{lbl['lbl.txt.yes']}"
 							rendered="#{shareBean.bumiFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.label.action']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg ne 8}">
+						disabledSelection="#{shareBean.prevApprovedEquityOwner}">
 						<p:commandLink
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
-
 							<p:outputPanel
-								rendered="#{shareBean.equityOwner or shareBean.director}">
-								<p:graphicImage library="ep/images/design" name="edit.png"
-									value="/resources/ep/images/design/edit.png"
-									rendered="#{!backingBean.managedBean.disAllowOwnerEdit}" />
-								<p:graphicImage library="ep/images/design" name="edit.png"
-									value="/resources/ep/images/design/edit.png"
-									rendered="#{backingBean.managedBean.disAllowOwnerEdit and shareBean.recordStatusFlg eq 8}" />
+								rendered="#{shareBean.prevApprovedEquityOwner}">
 								<p:graphicImage library="ep/images/design" name="document.png"
-									value="/resources/ep/images/design/document.png"
-									rendered="#{backingBean.managedBean.disAllowOwnerEdit and shareBean.recordStatusFlg ne 8}" />
+									value="/resources/ep/images/design/document.png" />
 							</p:outputPanel>
 							<p:outputPanel
-								rendered="#{!shareBean.equityOwner and !shareBean.director}">
+								rendered="#{!shareBean.prevApprovedEquityOwner}">
 								<p:graphicImage library="ep/images/design" name="edit.png"
 									value="/resources/ep/images/design/edit.png" />
 							</p:outputPanel>

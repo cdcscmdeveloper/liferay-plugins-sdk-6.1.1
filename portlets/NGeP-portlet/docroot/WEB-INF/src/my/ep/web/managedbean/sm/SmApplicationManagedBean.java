@@ -145,6 +145,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmAssociationBody> selectedPersProfBodies;
 	private List<SmRelatedCompany> selectedPersRelatedCompanies;
 	private List<SmStaffAcademic> selectedPersAcademics;
+	private List<SmPersonnel> prevApprovedPersonnels;
 	private String supplierRemarks;
 
 	private String businessTypeVal;
@@ -2548,5 +2549,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoToSvcRmrk(String poToSvcRmrk) {
 		this.poToSvcRmrk = poToSvcRmrk;
+	}
+
+	public List<SmPersonnel> getPrevApprovedPersonnels() {
+		return prevApprovedPersonnels;
+	}
+
+	public void setPrevApprovedPersonnels(List<SmPersonnel> prevApprovedPersonnels) {
+		this.prevApprovedPersonnels = prevApprovedPersonnels;
 	}
 }

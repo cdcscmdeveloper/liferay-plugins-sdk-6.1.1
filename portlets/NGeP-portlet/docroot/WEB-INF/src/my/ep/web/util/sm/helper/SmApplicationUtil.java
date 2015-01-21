@@ -3459,6 +3459,51 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
+	public static List<SmPersonnel> getPrevApprovedPersonnelDirectorOwner(
+			SmAppl smAppl) {
+		List<SmPersonnel> prevApprovedPersonnelsDirectorOwner = new ArrayList<SmPersonnel>();
+		if (!smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				&& !smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
+			String prevApplNo = smAppl.getApprovedSerFile() == null ? ""
+					: smAppl.getApprovedSerFile().substring(
+							smAppl.getApprovedSerFile().lastIndexOf('/') + 1,
+							smAppl.getApprovedSerFile().indexOf("_APP"));
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setApplNo(prevApplNo);
+			List<SmPersonnel> prevApprovedPersonnels = personnelSO
+					.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
+			if (prevApprovedPersonnels != null
+					&& !prevApprovedPersonnels.isEmpty()) {
+				for (SmPersonnel prevPersonnel : prevApprovedPersonnels) {
+					prevApprovedPersonnelsDirectorOwner.add(prevPersonnel);
+				}
+			}
+
+		}
+		return prevApprovedPersonnelsDirectorOwner;
+	}
+
+	public static void setPersonnelsPrevApprovedDirectorEquityOwner(
+			SmAppl smAppl, List<SmPersonnel> prevApprovedPersonnels,
+			boolean disallowedOwnerEdit) {
+		if (!smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				&& !smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			for (SmPersonnel currPersonnel : smAppl.getSmPersonnels()) {
+				setPrevDirectorEquityOwner(prevApprovedPersonnels,
+						currPersonnel);
+			}
+		}
+	}
+
 	public static SmTrackingDairyVO assignTrackingDairyValues(
 			SmApplicationManagedBean managedBean, String actionDesc,
 			PmStatus status) {
@@ -3475,6 +3520,21 @@ public class SmApplicationUtil {
 		trckVO.setGroupDocType(null);
 		return trckVO;
 
+	}
+
+	private static void setPrevDirectorEquityOwner(
+			List<SmPersonnel> personnels, SmPersonnel personnelParam) {
+		personnelParam.setPrevApprovedDirector(false);
+		personnelParam.setPrevApprovedEquityOwner(false);
+		for (SmPersonnel personnelTmp : personnels) {
+			if (personnelParam.getIdentificationNo().equals(
+					personnelTmp.getIdentificationNo())) {
+				personnelParam.setPrevApprovedDirector(personnelTmp
+						.isDirector());
+				personnelParam.setPrevApprovedEquityOwner(personnelTmp
+						.isEquityOwner());
+			}
+		}
 	}
 
 	private static String getUserRoleValue(SmApplicationManagedBean managedBean) {

@@ -407,7 +407,6 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
-
 		}
 		getManagedBean()
 				.setDefPmCountry(
@@ -675,6 +674,12 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
 				// set basic info for cancel mof
 			}
+
+			// set previous approved personnels
+			getManagedBean().setPrevApprovedPersonnels(
+					SmApplicationUtil
+							.getPrevApprovedPersonnelDirectorOwner(smAppl));
+
 			getManagedBean()
 					.setSupplierParentCatList(
 							SmApplicationUtil
@@ -985,6 +990,10 @@ public class SmApplicationBackingBean extends
 					&& !valid) {
 				saveOrUpdateAppl();
 				calculateCapital();
+				SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
+						getManagedBean().getSmAppl(), getManagedBean()
+								.getPrevApprovedPersonnels(), getManagedBean()
+								.isDisAllowOwnerEdit());
 			} else {
 				valid = retriveLatestApplAfterUpdate(currentPageType,
 						outputPageType);
@@ -1010,6 +1019,12 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 					calcPersonnelListCount();
+					SmApplicationUtil
+							.setPersonnelsPrevApprovedDirectorEquityOwner(
+									getManagedBean().getSmAppl(),
+									getManagedBean()
+											.getPrevApprovedPersonnels(),
+									getManagedBean().isDisAllowOwnerEdit());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 					SmApplicationUtil
@@ -1039,6 +1054,12 @@ public class SmApplicationBackingBean extends
 					if (valid) {
 						log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
 						calculateCapital();
+						SmApplicationUtil
+								.setPersonnelsPrevApprovedDirectorEquityOwner(
+										getManagedBean().getSmAppl(),
+										getManagedBean()
+												.getPrevApprovedPersonnels(),
+										getManagedBean().isDisAllowOwnerEdit());
 						break;
 					}
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
@@ -3231,14 +3252,11 @@ public class SmApplicationBackingBean extends
 							.execute(
 									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
 				}
-				// for new personnel set record status flag to 8
-				getManagedBean().getSelectedShareHolder().setRecordStatusFlg(
-						DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 				getManagedBean().getSmAppl().getSmPersonnels()
 						.add(getManagedBean().getSelectedShareHolder());
 
 			}
-			updateAuthorizedPersonnel(getManagedBean().getSmAppl()
+			updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 					.getSmPersonnels());
 			saveOrUpdateAppl();
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -3275,13 +3293,22 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void updateAuthorizedPersonnel(List<SmPersonnel> smPersonnels) {
+	private void updatePersonnelRecordStatus(List<SmPersonnel> smPersonnels) {
 		if (smPersonnels != null && !smPersonnels.isEmpty()) {
 			for (SmPersonnel smPersonnel : smPersonnels) {
 				if (smPersonnel.getAuthorizedFlg() == 0) {
 					smPersonnel.setEpRole(null);
 					smPersonnel.setSoftcertFlg(0);
 					smPersonnel.setContractSignerFlg(0);
+					smPersonnel
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				} else {
+					if (smPersonnel.getPmUser() == null
+							&& smPersonnel.getEpRole() != null
+							&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+						smPersonnel
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+					}
 				}
 			}
 		}
@@ -3461,6 +3488,26 @@ public class SmApplicationBackingBean extends
 
 		// disabled justification
 		// disableJustification(shareHolderBean);
+	}
+
+	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel) {
+		String accStatus = "";
+		if (smPersonnel.getEpRole() != null
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+			if (smPersonnel.getPmUser() == null) {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.pending", null);
+			} else {
+				if (SmCommonUtil.isPersonnelAlreadyDeactivate(smPersonnel)) {
+					accStatus = SmCommonUtil.getMessage(
+							"lbl.sm.activation.status.pending", null);
+				} else {
+					accStatus = SmCommonUtil.getMessage(
+							"lbl.sm.activation.status.activated", null);
+				}
+			}
+		}
+		return accStatus;
 	}
 
 	@SuppressWarnings("unused")
@@ -6663,7 +6710,6 @@ public class SmApplicationBackingBean extends
 
 		String revApprvrAppNo = "";
 		String revSupplAppNo = "";
-
 		if (getManagedBean().getSmAppl() != null) {
 			if (getManagedBean().getSmAppl().getApprovedSerFile() != null
 					&& StringUtils.isNotBlank(getManagedBean().getSmAppl()
@@ -6970,9 +7016,8 @@ public class SmApplicationBackingBean extends
 
 	public boolean isPersonnelViewOnly(SmPersonnel smPersonnel) {
 		boolean retVal = false;
-		if ((smPersonnel.isEquityOwner() || smPersonnel.isDirector())
-				&& getManagedBean().isDisAllowOwnerEdit()
-				&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+		if (smPersonnel.isPrevApprovedDirector()
+				|| smPersonnel.isPrevApprovedEquityOwner()) {
 			retVal = true;
 		}
 		return retVal;
