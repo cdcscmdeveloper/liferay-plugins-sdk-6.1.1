@@ -473,26 +473,19 @@
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.equityOwner and backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg ne 8)}">
+							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this,@([id$=prsnlInfoSecPoRmrk]),:form:tt:prsnlSecApprvrRmrk" partialSubmit="true" update=":form"
 								style="padding-right:5px;">
 								<p:outputPanel
-									rendered="#{person.equityOwner or person.director}">
+									rendered="#{person.prevApprovedDirector or person.prevApprovedEquityOwner}">
 									<p:graphicImage library="ep/images/design" name="document.png"
-										value="/resources/ep/images/design/document.png"
-										rendered="#{backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg ne 8}" />
-									<p:graphicImage library="ep/images/design" name="edit.png"
-										value="/resources/ep/images/design/edit.png"
-										rendered="#{backingBean.managedBean.disAllowOwnerEdit and person.recordStatusFlg eq 8}" />
-									<p:graphicImage library="ep/images/design" name="edit.png"
-										value="/resources/ep/images/design/edit.png"
-										rendered="#{!backingBean.managedBean.disAllowOwnerEdit}" />
+										value="/resources/ep/images/design/document.png" />
 								</p:outputPanel>
 								<p:outputPanel
-									rendered="#{!person.equityOwner and !person.director}">
+									rendered="#{!person.prevApprovedDirector and !person.prevApprovedEquityOwner}">
 									<p:graphicImage library="ep/images/design" name="edit.png"
 										value="/resources/ep/images/design/edit.png" />
 								</p:outputPanel>
