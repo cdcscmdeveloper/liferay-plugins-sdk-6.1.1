@@ -206,7 +206,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setAction(outcome);
 			getManagedBean().setTaskName(res.getTaskName());
-			getManagedBean().setAutoUpdate(true);
 			
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
@@ -372,42 +371,21 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
  		}	
 				
 		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
 		}		
 		
 		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().isEmpty()) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_750014);
 		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-			 RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract termination"});
 		}
-		
-		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
-					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE))){
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(getManagedBean().getContractVer().getDocType());
-			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
-			sb.append(outcome);			
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(outcome);
-		}
-		
-		
 	}
 	 
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
@@ -758,10 +736,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		return saveContractTermination(getManagedBean().getButtonAction());
 	}
 	
-	public void disableUpdate(){
-		getManagedBean().setAutoUpdate(false);
-	}
-	
 	public boolean isApproverSetting() {
 		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
 				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FT_HT_NAME) ||
@@ -770,5 +744,37 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			return true;
 		else 
 			return false;
+	}
+	
+	public String gpkiSignAction(String outcome) throws Exception{
+		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
+					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE))){
+			validateContractTermination(outcome);
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(outcome);			
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}else if(BpmOutcomeConst.BPM_CANCEL.equals(outcome)){
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			return null;
+		}
+		else{
+			return saveContractTermination(outcome);
+		}
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
 	}
 }

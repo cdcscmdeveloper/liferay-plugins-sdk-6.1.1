@@ -29,7 +29,7 @@
 	width: 300px;
 }
 </style>
-		<p:blockUI block=":form" widgetVar="blockUIWidget">
+		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<ac:gpkiPopup
@@ -48,7 +48,7 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 							immediate="true" 
-							oncomplete="window.history.back();blockUIWidget.hide();"
+							oncomplete="window.history.back();blockWidget.hide();"
 							rendered="#{supplierBackingBean.managedBean.viewOnly}" /></td>
 					<td class="ppRightBtn"><ui:repeat var="outcome"
 							value="#{supplierBackingBean.managedBean.action}">
@@ -56,14 +56,14 @@
 								value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form,@([id$=messages])"
 								styleClass="ui-button" process="@form"
-								onstart="blockUIWidget.show();"		
-								oncomplete="blockUIWidget.hide();" 	
+								onstart="blockWidget.show();"		
+								oncomplete="blockWidget.hide();" 	
 								action="#{supplierBackingBean.factoringRequesttSignAction(outcome)}"
 								rendered="#{!supplierBackingBean.managedBean.viewOnly and not supplierBackingBean.isSupplierRole()}"/>
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form,@([id$=messages])"
 								styleClass="ui-button" process="@form"
-								onstart="blockUIWidget.show();"		
-								oncomplete="blockUIWidget.hide();" 	
+								onstart="blockWidget.show();"		
+								oncomplete="blockWidget.hide();" 	
 								action="#{supplierBackingBean.factoringRequesttSignAction(outcome)}"
 								actionListener="#{spkiBackingBean.getChallengeQuestions}"
 								rendered="#{!supplierBackingBean.managedBean.viewOnly and supplierBackingBean.isSupplierRole()}"/>
@@ -115,7 +115,7 @@
 						<f:selectItems
 							value="#{supplierBackingBean.getContractSupplierLoa()}" />
 						<p:ajax event="change" process="@this"
-							onstart="blockUIWidget.show();" oncomplete="blockUIWidget.hide();"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"
 							listener="#{supplierBackingBean.changeLoaActionListener()}" />
 					</p:selectOneMenu>
@@ -220,7 +220,7 @@
 						<f:selectItems
 							value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
 						<p:ajax event="change" process="@this"
-							onstart="blockUIWidget.show();" oncomplete="blockUIWidget.hide();"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="branchId,bankName,accNo,clausePanel, notificationBtn"
 							listener="#{supplierBackingBean.reset}" />
 					</p:selectOneMenu>

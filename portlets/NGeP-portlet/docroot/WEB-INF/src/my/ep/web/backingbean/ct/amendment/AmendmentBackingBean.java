@@ -317,7 +317,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			     setAmendmentContractVer(resDTO);
 			     resetbooleanValue();
-			     getManagedBean().setAutoUpdate(true);
 			
 //			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) && 
 //					this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
@@ -3176,9 +3175,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
+		}else if(BpmOutcomeConst.BPM_CANCEL.equals(outcome)){
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			return null;
 		}else{
 			return saveContractAmendment(outcome);
 		}
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
 	}
 	
 	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
@@ -3186,10 +3193,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
 		}
 		return saveContractAmendment(getManagedBean().getButtonAction());
-	}
-	
-	public void disableUpdate(){
-		getManagedBean().setAutoUpdate(false);
 	}
 	
 	public void setAttachFileIndex(int index) {
