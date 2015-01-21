@@ -99,10 +99,12 @@
 	<tr>
 		<td width="40%" class="txtBold">Company Name</td>
 		<td class="sColTwentyPerc">
-			#if($equityCompanies.size() > 0)
+			#if($!equityCompanies and $equityCompanies.size() > 0)
 				#foreach($equityCompany in $equityCompanies)
 			    	$velocityCount. $equityCompany.companyName <br />
 			  	#end
+			#else
+				NOT APPLICABLE
 	  		#end		
 		</td>
 		<td class="sColTwentyPerc"></td>
