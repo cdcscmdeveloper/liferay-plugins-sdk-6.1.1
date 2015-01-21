@@ -1289,7 +1289,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
-				
+
 				if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null) {
 					PmUserGroup pmUserGroup = new PmUserGroup();
 					getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
@@ -1300,7 +1300,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 				}			
 				getManagedBean().getUserGroupList().clear();
-				
+
 				//new
 				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
 				if(resDTO.getUserGroupList().size()>0) {
@@ -1315,7 +1315,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
 						}
 					}
-					
+
 					List<String> source = new ArrayList<String>();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						if(getManagedBean().getApproverModel().getSource().size()==0 && getManagedBean().getApproverModel().getTarget().size() == 0) {
@@ -1325,9 +1325,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 					getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 				}
-				
-				//end
-				getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2123,6 +2121,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 		getManagedBean().setApproverModel(null);
 		initializeApproverGroup();
+		initializeDelAddr();
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
@@ -2134,6 +2133,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 	
+	private void initializeDelAddr() {
+		if(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
+			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().clear();
+			for(FlFulfilmentItemAddr itemAddr : getManagedBean().getShowAllItemsRows()){
+				itemAddr.setOrderedQty(new BigDecimal(0));
+				
+			}
+			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		}
+	}
+
 	private void checkPtjGroupAndInitialize() {
 		getManagedBean().setCurrentPtjGroupId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getPmPtjGroup().getPtjGroupId());
 		if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId() != getManagedBean().getCurrentPtjGroupId()){
