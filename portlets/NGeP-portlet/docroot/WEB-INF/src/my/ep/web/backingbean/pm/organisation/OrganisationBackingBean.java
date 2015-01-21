@@ -24,7 +24,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -48,15 +47,11 @@ import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
-import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -77,7 +72,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -186,8 +180,8 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setSupplierUsers(null);
 		this.getManagedBean().setSelectedSupplierUsers(null);
 		//this.getManagedBean().setDeliveryAddress(null);
-		this.getManagedBean().setDeliveryContactPerson(null);
-		this.getManagedBean().setOfficeContactPerson(null);
+		//this.getManagedBean().setDeliveryContactPerson(new PmContact());
+		//this.getManagedBean().setOfficeContactPerson(new PmContact());
 		this.getManagedBean().setOfficeAddress(null);
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);		
 		this.getManagedBean().setOrgTypeId(null);
@@ -366,6 +360,7 @@ public class OrganisationBackingBean extends
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.LOCAL_AUTHORITY.value())) {
 			
+			
 				if (orgProfile.getSmSupplier() != null) {
 					log.info("Supplier Test");
 					this.getManagedBean().setSmSupplierBanks(
@@ -537,18 +532,9 @@ public class OrganisationBackingBean extends
 			IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IRegistrationSO.class);
-
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
-			SupplierSearchResDTO supResDTO;
-			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
-			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
+							IRegistrationSO.class);			
 			// new Supplier
-			if (supResDTO.getSmSupplier() == null) {
+			if (orgProfile.getSmSupplier() == null) {
 				log.info("Create new Supplier");
 				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 				regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());             
@@ -569,24 +555,7 @@ public class OrganisationBackingBean extends
 				RegistrationResDTO regResDTO = registrationSO
 						.createPTJSupplier(regReqDTO);
 				regResDTO.setSuccessful(true);
-				//Update User Role
-				/*for(PmUser user:getManagedBean().getSupplierUsers()){
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setPmUser(user);
-				userReqDTO.isSupplierUser();
-				List<PmUserRole> pmUserRoles = new ArrayList<PmUserRole>();
-				PmUserRole pmUserRole = new PmUserRole();				
-				PmRole pmRole = new PmRole();
-				pmRole.setRoleCode(RoleCode.APPROVER.value());
-				pmUserRole.setPmRole(pmRole);
-				pmUserRoles.add(pmUserRole);
-				userReqDTO.setNewRoleList(pmUserRoles);
-				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
-				userResDTO.setSuccessful(true);
-				}*/
+				
 				//Fee Exemption
 				IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
 						.getInstance().getServiceObject(
@@ -600,11 +569,17 @@ public class OrganisationBackingBean extends
 				feeResDTO.setSuccessful(true);
 
 			}
-			if (supResDTO.getSmSupplier() != null) {
+			if (orgProfile.getSmSupplier() != null) {
 				log.info("Update Supplier");
-				supResDTO = supplierSearchSO
-						.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);
-				SmSupplier supplier = supResDTO.getSmSupplier();
+				/*supResDTO = supplierSearchSO
+						.retriveSuppProfileAndPersonnelBySuppId(supReqDTO);*/
+				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveSupplierByProfileId(reqDTO);
+				
+				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
+				
+				SmSupplier supplier = orgProfileSm.getSmSupplier();
 				if (supplier != null) {
 					RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 					for(SmPersonnel personnelUser:getManagedBean().getSmPersonnels()){
@@ -641,56 +616,13 @@ public class OrganisationBackingBean extends
 				}
 			}
 		}
-		/*else{
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
-			SupplierSearchResDTO supResDTO;
-			supReqDTO.setSupplierId(orgProfile.getOrgProfileId());
-			supResDTO = supplierSearchSO.retriveSupplierById(supReqDTO);
-			if (supResDTO.getSmSupplier() != null) {
-				
 		
-			IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
-			FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
-			PmFeeExemption feeEx = new PmFeeExemption();				
-			feeEx.setOrgProfileId(orgProfile);
-			log.info("Org ProifleId--"+orgProfile.getOrgProfileId());
-			FeeExemptionResDTO feeResDTO = exemptionSO.deleteFeeExemptionByOrgProfile(feeReqDTO);			
-			feeReqDTO.setFeeExemption(feeResDTO.getFeeExemption());
-			feeResDTO = exemptionSO.deleteFeeExemption(feeReqDTO);
-			feeResDTO.setSuccessful(true);
-			for(PmUser user:getManagedBean().getSupplierUsers()){
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setPmUser(user);
-				userReqDTO.isSupplierUser();
-				List<PmUserRole> pmUserRoles = new ArrayList<PmUserRole>();
-				PmUserRole pmUserRole = new PmUserRole();				
-				PmRole pmRole = new PmRole();
-				//pmRole.setRoleCode(RoleCode.APPROVER.value());
-				pmUserRole.setPmRole(pmRole);
-				pmUserRoles.add(pmUserRole);
-				userReqDTO.setRemoveRoleList(pmUserRoles);
-				UserResDTO userResDTO= userSO.saveUser(userReqDTO);
-				userResDTO.setSuccessful(true);
-				}
-			log.info("not GoveSeller");
-			}
-		}*/
 		
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			//getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
 			
-			orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
+			//orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
 			if (getManagedBean().getOrgProfile().isGroupOrg()) {
 				List<PmProfileGroup> profileGrp = getManagedBean()
