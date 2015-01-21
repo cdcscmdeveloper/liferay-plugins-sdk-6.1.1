@@ -1063,6 +1063,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
+
+			// Temp setTextBeforeSign : DocNo+Outcome
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+			sb.append(getManagedBean().getButtonAction());
+			getManagedBean().setTextBeforeSign(sb.toString());
+		
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1112,13 +1119,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !isSupplierRole()) {
-				// Temp setTextBeforeSign : DocNo+Outcome
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-				sb.append(getManagedBean().getButtonAction());
-				getManagedBean().setTextBeforeSign(sb.toString());
-			}else if(getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()){
+			if(getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()){
 				// Temp setTextBeforeSign : DocNo+Outcome
 				StringBuilder sb = new StringBuilder();
 				sb.append("INV-");
