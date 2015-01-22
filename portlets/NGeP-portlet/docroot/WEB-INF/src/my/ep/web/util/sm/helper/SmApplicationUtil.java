@@ -2209,7 +2209,7 @@ public class SmApplicationUtil {
 	 */
 	public static void assignActiveCategoryList(
 			SmApplicationManagedBean managedBean) {
-		List<SmSupplierCategory> catList = new ArrayList<>();
+		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
