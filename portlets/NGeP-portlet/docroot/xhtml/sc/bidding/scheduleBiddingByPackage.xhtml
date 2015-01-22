@@ -96,12 +96,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}"
-				style="width :15%;">
-				<h:outputText id="decrementAmtByPackage" style="float : right"
+				style="white-space : normal; width :15%;">
+				<p:inputText id="decrementAmtByPackage" style="float : right" size="10"
 					value="#{bidItem.decrementAmt }">
+					<p:ajax event="change" process="@this"
+						partialSubmit="true" />
 					<f:convertNumber for="decrementAmt"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+				</p:inputText>
 			</p:column>
 
 		</p:dataTable>
