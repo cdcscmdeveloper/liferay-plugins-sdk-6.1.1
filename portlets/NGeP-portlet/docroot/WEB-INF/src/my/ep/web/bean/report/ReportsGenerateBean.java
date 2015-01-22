@@ -11,6 +11,7 @@ import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -2517,8 +2518,9 @@ public class ReportsGenerateBean {
 			stateLst = new ArrayList<SelectItem>();		
 			IStateSO stateSO	=	(IStateSO)BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
 			StateReqDTO	stateReqDTO	=	new StateReqDTO();
-			stateReqDTO.setCountryId(1L);//TODO malaysia		
-			StateResDTO resStateDTO	=	stateSO.retriveStatesListByCountryID(stateReqDTO);		
+			stateReqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			//stateReqDTO.setCountryId(1L);//TODO malaysia		
+			StateResDTO resStateDTO	=	stateSO.retriveStatesListByCountryCode(stateReqDTO);		
 			for(PmState state: resStateDTO.getStateList()){			
 				SelectItem selectItem= new SelectItem();
 				selectItem.setLabel(state.getStateName());
