@@ -240,7 +240,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}			
 		}
 		if(getManagedBean().isContractRequest() == Boolean.TRUE){
-			checkValidity(getManagedBean().getFlRequest());
+			//Remove the checking if contract terminated/expired during supplier acknowledge, 
+			//unitEP(22/1/2015) said should allow to proceed if the order generated.
+			//checkValidity(getManagedBean().getFlRequest());
 		}
 	}
 
