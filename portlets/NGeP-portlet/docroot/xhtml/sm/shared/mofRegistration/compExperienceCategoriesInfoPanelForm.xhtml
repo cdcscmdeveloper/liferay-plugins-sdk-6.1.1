@@ -20,14 +20,14 @@
 						value="#{backingBean.managedBean.selectedAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=suppExpCatCodesDtWidVar])"
-							listener="#{backingBean.selectAll}" />
+							listener="#{backingBean.selectAllCompanyExperinceCategories}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 
 				<p:selectBooleanCheckbox
 					value="#{backingBean.managedBean.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
-						listener="#{backingBean.selected(index)}" />
+						listener="#{backingBean.selectedCompanyExperinceCategory(index)}" />
 				</p:selectBooleanCheckbox>
 
 			</p:column>
