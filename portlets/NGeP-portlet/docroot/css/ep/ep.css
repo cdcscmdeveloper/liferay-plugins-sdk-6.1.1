@@ -1988,15 +1988,7 @@ table.ppTwoTable td {
 	white-space: normal;
 }
 
-.gtBudgetAmt{
-	padding:0;
-}
-
-.gtPlanAmt{
-	padding:0;
-}
-
-.gtEstAmt{
+.gtBudgetAmt, .gtPlanAmt, .gtEstAmt, .gtNonAllocAmt{
 	padding:0;
 }
 
