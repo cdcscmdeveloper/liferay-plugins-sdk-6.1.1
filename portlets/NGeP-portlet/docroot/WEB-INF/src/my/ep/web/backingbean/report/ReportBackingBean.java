@@ -29,6 +29,7 @@ import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -161,8 +162,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setOrgProfileList(List<String> orgProfileList) {
 		this.orgProfileList = orgProfileList;
-	}	
+	}
+	private String localToDateVar;
 	private String userId;
+	private long lngUserId;
 	private String roleCode;	
 	private Date fromDate;
 	private Date toDate;
@@ -342,6 +345,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctComplete;	
 	
 	
+	
+	public String getLocalToDateVar() {
+		return localToDateVar;
+	}
+	public void setLocalToDateVar(String localToDateVar) {
+		this.localToDateVar = localToDateVar;
+	}
+	public long getLngUserId() {
+		return lngUserId;
+	}
+	public void setLngUserId(long lngUserId) {
+		this.lngUserId = lngUserId;
+	}
 	public String getCmSupplOrAdmin() {
 		return cmSupplOrAdmin;
 	}
@@ -1568,6 +1584,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		UserReqDTO reqDTO = new UserReqDTO();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {	
 			userId = new FacesScopes().getUserSessionBean().getUserId().toString();
+			lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 			UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
@@ -1673,15 +1690,27 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);			
 		}
-	}	
+	}
+	public void retriveSVOfficerUser(){
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);		
+		List<String>  svoUser= reportSO.retriveSVOfficerUser(lngUserId);
+		stateLst = new ArrayList<SelectItem>();		
+		if (svoUser.size()>0) {			
+			for (int i = 0; i < svoUser.size(); i++) {					
+				log.info("SVOUSER LIST #########################"+svoUser.get(i));				
+			}
+		}
+	}
 	public void retrieveDates(){		
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
-		Date currentDate= new Date();
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		
 		if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){
+			Date currentDate= new Date();
 			this.setScCreatedFromYear(outputDateFormat.format(currentDate).substring(6,10));
 			this.setScCreatedToYear(outputDateFormat.format(currentDate).substring(6,10));
 		}
 		if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
+			Date currentDate= new Date();
 			this.setSmCreatedFromYear(outputDateFormat.format(currentDate).substring(6,10));
 			this.setSmCreatedToYear(outputDateFormat.format(currentDate).substring(6,10));
 		}
@@ -1700,6 +1729,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}*/
 		if((getManagedBean().getModuleValue()!=null)&&(this.getSubModule()!=null)){
 			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))&&(this.getSubModule().equalsIgnoreCase(ReportConst.SUB_MOD_S1))){
+				Date currentDate= new Date();
 				this.setScSoneCrtdToDate(currentDate);
 				Date newDate= new Date();
 				newDate.setMonth(0);
@@ -2002,7 +2032,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCtContrMontrStatus()!=null)&&(this.getCtContrMontrStatus()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCtContrMontrStatusVar(ReportConst.CT_AMP_STATUS_EQ+this.getCtContrMontrStatus());
 			}
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFromDateVar(ReportConst.FL_AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
 			}
@@ -2046,7 +2076,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getSmReportType()!=null)&&(this.getSmReportType()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setReportTypeTotVar(ReportConst.AMP_SM_REPORT_TYPE_EQ+this.getSmReportType());
 			}
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFromDateVar(ReportConst.AMP_SM_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
 			}
@@ -2073,7 +2103,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){			
 			
 			
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFromDateVar(ReportConst.AMP_SM_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
 			}
@@ -2323,7 +2353,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getScPublishToDate()!=null)&&(this.getScPublishToDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScPublishToDateVar(ReportConst.AMP_PUB_TO_DT_EQ+outputDateFormat.format(this.getScPublishToDate()));
 			}
-			SimpleDateFormat outputDateFormat2 = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			SimpleDateFormat outputDateFormat2 = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if((this.getScSoneCrtdFromDate()!=null)&&(this.getScSoneCrtdFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScSoneCrtdFromDateVar(ReportConst.AMP_CREAT_FRM_DT_EQ+outputDateFormat2.format(this.getScSoneCrtdFromDate()));
 			}
@@ -2380,16 +2410,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getCmItemName());
 			}
 			if((this.getCmItemType()!=null)&&(this.getCmItemType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemTypeTotVar(ReportConst.AMP_ITM_TYPE_EQ+this.getCmItemType());
+				rptGenBean.setItemTypeTotVar(ReportConst.CM_AMP_ITEM_TYPE_EQ+this.getCmItemType());
 			}
 			if((this.getCmItemStatus()!=null)&&(this.getCmItemStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemStatusTotVar(ReportConst.AMP_ITM_STATUS_EQ+this.getCmItemStatus());
+				rptGenBean.setItemStatusTotVar(ReportConst.CM_AMP_ITEM_STATUS_EQ+this.getCmItemStatus());
 			}
 			if((this.getCmUnspscCode()!=null)&&(this.getCmUnspscCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscCodeTotVar(ReportConst.AMP_UNSPSC_CODE_EQ+this.getCmUnspscCode());
+				rptGenBean.setUnspscCodeTotVar(ReportConst.CM_AMP_UNSPSC_CODE_EQ+this.getCmUnspscCode());
 			}
 			if((this.getCmUnspscTitle()!=null)&&(this.getCmUnspscTitle()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getCmUnspscTitle());
+				rptGenBean.setUnspscTitleTotVar(ReportConst.CM_AMP_UNSPSC_TITLE_EQ+this.getCmUnspscTitle());
 			}			
 			if((this.getCmExtentionType()!=null)&&(this.getCmExtentionType()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ+this.getCmExtentionType());
@@ -2407,10 +2437,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setCmExtentionCodeVar(ReportConst.CM_AMP_EXT_CODE_EQ+this.getCmExtentionCode());
 			}
 			if((this.getCmCompanyName()!=null)&&(this.getCmCompanyName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCmCompanyName());
+				rptGenBean.setCompanyNameTotVar(ReportConst.CM_AMP_COMP_NAME_EQ+this.getCmCompanyName());
 			}
 			if((this.getCmRegistrationType()!=null)&&(this.getCmRegistrationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getCmRegistrationType());
+				rptGenBean.setRegistrationTypeTotVar(ReportConst.CM_AMP_REG_TYPE_EQ+this.getCmRegistrationType());
 			}
 			if((this.getCmItemCategory()!=null)&&(this.getCmItemCategory()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ+this.getCmItemCategory());
@@ -2418,7 +2448,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCmProofIdentity()!=null)&&(this.getCmProofIdentity()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getCmProofIdentity());
 			}
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFromDateVar(ReportConst.CM_AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
 			}
@@ -2536,12 +2566,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getFlItemName()!=null)&&(this.getFlItemName()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getFlItemName());
 			}			
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFromDateVar(ReportConst.FL_AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
 			}
-			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
+			//SimpleDateFormat outputDateFormat2 = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				
 				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
+				
 			}
 			if((this.getFlContractOrder()!=null)&&(this.getFlContractOrder()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFlContractOrderVar(ReportConst.FL_AMP_COTRACT_ORDER_EQ+this.getFlContractOrder());
