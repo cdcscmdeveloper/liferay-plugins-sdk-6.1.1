@@ -402,6 +402,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		
+		getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		
 		addPurchsedItems();
 		if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()>0) {
 			getManagedBean().setTierMap(new HashMap<Long,List<FlFulfilmentItemAddr>>());
