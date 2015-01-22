@@ -3720,4 +3720,32 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  } 
 		  return false;
 	}
+	
+	public void committeeFileUpload(FileUploadEvent event) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		UploadedFile item = event.getFile();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		getManagedBean().getContractVer().getCommitteDecisionAttachements().add(attachment);
+	}
+	
+	public void deleteCommitteAttachmentAction(int index) {
+		getManagedBean().getContractVer().getCommitteDecisionAttachements().remove(index);
+	}
 }
