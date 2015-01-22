@@ -120,12 +120,12 @@
 					cols="48" styleClass="ui-inputtextarea" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true"
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{contractRequestBackingBean.removeAddRow()}"
 					oncomplete="delAddrDlg.hide();" />
-				<p:commandButton value="No" 
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					partialSubmit="true"
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{contractRequestBackingBean.notRemoveAddressRow()}"
@@ -216,12 +216,12 @@
 			severity="alert" widgetVar="delItemDlg" closable="true"
 			appendToBody="true" header="Delete Confirmation">
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true"
 					action="#{contractRequestBackingBean.removeItemRow}"
 					update="itemDataTable"
 					oncomplete="delItemDlg.hide();" />
-				<p:commandButton value="No" 
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delItemDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>		
