@@ -3730,6 +3730,10 @@ public class SmApplicationBackingBean extends
 			updatePersonnelRecordStatus(getManagedBean().getSmAppl()
 					.getSmPersonnels());
 			saveOrUpdateAppl();
+			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
+					getManagedBean().getSmAppl(), getManagedBean()
+							.getPrevApprovedPersonnels(), getManagedBean()
+							.isDisAllowOwnerEdit());
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 				calculateCapital();
