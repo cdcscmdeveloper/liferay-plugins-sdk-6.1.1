@@ -153,7 +153,23 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			
 			// Need to call this as user may not click on summary menu
 			calInvSummary();
-			
+			// Check is it DAN exist
+			BigDecimal adjustedAmt = new BigDecimal(0);
+			for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
+				adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
+				if(adjustedAmt.doubleValue()>0) {
+					reqDTO.setDan(true);
+				} else if(adjustedAmt.doubleValue()<0) {
+					reqDTO.setCan(true);
+					Map<String, String> paramMap = new HashMap<String, String>();
+					paramMap.put(ReportConst.PARAM_DOC_NO, "TEMP_DOC_NO");
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					reqDTO.setReportUrl(generateReportURL(ReportConst.FL_NGEP_CREDIT_NOTE,paramMap));
+				}
+				if(reqDTO.isDan() && reqDTO.isCan()) {
+					break;
+				}
+			}
 			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -1081,23 +1097,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
 
-			// Check is it DAN exist
-			BigDecimal adjustedAmt = new BigDecimal(0);
-			for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
-				adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
-				if(adjustedAmt.doubleValue()>0) {
-					reqDTO.setDan(true);
-				} else if(adjustedAmt.doubleValue()<0) {
-					reqDTO.setCan(true);
-					Map<String, String> paramMap = new HashMap<String, String>();
-					paramMap.put(ReportConst.PARAM_DOC_NO, "TEMP_DOC_NO");
-					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-					reqDTO.setReportUrl(generateReportURL(ReportConst.FL_NGEP_CREDIT_NOTE,paramMap));
-				}
-				if(reqDTO.isDan() && reqDTO.isCan()) {
-					break;
-				}
-			}
 
 			reqDTO.setOutcome(outcome);
 			reqDTO.setInvoice(getManagedBean().getInvoice());
