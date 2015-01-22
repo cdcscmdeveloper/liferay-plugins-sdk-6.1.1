@@ -62,4 +62,35 @@
               </p:dataTable>
          </h:panelGrid>
      </p:panel>
+     <p:panel header="Attachement" toggleable="true" 
+        rendered="#{amendmentBackingBean.managedBean.contractVer.committeDecisionAttachements.size() > 0}">
+		<table style="width: 100%">
+				    <tr>
+			           <td class="TableFieldLeft" width="14%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			           <td>
+				            <p:dataGrid id="lampiranComitte1" value="#{amendmentBackingBean.managedBean.contractVer.committeDecisionAttachements}"
+					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+					           <table>
+						          <tr>
+							       <td rowspan="2"><h:graphicImage library="ep/images/design" name="#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							       <td width="5"></td>
+							       <td>
+								       <h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								       <h:outputText value="#{attachFile.createdDate}">
+									     <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+						   </h:outputText>
+						</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
+	</p:panel>
 </ui:composition>

@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" >
+   <p:panel header="Attachement" toggleable="true">
+		<table style="width: 100%">
+				    <tr>
+			           <td class="TableFieldLeft" width="14%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+			           <td class="TableFieldRight">
+				         <p:commandButton oncomplete="uploadComitteDlg.show();return false;" icon="iconAttachment" 
+				           disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
+					        update="lampiranComitte, uploadComitteDlg" value="#{lbl['lbl.ct.upload.attach.files']}" immediate="true"/>
+			           </td>
+		             </tr>
+		             <tr>
+			           <td/>
+			           <td>
+				            <p:dataGrid id="lampiranComitte" value="#{amendmentBackingBean.managedBean.contractVer.committeDecisionAttachements}"
+					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+					           <table>
+						          <tr>
+							       <td rowspan="2"><h:graphicImage library="ep/images/design" name="#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							       <td width="5"></td>
+							       <td>
+								       <h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
+								       <h:outputText value="#{attachFile.createdDate}">
+									     <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+						   </h:outputText>
+						</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+			 	 				<p:commandLink onclick="deleteComitteDlg.show();"  disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
+			 	 				   action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}">
+			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>
+			 	 			</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
+
+	<p:dialog id="uploadComitteDlg" widgetVar="uploadComitteDlg" 
+	   modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{amendmentBackingBean.committeeFileUpload}"
+			mode="advanced" id="CommitteUploadId"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
+			update="lampiranComitte" >
+		</p:fileUpload> 
+	</p:dialog>
+	
+	<p:dialog id="deleteComitteDlg" widgetVar="deleteComitteDlg"
+      	styleClass="screen-title" resizable="false" modal="true" width="330">  
+      	<h:panelGrid columns="3">
+ 			<p:graphicImage library="ep/images/design" name="exclamation.png"
+		     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+		   	<p:spacer width="10"/>
+            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
+     	</h:panelGrid>
+		<div class="ppRightBtn">
+	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiranComitte" process="@form" 
+	     	actionListener="#{amendmentBackingBean.deleteCommitteAttachmentAction(amendmentBackingBean.managedBean.attachFileIndex)}" 
+	     	onclick="deleteComitteDlg.hide();"/>
+		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteComitteDlg.hide();" type="button" />
+	   </div>
+ 	</p:dialog>	
+			
+		
+	</p:panel>		
+		
+</ui:composition>
