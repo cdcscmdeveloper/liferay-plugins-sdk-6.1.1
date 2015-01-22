@@ -104,6 +104,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isMultipleAward;
 	private boolean isOnlineBidding;
 	private boolean isMultipleLoi;
+	private boolean isItemRowSelect;
 	
 	private ScQtEvaluationResult shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -462,6 +463,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setMultipleLoi(boolean isMultipleLoi) {
 		this.isMultipleLoi = isMultipleLoi;
+	}
+
+	/**
+	 * @return the isItemRowSelect
+	 */
+	public boolean isItemRowSelect() {
+		return isItemRowSelect;
+	}
+
+	/**
+	 * @param isItemRowSelect the isItemRowSelect to set
+	 */
+	public void setItemRowSelect(boolean isItemRowSelect) {
+		this.isItemRowSelect = isItemRowSelect;
 	}
 
 	/**
