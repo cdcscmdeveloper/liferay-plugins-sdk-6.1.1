@@ -1,5 +1,9 @@
 package my.ep.web.integration.common;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
 public class IntegrationConstants {
 
 	// for PHIS
@@ -41,9 +45,28 @@ public class IntegrationConstants {
 	
 	public static final String OSB_HOST="192.168.62.17";
 	
+	public static final String SERVICE_HOST="192.168.120.14";
+	
 	public static final String EMPTY_TRING="";
 	
 	public static final String CONSUMER_ID = "EPP-001";
+	
+	public static final int DEFAULT_INT=0;
+	
+	public static final Date DEFAULT_DATE =new Date();
+	
+	public static final String VAVLUE_YES = "Y";
+	
+	public static final String VAVLUE_NO = "N";
+	
+	public static final String VAVLUE_NA = "N/A";
+	
+	public static final String VALUE_ONE ="1";
+	
+	public static final String VALUE_ZERO ="0";
+	
+	public final static Charset ENCODING = StandardCharsets.UTF_8;
+	
 	
 
 }
