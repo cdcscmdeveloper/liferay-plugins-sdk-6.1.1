@@ -17,7 +17,8 @@
 			<p:dataTable id="samebsvdtls" var="brfsitdtl"
 				value="#{bsvDetails.briefingList}" style="width:100%">
 				<ac:paginator for="samebsvdtls"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:25%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
@@ -36,7 +37,8 @@
 						<h:outputText value="#{brfsitdtl.location}" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
@@ -50,29 +52,38 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
 					style="width:5%;white-space: normal;">
+
 					<p:commandLink
+						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
 						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
 						process="@this">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
 
 					</p:commandLink>
+
+					<p:graphicImage library="ep/images/design" name="register.png"
+						rendered="#{!bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
+						value="/resources/ep/images/design/register.png" />
 				</p:column>
 			</p:dataTable>
+
 
 		</p:panel>
 	</ui:fragment>
 	<ui:fragment rendered="#{!bsvDetails.scQtBsv.sameBsv}">
 
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
-			<h:outputText value="* All Attandence required for Briefing" rendered="#{bsvDetails.scQtBsv.allBriefingReq}" />
-			
+			<h:outputText value="* All Attandence required for Briefing"
+				rendered="#{bsvDetails.scQtBsv.allBriefingReq}" />
+
 			<p:spacer width="30px;">
 			</p:spacer>
 			<p:dataTable id="brfsitdtl" var="brfsitdtl"
 				value="#{bsvDetails.briefingList}" style="width:100%">
 				<ac:paginator for="brfsitdtl"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:25%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
@@ -91,7 +102,8 @@
 						<h:outputText value="#{brfsitdtl.location}" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
@@ -107,12 +119,15 @@
 				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
 					style="width:5%;white-space: normal;">
 					<p:commandLink
+						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
 						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
 						process="@this">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
 					</p:commandLink>
-
+					<p:graphicImage library="ep/images/design" name="register.png"
+						rendered="#{!bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
+						value="/resources/ep/images/design/register.png" />
 				</p:column>
 			</p:dataTable>
 
@@ -123,7 +138,8 @@
 			<p:dataTable id="sitevisitDtls" var="sitevisitDtls"
 				value="#{bsvDetails.sitevisitList}" style="width:100%">
 				<ac:paginator for="sitevisitDtls"></ac:paginator>
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}" style="width:25%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					style="width:25%;white-space: normal;">
 					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
@@ -143,7 +159,8 @@
 					</p:commandLink>
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:18%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					style="width:18%;white-space: normal;">
 					<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
@@ -160,11 +177,15 @@
 				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
 					style="width:5%;white-space: normal;">
 					<p:commandLink
+						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(sitevisitDtls)}"
 						action="#{bsvAttendanceBackingBean.registerSupplier(sitevisitDtls)}"
 						process="@this">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
 					</p:commandLink>
+					<p:graphicImage library="ep/images/design" name="register.png"
+						rendered="#{!bsvAttendanceBackingBean.showRegistrationIcon(sitevisitDtls)}"
+						value="/resources/ep/images/design/register.png" />
 				</p:column>
 			</p:dataTable>
 

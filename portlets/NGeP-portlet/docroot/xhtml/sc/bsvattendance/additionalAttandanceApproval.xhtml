@@ -105,7 +105,7 @@
 			<p:column headerText="#{lbl['lbl.so.location']}" style="width:120px;">
 				<p:commandLink style="margin-right:20px;"
 					action="#{bsvAttendanceBackingBean.showLocationDtls(sitevisitDtls)}"
-					oncomplete="popupLoc.show()" update="@(.qtCount)">
+					oncomplete="popupLoc.show()" update="@(.locationpopup)">
 					<h:outputText value="#{sitevisitDtls.location}" />
 				</p:commandLink>
 
