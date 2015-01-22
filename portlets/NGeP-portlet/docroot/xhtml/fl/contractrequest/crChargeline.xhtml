@@ -42,8 +42,10 @@
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.coaValue}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<p:graphicImage library="ep/images/design" name="tick.png" rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue == 'Y' }"
+					value="/css/images/design/tick.png" title="#{chargeLineNode.coaValue}" />		
+				<p:graphicImage library="ep/images/design" name="reject.png" rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue != 'Y' }"
+					value="/css/images/design/reject.png" title="#{chargeLineNode.coaValue}" />					
 			</p:column>
 			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}">
 				<f:facet name="header" style="width:8%;">
