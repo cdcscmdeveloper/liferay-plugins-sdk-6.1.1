@@ -6,12 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import my.ep.web.integration.eperunding.BoardOfDirector;
 import my.ep.web.integration.eperunding.ConsultantProfile;
@@ -20,6 +23,7 @@ import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.gfmas.BankAccountInformation;
 import my.ep.web.integration.gfmas.GlAccount;
+import my.ep.web.integration.gfmas.MasterDataMaterialInfo;
 import my.ep.web.integration.gfmas.MasterDataVendor;
 import my.ep.web.integration.gfmas.ProgramActivity;
 import my.ep.web.integration.gfmas.Project;
@@ -409,8 +413,76 @@ public class FileUtility {
 			}
 		}
 	}
+	
 
-	public static String formatStringField(String input, int length, String align) {
+	public List<MasterDataVendor> masterDataVendorFileInPutStream(String filePath) {
+			String PROCESS_ID = "APOVE";
+			Path path = Paths.get(filePath);
+		    String line;
+		    List<MasterDataVendor> masterDataVendorList = new ArrayList<MasterDataVendor>();
+		    MasterDataVendor masterDataVendor = null;
+		    BankAccountInformation bankAccountInformation = null;
+			
+			  try (Scanner scanner =  new Scanner(path, IntegrationConstants.ENCODING.name())){
+				  
+				  FileUtility fileUtility = new FileUtility();
+			      while (scanner.hasNextLine()){
+			    	  line = scanner.nextLine();
+			    	  if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
+			    		  masterDataVendor = new MasterDataVendor();
+			    		 // masterDataVendor.setRecordType(Integer.parseInt(fileUtility.getValue(line,0 ,1 )));
+			    		  masterDataVendor.setRecordType(0);
+			    		  masterDataVendor.setAgencyId(fileUtility.getValue(line,1 ,6 ));
+			    		  masterDataVendor.setVendorIdCode(fileUtility.getValue(line,7 ,20 ));
+			    		  masterDataVendor.setEntityCode(fileUtility.getValue(line,27 ,4 ));
+			    		  masterDataVendor.setSapVendorCode(fileUtility.getValue(line,31 ,10 ));
+			    		  masterDataVendor.setName(fileUtility.getValue(line,41 ,35 ));
+			    		  masterDataVendor.setName2(fileUtility.getValue(line,76 ,35 ));
+			    		  masterDataVendor.setAddress(fileUtility.getValue(line,111 ,35 ));
+			    		  masterDataVendor.setAddress2(fileUtility.getValue(line,146 ,35 ));
+			    		  masterDataVendor.setAddress3(fileUtility.getValue(line,181 ,35 ));
+			    		  masterDataVendor.setPostCode(fileUtility.getValue(line,216 ,5 ));
+			    		  masterDataVendor.setCity(fileUtility.getValue(line,221 ,35 ));
+			    		  masterDataVendor.setRegion(fileUtility.getValue(line,256 ,3 ));
+			    		  masterDataVendor.setCountry(fileUtility.getValue(line,259 ,2 ));
+			    		  masterDataVendor.setTelephoneNo(fileUtility.getValue(line,261 ,15 ));
+			    		  masterDataVendor.setFaxNo(fileUtility.getValue(line,276 ,15 ));
+			    		  masterDataVendor.setEmailAddress(fileUtility.getValue(line,291 ,100 ));
+			    		//  masterDataVendor.setCurrency(fileUtility.getValue(line,391 ,5 ));
+//			    		  masterDataVendor.setPaymentTerm(fileUtility.getValue(line,396 ,4 ));
+//			    		  masterDataVendor.setMobileNo(fileUtility.getValue(line,400 ,15 ));
+			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
+			    		  bankAccountInformation = new BankAccountInformation();
+			    		  bankAccountInformation.setRecordType(1);
+			    		  bankAccountInformation.setRecordNumber(Integer.parseInt(fileUtility.getValue(line,1 ,3 )));
+			    		  bankAccountInformation.setBankCountry(fileUtility.getValue(line,4 ,2 ));
+			    		  bankAccountInformation.setBankKey(fileUtility.getValue(line,6 ,15 ));
+			    		  bankAccountInformation.setBankAccount(fileUtility.getValue(line,21 ,18 ));
+//			    		  bankAccountInformation.setCurrency(fileUtility.getValue(line,39 ,5 ));
+//			    		  bankAccountInformation.setAccountHolderName(fileUtility.getValue(line,44 ,60 ));
+//			    		  masterDataVendor.setBankAccountInformation(bankAccountInformation);
+			    		  masterDataVendorList.add(masterDataVendor);
+			    	  }
+			      }  
+			  } catch (IOException e) {
+				e.printStackTrace();
+			}
+			return masterDataVendorList;
+		}
+	
+	
+	// set values for masterData material Info
+	
+	public List<MasterDataMaterialInfo> setMasterDataMaterialInfo(){
+		
+		
+		return null;
+		
+	}
+	
+	
+
+	public String formatStringField(String input, int length, String align) {
 		String formatInput;
 		String formatInput1 = null;
 		//System.out.println("input.length() :"+input);
@@ -578,52 +650,52 @@ public class FileUtility {
 		Writer writer = null;
 
 		try {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath + fileName), "utf-8"));
 
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath + fileName), "utf-8"));
+			
+			if (content.size() != 0) {
+				StringBuffer line;
+				writer.write("         " + content.size() + " Rows Selected");
+				for (EquityOwner eOwner : content) {
+					line = new StringBuffer();
 
-			StringBuffer line = new StringBuffer();
-			writer.write("         " + content.size() + " Rows Selected");
-			for (EquityOwner eOwner : content) {
+					line.append(System.getProperty("line.separator"));
 
-				line.append(System.getProperty("line.separator"));
+					line.append(formatString(eOwner.getMOFNo()));
 
-				line.append(formatString(eOwner.getMOFNo()));
-
-				line.append(formatString(eOwner.getOwner().getIsEquityOwner()));
-				line.append(formatString(eOwner.getOwner().getName()));
-				line.append(formatString(eOwner.getOwner().getNewICNo()));
-				line.append(formatString(eOwner.getOwner().getPassport()));
-				line.append(formatString(eOwner.getOwner().getIsBumi()));
-				line.append(formatInt(eOwner.getOwner().getCitizenOf()));
-				line.append(formatString(eOwner.getOwner().getEquityValue()));
-				line.append(formatString(eOwner.getOwner()
+					line.append(formatString(eOwner.getOwner().getIsEquityOwner()));
+					line.append(formatString(eOwner.getOwner().getName()));
+					line.append(formatString(eOwner.getOwner().getNewICNo()));
+					line.append(formatString(eOwner.getOwner().getPassport()));
+					line.append(formatString(eOwner.getOwner().getIsBumi()));
+					line.append(formatInt(eOwner.getOwner().getCitizenOf()));
+					line.append(formatString(eOwner.getOwner().getEquityValue()));
+					line.append(formatString(eOwner.getOwner()
 						.getEquityPercentage()));
-				line.append(formatString(eOwner.getOwner().getRace()));
-				line.append(formatString(eOwner.getOwner().getDesignation()));
+					line.append(formatString(eOwner.getOwner().getRace()));
+					line.append(formatString(eOwner.getOwner().getDesignation()));
 
-				line.append(formatString(eOwner.getQualification().getMajorIn()));
-				line.append(formatString(eOwner.getQualification().getQualification()));
-				line.append(formatInt(eOwner.getQualification()
+					line.append(formatString(eOwner.getQualification().getMajorIn()));
+					line.append(formatString(eOwner.getQualification().getQualification()));
+					line.append(formatInt(eOwner.getQualification()
 						.getQualificationLevel()));
-				line.append(formatString(eOwner.getQualification()
+					line.append(formatString(eOwner.getQualification()
 						.getInstitute()));
-				line.append(formatString(eOwner.getQualification().getYear()));
-				line.append(formatString(eOwner.getQualification().getEducationField()));
+					line.append(formatString(eOwner.getQualification().getYear()));
+					line.append(formatString(eOwner.getQualification().getEducationField()));
 
-				line.append(formatString(eOwner.getProfBodyDetail()
+					line.append(formatString(eOwner.getProfBodyDetail()
 						.getProfBody()));
-				line.append(formatString(eOwner.getProfBodyDetail()
+					line.append(formatString(eOwner.getProfBodyDetail()
 						.getProfBodyNo()));
-				line.append(formatDateEperunding(eOwner.getProfBodyDetail()
+					line.append(formatDateEperunding(eOwner.getProfBodyDetail()
 						.getProfBodyExpiry()));
 
-				line.append(String.format("%s", eOwner.getExpertise()
-						.getCategoryClassification()));
+					line.append(String.format("%s", eOwner.getExpertise().getCategoryClassification()));
 
 				writer.write(line.toString());
 			}
-			System.out.println("line :" + line.toString());
+			}
 
 		} catch (IOException e) {
 
@@ -652,11 +724,12 @@ public class FileUtility {
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
-			StringBuffer line = new StringBuffer();
+			StringBuffer line;
+		
 			writer.write("         " + content.size() + " Rows Selected");
-			// line.append(System.getProperty("line.separator"));
 			for (ConsultantProfile cProfile : content) {
 
+				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 
 				line.append(formatString(cProfile.getCompanyName()));
@@ -725,7 +798,6 @@ public class FileUtility {
 				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
-			System.out.println("line :" + line.toString());
 
 		} catch (IOException e) {
 
@@ -752,10 +824,10 @@ public class FileUtility {
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
-			StringBuffer line = new StringBuffer();
+			StringBuffer line = null;
 			writer.write("         " + content.size() + " Rows Selected");
-			// line.append(System.getProperty("line.separator"));
 			for (Signatory signatory : content) {
+				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 				line.append(formatString(signatory.getMOFNo()));
 				line.append(formatString(signatory.getAuthorizedSignatory().getName()));
@@ -795,10 +867,11 @@ public class FileUtility {
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
-			StringBuffer line = new StringBuffer();
+			StringBuffer line;
 			writer.write("         " + content.size() + " Rows Selected");
 			// line.append(System.getProperty("line.separator"));
 			for (ManagementPersonnel mPersonnel : content) {
+				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 
 				line.append(formatString(mPersonnel.getMOFNo()));
@@ -849,7 +922,6 @@ public class FileUtility {
 				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
-			System.out.println("line :" + line.toString());
 
 		} catch (IOException e) {
 
@@ -877,10 +949,11 @@ public class FileUtility {
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
-			StringBuffer line = new StringBuffer();
+			StringBuffer line;
 			writer.write("         " + content.size() + " Rows Selected");
 			// line.append(System.getProperty("line.separator"));
 			for (BoardOfDirector bDirector : content) {
+				line = new StringBuffer();
 
 				line.append(System.getProperty("line.separator"));
 
@@ -923,7 +996,6 @@ public class FileUtility {
 				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
-			System.out.println("line :" + line.toString());
 
 		} catch (IOException e) {
 
@@ -1215,5 +1287,15 @@ public class FileUtility {
 			return file.getAbsolutePath();
 
 	}
+	
+	
+	  public String getValue(String line,int begin,int size){
+		  
+		  String result = line.substring(begin, begin+size);
+//		  char[] result = new char[size];
+//		  line.getChars(begin, begin+size, result, 0);
+		  return result.trim();
+	  }
+
 
 }
