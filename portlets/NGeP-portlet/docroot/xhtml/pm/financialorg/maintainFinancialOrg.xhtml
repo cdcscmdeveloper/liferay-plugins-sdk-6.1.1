@@ -29,41 +29,6 @@
 
 
 		</table>
-		<!-- <c:if
-			test="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
-			<ui:include src="/xhtml/pm/financialorg/financialOrgHeader.xhtml"></ui:include>
-		</c:if> -->
-		<table style="border:0; cellspacing:0; cellpadding:0; width:100%;" id="subMenu">
-			<tr>
-				<td width="20%" valign="top" class="sidemenutd">
-					<p:tabMenu id="tmFacMenu"
-						styleClass="sidemenu"
-						activeIndex="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
-						>
-						<p:menuitem value="#{lbl['lbl.pm.menu.general.finance']}" action="#{financialOrgBackingBean.changeMenuIndex(financialOrgBackingBean.generalInfoTab)}"
-							update="@form">
-							<f:param name="disableValidation" value="" />
-						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringMenu"
-							action="#{financialOrgBackingBean.changeMenuIndex(financialOrgBackingBean.factringBranchInfoTab)}"
-							disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}"
-							update="@form">
-							<f:param name="disableValidation" value="" />
-						</p:menuitem>
-
-					</p:tabMenu>
-				</td>
-				<td width="80%" valign="top">
-					<p:outputPanel id="opFactoringGeneral"
-						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.generalInfoTab}">
-						<ui:include src="generalFinancialdetails.xhtml" />
-					</p:outputPanel>
-					<p:outputPanel id="opFactoringBranch"
-						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.factringBranchInfoTab}">
-						<ui:include src="factoringBranch.xhtml" />
-					</p:outputPanel> 
-				</td>
-			</tr>
-		</table>
+		<ui:include src="generalFinancialdetails.xhtml" />
 	</ui:define>
 </ui:composition>
