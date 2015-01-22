@@ -12,10 +12,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		/*
 			This is to update grand total at footer without reloading the whole datatable
 			gtEstAmt - the class name of grand total field
-			gtEstAmt - the class name of calculated value in hidden field
+			hiddenGtEstAmt - the class name of calculated value in hidden field
 		*/
 		function updatePpFooter(){
-			document.getElementsByClassName('gtEstAmt')[0].innerHTML = document.getElementsByClassName('gtEstAmt')[0].value;
+			document.getElementsByClassName('gtEstAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtEstAmt')[0].value;
 			
 		}
 			
