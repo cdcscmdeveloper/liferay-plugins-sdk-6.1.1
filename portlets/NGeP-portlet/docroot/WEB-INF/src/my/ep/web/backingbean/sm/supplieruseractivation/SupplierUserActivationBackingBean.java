@@ -38,6 +38,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -97,7 +98,7 @@ public class SupplierUserActivationBackingBean extends
 		//log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(personnel != null && supplierProfile != null) {
+		if(personnel != null && supplierProfile != null && isPersonnelAlreadyDeactivate(personnel, supplierProfile.getSupplierId())) {
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
 				
 				long applDateInMilis = personnel.getCreatedDate().getTime();
@@ -329,9 +330,27 @@ public class SupplierUserActivationBackingBean extends
 				}
 			}
 		}catch(Exception ex){
-			log.info("Error retrieve other personnels:"+ex.getMessage());
+			log.info("Error in getOthersPersonnelWithSameIdentificationNoAndSupplierId:"+ex.getMessage());
 		}
 		return smPersonnelList;
+	}
+	
+	//syazwan: added to validate if pending activation personnel already deactivate in latest approved personnel
+	private boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel,Long supplierId){
+		boolean isAlreadyDeactivate = false;
+		try{
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
+			reqDTO.setSmSupplierId(supplierId);
+			PersonnelResDTO resDTO = personnelSO.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
+			if(resDTO.getSmPersonnel()!=null && (resDTO.getSmPersonnel().getEpRole()==null || StringUtils.isBlank(resDTO.getSmPersonnel().getEpRole()))){
+				isAlreadyDeactivate = true;
+			}
+		}catch(Exception ex){
+			log.info("Error in isPersonnelAlreadyDeactivate:"+ex.getMessage());
+		}
+		return isAlreadyDeactivate;
 	}
 
 	public String getTempPassword() {
