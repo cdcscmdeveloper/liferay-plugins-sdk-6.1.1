@@ -7,12 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-
+<p:panel id="ruleConfigId">
 	<div style="text-align: right; min-height: 40px;">
 
 		<h:panelGroup>
-			<p:commandButton value="#{lbl['lbl.cm.save']}"
-				action="#{ruleCatalogueBackingBean.saveRuleCatalog}" update="@form"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.cm.save']}" partialSubmit="true" process=":form:settingTabId:ruleConfigId"
+				update=":form:settingTabId:ruleConfigId"
+				action="#{ruleCatalogueBackingBean.saveRuleCatalog}"></p:commandButton>
 
 		</h:panelGroup>
 
@@ -120,9 +121,9 @@
 		</p:column>
 
 		<p:column width="15%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
 			<f:facet name="header">
-								
+				<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			                	</f:facet>
 			<p:inputText value="#{typeValueObj.fromValue}" size="15" id="fromValueId" disabled="#{!(typeValueObj.brandNew)}" >
@@ -132,7 +133,7 @@
 		</p:column>
 
 		<p:column width="15%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
 			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
@@ -206,11 +207,11 @@
 		<div style="text-align: right;">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
-				partialSubmit="true" process=":form:settingTabId"
-				update=":form:settingTabId"></p:commandButton>
+				partialSubmit="true" process="@this"
+				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 
 		</div>
 	</h:panelGroup>
-
+</p:panel>
 
 </ui:composition>
