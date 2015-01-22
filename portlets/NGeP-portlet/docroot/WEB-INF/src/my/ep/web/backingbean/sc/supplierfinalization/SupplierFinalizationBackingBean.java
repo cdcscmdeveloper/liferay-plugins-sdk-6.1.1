@@ -573,6 +573,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				scQtFinalization = supplierFinalizationInfo(scQtFinalization);
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 				if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(decisionTypeCode)) {
+					if (!this.getManagedBean().isForwardToBpk()) {
+						if (scQtFinalization.getReason() == null 
+								|| scQtFinalization.getReason().getReasonId() == null) {
+							throw new EpException(MessageConst.ERROR_760232);
+						}
+					}
+					
 					String recommendTypeCode = scQtFinalization.getRecommendedTypeId().getParameterCode();
 					if (recommendTypeCode.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
 						saveByPackage(scQtFinalization);
