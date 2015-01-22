@@ -578,6 +578,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 								|| scQtFinalization.getReason().getReasonId() == null) {
 							throw new EpException(MessageConst.ERROR_760232);
 						}
+						if (scQtFinalization.getHigherCommitte() == null 
+								|| scQtFinalization.getHigherCommitte().getParameterId() == null) {
+							throw new EpException(MessageConst.ERROR_760233);
+						}
 					}
 					
 					String recommendTypeCode = scQtFinalization.getRecommendedTypeId().getParameterCode();
