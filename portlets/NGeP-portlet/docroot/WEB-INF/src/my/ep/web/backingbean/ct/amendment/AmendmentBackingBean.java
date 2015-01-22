@@ -114,6 +114,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -477,6 +478,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			    }
 		  	    
+		  	    if (getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
+		  	    	getManagedBean().setSecretaryId(getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
+		  	    }
+		  	    
 		  	    if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {         
 		  	    	for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			        	// If effective date is after current date, status is still display old status
@@ -591,7 +596,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		     	contractSO = null;
 		     	reqDTO = null;
 		     	extResDTO =  null;
-		     	resDTO = null;			
+		     	resDTO = null;
 		    }
 	   }
 	
@@ -672,7 +677,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 		      try{
 			   
-		    	    chkComplyAP201Rule();	
+		    	    chkComplyAP201Rule();
+		    	    setSecretary();
 		    	    validateContractAmendment(action);
 			        reqDTO = new ContractReqDTO();
 			        String token = getFacesScopes().getBPMAuthenticationCtxToken();	
@@ -708,7 +714,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	                	if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size()==1) {
 	                		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	                	}
-	                }	
+	                }
 	       
 	               reqDTO.setUserRole(getUserRole());
 	               reqDTO.setTaskName(getManagedBean().getTaskName());
@@ -789,16 +795,56 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    }
 		  return null;		
 	   }
+	   
+	   private void setSecretary() {
+		   if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+	           if(!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
+		    	  if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
+		                  getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
+		    		  
+		    		  UserReqDTO userReqDTO = new UserReqDTO();
+	    			  IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	    			  
+		    		  if (!getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) &&
+		    				  !getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+		   			   	  
+		    			  userReqDTO.setRoleCode(getManagedBean().getCommittetype()+"_SECRETARY");	
+		   			   	  if(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null)
+		   			   		  userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
+					      else 
+					    	  userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		   			   	  
+		   			   	  List<PmUser> list = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+		   			   	  if (list.size() > 0) {
+		   			   		  getManagedBean().getContractVer().getCtAmendment().setSecretary(list.get(0));
+		   			   	  }
+		    		  }
+		    		  else {
+		    			  if(getManagedBean().getSecretaryId() != null) {
+		    					userReqDTO.setUserId(getManagedBean().getSecretaryId());
+		    					getManagedBean().getContractVer().getCtAmendment().setSecretary(userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser());
+		    				}
+		    		  }
+		    	  }	
+		    	  else {
+		    		  if (getManagedBean().getContractVer().getCtContract().getQuotationTender() != null) {
+		    			  CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		                   ICommitteSO committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+		                   committeReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
+		                   committeReqDTO.setIshigerCommitte(false);
+		                   CommitteResDTO committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(committeReqDTO);
+		                   if (committeResDTO.getHigherCommitteSecratary() != null) {
+		                	   getManagedBean().getContractVer().getCtAmendment().setSecretary(committeResDTO.getHigherCommitteSecratary());
+		                   }
+		    		  }
+		    	  }	
+		      }
+		   }
+	   }
 	 
 	   public void validateContractAmendment(String action) {
-		  
-		      ICommitteSO committeSO = null; 
-		   
 		       try {
-		    	           CommitteResDTO committeResDTO = null;
-		    	           getManagedBean().setAutoUpdate(true);		
-		    	           CommitteReqDTO conReqDTO = new CommitteReqDTO();
-				           committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ICommitteSO.class);
+		    	           getManagedBean().setAutoUpdate(true);	
 		       
 				          if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || 
 					                   (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
@@ -807,8 +853,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 			                  String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
 		 			                  String ap201Remark = getManagedBean().getContractVer().getAp201Remark().get(0).getRemark();
 		 			                  if((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (ap201Remark == null || ap201Remark.length() == 0)) {
-		 				                       RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-		 					                   throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+		 				              		RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+		 				              		throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		 			                  }
 			             }		   
 			   
@@ -817,22 +863,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					    		   && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 					    		   && !getManagedBean().getContractVer().getCtAmendment().isValueChange() && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
 					                  RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-					                  throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Type"});		 
+					                  throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				           }
 			   
 				          if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
-					                 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-						             throw new EpException(MessageConst.ERROR_100022, new String[]{"File Reference No."});			 
+					                 RequestContext.getCurrentInstance().addCallbackParam("epException",true);	
+						             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					       }
 				   
 				          if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
 					               RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-				                   throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Title"});
+				                   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			              }
 				   
 				         if(getManagedBean().getContractVer().getCtAmendment().getDescription() == null || getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
 					         RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-				             throw new EpException(MessageConst.ERROR_100022, new String[]{"Amendment Description"});
+				             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			              } 
 			   
 				         if((!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)  
@@ -881,41 +927,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   
 			           //Validation checking for committee
 			           if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && getManagedBean().getTaskId()==null) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			        	   	if(!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
-			        	        if (getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {    		
-						                 if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
-								                  getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
-								
-							                     if(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null)
-									                   conReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
-								                else 
-									                  conReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-								      
-												conReqDTO.setFinalizationSecratary(true);
-												conReqDTO.setCommitteeType(getManagedBean().getCommittetype());
-												committeResDTO =  committeSO.retrieveCommitteMembersByQtIdAndCommType(conReqDTO);
-								
-												if (committeResDTO.getCommMemberResultBean() == null  ||  committeResDTO.getCommMemberResultBean().getResultList().isEmpty()) {
-													RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-													// throw new Exception("Committee secretary not formed.");
-													throw new EpException(MessageConst.ERROR_750019);
-												}
-						          
-						                  }	else {
-						    		               if (getManagedBean().getContractVer().getCtContract().getQuotationTender() == null) {
-						    			                  RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-						    				               throw new EpException(MessageConst.ERROR_750020); 
-						    		               } else {
-			    			                        conReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
-			    			                        conReqDTO.setIshigerCommitte(false);
-			    			                        committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(conReqDTO);
-			    			                        if (committeResDTO.getHigherCommitteSecratary() == null) {
-			    				                           RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			    				                           throw new EpException(MessageConst.ERROR_750019);
-			    			                         }
-			    		                        }
-			    	                   }			    	
-			                    }
+			        	   	if(!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
+				                 if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
+						                  getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
+				                	 if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) ||
+						    				  getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				                		 if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+					                        	RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+					                        	throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					                        }
+				                	 }
+				                  }	
+				                 // For not Direct Nego and PBB/PBA
+				                 if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+		                        	RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+		                        	throw new EpException(MessageConst.ERROR_750019);
+	    	                   }
 			        	   	}
 			            } //Validation checking for committee End
 			    
@@ -948,7 +975,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 										    		  
 			    			                          } if (ctMeeting.getMeetingStatusId() == null) {
 										    				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-												    		throw new EpException(MessageConst.ERROR_100022, new String[]{"Meeting Status"});
+												    		throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.meeting.status", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 										    		
 			    			                          } if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 			    			                        	  if (ctMeeting.getMeetingStatusId().equals(ContractStatusConst.FA_MEETING_PENDING)) {
@@ -972,13 +999,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	                 if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 			    	                	   if(getManagedBean().getPbQcApproved() == null ||getManagedBean().getPbQcApproved().equalsIgnoreCase("")){
 			    	                		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-									    		throw new EpException(MessageConst.ERROR_100022, new String[]{"Decision"});
+									    		throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			    	                	   }
 			    	                	   
 			    	                	   if(getManagedBean().getContractVer().getCtAmendment().getPbqcJustification() == null
 			    	                			    ||getManagedBean().getContractVer().getCtAmendment().getPbqcJustification().equalsIgnoreCase("")){
 			    	                		   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-									    		throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			    	                		   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			    	                	   }
 			    	                }
 			    	
@@ -1028,9 +1055,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    } catch (NamingException e) {
 					e.printStackTrace();
 				} 
-		   finally {
-				     committeSO = null;
-			    }
 	   }
 	 
 	 public void changeField() {
@@ -1180,7 +1204,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 			        List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			        items = new SelectItem[list.size()+1];
-					items[0] = new SelectItem(null, "- Select One -");
+					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			      
 					for(PmOrgProfile orgProfile : list) 
 				      items[i++] = new SelectItem( orgProfile.getOrgCode(), orgProfile.getOrgName());       
@@ -1217,7 +1241,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
 			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
 		    items = new SelectItem[list.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		    for(PmFinancialOrg pmFinancialOrg : list) 
 				  items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());   
 	    }catch (Exception e) {
@@ -2482,7 +2506,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 				List<PmUser> list = resDTO.getUserList();
 			   items = new SelectItem[list.size()+1];
-		       items[0] = new SelectItem(null, "- Select One -");
+		       items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		       for(PmUser pmUser : list) {
 			       items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
 		       }
@@ -2504,7 +2528,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 				List<PmUser> list = resDTO.getUserList();
 			   items = new SelectItem[list.size()+1];
-		       items[0] = new SelectItem(null, "- Select One -");
+		       items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		       for(PmUser pmUser : list) {
 			       items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
 		       }
@@ -2606,7 +2630,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				
 				List<PmStatusDesc> list = resDTO.getStatusDescList();
 			   items = new SelectItem[list.size()+1];
-		       items[0] = new SelectItem(null, "- Select One -");
+		       items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		       for(PmStatusDesc statusDesc : list) {
 			       items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
 		       }
@@ -2813,7 +2837,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   CountryResDTO resDTO = countrySO.retrieveCountryList();
 			List<PmCountry> list = resDTO.getCountryList();
 		   items = new SelectItem[list.size()+1];
-	       items[0] = new SelectItem(null, "- Select One -");
+	       items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 	       for(PmCountry pmCountry : list) {
 		       items[i++] = new SelectItem(pmCountry.getCountryId(), pmCountry.getCountryName());
 	       }
@@ -3164,6 +3188,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
 				&& isGpkiRole()) {
 			chkComplyAP201Rule();
+    	    setSecretary();
 			validateContractAmendment(outcome);
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
@@ -3288,13 +3313,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			File pdfFile = new File(filePath);
 			if (!pdfFile.exists()) {
 				VelocityContext context = new VelocityContext();
-				String contractNo = "Contract Number";
 				int type = 0;
-				String supplierName ="Supplier Name";
-				String	sourcingTitle ="Sourcing Title";
-				String bondAmount ="Bond Amount";
-				String	expiryPeriod = "Expiry Period";
-				String	bondAmountWord = "Bond Amount Word"; 		
 				
 				context.put("type", type);
 				context.put("contractNo", "...........................");
@@ -3669,7 +3688,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    
 		    if(secratory) {
 		    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-	        	   throw new EpException(MessageConst.ERROR_100022,  new String[]{"Secretary"});
+	        	   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			 } 
 		    
 		    if(members) {
@@ -3747,5 +3766,41 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void deleteCommitteAttachmentAction(int index) {
 		getManagedBean().getContractVer().getCommitteDecisionAttachements().remove(index);
+	}
+	
+	public SelectItem[]  getSecretaryDropdownList() {
+		SelectItem[] items = null;     
+		try {
+			int i = 1;
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			List<Long> orgProfileIds = new ArrayList<Long>();
+			Long ownerOrgProfileId = getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId();
+			
+		   	OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		   	orgProfileReqDTO.setOrgProfileId(ownerOrgProfileId);
+		   	OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(orgProfileReqDTO);
+		   	
+		   	for (PmProfileGroup profileGroup : orgProfileResDTO.getProfileGroups()) {
+		   		orgProfileIds.add(profileGroup.getMainOrgProfile().getOrgProfileId());
+		   	}
+		   	
+		   	UserReqDTO reqDTO = new UserReqDTO();
+		   	reqDTO.setRoleCode(getManagedBean().getCommittetype()+"_SECRETARY");
+			orgProfileIds.add(ownerOrgProfileId);
+		   	reqDTO.setOrgProfileIds(orgProfileIds);
+		   	
+		   	UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+		   	List<PmUser> list = resDTO.getUserList();
+			items = new SelectItem[list.size()+1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for(PmUser user : list) {
+		       items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+			}
+		 } catch (Exception e) {
+	    	   e.printStackTrace();
+	    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	     }
+		return items;
 	}
 }

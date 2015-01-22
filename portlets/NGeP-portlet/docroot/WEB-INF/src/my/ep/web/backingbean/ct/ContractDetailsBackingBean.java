@@ -1137,7 +1137,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
 			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
 		    items = new SelectItem[list.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		    for(PmFinancialOrg pmFinancialOrg : list) 
 				  items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());   
 	    } catch (Exception e) {
@@ -1280,7 +1280,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		   OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 		   List<PmOrgProfile> list = resDTO.getOrgProfileList();
 		   items = new SelectItem[list.size()+1];
-	       items[0] = new SelectItem(null, "- Select One -");
+	       items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 	       for(PmOrgProfile orgProfile : list) {
 		       items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 	       }
@@ -1296,7 +1296,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try {
 			items = new SelectItem[3];
 			int i = 0;
-			items[i++] = new SelectItem(0,"- Select One -");
+			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.STATUS_COMPLETE,  ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.STATUS_INCOMPLETE,  ResourceBundleUtils.getMessage("lbl.ct.incomplete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			
@@ -1380,7 +1380,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					 int endYear = Integer.valueOf(enddate.substring(6, 10));
 		 
 					 selectItems = new ArrayList<SelectItem>();
-					 selectItems.add(new SelectItem(null, "-Select One-"));
+					 selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					 
 					 if((schedStartYear == 0) || (schedStartYear == startYear && schedStartYear != endYear)) { 
 					      for(int i=startMonth; i <= 12; i++) 
@@ -1440,7 +1440,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						 int endYear = Integer.valueOf(enddate.substring(6, 10));
 			 
 						 selectItems = new ArrayList<SelectItem>();
-						 selectItems.add(new SelectItem(null, "-Select One-"));
+						 selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 						 
 						  if(schedEndYear == endYear && schedEndYear == startYear) { 
 						      for(int i=startMonth; i <= endMonth; i++) 

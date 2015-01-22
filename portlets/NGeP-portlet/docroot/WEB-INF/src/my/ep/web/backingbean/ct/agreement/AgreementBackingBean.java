@@ -102,6 +102,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -518,7 +519,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			for (PmOrgProfile orgProfile : list) {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
 						orgProfile.getOrgName());
@@ -557,7 +558,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			     resDTO = userSO.retrieveUserListByRole(reqDTO);
 			     List<PmUser> list = resDTO.getUserList();
 			     items = new SelectItem[list.size() + 1];
-			     items[0] = new SelectItem(null, "- Select One -");
+			     items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			 	 Map<Long, PmUser> agencyUserMap =  new HashMap<Long, PmUser>();
 			     for (PmUser pmUser : list) {
 				     items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
@@ -596,7 +597,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 			             resDTO = supplierSearchSO.retrieveContractSigners(reqDTO);
 			             items = new SelectItem[resDTO.getPersonnels().size() + 1];
-			             items[0] = new SelectItem(null, "- Select One -");
+			             items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			             for(SmPersonnel personnel : resDTO.getPersonnels()) {
 				              items[i++] = new SelectItem(personnel.getName(),personnel.getName());
 				              getManagedBean().getSupplierUserMap().put(personnel.getName(),personnel);

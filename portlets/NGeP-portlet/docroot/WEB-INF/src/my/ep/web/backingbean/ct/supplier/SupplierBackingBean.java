@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -355,7 +354,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				            resDTO = supplierSO.retrieveSupplierContract(reqDTO);
 				            List<CtContract> list = resDTO.getContractList();
 				            items = new SelectItem[list.size() + 1];
-				            items[0] = new SelectItem(null, "- Select One -");
+				            items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				            for (CtContract obj : list) {
 				          	     items[i++] = new SelectItem(obj.getCurrentContractVer().getContractVerId(), obj.getContractNo());
 				        	} 
@@ -709,7 +708,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			            resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
 			            List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
 			            items = new SelectItem[list.size() + 1];
-			            items[0] = new SelectItem(null, "- Select One -");
+			            items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			            for (PmFinancialOrg pmFinancialOrg : list) {
 				             items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(),	pmFinancialOrg.getFinOrgName());
 				             getManagedBean().getFactoringCompMap().put(pmFinancialOrg.getFinancialOrgId(),	pmFinancialOrg.getFinOrgName());
@@ -742,7 +741,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				    if(resDTO.getFinancialBranchList() != null && !resDTO.getFinancialBranchList().isEmpty()){
 					         List<PmFinancialBranch> list = resDTO.getFinancialBranchList();
 					         items = new SelectItem[list.size() + 1];
-					         items[0] = new SelectItem(null, "- Select One -");
+					         items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 					         for (PmFinancialBranch pmFinancialBranch : list) {
 						          items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
 				             } getManagedBean().setFinancialBankBranch(items);
@@ -926,7 +925,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			                    	    } contractList.add(contractLoa);
 			                    	} 
 			                       items = new SelectItem[contractList.size()+1];
-				                    items[0] = new SelectItem(null, "- Select One -");
+				                    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				                    int i = 1;
 				                    for (CtContract ctLoalist : contractList) {  
 	                         	       items[i++] = new SelectItem(ctLoalist.getLoa().getLoaId(), ctLoalist.getLoa().getLoaNo());
