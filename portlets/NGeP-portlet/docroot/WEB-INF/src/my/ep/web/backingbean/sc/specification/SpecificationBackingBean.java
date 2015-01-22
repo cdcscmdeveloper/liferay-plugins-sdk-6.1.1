@@ -2459,21 +2459,38 @@ public class SpecificationBackingBean extends
 		int i = 0;
 		if (null != checklist && !checklist.isEmpty()) {
 			for (ScQtCheckList specChecklist : checklist) {
-
-				if (null != specChecklist.getScQtDoc()
-						&& specChecklist
-								.getScQtDoc()
-								.getTplSpecMaster()
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.COMMON_COMPONENT,
+										ITemplateSpecSO.class);
+						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+						specReqDTO.setSpecMaster(specChecklist.getScQtDoc()
+								.getTplSpecMaster());
+						specReqDTO
+								.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						TemplateSpecResDTO resDTO = templateSpecSO
+								.getTemplateMaster(specReqDTO);
+						/*
+						 * specChecklist.getScQtDoc().setTplSpecMaster(
+						 * resDTO.getSpecMaster());
+						 */
+						if (resDTO
+								.getSpecMaster()
 								.getItemTypeCode()
 								.getParameterCode()
 								.equalsIgnoreCase(
 										ParameterConst.ITEM_TYPE_SERVICE)) {
-					i++;
-					if (i >= 1) {
-						return true;
+							i++;
+							if (i >= 1) {
+								return true;
+							}
+						}
 					}
 				}
-
 			}
 		}
 
