@@ -312,43 +312,56 @@ public class SupplierUserActivationBackingBean extends
 		}
 	}
 	
-	//syazwan: added to retrieve others personnel with same identificationNo and supplierId
-	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(SmPersonnel smPersonnel,Long supplierId){
+	// syazwan: added to retrieve others personnel with same identificationNo
+	// and supplierId
+	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(
+			SmPersonnel smPersonnel, Long supplierId) {
 		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-		try{
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
+		try {
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
 			reqDTO.setDraftApplId(null);
-			PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
-			if(resDTO.getSmPersonnelList() != null && !resDTO.getSmPersonnelList().isEmpty()) {
-				for(SmPersonnel smPersonnelTmp:resDTO.getSmPersonnelList()){
-					if(smPersonnelTmp.getPersonnelId().compareTo(smPersonnel.getPersonnelId())!=0){
+			PersonnelResDTO resDTO = personnelSO
+					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
+			if (resDTO.getSmPersonnelList() != null
+					&& !resDTO.getSmPersonnelList().isEmpty()) {
+				for (SmPersonnel smPersonnelTmp : resDTO.getSmPersonnelList()) {
+					if (smPersonnelTmp.getPersonnelId().compareTo(
+							smPersonnel.getPersonnelId()) != 0) {
 						smPersonnelList.add(smPersonnelTmp);
 					}
 				}
 			}
-		}catch(Exception ex){
-			log.info("Error in getOthersPersonnelWithSameIdentificationNoAndSupplierId:"+ex.getMessage());
+		} catch (Exception ex) {
+			log.info("Error in getOthersPersonnelWithSameIdentificationNoAndSupplierId:"
+					+ ex.getMessage());
 		}
 		return smPersonnelList;
 	}
-	
-	//syazwan: added to validate if pending activation personnel already deactivate in latest approved personnel
-	private boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel,Long supplierId){
+
+	// syazwan: added to validate if pending activation personnel already
+	// deactivate in latest approved personnel
+	private boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel,
+			Long supplierId) {
 		boolean isAlreadyDeactivate = false;
-		try{
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
+		try {
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
-			PersonnelResDTO resDTO = personnelSO.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
-			if(resDTO.getSmPersonnel()!=null && (resDTO.getSmPersonnel().getEpRole()==null || StringUtils.isBlank(resDTO.getSmPersonnel().getEpRole()))){
+			PersonnelResDTO resDTO = personnelSO
+					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
+			if (resDTO.getSmPersonnel() != null
+					&& (resDTO.getSmPersonnel().getEpRole() == null || StringUtils
+							.isBlank(resDTO.getSmPersonnel().getEpRole()))) {
 				isAlreadyDeactivate = true;
 			}
-		}catch(Exception ex){
-			log.info("Error in isPersonnelAlreadyDeactivate:"+ex.getMessage());
+		} catch (Exception ex) {
+			log.info("Error in isPersonnelAlreadyDeactivate:" + ex.getMessage());
 		}
 		return isAlreadyDeactivate;
 	}
