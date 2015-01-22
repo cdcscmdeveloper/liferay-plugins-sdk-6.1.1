@@ -47,7 +47,7 @@
 						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
 						<td colspan="4" style="text-align: right">
 						<p:commandButton value="STOP FULFILMENT" update="@form"
-							action="#{flOrderBB.gpkiSignAction('STOP FULFILMENT')}">
+							action="#{flOrderBB.signingAction('STOP FULFILMENT')}">
 							<f:param name="actionName" value="STOP" />
 						</p:commandButton>
 					</td></c:if>
