@@ -156,9 +156,21 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
+// TODO: Auto-generated Javadoc
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
+	/**
+	 * Validate person limit.
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @param applType
+	 *            the appl type
+	 * @param applId
+	 *            the appl id
+	 * @return the int
+	 */
 	public static int validatePersonLimit(Long supplierId, String applType,
 			Long applId) {
 		log.info("******* Validate Personnel Count Start ******");
@@ -193,6 +205,19 @@ public class SmApplicationUtil {
 		return validPerCount;
 	}
 
+	/**
+	 * Gets the sm authorized personnel count vo.
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @param applType
+	 *            the appl type
+	 * @param applId
+	 *            the appl id
+	 * @param isAddNewPersonnel
+	 *            the is add new personnel
+	 * @return the sm authorized personnel count vo
+	 */
 	public static SmAuthorizedPersonnelCountVO getSmAuthorizedPersonnelCountVO(
 			Long supplierId, String applType, Long applId,
 			boolean isAddNewPersonnel) {
@@ -235,6 +260,13 @@ public class SmApplicationUtil {
 		return countVO;
 	}
 
+	/**
+	 * Valiate new category added.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return true, if successful
+	 */
 	public static boolean valiateNewCategoryAdded(
 			SmApplicationManagedBean managedBean) {
 		boolean addedNewCode = false;
@@ -265,6 +297,13 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Validate supporting docs.
+	 * 
+	 * @param suppDocs
+	 *            the supp docs
+	 * @return true, if successful
+	 */
 	public static boolean validateSupportingDocs(List<SmApplSupportDoc> suppDocs) {
 		boolean validSupportDocs = true;
 		int i = 0;
@@ -298,6 +337,11 @@ public class SmApplicationUtil {
 		return validSupportDocs;
 	}
 
+	/**
+	 * Gets the current supplier.
+	 * 
+	 * @return the current supplier
+	 */
 	public static SmSupplier getCurrentSupplier() {
 		SmSupplier smSupp = new SmSupplier();
 		try {
@@ -371,6 +415,13 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Gets the review application base page.
+	 * 
+	 * @param applicationType
+	 *            the application type
+	 * @return the review application base page
+	 */
 	public static String getReviewApplicationBasePage(String applicationType) {
 		String basePage = "";
 		if (applicationType != null) {
@@ -397,6 +448,13 @@ public class SmApplicationUtil {
 		return basePage;
 	}
 
+	/**
+	 * Gets the review application supplier base page.
+	 * 
+	 * @param applicationType
+	 *            the application type
+	 * @return the review application supplier base page
+	 */
 	public static String getReviewApplicationSupplierBasePage(
 			String applicationType) {
 		String basePage = "";
@@ -424,6 +482,13 @@ public class SmApplicationUtil {
 		return basePage;
 	}
 
+	/**
+	 * Gets the review application supplier profile base page.
+	 * 
+	 * @param applicationType
+	 *            the application type
+	 * @return the review application supplier profile base page
+	 */
 	public static String getReviewApplicationSupplierProfileBasePage(
 			String applicationType) {
 		String basePage = "";
@@ -451,10 +516,22 @@ public class SmApplicationUtil {
 		return basePage;
 	}
 
+	/**
+	 * Gets the application error page.
+	 * 
+	 * @return the application error page
+	 */
 	public static String getApplicationErrorPage() {
 		return "/xhtml/sm/userProfileMaintenance/outputMsg";
 	}
 
+	/**
+	 * Sets the appl pm status.
+	 * 
+	 * @param statusId
+	 *            the status id
+	 * @return the status res dto
+	 */
 	public static StatusResDTO setApplPmStatus(String statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(Long.parseLong(statusId));
@@ -470,6 +547,13 @@ public class SmApplicationUtil {
 		// }
 	}
 
+	/**
+	 * Assign supplier business type.
+	 * 
+	 * @param sup
+	 *            the sup
+	 * @return the string
+	 */
 	public static String assignSupplierBusinessType(SmSupplier sup) {
 		if (sup.getBusinessType()
 				.equalsIgnoreCase(
@@ -518,6 +602,17 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Manage equity limit.
+	 * 
+	 * @param personnel
+	 *            the personnel
+	 * @param businessTypeVal
+	 *            the business type val
+	 * @param shrHldrs
+	 *            the shr hldrs
+	 * @return true, if successful
+	 */
 	public static boolean manageEquityLimit(SmPersonnel personnel,
 			String businessTypeVal, List<SmPersonnel> shrHldrs) {
 		if (personnel.isEquityOwner()
@@ -539,6 +634,12 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Sets the navigation for resubmit appln.
+	 * 
+	 * @param applType
+	 *            the new navigation for resubmit appln
+	 */
 	public static void setNavigationForResubmitAppln(String applType) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -581,6 +682,15 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Validate ict cat code.
+	 * 
+	 * @param appl
+	 *            the appl
+	 * @param category
+	 *            the category
+	 * @return true, if successful
+	 */
 	public static boolean validateIctCatCode(SmAppl appl,
 			SmSupplierCategory category) {
 		boolean validCat = true;
@@ -675,6 +785,19 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Assign max review count.
+	 * 
+	 * @param appType
+	 *            the app type
+	 * @param applCatType
+	 *            the appl cat type
+	 * @param supplierType
+	 *            the supplier type
+	 * @param businessType
+	 *            the business type
+	 * @return the int
+	 */
 	public static int assignMaxReviewCount(String appType, String applCatType,
 			String supplierType, String businessType) {
 		int i = 0;
@@ -732,6 +855,17 @@ public class SmApplicationUtil {
 		return i;
 	}
 
+	/**
+	 * Validate basic info before save.
+	 * 
+	 * @param validSave
+	 *            the valid save
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateBasicInfoBeforeSave(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
@@ -827,6 +961,17 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Validate bank before save.
+	 * 
+	 * @param validSave
+	 *            the valid save
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateBankBeforeSave(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
@@ -875,6 +1020,17 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	/**
+	 * Validate category other desc.
+	 * 
+	 * @param validSave
+	 *            the valid save
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateCategoryOtherDesc(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
@@ -895,6 +1051,17 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	/**
+	 * Validate categories before save.
+	 * 
+	 * @param validSave
+	 *            the valid save
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateCategoriesBeforeSave(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
@@ -921,6 +1088,17 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	/**
+	 * Validate personnel before save.
+	 * 
+	 * @param validSave
+	 *            the valid save
+	 * @param currentTab
+	 *            the current tab
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return true, if successful
+	 */
 	public static boolean validatePersonnelBeforeSave(boolean validSave,
 			int currentTab, SmApplicationManagedBean managedBean) {
 		Locale locale = new FacesScopes().getUserLocale();
@@ -1125,6 +1303,14 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	/**
+	 * Sets the navigation back to current page.
+	 * 
+	 * @param currentTab
+	 *            the current tab
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	private static void setNavigationBackToCurrentPage(int currentTab,
 			SmApplicationManagedBean managedBean) {
 		managedBean.setTabActiveIndex(currentTab);
@@ -1132,6 +1318,15 @@ public class SmApplicationUtil {
 				managedBean.getSmAppl().getCurrentActiveTab());
 	}
 
+	/**
+	 * Validate equity owner count.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateEquityOwnerCount(
 			SmApplicationManagedBean managedBean, int currentTab) {
 		boolean validCount = true;
@@ -1162,6 +1357,15 @@ public class SmApplicationUtil {
 		return validCount;
 	}
 
+	/**
+	 * Validate equity company amount.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateEquityCompanyAmount(
 			SmApplicationManagedBean managedBean, int currentTab) {
 		boolean validAmt = true;
@@ -1205,6 +1409,15 @@ public class SmApplicationUtil {
 		return validAmt;
 	}
 
+	/**
+	 * Validate equity owner amount.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean validateEquityOwnerAmount(
 			SmApplicationManagedBean managedBean, int currentTab) {
 		Locale locale = new FacesScopes().getUserLocale();
@@ -1324,6 +1537,16 @@ public class SmApplicationUtil {
 		return validAmt;
 	}
 
+	/**
+	 * Validate paid captial amt.
+	 * 
+	 * @param setNavigationCurrentPage
+	 *            the set navigation current page
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 */
 	public static void validatePaidCaptialAmt(boolean setNavigationCurrentPage,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
@@ -1368,11 +1591,24 @@ public class SmApplicationUtil {
 		appl = null;
 	}
 
+	/**
+	 * Validate personnel i cand email liferay and pm.
+	 * 
+	 * @param smPersonnel
+	 *            the sm personnel
+	 */
 	public static void validatePersonnelICandEmailLiferayAndPm(
 			SmPersonnel smPersonnel) {
 
 	}
 
+	/**
+	 * Checks if is exist email in pm user.
+	 * 
+	 * @param email
+	 *            the email
+	 * @return true, if is exist email in pm user
+	 */
 	public static boolean isExistEmailInPmUser(String email) {
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IUserSO.class);
@@ -1390,6 +1626,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Checks if is exist user by identification no.
+	 * 
+	 * @param idNo
+	 *            the id no
+	 * @return true, if is exist user by identification no
+	 */
 	public static boolean isExistUserByIdentificationNo(String idNo) {
 		log.debug("*********retrieveUserByIdentificationNo**********" + idNo);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
@@ -1405,11 +1648,25 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Gets the company id.
+	 * 
+	 * @return the company id
+	 */
 	public static String getCompanyId() {
 		return EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.PORTAL_COMPANY_ID);
 	}
 
+	/**
+	 * Check valid user.
+	 * 
+	 * @param pers
+	 *            the pers
+	 * @param appl
+	 *            the appl
+	 * @return true, if successful
+	 */
 	public static boolean checkValidUser(SmPersonnel pers, SmAppl appl) {
 		boolean validUser = true;
 		if (pers.getIdentificationType().getParameterCode()
@@ -1458,6 +1715,12 @@ public class SmApplicationUtil {
 		return validUser;
 	}
 
+	/**
+	 * My identity verification.
+	 * 
+	 * @param per
+	 *            the per
+	 */
 	public static void myIdentityVerification(SmPersonnel per) {
 		String postCode = "";
 		for (SmPersonnelAddress addr : per.getSmPersonnelAddresses()) {
@@ -1500,6 +1763,15 @@ public class SmApplicationUtil {
 		// }
 	}
 
+	/**
+	 * Check valid bank.
+	 * 
+	 * @param bank
+	 *            the bank
+	 * @param appl
+	 *            the appl
+	 * @return true, if successful
+	 */
 	public static boolean checkValidBank(SmSupplierBank bank, SmAppl appl) {
 
 		boolean validBank = true;
@@ -1536,6 +1808,17 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Sets the verification values.
+	 * 
+	 * @param sec
+	 *            the sec
+	 * @param isVerifiedAll
+	 *            the is verified all
+	 * @param maxReviewCout
+	 *            the max review cout
+	 * @return the sm appl section review
+	 */
 	public static SmApplSectionReview setVerificationValues(
 			SmApplSectionReview sec, Boolean isVerifiedAll, int maxReviewCout) {
 
@@ -1574,6 +1857,13 @@ public class SmApplicationUtil {
 		return sec;
 	}
 
+	/**
+	 * Sets the default addr.
+	 * 
+	 * @param defCntry
+	 *            the def cntry
+	 * @return the sm address
+	 */
 	public static SmAddress setDefaultAddr(PmCountry defCntry) {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();
@@ -1591,6 +1881,15 @@ public class SmApplicationUtil {
 		return addr;
 	}
 
+	/**
+	 * Sets the default addr with same id.
+	 * 
+	 * @param defCntry
+	 *            the def cntry
+	 * @param addr
+	 *            the addr
+	 * @return the sm address
+	 */
 	public static SmAddress setDefaultAddrWithSameId(PmCountry defCntry,
 			SmAddress addr) {
 		PmCountry cntry = new PmCountry();
@@ -1613,6 +1912,15 @@ public class SmApplicationUtil {
 		return addr;
 	}
 
+	/**
+	 * Sets the default base office addr.
+	 * 
+	 * @param baseOffAddr
+	 *            the base off addr
+	 * @param facAddr
+	 *            the fac addr
+	 * @return the sm address
+	 */
 	public static SmAddress setDefaultBaseOfficeAddr(SmAddress baseOffAddr,
 			SmAddress facAddr) {
 		// SmAddress addr = new SmAddress();
@@ -1648,6 +1956,13 @@ public class SmApplicationUtil {
 		return facAddr;
 	}
 
+	/**
+	 * Gets the staff list.
+	 * 
+	 * @param app
+	 *            the app
+	 * @return the staff list
+	 */
 	public static List<SmStaffTotal> getStaffList(SmAppl app) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
 		log.info("****  getStaffList *********" + app.getSupplierType());
@@ -1671,6 +1986,15 @@ public class SmApplicationUtil {
 		return staffList;
 	}
 
+	/**
+	 * Gets the remarks by doc.
+	 * 
+	 * @param docType
+	 *            the doc type
+	 * @param docId
+	 *            the doc id
+	 * @return the remarks by doc
+	 */
 	public static SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
 		reqDTO.setDocId(docId);
@@ -1682,6 +2006,15 @@ public class SmApplicationUtil {
 		return resDTO;
 	}
 
+	/**
+	 * Gets the sm remarks by doc type and id.
+	 * 
+	 * @param docType
+	 *            the doc type
+	 * @param docId
+	 *            the doc id
+	 * @return the sm remarks by doc type and id
+	 */
 	public static String getSmRemarksByDocTypeAndId(String docType, Long docId) {
 		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType,
 				docId);
@@ -1696,6 +2029,12 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Check over lapping categories.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void checkOverLappingCategories(
 			SmApplicationManagedBean managedBean) {
 		managedBean.setOverLappedCategoryMsg("");
@@ -1719,6 +2058,15 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Valid l3 category code for over lapping.
+	 * 
+	 * @param catL3Id
+	 *            the cat l3 id
+	 * @param supplierId
+	 *            the supplier id
+	 * @return true, if successful
+	 */
 	public static boolean validL3CategoryCodeForOverLapping(Long catL3Id,
 			Long supplierId) {
 		log.info("*** Validate the code with directors and equi owners ***** ");
@@ -1746,6 +2094,12 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Validate supporting docs decision.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void validateSupportingDocsDecision(
 			SmApplicationManagedBean managedBean) {
 		for (SmApplSupportDoc doc : managedBean.getSmAppl()
@@ -1756,6 +2110,12 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Validate category and docs decision.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void validateCategoryAndDocsDecision(
 			SmApplicationManagedBean managedBean) {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
@@ -1779,6 +2139,17 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Check support docs validity.
+	 * 
+	 * @param validSave
+	 *            the valid save
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param currentTab
+	 *            the current tab
+	 * @return true, if successful
+	 */
 	public static boolean checkSupportDocsValidity(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		validSave = true;
@@ -1801,6 +2172,13 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	/**
+	 * Sets the cancellation sm attachment.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean objectthe new cancellation sm
+	 *            attachment
+	 */
 	public static void setCancellationSmAttachment(
 			SmApplicationManagedBean managedBean) {
 		SmAttachment attach = new SmAttachment();
@@ -1809,6 +2187,12 @@ public class SmApplicationUtil {
 		managedBean.setCancellationAttachment(attach);
 	}
 
+	/**
+	 * Assign active category list.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void assignActiveCategoryList(
 			SmApplicationManagedBean managedBean) {
 		List<SmSupplierCategory> catList = new ArrayList<>();
@@ -1828,6 +2212,12 @@ public class SmApplicationUtil {
 		managedBean.setActiveCategoryList(catList);
 	}
 
+	/**
+	 * Assign non personnel prof body list.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void assignNonPersonnelProfBodyList(
 			SmApplicationManagedBean managedBean) {
 		List<SmAssociationBody> assocBodyList = new ArrayList<SmAssociationBody>();
@@ -1846,6 +2236,17 @@ public class SmApplicationUtil {
 		managedBean.setNonPersonnelProfBodyList(assocBodyList);
 	}
 
+	/**
+	 * Sets the default staff values.
+	 * 
+	 * @param stf
+	 *            the stf
+	 * @param app
+	 *            the app
+	 * @param category
+	 *            the category
+	 * @return the sm staff total
+	 */
 	private static SmStaffTotal setDefaultStaffValues(SmStaffTotal stf,
 			SmAppl app, String category) {
 		stf.setRevNo(new BigDecimal(1));
@@ -1857,6 +2258,17 @@ public class SmApplicationUtil {
 		return stf;
 	}
 
+	/**
+	 * Gets the PO login id.
+	 * 
+	 * @param statusId
+	 *            the status id
+	 * @param secondaryStatusId
+	 *            the secondary status id
+	 * @param docId
+	 *            the doc id
+	 * @return the PO login id
+	 */
 	public static String getPOLoginId(Long statusId, Long secondaryStatusId,
 			Long docId) {
 		log.info("*** This is resubmit to get po ****** ");
@@ -1887,6 +2299,13 @@ public class SmApplicationUtil {
 		return poLogin;
 	}
 
+	/**
+	 * Check pending activation personnel list.
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @return true, if successful
+	 */
 	public static boolean checkPendingActivationPersonnelList(Long supplierId) {
 		boolean result = false;
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
@@ -1904,6 +2323,12 @@ public class SmApplicationUtil {
 		return result;
 	}
 
+	/**
+	 * Check equity owner update allowance.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
 		System.out
@@ -1933,6 +2358,15 @@ public class SmApplicationUtil {
 				+ managedBean.isDisAllowOwnerEdit());
 	}
 
+	/**
+	 * Validate before proceed.
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @param applicationType
+	 *            the application type
+	 * @return true, if successful
+	 */
 	public static boolean validateBeforeProceed(Long supplierId,
 			String applicationType) {
 		boolean result = false;
@@ -2011,6 +2445,13 @@ public class SmApplicationUtil {
 		return result;
 	}
 
+	/**
+	 * Checks for active transactions.
+	 * 
+	 * @param smSupplier
+	 *            the sm supplier
+	 * @return true, if successful
+	 */
 	public static boolean hasActiveTransactions(SmSupplier smSupplier) {
 
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
@@ -2025,6 +2466,13 @@ public class SmApplicationUtil {
 		return resDTO.isHasActiveTransaction();
 	}
 
+	/**
+	 * Check active sm appl for supp.
+	 * 
+	 * @param smSupplier
+	 *            the sm supplier
+	 * @return true, if successful
+	 */
 	public static boolean checkActiveSmApplForSupp(SmSupplier smSupplier) {
 		boolean activeSmAppl = false;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
@@ -2038,6 +2486,11 @@ public class SmApplicationUtil {
 		return activeSmAppl;
 	}
 
+	/**
+	 * Retrieve pm country list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmCountry> retrievePmCountryList() {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
@@ -2049,6 +2502,15 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Generate application num.
+	 * 
+	 * @param applType
+	 *            the appl type
+	 * @param suppType
+	 *            the supp type
+	 * @return the string
+	 */
 	public static String generateApplicationNum(String applType, String suppType) {
 		IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
@@ -2063,6 +2525,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve pm cert body list.
+	 * 
+	 * @param certType
+	 *            the cert type
+	 * @return the list
+	 */
 	public static List<PmCertBody> retrievePmCertBodyList(String certType) {
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
@@ -2079,6 +2548,11 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve pm race list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmRace> retrievePmRaceList() {
 		IRaceSO reqSO = (IRaceSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IRaceSO.class);
@@ -2090,6 +2564,11 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve pm prof body list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmCertBody> retrievePmProfBodyList() {
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
@@ -2115,6 +2594,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve parent category list for experience page.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the list
+	 */
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage(
 			SmApplicationManagedBean managedBean) {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -2131,6 +2617,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve parent category list for category codes page.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the list
+	 */
 	public static List<PmCategoryL1> retrieveParentCategoryListForCategoryCodesPage(
 			SmApplicationManagedBean managedBean) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -2173,6 +2666,15 @@ public class SmApplicationUtil {
 		return resDTO.getCategoryL1List();
 	}
 
+	/**
+	 * Retrieve experience child category list.
+	 * 
+	 * @param categoryL1Id
+	 *            the category l1 id
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the list
+	 */
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
 			long categoryL1Id, SmApplicationManagedBean managedBean) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -2185,6 +2687,15 @@ public class SmApplicationUtil {
 		return resDTO.getCategoryL2List();
 	}
 
+	/**
+	 * Retrieve child category list.
+	 * 
+	 * @param categoryL1Id
+	 *            the category l1 id
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the list
+	 */
 	public static List<PmCategoryL2> retrieveChildCategoryList(
 			long categoryL1Id, SmApplicationManagedBean managedBean) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -2226,6 +2737,15 @@ public class SmApplicationUtil {
 		return resDTO.getCategoryL2List();
 	}
 
+	/**
+	 * Retrieve experience sub child category list.
+	 * 
+	 * @param categoryL2Id
+	 *            the category l2 id
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the list
+	 */
 	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
 			long categoryL2Id, SmApplicationManagedBean managedBean) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -2238,6 +2758,15 @@ public class SmApplicationUtil {
 		return resDTO.getCategoryL3List();
 	}
 
+	/**
+	 * Retrieve sub child category list.
+	 * 
+	 * @param categoryL2Id
+	 *            the category l2 id
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the list
+	 */
 	public static List<PmCategoryL3> retrieveSubChildCategoryList(
 			long categoryL2Id, SmApplicationManagedBean managedBean) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
@@ -2283,6 +2812,15 @@ public class SmApplicationUtil {
 		return resDTO.getCategoryL3List();
 	}
 
+	/**
+	 * Check category pending transaction.
+	 * 
+	 * @param categories
+	 *            the categories
+	 * @param supplierId
+	 *            the supplier id
+	 * @return true, if successful
+	 */
 	public static boolean checkCategoryPendingTransaction(
 			List<SmSupplierCategory> categories, Long supplierId) {
 		log.info("*** Validate the code having active transaction ***** ");
@@ -2332,6 +2870,11 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve uom list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmUom> retrieveUomList() {
 		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IUomSO.class);
@@ -2343,6 +2886,11 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Gets the uom select items.
+	 * 
+	 * @return the uom select items
+	 */
 	public static List<SelectItem> getUomSelectItems() {
 		List<SelectItem> uomSelectItems = new ArrayList<SelectItem>();
 		List<PmUom> uomList = retrieveUomList();
@@ -2371,6 +2919,11 @@ public class SmApplicationUtil {
 		return uomSelectItems;
 	}
 
+	/**
+	 * Gets the race select items.
+	 * 
+	 * @return the race select items
+	 */
 	public static List<SelectItem> getRaceSelectItems() {
 		List<SelectItem> raceSelectItems = new ArrayList<SelectItem>();
 		List<PmRace> racesList = retrievePmRaceList();
@@ -2399,6 +2952,11 @@ public class SmApplicationUtil {
 		return raceSelectItems;
 	}
 
+	/**
+	 * Retrieve reject reason list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmReasonDesc> retrieveRejectReasonList() {
 		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IReasonSO.class);
@@ -2415,6 +2973,11 @@ public class SmApplicationUtil {
 	}
 
 	// @SuppressWarnings("unused")
+	/**
+	 * Retrieve registration status list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmStatusDesc> retrieveRegistrationStatusList() {
 		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
@@ -2428,6 +2991,11 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve edu field list.
+	 * 
+	 * @return the list
+	 */
 	public static List<PmEduField> retrieveEduFieldList() {
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		IEducationFieldSO reqSO = (IEducationFieldSO) BusinessDelegate
@@ -2440,6 +3008,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve pm country by id.
+	 * 
+	 * @param countryId
+	 *            the country id
+	 * @return the pm country
+	 */
 	public static PmCountry retrievePmCountryById(Long countryId) {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
@@ -2450,6 +3025,13 @@ public class SmApplicationUtil {
 		return resDTO.getPmCountry();
 	}
 
+	/**
+	 * Retrieve pm state by id.
+	 * 
+	 * @param stateId
+	 *            the state id
+	 * @return the pm state
+	 */
 	public static PmState retrievePmStateById(Long stateId) {
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2461,6 +3043,13 @@ public class SmApplicationUtil {
 		return resDTO.getPmState();
 	}
 
+	/**
+	 * Retrieve zone by state id.
+	 * 
+	 * @param stateId
+	 *            the state id
+	 * @return the pm zone
+	 */
 	public static PmZone retrieveZoneByStateId(Long stateId) {
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2479,6 +3068,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve pm city by id.
+	 * 
+	 * @param cityId
+	 *            the city id
+	 * @return the pm city
+	 */
 	public static PmCity retrievePmCityById(Long cityId) {
 		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2490,6 +3086,13 @@ public class SmApplicationUtil {
 		return resDTO.getPmCity();
 	}
 
+	/**
+	 * Retrieve pm dist by id.
+	 * 
+	 * @param distId
+	 *            the dist id
+	 * @return the pm district
+	 */
 	public static PmDistrict retrievePmDistById(Long distId) {
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2501,6 +3104,13 @@ public class SmApplicationUtil {
 		return resDTO.getPmDistrict();
 	}
 
+	/**
+	 * Retrive application by id.
+	 * 
+	 * @param applId
+	 *            the appl id
+	 * @return the mof registration res dto
+	 */
 	public static MofRegistrationResDTO retriveApplicationById(int applId) {
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
@@ -2523,6 +3133,13 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Gets the last approved appliction for supplier.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the last approved appliction for supplier
+	 */
 	public static SmAppl getLastApprovedApplictionForSupplier(
 			SmApplicationManagedBean managedBean) {
 		ISmApplRevisionSO revisionSO = null;
@@ -2548,6 +3165,13 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Sets the navigation for appl.
+	 * 
+	 * @param appType
+	 *            the app type
+	 * @return the string
+	 */
 	public static String setNavigationForAppl(String appType) {
 		String s = null;
 		switch (appType) {
@@ -2581,6 +3205,12 @@ public class SmApplicationUtil {
 		return s;
 	}
 
+	/**
+	 * Sets the navigation for appl tn c page.
+	 * 
+	 * @param applType
+	 *            the new navigation for appl tn c page
+	 */
 	public static void setNavigationForApplTnCPage(String applType) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String s = "";
@@ -2620,6 +3250,13 @@ public class SmApplicationUtil {
 				.handleNavigation(fc, null, s);
 	}
 
+	/**
+	 * Sets the exception navigation for appl.
+	 * 
+	 * @param appType
+	 *            the app type
+	 * @return the string
+	 */
 	public static String setExceptionNavigationForAppl(String appType) {
 		String s = null;
 		switch (appType) {
@@ -2648,6 +3285,13 @@ public class SmApplicationUtil {
 		return s;
 	}
 
+	/**
+	 * Sets the parameter const.
+	 * 
+	 * @param appType
+	 *            the app type
+	 * @return the string
+	 */
 	public static String setParameterConst(String appType) {
 		String s = null;
 		switch (appType) {
@@ -2676,6 +3320,15 @@ public class SmApplicationUtil {
 		return s;
 	}
 
+	/**
+	 * Gets the default sm appl supporting doc.
+	 * 
+	 * @param doc
+	 *            the doc
+	 * @param appl
+	 *            the appl
+	 * @return the default sm appl supporting doc
+	 */
 	public static SmApplSupportDoc getDefaultSmApplSupportingDoc(
 			PmDocument doc, SmAppl appl) {
 		SmApplSupportDoc docu = new SmApplSupportDoc();
@@ -2696,6 +3349,12 @@ public class SmApplicationUtil {
 	}
 
 	// SM Address Clone code start
+	/**
+	 * Clone share holder address.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void cloneShareHolderAddress(
 			SmApplicationManagedBean managedBean) {
 		managedBean.getShareHolderResdAddr().setSmAddress(
@@ -2716,6 +3375,19 @@ public class SmApplicationUtil {
 						managedBean.getDefPmCountry()));
 	}
 
+	/**
+	 * Clone as permenant addr.
+	 * 
+	 * @param srcAddr
+	 *            the src addr
+	 * @param desAddr
+	 *            the des addr
+	 * @param desPersAddr
+	 *            the des pers addr
+	 * @param cntry
+	 *            the cntry
+	 * @return the sm address
+	 */
 	private static SmAddress cloneAsPermenantAddr(SmAddress srcAddr,
 			SmAddress desAddr, SmPersonnelAddress desPersAddr, PmCountry cntry) {
 		SmAddress smAddress = new SmAddress();
@@ -2749,6 +3421,14 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Assign cloned address values.
+	 * 
+	 * @param desAddr
+	 *            the des addr
+	 * @param srcAddr
+	 *            the src addr
+	 */
 	private static void assignClonedAddressValues(SmAddress desAddr,
 			SmAddress srcAddr) {
 		desAddr.setAddress1(srcAddr.getAddress1());
@@ -2764,6 +3444,12 @@ public class SmApplicationUtil {
 		desAddr.getPmCity().setCityId(srcAddr.getPmCity().getCityId());
 	}
 
+	/**
+	 * Reset to default entity values.
+	 * 
+	 * @param baseEntity
+	 *            the base entity
+	 */
 	private static void resetToDefaultEntityValues(BaseEntity baseEntity) {
 		baseEntity.setBrandNew(true);
 		baseEntity.setModified(false);
@@ -2774,6 +3460,12 @@ public class SmApplicationUtil {
 		baseEntity.setChangedDate(null);
 	}
 
+	/**
+	 * Reset sm address child lists.
+	 * 
+	 * @param smAdd
+	 *            the sm add
+	 */
 	private static void resetSmAddressChildLists(SmAddress smAdd) {
 		smAdd.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
 		smAdd.setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
@@ -2786,6 +3478,13 @@ public class SmApplicationUtil {
 
 	// SM Address Clone code end
 
+	/**
+	 * Default sm appl.
+	 * 
+	 * @param appl
+	 *            the appl
+	 * @return the sm appl
+	 */
 	public static SmAppl defaultSmAppl(SmAppl appl) {
 		// = new SmAppl();
 		if (appl.getSmSupplierBranches() == null) {
@@ -2828,6 +3527,12 @@ public class SmApplicationUtil {
 		return appl;
 	}
 
+	/**
+	 * Calculate share holder percent.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void calculateShareHolderPercent(
 			SmApplicationManagedBean managedBean) {
 		log.info("********* calculateShareHolderPercent ********  ");
@@ -2971,6 +3676,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Retrieve pm parameter by id.
+	 * 
+	 * @param paramId
+	 *            the param id
+	 * @return the pm parameter
+	 */
 	public static PmParameter retrievePmParameterById(Long paramId) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2982,6 +3694,13 @@ public class SmApplicationUtil {
 		return resDTO.getPmParameter();
 	}
 
+	/**
+	 * Gets the sm supplier basic info vo.
+	 * 
+	 * @param bean
+	 *            the bean
+	 * @return the sm supplier basic info vo
+	 */
 	public static SmSupplierBasicInfoVO getSmSupplierBasicInfoVO(
 			SmApplicationManagedBean bean) {
 		SmSupplierBasicInfoVO smSupplierBasicInfoVO = bean.getBasicInfo();
@@ -3097,6 +3816,15 @@ public class SmApplicationUtil {
 		return smSupplierBasicInfoVO;
 	}
 
+	/**
+	 * Gets the active mof account.
+	 * 
+	 * @param smMofAccounts
+	 *            the sm mof accounts
+	 * @param suppType
+	 *            the supp type
+	 * @return the active mof account
+	 */
 	public static SmMofAccount getActiveMofAccount(
 			List<SmMofAccount> smMofAccounts, String suppType) {
 		SmMofAccount smMofAccount = new SmMofAccount();
@@ -3113,6 +3841,13 @@ public class SmApplicationUtil {
 		return smMofAccount;
 	}
 
+	/**
+	 * Gets the admin personnel.
+	 * 
+	 * @param smPersonnels
+	 *            the sm personnels
+	 * @return the admin personnel
+	 */
 	private static SmPersonnel getAdminPersonnel(List<SmPersonnel> smPersonnels) {
 		SmPersonnel smPersonnelRetVal = null;
 		if (smPersonnels != null) {
@@ -3131,6 +3866,12 @@ public class SmApplicationUtil {
 		return smPersonnelRetVal;
 	}
 
+	/**
+	 * Check allowed to approve.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void checkAllowedToApprove(
 			SmApplicationManagedBean managedBean) {
 		boolean validForApproval = false;
@@ -3191,6 +3932,13 @@ public class SmApplicationUtil {
 		managedBean.setAllowedToApprove(validForApproval);
 	}
 
+	/**
+	 * Validate site visit selections.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return true, if successful
+	 */
 	public static boolean validateSiteVisitSelections(
 			SmApplicationManagedBean managedBean) {
 		boolean valid = true;
@@ -3212,6 +3960,12 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Site visit data update.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void siteVisitDataUpdate(SmApplicationManagedBean managedBean) {
 		SmSvTask svTask = new SmSvTask();
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
@@ -3305,6 +4059,13 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Update site visit task.
+	 * 
+	 * @param svTask
+	 *            the sv task
+	 * @return true, if successful
+	 */
 	@SuppressWarnings("unused")
 	private static boolean updateSiteVisitTask(SmSvTask svTask) {
 		ISiteAssignSO siteSO = null;
@@ -3327,6 +4088,12 @@ public class SmApplicationUtil {
 		return updateSuccess;
 	}
 
+	/**
+	 * Show supp profile not ready msg.
+	 * 
+	 * @param fc
+	 *            the fc
+	 */
 	public static void showSuppProfileNotReadyMsg(FacesContext fc) {
 		fc.addMessage(
 				null,
@@ -3336,6 +4103,13 @@ public class SmApplicationUtil {
 								new FacesScopes().getUserLocale())));
 	}
 
+	/**
+	 * Gets the active mof num for supplier.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the active mof num for supplier
+	 */
 	public static String getActiveMofNumForSupplier(
 			SmApplicationManagedBean managedBean) {
 		String mofNum = "";
@@ -3354,6 +4128,12 @@ public class SmApplicationUtil {
 		return mofNum;
 	}
 
+	/**
+	 * Handle show or hide facility panels.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
 	public static void handleShowOrHideFacilityPanels(
 			SmApplicationManagedBean managedBean) {
 		managedBean.setShowDockyardPanel(false);
@@ -3384,6 +4164,15 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Checks if is personnel created in basic.
+	 * 
+	 * @param smPersonnel
+	 *            the sm personnel
+	 * @param supplierId
+	 *            the supplier id
+	 * @return true, if is personnel created in basic
+	 */
 	public static boolean isPersonnelCreatedInBasic(SmPersonnel smPersonnel,
 			Long supplierId) {
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
@@ -3396,6 +4185,16 @@ public class SmApplicationUtil {
 		return personnelSO.isPersonnelCreatedDuringBasicAccount(reqDTO);
 	}
 
+	/**
+	 * Manage and save new sm remarks.
+	 * 
+	 * @param docId
+	 *            the doc id
+	 * @param docType
+	 *            the doc type
+	 * @param remarks
+	 *            the remarks
+	 */
 	public static void manageAndSaveNewSmRemarks(Long docId, String docType,
 			String remarks) {
 		SmRemark remark = new SmRemark();
@@ -3406,6 +4205,12 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Save sm remarks.
+	 * 
+	 * @param remarks
+	 *            the remarks
+	 */
 	public static void saveSmRemarks(SmRemark remarks) {
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
 		reqDTO.setSmRemark(remarks);
@@ -3415,6 +4220,15 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Checks if is personnel bank signatory.
+	 * 
+	 * @param smPersonnel
+	 *            the sm personnel
+	 * @param smSupplierBanks
+	 *            the sm supplier banks
+	 * @return true, if is personnel bank signatory
+	 */
 	public static boolean isPersonnelBankSignatory(SmPersonnel smPersonnel,
 			List<SmSupplierBank> smSupplierBanks) {
 		boolean retVal = false;
@@ -3442,6 +4256,13 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Checks if selected personnel is point of contact for any of the listed branches.
+	 * 
+	 * @param smPersonnel - SmPersonnel object
+	 * @param smSupplierBranches - List of sm supplier branches
+	 * @return true, if is personnel is point of contact
+	 */
 	public static boolean isPersonnelBranchPointOfContact(
 			SmPersonnel smPersonnel, List<SmSupplierBranch> smSupplierBranches) {
 		boolean retVal = false;
@@ -3459,6 +4280,12 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
+	/**
+	 * Gets the list of previously approved personnel director owner.
+	 * 
+	 * @param smAppl - SmAppl object
+	 * @return the List<SmPersonnel> 
+	 */
 	public static List<SmPersonnel> getPrevApprovedPersonnelDirectorOwner(
 			SmAppl smAppl) {
 		List<SmPersonnel> prevApprovedPersonnelsDirectorOwner = new ArrayList<SmPersonnel>();
@@ -3490,6 +4317,16 @@ public class SmApplicationUtil {
 		return prevApprovedPersonnelsDirectorOwner;
 	}
 
+	/**
+	 * Sets the personnels previously approved director or equity owner.
+	 * 
+	 * @param smAppl
+	 *            - SmAppl object
+	 * @param prevApprovedPersonnels
+	 *            - List of SmPersonnel
+	 * @param disallowedOwnerEdit
+	 *            - boolean
+	 */
 	public static void setPersonnelsPrevApprovedDirectorEquityOwner(
 			SmAppl smAppl, List<SmPersonnel> prevApprovedPersonnels,
 			boolean disallowedOwnerEdit) {
@@ -3504,6 +4341,17 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Assign new tracking dairy values.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param actionDesc
+	 *            the action desc
+	 * @param status
+	 *            - PmStatus object
+	 * @return the SmTrackingDairyVO object
+	 */
 	public static SmTrackingDairyVO assignTrackingDairyValues(
 			SmApplicationManagedBean managedBean, String actionDesc,
 			PmStatus status) {
@@ -3522,6 +4370,14 @@ public class SmApplicationUtil {
 
 	}
 
+	/**
+	 * Sets the prev director equity owner.
+	 * 
+	 * @param personnels
+	 *            - List of personnels
+	 * @param personnelParam
+	 *            - SmPersonnel object
+	 */
 	private static void setPrevDirectorEquityOwner(
 			List<SmPersonnel> personnels, SmPersonnel personnelParam) {
 		personnelParam.setPrevApprovedDirector(false);
@@ -3537,6 +4393,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Gets the user role value.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the user role value as String
+	 */
 	private static String getUserRoleValue(SmApplicationManagedBean managedBean) {
 		if (managedBean.isPoUser()) {
 			return RoleCode.UPS_PO.value();
@@ -3566,8 +4429,10 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Reset deactivated personnel.
+	 * Reset deactivated personnels status in the application.
 	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
 	 * @return true, if successful
 	 */
 	public static boolean resetDeactivatedPersonnel(
@@ -3594,8 +4459,10 @@ public class SmApplicationUtil {
 	 * Sets the default base office address.
 	 * 
 	 * @param addr
-	 *            the addr
-	 * @return the sm address
+	 *            - SmAddress object
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return the SmAddress object
 	 */
 	public static SmAddress setDefaultBaseOfficeAddress(SmAddress addr,
 			SmApplicationManagedBean managedBean) {
@@ -3619,7 +4486,11 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Sets the application category selected.
+	 * Sets the application category selected i.e. special or normal.Used to set
+	 * the max sections count for review.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
 	 */
 	public static void setApplicationCategorySelected(
 			SmApplicationManagedBean managedBean) {
@@ -3638,7 +4509,10 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Sets the reg cat code confirm dialog.
+	 * Sets the register categor code confirm dialog text.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
 	 */
 	public static void setRegCatCodeConfirmDialog(
 			SmApplicationManagedBean managedBean) {
