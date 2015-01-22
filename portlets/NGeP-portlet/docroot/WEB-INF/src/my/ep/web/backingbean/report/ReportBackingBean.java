@@ -1691,7 +1691,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			getManagedBean().setRptGenBean(rptGenBean);			
 		}
 	}
-	public void retriveSVOfficerUser(){
+	/*public void retriveSVOfficerUser(){
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);		
 		List<String>  svoUser= reportSO.retriveSVOfficerUser(lngUserId);
 		stateLst = new ArrayList<SelectItem>();		
@@ -1700,7 +1700,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				log.info("SVOUSER LIST #########################"+svoUser.get(i));				
 			}
 		}
-	}
+	}*/
 	public void retrieveDates(){		
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		
