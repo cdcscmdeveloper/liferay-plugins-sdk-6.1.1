@@ -2456,16 +2456,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateVar(ReportConst.CM_AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
 			}
 			if((this.getCmEpNumber()!=null)&&(this.getCmEpNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setEpNumberTotVar(ReportConst.AMP_EP_NO_EQ+this.getCmEpNumber());
+				rptGenBean.setEpNumberTotVar(ReportConst.CM_AMP_EP_NO_EQ+this.getCmEpNumber());
 			}
 			if((this.getCmBusinessRegNo()!=null)&&(this.getCmBusinessRegNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setBusinessRegNoTotVar(ReportConst.AMP_BUSI_REG_NO_EQ+this.getCmBusinessRegNo());
+				rptGenBean.setBusinessRegNoTotVar(ReportConst.CM_AMP_BUSI_REG_NO_EQ+this.getCmBusinessRegNo());
 			}
 			if((this.getCmIcNumber()!=null)&&(this.getCmIcNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setIcNumberTotVar(ReportConst.AMP_IC_NO_EQ+this.getCmIcNumber());
+				rptGenBean.setIcNumberTotVar(ReportConst.CM_AMP_IC_NO_EQ+this.getCmIcNumber());
 			}
 			if((this.getCmMofNumber()!=null)&&(this.getCmMofNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getCmMofNumber());
+				rptGenBean.setMofNumberTotVar(ReportConst.CM_AMP_MOF_NO_EQ+this.getCmMofNumber());
 			}
 			if((this.getCmSupplOrAdmin()!=null)&&(this.getCmSupplOrAdmin()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCmSupplOrAdminVar(ReportConst.CM_AMP_SUPPOR_ADMIN_EQ+this.getCmSupplOrAdmin());
