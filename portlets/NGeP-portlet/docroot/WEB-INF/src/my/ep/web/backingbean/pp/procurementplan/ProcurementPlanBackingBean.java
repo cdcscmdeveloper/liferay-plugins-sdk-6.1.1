@@ -113,7 +113,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public ISearchBean<PmParameterDesc> getPlanTypeSearchBean() {
 		log.info("getPlanTypeSearchBean");
 		if (this.planTypeSearchBean == null) {
-			log.info("getPlanTypeSearchBean2");
 			this.planTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "somPlanType");
 		}
 
@@ -1812,7 +1811,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return boolean
 	 */
 	public boolean isRoleBPK(){
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_OFFICER.value());
 	}
 	
 	/**
