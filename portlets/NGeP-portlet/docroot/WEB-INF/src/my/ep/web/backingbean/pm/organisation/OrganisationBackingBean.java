@@ -146,7 +146,7 @@ public class OrganisationBackingBean extends
 		resetInitialOrg();
 		retrieveFinancialOrgList();
 		
-         //  this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
+           this.getManagedBean().getDeliveryAddress().setPmAddress(PmCommonUtil.getNewPmAddress());
 
 		if (id != null && id > 0) {
 			maintainOrganisation(id);
@@ -620,9 +620,9 @@ public class OrganisationBackingBean extends
 		
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			//getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
 			
-			//orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
+			orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
 			if (getManagedBean().getOrgProfile().isGroupOrg()) {
 				List<PmProfileGroup> profileGrp = getManagedBean()
@@ -882,11 +882,11 @@ public class OrganisationBackingBean extends
 		PmAddressType addressType = new PmAddressType();
 		addressType.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		addressType.setPmAddress(PmCommonUtil.getNewPmAddress());	
-		List<PmContact> contactList= new ArrayList<PmContact>();
+		/*List<PmContact> contactList= new ArrayList<PmContact>();
 		
 		getManagedBean().setDeliveryContactPerson(new PmContact());
 		contactList.add(this.getManagedBean().getDeliveryContactPerson());
-		addressType.setPmContacts(contactList);	
+		addressType.setPmContacts(contactList);*/	
 		getManagedBean().setDeliveryAddress(addressType);
 	}
 	public void updateDeliveryAddrDt() {	
@@ -912,13 +912,13 @@ public class OrganisationBackingBean extends
 			getManagedBean().getAddressTypesList().add(deliveryAddr);
 			deliveryAddr.setPmAddress(manualAddr);
 		}else{
-			for(int i =0; i < getManagedBean().getOrgProfile().getPmAddressTypes().size(); i++){
+			for(int i =0; i < getManagedBean().getAddressTypesList().size(); i++){
 				PmAddressType adressType = getManagedBean().getAddressTypesList().get(i);
 				PmAddress address = adressType.getPmAddress();
 				
 				
 				if( (!manualAddr.isBrandNew()) && address.getAddressId() != null && address.getAddressId().equals(manualAddr.getAddressId())){					
-					getManagedBean().getOrgProfile().getPmAddressTypes().set(i, adressType);
+					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
 				}else if(address.getAddressName().equals(manualAddr.getAddressName())){
 					getManagedBean().getAddressTypesList().set(i, adressType);
@@ -926,7 +926,7 @@ public class OrganisationBackingBean extends
 				}
 			}
 		}
-		//validateDeliveryAddress(manualAddr);
+		validateDeliveryAddress(manualAddr);
 			
 	}
 	
@@ -940,7 +940,7 @@ public class OrganisationBackingBean extends
 					addrExist = true;
 				}			
 				
-				if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
+				/*if (address.getPmContacts() != null && !address.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(address.getPmContacts().get(0));
 				} 
 				else{
@@ -950,25 +950,11 @@ public class OrganisationBackingBean extends
 				contact.setPmAddressType(address);
 				contactLst.add(contact);
 				address.setPmContacts(contactLst);
-				}
+				}*/
 			
 		}
-		if (!addrExist) {
+		if (!addrExist) {			
 			
-			/*this.getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());			
-			this.getManagedBean().setDeliveryContactPerson(new PmContact());			
-			List<PmContact> contactLst = new ArrayList<PmContact>();
-			PmAddressType addressType = new PmAddressType();
-			addressType.setAddressType(AddressType.DELIVERY_ADDRESS.value());
-			//addressType.setPmAddress(this.getManagedBean().getPmAddress());
-			addressType.setPmOrgProfile(this.getManagedBean().getOrgProfile());			
-			this.getManagedBean().getDeliveryContactPerson().setPmAddressType(addressType);
-			contactLst.add(this.getManagedBean().getOfficeContactPerson());
-			addressType.setPmContacts(contactLst);	
-			List<PmAddressType> orgAddressTypes = this.getManagedBean().getAddressTypesList();
-			orgAddressTypes.add(addressType);
-			this.getManagedBean().getOrgProfile().setPmAddressTypes(orgAddressTypes);*/	
-//
 			List<PmAddressType> orgAddressTypes = this.getManagedBean().getAddressTypesList();
 			//List<PmAddressType> orgAddressTypes = this.getManagedBean().getOrgProfile().getPmAddressTypes();
 			PmAddressType addressTypet = getManagedBean().getPmAddressType();
@@ -977,12 +963,12 @@ public class OrganisationBackingBean extends
 			getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());
 			PmAddress officeAddress = getManagedBean().getOfficeAddress();
 			addressTypet.setPmAddress(officeAddress);
-			List<PmContact> contactLst = new ArrayList<PmContact>();
+			/*List<PmContact> contactLst = new ArrayList<PmContact>();
 			getManagedBean().setDeliveryContactPerson(new PmContact());
 			PmContact contact = getManagedBean().getDeliveryContactPerson();
 			contact.setPmAddressType(addressTypet);
 			contactLst.add(contact);
-			addressTypet.setPmContacts(contactLst);
+			addressTypet.setPmContacts(contactLst);*/
 			addressTypet.setPmOrgProfile(this.getManagedBean().getOrgProfile());
 			//orgProfile.setPmAddressTypes(orgAddressTypes);
 			
