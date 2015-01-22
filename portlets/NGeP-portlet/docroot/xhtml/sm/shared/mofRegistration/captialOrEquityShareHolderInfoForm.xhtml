@@ -64,40 +64,40 @@
 						listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
 					<p:column selectionMode="multiple" width="5%"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit and shareBean.recordStatusFlg ne 8}" />
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}" />
 
 
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<h:outputText value="#{shareBean.name}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<h:outputText value="#{shareBean.identificationNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<h:outputText value="#{shareBean.sharePercentage}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}"
-						disabledSelection="#{shareBean.equityOwner and backingBean.managedBean.disAllowOwnerEdit}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<h:outputText value="#{shareBean.shareAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}"
-						disabledSelection="#{shareBean.prevApprovedEquityOwner}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<h:outputText value="#{lbl['lbl.txt.yes']}"
 							rendered="#{shareBean.bumiFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.label.action']}"
-						disabledSelection="#{shareBean.prevApprovedEquityOwner}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
 						<p:commandLink
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
