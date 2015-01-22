@@ -52,6 +52,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private String bsvZoneindx="0";
 	
 	
+	
 
 	public List<ScQtBsvRegistration> getBriefingRegistrationList() {
 		return briefingRegistrationList;
