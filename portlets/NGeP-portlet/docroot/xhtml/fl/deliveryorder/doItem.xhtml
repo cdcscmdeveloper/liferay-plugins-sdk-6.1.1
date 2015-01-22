@@ -362,12 +362,12 @@
 					cols="48" styleClass="ui-inputtextarea" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true"
 					update="lampiran"
 					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"
 					 />
-				<p:commandButton value="No" 
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delFileDlg.hide();" type="button" />
 			</div>
 		</p:dialog>
