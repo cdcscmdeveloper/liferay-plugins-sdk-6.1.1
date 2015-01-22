@@ -52,16 +52,16 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	private PmAddress pmAddress;
 	private PmContact contactPerson;
 
-	// Financial Branch
-	private PmFinancialBranch selectedPmFinancialBranch;
+//	// Financial Branch
+//	private PmFinancialBranch selectedPmFinancialBranch;
 	
-	// Financial Branch address
-	private PmAddress branchAddress;
-	private PmContact branchContactPerson;
+//	// Financial Branch address
+//	private PmAddress branchAddress;
+//	private PmContact branchContactPerson;
 
 
-	// Financial Branch Acc
-	private List<PmFinancialAcc> selectedPmFinancialBranchAcc;
+//	// Financial Branch Acc
+//	private List<PmFinancialAcc> selectedPmFinancialBranchAcc;
 	
 	// General
 	private boolean showParentMsg;
@@ -70,18 +70,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	private int selectedTabIndex;
 	private Date currentDate = new Date();
 
-//	private boolean byFactoring = true;
-//	private int activeIndex = 0;
-	
-	
-	
-	
-	/**
-	 * @return the branchAddress
-	 */
-	public PmAddress getBranchAddress() {
-		return branchAddress;
-	}
 
 	/**
 	 * @return the currentDate
@@ -97,28 +85,35 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 		this.currentDate = currentDate;
 	}
 
-	/**
-	 * @param branchAddress
-	 *            the branchAddress to set
-	 */
-	public void setBranchAddress(PmAddress branchAddress) {
-		this.branchAddress = branchAddress;
-	}
+//	/**
+//	 * @return the branchAddress
+//	 */
+//	public PmAddress getBranchAddress() {
+//		return branchAddress;
+//	}
 
-	/**
-	 * @return the branchContactPerson
-	 */
-	public PmContact getBranchContactPerson() {
-		return branchContactPerson;
-	}
-
-	/**
-	 * @param branchContactPerson
-	 *            the branchContactPerson to set
-	 */
-	public void setBranchContactPerson(PmContact branchContactPerson) {
-		this.branchContactPerson = branchContactPerson;
-	}
+//	/**
+//	 * @param branchAddress
+//	 *            the branchAddress to set
+//	 */
+//	public void setBranchAddress(PmAddress branchAddress) {
+//		this.branchAddress = branchAddress;
+//	}
+//
+//	/**
+//	 * @return the branchContactPerson
+//	 */
+//	public PmContact getBranchContactPerson() {
+//		return branchContactPerson;
+//	}
+//
+//	/**
+//	 * @param branchContactPerson
+//	 *            the branchContactPerson to set
+//	 */
+//	public void setBranchContactPerson(PmContact branchContactPerson) {
+//		this.branchContactPerson = branchContactPerson;
+//	}
 
 	public PmAddress getPmAddress() {
 		return pmAddress;
@@ -225,21 +220,21 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 		this.showParentMsg = showParentMsg;
 	}
 
-	/**
-	 * @return the selectedPmFinancialBranch
-	 */
-	public PmFinancialBranch getSelectedPmFinancialBranch() {
-		return selectedPmFinancialBranch;
-	}
-
-	/**
-	 * @param selectedPmFinancialBranch
-	 *            the selectedPmFinancialBranch to set
-	 */
-	public void setSelectedPmFinancialBranch(
-			PmFinancialBranch selectedPmFinancialBranch) {
-		this.selectedPmFinancialBranch = selectedPmFinancialBranch;
-	}
+//	/**
+//	 * @return the selectedPmFinancialBranch
+//	 */
+//	public PmFinancialBranch getSelectedPmFinancialBranch() {
+//		return selectedPmFinancialBranch;
+//	}
+//
+//	/**
+//	 * @param selectedPmFinancialBranch
+//	 *            the selectedPmFinancialBranch to set
+//	 */
+//	public void setSelectedPmFinancialBranch(
+//			PmFinancialBranch selectedPmFinancialBranch) {
+//		this.selectedPmFinancialBranch = selectedPmFinancialBranch;
+//	}
 
 	/**
 	 * @return the serviceTypes
@@ -270,20 +265,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 		this.enableUpdateStatus = enableUpdateStatus;
 	}
 
-	/**
-	 * @return the selectedPmFinancialBranchAcc
-	 */
-	public List<PmFinancialAcc> getSelectedPmFinancialBranchAcc() {
-		return selectedPmFinancialBranchAcc;
-	}
-
-	/**
-	 * @param selectedPmFinancialBranchAcc the selectedPmFinancialBranchAcc to set
-	 */
-	public void setSelectedPmFinancialBranchAcc(
-			List<PmFinancialAcc> selectedPmFinancialBranchAcc) {
-		this.selectedPmFinancialBranchAcc = selectedPmFinancialBranchAcc;
-	}
+//	/**
+//	 * @return the selectedPmFinancialBranchAcc
+//	 */
+//	public List<PmFinancialAcc> getSelectedPmFinancialBranchAcc() {
+//		return selectedPmFinancialBranchAcc;
+//	}
+//
+//	/**
+//	 * @param selectedPmFinancialBranchAcc the selectedPmFinancialBranchAcc to set
+//	 */
+//	public void setSelectedPmFinancialBranchAcc(
+//			List<PmFinancialAcc> selectedPmFinancialBranchAcc) {
+//		this.selectedPmFinancialBranchAcc = selectedPmFinancialBranchAcc;
+//	}
 
 	
 }
