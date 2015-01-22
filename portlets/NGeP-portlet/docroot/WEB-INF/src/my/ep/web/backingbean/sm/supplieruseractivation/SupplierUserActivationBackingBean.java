@@ -177,9 +177,7 @@ public class SupplierUserActivationBackingBean extends
 					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
 					
 					Long draftApplId = null;
-					IPersonnelSO personnelSO = null;
 					IMofRegistrationSO mofRegistrationSO = null;
-					List<SmPersonnel> personnelList = new ArrayList<SmPersonnel>();
 					try {
 						mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
 						MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
@@ -187,26 +185,13 @@ public class SupplierUserActivationBackingBean extends
 						MofRegistrationResDTO mofRegistrationResDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
 						if(mofRegistrationResDTO.getSmAppl() != null)
 							draftApplId = mofRegistrationResDTO.getSmAppl().getApplId();
-						personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
-						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-						reqDTO.setIdentificationNo(this.getManagedBean().getSmPersonnel().getIdentificationNo());
-						reqDTO.setSmSupplierId(Long.parseLong(supplierId));
-						reqDTO.setDraftApplId(draftApplId);
-						
-						//syazwan: temp disabled because seems didn't do anything
-//						PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
-//						if(resDTO.getSmPersonnel() != null) {
-//							personnelList = resDTO.getSmPersonnelList();
-//						}
 					} finally {
-						personnelSO = null;
+						
 					}
 					
 					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
 					
-					//syazwan: temp disabled because seems didn't do anything
-//					if(personnelList != null && personnelList.size() > 0)
-//						reqDTO.setSmPersonnels(personnelList);
+					reqDTO.setSmPersonnels(getOthersPersonnelWithSameIdentificationNoAndSupplierId(getManagedBean().getSmPersonnel(), Long.parseLong(supplierId)));
 					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					reqDTO.setLoginId(loginId);
@@ -324,6 +309,29 @@ public class SupplierUserActivationBackingBean extends
 		} catch (SystemException e) {
 			log.info(e.getMessage());
 		}
+	}
+	
+	//syazwan: added to retrieve others personnel with same identificationNo and supplierId
+	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(SmPersonnel smPersonnel,Long supplierId){
+		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+		try{
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
+			reqDTO.setSmSupplierId(supplierId);
+			reqDTO.setDraftApplId(null);
+			PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
+			if(resDTO.getSmPersonnelList() != null && !resDTO.getSmPersonnelList().isEmpty()) {
+				for(SmPersonnel smPersonnelTmp:resDTO.getSmPersonnelList()){
+					if(smPersonnelTmp.getPersonnelId().compareTo(smPersonnel.getPersonnelId())!=0){
+						smPersonnelList.add(smPersonnelTmp);
+					}
+				}
+			}
+		}catch(Exception ex){
+			log.info("Error retrieve other personnels:"+ex.getMessage());
+		}
+		return smPersonnelList;
 	}
 
 	public String getTempPassword() {
