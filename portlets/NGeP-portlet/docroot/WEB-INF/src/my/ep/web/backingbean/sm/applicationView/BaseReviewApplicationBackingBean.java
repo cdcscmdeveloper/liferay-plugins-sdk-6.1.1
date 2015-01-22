@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
@@ -21,6 +22,8 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -134,7 +137,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 
 		} catch (NullPointerException ne) {
-			log.error("***************Error init revision appl:"+ne.getMessage());
+			log.error("***************Error init revision appl:"
+					+ ne.getMessage());
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
 			applRevisionSO = null;
@@ -253,19 +257,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	private SmMofAccount getSingleSmMofAccount() {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+
 		SmMofAccount smMofAccount = new SmMofAccount();
 		try {
-			List<SmMofAccount> accounts = getManagedBean().getSmAppl()
-					.getSmSupplier().getSmMofAccounts();
-			for (SmMofAccount account : accounts) {
-				if (account.getSupplierType().equalsIgnoreCase(
-						getManagedBean().getSmAppl().getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
-					smMofAccount = account;
-					break;
-				}
-			}
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
+			reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+			MofAccountResDTO resDTO = mofAccountSO
+					.retriveMOFAccountBySupplierIdAndType(reqDTO);
+			smMofAccount = resDTO.getMofAccount();
 		} catch (Exception ex) {
 			log.error(ex.getMessage());
 		}
