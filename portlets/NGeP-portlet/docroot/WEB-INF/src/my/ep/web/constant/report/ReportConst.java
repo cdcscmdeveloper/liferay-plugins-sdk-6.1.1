@@ -510,6 +510,11 @@ public class ReportConst {
 	public static final String AMP_PREPORT_ID_EQ = "&PREPORTID=";
 	public static final String AMP_PUSER_ID_EQ = "&PUSER=";
 	//cm
+	
+	public static final String CM_AMP_MOF_NO_EQ = "&PSUPPMOFNO=";
+	public static final String CM_AMP_IC_NO_EQ = "&PICNO=";
+	public static final String CM_AMP_BUSI_REG_NO_EQ = "&PREGNO=";
+	public static final String CM_AMP_EP_NO_EQ = "&PEPNO=";
 	public static final String CM_AMP_TO_DATE_EQ = "&PTODATE=";
 	public static final String CM_AMP_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String CM_AMP_COMP_NAME_EQ = "&PCOMPANYNAME=";
