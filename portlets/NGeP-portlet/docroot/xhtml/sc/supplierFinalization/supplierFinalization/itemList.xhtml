@@ -37,7 +37,7 @@
 			<p:column style="width:2%;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblPanel])"
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
 								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
@@ -130,7 +130,7 @@
 				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
-					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" process="@this" />
+					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" process="@this" update="@this"/>
 	   			</p:selectOneMenu>
 				
 				<p:commandButton value="#{lbl['lbl.btn.apply']}" 
