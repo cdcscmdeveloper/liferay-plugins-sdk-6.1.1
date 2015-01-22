@@ -7930,7 +7930,7 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
 						.getEpRole().equalsIgnoreCase(
 								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
-						|| (personnel.isPrevApprovedDirector() && personnel
+						|| (personnel.isPrevApprovedDirector() || personnel
 								.isPrevApprovedEquityOwner())) {
 					iterator.remove();
 				}
