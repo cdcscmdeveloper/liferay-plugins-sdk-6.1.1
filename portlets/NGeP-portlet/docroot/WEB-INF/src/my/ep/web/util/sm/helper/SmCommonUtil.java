@@ -63,9 +63,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+// TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 
+	/**
+	 * Hash string.
+	 *
+	 * @param str the str
+	 * @return the string
+	 */
 	public static String hashString(String str) {
 
 		MessageDigest md = null;
@@ -81,6 +88,12 @@ public class SmCommonUtil {
 		return new String(Hex.encodeHex(shaDig));
 	}
 
+	/**
+	 * Md5.
+	 *
+	 * @param str the str
+	 * @return the string
+	 */
 	public static String md5(String str) {
 
 		MessageDigest md = null;
@@ -96,6 +109,13 @@ public class SmCommonUtil {
 		return new String(Hex.encodeHex(md5Dig));
 	}
 
+	/**
+	 * Retrieve parameter desc list.
+	 *
+	 * @param paramType the param type
+	 * @param lang the lang
+	 * @return the list
+	 */
 	public static List<PmParameterDesc> retrieveParameterDescList(
 			String paramType, String lang) {
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -108,6 +128,12 @@ public class SmCommonUtil {
 		return resDTO.getParameterDescList();
 	}
 
+	/**
+	 * Retrieve country by country code.
+	 *
+	 * @param countryCode the country code
+	 * @return the pm country
+	 */
 	public static PmCountry retrieveCountryByCountryCode(String countryCode) {
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode(countryCode);
@@ -119,6 +145,14 @@ public class SmCommonUtil {
 		return resDTO.getPmCountry();
 	}
 
+	/**
+	 * Retrieve pm status list.
+	 *
+	 * @param moduleCode the module code
+	 * @param docType the doc type
+	 * @param lang the lang
+	 * @return the list
+	 */
 	public static List<PmStatusDesc> retrievePmStatusList(String moduleCode,
 			String docType, String lang) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
@@ -132,6 +166,12 @@ public class SmCommonUtil {
 		return resDTO.getStatusDescList();
 	}
 
+	/**
+	 * Conver pm status list to map.
+	 *
+	 * @param pmStatusDescLs the pm status desc ls
+	 * @return the map
+	 */
 	public static Map<Long, PmStatusDesc> converPmStatusListToMap(
 			List<PmStatusDesc> pmStatusDescLs) {
 		Map<Long, PmStatusDesc> statDescMap = new HashMap<Long, PmStatusDesc>();
@@ -141,6 +181,14 @@ public class SmCommonUtil {
 		return statDescMap;
 	}
 
+	/**
+	 * Retrieve parameter by type and code.
+	 *
+	 * @param paramType the param type
+	 * @param paramCode the param code
+	 * @param lang the lang
+	 * @return the pm parameter
+	 */
 	public static PmParameter retrieveParameterByTypeAndCode(String paramType,
 			String paramCode, String lang) {
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -154,6 +202,12 @@ public class SmCommonUtil {
 		return resDTO.getPmParameter();
 	}
 
+	/**
+	 * Gets the param description by language and pm parameter.
+	 *
+	 * @param pmParameter the pm parameter
+	 * @return the param description by language and pm parameter
+	 */
 	public static String getParamDescriptionByLanguageAndPmParameter(
 			PmParameter pmParameter) {
 		String desc = "";
@@ -176,6 +230,12 @@ public class SmCommonUtil {
 
 	}
 
+	/**
+	 * Retrieve business nature by id.
+	 *
+	 * @param bizId the biz id
+	 * @return the pm business nature
+	 */
 	public static PmBusinessNature retrieveBusinessNatureById(Long bizId) {
 		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 		reqDTO.setBusinessNatureId(bizId);
@@ -188,6 +248,12 @@ public class SmCommonUtil {
 		return resDTO.getBusinessNature();
 	}
 
+	/**
+	 * Gets the appl type desc.
+	 *
+	 * @param applType the appl type
+	 * @return the appl type desc
+	 */
 	public static String getApplTypeDesc(String applType) {
 		log.info("--------getApplTypeDesc start--------" + applType);
 		String apType = "";
@@ -227,6 +293,14 @@ public class SmCommonUtil {
 		return apType;
 	}
 
+	/**
+	 * Calc personnel list count.
+	 *
+	 * @param personnelList the personnel list
+	 * @param stfTotals the stf totals
+	 * @param supplierType the supplier type
+	 * @return the sm personnle calc vo
+	 */
 	public static SmPersonnleCalcVO calcPersonnelListCount(
 			List<SmPersonnel> personnelList, List<SmStaffTotal> stfTotals,
 			String supplierType) {
@@ -243,6 +317,12 @@ public class SmCommonUtil {
 		return personVO;
 	}
 
+	/**
+	 * Retrieve pm country by id.
+	 *
+	 * @param countryId the country id
+	 * @return the pm country
+	 */
 	private static PmCountry retrievePmCountryById(Long countryId) {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
@@ -253,6 +333,15 @@ public class SmCommonUtil {
 		return resDTO.getPmCountry();
 	}
 
+	/**
+	 * Calc sum up by personnel.
+	 *
+	 * @param per the per
+	 * @param persCalcVo the pers calc vo
+	 * @param supplierType the supplier type
+	 * @param locale the locale
+	 * @return the sm personnle calc vo
+	 */
 	private static SmPersonnleCalcVO calcSumUpByPersonnel(SmPersonnel per,
 			SmPersonnleCalcVO persCalcVo, String supplierType, Locale locale) {
 		per.setRoleName("");
@@ -418,6 +507,11 @@ public class SmCommonUtil {
 
 	}
 
+	/**
+	 * Calcute staff sub total summary.
+	 *
+	 * @param persCalcVo the pers calc vo
+	 */
 	private static void calcuteStaffSubTotalSummary(SmPersonnleCalcVO persCalcVo) {
 		persCalcVo.setEquityOwnerTotalCnt(persCalcVo.getEquiOwnrBumiCnt()
 				+ persCalcVo.getEquiOwnrNonBumiCnt()
@@ -440,6 +534,15 @@ public class SmCommonUtil {
 				+ persCalcVo.getProfFrgEnterCnt());
 	}
 
+	/**
+	 * Sets the personnel count summary.
+	 *
+	 * @param per the per
+	 * @param bumiCount the bumi count
+	 * @param nonBumCount the non bum count
+	 * @param frgCount the frg count
+	 * @param persCalcVo the pers calc vo
+	 */
 	private static void setPersonnelCountSummary(SmPersonnel per,
 			int bumiCount, int nonBumCount, int frgCount,
 			SmPersonnleCalcVO persCalcVo) {
@@ -462,11 +565,25 @@ public class SmCommonUtil {
 		persCalcVo.getSummaryCountVO().setFrgCount(frgCount);
 	}
 
+	/**
+	 * Reset all personnel count.
+	 *
+	 * @param stfTotalList the stf total list
+	 * @param persCalcVo the pers calc vo
+	 * @return the sm personnle calc vo
+	 */
 	public static SmPersonnleCalcVO resetAllPersonnelCount(
 			List<SmStaffTotal> stfTotalList, SmPersonnleCalcVO persCalcVo) {
 		return assignEnteredStaffValues(stfTotalList, persCalcVo);
 	}
 
+	/**
+	 * Assign entered staff values.
+	 *
+	 * @param stfTotalList the stf total list
+	 * @param persCalcVo the pers calc vo
+	 * @return the sm personnle calc vo
+	 */
 	public static SmPersonnleCalcVO assignEnteredStaffValues(
 			List<SmStaffTotal> stfTotalList, SmPersonnleCalcVO persCalcVo) {
 		for (SmStaffTotal stf : stfTotalList) {
@@ -507,6 +624,13 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
+	/**
+	 * Calculate bumi percentage totals.
+	 *
+	 * @param persCalcVo the pers calc vo
+	 * @param personnelList the personnel list
+	 * @return the sm personnle calc vo
+	 */
 	public static SmPersonnleCalcVO calculateBumiPercentageTotals(
 			SmPersonnleCalcVO persCalcVo, List<SmPersonnel> personnelList) {
 		calcuteStaffSubTotalSummary(persCalcVo);
@@ -567,6 +691,18 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
+	/**
+	 * Display bumi recommend note.
+	 *
+	 * @param smSupplierBankList the sm supplier bank list
+	 * @param persCalcVo the pers calc vo
+	 * @param outputPage the output page
+	 * @param applType the appl type
+	 * @param supplType the suppl type
+	 * @param bumiPercentage the bumi percentage
+	 * @param supplUser the suppl user
+	 * @return the string
+	 */
 	public static String displayBumiRecommendNote(
 			List<SmSupplierBank> smSupplierBankList,
 			SmPersonnleCalcVO persCalcVo, String outputPage, String applType,
@@ -620,6 +756,12 @@ public class SmCommonUtil {
 		return persCalcVo.getBumiRecommendNote();
 	}
 
+	/**
+	 * Sets the all bank signatories non bumi.
+	 *
+	 * @param persCalcVo the pers calc vo
+	 * @param smSupplierBankList the sm supplier bank list
+	 */
 	private static void setAllBankSignatoriesNonBumi(
 			SmPersonnleCalcVO persCalcVo,
 			List<SmSupplierBank> smSupplierBankList) {
@@ -643,6 +785,12 @@ public class SmCommonUtil {
 		persCalcVo.setNonBumiSignatoryBank(bankSignatoryNonBumi);
 	}
 
+	/**
+	 * Gets the bank signatory non bumi.
+	 *
+	 * @param smSupplierBank the sm supplier bank
+	 * @return the bank signatory non bumi
+	 */
 	private static String getBankSignatoryNonBumi(SmSupplierBank smSupplierBank) {
 		String bankRetVal = "";
 
@@ -664,6 +812,13 @@ public class SmCommonUtil {
 		return bankRetVal;
 	}
 
+	/**
+	 * Sets the bumi status.
+	 *
+	 * @param persCalcVo the pers calc vo
+	 * @param bumiPercentage the bumi percentage
+	 * @return the sm personnle calc vo
+	 */
 	private static SmPersonnleCalcVO setBumiStatus(
 			SmPersonnleCalcVO persCalcVo, BigDecimal bumiPercentage) {
 		persCalcVo.setBumiStatus(false);
@@ -674,6 +829,13 @@ public class SmCommonUtil {
 		return persCalcVo;
 	}
 
+	/**
+	 * Gets the message.
+	 *
+	 * @param key the key
+	 * @param params the params
+	 * @return the message
+	 */
 	public static String getMessage(String key, String[] params) {
 		Locale locale = new FacesScopes().getUserLocale();
 		String msg = "";
@@ -689,6 +851,12 @@ public class SmCommonUtil {
 		return msg;
 	}
 
+	/**
+	 * Calculate sm application paid up capital sum.
+	 *
+	 * @param compBasic the comp basic
+	 * @param businessTypeVal the business type val
+	 */
 	public static void calculateSmApplicationPaidUpCapitalSum(
 			SmCompanyBasic compBasic, String businessTypeVal) {
 		boolean llpOrRoc = false;
@@ -778,6 +946,11 @@ public class SmCommonUtil {
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
 
+	/**
+	 * Calculate sm application paid up capital percent.
+	 *
+	 * @param compBasic the comp basic
+	 */
 	public static void calculateSmApplicationPaidUpCapitalPercent(
 			SmCompanyBasic compBasic) {
 		BigDecimal mul = new BigDecimal(100);
@@ -834,6 +1007,11 @@ public class SmCommonUtil {
 
 	}
 
+	/**
+	 * Calc all equity owner percent.
+	 *
+	 * @param managedBean the managed bean
+	 */
 	public static void calcAllEquityOwnerPercent(
 			SmApplicationManagedBean managedBean) {
 		BigDecimal mul = new BigDecimal(100);
@@ -858,6 +1036,13 @@ public class SmCommonUtil {
 
 	}
 
+	/**
+	 * Gets the sm bpm task title.
+	 *
+	 * @param bpmOriginalTaskTitle the bpm original task title
+	 * @param bpmProcessId the bpm process id
+	 * @return the sm bpm task title
+	 */
 	public static String getSmBpmTaskTitle(String bpmOriginalTaskTitle,
 			String bpmProcessId) {
 		String retVal = bpmOriginalTaskTitle == null ? ""
@@ -904,6 +1089,13 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
+	/**
+	 * Checks if is ser file exist.
+	 *
+	 * @param applNo the appl no
+	 * @param serType the ser type
+	 * @return true, if is ser file exist
+	 */
 	public static boolean isSerFileExist(String applNo, String serType) {
 		boolean exist = true;
 		// Check if approved serialized file exists for latest approved
@@ -924,6 +1116,12 @@ public class SmCommonUtil {
 		return exist;
 	}
 
+	/**
+	 * Creates the ser file.
+	 *
+	 * @param smAppl the sm appl
+	 * @param serType the ser type
+	 */
 	public static void createSerFile(SmAppl smAppl, String serType) {
 		ISmApplRevisionSO applRevisionSO = null;
 		try {
@@ -948,6 +1146,12 @@ public class SmCommonUtil {
 		}
 	}
 
+	/**
+	 * Gets the default address.
+	 *
+	 * @param defaultAddr the default addr
+	 * @return the default address
+	 */
 	public static SmAddress getDefaultAddress(SmAddress defaultAddr) {
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
@@ -961,6 +1165,11 @@ public class SmCommonUtil {
 		return defaultAddr;
 	}
 
+	/**
+	 * Gets the my country id.
+	 *
+	 * @return the my country id
+	 */
 	public static Long getMyCountryId() {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
@@ -970,10 +1179,20 @@ public class SmCommonUtil {
 		return resDTO.getPmCountry().getCountryId();
 	}
 
+	/**
+	 * Close block ui.
+	 */
 	public static void closeBlockUI() {
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
 
+	/**
+	 * Checks if is personnel created in previous approved appl.
+	 *
+	 * @param smAppl the sm appl
+	 * @param smPersonnel the sm personnel
+	 * @return true, if is personnel created in previous approved appl
+	 */
 	public static boolean isPersonnelCreatedInPreviousApprovedAppl(
 			SmAppl smAppl, SmPersonnel smPersonnel) {
 		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
@@ -995,6 +1214,12 @@ public class SmCommonUtil {
 		return retVal;
 	}
 	
+	/**
+	 * Checks if is personnel already deactivate.
+	 *
+	 * @param smPersonnel the sm personnel
+	 * @return true, if is personnel already deactivate
+	 */
 	public static boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel){
 		boolean retVal = false;
 		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
@@ -1006,6 +1231,12 @@ public class SmCommonUtil {
 		return retVal;
 	}
 	
+	/**
+	 * Format to two decimal point.
+	 *
+	 * @param amount the amount
+	 * @return the string
+	 */
 	public static String formatToTwoDecimalPoint(BigDecimal amount){
 		DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		return formatter.format(amount);

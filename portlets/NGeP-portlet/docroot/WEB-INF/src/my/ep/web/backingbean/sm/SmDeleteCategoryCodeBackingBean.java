@@ -92,7 +92,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 	}
 
 	public void assignActiveCategoryList() {
-		List<SmSupplierCategory> catList = new ArrayList<>();
+		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
