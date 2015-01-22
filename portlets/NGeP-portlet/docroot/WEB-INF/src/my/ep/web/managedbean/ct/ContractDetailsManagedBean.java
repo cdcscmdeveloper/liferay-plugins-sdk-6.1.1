@@ -177,7 +177,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean  progSchedButtonDeactive;
 	
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate;
+	private boolean autoUpdate = true;
 	private String textBeforeSign;
 	private String buttonAction;
 	private int counter;
