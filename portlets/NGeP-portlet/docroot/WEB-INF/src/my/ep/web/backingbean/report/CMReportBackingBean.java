@@ -175,6 +175,46 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 					rptGenBean.setCmRegistrationTypeView(true);					
 				//};
 				break;
+	        case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
+	        	rptGenBean.setCmUnspscCodeView(true);
+				rptGenBean.setCmUnspscTitleView(true);				
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);					
+				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+					rptGenBean.setCmItemTypeView(true);
+					rptGenBean.setCmCompanyNameView(true);
+					rptGenBean.setCmRegistrationTypeView(true);					
+				//};
+				break;
+	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:
+	        					
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);					
+				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+					rptGenBean.setCmItemTypeView(true);
+					rptGenBean.setCmCompanyNameView(true);
+					rptGenBean.setCmRegistrationTypeView(true);					
+				//};
+				break;
+	        case ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL:
+	        	rptGenBean.setCmUnspscCodeView(true);
+				rptGenBean.setCmUnspscTitleView(true);				
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);					
+				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+					
+					rptGenBean.setCmCompanyNameView(true);
+					rptGenBean.setCmRegistrationTypeView(true);					
+				//};
+				break;
+	        case ReportConst.LST_ITM_CODE_RPT_VAL:
+	        	rptGenBean.setCmUnspscCodeView(true);
+				rptGenBean.setCmUnspscTitleView(true);				
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);					
+				rptGenBean.setCmItemNameView(true);		
+				rptGenBean.setCmExtentionView(true);
+				break;
 	       /* case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);			
 				rptGenBean.setCmUnspscCodeView(true);

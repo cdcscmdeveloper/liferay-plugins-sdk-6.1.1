@@ -510,7 +510,7 @@ public class ReportConst {
 	public static final String AMP_PREPORT_ID_EQ = "&PREPORTID=";
 	public static final String AMP_PUSER_ID_EQ = "&PUSER=";
 	//cm
-	
+	public static final String CM_AMP_ITM_NAME_EQ = "&PITEMNAME=";
 	public static final String CM_AMP_MOF_NO_EQ = "&PSUPPMOFNO=";
 	public static final String CM_AMP_IC_NO_EQ = "&PICNO=";
 	public static final String CM_AMP_BUSI_REG_NO_EQ = "&PREGNO=";
@@ -527,6 +527,7 @@ public class ReportConst {
 	public static final String CM_AMP_USER_EQ = "&PUSER=";
 	public static final String CM_AMP_UNSPSC_CODE_EQ = "&PUNSPSCCODE=";
 	public static final String CM_AMP_UNSPSC_TITLE_EQ = "&PUNSPSCTITLE=";
+	public static final String CM_AMP_EXTENSION_EQ = "&PEXTENSION=";
 	//sc
 	public static final String SC_AMP_REQUISENER_EQ = "&REQUIUSRID=";
 	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";

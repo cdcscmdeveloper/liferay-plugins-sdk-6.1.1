@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -19,6 +21,7 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -27,14 +30,16 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.report.ReportBackingBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
  * @Author Jangari Kondal Reddy
  */
 public class ReportsGenerateBean {
-	
+	private static final Logger log = EpLogger.getLogger(ReportsGenerateBean.class);
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
 	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
 	
@@ -46,7 +51,7 @@ public class ReportsGenerateBean {
 	private Object[] statusLst;
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
-				
+	private long lngUserId;			
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
@@ -102,6 +107,7 @@ public class ReportsGenerateBean {
 		private boolean cmBasicRegView = false;
 		private boolean cmMofRegView = false;
 		private boolean cmSupplOrAdminView = false;
+		private boolean cmExtentionView = false;
 		//SM module
 		private boolean smCompanyNameView = false;
 		private boolean smApplicationNoView = false;
@@ -288,7 +294,8 @@ public class ReportsGenerateBean {
 		private String toDateVar=ReportConst.EMPTY_VAL;		
 		//cm
 		private String cmSupplOrAdminVar=ReportConst.EMPTY_VAL;	
-		private String cmExtentionCodeVar=ReportConst.EMPTY_VAL;	
+		private String cmExtentionCodeVar=ReportConst.EMPTY_VAL;
+		private String cmExtentionVar=ReportConst.EMPTY_VAL;
 		
 		//sm
 		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
@@ -413,6 +420,24 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public boolean isCmExtentionView() {
+			return cmExtentionView;
+		}
+		public void setCmExtentionView(boolean cmExtentionView) {
+			this.cmExtentionView = cmExtentionView;
+		}
+		public String getCmExtentionVar() {
+			return cmExtentionVar;
+		}
+		public void setCmExtentionVar(String cmExtentionVar) {
+			this.cmExtentionVar = cmExtentionVar;
+		}
+		public long getLngUserId() {
+			return lngUserId;
+		}
+		public void setLngUserId(long lngUserId) {
+			this.lngUserId = lngUserId;
+		}
 		public String getCmExtentionCodeVar() {
 			return cmExtentionCodeVar;
 		}
@@ -2617,4 +2642,17 @@ public class ReportsGenerateBean {
 			 }
 			 return yearList; 
 		}
+		/*public void retriveSVOfficerUser(){
+			if (null != new FacesScopes().getUserSessionBean().getUserId()) {				
+				lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
+			}
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);		
+			List<String>  svoUser= reportSO.retriveSVOfficerUser(lngUserId);
+			stateLst = new ArrayList<SelectItem>();		
+			if (svoUser.size()>0) {			
+				for (int i = 0; i < svoUser.size(); i++) {					
+					log.info("SVOUSER LIST #########################"+svoUser.get(i));				
+				}
+			}
+		}*/
 }
