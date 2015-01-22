@@ -74,16 +74,16 @@
 				<p:graphicImage styleClass="ui-icon-complain" />
 				<p:spacer width="10" />
 				<p:inputTextarea disabled="true"
-					value="Are you sure you want to delete this file?" rows="2"
+					value="#{lbl['lbl.fl.dialog.delete.file.msg']}" rows="2"
 					cols="48" styleClass="ui-inputtextarea" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true"
 					update="doMaintain"
 					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"
 					 />
-				<p:commandButton value="No" 
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delFileDlg.hide();" type="button" />
 			</div>
 	</p:dialog>
