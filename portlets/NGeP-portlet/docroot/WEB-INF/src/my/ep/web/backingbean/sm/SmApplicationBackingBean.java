@@ -5659,10 +5659,13 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets default values for the mof registration req dto.
 	 * 
-	 * @param bpmAppl - SmAppl object
-	 *            
-	 * @param outcome - the outcome value
-	 * @param actionDesc - the action desc
+	 * @param bpmAppl
+	 *            - SmAppl object
+	 * 
+	 * @param outcome
+	 *            - the outcome value
+	 * @param actionDesc
+	 *            - the action desc
 	 * @return the mof registration req dto object
 	 */
 	private MofRegistrationReqDTO setMofRegistrationReqDTO(SmAppl bpmAppl,
@@ -5735,7 +5738,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Submit po escalation to approver.
 	 * 
-	 * @param recommendation -  the recommendation
+	 * @param recommendation
+	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
 		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
@@ -5756,7 +5760,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * PO select to assign final approve or reject to apparover.
 	 * 
-	 * @param dialog - the dialog id to be opened
+	 * @param dialog
+	 *            - the dialog id to be opened
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
@@ -5768,7 +5773,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Approver select to Approve or reject mof cancellation.
 	 * 
-	 * @param dialog - the dialog id to be opened
+	 * @param dialog
+	 *            - the dialog id to be opened
 	 */
 	public void approveOrRejectMofCancellation(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
@@ -5779,7 +5785,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * PO select to Assign site visit and pop up opens.
 	 * 
-	 * @param dialog - the dialog id to be opened
+	 * @param dialog
+	 *            - the dialog id to be opened
 	 */
 	public void assignSiteVisitPopUp(String dialog) {
 		log.info("**** assignSiteVisitPopUp *** ");
@@ -5812,8 +5819,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Submit po descision for site visit.
 	 * 
-	 * @param dialog - the dialog id be closed
-	 * @param decision - the decision
+	 * @param dialog
+	 *            - the dialog id be closed
+	 * @param decision
+	 *            - the decision
 	 * @return the redirect page.
 	 */
 	public String submitPODescisionForSiteVisit(String dialog, String decision) {
@@ -5835,7 +5844,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Cancel button action for site visit action.
 	 * 
-	 * @param dialog  -  the dialog id to be close
+	 * @param dialog
+	 *            - the dialog id to be close
 	 */
 	public void cancelSiteVisitAction(String dialog) {
 		getManagedBean().setShowParentMsg(true);
@@ -5844,9 +5854,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel button action for approve or reject.Close the pop up without any action.
+	 * Cancel button action for approve or reject.Close the pop up without any
+	 * action.
 	 * 
-	 * @param dialog  -  the dialog id to be close
+	 * @param dialog
+	 *            - the dialog id to be close
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
@@ -5857,7 +5869,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset mof cancellation final approve or reject.
 	 * 
-	 * @param dialog -  the dialog id to be closed
+	 * @param dialog
+	 *            - the dialog id to be closed
 	 */
 	public void resetMofCancellationFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
@@ -5868,8 +5881,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Final decision approve or reject application.
 	 * 
-	 * @param dialog - the dialog id be closed
-	 * @param decision - the decision
+	 * @param dialog
+	 *            - the dialog id be closed
+	 * @param decision
+	 *            - the decision
 	 * @return the redirect page.
 	 */
 	public String finalDecisionApproveOrRejectAppln(String dialog,
@@ -5887,8 +5902,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Final decision of PO on delete pending appln
 	 * 
-	 * @param dialog - the dialog id to be closed
-	 * @param decision - the decision
+	 * @param dialog
+	 *            - the dialog id to be closed
+	 * @param decision
+	 *            - the decision
 	 * @return the redirect page.
 	 */
 	public String finalDecisionDeletePendingAppln(String dialog, String decision) {
@@ -5905,7 +5922,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Approve or reject pending application cancellation.
 	 * 
-	 * @param res - the PO or Approver resposne
+	 * @param res
+	 *            - the PO or Approver resposne
 	 * @return the redirect page.
 	 */
 	public String approveOrRejectPendingApplicationCancellation(String res) {
@@ -5952,7 +5970,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Submit p oor approver review to bpm.
 	 * 
-	 * @param res - the PO or Approver resposne
+	 * @param res
+	 *            - the PO or Approver resposne
 	 * @return the redirect page.
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
@@ -6264,10 +6283,14 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Test sm application validations before save or update to DB.
 	 * 
-	 * @param applType - the application type
-	 * @param currentPageType -the current page type
-	 * @param outputPageType - the output page type
-	 * @param isBpmSubmit - boolean
+	 * @param applType
+	 *            - the application type
+	 * @param currentPageType
+	 *            -the current page type
+	 * @param outputPageType
+	 *            - the output page type
+	 * @param isBpmSubmit
+	 *            - boolean
 	 * @return true, if successful
 	 */
 	public boolean testSmAppl(String applType, String currentPageType,
@@ -6333,7 +6356,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Change all sections verification value based on selection on screen.
 	 * 
-	 * @param isVerifiedAll - boolean
+	 * @param isVerifiedAll
+	 *            - boolean
 	 */
 	public void changeVerifyAll(Boolean isVerifiedAll) {
 		log.info(" **** Enter to  verified all ***** " + isVerifiedAll);
@@ -6356,7 +6380,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Change section verification value based on selection on screen.
 	 * 
-	 * @param isSectionVerified - boolean
+	 * @param isSectionVerified
+	 *            - boolean
 	 */
 	public void changeVerifySection(Boolean isSectionVerified) {
 		if (getManagedBean().isPoUser()) {
@@ -6375,8 +6400,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Add or remove verification count for sections.
 	 * 
-	 * @param sec -SmApplSectionReview object
-	 * @param isSectionVerified - boolean
+	 * @param sec
+	 *            -SmApplSectionReview object
+	 * @param isSectionVerified
+	 *            - boolean
 	 * @return the sm appl section review object
 	 */
 	private SmApplSectionReview assignVerificationCount(
@@ -6400,7 +6427,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Save sm remarks.
 	 * 
-	 * @param remarks - SmRemark object
+	 * @param remarks
+	 *            - SmRemark object
 	 */
 	private void saveSmRemarks(SmRemark remarks) {
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
@@ -6414,7 +6442,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Save sm cancellation attachment.
 	 * 
-	 * @param attach -SmAttachment
+	 * @param attach
+	 *            -SmAttachment
 	 */
 	private void saveSmCancellationAttachment(SmAttachment attach) {
 		SmAttachmentReqDTO reqDTO = new SmAttachmentReqDTO();
@@ -6428,7 +6457,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Retrieve supporting document list.
 	 * 
-	 * @param reqDTO -DocumentReqDTO
+	 * @param reqDTO
+	 *            -DocumentReqDTO
 	 * @return the document res dto object
 	 */
 	private DocumentResDTO retrieveSupportingDocumentList(DocumentReqDTO reqDTO) {
@@ -6497,8 +6527,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Handle and save file attachment for resubmit supproting doc file(s).
 	 * 
-	 * @param event -
-	 *            the FileUploadEvent
+	 * @param event
+	 *            - the FileUploadEvent
 	 */
 	public void handleResubmitSupDocFileAttachment(FileUploadEvent event) {
 		log.info("********handleFileAttachment********");
@@ -6528,9 +6558,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *Handle and save file attachment for supporting documents
+	 * Handle and save file attachment for supporting documents
 	 * 
-	 * @param event - the FileUploadEvent 
+	 * @param event
+	 *            - the FileUploadEvent
 	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		log.info("********handleFileAttachment********");
@@ -6573,7 +6604,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Handle and save file attachment for cancel mof registration.
 	 * 
-	 * @param event -   the FileUploadEvent
+	 * @param event
+	 *            - the FileUploadEvent
 	 */
 	public void handleCancelMofRegFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
@@ -6613,7 +6645,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Retrieve pm state list by country id.
 	 * 
-	 * @param countryId - the country id
+	 * @param countryId
+	 *            - the country id
 	 * @return the list PmStates
 	 */
 	private List<PmState> retrievePmStateList(long countryId) {
@@ -6628,7 +6661,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Retrieve pm district list by state id.
 	 * 
-	 * @param stateId -  the state id
+	 * @param stateId
+	 *            - the state id
 	 * @return the list of Pmdistricts
 	 */
 	private List<PmDistrict> retrievePmDistrictList(long stateId) {
@@ -6643,7 +6677,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Retrieve pm city list by district Id.
 	 * 
-	 * @param districtId -   the district id
+	 * @param districtId
+	 *            - the district id
 	 * @return the list of Pmcities
 	 */
 	private List<PmCity> retrievePmCityList(long districtId) {
@@ -6658,9 +6693,12 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Clone sm application draft from the stable or prev approved application.
 	 * 
-	 * @param id - supplier Id
-	 * @param applicationType -  the application type
-	 * @param supplierType -  the supplier type
+	 * @param id
+	 *            - supplier Id
+	 * @param applicationType
+	 *            - the application type
+	 * @param supplierType
+	 *            - the supplier type
 	 * @return the mof registration res dto object
 	 */
 	private MofRegistrationResDTO cloneSmApplicationDraft(long id,
@@ -6695,10 +6733,14 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign max count of sections to be review based on application.
 	 * 
-	 * @param appType- the application type
-	 * @param applCatType- the applcation category type
-	 * @param supplierType-  the supplier type
-	 * @param businessType- the business type
+	 * @param appType
+	 *            - the application type
+	 * @param applCatType
+	 *            - the applcation category type
+	 * @param supplierType
+	 *            - the supplier type
+	 * @param businessType
+	 *            - the business type
 	 * @return the int - count of sections
 	 */
 	private int assignMaxReviewCount(String appType, String applCatType,
@@ -6707,15 +6749,19 @@ public class SmApplicationBackingBean extends
 				supplierType, businessType);
 	}
 
-	
 	/**
 	 * Populate or update states in selected panel by country id.
 	 * 
-	 * @param coutryId - Long coutryId
-	 * @param panelName - the panel name
-	 * @param state - PmState object
-	 * @param district - PmDistrict object
-	 * @param city - PmCity object
+	 * @param coutryId
+	 *            - Long coutryId
+	 * @param panelName
+	 *            - the panel name
+	 * @param state
+	 *            - PmState object
+	 * @param district
+	 *            - PmDistrict object
+	 * @param city
+	 *            - PmCity object
 	 * 
 	 */
 	public void populateStatesByCountry(long coutryId, String panelName,
@@ -6863,13 +6909,17 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Populate or update districts in selected panel by state id.
 	 * 
-	 * @param stateId - Long state id
-	 * @param panelName - the panel name
-	 * @param district - PmDistrict object
-	 * @param city - PmCity object
+	 * @param stateId
+	 *            - Long state id
+	 * @param panelName
+	 *            - the panel name
+	 * @param district
+	 *            - PmDistrict object
+	 * @param city
+	 *            - PmCity object
 	 * 
 	 */
-	
+
 	public void populateDistrictsByState(long stateId, String panelName,
 			PmDistrict district, PmCity city) {
 		try {
@@ -6980,9 +7030,12 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Populate or update cities in selected panel by district id.
 	 * 
-	 * @param districtId - Long district id
-	 * @param panelName -  the panel name
-	 * @param city - PmCity object
+	 * @param districtId
+	 *            - Long district id
+	 * @param panelName
+	 *            - the panel name
+	 * @param city
+	 *            - PmCity object
 	 */
 	public void populateCitiesByDistrict(long districtId, String panelName,
 			PmCity city) {
@@ -7055,9 +7108,12 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Populate experience page child category list by parent category id.
 	 * 
-	 * @param parentId - Long parent id
-	 * @param catL2 - PmCategoryL2  object
-	 * @param catL3 - PmCategoryL3 object
+	 * @param parentId
+	 *            - Long parent id
+	 * @param catL2
+	 *            - PmCategoryL2 object
+	 * @param catL3
+	 *            - PmCategoryL3 object
 	 * 
 	 */
 	public void populateExperienceChildCategoryByParent(long parentId,
@@ -7076,8 +7132,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Populate experience page sub child category by child id.
 	 * 
-	 * @param childId - Long the child category id
-	 * @param catL3 - PmCategoryL3 object
+	 * @param childId
+	 *            - Long the child category id
+	 * @param catL3
+	 *            - PmCategoryL3 object
 	 */
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
@@ -7096,9 +7154,12 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Populate and update child category list by parent category Id.
 	 * 
-	 * @param parentId - Long parent id
-	 * @param catL2 - PmCategoryL2  object
-	 * @param catL3 - PmCategoryL3 object
+	 * @param parentId
+	 *            - Long parent id
+	 * @param catL2
+	 *            - PmCategoryL2 object
+	 * @param catL3
+	 *            - PmCategoryL3 object
 	 */
 	public void populateChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
@@ -7123,8 +7184,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Populate and update sub child category list by child category Id.
 	 * 
-	 * @param childId - Long the child category id
-	 * @param catL3 - PmCategoryL3 object
+	 * @param childId
+	 *            - Long the child category id
+	 * @param catL3
+	 *            - PmCategoryL3 object
 	 */
 	public void populateSubChildCategoryByChild(long childId, PmCategoryL3 catL3) {
 		try {
@@ -7144,7 +7207,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset selected district id to null.
 	 * 
-	 * @param dist - PmDistrict object
+	 * @param dist
+	 *            - PmDistrict object
 	 */
 	private void resetDistrict(PmDistrict dist) {
 		dist.setDistrictId(null);
@@ -7153,7 +7217,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset selected city id to null.
 	 * 
-	 * @param city - PmCity object
+	 * @param city
+	 *            - PmCity object
 	 */
 	private void resetCity(PmCity city) {
 		city.setCityId(null);
@@ -7162,7 +7227,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset selected state id to null.
 	 * 
-	 * @param state -PmState object
+	 * @param state
+	 *            -PmState object
 	 */
 	private void resetState(PmState state) {
 		state.setStateId(null);
@@ -7171,7 +7237,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset selected child category id to null.
 	 * 
-	 * @param catL2 -PmCategoryL2 object
+	 * @param catL2
+	 *            -PmCategoryL2 object
 	 */
 	private void resetChildCategory(PmCategoryL2 catL2) {
 		catL2.setCategoryL2Id(null);
@@ -7181,7 +7248,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset selected sub child category id to null.
 	 * 
-	 * @param catL3 - PmCategoryL3 object
+	 * @param catL3
+	 *            - PmCategoryL3 object
 	 */
 	private void resetSubChildCategory(PmCategoryL3 catL3) {
 		catL3.setCategoryL3Id(null);
@@ -7199,9 +7267,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Sets or filter the failities based on the facility type from all smFacilities.
+	 * Sets or filter the failities based on the facility type from all
+	 * smFacilities.
 	 * 
-	 * @param smFacilities - List of SmFacility in the application
+	 * @param smFacilities
+	 *            - List of SmFacility in the application
 	 */
 	private void setApplicationFailities(List<SmFacility> smFacilities) {
 		log.info("*** Existing Facility******");
@@ -7269,7 +7339,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets or filter the list the application share holders from SmPersonnels.
 	 * 
-	 * @param perList - List of all SmPersonnels in the application
+	 * @param perList
+	 *            - List of all SmPersonnels in the application
 	 */
 	private void setApplicationShareHolders(List<SmPersonnel> perList) {
 		getManagedBean().setSmapplShareHolders(new ArrayList<SmPersonnel>());
@@ -7286,7 +7357,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the default values for new added personnel.
 	 * 
-	 * @param shr - SmPersonnel object
+	 * @param shr
+	 *            - SmPersonnel object
 	 */
 	private void setDefaultPersonnelValues(SmPersonnel shr) {
 		shr.setRevNo(1);
@@ -7517,8 +7589,9 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the navigation for resubmit application.
 	 * 
-	 * @param applType - type of application submitted
-	 *            
+	 * @param applType
+	 *            - type of application submitted
+	 * 
 	 */
 	private void setNavigationForResubmitAppln(String applType) {
 		SmApplicationUtil.setNavigationForResubmitAppln(applType);
@@ -7527,7 +7600,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Manages min and max equity holder limit for supplier.
 	 * 
-	 * @param personnel - SmPersonnel object
+	 * @param personnel
+	 *            - SmPersonnel object
 	 */
 	private void manageEquityLimit(SmPersonnel personnel) {
 		getManagedBean().setValidEquityLimit(
@@ -7539,7 +7613,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign supplier business type for screen validation purpose.
 	 * 
-	 * @param sup - SmSupplier object
+	 * @param sup
+	 *            - SmSupplier object
 	 */
 	private void assignSupplierBusinessType(SmSupplier sup) {
 		getManagedBean().setBusinessTypeVal(
@@ -7550,7 +7625,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the application current pm status.
 	 * 
-	 * @param statusIdpm - pm status id passed as String
+	 * @param statusIdpm
+	 *            - pm status id passed as String
 	 */
 	private void setApplPmStatus(String statusId) {
 		StatusResDTO resDTO = SmApplicationUtil.setApplPmStatus(statusId);
@@ -7562,7 +7638,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the pm status desc.
 	 * 
-	 * @param statusId - pm status id passed as String
+	 * @param statusId
+	 *            - pm status id passed as String
 	 */
 	private void setPmStatusDesc(String statusId) {
 		log.info("****** Status Id ******" + statusId);
@@ -7579,9 +7656,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign value reqd to false when anyof the pop up is opened 
-	 * in the screen.Used for enable and disable screen validation
-	 * dynamically.
+	 * Assign value reqd to false when anyof the pop up is opened in the
+	 * screen.Used for enable and disable screen validation dynamically.
 	 */
 	private void assignValReqdToTrue() {
 		getManagedBean().setShowParentMsg(false);
@@ -7589,9 +7665,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign value reqd to false when anyof the pop up is closed 
-	 * in the screen.Used for enable and disable screen validation
-	 * dynamically.
+	 * Assign value reqd to false when anyof the pop up is closed in the
+	 * screen.Used for enable and disable screen validation dynamically.
 	 */
 	private void assignValReqdToFalse() {
 		getManagedBean().setShowParentMsg(true);
@@ -7602,10 +7677,14 @@ public class SmApplicationBackingBean extends
 	 * Assign or populate states, districits and cities in the selected panel
 	 * for sel values.
 	 * 
-	 * @param countryId - Long country id
-	 * @param stateID - Long state id
-	 * @param districtId - Long district id
-	 * @param panelName - String panel name
+	 * @param countryId
+	 *            - Long country id
+	 * @param stateID
+	 *            - Long state id
+	 * @param districtId
+	 *            - Long district id
+	 * @param panelName
+	 *            - String panel name
 	 */
 	private void assignStateDistAndCityForSelVal(Long countryId, Long stateID,
 			Long districtId, String panelName) {
@@ -7616,7 +7695,6 @@ public class SmApplicationBackingBean extends
 		populateCitiesByDistrict(districtId, panelName, new PmCity());
 	}
 
-	
 	/**
 	 * Validate supporting docs.
 	 * 
@@ -7639,7 +7717,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Validate paid captial amt.
 	 * 
-	 * @param setNavigationCurrentPage -boolean value determining the navigation to current page
+	 * @param setNavigationCurrentPage
+	 *            -boolean value determining the navigation to current page
 	 */
 	private void validatePaidCaptialAmt(boolean setNavigationCurrentPage) {
 		SmApplicationUtil.validatePaidCaptialAmt(setNavigationCurrentPage,
@@ -7719,8 +7798,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Download selected supporting document.
 	 * 
-	 * @param fileName -the file name
-	 * @param filePath - the file path
+	 * @param fileName
+	 *            -the file name
+	 * @param filePath
+	 *            - the file path
 	 */
 	public void downloadSelectedSuppDoc(String fileName, String filePath) {
 		String finalFilePath = filePath + fileName;
@@ -7735,8 +7816,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Download signature supporting document template.
 	 * 
-	 * @param fileName - the file name
-	 * @param filePath - the file path
+	 * @param fileName
+	 *            - the file name
+	 * @param filePath
+	 *            - the file path
 	 */
 	public void downloadSignatureSuppDoc(String fileName, String filePath) {
 		String finalFilePath = filePath;
@@ -7759,8 +7842,10 @@ public class SmApplicationBackingBean extends
 
 	/**
 	 * Sets the file.
-	 * @param file - StreamedContent
-	 *            
+	 * 
+	 * @param file
+	 *            - StreamedContent
+	 * 
 	 */
 	public void setFile(StreamedContent file) {
 		this.file = file;
@@ -7831,8 +7916,9 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Remove un selected admin from the selected personnel list.
 	 * 
-	 * @param e - AjaxBehaviorEvent
-	 *            
+	 * @param e
+	 *            - AjaxBehaviorEvent
+	 * 
 	 */
 	public void unSelectAdmin(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolders() != null) {
@@ -7844,8 +7930,8 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
 						.getEpRole().equalsIgnoreCase(
 								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
-						|| (personnel.isEquityOwner() && getManagedBean()
-								.isDisAllowOwnerEdit())) {
+						|| (personnel.isPrevApprovedDirector() && personnel
+								.isPrevApprovedEquityOwner())) {
 					iterator.remove();
 				}
 			}
@@ -7855,7 +7941,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Removed un select apporved categories from the list.
 	 * 
-	 * @param e -AjaxBehaviorEvent
+	 * @param e
+	 *            -AjaxBehaviorEvent
 	 */
 	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
 		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
@@ -7875,7 +7962,7 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Retrieve identity type from PM.
 	 * 
-	 * @return SelectItem[] 
+	 * @return SelectItem[]
 	 */
 	public SelectItem[] getPmIdTypeDropdownValues() {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -7933,7 +8020,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Display bumi recommend note for the application by supplier in managed bean.
+	 * Display bumi recommend note for the application by supplier in managed
+	 * bean.
 	 */
 	private void displayBumiRecommendNote() {
 		log.info("*** Start displayBumiRecommendNote *******");
@@ -8040,10 +8128,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Update and set selected category, added in the company experience section to
-	 * the managed bean mapping
+	 * Update and set selected category, added in the company experience section
+	 * to the managed bean mapping
 	 * 
-	 * @param index  - int value of the selected index
+	 * @param index
+	 *            - int value of the selected index
 	 **/
 	public void selectedCompanyExperinceCategory(int index) {
 
@@ -8074,7 +8163,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Gets the business type description or lable based on code.
 	 * 
-	 * @param businessTypeVal - String
+	 * @param businessTypeVal
+	 *            - String
 	 * @return String - the business type description or label
 	 */
 	public String getBusinessType(String businessTypeVal) {
