@@ -636,7 +636,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		             resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 		             List<PmReasonDesc> list = resDTO.getReasonDescList();
 		             items = new SelectItem[list.size()+1];
-		             items[0] = new SelectItem(null, "- Select One -");
+		             items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		             for(PmReasonDesc reasonDesc : list) {
 			             items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
 			             reasonDescMap.put(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());

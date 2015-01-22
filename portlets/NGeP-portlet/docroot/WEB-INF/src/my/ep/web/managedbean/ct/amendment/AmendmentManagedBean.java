@@ -139,6 +139,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String committetype;
 	private boolean disableAmendDetails;
 	private boolean disablefinalAmendDetails;
+	private Long secretaryId;
 
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -860,6 +861,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setBpmActionFlag(boolean bpmActionFlag) {
 		this.bpmActionFlag = bpmActionFlag;
+	}
+
+	public Long getSecretaryId() {
+		return secretaryId;
+	}
+
+	public void setSecretaryId(Long secretaryId) {
+		this.secretaryId = secretaryId;
 	}
 	
 }

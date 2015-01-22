@@ -124,8 +124,28 @@
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"
 					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}" />
 				<p:message for="txtdesc" display="icon" />	
-			</h:panelGrid>
+			</h:panelGrid>			
 		</h:panelGrid>
+		<h:panelGroup rendered="#{amendmentBackingBean.managedBean.committetype eq ParameterConst.committeeTypeQuotationCommitteeB or 
+				  		        amendmentBackingBean.managedBean.committetype eq ParameterConst.committeeTypeQuotationCommitteeA and
+				  		        amendmentBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego and
+				  		        !amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
+		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
+			<h:panelGrid columns="2" style="float:right;">
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
+			</h:panelGrid>
+			<h:panelGrid columns="3">
+				<p:selectOneMenu id="secretary" value="#{amendmentBackingBean.managedBean.secretaryId}" 
+					label="#{lbl['lbl.ct.secretary']}" style="width:300px;"
+					disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
+		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
+		       	</p:selectOneMenu>
+			    <p:spacer width="1"/>
+				<p:message for="secretary" display="icon" />
+			</h:panelGrid>
+		  </h:panelGrid>
+		</h:panelGroup>
 		<h:panelGrid id="instruction"  columns="1" style="width:100%">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.extension.period']}" escape="false"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"/><br/>

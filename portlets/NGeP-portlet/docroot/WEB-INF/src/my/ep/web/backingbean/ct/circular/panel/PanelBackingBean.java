@@ -987,7 +987,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			StateResDTO resDTO = stateSO.retriveStatesListByCountryID(reqDTO);
 			
 		    items = new SelectItem[resDTO.getStateList().size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		    int i = 1;
 		    for(PmState state: resDTO.getStateList()) {
 		    	items[i++] = new SelectItem(state.getStateId(), state.getStateName());
@@ -1036,7 +1036,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
 		    items = new SelectItem[list.size()+2];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		      
 			for(PmStatusDesc statusDesc : list) {
 				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
@@ -1053,7 +1053,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public SelectItem[] getZonalLevelDropDown() {
 		SelectItem[] items = new SelectItem[3];
-		items[0] = new SelectItem(null, "- Select One -");
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		int i = 1;
 		for(SelectItem item : getDropdownCodeValues(ParameterTypeConst.LOCATION_LEVEL)) {
 			if(item.getValue()==null) {
