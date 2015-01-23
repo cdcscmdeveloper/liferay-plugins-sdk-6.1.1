@@ -104,7 +104,8 @@
 		test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
 		<p:panel id="samplezoneid" header="#{lbl['lbl.so.sample.submission']}"
 			toggleable="true"
-			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}" styleClass="sampleSubmitionUpdate">
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}"
+			styleClass="sampleSubmitionUpdate">
 			<p:dataTable id="sampleid" var="samplesubmissiondtl" editable="true"
 				rowIndexVar="rowIndex" rowKey="#{samplesubmissiondtl}"
 				value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmissionList}"
@@ -113,27 +114,28 @@
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="Zone/Location">
+				<p:column headerText="#{lbl['lbl.so.zone.location']}">
 					<h:outputText
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>
-				<p:column headerText="Address">
+				<p:column headerText="#{lbl['lbl.sc.address']}">
 					<h:outputText value="#{samplesubmissiondtl.address.address1}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
 					<p:commandLink
 						action="#{qTScheduleDetailBackingBean.editAddress(samplesubmissiondtl,rowIndex)}"
-						style="margin-right:20px;" partialSubmit="true" process="@this" update="@(.sampleSubmitionUpdate)">
+						style="margin-right:20px;" partialSubmit="true" process="@this"
+						update="@(.sampleSubmitionUpdate)">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="Apply" process="@this,sampleid"
+				<p:commandButton value="#{lbl['lbl.btn.apply']}"
+					process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
-					update="@(.sampleSubmitionUpdate)" 
-					oncomplete="sampledlg.show();" />
+					update="@(.sampleSubmitionUpdate)" />
 			</div>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.so.sample.submission']}" toggleable="true"
@@ -222,7 +224,7 @@
 											itemLabel="#{district.districtName}" />
 										<p:ajax event="change"
 											listener="#{qTScheduleDetailBackingBean.retrievePmCityList}"
-											update="@(.sampledistrictCity)" partialSubmit="true"/>
+											update="@(.sampledistrictCity)" partialSubmit="true" />
 									</p:selectOneMenu></td>
 								<td><p:message id="sampledistrict1Msg"
 										for="sampledistrict1" display="icon" /></td>
@@ -348,8 +350,7 @@
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				update="doaaid"
+			<p:commandButton value="#{lbl['lbl.so.delete']}" update="doaaid"
 				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
 		</div>
 	</p:panel>
