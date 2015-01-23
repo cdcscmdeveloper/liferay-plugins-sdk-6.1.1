@@ -4194,6 +4194,10 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmapplShareHolders().remove(shr);
 			}
 			saveOrUpdateAppl();
+			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
+					getManagedBean().getSmAppl(), getManagedBean()
+							.getPrevApprovedPersonnels(), getManagedBean()
+							.isDisAllowOwnerEdit());
 			getManagedBean().getSelectedShareHolders().clear();
 			if (!personType
 					.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
