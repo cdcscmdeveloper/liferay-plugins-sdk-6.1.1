@@ -30,7 +30,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
 		     selection="#{pPlanBackingBean.managedBean.deletePpItems}" 
 		     rowIndexVar="index" rowKey="#{ppItem}">
-
+			<ac:paginator for="dtProcurementPlan" />
 			<p:columnGroup type="header">
 				<p:row>
 				 	<p:column selectionMode="multiple"  style="width:2%" />
