@@ -7,7 +7,7 @@
 	<p:panel styleClass="sampleDetails" >
 
 		<p:dataTable id="deliveryAddressId"
-			value="#{organisationBackingBean.managedBean.addressTypesList}"
+			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
 			<p:column selectionMode="multiple"
@@ -34,6 +34,7 @@
 			</p:column>
 
 		</p:dataTable>
+		<p:spacer height="15"></p:spacer>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
 				oncomplete="addressPopup.show();" update="@([id$=deliveryAddressDialog])"	
@@ -266,12 +267,13 @@
 
 		<div align="right">
 
-			<p:commandButton value="Ok" style="float:right;"
+			<p:commandButton value="Ok" 
 				action="#{organisationBackingBean.updateDeliveryAddrDt}"
-				update="deliveryAddressId" onclick="addressPopup.hide();">
+				update="deliveryAddressId" onclick="addressPopup.hide();"
+				oncomplete="deliveryAddres.paginator.endLink.click();">
 			</p:commandButton>
 			&#160;&#160;
-			<p:commandButton value="Cancel" style="float:right;"
+			<p:commandButton value="Cancel" 
 				onclick="addressPopup.hide();"></p:commandButton>
 		</div>
 

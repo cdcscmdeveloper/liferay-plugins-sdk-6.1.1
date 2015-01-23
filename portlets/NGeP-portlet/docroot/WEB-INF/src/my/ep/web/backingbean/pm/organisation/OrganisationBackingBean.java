@@ -346,6 +346,15 @@ public class OrganisationBackingBean extends
 				OrganizationType.DIVISION.value())) {
 			retrieveMinistryList();
 			orgDeliveryAddrList(orgProfile);
+			/*if(orgProfile.getMainProfileGroups()!=null && !orgProfile.getMainProfileGroups().isEmpty()){
+				for(PmProfileGroup profileGroup:orgProfile.getMainProfileGroups()){
+					if(profileGroup.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || profileGroup.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED){
+						this.getManagedBean().getProfileGroup().add(profileGroup);
+						
+					}
+					
+				}
+			}*/
 			this.getManagedBean().setProfileGroup(
 					orgProfile.getMainProfileGroups());
 
@@ -624,7 +633,7 @@ public class OrganisationBackingBean extends
 								}
 								/*else{
 									supplierBank.setRecordStatusFlg(supplierBank.getRecordStatusFlg());
-									//supplier.getSmAppl().getSmSupplierBanks().addAll(getManagedBean().getSmSupplierBanks());
+									
 									supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());
 								}*/
 							
@@ -716,18 +725,14 @@ public class OrganisationBackingBean extends
 				
 			}
 			else{
-				
-				orgProfile.setMainProfileGroups(null);
-				/*List<PmProfileGroup> profileGrp = getManagedBean()
-						.getProfileGroup();
-				if(getManagedBean().getProfileGroup()!=null && getManagedBean().getProfileGroup().isEmpty()){
-					for (PmProfileGroup proGroup : profileGrp) {
-						
-							proGroup.getMainOrgProfile().setRecordStatusFlg(9);
-							log.info("record Status inactive");
+			
+				if(getManagedBean().getProfileGroup()!=null && !getManagedBean().getProfileGroup().isEmpty()){
+					for (PmProfileGroup proGroup : getManagedBean().getProfileGroup()) {						
+							proGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							log.info("Profile Suspended");
 						
 					}	
-				}*/
+				}
 								
 			}
 			

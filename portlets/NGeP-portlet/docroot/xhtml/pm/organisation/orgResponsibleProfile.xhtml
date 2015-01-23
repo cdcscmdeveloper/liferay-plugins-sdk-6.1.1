@@ -10,7 +10,7 @@
 	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.responsible.org']}" toggleable="true">
 		<br/>
 	   	<p:dataTable id="dtOrgUnit" var="orgUnit" styleClass="dtOrgUnit" 
-		     value="#{organisationBackingBean.managedBean.profileGroup}"
+		     value="#{organisationBackingBean.managedBean.profileGroup}" widgetVar="responsibleOrg"
 		     selection="#{organisationBackingBean.managedBean.selectedProfileGroup}" 
 		     selectionMode="single"
 		     rowIndexVar="index" rowKey="#{orgUnit}">   
@@ -60,7 +60,8 @@
        	<br/>
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,dtOrgUnit" partialSubmit="true" immediate="true" 
-		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" />
+		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" 
+		   	 	oncomplete="responsibleOrg.paginator.endLink.click();" />
 		</div>
     	<ac:lovPopup /> 		
 	</p:panel>
