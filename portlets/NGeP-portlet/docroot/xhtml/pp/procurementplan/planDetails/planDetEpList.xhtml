@@ -104,7 +104,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:row>
 			</p:columnGroup>
 		  
-			<p:column selectionMode="multiple"  style="width:2%" />
+			<p:column selectionMode="multiple"  style="width:2%"  disabledSelection="#{!ppItem.brandNew}" />
 	        <p:column style="white-space:nowrap;">
 	        
 	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" update=":form:dtExpenditurePlan" 
