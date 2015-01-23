@@ -38,14 +38,14 @@
 								<td width="35%"><p:inputText size="50"
 										value="#{cdTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
 							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel value="Status" /></td>
-								<td width="65%"><p:selectOneMenu style="width: 314px;"
-											value="#{cdTrackingDiaryBackingBean.managedBean.searchStatusId}">
-											<f:selectItems
-												value="#{cdTrackingDiaryBackingBean.getStatus()}" />
-									</p:selectOneMenu></td>
-							</tr>
+<!-- 							<tr> -->
+<!-- 								<td width="35%"><p:outputLabel value="Status" /></td> -->
+<!-- 								<td width="65%"><p:selectOneMenu style="width: 314px;" -->
+<!-- 											value="#{cdTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
+<!-- 											<f:selectItems -->
+<!-- 												value="#{cdTrackingDiaryBackingBean.getStatus()}" /> -->
+<!-- 									</p:selectOneMenu></td> -->
+<!-- 							</tr> -->
 						</table>
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.search']}"
@@ -58,7 +58,7 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{cdTrackingDiaryBackingBean.managedBean.cdDocumentDataModel}" var="unspscObject"
+				value="#{cdTrackingDiaryBackingBean.managedBean.cdDocumentDataModel}" var="Obj"
 				width="100%" rows="10">
 
 				<ac:paginator for="unspscTableID"></ac:paginator>
@@ -67,32 +67,32 @@
 					<f:facet name="header">
 					Creation Date
 					</f:facet>
-				#{unspscObject.createdDate}
+				#{Obj[0]}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					Document No
 				</f:facet>
-				#{unspscObject.unspscCode}
+				#{Obj[1]}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					UNSPSC/Extension Code
 				</f:facet>
-				#{unspscObject.unspscCode}
+				#{Obj[2]}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					UNSPSC Title
 				</f:facet>
-				#{unspscObject.unspscTitle}
+				#{Obj[3]}#{Obj[4]}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObject)}">
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(Obj)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>

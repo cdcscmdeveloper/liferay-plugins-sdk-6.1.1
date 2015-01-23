@@ -28,47 +28,47 @@
 			</div>
 		</div>
 
-		<table style="width: 100%">
-			<tr>
-				<td><p:panel style="width: 100%;" header="Document Details"
-						toggleable="true" id="searchTabId">
-						<table style="margin-top: 10px; width: 100%;">
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="Item Code" /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
+<!-- 		<table style="width: 100%"> -->
+<!-- 			<tr> -->
+<!-- 				<td><p:panel style="width: 100%;" header="Document Details" -->
+<!-- 						toggleable="true" id="searchTabId"> -->
+<!-- 						<table style="margin-top: 10px; width: 100%;"> -->
+<!-- 							<tr> -->
+<!-- 								<td width="15%"><p:outputLabel -->
+<!-- 										value="Item Code" /></td> -->
+<!-- 								<td width="35%"><p:inputText size="50" -->
+<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td> -->
+<!-- 							</tr> -->
 
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Item Name" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Contracted Item?" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.yesNoFlag)}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="Status" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
+<!-- 							<tr> -->
+<!-- 								<td width="35%"><p:outputLabel -->
+<!-- 										value="Item Name" /></td> -->
+<!-- 								<td width="65%"><p:inputText size="50" -->
+<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<!-- 								<td width="35%"><p:outputLabel -->
+<!-- 										value="Contracted Item?" /></td> -->
+<!-- 								<td width="35%">					 -->
+<!-- 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}"> -->
+<!-- 										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.yesNoFlag)}" /> -->
+<!-- 									</p:selectOneMenu> -->
+<!-- 								</td>						 -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<!-- 								<td width="35%"><p:outputLabel -->
+<!-- 										value="Status" /></td> -->
+<!-- 								<td width="35%">					 -->
+<!-- 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}"> -->
+<!-- 										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" /> -->
+<!-- 									</p:selectOneMenu> -->
+<!-- 								</td>						 -->
+<!-- 							</tr> -->
 							
-						</table>					
-				</p:panel></td>
-			</tr>
-		</table>
+<!-- 						</table>					 -->
+<!-- 				</p:panel></td> -->
+<!-- 			</tr> -->
+<!-- 		</table> -->
 		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include>
 	</h:panelGroup>		
 
