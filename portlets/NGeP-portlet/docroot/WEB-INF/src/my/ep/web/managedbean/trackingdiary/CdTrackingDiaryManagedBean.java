@@ -31,12 +31,58 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchUNSPSCExtensionCodeValue;
 	private Long searchStatusId;
 
-	private CmUnspsc cmUnspsc;
-	private IPagingDataModel<CmUnspsc> cdDocumentDataModel 	= new SearchPagingDataModel();
-	private SearchFilterBean titleFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
-	public CmUnspsc getCmUnspsc() {
-		return cmUnspsc;
+	private class SearchPagingDataModel extends PagingDataModel<Object[]> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchPagingDataModel() {
+			super("unspscTableID", false);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+
+			ICodificationSO unspscSO = null;
+			try {
+				System.out.println("pageChangeListener");
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
+						.getServiceObject("cm", ICodificationSO.class);
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				if(getSearchDocumentNoValue()!=null && getSearchDocumentNoValue()!="") {
+					System.out.println("getSearchDocumentNoValue");
+					reqDTO.setExtSearchBean(searchBean);
+					reqDTO.setDocNo(getSearchDocumentNoValue());
+				}
+				if(getSearchUNSPSCExtensionCodeValue()!=null && getSearchUNSPSCExtensionCodeValue()!="") {
+					System.out.println("getSearchItemCodeValue");
+					reqDTO.setExtSearchBean(searchBean);
+					reqDTO.setUnspscCode(getSearchUNSPSCExtensionCodeValue());
+				}
+				if(getSearchSupplierValue()!=null && getSearchSupplierValue()!="") {
+					System.out.println("getSearchSupplierValue");
+					reqDTO.setExtSearchBean(searchBean);
+					reqDTO.setSupplierName(getSearchSupplierValue());
+				}
+//				if(getSearchStatusId()!=null) {
+//					System.out.println("getSearchStatusId"+getSearchStatusId());
+//					reqDTO.setst(getSearchStatusId());
+//				}
+				System.out.println("*********b4***********");
+				CodificationResDTO resDTO = unspscSO.retrieveCodificationRequest(reqDTO);
+				System.out.println("*********after***********" + resDTO.getCodificationRequestResultBean().getTotalRecord());
+				return resDTO.getCodificationRequestResultBean();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				unspscSO = null;
+			}
+			return new SearchResultBean();
+		}
 	}
 
 	public String getSearchDocumentNoValue() {
@@ -72,63 +118,11 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchStatusId = searchStatusId;
 	}
 
-	public void setCmUnspsc(CmUnspsc cmUnspsc) {
-		this.cmUnspsc = cmUnspsc;
-	}
-	public SearchFilterBean getTitleFilterBean() {
-		return titleFilterBean;
-	}
-
-	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
-		this.titleFilterBean = titleFilterBean;
-	}
-	public IPagingDataModel<CmUnspsc> getCdDocumentDataModel() {
+	public IPagingDataModel<Object[]> getCdDocumentDataModel() {
 		return cdDocumentDataModel;
 	}
 
-	public void setCdDocumentDataModel(IPagingDataModel<CmUnspsc> cdDocumentDataModel) {
+	public void setCdDocumentDataModel(IPagingDataModel<Object[]> cdDocumentDataModel) {
 		this.cdDocumentDataModel = cdDocumentDataModel;
 	}
-	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
-
-		private static final long serialVersionUID = 1L;
-
-		public SearchPagingDataModel() {
-			super("supplierItemID", false);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected ISearchResultBean<CmUnspsc> pageChangeListener(
-				ISearchBean<CmUnspsc> searchBean) {
-
-			ICodificationSO unspscSO = null;
-			try {
-				System.out.println("pageChangeListener");
-				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
-						.getServiceObject("cm", ICodificationSO.class);
-
-				titleFilterBean.setSearchField("unspscTitle");
-				titleFilterBean.setSearchValue("aa");
-				searchBean.getDataFilterBeans().add(titleFilterBean);
-
-
-				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setSearchBean(searchBean);
-				System.out.println("*********b4***********");
-				CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
-
-				System.out.println("*********after***********" + resDTO.getResultBean().getTotalRecord());
-				return resDTO.getResultBean();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				unspscSO = null;
-			}
-			return new SearchResultBean();
-		}
-
-	}
-
-
 }

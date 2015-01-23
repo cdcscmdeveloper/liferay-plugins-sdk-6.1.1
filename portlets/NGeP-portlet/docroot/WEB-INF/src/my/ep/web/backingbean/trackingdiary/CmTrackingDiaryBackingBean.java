@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.trackingdiary;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -11,29 +12,21 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
-import my.ep.constant.MessageConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.constant.cm.CmConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.managedbean.trackingdiary.CdTrackingDiaryManagedBean;
 import my.ep.web.managedbean.trackingdiary.CmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "cmTrackingDiaryBackingBean")
@@ -43,11 +36,8 @@ public class CmTrackingDiaryBackingBean extends
 	private static Logger log = Logger.getLogger(CmTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CATALOG_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CATALOG_DETAIL_SEARCH = "cmTrackingDiaryDetailSearch.xhtml";
-	private SearchFilterBean docTypeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean docIdFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean docNoFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	FacesScopes face = new FacesScopes();
 
-	private IPagingDataModel<VCmSupplierItem> searchDataModel 	= new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
 	public CmTrackingDiaryBackingBean() {
@@ -81,57 +71,6 @@ public class CmTrackingDiaryBackingBean extends
 //		searchDataModel.reloadData();	
 		
 	}
-	private class SearchPagingDataModel extends PagingDataModel<VCmSupplierItem> {
-
-		private static final long serialVersionUID = 1L;
-
-		public SearchPagingDataModel() {
-			super("supplierItemID", false);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected ISearchResultBean<VCmSupplierItem> pageChangeListener(
-				ISearchBean<VCmSupplierItem> searchBean) {
-
-			IViewSupplierItemSO viewSO = null;
-
-			try {	
-
-				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance().getServiceObject("cm",IViewSupplierItemSO.class);
-
-
-				
-				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-				reqDTO.setViewSearchBean(searchBean);
-				
-				if(searchBean.getDataFilterBeans().size()<=0){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(MessageConst.ERROR_716006,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					//throw new EpException(MessageConst.ERROR_715014);
-					return new SearchResultBean();
-				}
-				
-				log.info("*********b4***********");
-				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
-				log.info("*********after***********");
-				log.info("*********resDTO.getViewSuppItemResultBean()***********"+resDTO.getViewSuppItemResultBean().getTotalRecord());
-
-				return resDTO.getViewSuppItemResultBean();
-			}catch(Exception e){
-				e.printStackTrace();
-				return new SearchResultBean();
-			} finally {
-				viewSO = null;
-			}
-		}
-
-	}
-
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
 
@@ -147,7 +86,8 @@ public class CmTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),""));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
 //			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
 
 			reqDTO.setSearchBean(searchBean);
@@ -174,25 +114,17 @@ public class CmTrackingDiaryBackingBean extends
 
 	public String reset() {
 		System.out.println("In reset ...................");
-//		itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-//		itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-//		supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		this.setSearchDataModel(new SearchPagingDataModel());
-		searchDataModel.reloadData();
 		System.out.println("after reset.........................");
 		return null;
 	}
 	public SelectItem[] getStatus() {
 		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
 
 		try {
-
 			items = new SelectItem[3];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
-
 			items[1] = new SelectItem(new String("ACT"), new String("ACTIVE"));
 			items[2] = new SelectItem(new String("NACT"), new String("NON ACTIVE"));
 		} catch (Exception e) {
@@ -205,18 +137,29 @@ public class CmTrackingDiaryBackingBean extends
 
 		return items;
 	}
+	/**
+	 * to return the all Supplier Item's status as a SelectItem list. 
+	 * @return
+	 */
+	public List<SelectItem> getItemStatusOptions() {
+		List<SelectItem> options = new ArrayList<SelectItem>();
+		
+		options.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				face.getUserLocale())));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_DRAFT, "Draf"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_PENDING_APPROVAL, "Menunggu Kelulusan"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_APPROVED, "Diluluskan"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_REJECTED, "Ditolak"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_PUBLISHED, "Diiklankan"));
+		options.add(new SelectItem(CmConst.ITEM_STATUS_EXPIRED, "Tamat Tempoh"));
+		
+		return options;
+	}
 
 	public String backToPrev() {
 
 		return NAV_TO_CATALOG_SEARCH;
-	}
-
-	public IPagingDataModel<VCmSupplierItem> getSearchDataModel() {
-		return searchDataModel;
-	}
-
-	public void setSearchDataModel(IPagingDataModel<VCmSupplierItem> searchDataModel) {
-		this.searchDataModel = searchDataModel;
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
@@ -227,32 +170,6 @@ public class CmTrackingDiaryBackingBean extends
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
-
-
-	public SearchFilterBean getDocTypeFilterBean() {
-		return docTypeFilterBean;
-	}
-
-	public void setDocTypeFilterBean(SearchFilterBean docTypeFilterBean) {
-		this.docTypeFilterBean = docTypeFilterBean;
-	}
-
-	public SearchFilterBean getDocIdFilterBean() {
-		return docIdFilterBean;
-	}
-
-	public void setDocIdFilterBean(SearchFilterBean docIdFilterBean) {
-		this.docIdFilterBean = docIdFilterBean;
-	}
-
-	public SearchFilterBean getDocNoFilterBean() {
-		return docNoFilterBean;
-	}
-
-	public void setDocNoFilterBean(SearchFilterBean docNoFilterBean) {
-		this.docNoFilterBean = docNoFilterBean;
-	}
-
 
 }
 

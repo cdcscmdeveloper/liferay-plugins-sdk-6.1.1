@@ -32,9 +32,6 @@ public class CdTrackingDiaryBackingBean extends
 	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cdTrackingDiaryDetailSearch.xhtml";
-	private SearchFilterBean docTypeFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean docIdFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean docNoFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 //	private IPagingDataModel<CmUnspsc> searchDataModel 	= new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
@@ -69,8 +66,8 @@ public class CdTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
-//			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchDocumentNoValue()));
+			System.out.println("docNo" + getManagedBean().getSearchDocumentNoValue());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -86,9 +83,9 @@ public class CdTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(CmUnspsc unspscObj) {
-		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-		getManagedBean().setCmUnspsc(unspscObj);
+	public String goToTrackingDiarySearch(Object[] unspscObj) {
+//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
+//		getManagedBean().setCmUnspsc(unspscObj);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}
@@ -134,22 +131,6 @@ public class CdTrackingDiaryBackingBean extends
 	public void setSearchTrackingDiaryDataModel(
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
-	}
-
-	public SearchFilterBean getDocTypeFilterBean() {
-		return docTypeFilterBean;
-	}
-
-	public void setDocTypeFilterBean(SearchFilterBean docTypeFilterBean) {
-		this.docTypeFilterBean = docTypeFilterBean;
-	}
-
-	public SearchFilterBean getDocIdFilterBean() {
-		return docIdFilterBean;
-	}
-
-	public void setDocIdFilterBean(SearchFilterBean docIdFilterBean) {
-		this.docIdFilterBean = docIdFilterBean;
 	}
 
 }

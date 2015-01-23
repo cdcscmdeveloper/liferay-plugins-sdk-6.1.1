@@ -32,20 +32,11 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchItemCodeValue;
 	private String searchItemNameValue;
 	private String searchSupplierValue; 
-	private Long searchStatusId;
+	private String searchStatusId;
 	private Date searchCreatedFromDuration;
 	private Date searchCreatedToDuration;
 
 	private IPagingDataModel<CmSupplierItem> cmDocumentDataModel 	= new SearchPagingDataModel();
-	private SearchFilterBean titleFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-
-//	public SearchFilterBean getTitleFilterBean() {
-//		return titleFilterBean;
-//	}
-//
-//	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
-//		this.titleFilterBean = titleFilterBean;
-//	}
 
 	private class SearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
@@ -67,10 +58,25 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 						.getServiceObject("cm", ICatalogueSO.class);
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-				reqDTO.setItemCode(getSearchItemCodeValue());
-//				reqDTO.setItemCode(getSearchSupplierValue());
-				System.out.println("*********b4***********");
-				CatalogueResDTO resDTO = catSO.searchSupplierItemByStatus(reqDTO);
+				if(getSearchItemCodeValue()!=null && getSearchItemCodeValue()!="") {
+					System.out.println("getSearchItemCodeValue");
+					reqDTO.setItemCode(getSearchItemCodeValue());
+				}
+//				if(getSupplierName()!=null && getSupplierName()!="") {
+//					System.out.println("getSupplierName");
+//					reqDTO.setCompanyName(getSupplierName());
+//				}
+				if(getSearchStatusId()!=null && getSearchStatusId()!="") {
+					System.out.println("getSearchStatusId"+getSearchStatusId());
+					reqDTO.setItemStatus(getSearchStatusId());
+				}
+//				if(getApplicationType()!=null && getApplicationType()!="") {
+//					System.out.println("getApplicationNo");
+//					reqDTO.setApplType(getApplicationType());
+//				}
+				reqDTO.setSearchBean(searchBean);
+				System.out.println("*********b4***********"+getSearchItemCodeValue() );
+				CatalogueResDTO resDTO = catSO.searchSupplierItem(reqDTO);
 
 				System.out.println("*********after***********" + resDTO.getSuppItemResultBean().getTotalRecord());
 				return resDTO.getSuppItemResultBean();
@@ -116,11 +122,11 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchSupplierValue = searchSupplierValue;
 	}
 
-	public Long getSearchStatusId() {
+	public String getSearchStatusId() {
 		return searchStatusId;
 	}
 
-	public void setSearchStatusId(Long searchStatusId) {
+	public void setSearchStatusId(String searchStatusId) {
 		this.searchStatusId = searchStatusId;
 	}
 
