@@ -1408,26 +1408,29 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			int size = this.getManagedBean().getSelectedPlan().getPpExpenditureItems().size();
 //			PpExpenditureItem epItem = this.getManagedBean().getSelectedPlan().getPpExpenditureItems().get(size-1);
 			for(PpExpenditureItem epItem: this.getManagedBean().getSelectedPlan().getPpExpenditureItems()){
-				if(epItem.getPmGlAccount().getGlAccountId()==null){
-					throw new EpException(MessageConst.ERROR_730003);
-				}
-				if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
-					throw new EpException(MessageConst.ERROR_730004);
-				}
-				if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
-					throw new EpException(MessageConst.ERROR_730005);
-				}
-				if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
-					throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
-				}
-				if(epItem.getNonEpAmt().intValue()>0){
-					if(epItem.getJustifications()==null 
-							|| epItem.getJustifications().get(0)==null 
-							|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())){
-						throw new EpException(MessageConst.ERROR_730007);
+				if(DbValueConst.RECORD_STATUS_ACTIVE ==epItem.getRecordStatusFlg()){
+					
+					if(epItem.getPmGlAccount().getGlAccountId()==null){
+						throw new EpException(MessageConst.ERROR_730003);
 					}
+					if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
+						throw new EpException(MessageConst.ERROR_730004);
+					}
+					if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
+						throw new EpException(MessageConst.ERROR_730005);
+					}
+					if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
+						throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
+					}
+					if(epItem.getNonEpAmt().intValue()>0){
+						if(epItem.getJustifications()==null 
+								|| epItem.getJustifications().get(0)==null 
+								|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())){
+							throw new EpException(MessageConst.ERROR_730007);
+						}
+					}
+					soIds.add(epItem.getPmGlAccount().getGlAccountId());
 				}
-				soIds.add(epItem.getPmGlAccount().getGlAccountId());
 			}
 			if(!soIds.isEmpty()){
 				if(!validationUniqueIds(soIds)){
@@ -1551,20 +1554,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			int size = this.getManagedBean().getSelectedPlan().getPpProcurementItems().size();
 //			PpProcurementItem ppItem = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(size-1);
 			for(PpProcurementItem ppItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
-				if(StringUtils.isBlank(ppItem.getProcurementTitle())){
-					throw new EpException(MessageConst.ERROR_730010);
-				}
-				if(ppItem.getProcurementCat().getParameterId()==null){
-					throw new EpException(MessageConst.ERROR_730011);
-				}
-				if(ppItem.getProcurementType().getParameterId()==null){
-					throw new EpException(MessageConst.ERROR_730013);
-				}
-				if(ppItem.getInvitationDate()==null){
-					throw new EpException(MessageConst.ERROR_730012);
-				}
-				if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
-					throw new EpException(MessageConst.ERROR_730014);
+				if(DbValueConst.RECORD_STATUS_ACTIVE ==ppItem.getRecordStatusFlg()){
+					if(StringUtils.isBlank(ppItem.getProcurementTitle())){
+						throw new EpException(MessageConst.ERROR_730010);
+					}
+					if(ppItem.getProcurementCat().getParameterId()==null){
+						throw new EpException(MessageConst.ERROR_730011);
+					}
+					if(ppItem.getProcurementType().getParameterId()==null){
+						throw new EpException(MessageConst.ERROR_730013);
+					}
+					if(ppItem.getInvitationDate()==null){
+						throw new EpException(MessageConst.ERROR_730012);
+					}
+					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
+						throw new EpException(MessageConst.ERROR_730014);
+					}
 				}
 			}
 		}
@@ -2664,7 +2669,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("searchPlan");
 		this.getManagedBean().setSearch(true);
 		ppPlanDataModel.reloadData();
-		
 	}
 
 	/**
