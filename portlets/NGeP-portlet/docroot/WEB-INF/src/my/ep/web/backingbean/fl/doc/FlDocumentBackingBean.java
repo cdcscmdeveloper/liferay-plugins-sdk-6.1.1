@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.doc;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,8 +17,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
@@ -74,7 +73,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 //import my.ep.constant.BpmOutcomeConst;
 
 /**
@@ -853,13 +851,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 		
 		if(reportName!=null) {
-			String reportUrl = generateReportURL(reportName, paramMap);
-			String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()+"/ReportViewServlet";		
-			
-			PortletRequest portalRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-			HttpServletRequest req = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
-			req.getSession().setAttribute("generatedUrl", reportUrl);
-			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
+			try {
+				generateReport(reportName, paramMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} else {
 			throw new EpException("Report is not available for this document.");
 		}
