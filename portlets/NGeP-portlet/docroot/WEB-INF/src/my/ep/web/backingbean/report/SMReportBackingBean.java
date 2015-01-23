@@ -479,7 +479,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL1List();		
 		for(PmCategoryL1 catOne: catCodeResDTO.getCategoryL1List()){			
 			SelectItem selectItem= new SelectItem();
-			selectItem.setLabel(catOne.getCategoryName());
+			selectItem.setLabel(catOne.getCategoryName()+" - "+catOne.getCategoryL1Id());
 			selectItem.setValue(catOne.getCategoryL1Id());
 			levOneCatLst.add(selectItem);			
 		}
