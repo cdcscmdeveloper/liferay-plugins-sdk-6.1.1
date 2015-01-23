@@ -192,6 +192,26 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
+	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel) {
+		String accStatus = "";
+		if (smPersonnel.getEpRole() != null
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+			if (smPersonnel.getPmUser() == null) {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.pending", null);
+			} else {
+				if (SmCommonUtil.isPersonnelAlreadyDeactivate(smPersonnel)) {
+					accStatus = SmCommonUtil.getMessage(
+							"lbl.sm.activation.status.pending", null);
+				} else {
+					accStatus = SmCommonUtil.getMessage(
+							"lbl.sm.activation.status.activated", null);
+				}
+			}
+		}
+		return accStatus;
+	}
+
 	private void printJsfBeanList() {
 		ApplicationAssociate application = ApplicationAssociate
 				.getInstance(FacesContext.getCurrentInstance()
@@ -265,8 +285,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		SmMofAccount smMofAccount = new SmMofAccount();
 		try {
 			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
-			reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+			reqDTO.setSupplierType(getManagedBean().getSmAppl()
+					.getSupplierType());
+			reqDTO.setSupplierId(getManagedBean().getSmSupplier()
+					.getSupplierId());
 			MofAccountResDTO resDTO = mofAccountSO
 					.retriveMOFAccountBySupplierIdAndType(reqDTO);
 			smMofAccount = resDTO.getMofAccount();
