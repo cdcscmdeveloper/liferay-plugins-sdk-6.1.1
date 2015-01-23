@@ -168,7 +168,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrievePpRejectReasons(ppItem)}"
-			    	disabled="#{!ppItem.rejected}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
+			    	disabled="#{!ppItem.rejected or !ppItem.editable}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
