@@ -782,6 +782,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		
+		log.info("themeDisplay"+themeDisplay);
+		if(themeDisplay!=null) {
+			log.info("themeDisplay.getURLCurrent()"+themeDisplay.getURLCurrent());
+			log.info("themeDisplay.getLayout()"+themeDisplay.getLayout());
+			if(themeDisplay.getLayout()!=null) {
+				log.info("themeDisplay.getLayout().getGroup()"+themeDisplay.getLayout().getGroup());
+				if(themeDisplay.getLayout().getGroup().getFriendlyURL()!=null) {
+					log.info("themeDisplay.getLayout().getGroup().getFriendlyURL()"+themeDisplay.getLayout().getGroup().getFriendlyURL());
+				}
+			}
+		}
+		
 		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String url = "contract-request";
