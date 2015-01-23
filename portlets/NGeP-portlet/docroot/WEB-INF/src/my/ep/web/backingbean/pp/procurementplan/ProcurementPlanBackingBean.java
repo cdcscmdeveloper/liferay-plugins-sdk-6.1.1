@@ -2678,6 +2678,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void searchPlan(){
 		log.info("searchPlan");
 		this.getManagedBean().setSearch(true);
+		boolean isEmpty = true;
+		  if(!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getPlanNumber())){
+			  isEmpty = false;
+		  }else if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
+			  isEmpty = false;
+		  }else if(this.getManagedBean().getPlanSearchBean().getPlanType().getParameterId()!=null){
+			  isEmpty = false;
+		  }else if(this.getManagedBean().getPlanSearchBean().getVotType().getParameterId()!=null){
+			  isEmpty = false;
+		  }else if(this.getManagedBean().getPlanSearchBean().getPtj().getOrgProfileId()!=null){
+			  isEmpty = false;
+		  }
+		  if(isEmpty){
+			  throw new EpException(MessageConst.ERROR_730027);
+		  }
 		ppPlanDataModel.reloadData();
 	}
 
