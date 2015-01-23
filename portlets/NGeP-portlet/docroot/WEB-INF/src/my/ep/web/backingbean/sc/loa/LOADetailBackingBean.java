@@ -212,7 +212,9 @@ public class LOADetailBackingBean extends
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(true);
-			getManagedBean().setDpLoaListPageNav(true);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+	        getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 
 		} finally {
 			qtAwardSO = null;
@@ -2860,6 +2862,9 @@ public class LOADetailBackingBean extends
 			statusSO = null;
 		}
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+        getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		
 		return editLOAAction(scLoa);
 
 	}
@@ -3179,18 +3184,10 @@ public class LOADetailBackingBean extends
 	/**
 	 * Page navigation to dp and qt loa list.
 	 */
-	public void backToPervious() {
-		log.info("backToPervious");
+	public void backToPrevious() {
+		log.info("backToPrevious");
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(getManagedBean().isDpLoaListPageNav()) {
-			// page nav. to dpLoaList 
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);
-		} else  {
-			// page nav. to qtLoaList 
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
-		}
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
 }
