@@ -647,7 +647,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
-		retrieveLOIList(getManagedBean().getSourceId());
+		//retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 
