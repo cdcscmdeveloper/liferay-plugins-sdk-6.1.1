@@ -14,9 +14,9 @@ public class IntegrationConstants {
 	public static final String FILE_EXTENSION_GFMAS = ".GPG";
 	public static final String SEQUENCE_NO = "001";
 
-	public static final String FILE_PATH = "C:/Integration/Upload/";
+	public static final String FILE_PATH = "/batch/Upload/";
 
-	public static final String GMAS_UPLOAD = "batch/1GFMAS/OUT/";
+	public static final String GMAS_UPLOAD = "/batch/1GFMAS/OUT/";
 	public static final String GMAS_DOWNLOAD = "/batch/1GFMAS/IN/";
 	public static final String GMAS_ARCHIVE = "/batch/1GFMAS/ARCHIVE/";
 
@@ -26,9 +26,9 @@ public class IntegrationConstants {
 	public static final String EPERUNDING_UPLOAD_DIR = "/batch/ePerunding/IN/";
 	public static final String EPERUNDING_ARCHIVE_DIR = "/batch/ePerunding/ARCHIVE/";
 	
-	public static final String ENCRYPTED_FILE_PATH="C:/Integration/Encryption/encrypt/";
+	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
 	
-	public static final String DECRYPTED_FILE_PATH="C:/Integration/Encryption/decrypt/";
+	public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
 
 	public static final String SFTP_HOST = "192.168.62.15";
 	public static final int SFTP_PORT = 22;// Integer.parseInt("22");
