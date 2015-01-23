@@ -47,6 +47,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -72,6 +73,8 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
@@ -101,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
@@ -621,8 +625,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				getManagedBean().getCtDateEnd() == null && 
 				(getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().length() == 0) && 
 				(getManagedBean().getCtLOANo() == null || getManagedBean().getCtLOANo().length() == 0) && 
-				getManagedBean().getCtContractStatus() == 0 &&
-				getManagedBean().getTerminationTypeId() == null) {
+				getManagedBean().getCtStatus() == 0 &&
+				getManagedBean().getTerminationTypeId() == null &&
+				getManagedBean().getCtContractStatus() == null) {
 					FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_755000,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -652,12 +657,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().setCtDateEnd(null);	
 		this.getManagedBean().setCtPhysicalNo(null);	
 		this.getManagedBean().setCtLOANo(null);
-		this.getManagedBean().setCtContractStatus(0);
+		this.getManagedBean().setCtStatus(0);
 		this.getManagedBean().setTerminationTypeId(null);
+		this.getManagedBean().setCtContractStatus(null);
 	}
-	
-
-	
+		
     public String saveContract(String action) throws Exception{
 
     	IContractSO contractSO = null;
@@ -1305,6 +1309,44 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
+	}
+	
+	public SelectItem[] getSearchContractStatusDropdown() {
+		IStatusSO statusSO = null;
+		SelectItem[] items = null;
+		try {
+			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+			String languageCode = getFacesScopes().getUserLocale().getLanguage();
+			
+			int i = 1;
+		 	StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode("CT");
+			List <String> docTypeList = new ArrayList<String>();
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			
+			reqDTO.setDocTypeList(docTypeList);
+			reqDTO.setLanguageCode(languageCode);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			
+		    List<PmStatusDesc> list =  resDTO.getStatusDescList();
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		      
+			for(PmStatusDesc statusDesc : list) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			statusSO = null;
+		}
+	    return items;
 	}
 	
 	public String changeIntToString(int temp){

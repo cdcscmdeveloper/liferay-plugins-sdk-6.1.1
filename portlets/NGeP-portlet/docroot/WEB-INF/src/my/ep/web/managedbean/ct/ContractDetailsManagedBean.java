@@ -97,7 +97,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String warningPercentage;
 	
 	private int selectedIndex;
-	private int ctContractStatus;
+	private int ctStatus;
+	private Long ctContractStatus;
 	private Long terminationTypeId;
 	private Long ministryProfileId;
 	private Long departmentProfileId;
@@ -808,12 +809,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.smSupplierBanks = smSupplierBanks;
 	}
 
-	public int getCtContractStatus() {
-		return ctContractStatus;
+	public int getCtStatus() {
+		return ctStatus;
 	}
 
-	public void setCtContractStatus(int ctContractStatus) {
-		this.ctContractStatus = ctContractStatus;
+	public void setCtStatus(int ctStatus) {
+		this.ctStatus = ctStatus;
 	}
 
 	public boolean isChkConceValue() {
@@ -1094,6 +1095,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.ctAmendment = ctAmendment;
 	}
 	
+	public Long getCtContractStatus() {
+		return ctContractStatus;
+	}
+
+	public void setCtContractStatus(Long ctContractStatus) {
+		this.ctContractStatus = ctContractStatus;
+	}
+
 	public IPagingDataModel<VCtContract> getContractDataModel() {
 		return contractDataModel;
 	}
@@ -1170,9 +1179,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
-				if(getCtContractStatus()>0) {
+				if(getCtStatus()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
-					getCtContractStatus()));					
+					getCtStatus()));					
 				}
 				if(getTerminationTypeId() != null) {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -1194,6 +1203,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 				
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
+				if(getCtContractStatus() != null) {
+					reqDTO.setStatusId(getCtContractStatus());
+				}
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
 				setSelectedIndex(0);
