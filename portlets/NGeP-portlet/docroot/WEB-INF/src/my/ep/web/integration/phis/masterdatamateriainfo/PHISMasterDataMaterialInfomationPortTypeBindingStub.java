@@ -7,7 +7,7 @@
 
 package my.ep.web.integration.phis.masterdatamateriainfo;
 
-public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apache.axis.client.Stub implements my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_PortType {
+public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apache.axis.client.Stub implements my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_PortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
@@ -25,10 +25,10 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("inquire");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRq"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRq_Type"), my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRq_Type.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRq"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRq_Type"), my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRs_Type"));
-        oper.setReturnClass(my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type.class);
+        oper.setReturnClass(my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type.class);
         oper.setReturnQName(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRs"));
         oper.setStyle(org.apache.axis.constants.Style.DOCUMENT);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -137,35 +137,35 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RqHeader_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RqUID_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.epmf.RqUID_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RsHeader_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.epmf.RsHeader_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.RsHeader_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RsUID_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.epmf.RsUID_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.RsUID_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "Status_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.epmf.Status_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.Status_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -242,21 +242,21 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRq_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRq_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "EPMFRs_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataMaterialInfomation", "MaterialInformationRq_Type");
             cachedSerQNames.add(qName);
-            cls = my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.MaterialInformationRq_Type.class;
+            cls = my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -327,7 +327,7 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
         }
     }
 
-    public my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type inquire(my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRq_Type part) throws java.rmi.RemoteException {
+    public my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type inquire(my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type part) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -351,9 +351,9 @@ public class PHISMasterDataMaterialInfomationPortTypeBindingStub extends org.apa
         else {
             extractAttachments(_call);
             try {
-                return (my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type) _resp;
+                return (my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type) _resp;
             } catch (java.lang.Exception _exception) {
-                return (my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type) org.apache.axis.utils.JavaUtils.convert(_resp, my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type.class);
+                return (my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type) org.apache.axis.utils.JavaUtils.convert(_resp, my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

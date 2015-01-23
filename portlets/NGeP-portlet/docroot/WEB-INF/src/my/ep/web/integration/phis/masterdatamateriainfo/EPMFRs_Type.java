@@ -8,13 +8,13 @@
 package my.ep.web.integration.phis.masterdatamateriainfo;
 
 public class EPMFRs_Type  implements java.io.Serializable {
-    private my.gov.ep.www.Schema._1_0.epmf.RsHeader_Type rsHeader;
+    private my.ep.web.integration.phis.masterdatamateriainfo.RsHeader_Type rsHeader;
 
     public EPMFRs_Type() {
     }
 
     public EPMFRs_Type(
-           my.gov.ep.www.Schema._1_0.epmf.RsHeader_Type rsHeader) {
+           my.ep.web.integration.phis.masterdatamateriainfo.RsHeader_Type rsHeader) {
            this.rsHeader = rsHeader;
     }
 
@@ -24,7 +24,7 @@ public class EPMFRs_Type  implements java.io.Serializable {
      * 
      * @return rsHeader
      */
-    public my.gov.ep.www.Schema._1_0.epmf.RsHeader_Type getRsHeader() {
+    public my.ep.web.integration.phis.masterdatamateriainfo.RsHeader_Type getRsHeader() {
         return rsHeader;
     }
 
@@ -34,7 +34,7 @@ public class EPMFRs_Type  implements java.io.Serializable {
      * 
      * @param rsHeader
      */
-    public void setRsHeader(my.gov.ep.www.Schema._1_0.epmf.RsHeader_Type rsHeader) {
+    public void setRsHeader(my.ep.web.integration.phis.masterdatamateriainfo.RsHeader_Type rsHeader) {
         this.rsHeader = rsHeader;
     }
 

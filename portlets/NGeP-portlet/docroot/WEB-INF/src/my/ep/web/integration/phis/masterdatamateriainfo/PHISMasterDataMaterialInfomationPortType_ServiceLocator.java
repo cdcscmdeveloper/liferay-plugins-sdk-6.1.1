@@ -7,7 +7,7 @@
 
 package my.ep.web.integration.phis.masterdatamateriainfo;
 
-public class PHISMasterDataMaterialInfomationPortType_ServiceLocator extends org.apache.axis.client.Service implements my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_Service {
+public class PHISMasterDataMaterialInfomationPortType_ServiceLocator extends org.apache.axis.client.Service implements my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_Service {
 
     public PHISMasterDataMaterialInfomationPortType_ServiceLocator() {
     }
@@ -39,7 +39,7 @@ public class PHISMasterDataMaterialInfomationPortType_ServiceLocator extends org
         PHISMasterDataMaterialInfomationPortTypePortWSDDServiceName = name;
     }
 
-    public my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort() throws javax.xml.rpc.ServiceException {
+    public my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint;
         try {
             endpoint = new java.net.URL(PHISMasterDataMaterialInfomationPortTypePort_address);
@@ -50,9 +50,9 @@ public class PHISMasterDataMaterialInfomationPortType_ServiceLocator extends org
         return getPHISMasterDataMaterialInfomationPortTypePort(endpoint);
     }
 
-    public my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
+    public my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
         try {
-            my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortTypeBindingStub _stub = new my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortTypeBindingStub(portAddress, this);
+            my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortTypeBindingStub _stub = new my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortTypeBindingStub(portAddress, this);
             _stub.setPortName(getPHISMasterDataMaterialInfomationPortTypePortWSDDServiceName());
             return _stub;
         }
@@ -72,8 +72,8 @@ public class PHISMasterDataMaterialInfomationPortType_ServiceLocator extends org
      */
     public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         try {
-            if (my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_PortType.class.isAssignableFrom(serviceEndpointInterface)) {
-                my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortTypeBindingStub _stub = new my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortTypeBindingStub(new java.net.URL(PHISMasterDataMaterialInfomationPortTypePort_address), this);
+            if (my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_PortType.class.isAssignableFrom(serviceEndpointInterface)) {
+                my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortTypeBindingStub _stub = new my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortTypeBindingStub(new java.net.URL(PHISMasterDataMaterialInfomationPortTypePort_address), this);
                 _stub.setPortName(getPHISMasterDataMaterialInfomationPortTypePortWSDDServiceName());
                 return _stub;
             }
