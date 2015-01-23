@@ -198,7 +198,7 @@
 					disabled="#{flOrderBB.managedBean.buttonVal=='View'}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.financialOrgId}" 
 					style="width: 425px;margin-bottom:5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="factoringComp"
 							value="#{flOrderBB.managedBean.pmFinancialOrgs}"
 							itemLabel="#{factoringComp.finOrgName}"
@@ -213,7 +213,7 @@
 							value="#{lbl['lbl.fl.factoring.branch']}" /></td>
 					<td><p:selectOneMenu id="factoringBranch" disabled="#{empty flOrderBB.managedBean.factoringBranchList or flOrderBB.managedBean.buttonVal=='View'}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.financialBranchId}" style="width: 325px;margin-bottom:5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="factoringBranch"
 							value="#{flOrderBB.managedBean.factoringBranchList}"
 							itemLabel="#{factoringBranch.branchName}"

@@ -16,7 +16,7 @@
 			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}">
 				<p:selectOneMenu id="deductionList" value="#{deduction.deductionType.parameterId}" disabled="#{paymentMatchBackingBean.managedBean.buttonVal == 'View'}">
-					<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="ctDeduction"
 						value="#{paymentMatchBackingBean.getDropdownValuesByCtDetails()}"/>
 						 <p:ajax event="change" process="@this" update="deductionList,descId,danaPnl,gosodoPnl,deductionAmtPnl"
