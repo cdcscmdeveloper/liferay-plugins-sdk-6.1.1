@@ -67,6 +67,26 @@
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 						</c:when>
+						<c:when
+							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT}">
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialog" partialSubmit="true"
+								process="@this"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
+								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+							<p:commandButton
+								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
+								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this"
+								action="#{backingBean.assignMissingDocsList}"
+								update=":form:tt:sendInqDialog" />
+						</c:when>
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
