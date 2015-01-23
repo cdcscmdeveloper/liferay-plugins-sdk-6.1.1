@@ -1433,9 +1433,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 					if(epItem.getNonEpAmt().intValue()>0){
 						if(epItem.getJustifications()==null 
-								|| epItem.getJustifications().isEmpty()
-								|| epItem.getJustifications().get(0)==null 
-								|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())){
+								|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
+								|| (epItem.getJustifications()!=null 
+									&& epItem.getJustifications().isEmpty() 
+									&& epItem.getJustifications().get(0)==null)  
+								|| (epItem.getJustifications()!=null 
+									&& epItem.getJustifications().isEmpty() 
+									&& epItem.getJustifications().get(0)==null
+									&& StringUtils.isBlank(epItem.getJustifications().get(0).getRemark()))){
 							throw new EpException(MessageConst.ERROR_730007);
 						}
 					}
