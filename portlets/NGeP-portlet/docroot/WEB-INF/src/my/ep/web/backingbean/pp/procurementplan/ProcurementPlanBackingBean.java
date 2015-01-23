@@ -546,34 +546,34 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						log.info("no workflow status");
 						ppPlan.setCurrentStatus(new PpWorkflowStatus());
 						ppPlan.getCurrentStatus().setPmStatus(new PmStatus());
-						
-						if(!fromList){
-							log.info("load BPM status");
-							//get BPM status instead
-							PmStatus bpmStatus = new PmStatus();
-							bpmStatus.setStatusId(this.getManagedBean().getBpmStatusId());
-							PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
-							ppWorkflowStatus.setPmStatus(bpmStatus);
-							ppWorkflowStatus.setCreatedDate(this.getManagedBean().getBpmStatusDate());
-							ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(this.getManagedBean().getBpmStatusCreator(), null).getUserName());
-							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
-						}else{
-							// PP20150108-0012
-							log.info("load default status");
-							PmStatus bpmStatus = new PmStatus();
-							PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
-							if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
-								bpmStatus.setStatusId(ProcurementPlanConst.PPP_PENDING_SUBMISSION);
-								ppWorkflowStatus.setPmStatus(bpmStatus);
-							}else{
-								bpmStatus.setStatusId(ProcurementPlanConst.PPE_PENDING_SUBMISSION);
-								ppWorkflowStatus.setPmStatus(bpmStatus);
-							}
-							ppWorkflowStatus.setCreatedDate(ppPlan.getCreatedDate());
-							ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(null, ppPlan.getCreatedBy()).getUserName());
-							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
-						}
-						
+//						no longer required as BPM will always insert status 23 Jan 2015
+//						if(!fromList){
+//							log.info("load BPM status");
+//							//get BPM status instead
+//							PmStatus bpmStatus = new PmStatus();
+//							bpmStatus.setStatusId(this.getManagedBean().getBpmStatusId());
+//							PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
+//							ppWorkflowStatus.setPmStatus(bpmStatus);
+//							ppWorkflowStatus.setCreatedDate(this.getManagedBean().getBpmStatusDate());
+//							ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(this.getManagedBean().getBpmStatusCreator(), null).getUserName());
+//							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
+//						}else{
+//							// PP20150108-0012
+//							log.info("load default status");
+//							PmStatus bpmStatus = new PmStatus();
+//							PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
+//							if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+//								bpmStatus.setStatusId(ProcurementPlanConst.PPP_PENDING_SUBMISSION);
+//								ppWorkflowStatus.setPmStatus(bpmStatus);
+//							}else{
+//								bpmStatus.setStatusId(ProcurementPlanConst.PPE_PENDING_SUBMISSION);
+//								ppWorkflowStatus.setPmStatus(bpmStatus);
+//							}
+//							ppWorkflowStatus.setCreatedDate(ppPlan.getCreatedDate());
+//							ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(null, ppPlan.getCreatedBy()).getUserName());
+//							this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
+//						}
+//						
 					}else{
 						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());
 					}
@@ -792,9 +792,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				&& !this.getManagedBean().isModeReviewEditable()){
 			newRemark = false;
 		}
-		for(PpRemark remark  :this.getManagedBean().getSelectedRemarks()){
-			System.out.println(remark.getRemark() + remark.isEditable());
-		}
+	
 		
 		// for user to edit draft remark
 		if(newRemark){
@@ -892,6 +890,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			newRemark = false;
 		}
 		
+		if(ppItem.isEditable()){
+			newRemark = false;
+		}
+		
+		
 		/* enable for phase 2
 		// for user to edit draft remark
 		if(newRemark){
@@ -970,10 +973,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		// filter by current view mode	
-		if(!this.getManagedBean().isModeEditable() 
-				&& !this.getManagedBean().getSelectedPlan().isUpdatable()){
+		if((!this.getManagedBean().isModeEditable() 
+				&& !this.getManagedBean().getSelectedPlan().isUpdatable())){
 			newRemark = false;
 		}
+		
+		if(epItem.isEditable()){
+			newRemark = false;
+		}
+		
 	
 		/* enable for phase 2
 		// for user to edit draft remark
@@ -1080,9 +1088,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		// filter by current view mode	
-		if(!this.getManagedBean().isModeEditable()){
+		if(!this.getManagedBean().isModeEditable() || !epItem.isEditable()){
 			newRemark = false;
 		}
+	
 		
 		/* enable for phase 2
 		// for user to edit draft remark
