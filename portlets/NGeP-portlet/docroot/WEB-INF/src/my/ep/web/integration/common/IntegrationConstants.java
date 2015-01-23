@@ -15,6 +15,7 @@ public class IntegrationConstants {
 	public static final String SEQUENCE_NO = "001";
 
 	public static final String FILE_PATH = "/batch/Upload/";
+//	public static final String FILE_PATH = "C:/Integration/Upload/";
 
 	public static final String GMAS_UPLOAD = "/batch/1GFMAS/OUT/";
 	public static final String GMAS_DOWNLOAD = "/batch/1GFMAS/IN/";
@@ -27,6 +28,7 @@ public class IntegrationConstants {
 	public static final String EPERUNDING_ARCHIVE_DIR = "/batch/ePerunding/ARCHIVE/";
 	
 	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
+//	public static final String ENCRYPTED_FILE_PATH="C:/Integration/Encryption/encrypt/";
 	
 	public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
 
@@ -35,12 +37,12 @@ public class IntegrationConstants {
 	public static final String SFTP_USER = "oracle";
 	public static final String SFTP_PASS = "welcome1";
 	
-	public static final String GMAS_PUBLIC_KEY_PATH = "./NGeP-portlet/docroot/encryptionKeys/1gfmasdev_pub.id";
-	public static final String GMAS_PRIVATE_KEY_PATH = "./NGeP-portlet/docroot/encryptionKeys/privatekey";
+	public static final String GMAS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id";
+	public static final String GMAS_PRIVATE_KEY_PATH = "/NGeP-portlet/docroot/encryptionKeys/privatekey";
 
 	public static final String GMAS_PASS_PHASE = "eperolehanpsstg";
 	
-	public static final String PHIS_PUBLIC_KEY_PATH = "./NGeP-portlet/docroot/encryptionKeys/PLSB publickey.asc";
+	public static final String PHIS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/PLSB publickey.asc";
 	
 	public static final String CRE="CRE";
 	public static final String ADJ="ADJ";
