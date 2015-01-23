@@ -72,6 +72,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private Long prgActivityId;
 	private String financingTypeCode;
 	private Long deductionId;
+	private String invoiceDate;
 
 	private FlFulfilmentRequest fulfilmentRequest;
 
@@ -991,5 +992,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setDanAmtGrandTotal(BigDecimal danAmtGrandTotal) {
 		this.danAmtGrandTotal = danAmtGrandTotal;
+	}
+
+	/**
+	 * @return the invoiceDate
+	 */
+	public String getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	/**
+	 * @param newDate the invoiceDate to set
+	 */
+	public void setInvoiceDate(String newDate) {
+		this.invoiceDate = newDate;
 	}
 }

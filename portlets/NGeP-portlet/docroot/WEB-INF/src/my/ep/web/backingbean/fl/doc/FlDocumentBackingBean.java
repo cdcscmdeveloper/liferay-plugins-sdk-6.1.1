@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.doc;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -556,6 +557,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			pmBB.getManagedBean().getPaymentAdvice().setFlPaymentDeduction(resDTO.getPaymentAdvice().getFlPaymentDeduction());
 			pmBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			pmBB.checkHaveAdvancedPayment(resDTO.getPaymentAdvice());
+			SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
+			String newDate = df.format(pmBB.getManagedBean().getPaymentAdvice().getFlInvoice().getSubmissionDate());
+			pmBB.getManagedBean().setInvoiceDate(newDate);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
