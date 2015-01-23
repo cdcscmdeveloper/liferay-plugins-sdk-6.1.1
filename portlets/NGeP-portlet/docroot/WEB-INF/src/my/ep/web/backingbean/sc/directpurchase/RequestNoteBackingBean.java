@@ -1655,9 +1655,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
             		 getManagedBean().setItemCheck(Boolean.FALSE); 
             	 }
 
-            	 if(scRequestSupplierItem.getRequestNoteItem() == null){
+            	 /*if(scRequestSupplierItem.getRequestNoteItem() == null){
             		 scRequestSupplierItem.setRequestNoteItem(scRequestNoteDtl.getRequestItem());
-            	 }
+            	 }*/
 
             	 if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
             		 for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
@@ -1707,14 +1707,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		if(getManagedBean().getRequestNoteDtl() != null){
 			List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
-			BigDecimal quantity  = getManagedBean().getRequestSupplierItem().getRequestNoteItem().getQuantity();
+			BigDecimal quantity  = getManagedBean().getRequestNoteDtl().getRequestItem().getQuantity();
 			ScRequestNoteDtl selectedRequestNoteDtl = getManagedBean().getRequestNoteDtl();
 			
 			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
 					if(requestNoteDtl.equals(selectedRequestNoteDtl)){
 						requestNoteDtl.getRequestItem().setQuantity(quantity);
-						requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().setQuantity(quantity);
+						//requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().setQuantity(quantity);
 						requestNoteDtls.add(requestNoteDtl);
 					} else{
 						requestNoteDtls.add(requestNoteDtl);
