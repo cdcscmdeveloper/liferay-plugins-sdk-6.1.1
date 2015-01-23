@@ -8,16 +8,16 @@
 package my.ep.web.integration.phis.masterdatamateriainfo;
 
 public class EPMFRq_Type  implements java.io.Serializable {
-    private my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type rqHeader;
+    private my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type rqHeader;
 
-    private my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.MaterialInformationRq_Type materialInformationRq;
+    private my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type materialInformationRq;
 
     public EPMFRq_Type() {
     }
 
     public EPMFRq_Type(
-           my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type rqHeader,
-           my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.MaterialInformationRq_Type materialInformationRq) {
+           my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type rqHeader,
+           my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type materialInformationRq) {
            this.rqHeader = rqHeader;
            this.materialInformationRq = materialInformationRq;
     }
@@ -28,7 +28,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @return rqHeader
      */
-    public my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type getRqHeader() {
+    public my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type getRqHeader() {
         return rqHeader;
     }
 
@@ -38,7 +38,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @param rqHeader
      */
-    public void setRqHeader(my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type rqHeader) {
+    public void setRqHeader(my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type rqHeader) {
         this.rqHeader = rqHeader;
     }
 
@@ -48,7 +48,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @return materialInformationRq
      */
-    public my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.MaterialInformationRq_Type getMaterialInformationRq() {
+    public my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type getMaterialInformationRq() {
         return materialInformationRq;
     }
 
@@ -58,7 +58,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @param materialInformationRq
      */
-    public void setMaterialInformationRq(my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.MaterialInformationRq_Type materialInformationRq) {
+    public void setMaterialInformationRq(my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type materialInformationRq) {
         this.materialInformationRq = materialInformationRq;
     }
 

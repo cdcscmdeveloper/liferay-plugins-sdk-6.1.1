@@ -8,5 +8,5 @@
 package my.ep.web.integration.phis.masterdatamateriainfo;
 
 public interface PHISMasterDataMaterialInfomationPortType_PortType extends java.rmi.Remote {
-    public my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRs_Type inquire(my.gov.ep.www.Schema._1_0.PHISMasterDataMaterialInfomation.EPMFRq_Type part) throws java.rmi.RemoteException;
+    public my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type inquire(my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type part) throws java.rmi.RemoteException;
 }

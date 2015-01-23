@@ -16,7 +16,7 @@ public class RqHeader_Type  implements java.io.Serializable {
 
     private java.lang.String ipAddress;
 
-    private my.gov.ep.www.Schema._1_0.epmf.RqUID_Type UID;
+    private my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type UID;
 
     public RqHeader_Type() {
     }
@@ -26,7 +26,7 @@ public class RqHeader_Type  implements java.io.Serializable {
            java.lang.String orgUnit,
            java.lang.String segment,
            java.lang.String ipAddress,
-           my.gov.ep.www.Schema._1_0.epmf.RqUID_Type UID) {
+           my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type UID) {
            this.consumerID = consumerID;
            this.orgUnit = orgUnit;
            this.segment = segment;
@@ -120,7 +120,7 @@ public class RqHeader_Type  implements java.io.Serializable {
      * 
      * @return UID
      */
-    public my.gov.ep.www.Schema._1_0.epmf.RqUID_Type getUID() {
+    public my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type getUID() {
         return UID;
     }
 
@@ -130,7 +130,7 @@ public class RqHeader_Type  implements java.io.Serializable {
      * 
      * @param UID
      */
-    public void setUID(my.gov.ep.www.Schema._1_0.epmf.RqUID_Type UID) {
+    public void setUID(my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type UID) {
         this.UID = UID;
     }
 
