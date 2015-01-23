@@ -17,9 +17,8 @@
 			<p:messages id="ackMsg" showDetail="true" autoUpdate="false" severity="info" />
 			<h:outputText value="#{lbl['lbl.txt.view']}" />
 			<p:spacer width="5px" />
-			<p:commandLink  value="#{commonBackingBean.managedBean.reportDisplayName}" 
-				oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
-				actionListener="#{commonBackingBean.generateReport}" />
+			<p:commandLink ajax="false" value="#{commonBackingBean.managedBean.reportDisplayName}" 
+				action="#{commonBackingBean.generateReport}" />
 		</p:panel>
 	</ui:define>
 		    
