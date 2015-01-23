@@ -6,6 +6,7 @@ package my.ep.web.backingbean.fl.paymentmatch;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -328,6 +329,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			if(getManagedBean().getPaymentAdvice().isBrandNew()){
 				getManagedBean().getPaymentAdvice().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			}
+			SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
+			String newDate = df.format(getManagedBean().getPaymentAdvice().getFlInvoice().getSubmissionDate());
+			getManagedBean().setInvoiceDate(newDate);
 		}
 	}
 	
