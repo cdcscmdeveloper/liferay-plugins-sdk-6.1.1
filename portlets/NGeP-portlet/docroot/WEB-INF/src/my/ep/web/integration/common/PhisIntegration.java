@@ -15,7 +15,6 @@ import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -29,8 +28,6 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
@@ -41,15 +38,13 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.AddressType;
-import my.ep.util.lookupservice.EpEjbRemoteBusinessDelegate;
 import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.gfmas.ProgramActivity;
 import my.ep.web.integration.gfmas.Project;
-import my.ep.web.integration.gfmas.SSTInformation;
 import my.ep.web.integration.gfmas.VotFund;
 import my.ep.web.integration.phis.ItemType;
+import my.ep.web.integration.phis.MasterDataMaterialInfo;
 import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
 import my.ep.web.integration.phis.MaterialColor;
@@ -63,34 +58,37 @@ import my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+/*
+* @ Ganga prasad
+*/
 public class PhisIntegration {
 	
 	public static void main(String[] args) throws IOException {
 		PhisIntegration test = new PhisIntegration();
 		//test.creatteFilesforPHIS();
-		test.createFileforSSTInformation();
+		//test.createFileforSSTInformation();
 	}
-	IVotFundSO votFundSO = EpEjbRemoteBusinessDelegate.getInstance()
+	IVotFundSO votFundSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IVotFundSO.class);
-	IProgramActivitySO programActivitySO = EpEjbRemoteBusinessDelegate
+	IProgramActivitySO programActivitySO = BusinessDelegate
 			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProgramActivitySO.class);
-	IProjectSetiaSO projectSetiaSO = EpEjbRemoteBusinessDelegate.getInstance()
+	IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProjectSetiaSO.class);
-	IGlAccountSO glAccountSO = EpEjbRemoteBusinessDelegate.getInstance()
+	IGlAccountSO glAccountSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IGlAccountSO.class);
-	IAddressSO addressSO = EpEjbRemoteBusinessDelegate.getInstance()
+	IAddressSO addressSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAddressSO.class);
 	
 	// method to create file for pharmaniaga for Class,Brand,Measrement,ItemType,Color
 	
-	public void creatteFilesforPHIS() {
+	public void createFilesforPHIS() {
 
-		ICodificationSO codificationSO = (ICodificationSO) EpEjbRemoteBusinessDelegate
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -105,6 +103,7 @@ public class PhisIntegration {
 		}
 
 		reqDTO.setCreateDate(date);
+		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
 		CodificationResDTO resDTO = codificationSO
 				.searchItemByCreateDate(reqDTO);
 
@@ -186,8 +185,9 @@ public class PhisIntegration {
 				mClass.setMaterialClassCode(cmUnspsc.getUnspscParentCode().trim());
 				mClass.setMaterialClassAction(utility.checkAction(cmUnspsc.getCreatedDate(), cmUnspsc.getChangedDate()).trim());
 				mClass.setMaterialOldClassCode("");
+				mClass.setMaterialClassDescription(cmUnspsc.getUnspscTitle().trim());
 				
-				if(cmUnspsc.getUnspscParentCode()==null){
+			/*	if(cmUnspsc.getUnspscParentCode()==null){
 					mClass.setMaterialClassDescription(cmUnspsc.getUnspscDescription().trim());
 				}else{
 						for(int i= cmUnspsc.getUnspscLevel()+1;i>0;i--){
@@ -198,7 +198,7 @@ public class PhisIntegration {
 							}
 							}
 						}
-				}
+				}*/
 				if(!mClasses.contains(mClass)){
 					mClasses.add(mClass);
 				}
@@ -217,52 +217,6 @@ public class PhisIntegration {
 
 	}
 	
-	//create files for Phis SST information
-	public void createFileforSSTInformation() {
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
-		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
-		Date startDate = null;
-		Date endDate = null;
-		try {
-			startDate = ft.parse("04/03/2013");
-			endDate = ft.parse("20/05/2015");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		reqDTO.setStartDate(startDate);
-		reqDTO.setEndDate(endDate);
-
-		AwardSupplierResDTO resDTO = qtAwardSO
-				.retrieveLoaListByDateRange(reqDTO);
-
-		List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
-		System.out.println("List: " + list.size());
-		FileUtility utility = new FileUtility();
-		List<ScLoa> scLoaList = resDTO.getLoaResultBean().getResultList();
-		List<SSTInformation> sstInformations = new ArrayList<SSTInformation>();
-		SSTInformation sstInformation;
-		for (ScLoa scLoa : scLoaList) {
-			sstInformation = new SSTInformation();
-			sstInformation.setRecordType(0);
-			sstInformation.setSSTNumber(scLoa.getLoaId().toString());
-			sstInformation.setPhysicalSSTNumber(scLoa.getLoaNo());
-			sstInformation.setSapVendorCode(scLoa.getScLoiLoa().getSmSupplier().getSapVendorCode());
-			sstInformation.setKumpPtj(scLoa.getScLoiLoa().getPmOrgProfile().getPmOrgValidity().getOrgCode());
-			sstInformation.setSstAcknowledgeDate(utility.formatDate(scLoa.getAckDate()));
-			sstInformations.add(sstInformation);
-		}
-
-		String filePath = IntegrationConstants.FILE_PATH;
-
-		// calling method to save data in files
-		utility.sstInformationFileOutPutStream(sstInformations, filePath);
-
-	}
 	public void deliveryAddress() {
 		{
 			AddressReqDTO reqDTO = new AddressReqDTO();
@@ -578,6 +532,54 @@ public class PhisIntegration {
 		utility.glAccountFileOutPutStream(glAccountList, filePath);
 
 	}
+	
+	public void masterDataMaterialInfoPHIS(List<MasterDataMaterialInfo> materialInfoList){/*
+
+		
+		try{
+			my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type();
+		
+			my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type rqHeader_Type = new my.ep.web.integration.phis.masterdatamateriainfo.RqHeader_Type();
+			
+			rqHeader_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
+			rqHeader_Type.setIpAddress(IntegrationConstants.SERVICE_HOST);
+			rqHeader_Type.setOrgUnit("PHS-220");
+			rqHeader_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
+			
+			my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type rqUID_Type = new my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type();
+			rqUID_Type.setAsyncRqUID("PHS-220");
+			rqUID_Type.setRqUID(IntegrationConstants.SEQUENCE_NO);
+		
+		
+		
+		for(MasterDataMaterialInfo materialInfo:materialInfoList){
+		
+			my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type materialInformationRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type();
+			materialInformationRq_Type.setProductCode(materialInfo.getProductCode());
+			materialInformationRq_Type.setCodeType(materialInfo.getCodeType());
+			materialInformationRq_Type.setKodTindakan(materialInfo.getKodTindakan());
+		
+			materialInformationRq_Type.setOldProductCode(materialInfo.getOldProductCode());
+			materialInformationRq_Type.setItemDescription(materialInfo.getItemDescription());
+			materialInformationRq_Type.setStartEffectiveDate(materialInfo.getStartEffectiveDate());
+			materialInformationRq_Type.setEndEffectiveDate(materialInfo.getEndEffectiveDate());
+		
+			materialInformationRq_Type.setCommodityName(materialInfo.getCommodityName());
+			materialInformationRq_Type.setBaseUnitOfMeasure(materialInfo.getBaseUnitOfMeasure());
+			materialInformationRq_Type.setSegment(materialInfo.getSegment());       //size 2
+			materialInformationRq_Type.setFamily(materialInfo.getFamily());        //size 4    
+			materialInformationRq_Type.setAltUnitOfMeasurement(materialInfo.getAltUnitOfMeasurement());
+		
+			epmfRq_Type.setMaterialInformationRq(materialInformationRq_Type);
+			epmfRq_Type.setRqHeader(rqHeader_Type);
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+	
+	*/}
 
 
 }
