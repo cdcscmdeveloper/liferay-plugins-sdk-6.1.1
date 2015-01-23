@@ -172,7 +172,7 @@
 					<property name="columnName" value="regNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sm.epno" />
+					<property name="bundleKey" value="lbl.sm.regno" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
