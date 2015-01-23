@@ -1,6 +1,5 @@
 package my.ep.web.integration.eperunding;
 
-import java.util.List;
 
 public class BoardOfDirector {
 
@@ -49,6 +48,23 @@ public class BoardOfDirector {
 
 	public void setProfBodyDetail(ProfBodyDetail profBodyDetail) {
 		this.profBodyDetail = profBodyDetail;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof BoardOfDirector)
+	    {
+	    	BoardOfDirector temp = (BoardOfDirector) obj;
+	        if(this.MOFNo.equalsIgnoreCase(temp.MOFNo)&& this.director.getIsBumi().equalsIgnoreCase(temp.director.getIsBumi())&& this.director.getName().equalsIgnoreCase(temp.director.getName()))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.MOFNo.hashCode()+this.director.getIsBumi().hashCode()+this.director.getName().hashCode());        
 	}
 
 }
