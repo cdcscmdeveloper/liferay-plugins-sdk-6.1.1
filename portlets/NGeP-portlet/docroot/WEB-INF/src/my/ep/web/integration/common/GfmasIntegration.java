@@ -16,7 +16,6 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.util.lookupservice.EpEjbRemoteBusinessDelegate;
 import my.ep.web.integration.gfmas.MasterDataMaterialInfo;
 import my.ep.web.integration.gfmas.MasterDataVendor;
 import my.ep.web.integration.gfmas.SSTInformation;
@@ -144,7 +143,7 @@ public class GfmasIntegration {
 
 		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
 		String fileName = "1000APOVE40000120141113001.GPG";
-		ISupplierSearchSO supplierSearchSO = EpEjbRemoteBusinessDelegate
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 		if (osbUtility.osbServiceCallInBound("GFM-370")) {
