@@ -1,6 +1,8 @@
 package my.ep.web.scheduler.job.cm;
 
 import my.ep.factory.EpLogger;
+import my.ep.web.integration.common.GfmasIntegration;
+import my.ep.web.integration.common.PhisIntegration;
 
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
@@ -27,6 +29,17 @@ public class CmBatchIntegrationJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
+	   System.out.println("CmBatchIntegrationJob ");
+       PhisIntegration cmIntegration = new PhisIntegration();	
+       GfmasIntegration gfmasIntegration = new GfmasIntegration();
+       gfmasIntegration.sstInformationGfmas();
+       cmIntegration.createFilesforPHIS();
+       
+       cmIntegration.votFund();
+       cmIntegration.votFundDana();
+       cmIntegration.glAccount();
+       cmIntegration.programActivity();
+       cmIntegration.project();
 		
 	}
 
