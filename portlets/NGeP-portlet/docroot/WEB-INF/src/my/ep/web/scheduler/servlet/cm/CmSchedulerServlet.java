@@ -24,6 +24,6 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.CM_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.CM_INTEGRATION_JOB_GROUP),
 						CmBatchIntegrationJob.class, "Job to run every two hours",
-						"0 0/2 * * * ?");
+						"0 0 8,20 * * ?");
 	}
 }
