@@ -1261,8 +1261,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/**
 	 * Page navigation to catalogue search page in Request Note
 	 */
-	public String backToPervious() {
-		log.info("add item");
+	public String backToPrevious() {
+		log.info("backToPrevious");
 		getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		ScRequestItem requestItem = new ScRequestItem();

@@ -10,7 +10,7 @@
 	<div class="ppRightBtn">
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}" rendered="#{lOIDetailBackingBean.managedBean.editFlag}"
 			style="float:left;"
-			action="#{lOIDetailBackingBean.backToPervious}" />
+			action="#{lOIDetailBackingBean.backToPrevious}" />
 
 		<p:commandButton value="Preview Letter" rendered="#{isPendingSubmissionStatus || isPendingNegotiation}"
 			process="@form" update="@all" partialSubmit = "true"

@@ -65,7 +65,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			
 			lOIDetailBackingBean.getManagedBean().setSourceId(sourceId);
 			lOIDetailBackingBean.getManagedBean().setPayLoadData(dpDataType);
-			lOIDetailBackingBean.getManagedBean().setQtLoaEditFlag(Boolean.TRUE);
 			
 			retrieveLOAList(sourceId);
 			

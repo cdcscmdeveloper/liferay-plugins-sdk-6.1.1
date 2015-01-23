@@ -28,13 +28,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	          partialSubmit="true" process="@this"
 	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 	          rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-			  style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}"  />
+			  style="float:left;" action="#{purchaseInDefaultBackingBean.backToPrevious}"  />
 			  
 		     <p:commandButton immediate="true"  
 				  value="#{lbl['lbl.btn.back']}"
 				  partialSubmit="true" process="@this" style="float:left;"
 				  rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-				  action="#{purchaseInDefaultBackingBean.backToPervious}" />
+				  action="#{purchaseInDefaultBackingBean.backToPrevious}" />
 					 
 		    <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 		      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

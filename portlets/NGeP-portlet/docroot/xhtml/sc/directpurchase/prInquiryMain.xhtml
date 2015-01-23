@@ -22,7 +22,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	     <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}">
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" 
 	                partialSubmit="true" process="@this"
-				    style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
+				    style="float:left;" action="#{purchaseInquiryBackingBean.backToPrevious}" />
 
 					<p:commandButton value="#{lbl['lbl.sc.common.submit']}"  partialSubmit="true" process="@form"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
@@ -40,7 +40,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 						 rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"
 					     value="#{lbl['lbl.btn.back']}"
 						 style="float:left;"
-						 action="#{purchaseInquiryBackingBean.backToPervious}" />
+						 action="#{purchaseInquiryBackingBean.backToPrevious}" />
 								
 			  <c:choose>
 				<c:when test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
