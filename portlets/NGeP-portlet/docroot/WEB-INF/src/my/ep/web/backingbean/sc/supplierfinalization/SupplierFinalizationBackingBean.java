@@ -262,12 +262,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		packageRecommendByEvent();
 	}
 	
-	private void navigateToSupplierFinalizationTab(int activeIndex) {
-		if (activeIndex != 2) {
-			supplierFinalizationRetrival();
-		}
-	}
-	
 	private void committeeEndorsementRetrival(){
 		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_ENDORSEMENT);
 		retrieveCommitteeEndorsement();
@@ -617,6 +611,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		switch (activeIndex) {
 			case 0:
 				preparationRetrival();
+				ScQt scQt = getManagedBean().getScQt();
+				retrieveSupplierFinalizationDtls(scQt);
 				break;
 			case 1:
 				biefingPaperRetrival();
