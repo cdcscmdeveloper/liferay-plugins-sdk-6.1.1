@@ -7,41 +7,55 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
-		
-	<div class="ppRightBtn">
-	<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}" rendered="#{lOADetailBackingBean.managedBean.editFlag}"
-		    style="float:left;"
-			action="#{lOADetailBackingBean.backToPervious}" />
-	
-		<p:commandButton value="#{lbl['lbl.so.save']}"
-			action="#{lOADetailBackingBean.saveAction}" rendered="#{isEditableStatus}"
-			process="@form" update="@form" 
-			onstart="blockWidget.show();"
-			oncomplete="blockWidget.hide();"/>
-			
-		<c:choose>
-			<c:when test="#{isPendingSubmissionStatus}">
-				<p:commandButton value="#{lbl['lbl.so.submit']}"
-					action="#{lOADetailBackingBean.submitAction}" 
-					process="@form" update="@form" 
-					onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-			</c:when>
-			<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
-				<ui:repeat var="bpmAction" value="#{lOADetailBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
 
-					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-						partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-						update="#{isReject ? '@this' : '@form'}" />
-				</ui:repeat>
-			</c:when>
-		</c:choose>
+	<div class="ppRightBtn">
+		<h:panelGroup id="loaButtonsId">
+			<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+				rendered="#{lOADetailBackingBean.managedBean.editFlag}"
+				style="float:left;" action="#{lOADetailBackingBean.backToPervious}" />
+
+			<p:commandButton value="#{lbl['lbl.so.save']}"
+				action="#{lOADetailBackingBean.saveAction}"
+				rendered="#{isEditableStatus}" process="@form" update="@form"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+
+			<c:choose>
+				<c:when test="#{isPendingSubmissionStatus}">
+					<p:commandButton value="#{lbl['lbl.so.submit']}"
+						action="#{lOADetailBackingBean.submitAction}" process="@form"
+						update="@form" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+				</c:when>
+				<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+					<ui:repeat var="bpmAction"
+						value="#{lOADetailBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button" onstart="blockWidget.show();"
+							rendered="#{!isPendingVerification}"
+							oncomplete="blockWidget.hide();"
+							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+							partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+							update="#{isReject ? '@this' : '@form'}" />
+
+
+						<p:commandButton value="#{lbl['lbl.btn.verify']}"
+							styleClass="ui-button" onstart="blockWidget.show();"
+							rendered="#{isPendingVerification}"
+							oncomplete="blockWidget.hide();"
+							disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
+							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+							partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+							update="#{isReject ? '@this' : '@form'}" />
+
+					</ui:repeat>
+				</c:when>
+			</c:choose>
+		</h:panelGroup>
 	</div>
 </ui:composition>
