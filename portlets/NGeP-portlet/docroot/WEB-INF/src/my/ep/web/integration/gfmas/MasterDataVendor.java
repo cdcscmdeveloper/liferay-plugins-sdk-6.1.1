@@ -8,6 +8,7 @@ public class MasterDataVendor {
 	private String agencyId;
 	private String vendorIdCode;
 	private String entityCode;
+	private String sapVendorCode; // for apove file
 	private String name;
 	private String name2;
 	private String address;
@@ -26,6 +27,9 @@ public class MasterDataVendor {
 	private String paymentTerm;
 	private int bankAccountInfoCount;
 	private int status;
+	private String mobileNo;
+
+	BankAccountInformation bankAccountInformation; // for apove file
 
 	List<BankAccountInformation> bankAccountInfoList;
 
@@ -59,6 +63,14 @@ public class MasterDataVendor {
 
 	public void setEntityCode(String entityCode) {
 		this.entityCode = entityCode;
+	}
+
+	public String getSapVendorCode() {
+		return sapVendorCode;
+	}
+
+	public void setSapVendorCode(String sapVendorCode) {
+		this.sapVendorCode = sapVendorCode;
 	}
 
 	public String getName() {
@@ -203,6 +215,23 @@ public class MasterDataVendor {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
+
+	public BankAccountInformation getBankAccountInformation() {
+		return bankAccountInformation;
+	}
+
+	public void setBankAccountInformation(
+			BankAccountInformation bankAccountInformation) {
+		this.bankAccountInformation = bankAccountInformation;
 	}
 
 	public List<BankAccountInformation> getBankAccountInfoList() {
