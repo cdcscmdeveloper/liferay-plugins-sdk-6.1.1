@@ -218,7 +218,7 @@ public class UnspscCodeBackingBean extends
 				if (this.getManagedBean().getRequestCode().isBrandNew()) {
 
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
-
+                    if(resDTO.isSuccessful()){
 					FacesContext facesContext = FacesContext
 							.getCurrentInstance();
 					facesContext
@@ -229,14 +229,14 @@ public class UnspscCodeBackingBean extends
 											null,
 											MessageUtils
 													.getMessage(
-															MessageConst.INFO_710001,
+															MessageConst.INFO_710013, new String[] {resDTO.getRequestCode().getDocNo()},
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
 					log.debug("***************BB end*****************");
 					// return "unspscRequestForm";
 					return "BPMtesting";
-
+                    }
 				} else {
 					log.info("***update***");
 					resDTO = unspscSO.updateCodificationRequest(reqDTO);
@@ -248,9 +248,11 @@ public class UnspscCodeBackingBean extends
 			facesContext.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710001,
+							MessageUtils.getMessage(MessageConst.INFO_710013, 
+									new String[] {resDTO.getRequestCode().getDocNo()},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new EpException(MessageConst.EP_MAJ_00001,
@@ -1496,14 +1498,15 @@ public class UnspscCodeBackingBean extends
 		reqDTO.setToken(token);
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
-
-		facesContext.addMessage(
+        if(resDTO.isSuccessful()){
+	     	facesContext.addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710001,
+						.getMessage(MessageConst.INFO_710013,new String[] {resDTO.getSaveExtList().get(0).getDocNo()},
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-
+        }
+        
 		return "BPMtesting";
 	}
 
