@@ -10,7 +10,7 @@ package my.ep.web.integration.phis.masterdatamateriainfo;
 public interface PHISMasterDataMaterialInfomationPortType_Service extends javax.xml.rpc.Service {
     public java.lang.String getPHISMasterDataMaterialInfomationPortTypePortAddress();
 
-    public my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort() throws javax.xml.rpc.ServiceException;
+    public my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort() throws javax.xml.rpc.ServiceException;
 
-    public my.gov.ep.www.Service._1_0.PHISMasterDataMaterialInfomation.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
+    public my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortType_PortType getPHISMasterDataMaterialInfomationPortTypePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
 }
