@@ -32,7 +32,7 @@
 				<tr>
 					<td>
 						<!-- for phase 1 -->
-						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" 
+						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}"
 							 maxlength="1000">
 						</p:inputTextarea>
 						
