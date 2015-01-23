@@ -18,25 +18,23 @@ public class Encryption {
 		File outFile = new File(outFilePath+fileName);
 		
 		
-		URL resource = getClass().getResource("/");
+		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 		
-		System.out.println("path -----------"+path);
-		//path.replace("modules/sun/jdk/main/service-loader-resources/", "standalone/deployments/NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id");
-		String replacePath = path;
-		replacePath.replaceAll("modules/sun/jdk/main/service-loader-resources/", "standalone/deployments/NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id");
+		System.out.println("path value with (.) :"+path);
 		
-		System.out.println("replacePath :"+replacePath);
+		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
 		
-		path = "/C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id";
-		System.out.println("path ==========="+path);
+		String encryptKey = "\\"+substring+IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
+		System.out.println("encryptKey :"+encryptKey);
+		
 		
 		// encript the content
 		String encrypted;
 		try {
 			encrypted = PGPProcessor.encryptContent(
 					readFileContents(inFile),
-					path);
+					encryptKey);
 
 			createFile(outFile, encrypted);
 		} catch (Exception e) {
@@ -49,7 +47,7 @@ public class Encryption {
 				
 	    // call osb service	for transfering from host to 1GFMAS
 				 OsbUtility osbUtility = new OsbUtility();
-				 osbUtility.osbServiceCall(processId);
+				// osbUtility.osbServiceCallOutBound(processId);
 		
 	}
 
@@ -77,13 +75,21 @@ public class Encryption {
 		
 		System.out.println("inFile  :"+inFile.getPath());
 		System.out.println("readFileContents :"+readFileContents(inFile));
+		
+		URL resource = getClass().getResource(".");
+		String path = resource.getPath();
+		
+		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
+		
+		String encryptKey = substring+IntegrationConstants.PHIS_PUBLIC_KEY_PATH;
 
+		
 		// encript the content
 		String encrypted;
 		try {
 			encrypted = PGPProcessor.encryptContent(
 					readFileContents(inFile),
-					IntegrationConstants.PHIS_PUBLIC_KEY_PATH);
+					encryptKey);
 
 			createFile(outFile, encrypted);
 		} catch (Exception e) {
@@ -97,7 +103,7 @@ public class Encryption {
 		
 		//once upload is done cal web service osb integration to transfer file.
 		 OsbUtility osbUtility = new OsbUtility();
-		 osbUtility.osbServiceCall(processId);
+		// osbUtility.osbServiceCallOutbound(processId);
 		
 	}
 
