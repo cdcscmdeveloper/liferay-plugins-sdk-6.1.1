@@ -198,10 +198,9 @@
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
 							        rendered="#{flDocument.isViewAction()}"
 							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}, {name:'statusDesc', value:'#{flDocument.status.statusId}'}])"/>
-									<p:menuitem value="#{lbl['lbl.btn.print']}"  
+									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
 										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || flDocument.docType==ParameterConst.doctypeStopDelivery )}"
-							        	oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
-										actionListener="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />							        
+										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />							        
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
 							        rendered="#{flDocument.isUpdateAction()}"
 							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"/>
@@ -219,15 +218,6 @@
 			</p:dataTable>
 			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
 				name="goToDetail" />
-
-			<script type="text/javascript">
-				function handleLocalesDialogComplete(xhr, status, args) {
-					if (args) {
-						window.open(args.reportViewUrl, '_blank');
-					}
-				}
-			</script>
-
 		</p:panel>
 	</ui:define>
 </ui:composition>
