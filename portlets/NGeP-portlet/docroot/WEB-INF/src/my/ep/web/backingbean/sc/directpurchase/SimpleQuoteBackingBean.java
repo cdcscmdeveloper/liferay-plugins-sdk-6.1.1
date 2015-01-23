@@ -2226,8 +2226,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	/**
 	 * Page navigation to catalogue search page in simpleQuote
 	 */
-	public void backToPervious() {
-		debugLogger("backToPervious");
+	public void backToPrevious() {
+		debugLogger("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(getManagedBean().getPageNavToRequestNote() != null){
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  

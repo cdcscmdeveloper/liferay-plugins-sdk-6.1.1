@@ -10,7 +10,7 @@
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" 
 	           	   id="backButton"
 	               partialSubmit="true" process="@this" 
-				   immediate="true" action="#{requestNoteBackingBean.backToPervious}"  
+				   immediate="true" action="#{requestNoteBackingBean.backToPrevious}"  
 				   rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"
 				   title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 				</p:commandButton>
@@ -38,7 +38,7 @@
 						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
 					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" process="@this" partialSubmit="true" 
 						           style="float:left;"  immediate="true" 
-						           action="#{requestNoteBackingBean.backToPervious}"   
+						           action="#{requestNoteBackingBean.backToPrevious}"   
 						           rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"/>
 						  </c:if>
 						
