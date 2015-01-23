@@ -369,6 +369,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (searchSupplierDataModel == null) {
 			getManagedBean().setSearchSupplierDataModel(new SupplierPagingDataModel("ressupplier", getManagedBean().getSupplierSearchBean()));
 		}
+		getManagedBean().getSearchSupplierDataModel().resetData();
 	}
 	
 	public void searchRestrictedSupplierAction() {
@@ -393,18 +394,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 		log.info("hasSearchValue: " + hasSearchValue);
-		
 		if(!hasSearchValue) {
-			throw new EpException(MessageConst.ERROR_716006);
+			throw new EpException(MessageConst.ERROR_760231);
 		} else {		
-			// enable or disable simple quote in search catalogue
-			//setSimpleQuoteFlag(Boolean.FALSE);
-			
-			//searchDataModel.reloadData();
 			getManagedBean().getSearchSupplierDataModel().reloadData();
 		}
-		
-		
 	}
 
 	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier, SmSupplier smSupplier) {
