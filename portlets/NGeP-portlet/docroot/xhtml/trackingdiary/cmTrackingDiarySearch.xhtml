@@ -58,7 +58,7 @@
 								<td width="35%"><p:selectOneMenu style="width: 314px;"
 											value="#{cmTrackingDiaryBackingBean.managedBean.searchStatusId}">
 											<f:selectItems
-												value="#{cmTrackingDiaryBackingBean.getStatus()}" />
+												value="#{cmTrackingDiaryBackingBean.getItemStatusOptions()}" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
@@ -74,7 +74,7 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="supplierItemID" lazy="true"
-				value="#{cmTrackingDiaryBackingBean.managedBean.cmDocumentDataModel}" var="unspscObject"
+				value="#{cmTrackingDiaryBackingBean.managedBean.cmDocumentDataModel}" var="cmObject"
 				width="100%" rows="10">
 
 				<ac:paginator for="supplierItemID"></ac:paginator>
@@ -83,32 +83,32 @@
 					<f:facet name="header">
 					Creation Date
 					</f:facet>
-				#{unspscObject.createdDate}
+				#{cmObject.createdDate}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					Item Code
 				</f:facet>
-				#{unspscObject.unspscCode}
+				#{cmObject.smSupplier.companyName}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Item Name
+					Item NamecmItem.itemName
 				</f:facet>
-				#{unspscObject.unspscCode}
+				
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Status
 				</f:facet>
-				#{unspscObject.unspscTitle}
+				
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObject)}">
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(cmObject)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>

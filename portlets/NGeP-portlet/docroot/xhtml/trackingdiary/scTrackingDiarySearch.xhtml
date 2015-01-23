@@ -24,7 +24,7 @@
 										value="Document Type" /></td>
 								<td width="35%">					
 									<p:selectOneMenu value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
+										<f:selectItems value="#{scTrackingDiaryBackingBean.getDocumentType()}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
@@ -79,43 +79,54 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="scDocumentTableID" lazy="true"
-				value="#{scTrackingDiaryBackingBean.managedBean.scRNDocumentDataModel}" var="unspscObj"
+				value="#{scTrackingDiaryBackingBean.managedBean.scRNDocumentDataModel}" var="Obj"
 				width="100%" rows="10">
 
 
-				<ac:paginator for="unspscTableID"></ac:paginator>
+				<ac:paginator for="scDocumentTableID"></ac:paginator>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					Creation Date
 				</f:facet>
-					#{unspscObj.unspscCode}
+					#{Obj[0]}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					Document No.
 				</f:facet>
-					#{unspscObj.unspscCode}
-
+					#{Obj[1]}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Document Title
 				</f:facet>
-				#{unspscObj.unspscTitle}
-			</p:column>
+					#{Obj[2]}
+				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Status
+					Document Title
 				</f:facet>
-				#{unspscObj.unspscTitle}
-			</p:column>				
-			<p:column>
+					#{Obj[3]}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					Document Title
+				</f:facet>
+					#{Obj[4]}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					Document Title
+				</f:facet>
+					#{Obj[5]}
+				</p:column>
+				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(Obj)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>
