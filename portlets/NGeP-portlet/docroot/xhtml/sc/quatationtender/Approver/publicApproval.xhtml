@@ -67,14 +67,7 @@
 							display="icon" /></td>
 				</tr>
 			</c:if>
-			<tr>
-				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.so.expectloadate']}" /></td>
-				<td><p:calendar id="publicationLoaDate"
-						value="#{approvalBackingBean.managedBean.qt.expectedLoaDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
-						readonlyInput="true" showOn="button" /></td>
-			</tr>
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
 				<td><p:inputText
@@ -91,6 +84,14 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
+			</tr>
+			<tr>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.so.expectloadate']}" /></td>
+				<td><p:calendar id="publicationLoaDate"
+						value="#{approvalBackingBean.managedBean.qt.expectedLoaDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
+						readonlyInput="true" showOn="button" /></td>
 			</tr>
 		</table>
 	</p:panel>
