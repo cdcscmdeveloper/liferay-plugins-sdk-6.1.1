@@ -33,7 +33,7 @@
 				<p:commandLink id="itemNameByItem" partialSubmit="true"
 					value="#{bidItem.scRequestItem.itemName}" process="@this"
 					oncomplete="participants.show();" update="@([id$=participants])"
-					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidSchedule.scBidItems[0])}" />
+					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
 				style="white-space : normal; width : 25%;">
@@ -102,7 +102,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}"
 				style="white-space : normal; width : 10%;">
-				<p:inputText style="float : right" id="decrementAmtByItem" size="10"
+				<p:inputText style="text-align : right" id="decrementAmtByItem" 
 					value="#{bidItem.decrementAmt }">
 					<p:ajax event="change" process="@this"
 						partialSubmit="true" />
