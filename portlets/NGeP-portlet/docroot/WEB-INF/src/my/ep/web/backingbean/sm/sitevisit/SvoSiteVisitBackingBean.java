@@ -46,6 +46,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvBankInfo;
 import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvComment;
@@ -448,10 +449,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
 			}
 			
-//			if(svTemplate.getSmSvFacility() == null){
-//				svTemplate.setSmSvFacility(new SmSvFacility());
-//			}
-			
 			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
@@ -489,9 +486,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				log.info("-----FIN LS SIZE----" + svTemplate.getFinancialDocLs().size());
 				
 			}else if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-/*				if(svTemplate.getSmSvFacility() == null){
-					svTemplate.setSmSvFacility(new SmSvFacility());
-				}*/
 				
 				if(svTemplate.getSmSvPrintworks() == null){
 					svTemplate.setSmSvPrintworks(new ArrayList<SmSvPrintwork>());				
@@ -504,8 +498,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				if(svTemplate.getSmSvLicenseInsurances().size() < 1){
 					prepareEquipmentLicenseInsurance(svTemplate,catCode);
 				}
-				
-				//svTemplate.getSmSvFacility().setSmSvTemplate(svTemplate);
 				
 				if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
 					for(SmSvCategory svCat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
@@ -524,10 +516,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 								this.getManagedBean().getPrintingCatLs().add(catCodeStr);
 								log.info("Printing---->" + catCodeStr);
 							}
-							/*
-							if(this.getManagedBean().getSmSvTask().getSmSvCategories() == null){
-								this.getManagedBean().getSmSvTask().setSmSvCategories(new ArrayList<SmSvCategory>());
-							}*/
 
 							if(svCat.getSmSvPrintmachines() == null || svCat.getSmSvPrintmachines().size() < 1){
 								List<PmParameterDesc> pmDescList = retrievePrintingAcc(catCodeStr);
@@ -568,13 +556,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 			if(svTemplate.getPmParameter()!=null && svTemplate.getPmParameter().getParameterCode()!=null){
-//				setSelectedSvTemplateAddresses(svTemplate.getPmParameter().getParameterCode());
 				setSelectedSmSvFacility(svTemplate.getPmParameter().getParameterCode());
 			}
 			
-			//log.info("printingParamMap>>>>>>" + this.getManagedBean().getPrintingParamMap().size());
 		}
-//		log.info("**********SvAddress Selected SV*********" + this.getManagedBean().getSelectedSvTemplate().getSvTemplateId());
+
 	}
 	
 	public void addInterviewee(){
@@ -2006,4 +1992,46 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
 	}
 	
+	public void addAdditionalMachine(){
+		log.info("-------addAdditionalMachine---------");
+		
+		//Additional Machine for DOCKTARD, MANUFACTURING and WORKSHOP
+		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
+		if(svTemplate.getSmSvAdtMachines() == null){
+			svTemplate.setSmSvAdtMachines(new ArrayList<SmSvAdtMachine>());
+		}
+		SmSvAdtMachine adtMachine = new SmSvAdtMachine();
+		adtMachine.setSmSvTemplate(svTemplate);
+		
+		this.getManagedBean().setSelectedAdtMachine(adtMachine);
+		this.getManagedBean().getSelectedAdtMachine().setNewMachine(true);
+		//svTemplate.getSmSvAdtMachines().add(new SmSvAdtMachine());
+	}
+	
+	public void removeAdditionalMachine(){
+		log.info("---removePrintWork---");
+		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
+		if(svTemplate.getSelectedAdtMachines().length > 0){
+			for (SmSvAdtMachine adtMachine : svTemplate.getSelectedAdtMachines()) {
+				svTemplate.getSmSvAdtMachines().remove(adtMachine);
+			}
+		}
+	}
+	
+	public void addAdditionalMachineToList(){
+		SmSvAdtMachine adtMachine = this.getManagedBean().getSelectedAdtMachine();
+		this.getManagedBean().getSelectedSvTemplate().getSmSvAdtMachines().add(adtMachine);
+		RequestContext.getCurrentInstance().execute("adtMacDlg.hide()");
+		log.info("ADT MACHINE SIZE......." + this.getManagedBean().getSelectedSvTemplate().getSmSvAdtMachines().size());
+	}
+	
+	public void saveAdditionalMachine(){
+		log.info("-------saveAdditionalMachine--------" + this.getManagedBean().getSelectedSvTemplate().getSvTemplateId());
+
+	}
+	
+	public void editAdditionalMachine(SmSvAdtMachine adtMachine){
+		this.getManagedBean().setSelectedAdtMachine(adtMachine);
+		this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);
+	}
 }
