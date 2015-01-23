@@ -37,7 +37,7 @@ public class CmBatchIntegrationJob implements Job {
        
        cmIntegration.votFund();
        cmIntegration.votFundDana();
-       cmIntegration.glAccount();
+     //  cmIntegration.glAccount();
        cmIntegration.programActivity();
        cmIntegration.project();
 		
