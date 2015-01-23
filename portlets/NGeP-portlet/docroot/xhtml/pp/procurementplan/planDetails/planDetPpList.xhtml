@@ -96,7 +96,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    </p:column>
 			 	</p:row>
 		 	</p:columnGroup>
-			<p:column selectionMode="multiple"/>
+			<p:column selectionMode="multiple"  disabledSelection="#{!ppItem.brandNew}" />
 	        <p:column>	
         		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
         			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
