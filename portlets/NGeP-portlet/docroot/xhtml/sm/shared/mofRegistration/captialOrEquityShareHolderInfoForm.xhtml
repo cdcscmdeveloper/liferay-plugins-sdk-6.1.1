@@ -98,7 +98,8 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.label.action']}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
-						<p:commandLink
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
 							<p:outputPanel
@@ -119,10 +120,12 @@
 
 				<p:spacer height="2px;" />
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					<p:commandButton value="#{lbl['lbl.sm.button.add']}" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
 						update=":form" />
-					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 						action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
 						update=":form:tt:shrPerDt" />
 				</div>
