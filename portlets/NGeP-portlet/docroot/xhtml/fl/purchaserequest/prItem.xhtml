@@ -240,7 +240,7 @@
 							label="#{lbl['lbl.fl.country']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="countryList"
 								value="#{purchaseRequestBackingBean.managedBean.countryList}"
 								itemLabel="#{countryList.countryName}"
@@ -257,7 +257,7 @@
 							label="#{lbl['lbl.fl.state']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="stateList"
 								value="#{purchaseRequestBackingBean.managedBean.stateList}"
 								itemLabel="#{stateList.stateName}"
@@ -282,7 +282,7 @@
 					<td><p:selectOneMenu id="manDivison"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
 								value="#{purchaseRequestBackingBean.managedBean.divisionList}"
 								itemValue="#{divisionList.divisionId}"
@@ -309,7 +309,7 @@
 							label="#{lbl['lbl.fl.district']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="districtList"
 								value="#{purchaseRequestBackingBean.managedBean.districtList}"
 								itemValue="#{districtList.districtId}"
@@ -337,7 +337,7 @@
 							label="#{lbl['lbl.fl.city']}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="cityList"
 								value="#{purchaseRequestBackingBean.managedBean.cityList}"
 								itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
@@ -385,7 +385,7 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
 						</p:selectOneMenu>

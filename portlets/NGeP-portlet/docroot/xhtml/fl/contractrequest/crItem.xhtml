@@ -274,7 +274,7 @@
 							label="Country"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="countryList"
 								value="#{contractRequestBackingBean.managedBean.countryList}"
 								itemLabel="#{countryList.countryName}"
@@ -291,7 +291,7 @@
 							label="State"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="stateList"
 								value="#{contractRequestBackingBean.managedBean.stateList}"
 								itemLabel="#{stateList.stateName}"
@@ -316,7 +316,7 @@
 					<td><p:selectOneMenu id="manDivison"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
 								value="#{contractRequestBackingBean.managedBean.divisionList}"
 								itemValue="#{divisionList.divisionId}"
@@ -343,7 +343,7 @@
 							label="District"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="districtList"
 								value="#{contractRequestBackingBean.managedBean.districtList}"
 								itemValue="#{districtList.districtId}"
@@ -371,7 +371,7 @@
 							label="City"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="cityList"
 								value="#{contractRequestBackingBean.managedBean.cityList}"
 								itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
@@ -419,7 +419,7 @@
 							required="#{contractRequestBackingBean.managedBean.required}"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
 						</p:selectOneMenu>
