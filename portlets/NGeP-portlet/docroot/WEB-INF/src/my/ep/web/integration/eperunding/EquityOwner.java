@@ -48,5 +48,22 @@ public class EquityOwner {
 	public void setProfBodyDetail(ProfBodyDetail profBodyDetail) {
 		this.profBodyDetail = profBodyDetail;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof EquityOwner)
+	    {
+	    	EquityOwner temp = (EquityOwner) obj;
+	        if(this.MOFNo.equalsIgnoreCase(temp.MOFNo)&& this.owner.getIsBumi().equalsIgnoreCase(temp.owner.getIsBumi())&& this.owner.getName().equalsIgnoreCase(temp.owner.getName()))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.MOFNo.hashCode()+this.owner.getIsBumi().hashCode()+this.owner.getName().hashCode());        
+	}
 
 }
