@@ -181,6 +181,21 @@ public class PmCommonUtil {
 	}
 	
 	/**
+	 * get record status options active 1 inactive 0
+	 * @return SelectItem[] 
+	 */
+	public static SelectItem[] getRecordStatusOptions() {
+		SelectItem[] items =  new SelectItem[2];
+		items[0] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
+				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED, ResourceBundleUtils.getMessage(
+				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+	    return items;
+	}
+	
+	/**
 	 * Get Role description by role code.
 	 * 
 	 * @param roleCode
