@@ -2448,7 +2448,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				
 			
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
-						|| (brandNew && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))) { //PP20150108-0007
+						|| (StringUtils.isBlank(this.getManagedBean().getTaskId()) 
+								&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))) { //PP20150108-0007
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
