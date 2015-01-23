@@ -890,7 +890,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			newRemark = false;
 		}
 		
-		if(ppItem.isEditable()){
+		if(!ppItem.isEditable()){
 			newRemark = false;
 		}
 		
@@ -978,7 +978,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			newRemark = false;
 		}
 		
-		if(epItem.isEditable()){
+		if(!epItem.isEditable()){
 			newRemark = false;
 		}
 		
