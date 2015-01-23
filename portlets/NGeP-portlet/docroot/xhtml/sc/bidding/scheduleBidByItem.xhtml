@@ -9,11 +9,11 @@
 	<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
 		id="scheduleByItemPanel">
 
-		<p:dataTable id="bidScheduleByItem" var="bidSchedule"
-			rowKey="#{bidSchedule.bidNo}" rowIndexVar="index"
-			value="#{scheduleBiddingBB.managedBean.bidScheduleList}">
+		<p:dataTable id="bidScheduleByItem" var="bidItem" rowKey="#{bidItem}"
+			rowIndexVar="index"
+			value="#{scheduleBiddingBB.managedBean.bidItemList}">
 
-			<p:column style="width:2% ;" >
+			<p:column style="width:2% ;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllItemsByItem"
 						value="#{scheduleBiddingBB.managedBean.selectedAll}">
@@ -31,41 +31,42 @@
 			<p:column headerText="#{lbl['lbl.sc.item.name']}"
 				style="white-space : normal; width : 20%;">
 				<p:commandLink id="itemNameByItem" partialSubmit="true"
-					value="#{bidSchedule.scBidItems[0].scRequestItem.itemName}"
-					process="@this" oncomplete="participants.show();"
-					update="@([id$=participants])"
+					value="#{bidItem.scRequestItem.itemName}" process="@this"
+					oncomplete="participants.show();" update="@([id$=participants])"
 					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidSchedule.scBidItems[0])}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
 				style="white-space : normal; width : 25%;">
 				<h:outputText id="itemDescByItem"
-					value="#{bidSchedule.scBidItems[0].scRequestItem.itemDesc}" />
+					value="#{bidItem.scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.uom']}" style="width : 8%;">
 				<h:outputText id="uomNameByItem"
-					value="#{bidSchedule.scBidItems[0].scRequestItem.uom.uomName}" />
+					value="#{bidItem.scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.quantity']}" style="width : 7%;">
 				<h:outputText id="quantityByItem" style="float : right"
-					value="#{bidSchedule.scBidItems[0].scRequestItem.quantity}">
+					value="#{bidItem.scRequestItem.quantity}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidSchedule.scBidItems[0].scRequestItem.uom.uomCode)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidItem.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bidding.start']}"
 				style="width : 10%;">
-				<p:calendar value="#{bidSchedule.startDate}" showOn="button" style="width:92%"
-					required="true" id="bidStartDateByItem" readonlyInput="true" label="#{lbl['lbl.sc.bidding.start']}"
+				<p:calendar value="#{bidItem.scBidSchedule.startDate}"
+					showOn="button" style="width:92%" required="true"
+					id="bidStartDateByItem" readonlyInput="true"
+					label="#{lbl['lbl.sc.bidding.start']}"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
 					<p:ajax event="dateSelect" process="bidStartDateByItem"
 						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidStartDateSelectListener(bidSchedule)}"
+						listener="#{scheduleBiddingBB.itemStartDateSelectListener(bidItem)}"
 						update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])" />
 					<p:ajax event="change" process="bidStartDateByItem"
 						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidStartDateSelectListener(bidSchedule)}"
+						listener="#{scheduleBiddingBB.itemStartDateSelectListener(bidItem)}"
 						update="@([id$=bidEndDateByItem],[id$=byItemStartDateMsg])" />
 				</p:calendar>
 				<p:message id="byItemStartDateMsg" for="bidStartDateByItem"
@@ -74,36 +75,40 @@
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}"
 				style="width : 10%;">
 
-				<p:calendar id="bidEndDateByItem" value="#{bidSchedule.endDate}" style="width:92%"
-					mindate="#{scheduleBiddingBB.managedBean.minEndDate}" label="#{lbl['lbl.sc.bidding.end']}"
-					showOn="button" readonlyInput="true" required="true"
+				<p:calendar id="bidEndDateByItem"
+					value="#{bidItem.scBidSchedule.endDate}" style="width:92%"
+					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
+					label="#{lbl['lbl.sc.bidding.end']}" showOn="button"
+					readonlyInput="true" required="true"
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
 					<p:ajax event="dateSelect" process="bidEndDateByItem"
 						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
+						listener="#{scheduleBiddingBB.itemEndDateSelectListener(bidItem)}"
 						update="@([id$=bidDurationByItem],[id$=byItemEndDateMsg])" />
 					<p:ajax event="change" process="bidEndDateByItem"
 						partialSubmit="true"
-						listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
+						listener="#{scheduleBiddingBB.itemEndDateSelectListener(bidItem)}"
 						update="@([id$=bidDurationByItem],[id$=byItemEndDateMsg])" />
 				</p:calendar>
-				<p:message id="byItemEndDateMsg" for="bidEndDateByItem" showDetail="false"
-					display="icon" />
+				<p:message id="byItemEndDateMsg" for="bidEndDateByItem"
+					showDetail="false" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.duration.hours']}"
 				style="width : 8%;">
 				<p:outputLabel id="bidDurationByItem"
-					value="#{bidSchedule.duration}" />
+					value="#{bidItem.scBidSchedule.duration}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}"
-				style="width : 10%;">
-				<h:outputText style="float : right" id="decrementAmtByItem"
-					value="#{bidSchedule.scBidItems[0].decrementAmt }" disabled="true">
+				style="white-space : normal; width : 10%;">
+				<p:inputText style="float : right" id="decrementAmtByItem" size="10"
+					value="#{bidItem.decrementAmt }">
+					<p:ajax event="change" process="@this"
+						partialSubmit="true" />
 					<f:convertNumber for="decrementAmtByItem"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+				</p:inputText>
 			</p:column>
 		</p:dataTable>
 
@@ -148,9 +153,10 @@
 
 						</p:calendar></td>
 
-					<TD><p:commandButton value="#{lbl['lbl.btn.apply']}" id="applyDates"
+					<TD><p:commandButton value="#{lbl['lbl.btn.apply']}"
+							id="applyDates"
 							process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
-							partialSubmit="true" style="float:center;" 
+							partialSubmit="true" style="float:center;"
 							action="#{scheduleBiddingBB.applyBidDates}"
 							update="@([id$=bidScheduleByItem])" /></TD>
 
