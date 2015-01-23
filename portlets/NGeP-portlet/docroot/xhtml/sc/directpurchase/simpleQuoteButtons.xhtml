@@ -50,7 +50,7 @@
 					partialSubmit="true" process="@this"
 					style="float:left;"
 					rendered="#{isPendingSubmissionStatus}"
-					action="#{simpleQuoteBackingBean.backToPervious}" 
+					action="#{simpleQuoteBackingBean.backToPrevious}" 
 					title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 					
 				</p:commandButton>
@@ -59,7 +59,7 @@
 					value="#{lbl['lbl.btn.back']}"
 					partialSubmit="true" process="@this" style="float:left;"
 					rendered="#{!isPendingSubmissionStatus}"
-					action="#{simpleQuoteBackingBean.backToPervious}" />
+					action="#{simpleQuoteBackingBean.backToPrevious}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
 					onstart="blockWidget.show();"
@@ -97,7 +97,7 @@
 									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 									partialSubmit="true" process="@this"
 									style="float:left;"
-									action="#{simpleQuoteBackingBean.backToPervious}" />
+									action="#{simpleQuoteBackingBean.backToPrevious}" />
 							</c:if> <!-- to view simple Quote from the request note header  Icon    -->
 							<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 								<c:if

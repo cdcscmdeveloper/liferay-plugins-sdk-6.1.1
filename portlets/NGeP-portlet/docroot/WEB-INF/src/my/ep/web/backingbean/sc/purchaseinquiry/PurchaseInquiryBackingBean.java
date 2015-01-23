@@ -928,8 +928,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 	 /**
 	  * Page navigation to catalogue search page in Purchase inquiry
 	  */
-	 public void backToPervious() {
-		 log.info("backToPervious");
+	 public void backToPrevious() {
+		 log.info("backToPrevious");
 		 FacesContext fc = FacesContext.getCurrentInstance();
 		 if(getManagedBean().getPageNavToRequestNote() != null){
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  

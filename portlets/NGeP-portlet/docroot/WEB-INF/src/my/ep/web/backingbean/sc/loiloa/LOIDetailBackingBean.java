@@ -645,20 +645,13 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Page navigation to loi loa list
 	 */
-	public void backToPervious() {
-		log.info("backToPervious");
+	public void backToPrevious() {
+		log.info("backToPrevious");
 		retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 
-		if(getManagedBean().isQtLoaEditFlag()){
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
-
-		} else{
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
-		}
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
 
 	/*
@@ -1070,6 +1063,8 @@ public class LOIDetailBackingBean extends
 			handleException(ex);
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
@@ -1090,6 +1085,8 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().setEditFlag(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
@@ -2272,7 +2269,7 @@ public class LOIDetailBackingBean extends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
 		String committeeType = getManagedBean().getCommitteeType();
-		boolean  qtLoaEditFlag = getManagedBean().isQtLoaEditFlag();
+		String  backToPreviousPage = getManagedBean().getBackToPreviousPage();
 		List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 
 		this.renewSesionObject();
@@ -2282,7 +2279,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
-		getManagedBean().setQtLoaEditFlag(qtLoaEditFlag);
+		getManagedBean().setBackToPreviousPage(backToPreviousPage);
 		if(payLoadData != null){
 			if (payLoadData instanceof SCEvaluationDataType) {
 				getManagedBean().setRecommendDtlIds(((SCEvaluationDataType)payLoadData).getGroupkeyMa());

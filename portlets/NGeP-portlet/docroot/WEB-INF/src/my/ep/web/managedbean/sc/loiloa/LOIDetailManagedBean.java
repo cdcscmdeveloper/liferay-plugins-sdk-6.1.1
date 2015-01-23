@@ -141,7 +141,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private String action;
 	private boolean editFlag;
-	private boolean qtLoaEditFlag;
 	private StreamedContent streamedContent;
 	
 	private Long awardSupplierId;
@@ -149,6 +148,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private boolean multipleLoiFlag;
 	private boolean itemDetailsFlag;
 	private boolean hideColumnFlag = true;
+	private String backToPreviousPage;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1125,14 +1125,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.editFlag = editFlag;
 	}
 
-	public boolean isQtLoaEditFlag() {
-		return qtLoaEditFlag;
-	}
-
-	public void setQtLoaEditFlag(boolean qtLoaEditFlag) {
-		this.qtLoaEditFlag = qtLoaEditFlag;
-	}
-
 	public StreamedContent getStreamedContent() {
 		return streamedContent;
 	}
@@ -1191,5 +1183,13 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setHideColumnFlag(boolean hideColumnFlag) {
 		this.hideColumnFlag = hideColumnFlag;
+	}
+
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
 	}
 }
