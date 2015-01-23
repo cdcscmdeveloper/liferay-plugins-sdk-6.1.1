@@ -41,7 +41,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<ac:paginator for="dtProcurementPlan" />
 	    	<p:columnGroup type="header">
 				<p:row>
-				 	<p:column selectionMode="multiple"  style="width:2%" />
+				 	<p:column selectionMode="multiple"  style="width:2%" disabledSelection="#{!restrict.brandNew}"  />
 				    <p:column  width="10%">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.object']}" />
