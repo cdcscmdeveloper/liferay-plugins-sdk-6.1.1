@@ -20,7 +20,15 @@ public class ReportMangedBean extends BaseManagedBean{
 	private String reportName;
 	private String reportValue;
 	private String moduleValue;
+	private String reportJsp;
+	
 			
+	public String getReportJsp() {
+		return reportJsp;
+	}
+	public void setReportJsp(String reportJsp) {
+		this.reportJsp = reportJsp;
+	}
 	public String getReportValue() {
 		return reportValue;
 	}
