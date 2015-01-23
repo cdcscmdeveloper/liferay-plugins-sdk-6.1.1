@@ -29,7 +29,7 @@
 						src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /></td>
 
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
-					<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+					<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 					<ui:param name="category" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
 						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
 							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
