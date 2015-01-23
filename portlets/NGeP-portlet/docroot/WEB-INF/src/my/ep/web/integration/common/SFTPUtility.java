@@ -24,20 +24,22 @@ public class SFTPUtility {
 	String password = IntegrationConstants.SFTP_PASS;
 
 	
-	  public static void main(String[] args) {
-	  
-	  
-	  String localFilePath = "C:/Integration/Encryption/encrypt/2014PHS-03040000120150109001.EPN"; 
-	  String remoteFilePath ="/batch/PHIS/OUT/2014PHS-03040000120150109001.EPN"; 
-	  // String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt";
+	 /* public static void main(String[] args) {
+	  String remoteFilePath = "/batch/1GFMAS/IN/1002APOVE40000120150102005.GPG"; 
+	  String localFilePath = "/batch/1GFMAS/ARCHIVE/1002APOVE40000120150102005.GPG"; 
+	  String localFilePath ="C:/Integration/18012014/1000APOVE40000120141003001.GPG"; 
+	   String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt";
 	  SFTPUtility sftpUtility = new SFTPUtility();
 	  sftpUtility.upload(localFilePath, remoteFilePath); 
-	  //exist(hostName, username,password, remoteFilePath); 
-	  // download(hostName, username, password,localFilePath,remoteFilePath); 
-	  // move(hostName, username, password,remoteFilePath, remoteTempFilePath); 
-	  // delete(hostName, username,password, remoteFilePath); }
+	  sftpUtility.exist(remoteFilePath); 
+	  sftpUtility.download(localFilePath,remoteFilePath); 
+	   move(hostName, username, password,remoteFilePath, remoteTempFilePath); 
+	   delete(hostName, username,password, remoteFilePath); }
+	  sftpUtility.listFilesInDirectory("");
+	  
+	  sftpUtility.move(remoteFilePath, localFilePath);
 	 
-	  }
+	  }*/
 	  
 	  
 	/**
@@ -79,8 +81,7 @@ public class SFTPUtility {
 		}
 	}
 
-	public boolean move(String hostName, String username, String password,
-			String remoteSrcFilePath, String remoteDestFilePath) {
+	public boolean move(String remoteSrcFilePath, String remoteDestFilePath) {
 		StandardFileSystemManager manager = new StandardFileSystemManager();
 
 		try {
@@ -114,8 +115,7 @@ public class SFTPUtility {
 	 * Method to download the file from remote server location
 	 * 
 	 */
-	public void download(String hostName, String username, String password,
-			String localFilePath, String remoteFilePath) {
+	public boolean download(String localFilePath, String remoteFilePath) {
 
 		StandardFileSystemManager manager = new StandardFileSystemManager();
 
@@ -141,6 +141,7 @@ public class SFTPUtility {
 			localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);
 
 			System.out.println("File download success");
+			return true;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -152,8 +153,7 @@ public class SFTPUtility {
 	 * Method to delete the specified file from the remote system
 	 * 
 	 */
-	public void delete(String hostName, String username, String password,
-			String remoteFilePath) {
+	public void delete(String remoteFilePath) {
 		StandardFileSystemManager manager = new StandardFileSystemManager();
 
 		try {
@@ -178,7 +178,7 @@ public class SFTPUtility {
 	/**
 	 * Method to check if the remote file exists in the specified remote
 	 */
-	public boolean exist(String hostName, String username, String password,
+	public boolean exist(
 			String remoteFilePath) {
 		StandardFileSystemManager manager = new StandardFileSystemManager();
 
@@ -291,8 +291,7 @@ public class SFTPUtility {
 			}
 			// remoteFile.createFolder();
 
-			System.out.println("directory creation successful :"
-					+ remoteFile.exists());
+			System.out.println("directory creation successful :"+ remoteFile.exists());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
