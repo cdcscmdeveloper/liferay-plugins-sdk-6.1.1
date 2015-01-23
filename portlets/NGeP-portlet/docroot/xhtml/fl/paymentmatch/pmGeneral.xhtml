@@ -136,7 +136,11 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.desc']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="51" maxlength="24"
+				<td><p:inputText size="26"
+						disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}/#{paymentMatchBackingBean.managedBean.invoiceDate}">
+					</p:inputText>
+					<p:inputText size="40" maxlength="24"
 						disabled="#{paymentMatchBackingBean.managedBean.buttonVal=='View'}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
 					</p:inputText>
