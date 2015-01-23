@@ -101,15 +101,6 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 				}
 				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("sc", ISourcingIntegrationSO.class);
 				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
-//				ISearchBean<Object[]> searchBeana = new SearchBean<Object[]>();
-//				searchBeana.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SQ"));
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"SQ15000000000"));
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),"60850"));
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),"TELEFON NOKIO"));
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("",SearchOperator.OPERATOR_BETWEEN.value(), 
-//						new SearchBetweenValue<Date>(createdDate
-//								new Date(System.currentTimeMillis() + (30*24*60*60*1000)),
-//								new Date(System.currentTimeMillis()))));
 				reqDTO.setSourcingDocSearchBean(searchBean);
 				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 				System.out.println("Result : "+resDTO.getSourcingDocSearchResultBean().getResultList().size());
