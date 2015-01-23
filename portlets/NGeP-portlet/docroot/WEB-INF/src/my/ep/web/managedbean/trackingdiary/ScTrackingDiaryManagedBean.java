@@ -94,6 +94,9 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 				if(getSearchStatusId()!=null) {
 					System.out.println("getSearchDocumentNo");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),getSearchStatusId()));
+				}
+				if(getSearchDocumentFromDuration()!=null && getSearchDocumentToDuration()!=null) {
+					System.out.println("getSearchDocumentNo");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate",SearchOperator.OPERATOR_BETWEEN.value(), 
 							new SearchBetweenValue<Date>(
 							new Date(System.currentTimeMillis() + (30*24*60*60*1000)),
