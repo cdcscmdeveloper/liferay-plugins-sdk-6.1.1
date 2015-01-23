@@ -1516,7 +1516,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 
 	
-	private String getContent(String docDefinitionKey) {
+	private String getContent(String docDefinitionKey) throws Exception {
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		VelocityContext context = null;
 		String vmFile = null;
@@ -1532,7 +1532,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
-		try{
+		
 			if(ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 				context = new VelocityContext();	
 				vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
@@ -1960,9 +1960,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				content = DocumentGenerator.getInstance().getHtmlFromVelocity(
 						vmFile, context);
 			}	
-		}catch (Exception e) {
-			throw new EpException(e.toString());
-		}
+		
 		return content;
 	}
 	
