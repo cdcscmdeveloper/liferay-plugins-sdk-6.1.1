@@ -1485,9 +1485,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().getSelectedPlan().setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
 			}
 			for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItems()){
-//				if(expenditureItem.isBrandNew()){
+				if(expenditureItem.isBrandNew()){
 					this.getManagedBean().getSelectedPlan().getPpExpenditureItems().remove(expenditureItem);
-//				}
+				}
 			}
 			this.getManagedBean().getDeleteEpItems().clear();
 			calculateEpGrandTotal();
@@ -1593,9 +1593,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 			}
 			for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
-//				if(procurementItem.isBrandNew()){
+				if(procurementItem.isBrandNew()){
 					this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
-//				}
+				}
 			}
 			this.getManagedBean().getDeletePpItems().clear();
 			calculatePpGrandTotal();
