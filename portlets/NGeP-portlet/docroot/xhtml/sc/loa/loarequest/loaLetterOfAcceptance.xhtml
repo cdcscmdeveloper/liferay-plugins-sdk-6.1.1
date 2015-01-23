@@ -62,9 +62,22 @@
 		</p:dataTable>
 
 		<div class="ppRightBtn">
-			<p:commandButton
-				value="#{lbl['lbl.btn.download.all']}" ajax="false"
+			<p:commandButton rendered="#{!isPendingVerification}"
+				value="#{lbl['lbl.btn.download.all']}" ajax="false" styleClass="ui-button"
 				action="#{lOADetailBackingBean.downloadAllReports}" />
+
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
+				styleClass="ui-button" update="@([id$=loaButtonsId])"
+				onclick="printBtn.jq.click();"
+				actionListener="#{lOADetailBackingBean.showVeriryButton()}"
+				rendered="#{isPendingVerification}" />
+
+			<p:commandButton
+				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
+				partialSubmit="true" process="@form" styleClass="ui-button" widgetVar="printBtn"
+				style="display:none;"
+				actionListener="#{lOADetailBackingBean.downloadAllReports}" />
+
 
 			<c:if test="#{isEditableStatus}">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"

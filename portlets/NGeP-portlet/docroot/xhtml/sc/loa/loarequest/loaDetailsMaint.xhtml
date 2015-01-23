@@ -17,6 +17,8 @@
 		<ui:param name="isEditableStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION || ((lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL || lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION) and !empty lOADetailBackingBean.managedBean.taskId)}" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
+		
 		
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
@@ -32,28 +34,29 @@
 					activeIndex="#{lOADetailBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
 
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" disabled="#{isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form" disabled="#{isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" disabled="#{isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form" disabled="#{!isAfterSupplierResponseStatus}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form" disabled="#{!isAfterSupplierResponseStatus or isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff or lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeAsAndWhen}">	
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
+					  disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff or lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeAsAndWhen or isPendingVerification}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq or isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 6 : 5}" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}" update="@form" disabled="#{isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
 					</p:menuitem>
 				</p:tabMenu>
