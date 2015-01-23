@@ -345,27 +345,31 @@ public class QTScheduleDetailBackingBean extends
 	 * Will be call when we click apply button for address.
 	 */
 	public void applyAddessToSelectedZonesAction() {
-
 		debugLogger("applySampleSubmission");
-		ScQtSampleSubmission sampleSubmission = new ScQtSampleSubmission();
-		PmAddress address = new PmAddress();
-		address.setPmCity(new PmCity());
-		address.setPmState(new PmState());
-		address.setPmDistrict(new PmDistrict());
-		address.setPmDivision(new PmDivision());
-		PmCountry country = new PmCountry();
-		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
-		CountryReqDTO countryReqDTo = new CountryReqDTO();
-		countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
-		CountryResDTO countryResDTO = countrySo
-				.retrieveCountryByCode(countryReqDTo);
-		country.setCountryId(countryResDTO.getPmCountry()
-				.getCountryId());
-		address.setPmCountry(country);
-		sampleSubmission.setAddress(address);
-		this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
-		retrievePmStateList();
+		if (!this.getManagedBean().getSelectedSubmissionList().isEmpty()) {
+			ScQtSampleSubmission sampleSubmission = new ScQtSampleSubmission();
+			PmAddress address = new PmAddress();
+			address.setPmCity(new PmCity());
+			address.setPmState(new PmState());
+			address.setPmDistrict(new PmDistrict());
+			address.setPmDivision(new PmDivision());
+			PmCountry country = new PmCountry();
+			ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+			country.setCountryId(countryResDTO.getPmCountry()
+					.getCountryId());
+			address.setPmCountry(country);
+			sampleSubmission.setAddress(address);
+			this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
+			retrievePmStateList();
+			RequestContext.getCurrentInstance().execute("sampledlg.show();");
+		} else {
+			throw new EpException(MessageConst.ERROR_760232);
+		}
 	}
 
 	/**
