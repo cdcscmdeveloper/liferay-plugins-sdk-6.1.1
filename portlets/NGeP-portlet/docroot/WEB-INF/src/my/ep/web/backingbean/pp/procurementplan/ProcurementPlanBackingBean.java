@@ -498,7 +498,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setInvitationYear("");
 			}else{ 
 				//next year
-				this.getManagedBean().setInvitationYear("c-0:c+1");
+				this.getManagedBean().setInvitationYear("c+1:c+1");
 			}
 		}else{
 			this.getManagedBean().setInvitationYear("");
