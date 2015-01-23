@@ -14,6 +14,7 @@ import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvEquipment;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
@@ -95,6 +96,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	private List<String> higherManagementNames = new ArrayList<String>();
 	private List<String> managementNames = new ArrayList<String>();
+	
+	private SmSvAdtMachine selectedAdtMachine;
 	
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -542,5 +545,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.smSvFacilityMap = smSvFacilityMap;
 	}
 
+	public SmSvAdtMachine getSelectedAdtMachine() {
+		return selectedAdtMachine;
+	}
+
+	public void setSelectedAdtMachine(SmSvAdtMachine selectedAdtMachine) {
+		this.selectedAdtMachine = selectedAdtMachine;
+	}
+	
 
 }
