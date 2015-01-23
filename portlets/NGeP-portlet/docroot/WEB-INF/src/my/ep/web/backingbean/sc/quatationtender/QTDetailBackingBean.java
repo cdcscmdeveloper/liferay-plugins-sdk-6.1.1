@@ -3287,6 +3287,14 @@ public class QTDetailBackingBean extends
 										.getParameterCode())) {
 					qtApproval.setApproverSettings(approvalTab
 							.getScQtApproval().getApproverSettings());
+					if (qtApproval.getScQtApprovalRemarks() == null) {
+						qtApproval.setScQtApprovalRemarks(approvalTab.getScQtApproval().getScQtApprovalRemarks());
+					} else {
+						qtApproval.setScQtApprovalRemarks(approvalTab.getScQtApproval().getScQtApprovalRemarks());
+					}
+					if (qtApproval.getScQtApprovalAttachment() == null) {
+						qtApproval.setScQtApprovalAttachment(approvalTab.getScQtApproval().getScQtApprovalAttachment());
+					}
 					return qtApproval;
 				}
 			}
