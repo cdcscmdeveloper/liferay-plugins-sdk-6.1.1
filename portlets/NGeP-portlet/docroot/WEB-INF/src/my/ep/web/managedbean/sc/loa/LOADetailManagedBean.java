@@ -96,6 +96,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	private String action;
 	private boolean editFlag;
+	private boolean dpLoaListPageNav;
+	private boolean verifyBtnFlag= true;
 
 	public LOADetailManagedBean() {
 	}
@@ -761,6 +763,22 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	public void setEditFlag(boolean editFlag) {
 		this.editFlag = editFlag;
+	}
+
+	public boolean isDpLoaListPageNav() {
+		return dpLoaListPageNav;
+	}
+
+	public void setDpLoaListPageNav(boolean dpLoaListPageNav) {
+		this.dpLoaListPageNav = dpLoaListPageNav;
+	}
+
+	public boolean isVerifyBtnFlag() {
+		return verifyBtnFlag;
+	}
+
+	public void setVerifyBtnFlag(boolean verifyBtnFlag) {
+		this.verifyBtnFlag = verifyBtnFlag;
 	}
 
 }

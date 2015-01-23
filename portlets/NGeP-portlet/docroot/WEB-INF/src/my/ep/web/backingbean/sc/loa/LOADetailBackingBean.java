@@ -212,6 +212,7 @@ public class LOADetailBackingBean extends
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(true);
+			getManagedBean().setDpLoaListPageNav(true);
 
 		} finally {
 			qtAwardSO = null;
@@ -303,6 +304,13 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = new ScLoa();
 			// scLoa.setLoaId(loaId);
+			
+			// active tab index for loa contents
+			if(getManagedBean().getCurrentStatusId() != null){
+				if(getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)){
+					getManagedBean().setSelectedTabIndex(5);
+				}
+			}
 
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -1106,8 +1114,15 @@ public class LOADetailBackingBean extends
 			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 			scAttachments.add(scLoaReportAttachment);
 		}
-
+	        
 		downloadAllFiles("NGeP-LOA-Report", scAttachments);
+	}
+
+	public void showVeriryButton() {
+	       
+		if(getManagedBean().isVerifyBtnFlag()){
+			getManagedBean().setVerifyBtnFlag(false);
+		}
 	}
 
 	public void generateContractSummaryPdfFromVelocity(ScAttachment attachment,
@@ -3162,14 +3177,20 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Page navigation to loi loa list
+	 * Page navigation to dp and qt loa list.
 	 */
 	public void backToPervious() {
 		log.info("backToPervious");
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
-
+		if(getManagedBean().isDpLoaListPageNav()) {
+			// page nav. to dpLoaList 
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);
+		} else  {
+			// page nav. to qtLoaList 
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+		}
 	}
 }
