@@ -243,7 +243,7 @@
 		<p:panel id="pnlSuppDoc" header="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}" toggleable="true">
 			<table class="customTbl">
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent"><p:calendar id="receiveCalId" navigator="true"
 							label="#{lbl['lbl.sm.receivedate']}" required="#{!empty param['disableValidation']}"
 							value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
