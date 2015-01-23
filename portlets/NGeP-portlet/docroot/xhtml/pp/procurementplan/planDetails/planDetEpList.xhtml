@@ -38,7 +38,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
 		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
 		     rowIndexVar="index" rowKey="#{epItem}">
-			
+			<ac:paginator for="dtProcurementPlan" />
 	    	<p:columnGroup type="header">
 				<p:row>
 				 	<p:column selectionMode="multiple"  style="width:2%" />
