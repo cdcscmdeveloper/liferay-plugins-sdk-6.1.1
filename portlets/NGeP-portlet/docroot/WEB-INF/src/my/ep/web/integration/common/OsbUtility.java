@@ -2,40 +2,33 @@ package my.ep.web.integration.common;
 
 import java.rmi.RemoteException;
 
-import my.ep.web.integration.osb.BatchOutboundRq_Type;
-import my.ep.web.integration.osb.BatchPortTypeProxy;
-import my.ep.web.integration.osb.EPMFRq_Type;
-import my.ep.web.integration.osb.EPMFRs_Type;
-import my.ep.web.integration.osb.RqHeader_Type;
-import my.ep.web.integration.osb.RqUID_Type;
-
 public class OsbUtility {
 
-	public void osbServiceCall(String processId) {
+	public void osbServiceCallOutBound(String processId) {
 
 		try {
-			RqHeader_Type header_Type = new RqHeader_Type();
+			my.ep.web.integration.osb.RqHeader_Type header_Type = new my.ep.web.integration.osb.RqHeader_Type();
 			header_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
 			header_Type.setIpAddress(IntegrationConstants.OSB_HOST);
 			header_Type.setOrgUnit(processId);
 			header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
-			RqUID_Type rqUID_Type = new RqUID_Type(
+			my.ep.web.integration.osb.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.RqUID_Type(
 					processId,
 					IntegrationConstants.SEQUENCE_NO);
 			header_Type.setUID(rqUID_Type);
 
-			BatchOutboundRq_Type batchOutboundRq_Type = new BatchOutboundRq_Type();
+			my.ep.web.integration.osb.BatchOutboundRq_Type batchOutboundRq_Type = new my.ep.web.integration.osb.BatchOutboundRq_Type();
 
 			batchOutboundRq_Type.setServiceCode(processId);
 
-			EPMFRq_Type epmfRq_Type = new EPMFRq_Type();
+			my.ep.web.integration.osb.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.osb.EPMFRq_Type();
 			epmfRq_Type.setRqHeader(header_Type);
 			epmfRq_Type.setBatchOutboundRq(batchOutboundRq_Type);
 
-			BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy();
+			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.BatchPortTypeProxy();
 
-			EPMFRs_Type epmfRs_Type = batchPortTypeProxy.invoke(epmfRq_Type);
+			my.ep.web.integration.osb.EPMFRs_Type epmfRs_Type = batchPortTypeProxy.invoke(epmfRq_Type);
 
 			System.out.println("getStatusCode  :"
 					+ epmfRs_Type.getRsHeader().getStatus().getStatusCode());
@@ -46,6 +39,41 @@ public class OsbUtility {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public boolean osbServiceCallInBound(String processId) {
+
+		  try {
+		   my.ep.web.integration.osb.inbound.RqHeader_Type header_Type = new my.ep.web.integration.osb.inbound.RqHeader_Type();
+		   header_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
+		   header_Type.setIpAddress(IntegrationConstants.OSB_HOST);
+		   header_Type.setOrgUnit(processId);
+		   header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
+
+		   my.ep.web.integration.osb.inbound.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.inbound.RqUID_Type(processId, IntegrationConstants.SEQUENCE_NO);
+		   header_Type.setUID(rqUID_Type);
+
+		   my.ep.web.integration.osb.inbound.BatchInboundRq_Type batchOutboundRq_Type = new my.ep.web.integration.osb.inbound.BatchInboundRq_Type();
+
+		   batchOutboundRq_Type.setServiceCode(processId);
+
+		   my.ep.web.integration.osb.inbound.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.osb.inbound.EPMFRq_Type();
+		   epmfRq_Type.setRqHeader(header_Type);
+		   epmfRq_Type.setBatchInboundRq(batchOutboundRq_Type);
+
+		   my.ep.web.integration.osb.inbound.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.inbound.BatchPortTypeProxy();
+
+		   my.ep.web.integration.osb.inbound.EPMFRs_Type epmfRs_Type =batchPortTypeProxy.invoke(epmfRq_Type);
+		   
+		   if(epmfRs_Type.getRsHeader().getStatus().getStatusCode().equalsIgnoreCase(IntegrationConstants.SERVICE_SUCCESS_CODE)){
+			   return true;   
+		   }
+		      
+		  } catch (RemoteException e) {
+		   e.printStackTrace();
+		  }
+
+		 return false;
 	}
 
 }
