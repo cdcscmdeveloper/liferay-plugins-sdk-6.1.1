@@ -2,6 +2,7 @@ package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -27,6 +28,7 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 //import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 
@@ -44,6 +46,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int zoneActiveIndex;
 	private int onlineBiddingActiveIndex;
 	private String processName;
+	
+	//MenuModel
+	private MenuModel zoneMenuModel;
 	
 	//Header
 	private ScQt scQt;
@@ -121,6 +126,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> unRecommendedSupplierList;
 	private List<ScQtRecommend> selectedRecommendList; 
 	private List<SmSupplier> awardSupplierList; 
+	
+	private Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> shortlistedSupppliersByZone;
+	private Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> shortlistedItemsByZone;	
 	
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
@@ -611,6 +619,36 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the shortlistedSupppliersByZone
+	 */
+	public Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> getShortlistedSupppliersByZone() {
+		return shortlistedSupppliersByZone;
+	}
+
+	/**
+	 * @param shortlistedSupppliersByZone the shortlistedSupppliersByZone to set
+	 */
+	public void setShortlistedSupppliersByZone(
+			Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> shortlistedSupppliersByZone) {
+		this.shortlistedSupppliersByZone = shortlistedSupppliersByZone;
+	}
+
+	/**
+	 * @return the shortlistedItemByZone
+	 */
+	public Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> getShortlistedItemsByZone() {
+		return shortlistedItemsByZone;
+	}
+
+	/**
+	 * @param shortlistedItemByZone the shortlistedItemByZone to set
+	 */
+	public void setShortlistedItemsByZone(
+			Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> shortlistedItemsByZone) {
+		this.shortlistedItemsByZone = shortlistedItemsByZone;
+	}
+
+	/**
 	 * @return the scQtFinalization
 	 */
 	public ScQtFinalization getScQtFinalization() {
@@ -918,6 +956,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeTabLabel(String committeeTabLabel) {
 		this.committeeTabLabel = committeeTabLabel;
+	}
+
+	/**
+	 * @return the zoneMenuModel
+	 */
+	public MenuModel getZoneMenuModel() {
+		return zoneMenuModel;
+	}
+
+	/**
+	 * @param zoneMenuModel the zoneMenuModel to set
+	 */
+	public void setZoneMenuModel(MenuModel zoneMenuModel) {
+		this.zoneMenuModel = zoneMenuModel;
 	}
 
 	/**
