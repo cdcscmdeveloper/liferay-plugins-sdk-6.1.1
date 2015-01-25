@@ -15,6 +15,13 @@
 		.label .ui-outputlabel { 
 			text-align: left; 
 		}.
+		
+		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
+		.tdWidth: 84%;
+		</c:if>
+		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
+		.tdWidth: 100%;
+		</c:if>		
 	</style>
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.finalization']}" toggleable="true">
@@ -200,13 +207,28 @@
 	
 	<p:spacer height="20px" />
 	<p:outputPanel id="itemSupplierPanel">
-		<h:panelGroup id="itemPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier and suppFinalizationBackingBean.managedBean.itemize}">
-			<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/itemList.xhtml" />
-		</h:panelGroup>
-
-		<h:panelGroup id="supplierPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier}">
-			<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/shortlistedSupplierList.xhtml" />
-		</h:panelGroup>
+		<table style="border: 0px;width:100%;">
+			<tr>
+				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
+					<td width="16%" style="vertical-align: baseline;">
+						<p:tabMenu styleClass="sidemenu"
+							activeIndex="#{suppFinalizationBackingBean.managedBean.prepareActiveIndex}"
+							style="display : table-caption;" model="#{suppFinalizationBackingBean.managedBean.zoneMenuModel}">
+							<!-- Menu items are dynamically populated from backing bean -->
+						</p:tabMenu>						
+					</td>
+				</c:if>
+				
+				<td class="tdWidth">
+					<h:panelGroup id="itemPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier and suppFinalizationBackingBean.managedBean.itemize}">
+						<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/itemList.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup id="supplierPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier}">
+						<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/shortlistedSupplierList.xhtml" />
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>	
 	</p:outputPanel>
 	
 	<p:spacer height="20px" />
