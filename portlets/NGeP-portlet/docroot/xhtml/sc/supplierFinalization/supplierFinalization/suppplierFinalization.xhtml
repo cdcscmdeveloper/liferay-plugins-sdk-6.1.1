@@ -113,6 +113,7 @@
 					
 					<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 						<p:outputLabel value="#{lbl['lbl.sc.finalization.committee']}" />
+						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 					</h:column>
 					
 					<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
@@ -128,6 +129,7 @@
 					
 					<h:column>
 						<p:outputLabel value="#{lbl['lbl.sc.reason']}" rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}"/>
+						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 						<p:outputLabel value=" " rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}"/>
 					</h:column>
 					<h:column>
