@@ -765,14 +765,14 @@
 					<property name="columnName" value="glAccCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.gl.account.code" />
+					<property name="bundleKey" value="lbl.pm.gl.accountCode" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="description" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.gl.account.desc" />
+					<property name="bundleKey" value="lbl.pm.gl.description" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 			</list>
