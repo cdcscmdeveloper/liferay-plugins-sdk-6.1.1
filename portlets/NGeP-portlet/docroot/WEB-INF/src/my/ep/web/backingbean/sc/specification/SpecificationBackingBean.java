@@ -1375,7 +1375,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 				specReqDTO.setScQt(scQtTechScore);
 				specSo.validateSCScoreSettings(specReqDTO);
-				specSo.validateSpecOfferPrice(specReqDTO);
+				//specSo.validateSpecOfferPrice(specReqDTO);
 
 			}
 
@@ -1456,7 +1456,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 				specReqDTO.setScQt(scQtFinScore);
 				specSo.validateSCScoreSettings(specReqDTO);
-				specSo.validateSpecOfferPrice(specReqDTO);
+				//specSo.validateSpecOfferPrice(specReqDTO);
 			}
 			break;
 		case 6:
@@ -8102,6 +8102,7 @@ public class SpecificationBackingBean extends
 				noContract.setCheckList(checkList);
 				setUserDetails(noContract);
 				noOfContractScore.add(noContract);
+
 			} else if (QTConstants.AUTO_SCORE
 					.equalsIgnoreCase(contractScoreType)) {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
@@ -8210,6 +8211,47 @@ public class SpecificationBackingBean extends
 						removedList.remove(i);
 					}
 				}
+			}
+			if ((null != checkList && null != checkList.getPmDocument())
+					&& (QTConstants.TECHNICAL_GOV_CODE
+							.equalsIgnoreCase(checkList.getPmDocument()
+									.getDocDefinitionKey()) || QTConstants.TECHNICAL_PRIVATE_CODE
+							.equalsIgnoreCase(checkList.getPmDocument()
+									.getDocDefinitionKey()))) {
+				if (((QTConstants.AUTO_SCORE
+						.equalsIgnoreCase(totalNoOfYearsType) && QTConstants.AUTO_SCORE
+						.equalsIgnoreCase(contractScoreType)) || (QTConstants.AUTO_SCORE
+						.equalsIgnoreCase(contractScoreType) && (null == totalNoOfYearsType || ""
+						.equals(totalNoOfYearsType))))) {
+					PmStatus evalStatus = new PmStatus();
+					// evalStatus=new PmStatus();
+					evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+					reqDTO.setEvaluationStatus(evalStatus);
+					// checkList.setPmEvalStatus(evalStatus);
+
+				} else {
+					PmStatus evalStatus = new PmStatus();
+					// evalStatus=new PmStatus();
+					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+					reqDTO.setEvaluationStatus(evalStatus);
+					// checkList.setPmEvalStatus(evalStatus);
+				}
+
+			} else {
+				if (QTConstants.AUTO_SCORE.equalsIgnoreCase(contractScoreType)) {
+					PmStatus evalStatus = new PmStatus();
+					// evalStatus=new PmStatus();
+					evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+					reqDTO.setEvaluationStatus(evalStatus);
+					// checkList.setPmEvalStatus(evalStatus);
+				} else {
+					PmStatus evalStatus = new PmStatus();
+					// evalStatus=new PmStatus();
+					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+					reqDTO.setEvaluationStatus(evalStatus);
+					// checkList.setPmEvalStatus(evalStatus);
+				}
+
 			}
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
@@ -8428,6 +8470,20 @@ public class SpecificationBackingBean extends
 					// DateUtils.addDays(new Date(), 90));
 				}
 			}
+			if (QTConstants.AUTO_SCORE.equalsIgnoreCase(contractScoreType)) {
+				PmStatus evalStatus = new PmStatus();
+				// evalStatus=new PmStatus();
+				evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+				reqDTO.setEvaluationStatus(evalStatus);
+				// checkList.setPmEvalStatus(evalStatus);
+			} else {
+				PmStatus evalStatus = new PmStatus();
+				// evalStatus = new PmStatus();
+				evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				reqDTO.setEvaluationStatus(evalStatus);
+				// checkList.setPmEvalStatus(evalStatus);
+			}
+
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
