@@ -54,13 +54,13 @@
 
 
 		</p:column>
-		<p:column>
+		<p:column width="10%">
 			<f:facet name="header">
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
 			<p:calendar showOn="button" id="effDate"
-				mindate="#{feeObj.defaultEffDate}" style="width :100px;"
+				mindate="#{feeObj.defaultEffDate}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
@@ -68,13 +68,13 @@
 			</p:calendar>
 		</p:column>
 
-		<p:column>
+		<p:column width="10%">
 			<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
 			<p:calendar showOn="button" id="contractFeeExpDateId" 
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :100px;"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}">
@@ -83,7 +83,7 @@
 			</p:calendar>
 		</p:column>
 
-		<p:column width="10%">
+		<p:column width="8%">
 			<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
@@ -93,7 +93,7 @@
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 			</p:selectOneMenu>
 		</p:column>
-		<p:column width="5%">
+		<p:column width="3%">
 			<f:facet name="header">
 
 			</f:facet>
