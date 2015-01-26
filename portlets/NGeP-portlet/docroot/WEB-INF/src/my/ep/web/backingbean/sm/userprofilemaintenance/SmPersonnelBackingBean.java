@@ -1154,18 +1154,6 @@ public class SmPersonnelBackingBean extends
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "userProfileSearch.xhtml");
 			getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
-
-			// update edited personnel in personnel list
-			for (SmPersonnel updatedPersonnel : getManagedBean()
-					.getSmPersonnelList()) {
-				if (updatedPersonnel.getPersonnelId()
-						.compareTo(
-								getManagedBean().getBasicSmPersonnel()
-										.getPersonnelId()) == 0) {
-					updatedPersonnel = getManagedBean().getBasicSmPersonnel();
-					break;
-				}
-			}
 		}
 	}
 
