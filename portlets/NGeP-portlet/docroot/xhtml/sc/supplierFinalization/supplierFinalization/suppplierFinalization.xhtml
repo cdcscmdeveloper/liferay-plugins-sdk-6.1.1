@@ -169,11 +169,9 @@
 					<p:outputLabel value="#{lbl['lbl.sc.reevaluation.required.for']}" />
 				</h:column>
 				<h:column>
-					<div class="checkbox">
+					<div style="float:left; display:inline-block;">
 						<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
-							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"/>
-					</div>				
-					<div class="label" style="float:left;">
+								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"/>		
 						<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
 					</div>
 				</h:column>
@@ -181,13 +179,11 @@
 				<h:column>
 				</h:column>
 				<h:column>
-					<div class="checkbox">
+					<div style="float:left; display:inline-block;">
 						<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
-							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" />
-					</div>
-					<div class="label" style="float:left;">
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" />	
 						<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
-					</div>					
+					</div>									
 				</h:column>
 			</h:panelGrid>
 		</p:outputPanel>
