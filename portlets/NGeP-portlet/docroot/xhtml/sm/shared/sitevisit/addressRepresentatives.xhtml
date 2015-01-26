@@ -10,7 +10,7 @@
 		<p:dataTable var="svAdd" id="dtblSelectedSvAdd" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvAddressMap[svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode]}" 
 			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAddresses}" 
-			 rowKey="#{svAdd}">
+			 rowKey="#{svAdd}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{viewFlag}"/>
 			<p:column headerText="#{lbl['lbl.sm.address']}">
 					#{svAdd.smAddress.address1}<br />
