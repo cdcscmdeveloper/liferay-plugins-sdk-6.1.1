@@ -41,6 +41,8 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean modeEditable;
 	private boolean isSearch;
 	private boolean backAllow;
+	private boolean approvedPlan;
+	
 	private PpWorkflowStatus ppWorkflowStatus;
 	private String bpmStatusCreator;
 	private Timestamp bpmStatusDate;
@@ -71,6 +73,20 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 
 
+
+	/**
+	 * @return the approvedPlan
+	 */
+	public boolean isApprovedPlan() {
+		return approvedPlan;
+	}
+
+	/**
+	 * @param approvedPlan the approvedPlan to set
+	 */
+	public void setApprovedPlan(boolean approvedPlan) {
+		this.approvedPlan = approvedPlan;
+	}
 
 	/**
 	 * @return the invitationYear
