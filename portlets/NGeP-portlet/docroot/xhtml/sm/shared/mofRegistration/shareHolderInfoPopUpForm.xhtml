@@ -313,9 +313,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty backingBean.managedBean.selectedShareHolder.epRole}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.activation.status']} :"/></td>
-					<td style="width:auto;background-color:whitesmoke;font-weight: bold;">
-						<p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getAuthorizedPersonnelAccountStatus(backingBean.managedBean.selectedShareHolder)}" />
-					</td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getAuthorizedPersonnelAccountStatus(backingBean.managedBean.selectedShareHolder)}" /></td>
 				</tr>
 			</p:outputPanel>
 		</table>
