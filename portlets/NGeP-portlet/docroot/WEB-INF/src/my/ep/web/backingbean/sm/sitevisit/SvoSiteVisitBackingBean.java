@@ -2023,11 +2023,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().getSelectedSvTemplate().getSmSvAdtMachines().add(adtMachine);
 		RequestContext.getCurrentInstance().execute("adtMacDlg.hide()");
 		log.info("ADT MACHINE SIZE......." + this.getManagedBean().getSelectedSvTemplate().getSmSvAdtMachines().size());
+		
+		this.getManagedBean().setSelectedAdtMachine(new SmSvAdtMachine());
 	}
 	
 	public void saveAdditionalMachine(){
-		log.info("-------saveAdditionalMachine--------" + this.getManagedBean().getSelectedSvTemplate().getSvTemplateId());
-
+		log.info("-------saveAdditionalMachine--------");
+		this.getManagedBean().setSelectedAdtMachine(new SmSvAdtMachine());
 	}
 	
 	public void editAdditionalMachine(SmSvAdtMachine adtMachine){
