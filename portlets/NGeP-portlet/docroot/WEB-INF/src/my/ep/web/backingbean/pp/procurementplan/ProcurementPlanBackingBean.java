@@ -3,9 +3,9 @@ package my.ep.web.backingbean.pp.procurementplan;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +68,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.pp.procurementplan.ProcurementPlanManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -484,6 +485,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBpmStatusDate(null);
 		this.getManagedBean().setBpmStatusId(null);
 		this.getManagedBean().setInvitationYear("c-0:c+1");
+		this.getManagedBean().setApprovedPlan(false);
 	}
 	
 	/**
@@ -576,6 +578,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //						
 					}else{
 						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());
+						//check ppWorkflowStatus contains approved
+//						List <PpWorkflowStatus> ppWorkflowStatuses = retrievePpApprovedStatus(ppPlan);
+//						if(ppWorkflowStatuses!=null && !ppWorkflowStatuses.isEmpty()){
+//							this.getManagedBean().setApprovedPlan(true);
+//						}
 					}
 					
 					this.getManagedBean().setSelectedPlan(ppPlan);
@@ -615,6 +622,33 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadPlanDetails - End");
 	}
 
+	/**
+	 * retrieve pp approved status
+	 * @param planType
+	 * @return List<PpWorkflowStatus>
+	 */
+	private List<PpWorkflowStatus> retrievePpApprovedStatus(PpPlan ppPlan){
+		log.info("retrievePpApprovedStatus");
+		Long docId = null;
+		String docType = null;
+		Long statusId = null;
+		
+		List<PpWorkflowStatus> ppWorkflowStatus = new ArrayList<PpWorkflowStatus>();
+		docId = ppPlan.getPlanId();
+		ppPlan.getPlanType();
+		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+			docType = ParameterConst.DOCTYPE_PLAN_PROCUREMENT;
+			statusId = ProcurementPlanConst.PPP_APPROVED;
+		}else{
+			docType = ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
+			statusId = ProcurementPlanConst.PPE_APPROVED;
+		}
+		
+		ppWorkflowStatus = PpCommonUtil.retrievePpApprovedStatus(docId, docType, statusId);
+		
+		return ppWorkflowStatus;
+	}
+	
 	/**
 	 * generate item editable mode
 	 * @param ppPlan
@@ -708,10 +742,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		loadPlanActors(ppPlan.getOrgProfile() , null);
 		
 		//default status for view
-		PmStatus bpmStatus = new PmStatus();
 		PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
-		bpmStatus.setStatusId(ProcurementPlanConst.PPP_PENDING_SUBMISSION); //PP or PE will do, for display only
-		ppWorkflowStatus.setPmStatus(bpmStatus);
+		ppWorkflowStatus.setPmStatus( new PmStatus());
 		ppWorkflowStatus.setCreatedDate(ppPlan.getCreatedDate());
 		ppWorkflowStatus.setCreatedUsername(PpCommonUtil.retrieveUserByLoginIdOrUserId(null, ppPlan.getCreatedBy()).getUserName());
 		this.getManagedBean().setPpWorkflowStatus(ppWorkflowStatus);
@@ -824,6 +856,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
 			remark.setUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			remark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 			if(!this.getManagedBean().getSelectedPlan().isBrandNew()){
 				PmRole roleCode = new PmRole();
 				roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
@@ -929,6 +962,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
 			remark.setUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			remark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 			PmRole roleCode = new PmRole();
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
@@ -1013,6 +1047,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
 			remark.setUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			remark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 			PmRole roleCode = new PmRole();
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
@@ -1123,6 +1158,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
 			remark.setUserId(getFacesScopes().getUserSessionBean().getLoginId());
+			remark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 			PmRole roleCode = new PmRole();
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
@@ -1236,6 +1272,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
 			reason.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
+			reason.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 			PmRole roleCode = new PmRole();
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			reason.setRoleCode(roleCode);
@@ -1551,7 +1588,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * Add new item procurement item list
 	 */
 	public void addPpItemDet(){
-		log.info("planPpItemDet");
+		log.info("addPpItemDet");
+		if(this.getManagedBean().getSelectedPlan().getPlanYear()==null){
+			throw new EpException(MessageConst.ERROR_730028);
+		}
 		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 		}
@@ -1560,9 +1600,35 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
+		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
+			//current year
+			ppItem.setInvitationDate(new Date());
+		}else{ 
+			System.out.println("next year ");
+			//next year
+			int nextYear = Calendar.getInstance().get(Calendar.YEAR);
+			Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+			
+			ppItem.setInvitationDate(date.getTime());
+		}
 		this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 		
 	}
+	/**
+	 * generate min date 
+	 * @return String (date in string)
+	 */
+	public String getMinDate(){
+		log.info("getMinDate");
+		String dateStr = "";
+		Date today = new Date();
+		dateStr = DateUtils.dateToString("dd/MM/yyyy", today);
+		return dateStr;
+	}
+	
+	/**
+	 * validation of pp item
+	 */
 	private void validatePpItem(){
 		log.info("validatePpItem");
 		if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty()){
@@ -2209,6 +2275,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw new EpException(MessageConst.ERROR_730016);
 		}
 		
+		if(ppPlan.getPlanYear()==null){
+			throw new EpException(MessageConst.ERROR_730028);
+		}
+		
+		
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 			validatePpItem();
 			// PP20150108-0005
@@ -2413,12 +2484,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//Get Justification 
 			justifications = getAllJustifications(ppPlan);
 			
-			if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)){
-				rejectReasons = getAllRejectionReasons(ppPlan);
-				if(rejectReasons!=null && !rejectReasons.isEmpty()){
-					reqDTO.setRejectReasonList(rejectReasons);
+			//Current not Pending Submission/Null and it is SAVE/REVISE
+			if(!brandNew 
+				&& !(ppPlan.getCurrentStatus().getWorkflowStatusId()!=null 
+					&& ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(ppPlan.getCurrentStatus().getWorkflowStatusId()))
+				&& !(ppPlan.getCurrentStatus().getWorkflowStatusId()!=null 
+					&& ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(ppPlan.getCurrentStatus().getWorkflowStatusId()))){
+				
+				if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
+						|| BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)){
+					rejectReasons = getAllRejectionReasons(ppPlan);
+					if(rejectReasons!=null && !rejectReasons.isEmpty()){
+						reqDTO.setRejectReasonList(rejectReasons);
+					}
 				}
 			}
+			
 			
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
