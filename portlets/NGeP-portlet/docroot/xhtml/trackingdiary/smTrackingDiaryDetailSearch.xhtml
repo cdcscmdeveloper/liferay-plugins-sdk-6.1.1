@@ -27,31 +27,48 @@
 				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" action="#{cdTrackingDiaryBackingBean.backToPrev}" />
 			</div>
 		</div>
+		<p:panel header="Trackng Diary Details" toggleable="true">
 
-<!-- 		<table style="width: 100%"> -->
-<!-- 			<tr> -->
-<!-- 				<td><p:panel style="width: 100%;" header="Document Details" -->
-<!-- 						toggleable="true" id="searchTabId"> -->
-<!-- 						<table> -->
-<!-- 							<tr> -->
+			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{cmTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+
+				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
+
+				<p:column width="15%">
+					<f:facet name="header">
+					Creation Timestamp
+					</f:facet>
+				#{trackingDiaryObj.actionedDate}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Actioned By
+					</f:facet>
+				#{trackingDiaryObj.actionedBy}
+				</p:column>
 <!-- 				<p:column width="15%"> -->
 <!-- 					<f:facet name="header"> -->
-<!-- 					Application No -->
+<!-- 					Role -->
 <!-- 					</f:facet> -->
-<!-- 				#{smSupplier.smAppl.applNo} -->
+<!-- 				#{trackingDiaryObj.pmRole.pmRoleDescs.roleName} -->
 <!-- 				</p:column> -->
-<!-- 				<p:column width="15%"> -->
-<!-- 					<f:facet name="header"> -->
-<!-- 					Application Type -->
-<!-- 					</f:facet> -->
-<!-- 				#{smSupplier.smAppl.applType} -->
-<!-- 				</p:column> -->
-<!-- 							</tr> -->
-<!-- 						</table> -->
-<!-- 					</p:panel></td> -->
-<!-- 			</tr> -->
-<!-- 		</table> -->
-		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include>
+				<p:column width="25%">
+					<f:facet name="header">
+					Description
+					</f:facet>
+				#{trackingDiaryObj.actionDesc}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Document Status
+					</f:facet>
+				#{cmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>			
+
+<!-- 		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include> -->
 	</h:panelGroup>		
 
 

@@ -51,7 +51,8 @@ import org.apache.log4j.Logger;
 public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryManagedBean>{
 
 	private static Logger log = Logger.getLogger(FlTrackingDiaryBackingBean.class);
-	public static final String NAV_TO_FUFILLMENT_DETAIL_SEARCH = "smTrackingDiaryDetailSearch.xhtml";
+	public static final String NAV_TO_FL_SEARCH = "trackingDiary.xhtml";
+	public static final String NAV_TO_DETAIL_SEARCH = "flTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
 	private FacesScopes getFacesScopes() {
@@ -272,11 +273,16 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		}
 	}
 
+	public String backToPrev() {
+
+		return NAV_TO_FL_SEARCH;
+	}
+
 	public String goToTrackingDiarySearch(VCtDocument vCtDocument) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 //		getManagedBean().setSmSupplier(smSupplier);
 		searchTrackingDiaryDataModel.reloadData();	
-		return NAV_TO_FUFILLMENT_DETAIL_SEARCH + "?faces-redirect=true";
+		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	
 }
