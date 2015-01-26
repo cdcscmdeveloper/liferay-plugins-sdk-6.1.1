@@ -25,7 +25,7 @@
 							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
-							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType)}"
+							action="#{backingBean.saveApplicationAsDraft(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <ui:include
@@ -39,13 +39,13 @@
 									<td><div align="left" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue('5','4',SupplierManagementConst.SM_APPL_BUTTON_TYPE_PREV)}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 												update=":form" />
 										</div></td>
 									<td><div align="right" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue('5','6')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 												update=":form" />
 										</div></td>
 								</tr>
@@ -57,13 +57,13 @@
 									<td><div align="left" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue('5','4',SupplierManagementConst.SM_APPL_BUTTON_TYPE_PREV)}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 												update=":form" />
 										</div></td>
 									<td><div align="right" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue('5','6')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 												update=":form" />
 										</div></td>
 								</tr>

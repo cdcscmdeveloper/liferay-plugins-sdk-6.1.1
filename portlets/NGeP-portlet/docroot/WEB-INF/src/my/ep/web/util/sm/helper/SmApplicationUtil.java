@@ -3198,6 +3198,7 @@ public class SmApplicationUtil {
 			s = SupplierManagementConst.PROCEED_MOF_REG;
 			break;
 		case "A":
+			// TODO changed to satisfy enhancement of adding the bank section
 			s = SupplierManagementConst.PROCEED_ADDTNLCAT_APPLN_SIDEMENU;
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
