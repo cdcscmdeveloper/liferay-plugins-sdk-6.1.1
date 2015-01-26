@@ -12,7 +12,7 @@
 		<div align="left">
 			<table style="align: left">
 				<tr>
-					<td><p:outputLabel id="startDateByPackage"
+					<td><h:outputText value="* " styleClass="mandatory" /> <p:outputLabel id="startDateByPackage"
 							value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
 					<td><p:calendar showOn="button" readonlyInput="true" required="true"
@@ -32,7 +32,7 @@
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<TD><p:spacer width="10"></p:spacer></TD>
 
-					<td><p:outputLabel id="endDateByPackage"
+					<td> <h:outputText value="* " styleClass="mandatory" /><p:outputLabel id="endDateByPackage"
 							value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
 					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate"

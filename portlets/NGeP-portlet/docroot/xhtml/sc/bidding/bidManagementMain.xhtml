@@ -21,8 +21,9 @@
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
 
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				action="#{biddingBB.biddingMonitorBackAction}"/>
+			<p:commandButton id="backButton" value="#{lbl['lbl.btn.back']}"
+				style="float:left;" partialSubmit="true" process="@this"
+				action="#{biddingBB.biddingMonitorBackAction}" />
 		</div>
 
 
@@ -31,18 +32,22 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></td>
+					<td><p:outputLabel id="biddingNoLbl"
+							value="#{lbl['lbl.sc.bidding.no']}" /></td>
 					<td class="header-info-text">
 						#{biddingBB.managedBean.scheduledBid.bidNo}</td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:outputLabel id="docNoLbl"
+							value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td style="width: 14%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.docNo}
 					</td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sc.ptj.name']}" /></td>
+					<td><p:outputLabel id="ptjNameLbl"
+							value="#{lbl['lbl.sc.ptj.name']}" /></td>
 					<td class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
 					</td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+					<td><p:outputLabel id="bidStatusLbl"
+							value="#{lbl['lbl.sc.status']}" /></td>
 
 					<td class="header-info-text">#{biddingBB.getStatusDescById(biddingBB.managedBean.scheduledBid.pmStatus.statusId)}
 					</td>
@@ -60,7 +65,7 @@
 				<table style="width: 60%">
 
 					<tr>
-						<td style="width: 15%"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel id="startDateLbl"
 								value="#{lbl['lbl.sc.bidding.start']}" /></td>
 						<td style="width: 15%"><p:inputText id="bidStart"
 								value="#{biddingBB.managedBean.scheduledBid.startDate}"
@@ -68,7 +73,7 @@
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
-						<td style="width: 15%"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel id="endDateLbl"
 								value="#{lbl['lbl.sc.bidding.end']}" /></td>
 						<td style="width: 15%"><p:inputText id="bidEnd"
 								value="#{biddingBB.managedBean.scheduledBid.endDate}" size="15"
@@ -79,7 +84,7 @@
 					</tr>
 
 					<tr>
-						<td style="width: 15%"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel id="bidDurationlbl"
 								value="#{lbl['lbl.sc.duration.hours']}" /></td>
 						<td style="width: 15%"><p:inputText id="duration" size="15"
 								disabled="true" value="#{biddingBB.managedBean.duration}" /></td>
@@ -89,7 +94,7 @@
 					</tr>
 					<c:if test="#{isZonal}">
 						<tr>
-							<td style="width: 15%"><p:outputLabel
+							<td style="width: 15%"><p:outputLabel id="zoneNameLbl"
 									value="#{lbl['lbl.sc.zone.name']}" /></td>
 							<td style="width: 15%"><p:inputText id="zoneNameLabel"
 									disabled="true" size="15"
@@ -110,10 +115,11 @@
 
 
 					<tr>
-						<td style="width: 15%"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel id="viewBylbl"
 								value="#{lbl['lbl.sc.view.by']}" /></td>
-						<td style="width: 15%">
-							<p:inputText disabled="true" size="15" value="#{biddingBB.getParameterDesc(biddingBB.managedBean.scheduledBid.scBid.recommendedTypeId)}" />
+						<td style="width: 15%"><p:inputText id="recommendTYpeLbl"
+								disabled="true" size="15"
+								value="#{biddingBB.getParameterDesc(biddingBB.managedBean.scheduledBid.scBid.recommendedTypeId)}" />
 						</td>
 						<td style="width: 15%"></td>
 						<td style="width: 15%"></td>

@@ -8,37 +8,37 @@
 
 	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
 
-		<p:dataTable id="biddingListBMBI" selectionMode="single"
+		<p:dataTable id="biddingListBMBI" selectionMode="single" rows="10"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}"
-			var="bidItem" 
+			var="bidItem" rowIndexVar="index"
 			rowKey="#{bidItem.bidItemId}"
 			selection="#{biddingBB.managedBean.selectedBidItem}">
 
-			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
+			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener(bidItem)}"
 				update="@([id$=itemPriceLineChartPanel])" />
 			<ac:paginator for="biddingListBMBI"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<h:outputText value="#{bidItem.scRequestItem.itemName}" />
+				<h:outputText id="itemNameBMBI" value="#{bidItem.scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}">
 
-				<h:outputText value="#{bidItem.scRequestItem.itemDesc}" />
+				<h:outputText id="itemDescBMBI"  value="#{bidItem.scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
-				<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
+				<h:outputText id="uomNameBMBI" value="#{bidItem.scRequestItem.uom.uomName}" />
 
 			</p:column>
 			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
-				<h:outputText style="float : right" value="#{bidItem.qty}">
+				<h:outputText id="qtyBMBI" style="float : right" value="#{bidItem.qty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidItem.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="width : 125px"
 				headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<h:outputText style="float : right" value="#{bidItem.decrementAmt}">
+				<h:outputText id="decrementAmtBMBI" style="float : right" value="#{bidItem.decrementAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -67,7 +67,7 @@
 
 		<div>
 
-			<p:lineChart value="#{biddingBB.managedBean.itemPriceLinearModel}"
+			<p:lineChart id="lineChartBMBI" value="#{biddingBB.managedBean.itemPriceLinearModel}"
 				legendPosition="e" style="height:300px;" />
 
 		</div>
@@ -78,26 +78,26 @@
 		
 		<p:spacer height="10"></p:spacer>
 
-		<p:dataTable id="rankingList"
+		<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
 			value="#{biddingBB.managedBean.scBidPriceList}" var="bidPriceItem">
 			<ac:paginator for="rankingList"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.ranking']}"
 				style=" align : center; width : 14%">
-				<h:outputText value="#{bidPriceItem.ranking}" />
+				<h:outputText id="itemRankVBI" value="#{bidPriceItem.ranking}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="align : center; width : 14%">
-				<h:outputText
+				<h:outputText id="supplierCodeVBI"
 					value="#{bidPriceItem.scBidSupplierItem.scBidSupplier.smSupplier.supplierId}" />
 			</p:column>
 			<p:column style="align : center; width : 14%"
 				headerText="#{lbl['lbl.sc.bumiputera.status']}">
-				<h:outputText
+				<h:outputText id="isBumiVBI"
 					value="#{(bidPriceItem.scBidSupplierItem.scBidSupplier.smSupplier.bumi) ? 'Yes' : 'No'}" />
 			</p:column>
 			<p:column style="align : center; width : 14%"
 				headerText="#{lbl['lbl.sc.starting.price']}">
-				<h:outputText style="float : right"
+				<h:outputText id="itemStartPriceVBI" style="float : right"
 					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -106,7 +106,7 @@
 			<p:column style=" align : center; width : 14%"
 				headerText="#{lbl['lbl.sc.last.bid.price']}">
 				<div style="align: right">
-					<p:commandLink value="#{bidPriceItem.bidPrice}"
+					<p:commandLink id="bidPriceVBI" value="#{bidPriceItem.bidPrice}"
 						style="float : right" oncomplete="priceHistory.show();"
 						action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
 						update="@([id$=historyPricePopupPanel])">
@@ -117,7 +117,7 @@
 			</p:column>
 			<p:column style=" align : center; width : 15%"
 				headerText="#{lbl['lbl.sc.difference.rm']}">
-				<h:outputText style="float : right"
+				<h:outputText id="differenceVBI" style="float : right"
 					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice - bidPriceItem.bidPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -125,7 +125,7 @@
 			</p:column>
 			<p:column style=" align : center; width : 15%"
 				headerText="#{lbl['lbl.sc.cost.saving']}">
-				<h:outputText style="float : right" value="#{1000}">
+				<h:outputText id="savingVBI" style="float : right" value="#{1000}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
