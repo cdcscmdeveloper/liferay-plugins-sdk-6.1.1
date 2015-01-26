@@ -148,7 +148,7 @@
 					<p:inputTextarea id="otherDesc" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
 						value="#{catBean.otherDesc}" required="true"
-						rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
+						rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" />
 					<p:message for="otherDesc" showDetail="false" showSummary="true"
 						display="icon" />
 				</p:column>
@@ -416,7 +416,7 @@
 					<p:inputTextarea id="otherDescR" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
 						value="#{catBeanR.otherDesc}" required="true"
-						rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}" />
+						rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" />
 					<p:message for="otherDescR" showDetail="false" showSummary="true"
 						display="icon" />
 				</p:column>
