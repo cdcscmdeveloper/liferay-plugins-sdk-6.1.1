@@ -1524,20 +1524,43 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void deleteEpItemDet(){
 		log.info("deleteEpItemDet");
-		if(this.getManagedBean().getDeleteEpItems()!=null && !this.getManagedBean().getDeleteEpItems().isEmpty()){
-			if(this.getManagedBean().getSelectedPlan().getPpExpenditureItems()==null){
-				this.getManagedBean().getSelectedPlan().setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
+		int count = 0;
+		if(this.getManagedBean().getSelectedPlan().getPpExpenditureItems()==null){
+			this.getManagedBean().getSelectedPlan().setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
+		}
+		if(this.getManagedBean().getDeleteEpItems()==null){
+			this.getManagedBean().setDeleteEpItems(new ArrayList<PpExpenditureItem>());
+		}
+		//add deleted item to list
+		for(PpExpenditureItem expenditureItem: this.getManagedBean().getSelectedPlan().getPpExpenditureItems()){
+			if(expenditureItem.isBrandNew() && expenditureItem.isDeleted()){
+				this.getManagedBean().getDeleteEpItems().add(expenditureItem);
+				count++;
 			}
-			for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItems()){
-				if(expenditureItem.isBrandNew()){
-					this.getManagedBean().getSelectedPlan().getPpExpenditureItems().remove(expenditureItem);
-				}
-			}
-			this.getManagedBean().getDeleteEpItems().clear();
-			calculateEpGrandTotal();
-		}else{
+		}
+		if(count==0){
 			throw new EpException(MessageConst.ERROR_730009);
 		}
+		
+		//remove deleted item from list
+		for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItems()){
+			this.getManagedBean().getSelectedPlan().getPpExpenditureItems().remove(expenditureItem);
+		}
+		
+//		if(this.getManagedBean().getDeleteEpItems()!=null && !this.getManagedBean().getDeleteEpItems().isEmpty()){
+//			if(this.getManagedBean().getSelectedPlan().getPpExpenditureItems()==null){
+//				this.getManagedBean().getSelectedPlan().setPpExpenditureItems(new ArrayList<PpExpenditureItem>());
+//			}
+//			for(PpExpenditureItem expenditureItem: this.getManagedBean().getDeleteEpItems()){
+//				if(expenditureItem.isBrandNew()){
+//					this.getManagedBean().getSelectedPlan().getPpExpenditureItems().remove(expenditureItem);
+//				}
+//			}
+//			this.getManagedBean().getDeleteEpItems().clear();
+//			calculateEpGrandTotal();
+//		}else{
+//			throw new EpException(MessageConst.ERROR_730009);
+//		}
 	}
 	
 	/**
@@ -1661,20 +1684,45 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void deletePpItemDet(){
 		log.info("deletePpItemDet");
-		if(this.getManagedBean().getDeletePpItems()!=null && !this.getManagedBean().getDeletePpItems().isEmpty()){
-			if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
-				this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
+		int count = 0;
+		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
+			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
+		}
+		if(this.getManagedBean().getDeletePpItems()==null){
+			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
+		}
+		//add deleted item to list
+		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
+			if(procurementItem.isBrandNew() && procurementItem.isDeleted()){
+				this.getManagedBean().getDeletePpItems().add(procurementItem);
+				count++;
 			}
-			for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
-				if(procurementItem.isBrandNew()){
-					this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
-				}
-			}
-			this.getManagedBean().getDeletePpItems().clear();
-			calculatePpGrandTotal();
-		}else{
+		}
+		
+		if(count==0){
 			throw new EpException(MessageConst.ERROR_730015);
 		}
+		
+		//remove deleted item from list
+		for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
+			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
+		}
+		
+		
+//		if(this.getManagedBean().getDeletePpItems()!=null && !this.getManagedBean().getDeletePpItems().isEmpty()){
+//			if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
+//				this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
+//			}
+//			for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
+//				if(procurementItem.isBrandNew()){
+//					this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
+//				}
+//			}
+//			this.getManagedBean().getDeletePpItems().clear();
+//			calculatePpGrandTotal();
+//		}else{
+//			throw new EpException(MessageConst.ERROR_730015);
+//		}
 	}
 	
 	
@@ -1756,17 +1804,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanYearOptions(boolean brandNew) {
 		log.info("getPlanYearOptions");
 		//TODO comment this for testing 
-		if(brandNew){			
-			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
-				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
-				return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-			}else{
-				SelectItem[] items = new SelectItem[1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				return items;
-			}
-		}else{
+//		if(brandNew){			
+//			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
+//				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
+//			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
+//				return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
+//			}else{
+//				SelectItem[] items = new SelectItem[1];
+//				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+//				return items;
+//			}
+//		}else{
 //			
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
@@ -1775,7 +1823,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
 			items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
 			return items;
-		}
+//		}
 	}
 	
 	/**
@@ -1786,45 +1834,45 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanVotTypeOptions(boolean brandNew) {
 		log.info("getPlanVotTypeOptions");
 		//TODO comment this for testing
-		if(brandNew){
-			List<Long> votTypeIds = null;
-			List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
-			
-			if(this.getManagedBean().getSelectedPlan().getPlanType().getParameterId()!=null 
-					&& this.getManagedBean().getSelectedPlan().getPlanYear()!=null){
-				votTypeIds = PpCommonUtil.existingPlannedVotTypes(
-						this.getCurrentActiveOrg().getOrgProfileId(), 
-						this.getManagedBean().getSelectedPlan().getPlanYear());
-
-				SearchBean<PmParameterDesc> searchBean = null;
-				if(votTypeIds!=null && !votTypeIds.isEmpty()){
-					log.info("filter VOT: ");
-					searchBean = new SearchBean<PmParameterDesc>();
-					//not included parameterId
-					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
-					bean.setSearchField("pmParameter.parameterId");
-					bean.setSearchValue(votTypeIds);
-					searchBean.getDataFilterBeans().add(bean);
-				}
-				parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, searchBean);
-			}
-		
-				
-			SelectItem[] items = null;
-			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale()));
-			int i = 1;
-			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterId(), parameterDesc.getCodeName());
-			}
-			return items; 
-		}else{
+//		if(brandNew){
+//			List<Long> votTypeIds = null;
+//			List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
+//			
+//			if(this.getManagedBean().getSelectedPlan().getPlanType().getParameterId()!=null 
+//					&& this.getManagedBean().getSelectedPlan().getPlanYear()!=null){
+//				votTypeIds = PpCommonUtil.existingPlannedVotTypes(
+//						this.getCurrentActiveOrg().getOrgProfileId(), 
+//						this.getManagedBean().getSelectedPlan().getPlanYear());
+//
+//				SearchBean<PmParameterDesc> searchBean = null;
+//				if(votTypeIds!=null && !votTypeIds.isEmpty()){
+//					log.info("filter VOT: ");
+//					searchBean = new SearchBean<PmParameterDesc>();
+//					//not included parameterId
+//					SearchFilterBean bean = new SearchFilterBean();
+//					bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+//					bean.setSearchField("pmParameter.parameterId");
+//					bean.setSearchValue(votTypeIds);
+//					searchBean.getDataFilterBeans().add(bean);
+//				}
+//				parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.VOT_TYPE, searchBean);
+//			}
+//		
+//				
+//			SelectItem[] items = null;
+//			items = new SelectItem[parameterDescs.size() + 1];
+//			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+//					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//					getFacesScopes().getUserLocale()));
+//			int i = 1;
+//			for (PmParameterDesc parameterDesc : parameterDescs) {
+//				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+//						.getParameterId(), parameterDesc.getCodeName());
+//			}
+//			return items; 
+//		}else{
 			return getVotTypeOptions();
-		}
+//		}
 		
 		
 	}
@@ -2470,7 +2518,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			validationPlanSubmit(action, ppPlan);
 			if(ppPlan.isBrandNew()){
 				//TODO: comment this for testing purpose only
-				validationPlanAvailability(ppPlan);  
+//				validationPlanAvailability(ppPlan);  
 			}
 			
 			//Get All Values
