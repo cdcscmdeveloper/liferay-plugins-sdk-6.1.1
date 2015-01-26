@@ -620,7 +620,9 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			// TODO changed to satisfy enhancement of adding the bank section
+			// "/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
 		case "B":
@@ -677,7 +679,9 @@ public class CommonApplBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							"/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
+							"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+			// TODO changed to satisfy enhancement of adding the bank section
+			// "/xhtml/sm/addAdditionalCategoryCodes/smAddtnlCatApplnSideMenu_BasePage.xhtml");
 			// "/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
 			smApplBB.getManagedBean().setHeaderMsg(
 					"Review Additional Category Code(s) Application - ");

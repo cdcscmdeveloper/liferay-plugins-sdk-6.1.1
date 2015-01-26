@@ -21,7 +21,8 @@ public class SupplierManagementConst {
 	// public static final String PROCEED_UPDATE_MOF_APPLN =
 	// "updateMofSmUser_BaseWizardPage";
 	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";
-	public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU = "smAddtnlCatApplnSideMenu_BasePage";
+	//public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU = "smAddtnlCatApplnSideMenu_BasePage";
+	public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU = "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml";
 	public static final String PROCEED_ADDTNLCAT_APPLN_TNC_PAGE = "/xhtml/sm/addAdditionalCategoryCodes/additionalCategoryCodeTermsAndConditionPage.xhtml";
 	// public static final String PROCEED_ADDTNLCAT_MOF_APPLN =
 	// "addAdditionalCategorySmUser_BaseWizardPage";
