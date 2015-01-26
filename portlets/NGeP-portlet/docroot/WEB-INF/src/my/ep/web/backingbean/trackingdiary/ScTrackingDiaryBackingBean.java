@@ -36,8 +36,8 @@ import org.apache.log4j.Logger;
 public class ScTrackingDiaryBackingBean extends
 		BaseBackingBean<ScTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(ScTrackingDiaryBackingBean.class);
-	public static final String NAV_TO_SMSUPPLIER_SEARCH = "trackingDiary.xhtml";
-	public static final String NAV_TO_SMSUPPLIER_DETAIL_SEARCH = "scTrackingDiaryDetailSearch.xhtml";
+	public static final String NAV_TO_SC_SEARCH = "trackingDiary.xhtml";
+	public static final String NAV_TO_DETAIL_SEARCH = "scTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	public ScTrackingDiaryBackingBean() {
 //	    String scSupplierCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("scSupplierCode");
@@ -114,7 +114,7 @@ public class ScTrackingDiaryBackingBean extends
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 //		getManagedBean().setScSupplier(scRequestNote);
 		searchTrackingDiaryDataModel.reloadData();
-		return NAV_TO_SMSUPPLIER_DETAIL_SEARCH + "?faces-redirect=true";
+		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
 	public String reset() {
@@ -123,7 +123,7 @@ public class ScTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_SMSUPPLIER_SEARCH;
+		return NAV_TO_SC_SEARCH;
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {

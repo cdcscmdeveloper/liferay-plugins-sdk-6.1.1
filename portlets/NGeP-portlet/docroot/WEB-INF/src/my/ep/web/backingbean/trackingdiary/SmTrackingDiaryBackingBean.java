@@ -69,7 +69,7 @@ public class SmTrackingDiaryBackingBean extends
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSmSupplier().getSmAppl().getApplNo()));
 //			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
-			System.out.println("docNo " + getManagedBean().getSmSupplier().getSmAppl().getApplNo());
+			System.out.println("getSmDocumentDataModel docNo " + getManagedBean().getSmSupplier().getSmAppl().getApplNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();

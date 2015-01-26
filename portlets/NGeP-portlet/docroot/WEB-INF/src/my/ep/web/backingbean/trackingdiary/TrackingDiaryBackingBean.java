@@ -12,7 +12,7 @@ public class TrackingDiaryBackingBean extends
 
 	private String codeType;
 
-	private int previousScreen = 0;//0=catSearch;1=catMaintenance;
+//	private int previousScreen = 0;//0=catSearch;1=catMaintenance;
 	
 	
 
