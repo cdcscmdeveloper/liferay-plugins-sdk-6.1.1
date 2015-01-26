@@ -36,12 +36,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 
 	   	<p:dataTable id="dtExpenditurePlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
-		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtProcurementPlan" />
 	    	<p:columnGroup type="header">
 				<p:row>
-				 	<p:column selectionMode="multiple"  style="width:2%" disabledSelection="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}"  />
+				 	<p:column  style="width:2%" />
 				    <p:column  width="10%">
 					    <f:facet name="header">
 					    	<h:outputText value="* " styleClass="mandatory" />
@@ -103,8 +102,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    </p:column>
 				</p:row>
 			</p:columnGroup>
-		  
-			<p:column selectionMode="multiple"  disabledSelection="#{!epItem.brandNew}" />
+			<p:column>
+				<p:selectBooleanCheckbox disabled="#{!epItem.brandNew}" value="#{epItem.deleted}"/>
+			</p:column>
 	        <p:column style="white-space:nowrap;">
 	        
 	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" update=":form:dtExpenditurePlan" 
