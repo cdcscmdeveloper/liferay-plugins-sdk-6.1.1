@@ -29,7 +29,7 @@
 		</div>
 		<p:panel header="Trackng Diary Details" toggleable="true">
 
-			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{cmTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
 
 				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
 
@@ -61,7 +61,7 @@
 					<f:facet name="header">
 					Document Status
 					</f:facet>
-				#{cmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				#{smTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
 				</p:column>
 
 			</p:dataTable>
