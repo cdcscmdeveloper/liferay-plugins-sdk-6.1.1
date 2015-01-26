@@ -248,9 +248,9 @@
 				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
 				<p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}" />
-				<h:panelGrid columns="4" style="width:350px;">
+				<h:panelGrid columns="4" style="width:400px;">
 					<h:panelGrid columns="3">
-						<p:inputText disabled="true" style="width:100px;"
+						<p:inputText disabled="true" style="width:120px;"
 							value="#{supplierBackingBean.managedBean.ctContract.smSupplier.regNo}" />
 						<p:spacer width="1" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
@@ -258,7 +258,7 @@
 					<p:spacer width="1" />
 					<p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
 					<h:panelGrid columns="3">
-						<p:inputText disabled="true" style="width:100px;"
+						<p:inputText disabled="true" style="width:120px;"
 							value="#{supplierBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
 						<p:spacer width="1" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
@@ -266,12 +266,12 @@
 				</h:panelGrid>
 
 				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
-				<p:inputText disabled="true" style="width:200px;"
+				<p:inputText disabled="true" style="width:250px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 				<h:panelGrid columns="3">
-					<p:inputText disabled="true" style="width:230px;"
+					<p:inputText disabled="true" style="width:310px;"
 						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
 					<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
@@ -281,7 +281,7 @@
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
-				<p:inputText disabled="true" style="width:200px;"
+				<p:inputText disabled="true" style="width:310px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
@@ -296,7 +296,7 @@
 
 				<h:panelGrid>
 					<p:inputTextarea id="supplierAddress" disabled="true" rows="5"
-						style="width:200px;" autoResize="true"
+						style="width:250px;" autoResize="true"
 						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}" />
 				</h:panelGrid>
 
