@@ -42,11 +42,11 @@
 		<p:dataTable id="dtIntRepTbl" var="interviewee" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
-				<p:inputText value="#{interviewee.name}" id="intName"  disabled="#{viewFlag}"/>
+				<p:inputText value="#{interviewee.name}" id="intName"  maxlength="50" disabled="#{viewFlag}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.userprofile.designation']}">
-				<p:inputText value="#{interviewee.designation}" id="intDesignation" disabled="#{viewFlag}" />
+				<p:inputText value="#{interviewee.designation}" id="intDesignation" maxlength="50" disabled="#{viewFlag}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
