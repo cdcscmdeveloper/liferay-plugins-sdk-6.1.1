@@ -986,21 +986,18 @@ public class RuleCatalogueBackingBean extends
 		// <= end2.getTime()));
 		// log.info("................start2.getTime() <= end1.getTime()="+(start2.getTime()
 		// <= end1.getTime()));
-		Date currentDate = new Date();
-		if (end1 == null) {
+//		Date currentDate = new Date();
+		if (end1 == null && end2 == null) {
 
-			if (start1.getTime() > currentDate.getTime()) {
-				end1 = start1;
-			} else {
-				end1 = currentDate;
-			}
+			return true;
+		}
+		if (end1 == null) {
+			return start1.getTime() <= end2.getTime();
+					
 		}
 		if (end2 == null) {
-			if (start2.getTime() > currentDate.getTime()) {
-				end2 = start2;
-			} else {
-				end2 = currentDate;
-			}
+			return start2.getTime() <= end1.getTime();
+					
 		}
 		return start1.getTime() <= end2.getTime()
 				&& start2.getTime() <= end1.getTime();
