@@ -1100,7 +1100,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 
 			reqDTO.setOutcome(outcome);
 			reqDTO.setInvoice(getManagedBean().getInvoice());
-			invoiceSO.validationCheck(reqDTO);
+			FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
+			getManagedBean().setInvoice(reqDTO2.getInvoice());
 			spkiBackingBean.getChallengeQuestions();
 			// set action
 			getManagedBean().setButtonAction(outcome);
