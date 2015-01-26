@@ -333,4 +333,13 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		return NAV_TO_CONTRACT_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
+	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
+		return searchTrackingDiaryDataModel;
+	}
+
+	public void setSearchTrackingDiaryDataModel(
+			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
+		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
+	}
+
 }
