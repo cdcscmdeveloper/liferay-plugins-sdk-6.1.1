@@ -216,7 +216,8 @@
 	</h:panelGrid>
  </p:panel>
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.panel.termination']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:1050px;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+       <h:panelGrid columns="4" style="width:1050px;" styleClass="top-aligned-columns"
+          columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
           <h:panelGrid columns="2" style="float:right;">
 			<p:outputLabel value="*" styleClass="mandatory" />
             <p:outputLabel value="#{lbl['lbl.ct.termination.decision']}" />
@@ -366,7 +367,8 @@
 		  <p:outputLabel value="#{lbl['lbl.ct.recommended.agency']}" />
 		 </h:panelGrid>
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-		       <p:inputText id="recomendAgency"  style="width:220px;" maxlength="255" required="true" label="#{lbl['lbl.ct.recommended.agency']}"
+		       <p:inputTextarea id="recomendAgency" rows="3"  style="width:170px;" 
+		           autoResize="false" maxlength="255" required="true" label="#{lbl['lbl.ct.recommended.agency']}"
                  disabled="#{terminationBackingBean.managedBean.viewContract}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}"/>
                   <p:message for="recomendAgency" display="icon"/>
@@ -390,13 +392,15 @@
 			 dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
 			 <ac:paginator for="terminationReason" />
 			     <p:column selectionMode="multiple" style="width:1%;" rendered="#{!terminationBackingBean.managedBean.viewContract}"/>  
-		         <p:column style="width:24%;"  headerText="#{lbl['lbl.ct.clause.no']}" >
-		             <p:selectOneMenu value="#{data.reasonType.reasonId}" style="width:100%;" disabled="#{terminationBackingBean.managedBean.viewContract}">
+		         <p:column style="width:24%;"   headerText="#{lbl['lbl.ct.clause.no']}" >
+		             <p:selectOneMenu value="#{data.reasonType.reasonId}" 
+		                style="width:100%;" disabled="#{terminationBackingBean.managedBean.viewContract}">
                          <f:selectItems value="#{terminationBackingBean.getTerminationReasonDesc()}" />
                	     </p:selectOneMenu>
                  </p:column>
-		        <p:column style="width:75%;" headerText="#{lbl['lbl.ct.termination.desc']}">
-		           <p:inputText value="#{data.description}" style="width:98%;" maxlength="500" disabled="#{terminationBackingBean.managedBean.viewContract}"/>
+		        <p:column  style="width:75%;"   headerText="#{lbl['lbl.ct.termination.desc']}">
+		           <p:inputTextarea id="resize" value="#{data.description}" rows="1" cols="125" 
+		              maxlength="500" disabled="#{terminationBackingBean.managedBean.viewContract}"/>
 		        </p:column> 
 		   </p:dataTable>
 		 </h:panelGrid>
