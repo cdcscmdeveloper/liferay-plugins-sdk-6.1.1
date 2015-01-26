@@ -314,8 +314,9 @@ public class BSVAttendanceBackingBean extends
 						&& bsvAttandance.size() > scQtBrief
 								.getMaxNoOfAttendance()) {
 					throw new EpException(MessageConst.ERROR_760230,
-							new String[] { ""
-									+ scQtBrief.getMaxNoOfAttendance() });
+							new String[] { Integer.valueOf(
+									scQtBrief.getMaxNoOfAttendance())
+									.toString() });
 				}
 				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
 
@@ -777,5 +778,9 @@ public class BSVAttendanceBackingBean extends
 
 		// this.getManagedBean().setBriefingAttendanceList(attanedList);
 
+	}
+	
+	public boolean showRegistrationIcon(ScQtBsvDtl bsvDtl){
+		return DateUtils.isDateGreaterOrEqual(new Date(), bsvDtl.getBsvDate());
 	}
 }
