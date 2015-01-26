@@ -86,7 +86,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.justification']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.updatable}">
+				    <p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 				    	<f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
 					    </f:facet>
@@ -171,7 +171,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<f:param name="disableValidation" value="" />
 				</p:commandLink>
 	        </p:column>
-	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and pPlanBackingBean.managedBean.selectedPlan.updatable}">
+	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	immediate="true" update=":form:dlItemRemark">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
@@ -229,7 +229,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeReview}"/>
 					<p:column footerText="&#160;" />
-				 	<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeEditable  and pPlanBackingBean.managedBean.selectedPlan.updatable}"/>
+				 	<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}"/>
 				 	<p:column footerText="&#160;" />
 					<p:column footerText="&#160;" rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}" />
 				</p:row>
