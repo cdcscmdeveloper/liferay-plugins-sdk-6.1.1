@@ -89,7 +89,7 @@
 					<f:facet name="header">
 					Item Code
 				</f:facet>
-				#{cmObject.smSupplier.companyName}
+				#{cmObject.itemDesc}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
@@ -101,14 +101,14 @@
 					<f:facet name="header">
 					Status
 				</f:facet>
-				
+				#{cmObject.itemStatus}	
 				</p:column>
 				<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(cmObject)}">
+						action="#{cmTrackingDiaryBackingBean.goToTrackingDiarySearch(cmObject)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 					</p:commandLink>

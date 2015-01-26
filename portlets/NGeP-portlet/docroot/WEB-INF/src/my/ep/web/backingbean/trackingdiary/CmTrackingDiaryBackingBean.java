@@ -16,6 +16,7 @@ import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
@@ -105,7 +106,7 @@ public class CmTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(VCtDocument vCtDocument) {
+	public String goToTrackingDiarySearch(CmSupplierItem cmSupplierItem) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 //		getManagedBean().setSmSupplier(smSupplier);
 		searchTrackingDiaryDataModel.reloadData();	
