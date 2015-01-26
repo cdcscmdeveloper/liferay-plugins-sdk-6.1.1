@@ -17,10 +17,14 @@
 		}.
 		
 		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
-		.tdWidth: 84%;
+		.tdWidth: { 84%; }
+		.sidemenu > .ui-tabmenu-nav {
+			padding-bottom: 380px !important;
+			margin-bottom: -380px !important;
+		}		
 		</c:if>
 		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
-		.tdWidth: 100%;
+		.tdWidth: { 100%; }
 		</c:if>		
 	</style>
 	
