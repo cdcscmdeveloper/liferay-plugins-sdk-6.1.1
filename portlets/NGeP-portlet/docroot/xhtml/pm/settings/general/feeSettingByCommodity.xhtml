@@ -10,7 +10,8 @@
 	<div style="text-align: right; min-height: 40px;">
 
 
-		<p:commandButton value="#{lbl['lbl.cm.save']}" partialSubmit="true" process=":form:settingTabId:feeSettingId"
+		<p:commandButton value="#{lbl['lbl.cm.save']}" partialSubmit="true"
+			process=":form:settingTabId:feeSettingId"
 			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.saveFeeExemptionForComodity}"></p:commandButton>
 
@@ -22,7 +23,7 @@
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
-  <ac:paginator for="feeByComodityTableID" />
+		<ac:paginator for="feeByComodityTableID" />
 		<p:column>
 			<f:facet name="header">
 
@@ -30,7 +31,8 @@
 				<h:outputText value="#{lbl['lbl.cm.unspsc.code']}" />
 			</f:facet>
 			<ac:lov id="lovCommodity" lovId="CM_UNSPSC" readonly="true"
-				label="#{lbl['lbl.cm.unspsc.code']}" disabled="#{!(feeObj.brandNew)}"
+				label="#{lbl['lbl.cm.unspsc.code']}"
+				disabled="#{!(feeObj.brandNew)}"
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 				size="15" headerText="unspsc commodity"
 				postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
@@ -38,7 +40,7 @@
 				conditionField="recordStatus^1|unspscLevel^3"
 				value="#{feeObj.unspscId.unspscCode}">
 			</ac:lov>
- <p:message id="lovCommodityMsg" for="lovCommodity" display="icon" />
+			<p:message id="lovCommodityMsg" for="lovCommodity" display="icon" />
 
 		</p:column>
 		<p:column>
@@ -52,20 +54,20 @@
 				<h:outputText value=" #{lbl['lbl.pm.unspsc.type']}" />
 			</f:facet>
 
-			<p:selectOneMenu value="#{feeObj.typeId.typeId}"
-				label="UNSPSC Type" disabled="#{!(feeObj.brandNew) || feeObj.unspscId.unspscCode == null}"
+			<p:selectOneMenu value="#{feeObj.typeId.typeId}" label="UNSPSC Type"
+				disabled="#{!(feeObj.brandNew) || feeObj.unspscId.unspscCode == null}"
 				style="width:128px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}"
 					itemValue="#{type.typeId}" var="type" />
 			</p:selectOneMenu>
 		</p:column>
-		<p:column>
+		<p:column width="10%">
 			<f:facet name="header">
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
-			<p:calendar showOn="button" id="effDate"  style="width :100px;"
+			<p:calendar showOn="button" id="effDate" style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -75,21 +77,22 @@
 			</p:calendar>
 		</p:column>
 
-		<p:column>
+		<p:column width="10%">
 			<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="comodityfeeExpDateId"  style="width :100px;"
+			<p:calendar showOn="button" id="comodityfeeExpDateId"
+				style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}">
-				
+
 			</p:calendar>
 		</p:column>
 
-		<p:column width="10%">
+		<p:column width="6%">
 			<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
@@ -99,12 +102,13 @@
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 			</p:selectOneMenu>
 		</p:column>
-		<p:column width="5%">
+		<p:column width="3%">
 			<f:facet name="header">
 
 			</f:facet>
 			<p:commandLink id="comoditydeleteFee" partialSubmit="true"
-				process="@this" disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
+				process="@this"
+				disabled="#{!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				action="#{ruleCatalogueBackingBean.deleteComodityFee(rowIndex)}"
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -113,13 +117,13 @@
 	</p:dataTable>
 	<br />
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.btn.add']}" 
-			partialSubmit="true" process=":form:settingTabId:feeSettingId"
+		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+			process=":form:settingTabId:feeSettingId"
 			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.addMoreComodityFee()}"></p:commandButton>
 
 	</div>
- 
+
 
 
 </ui:composition>
