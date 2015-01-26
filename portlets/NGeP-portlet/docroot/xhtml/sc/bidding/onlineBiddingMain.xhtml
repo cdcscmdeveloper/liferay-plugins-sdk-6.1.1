@@ -11,20 +11,17 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
+	
+	<p:messages id="onlineBiddingMainMessage" showDetail="true"  showSummary="false"
+			autoUpdate="true" closable="true" />
 
 		<h:panelGroup
 			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 
 			<p:poll interval="#{onlineBiddingBB.interval}"
 				listener="#{onlineBiddingBB.pollListener}"
-				update="itemWiseBidListOB" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()" />
+				update="itemWiseBidListOB"  />
 		</h:panelGroup>
-		
-		
 
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
 
@@ -149,7 +146,7 @@
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 					<p:spinner size="8" value="#{bidPriceItem.newPrice}" min="0"
-						id="spinner"
+						id="spinner" label="New Bid Price"
 						max="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt * 10}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
