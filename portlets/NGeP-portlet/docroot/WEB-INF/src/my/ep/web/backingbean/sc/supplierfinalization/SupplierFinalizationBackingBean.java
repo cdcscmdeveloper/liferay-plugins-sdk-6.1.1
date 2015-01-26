@@ -2581,13 +2581,14 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public void onZoneTabChangeAction(Integer zoneTabIndex) {
 		debugLogger("onZoneTabChangeAction");
 		
+		this.getManagedBean().setZoneActiveIndex(zoneTabIndex);
+		
 		List<TplSpecZoneDtl> zoneDtls = this.getManagedBean().getZoneDetails();
 		TplSpecZoneDtl selectedZone = zoneDtls.get(zoneTabIndex);
 		this.getManagedBean().setTplSpecZoneDtl(selectedZone);
 		if (this.getManagedBean().isItemize()) {
 			debugLogger("Zone - Itemized supplier selection");
-			
-			
+
 		} else {
 			debugLogger("Zone - Packagedwise supplier selection");
 			
