@@ -190,6 +190,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public void preRenderView() {
 		log.info("preRenderView");
+		this.resetManagedBean();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -579,10 +580,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}else{
 						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());
 						//check ppWorkflowStatus contains approved
-//						List <PpWorkflowStatus> ppWorkflowStatuses = retrievePpApprovedStatus(ppPlan);
-//						if(ppWorkflowStatuses!=null && !ppWorkflowStatuses.isEmpty()){
-//							this.getManagedBean().setApprovedPlan(true);
-//						}
+						List <PpWorkflowStatus> ppWorkflowStatuses = retrievePpApprovedStatus(ppPlan);
+						if(ppWorkflowStatuses!=null && !ppWorkflowStatuses.isEmpty()){
+							this.getManagedBean().setApprovedPlan(true);
+						}
 					}
 					
 					this.getManagedBean().setSelectedPlan(ppPlan);
