@@ -402,6 +402,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		
+		if(isRequisitioner()){
+			initializeApproverGroup();
+		}
 		getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 		
 		addPurchsedItems();
@@ -1270,9 +1273,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			
 			setFulfilmentRequestField(resDTO);
-			if(isRequisitioner()){
-				initializeApproverGroup();
-			}
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml?faces-redirect=true");//TODO once flError implemented ?faces-redirect=true removed
