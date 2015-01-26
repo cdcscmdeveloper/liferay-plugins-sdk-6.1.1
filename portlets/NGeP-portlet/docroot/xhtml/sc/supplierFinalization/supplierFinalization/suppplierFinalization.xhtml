@@ -214,7 +214,7 @@
 				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
 					<td width="16%" style="vertical-align: baseline;">
 						<p:tabMenu styleClass="sidemenu"
-							activeIndex="#{suppFinalizationBackingBean.managedBean.prepareActiveIndex}"
+							activeIndex="#{suppFinalizationBackingBean.managedBean.zoneActiveIndex}"
 							style="display : table-caption;" model="#{suppFinalizationBackingBean.managedBean.zoneMenuModel}">
 							<!-- Menu items are dynamically populated from backing bean -->
 						</p:tabMenu>						
