@@ -40,6 +40,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			instance = new DocumentGenerator();
 			
 			String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
+			log.info("myTemplatePath: " + myTemplatePath);
 
 	    	Properties p = new Properties();
 	    	p.setProperty( "file.resource.loader.path", myTemplatePath);
@@ -60,8 +61,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 */
 	public String getHtmlFromVelocity(String velocityTemplate, VelocityContext context) throws Exception {
 		debugLogger("getHtmlFromVelocity");
-		
+		log.info("velocityTemplate: " + velocityTemplate);
+		log.info("context: " + context);
     	Template template = Velocity.getTemplate(velocityTemplate);
+    	log.info("template: " + template);
     	
     	StringWriter output = new StringWriter();
     	
@@ -84,6 +87,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * @throws Exception
 	 */
 	public void generatePdfFromVelocity(String velocityTemplate, VelocityContext context, OutputStream os) throws Exception {
+		log.info("velocityTemplate: " + velocityTemplate);
 		String html = getHtmlFromVelocity(velocityTemplate, context);
 		
 		generatePdf(os, html);
