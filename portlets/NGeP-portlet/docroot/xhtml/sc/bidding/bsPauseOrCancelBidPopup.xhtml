@@ -11,7 +11,7 @@
 		<table>
 
 			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></TD>
+				<TD><p:outputLabel id="remainingTimeLblBPC" value="#{lbl['lbl.sc.remaining.time']}" /></TD>
 				<TD><p:inputText id="bidPauseOrCancelRemainingTime"
 						value="#{biddingBB.managedBean.duration}" size="20"
 						disabled="true" /></TD>
@@ -19,10 +19,12 @@
 			</tr>
 			<tr>
 
-				<TD><p:outputLabel value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
-				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes" required="true"
+				<TD><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel id="supplierNotesLblBPC" value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
+				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes" required="true" label="#{lbl['lbl.sc.notes.to.supplier']}"
 						value="#{biddingBB.managedBean.bidAction.remark}" cols="65" 
 						maxLength="200" />
+						<p:message id="supplierNotesMsg" for="bidPauseOrCancelsupplierNotes"
+					showDetail="false" display="icon" />
 						</TD>
 			</tr>
 
@@ -36,8 +38,8 @@
 		    process="@this,bidPauseOrCancelsupplierNotes "
 			partialSubmit="true" oncomplete="bidPauseOrCancel.hide();" />
 
-		<p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true"
-		  onclick="bidPauseOrCancel.hide();" />
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"  partialSubmit="true"
+		  onclick="bidPauseOrCancel.hide();" immediate="true"/>
 
 	</div>
 </ui:composition>

@@ -382,9 +382,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					ParameterConst.RECOMMEND_TYPE_ITEM);
 			getManagedBean().setBidManagementInitialViewBy(
 					ParameterConst.RECOMMEND_TYPE_ITEM);
+			rowSelectListener(getManagedBean().getScheduledBid().getScBidItems().get(0));
 		}
-
-		
 
 		getManagedBean().setRendered(false);
 
@@ -603,10 +602,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 	}
 
-	public void rowSelectListener(SelectEvent event) {
+	public void rowSelectListener(ScBidItem bidItem) {
 		log.info("rowSelectListener");
 
-		ScBidItem bidItem = (ScBidItem) event.getObject();
+		//ScBidItem bidItem = (ScBidItem) event.getObject();
 
 		IBiddingSO biddingSO = null;
 
