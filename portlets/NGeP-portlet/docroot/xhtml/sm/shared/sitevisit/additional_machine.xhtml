@@ -7,7 +7,7 @@
 	<p:panel header="#{lbl['lbl.sm.sitevisit.additional.machine']}" id="pnlAdtMachine">
 		<p:dataTable id="addlMachineDtTbl" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAdtMachines}" var="addMachineDtl"
 			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAdtMachines}" rowKey="#{addMachineDtl}">
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.manufacturing.type.machine']}
@@ -63,9 +63,9 @@
 			
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.action']}" />
+					<h:outputText value="#{lbl['lbl.sm.action']}" rendered="#{!viewFlag}"/>
 				</f:facet>
-				<p:commandLink id="btnAdtMacEdit" oncomplete="adtMacDlg.show();" update=":#{p:component('adtMachineDlg')}"
+				<p:commandLink id="btnAdtMacEdit" oncomplete="adtMacDlg.show();" update=":#{p:component('adtMachineDlg')}" rendered="#{!viewFlag}"
 					action="#{svoSiteVisitBackingBean.editAdditionalMachine(addMachineDtl)}" process="@this">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
