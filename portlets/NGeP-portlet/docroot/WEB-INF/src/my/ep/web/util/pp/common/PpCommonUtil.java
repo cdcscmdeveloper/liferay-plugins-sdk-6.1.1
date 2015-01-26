@@ -15,8 +15,6 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.procurementcattype.IProcurementCatTypeSO;
@@ -38,13 +36,12 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
-import my.ep.type.aut.SearchOperator;
+import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -196,6 +193,38 @@ public class PpCommonUtil {
 		return rejectReasons;
 	}
 
+	
+	/**
+	 * Retrieve ppWorkflowStatus list by docId, docType and statusId
+	 * @param docId
+	 * @param docType
+	 * @param statusId
+	 * @return List<PpWorkflowStatus>
+	 */
+	public static List<PpWorkflowStatus> retrievePpApprovedStatus(Long docId, String docType, Long statusId){
+		log.info("retrievePpApprovedStatus - Start");
+		List<PpWorkflowStatus> ppWorkflowStatus = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setDocId(docId);
+			reqDTO.setDocType(docType);
+			reqDTO.setStatusId(statusId);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
+			resDTO = reqSO.retrieveStatusList(reqDTO);
+			if (resDTO.isSuccessful()) {
+				ppWorkflowStatus = resDTO.getPpWorkflowStatus();
+			}
+		}finally{
+			reqSO = null;
+		}
+		log.info("retrievePpApprovedStatus - End");
+		return ppWorkflowStatus;
+	}
 	
 	/**
 	 * Retrieve plan by plan id
