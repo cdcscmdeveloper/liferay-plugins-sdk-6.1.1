@@ -264,10 +264,10 @@
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
 					</h:panelGrid>
 				</h:panelGrid>
-
-				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
-				<p:inputText disabled="true" style="width:250px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
+				
+				<p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
+				<p:inputText disabled="true" style="width:200px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierMobileNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 				<h:panelGrid columns="3">
@@ -287,22 +287,28 @@
 				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 				<p:inputText disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
-				<h:panelGroup>
+				
+				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
+				<p:inputText disabled="true" style="width:250px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
+				
+				<p:outputLabel value="#{lbl['lbl.ct.email']}" />
+				<p:inputText disabled="true" style="width:200px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
+
+                   <h:panelGroup>
 					<div style="height: 40px; vertical-align: top">
 						<p:outputLabel for="supplierAddress"
 							value="#{lbl['lbl.ct.address']}" />
 					</div>
 				</h:panelGroup>
-
 				<h:panelGrid>
 					<p:inputTextarea id="supplierAddress" disabled="true" rows="5"
 						style="width:250px;" autoResize="true"
 						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}" />
 				</h:panelGrid>
 
-				<p:outputLabel value="#{lbl['lbl.ct.email']}" />
-				<p:inputText disabled="true" style="width:200px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
+				
 			</h:panelGrid>
 		</p:panel>
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
