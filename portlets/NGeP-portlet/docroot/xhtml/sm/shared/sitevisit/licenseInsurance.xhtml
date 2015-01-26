@@ -26,6 +26,8 @@
 						navigator="true"  label="#{lbl['lbl.sm.license.closing.date']}"
 						value="#{dockWorkLicenseIns.expDate}" disabled="#{viewFlag}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						yearRange="0:+99" 
+						mindate="#{CommonConstants.CURRENT_DATE}"
 						readonlyInput="true" size="30" showOn="button" />
 
 			</p:column>
