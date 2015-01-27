@@ -2815,6 +2815,27 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				this.getManagedBean().setOnlineBidding(true);
 				selectionMode = QTConstants.SF_MULTIPLE;
 			}
+			
+			boolean isZonal = this.getManagedBean().getScQt().isZonal();
+			if (isZonal) {
+				Long selectedZoneId = this.getManagedBean().getTplSpecZoneDtl().getSpecZoneId();
+				Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> 
+					shortlistedSupppliersByZone = this.getManagedBean().getShortlistedSupppliersByZone();
+				if (MapUtils.isNotEmpty(shortlistedSupppliersByZone)) {
+					TplSpecZoneDtl currentZone = null;
+					for (TplSpecZoneDtl zone : shortlistedSupppliersByZone.keySet()) {
+						if ((zone.getSpecZoneId()).equals(selectedZoneId)) {
+							currentZone = zone;
+							break;
+						}
+					}
+					if (currentZone == null) {
+						this.getManagedBean().setShortlistedSupplierList(null);
+					} else {
+						this.getManagedBean().setShortlistedSupplierList(shortlistedSupppliersByZone.get(currentZone));
+					}
+				}				
+			}
 		}
 		this.getManagedBean().setItemize(itemize);
 		this.getManagedBean().setSelectionMode(selectionMode);
