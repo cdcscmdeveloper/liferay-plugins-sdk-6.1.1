@@ -15,6 +15,10 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
  */
 public class BriefingZoneBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5155820654362481606L;
 	private String zoneName;
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private List<ScQtBsvDtl> briefingList;

@@ -64,7 +64,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -87,6 +86,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -138,7 +138,7 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * Qtn / Tender Tab qtnTenderDetails
 	 */
-	public String retrieveQTDetails(Long qtId) {
+	public void retrieveQTDetails(Long qtId) {
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -178,8 +178,18 @@ public class NoticeBoardBackingBean extends
 				List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
 
 				if (null != zoneDtls) {
+					if (null == this.getManagedBean().getLocationNodes()) {
+						this.getManagedBean().setLocationNodes(
+								new ArrayList<TreeNode>());
+					}
 					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-
+						this.getManagedBean()
+								.getLocationNodes()
+								.add(LocationSingleton.getInstance()
+										.constuctTreeNode(
+												specZoneDtl,
+												specZoneDtl
+														.getTplSpecZoneLocs()));
 						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 						briefingReqDTO.setQtId(scQt.getQtId());
 						briefingReqDTO.setSpecZoneId(specZoneDtl
@@ -213,7 +223,10 @@ public class NoticeBoardBackingBean extends
 		}
 
 		// this.getManagedBean().setTabIndex(0);
-		return "/xhtml/sc/noticeboard/tenderNoticeDetail.xhtml?faces-redirect=true";
+		String pageUrl = "/xhtml/sc/noticeboard/tenderNoticeDetail.xhtml";
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getApplication().getNavigationHandler()
+				.handleNavigation(context, null, pageUrl);
 	}
 
 	/**
@@ -271,12 +284,14 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * Cancel button for Notice Board
 	 */
-	public String backBtn() {
+	public void backBtn() {
 		log.info("** Back Button **");
 
-		return "/xhtml/sc/noticeboard/"
-				+ this.getManagedBean().getPreviousPage()
-				+ ".xhtml?faces-redirect=true";
+		String pageUrl = "/xhtml/sc/noticeboard/"
+				+ this.getManagedBean().getPreviousPage();
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getApplication().getNavigationHandler()
+				.handleNavigation(context, null, pageUrl);
 
 	}
 
@@ -593,42 +608,6 @@ public class NoticeBoardBackingBean extends
 		clearTreeNode("location");
 	}
 
-	private void constructLocationTree(List<? extends TplSpecLoc> locCriterias) {
-		List<PmState> states = new ArrayList<PmState>();
-		List<TreeNode> locations = new ArrayList<TreeNode>();
-		for (TplSpecLoc locCriteria : locCriterias) {
-			PmState pmState = locCriteria.getPmState();
-			TreeNode root = null;
-			if (!states.contains(pmState)) {
-				root = new DefaultTreeNode("state", pmState, null);
-				root.setExpanded(true);
-				locations.add(root);
-			}
-			PmDivision division = locCriteria.getPmDivision();
-			TreeNode divisonNode = null;
-			if (division != null) {
-				divisonNode = new DefaultTreeNode("division", division, root);
-				divisonNode.setExpanded(true);
-			}
-			PmDistrict pmDistrict = locCriteria.getPmDistrict();
-			TreeNode districtNode = null;
-			if (pmDistrict != null) {
-				if (divisonNode == null) {
-					districtNode = new DefaultTreeNode("district", pmDistrict,
-							root);
-					districtNode.setExpanded(true);
-				} else {
-					districtNode = new DefaultTreeNode("district", pmDistrict,
-							divisonNode);
-					districtNode.setExpanded(true);
-				}
-			}
-			states.add(pmState);
-		}
-		this.getManagedBean().setLocationNodes(locations);
-
-	}
-
 	public void zoneTabChange(TabChangeEvent changeEvent) {
 		TplSpecZoneDtl specZoneDtl = ((BriefingZoneBean) changeEvent.getData())
 				.getTplSpecZoneDtl();
@@ -643,16 +622,19 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setLocation(briefing.getLocation());
 		StringBuffer address = new StringBuffer(briefing.getAddress()
 				.getAddress1());
-		address.append(",");
+
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
-			address.append(briefing.getAddress().getAddress2());
 			address.append(",");
+			address.append(briefing.getAddress().getAddress2());
+
 		}
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress3())) {
-			address.append(briefing.getAddress().getAddress3());
 			address.append(",");
+			address.append(briefing.getAddress().getAddress3());
+
 		}
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress4())) {
+			address.append(",");
 			address.append(briefing.getAddress().getAddress4());
 
 		}
@@ -707,6 +689,7 @@ public class NoticeBoardBackingBean extends
 			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 			reqDTO.setMofNo(mofNo);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			NoticeBoardResDTO resDTO = boardSO
 					.checkSupplierQualificationStatus(reqDTO);
 			this.getManagedBean().setQualificationBean(
@@ -1289,10 +1272,13 @@ public class NoticeBoardBackingBean extends
 				}
 
 			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								"You have registered for the briefing/site visit"));
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO,
+										null,
+										"You have alredy registered for the briefing/site visit"));
 			}
 
 		} else {
@@ -1399,7 +1385,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public NoticeBoardBackingBean() {
-		reset();
+		// reset();
 
 	}
 
@@ -1472,8 +1458,11 @@ public class NoticeBoardBackingBean extends
 	}
 
 	private void retriveBsvDetails(Long qtId) {
+		this.getManagedBean().setSmSupplier(null);
+		this.getManagedBean().setCompanyName(null);
 		this.getManagedBean().setMofAccounts(null);
 		this.getManagedBean().setAttendanceList(null);
+		this.getManagedBean().setMofNumber(null);
 		this.getManagedBean().setSelectedBsvAttandance(null);
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
@@ -1558,4 +1547,38 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	public void updateToBeAttandance(AjaxBehaviorEvent event) {
+		boolean isChecked = ((SelectBooleanCheckbox) event.getSource())
+				.isSelected();
+		int i = 0;
+
+		if (isChecked) {
+			i = 1;
+		} else {
+			i = -1;
+		}
+		BriefingZoneBean zoneBean = this.getManagedBean().getNormalBsvBean();
+
+		for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedBriefingDtls()) {
+			if (bsvDtl.getToBeattand() > bsvDtl.getMaxNoOfAttendance()) {
+				throw new EpException("");
+			}
+			bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
+			if (bsvDtl.getToBeattand() < 0) {
+				bsvDtl.setToBeattand(0);
+			}
+
+		}
+
+		for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedSiteVisitDtls()) {
+			if (bsvDtl.getToBeattand() > bsvDtl.getMaxNoOfAttendance()) {
+				throw new EpException("");
+			}
+			bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
+			if (bsvDtl.getToBeattand() < 0) {
+				bsvDtl.setToBeattand(0);
+			}
+		}
+
+	}
 }
