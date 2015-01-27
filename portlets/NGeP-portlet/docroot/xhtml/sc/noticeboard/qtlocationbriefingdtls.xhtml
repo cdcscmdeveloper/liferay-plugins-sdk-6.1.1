@@ -10,12 +10,19 @@
 	<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
 		<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
 			<p:panel header="Briefing And Site Visit Details" toggleable="true">
-				<div>
-					<h:outputText value="All Attandence required for Briefing"
-						rendered="#{bsvDetails.scQtBsv.allBriefingReq}">
-					</h:outputText>
-				</div>
-				<p:spacer width="20px"></p:spacer>
+
+				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+					<h:outputText value=" All Attandence required for Briefing"
+						rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
+						style="font-weight:bold;text-align: left;" />
+
+					<h:outputText
+						value=" At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+						rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
+						style="font-weight:bold;text-align: left;" />
+				</h:panelGroup>
+
+
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
@@ -60,11 +67,18 @@
 		<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
 
 			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
-				<h:outputText value="All Attandence required for Briefing"
-					rendered="#{bsvDetails.scQtBsv.allBriefingReq}">
-				</h:outputText>
-				<p:spacer width="10px;">
-				</p:spacer>
+				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+					<h:outputText value="All Attandence required for Briefing"
+						rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
+						style="font-weight:bold;text-align: left;" />
+
+
+					<h:outputText
+						value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing"
+						rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
+						style="font-weight:bold;text-align: left;" />
+
+				</h:panelGroup>
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
@@ -84,7 +98,7 @@
 						style="width:20%;white-space: normal;">
 						<p:commandLink style="margin-right:20px;;"
 							action="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
-							oncomplete="popupLoc.show()" update="@(.locationpopup)">
+							oncomplete="popupLoc.show()" update="@(.locationdtls)">
 							<h:outputText value="#{brfsitdtl.location}" />
 						</p:commandLink>
 					</p:column>
@@ -108,9 +122,20 @@
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
-				<h:outputText value="All Attandence required for SiteVisit"
-					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}">
-				</h:outputText>
+
+				<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
+					<h:outputText value="* All Attandence required for SiteVisit"
+						rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"
+						style="font-weight:bold;text-align: left;" />
+
+
+					<h:outputText
+						value="At Least #{bsvDetails.scQtBsv.minSiteVisitAttend} Attandence required for SiteVisit"
+						rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}"
+						style="font-weight:bold;text-align: left;" />
+
+				</h:panelGroup>
+
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
 					style="width:100%">
 					<ac:paginator for="sitevisitDtls"></ac:paginator>
@@ -130,7 +155,7 @@
 						style="width:20%;white-space: normal;">
 						<p:commandLink style="margin-right:20px;"
 							action="#{noticeBoardBackingBean.showLocationDtls(sitevisitDtls)}"
-							oncomplete="popupLoc.show()" update="@(.locationpopup)">
+							oncomplete="popupLoc.show()" update="@(.locationdtls)">
 							<h:outputText value="#{sitevisitDtls.location}" />
 						</p:commandLink>
 
@@ -157,6 +182,6 @@
 		</c:if>
 
 	</c:if>
+	
 
-	<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 </ui:composition>
