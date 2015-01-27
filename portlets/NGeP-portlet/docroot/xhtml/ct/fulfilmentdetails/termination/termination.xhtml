@@ -392,14 +392,16 @@
 			 dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
 			 <ac:paginator for="terminationReason" />
 			     <p:column selectionMode="multiple" style="width:1%;" rendered="#{!terminationBackingBean.managedBean.viewContract}"/>  
-		         <p:column style="width:24%;"   headerText="#{lbl['lbl.ct.clause.no']}" >
-		             <p:selectOneMenu value="#{data.reasonType.reasonId}" 
-		                style="width:100%;" disabled="#{terminationBackingBean.managedBean.viewContract}">
-                         <f:selectItems value="#{terminationBackingBean.getTerminationReasonDesc()}" />
-               	     </p:selectOneMenu>
+		         <p:column style="width:35%;">
+		             <f:facet name="header">
+					        <h:outputText value="* " styleClass="mandatory" />
+					       <h:outputText value="#{lbl['lbl.ct.clause.no']}"  />
+				        </f:facet>
+		              <p:inputTextarea id="cluseId" value="#{data.clauseNo}"  rows="2" style="width:95%;" autoResize="false"
+		              maxlength="200" disabled="#{terminationBackingBean.managedBean.viewContract}"/>
                  </p:column>
-		        <p:column  style="width:75%;"   headerText="#{lbl['lbl.ct.termination.desc']}">
-		           <p:inputTextarea id="resize" value="#{data.description}" rows="1" cols="125" 
+		        <p:column  style="width:65%;"   headerText="#{lbl['lbl.ct.termination.desc']}">
+		           <p:inputTextarea id="descId" value="#{data.description}" rows="2" style="width:95%;" autoResize="false"
 		              maxlength="500" disabled="#{terminationBackingBean.managedBean.viewContract}"/>
 		        </p:column> 
 		   </p:dataTable>

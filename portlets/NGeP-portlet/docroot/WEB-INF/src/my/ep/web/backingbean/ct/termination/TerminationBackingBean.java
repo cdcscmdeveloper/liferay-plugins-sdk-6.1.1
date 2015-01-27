@@ -69,7 +69,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.AddressType;
@@ -266,12 +265,14 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
 		flush();
-		if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
-			getManagedBean().setRemedy(true);
-		} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
-			getManagedBean().setTermination(true);
-		} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-			getManagedBean().setMutualTermination(true);
+		if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
+				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+					getManagedBean().setRemedy(true);
+				} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
+					getManagedBean().setTermination(true);
+				} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+					getManagedBean().setMutualTermination(true);
+				}
 		}
 		
 		if(getManagedBean().getContractVer().getStatus().getStatusId().longValue()==ContractStatusConst.FT_PENDING_LETTER_PRINT_AND_UPDATE.longValue() 
@@ -372,7 +373,17 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				
 		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
-		}		
+		}	
+		
+		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
+				!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+			  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
+				   if(reason.getClauseNo().length() == 0){
+					   throw new EpException(MessageConst.ERROR_100022, new String[]{"Termination clause"});
+				   }
+			  }
+		}
+		
 		
 		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().isEmpty()) {
@@ -577,7 +588,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 
 	 public void addTerminateReason() {
 		CtTerminationReason terminateReason = new CtTerminationReason();
-			terminateReason.setReasonType(new PmReason());
 		    terminateReason.setCtTermination(getManagedBean().getContractVer().getCtTermination());
 		    getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().add(terminateReason);
 	 }
