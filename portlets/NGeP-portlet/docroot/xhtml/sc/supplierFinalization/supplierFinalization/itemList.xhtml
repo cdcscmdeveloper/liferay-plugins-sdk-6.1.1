@@ -36,7 +36,8 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" 
+							listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 
