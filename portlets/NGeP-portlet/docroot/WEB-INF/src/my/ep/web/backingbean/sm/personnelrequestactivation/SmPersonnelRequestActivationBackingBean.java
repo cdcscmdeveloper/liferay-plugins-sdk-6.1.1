@@ -66,12 +66,6 @@ public class SmPersonnelRequestActivationBackingBean {
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 	}
 
-	public IMofRegistrationSO getMofRegistrationSO() {
-		return (IMofRegistrationSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMofRegistrationSO.class);
-	}
-
 	private void initExpiredPersonnels() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
