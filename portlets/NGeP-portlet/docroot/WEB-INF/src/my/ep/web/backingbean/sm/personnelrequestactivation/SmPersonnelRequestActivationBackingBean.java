@@ -42,7 +42,7 @@ public class SmPersonnelRequestActivationBackingBean {
 		initExpiredPersonnels();
 	}
 
-	public void activate() {
+	public void resendActivation() {
 		validate();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnelList(selectedExpiredActivationPersonnels);
