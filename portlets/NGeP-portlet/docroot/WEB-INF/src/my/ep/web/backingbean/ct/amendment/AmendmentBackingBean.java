@@ -1570,7 +1570,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					context.put("extEndDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
 				}
 				else {
-					context.put("extendMonths","");
+					context.put("extendMonths","-");
 					context.put("extStartDate", "");
 					context.put("extEndDate", "");
 				}
@@ -1773,7 +1773,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					bondAmt = amountDF.format(scLoa.getBondAmt());
 				}
 				context.put("bondAmt", bondAmt);
-				context.put("bondAmtText", scLoa.getBondAmt() != null ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt()) ) : ""); 
+				context.put("bondAmtText", scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue()!=0 ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt()) ) : ""); 
 				
 				if (scLoa.getBondAmt() != null && getManagedBean().getContractVer().getCtContract().isBondReq()) {
 					context.put("bondAmt200k", true);
