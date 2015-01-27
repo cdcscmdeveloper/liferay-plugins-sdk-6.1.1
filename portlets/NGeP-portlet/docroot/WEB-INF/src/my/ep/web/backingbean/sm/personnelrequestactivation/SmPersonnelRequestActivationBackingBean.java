@@ -83,7 +83,7 @@ public class SmPersonnelRequestActivationBackingBean {
 
 	private void validate() {
 		if (CollectionUtils.isEmpty(selectedExpiredActivationPersonnels)) {
-			throw new EpException(MessageConst.ERROR_722534,
+			throw new EpException(MessageConst.ERROR_722587,
 					new String[] { SmCommonUtil.getMessage("lbl.sm.personnel",
 							null) });
 		}
