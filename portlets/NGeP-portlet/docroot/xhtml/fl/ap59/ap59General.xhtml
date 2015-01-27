@@ -72,6 +72,22 @@
 		<table>
 			<tr>
 				<td style="width: 180px"><p:outputLabel
+						value="#{lbl['lbl.fl.inv.no']}" /></td>
+				<td><p:inputText size="35"
+						value="#{invoiceBackingBean.managedBean.invoice.invoiceNo}"
+						disabled="true">
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td style="width: 180px"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
+				<td><p:inputText size="35"
+						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}"
+						disabled="true">
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td style="width: 180px"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.inv.amount']}" /></td>
 				<td><p:inputText size="35"
 						value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtNew}"
