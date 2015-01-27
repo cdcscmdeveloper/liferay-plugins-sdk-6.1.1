@@ -208,12 +208,7 @@ public class SmPersonnelBackingBean extends
 		SelectItem role = new SelectItem();
 		role.setLabel(SmCommonUtil.getMessage(
 				"lbl.sm.person.composition.suppUser", null));
-
-		if (getManagedBean().isUpgradeMofDraftAppl()) {
-			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-		} else {
-			role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
-		}
+		role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
 		if (!getManagedBean().isDisableRole()) {
 			roles.add(role);
 		}
@@ -227,18 +222,12 @@ public class SmPersonnelBackingBean extends
 
 		if (getManagedBean().getBasicSmPersonnel() != null
 				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null
-				&& (getManagedBean().getBasicSmPersonnel().getEpRole()
-						.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
-						.getBasicSmPersonnel().getEpRole()
-						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+				&& getManagedBean().getBasicSmPersonnel().getEpRole()
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			SelectItem adminRole = new SelectItem();
 			adminRole.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.suppAdmin", null));
-			if (getManagedBean().isUpgradeMofDraftAppl()) {
-				adminRole.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
-			} else {
-				adminRole.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-			}
+			adminRole.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
 			getManagedBean().getRoleList().add(adminRole);
 		}
 	}
@@ -1092,13 +1081,15 @@ public class SmPersonnelBackingBean extends
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			getManagedBean().setBasicSmPersonnel(
 					saveNewUser(getManagedBean().getBasicSmPersonnel(), fc));
-
-			// add new personnel to personnel list
-			getManagedBean().getSmPersonnelList().add(
-					getManagedBean().getBasicSmPersonnel());
+			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
+			getManagedBean().setDisableAddNewUser(
+					validatePersonLimit(getManagedBean().getSmSupplier()));
 		} else {
 			if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				updateUser(getManagedBean().getBasicSmPersonnel(), fc);
+				initAuthorizedPersonnels(getManagedBean().getSmSupplier());
+				getManagedBean().setDisableAddNewUser(
+						validatePersonLimit(getManagedBean().getSmSupplier()));
 			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				if (getManagedBean().getBasicSmPersonnel().getEpRole() != null
 						&& StringUtils.isNotBlank(getManagedBean()
@@ -1113,6 +1104,10 @@ public class SmPersonnelBackingBean extends
 							"confirmDialog.show()");
 				} else {
 					updateUser(getManagedBean().getBasicSmPersonnel(), fc);
+					initAuthorizedPersonnels(getManagedBean().getSmSupplier());
+					getManagedBean().setDisableAddNewUser(
+							validatePersonLimit(getManagedBean()
+									.getSmSupplier()));
 				}
 			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
 				String[] params = { getManagedBean().getBasicSmPersonnel()
@@ -1125,10 +1120,6 @@ public class SmPersonnelBackingBean extends
 						"confirmDialog.show()");
 			}
 		}
-
-		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
-		getManagedBean().setDisableAddNewUser(
-				validatePersonLimit(getManagedBean().getSmSupplier()));
 	}
 
 	public void deactivateOrTerminate() throws Exception {
@@ -1191,8 +1182,13 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
-		reqDTO.setApplId(getManagedBean().getCurrSmAppl().getApplId());
+		reqDTO.setApplId(getManagedBean().getBasicSmAppl().getApplId());
 		reqDTO.setBasicSmAppl(getManagedBean().getBasicSmAppl());
+		if (reqDTO.isHasActiveAppl()) {
+			reqDTO.setDraftApplId(getManagedBean().getCurrSmAppl().getApplId());
+		} else {
+			reqDTO.setDraftApplId(null);
+		}
 
 		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
 
@@ -1230,6 +1226,12 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
 		reqDTO.setBasicSmAppl(getManagedBean().getBasicSmAppl());
+		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		if (reqDTO.isHasActiveAppl()) {
+			reqDTO.setDraftApplId(getManagedBean().getCurrSmAppl().getApplId());
+		} else {
+			reqDTO.setDraftApplId(null);
+		}
 		return smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
 	}
 
