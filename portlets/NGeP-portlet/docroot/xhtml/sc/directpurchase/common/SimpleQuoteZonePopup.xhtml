@@ -46,10 +46,10 @@
 				</TR>
 			</table>
 		</p:panel>
-		<p:panelGrid styleClass="noBorders tr,noBorders td" id="zoneOkBtn">
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
-					<p:commandButton
+					<p:commandButton id="proceedBtn"
 						value="#{lbl['lbl.sc.common.proceed.btn']}"
 						process="@all"
 						update="@this, zoneLocationDataTable"
@@ -63,6 +63,6 @@
 				</p:column>
 			</p:row>
 		</p:panelGrid>
-		  <p:ajax event="close" listener="#{simpleQuoteBackingBean.cancelZonePopUp}"/>
+			<p:defaultCommand target="proceedBtn"></p:defaultCommand>
 	</p:dialog>
 </ui:composition>

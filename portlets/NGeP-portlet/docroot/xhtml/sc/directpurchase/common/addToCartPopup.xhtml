@@ -137,7 +137,7 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" process="@form" partialSubmit="true" 
+					<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}" process="@form" partialSubmit="true"  id="proceedBtn"
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
 						onstart="popupBlockWidget.show();" oncomplete="popupBlockWidget.hide();"
 						update="addToCartId ,@([id$=btnId])"/>
@@ -152,6 +152,6 @@
     <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
 		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	  </p:blockUI>
-	
+	<p:defaultCommand target="proceedBtn"></p:defaultCommand>
 	</p:dialog>
 </ui:composition>
