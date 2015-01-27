@@ -2651,18 +2651,18 @@ public class ReportsGenerateBean {
 				}
 			}
 		}
-		public List<String> retriveStatus(){					
+		/*public List<String> retriveStatus(){					
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			StatusResDTO statusResDTO= reportSO.retriveStatus();
 			List<PmStatusDesc> stasLst = statusResDTO.getStatusDescList();
 			if (null != stasLst) {
 				statusLst=stasLst.toArray();
-				/*for (int i = 0; i < stasLst.size(); i++) {					
+				for (int i = 0; i < stasLst.size(); i++) {					
 					stsLst.add(stasLst.get(i)+"");				
-				}*/
+				}
 			}		
 			return stsLst;
-		}
+		}*/
 		public List<String> generateYearList(){
 			yearList = new ArrayList<String>();
 			 for (int i = 1950; i <= 2150; i++) {
