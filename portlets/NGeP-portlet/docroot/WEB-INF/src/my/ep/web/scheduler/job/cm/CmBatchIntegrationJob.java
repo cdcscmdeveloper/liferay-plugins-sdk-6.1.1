@@ -29,10 +29,11 @@ public class CmBatchIntegrationJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-	   System.out.println("CmBatchIntegrationJob ");
+	   log.info("CmBatchIntegrationJob ");
        PhisIntegration cmIntegration = new PhisIntegration();	
        GfmasIntegration gfmasIntegration = new GfmasIntegration();
        gfmasIntegration.sstInformationGfmas();
+       //gfmasIntegration.kodAkaunInPutStream();
        cmIntegration.createFilesforPHIS();
        
        cmIntegration.votFund();
