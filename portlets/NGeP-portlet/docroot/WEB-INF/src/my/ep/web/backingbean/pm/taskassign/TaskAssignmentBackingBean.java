@@ -533,12 +533,22 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			bean.setSearchValue(statusRoles);
 			searchBean.getDataFilterBeans().add(bean);
 			
+			String moduleCode = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue()).getModuleCode();
+			if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
+				// approver should be returned by BPM not selected from DB
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
+				bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+				bean.setSearchValue(APPROVER);
+				searchBean.getDataFilterBeans().add(bean);
+			}
+			/* 27 Jan 2014
 			// approver should be returned by BPM not selected from DB
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
 			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
 			bean.setSearchValue(APPROVER);
-			searchBean.getDataFilterBeans().add(bean);
+			searchBean.getDataFilterBeans().add(bean);*/
 			/* Search Bean Filter - End */
 			
 			//search users
@@ -551,9 +561,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					break;
 				}
 			}
-			if(isApprover){
+			if(isApprover && ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
 				generateCompleteUsers(pmUsers, task);
 			}
+			/* 27 Jan 2014
+			if(isApprover){
+				generateCompleteUsers(pmUsers, task);
+			}*/
 			
 				
 		} catch (Exception e) {
