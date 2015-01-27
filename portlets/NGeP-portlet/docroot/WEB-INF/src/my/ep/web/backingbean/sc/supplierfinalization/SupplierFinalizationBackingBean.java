@@ -622,11 +622,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		ScQtCommittee scQtCommittee = resDTO.getScQtCommittee() != null 
 										? resDTO.getScQtCommittee() : getManagedBean().getScQtCommittee();
 		SCEvaluationDataType dataType = (SCEvaluationDataType) getManagedBean().getPayLoad();
+		TplSpecZoneDtl specZone = getManagedBean().getTplSpecZoneDtl();
 		
 		renewSesionObject();
 		
 		getManagedBean().setCommitteeType(committeeType);
 		getManagedBean().setScQtCommittee(scQtCommittee);
+		getManagedBean().setTplSpecZoneDtl(specZone);
 		getManagedBean().setPayLoad(dataType);
 		
 		retrieveQTDetails(qtId);
@@ -2809,7 +2811,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			selectionMode = QTConstants.SF_MULTIPLE;
 			this.getManagedBean().setOnlineBidding(false);
 		} else {
-			if (StringUtils.isBlank(recommendByCode)) {
+			if (StringUtils.isBlank(recommendByCode)
+					|| ParameterConst.RECOMMEND_BY_SINGLE_AWARD.equals(recommendByCode)) {
 				getManagedBean().setRecommendBy(ParameterConst.RECOMMEND_BY_AWARD);
 			} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(recommendByCode)) {
 				this.getManagedBean().setOnlineBidding(true);
@@ -2817,7 +2820,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 			
 			boolean isZonal = this.getManagedBean().getScQt().isZonal();
-			if (isZonal) {
+			if (isZonal && 
+					this.getManagedBean().getTplSpecZoneDtl() != null) {
 				Long selectedZoneId = this.getManagedBean().getTplSpecZoneDtl().getSpecZoneId();
 				Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> 
 					shortlistedSupppliersByZone = this.getManagedBean().getShortlistedSupppliersByZone();
