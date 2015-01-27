@@ -92,8 +92,8 @@ public class ScTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
-//			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchDocumentNo()));
+			System.out.println("getScDocumentDataModel docNo " + getManagedBean().getSearchDocumentNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -110,7 +110,7 @@ public class ScTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(ScRequestNote scRequestNote) {
+	public String goToTrackingDiarySearch(Object[] scObj) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 //		getManagedBean().setScSupplier(scRequestNote);
 		searchTrackingDiaryDataModel.reloadData();
