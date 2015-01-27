@@ -8,7 +8,7 @@
 
 
 	<p:dialog id="dlRejectReason" header="#{lbl['lbl.pp.reject.reason']}" 
-		widgetVar="dlRejectReasonWv" dynamic="true" width="700" height="200">
+		widgetVar="dlRejectReasonWv" dynamic="true" width="700" height="200" closable="false">
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeRejectReason}" update="dgReason"/>
 		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmReasonCloseDialog}" update="dgReason" oncomplete="dlRejectReasonWv.hide()" />
 		<p:remoteCommand name="cancelCmd"  update="dgReason"  oncomplete="dlRejectReasonWv.hide()" />
