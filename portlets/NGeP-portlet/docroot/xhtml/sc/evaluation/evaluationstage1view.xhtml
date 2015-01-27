@@ -74,13 +74,14 @@
 			<ui:include src="complianceStage.xhtml" />
 		</c:if>
 
-		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
+		<c:if
+			test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 
 			<ui:include src="evaluationStage.xhtml" />
 		</c:if>
 
 
-		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 
 			<ui:include src="presentationDemoStage.xhtml" />
 		</c:if>
