@@ -40,15 +40,16 @@ import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.pm.AddressType;
 import my.ep.web.integration.gfmas.GlAccount;
-import my.ep.web.integration.gfmas.ProgramActivity;
-import my.ep.web.integration.gfmas.Project;
-import my.ep.web.integration.gfmas.VotFund;
 import my.ep.web.integration.phis.ItemType;
 import my.ep.web.integration.phis.MasterDataMaterialInfo;
 import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
 import my.ep.web.integration.phis.MaterialColor;
 import my.ep.web.integration.phis.MaterialMeasurement;
+import my.ep.web.integration.phis.PhisGlAccount;
+import my.ep.web.integration.phis.PhisProgramActivity;
+import my.ep.web.integration.phis.PhisProject;
+import my.ep.web.integration.phis.PhisVotFund;
 import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type;
@@ -314,14 +315,14 @@ public class PhisIntegration {
 
 		List<PmVotFund> votlist = resDTO.getVotFundList();
 
-		List<VotFund> votFundList = new ArrayList<VotFund>();
-		VotFund votFnd;
+		List<PhisVotFund> votFundList = new ArrayList<PhisVotFund>();
+		PhisVotFund votFnd;
 		for (PmVotFund votFund : votlist) {
 			Date effdate = votFund.getEffDate(); // your date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(effdate);
 			int year = cal.get(Calendar.YEAR);
-			votFnd = new VotFund();
+			votFnd = new PhisVotFund();
 			votFnd.setCode(votFund.getVotFundCode());
 			votFnd.setDescription(votFund.getDescription());
 			if(votFund.getPmPtjGroup()!=null){
@@ -360,10 +361,10 @@ public class PhisIntegration {
 
 		List<PmVotFund> votlist = resDTO.getVotFundList();
 
-		List<VotFund> votFundList = new ArrayList<VotFund>();
-		VotFund votFnd;
+		List<PhisVotFund> votFundList = new ArrayList<PhisVotFund>();
+		PhisVotFund votFnd;
 		for (PmVotFund votFund : votlist) {
-			votFnd = new VotFund();
+			votFnd = new PhisVotFund();
 			votFnd.setCode(votFund.getVotFundCode());
 			votFnd.setDescription(votFund.getDescription());
 			Date effdate = votFund.getEffDate();
@@ -402,8 +403,8 @@ public class PhisIntegration {
 		List<PmPrgActivity> votlist = resDTO.getPrgActivityList();
 
 		System.out.println("list: " + votlist.size());
-		List<ProgramActivity> prgActList = new ArrayList<ProgramActivity>();
-		ProgramActivity prgActivity;
+		List<PhisProgramActivity> prgActList = new ArrayList<PhisProgramActivity>();
+		PhisProgramActivity prgActivity;
 		for (PmPrgActivity programActvity : votlist) {
 
 			System.out.println("VotFundId"
@@ -412,7 +413,7 @@ public class PhisIntegration {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(effdate);
 			int year = cal.get(Calendar.YEAR);
-			prgActivity = new ProgramActivity();
+			prgActivity = new PhisProgramActivity();
 			prgActivity.setCode(programActvity.getPrgActivityCode());
 			prgActivity.setDescription(programActvity.getDescription());
 			prgActivity.setVotCode(programActvity.getPmVotFund()
@@ -449,14 +450,14 @@ public class PhisIntegration {
 
 		List<PmProject> projectlist = resDTO.getProjectList();
 
-		List<Project> programList = new ArrayList<Project>();
-		Project project;
+		List<PhisProject> programList = new ArrayList<PhisProject>();
+		PhisProject project;
 		for (PmProject pmProject : projectlist) {
 			Date effdate = pmProject.getEffDate(); // your date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(effdate);
 			int year = cal.get(Calendar.YEAR);
-			project = new Project();
+			project = new PhisProject();
 			project.setCode(pmProject.getProjectCode());
 			project.setVotCode(pmProject.getPmVotFund().getVotFundCode());
 			project.setSetiaCode(pmProject.getPmSetias().get(0).getSetiaCode());
@@ -479,7 +480,7 @@ public class PhisIntegration {
 	public void glAccount() {
 		
 
-		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
+		
 		Date date = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "02-07-2014";
@@ -488,15 +489,7 @@ public class PhisIntegration {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Date startDate = null;
-		Date endDate = null;
-		try {
-			startDate = ft.parse("01/10/2014");
-			endDate = ft.parse("30/10/2014");
-		} catch (ParseException e) {
-
-			e.printStackTrace();
-		}
+		
 
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
 		reqDTO.setCreatedDate(date);
@@ -508,10 +501,10 @@ public class PhisIntegration {
 
 		List<PmGlAccount> glAccountlist = resDTO.getGlAccountList();
 
-		List<GlAccount> glAccountList = new ArrayList<GlAccount>();
-		GlAccount glAccount;
+		List<PhisGlAccount> glAccountList = new ArrayList<PhisGlAccount>();
+		PhisGlAccount glAccount;
 		for (PmGlAccount account : glAccountlist) {
-			glAccount = new GlAccount();
+			glAccount = new PhisGlAccount();
 			Date effdate = account.getEffDate(); // your date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(effdate);

@@ -2,23 +2,24 @@ package my.ep.web.integration.gfmas;
 
 public class PtjGroup {
 
-	private int year;
+	private String year;
 	private String code;
 	private String description;
 	private String status;
 
+	
+
 	/**
 	 * @return the year
 	 */
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
 	/**
-	 * @param year
-	 *            the year to set
+	 * @param year the year to set
 	 */
-	public void setYear(int year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 

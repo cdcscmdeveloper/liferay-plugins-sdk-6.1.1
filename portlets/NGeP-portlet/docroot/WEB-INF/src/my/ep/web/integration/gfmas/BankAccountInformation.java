@@ -8,6 +8,51 @@ public class BankAccountInformation {
 	private String bankAccount;
 	private String currency;
 	private String AccountHolderName;
+	private String swiftCode;
+	private String status;
+	private String bankName;
+
+	/**
+	 * @return the swiftCode
+	 */
+	public String getSwiftCode() {
+		return swiftCode;
+	}
+
+	/**
+	 * @param swiftCode the swiftCode to set
+	 */
+	public void setSwiftCode(String swiftCode) {
+		this.swiftCode = swiftCode;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the bankName
+	 */
+	public String getBankName() {
+		return bankName;
+	}
+
+	/**
+	 * @param bankName the bankName to set
+	 */
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
 
 	public int getRecordType() {
 		return recordType;
