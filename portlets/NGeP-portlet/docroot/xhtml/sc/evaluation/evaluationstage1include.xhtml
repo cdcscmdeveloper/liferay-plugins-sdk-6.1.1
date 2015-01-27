@@ -38,7 +38,7 @@
 
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'OC'}">
+							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'OC' and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 							<li><h:outputText
 									value="#{lbl['lbl.sc.eva.main.menu.eva.stg']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
@@ -50,7 +50,7 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 							<li><h:outputText
 									value="#{lbl['lbl.sc.eva.present.demo.head']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
@@ -101,14 +101,14 @@
 
 
 						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'OC'}">
+							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'OC' and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 
 							<li
 								class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 2 ? 'space green-dot':'space black-dot')}" />
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 							<li
 								class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 3 ? 'space green-dot':'space black-dot')}" />
 						</ui:fragment>
