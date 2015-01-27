@@ -132,30 +132,6 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		return items;
 	}
 
-//	public SelectItem[] getDocumentTypeDropDown() {
-//		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
-//		try {
-//			SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FULFILMENT_DOCUMENT_TYPE);
-//			selectedItemList.add(items[0]);
-//			List<SelectItem> itemList = new ArrayList<SelectItem>();
-//		    for(SelectItem selectItem : items) {
-//		    	itemList.add(selectItem);
-//		    }
-//			List<String> flDocTypes = getDocTypeListByRole();
-//			List<String> selectedItemCode = new ArrayList<String>();
-//		    for(SelectItem selectItem : itemList) {
-//		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
-//		    		selectedItemCode.add(selectItem.getValue().toString());
-//		    		selectedItemList.add(selectItem);
-//		    	}
-//		    }
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(),e.getMessage()));
-//		}
-//	    return selectedItemList.toArray(new SelectItem[selectedItemList.size()]);
-//	}
-	
 	public void selectedOrderType(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
 		getManagedBean().setSearchViewType(null);
@@ -181,20 +157,6 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		reset();
 		
 		if(id!=null) {
-			/*if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-				this.getManagedBean().setCheckDocType(true);
-			}else */
-//			if(getManagedBean().getSearchOrderType().equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-//				this.getManagedBean().setCheckDocType(true);
-//			}
-//			if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-//				this.getManagedBean().setCheckPoDocType(true);
-//				getProcurementTypeList();
-//			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
-//				this.getManagedBean().setCheckDoDocType(true);
-//			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
-//				this.getManagedBean().setCheckInDocType(true);
-//			}
 		}
 		getManagedBean().setSearchViewType(id);
 	}
