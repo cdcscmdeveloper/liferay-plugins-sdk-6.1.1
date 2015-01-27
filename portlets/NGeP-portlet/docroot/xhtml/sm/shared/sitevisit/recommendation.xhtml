@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" toggleable="true">
 		<table>
 			<tr>
-				<td valign="top" style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
 				<td>
 					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false" 
 					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" />
@@ -17,7 +17,7 @@
 			</tr>
 			
 			<tr>
-				<td valign="top" style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
 					<p:inputTextarea rows="8" id="compInfoId"  style="width:50%;" autoResize="false" 
 					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" />
@@ -25,7 +25,7 @@
 			</tr>
 
 			<tr>
-				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /></td>
 				<td>
 					<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" required="#{!empty param['disableValidation']}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.recommended}">
@@ -36,7 +36,7 @@
 			</tr>
 			
 			<tr>
-				<td style="width:30%"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /></td>
 				<td>
 					<p:selectOneRadio id="bumiRecommendId" label="#{lbl['lbl.sm.sitevisit.bumirecommend']}" required="#{!empty param['disableValidation']}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.bumiRecommended}">
