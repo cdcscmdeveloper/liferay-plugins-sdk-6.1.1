@@ -41,8 +41,8 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
-					<p:commandButton
-						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
+					<p:commandButton id="okBtn"
+						value="#{lbl['lbl.btn.ok']}"
 						process="@all"  update="@form"
 						partialSubmit="true"
 						actionListener="#{simpleQuoteBackingBean.updateLocation}" />
@@ -54,6 +54,6 @@
 					</p:column>
 			</p:row>
 		</p:panelGrid>
-		
+		<p:defaultCommand target="okBtn"></p:defaultCommand>
 	</p:dialog>
 </ui:composition>

@@ -56,7 +56,7 @@
 		    resetValues="true" partialSubmit="true"
 		    process="@this" />
 
-	   <p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.search']}" style="float:right;" action="#{simpleQuoteMB.searchCloneItemSpec}"
+	   <p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.search']}" style="float:right;" action="#{simpleQuoteMB.searchCloneItemSpec}"  id="cloneItemSearchBtn"
 				update="scQuoteDataModel" process="@this ,cloneItemSpecId"/>
 				
 	 
@@ -109,5 +109,7 @@
 			</div>
 
 		</p:panel>
+		
+		<p:defaultCommand target="cloneItemSearchBtn"></p:defaultCommand>
 		</p:dialog>
 </ui:composition>
