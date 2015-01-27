@@ -1,6 +1,8 @@
 package my.ep.web.integration.common;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -24,22 +26,23 @@ public class SFTPUtility {
 	String password = IntegrationConstants.SFTP_PASS;
 
 	
-	 /* public static void main(String[] args) {
-	  String remoteFilePath = "/batch/1GFMAS/IN/1002APOVE40000120150102005.GPG"; 
+	  public static void main(String[] args) {
+		  /* String remoteFilePath = "/batch/1GFMAS/IN/1002APOVE40000120150102005.GPG"; 
 	  String localFilePath = "/batch/1GFMAS/ARCHIVE/1002APOVE40000120150102005.GPG"; 
 	  String localFilePath ="C:/Integration/18012014/1000APOVE40000120141003001.GPG"; 
-	   String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt";
+	   String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt"; */
 	  SFTPUtility sftpUtility = new SFTPUtility();
-	  sftpUtility.upload(localFilePath, remoteFilePath); 
+	  System.out.println("File Name :"+sftpUtility.findFileNameInDirectory(IntegrationConstants.PHIS_UPLOAD_DIR, "PHS-030"));
+	 /* sftpUtility.upload(localFilePath, remoteFilePath); 
 	  sftpUtility.exist(remoteFilePath); 
 	  sftpUtility.download(localFilePath,remoteFilePath); 
 	   move(hostName, username, password,remoteFilePath, remoteTempFilePath); 
 	   delete(hostName, username,password, remoteFilePath); }
-	  sftpUtility.listFilesInDirectory("");
+	  sftpUtility.listFilesInDirectory("");*/
 	  
-	  sftpUtility.move(remoteFilePath, localFilePath);
+	 // sftpUtility.move(remoteFilePath, localFilePath);
 	 
-	  }*/
+	  }
 	  
 	  
 	/**
@@ -299,4 +302,48 @@ public class SFTPUtility {
 			manager.close();
 		}
 	}
+	
+	public String findFileNameInDirectory(String directoryName,String serviceId) {
+
+			StandardFileSystemManager manager = new StandardFileSystemManager();
+			String fileName = null;
+
+			try {
+				manager.init();
+
+				FileObject remoteFile = manager.resolveFile(
+						createConnectionString(hostName, username, password,
+								directoryName), createDefaultOptions());
+                
+				if (remoteFile.exists()) {
+					FileObject exists[] = remoteFile.getChildren();
+					
+					for (int i = 0; i < exists.length; i++) {
+
+						fileName = exists[i].getName().toString();
+						String subFile = fileName.substring(52);
+						
+						if(subFile.contains(serviceId)){
+							subFile.contains(getDateStringValue());
+							return subFile;
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+				manager.close();
+			}
+			return null;
+		}
+	
+	public String getDateStringValue(){
+		
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyMMdd");
+
+		String DATE = dt1.format(new Date());
+		return DATE;
+	}
+	
 }
