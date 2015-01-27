@@ -33,6 +33,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -45,6 +46,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -184,10 +186,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private int counter;
 	
 	private String financialAccNo;
-	private boolean buttonHideActive = false;
+	private boolean buttonHideActive = true;
 	private List<CtPerformanceBond> performanceBondList;
 	private int firstRowSelected;
 	private boolean selectAll;
+	private List <CtAgencyAddress> selectedListOfAddress;
+	private List <PmAddressType> addressTypeList;
 	
 	private CtAmendment ctAmendment;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
@@ -1101,6 +1105,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtContractStatus(Long ctContractStatus) {
 		this.ctContractStatus = ctContractStatus;
+	}	
+
+	public List<CtAgencyAddress> getSelectedListOfAddress() {
+		return selectedListOfAddress;
+	}
+
+	public void setSelectedListOfAddress(List<CtAgencyAddress> selectedListOfAddress) {
+		this.selectedListOfAddress = selectedListOfAddress;
+	}	
+
+	public List<PmAddressType> getAddressTypeList() {
+		return addressTypeList;
+	}
+
+	public void setAddressTypeList(List<PmAddressType> addressTypeList) {
+		this.addressTypeList = addressTypeList;
 	}
 
 	public IPagingDataModel<VCtContract> getContractDataModel() {

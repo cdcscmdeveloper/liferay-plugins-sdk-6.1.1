@@ -10,19 +10,19 @@
    <p:panel id="agencyId" header="#{lbl['lbl.ct.panel.agency']}"  toggleable="true"  toggleSpeed="500">
        
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
-	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
-	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address1']}" escape="false"/>
-	   <p:graphicImage value="/css/images/design/house.png" styleClass="ui-icon-address" />
-	   <h:outputText styleClass="instruction" value=" #{lbl['lbl.ct.instruction.delivery.address2']}" escape="false"/><br/><br/>
-  
-       <p:dataTable var="agencyData"  value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
-           id="tableAgencyDetails"  selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
-              
-               <ac:paginator for="tableAgencyDetails"/>
-               <p:ajax event="rowSelect" update=":form:agencyId" />
-              
-               <p:column selectionMode="multiple" style="width:2%;" 
-                  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"></p:column>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/><br/>
+       <p:dataTable id="tableAgencyDetails" var="agencyData"  value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
+  			selectionMode="single" rowKey="#{agencyData}" selection="#{contractDetailsBackingBean.managedBean.selectedAgency}" >
+            <ac:paginator for="tableAgencyDetails"/>
+            <p:ajax event="rowSelect" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
+                  
+            <p:column style="width:2%;">
+	     		<p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" styleClass="myCustomChekBox"
+	      			rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+			  		<p:ajax event="change" update=":form:delBtn" listener="#{contractDetailsBackingBean.selectOneCheckboxSelect}"></p:ajax>
+		       	</p:selectBooleanCheckbox>
+	      	</p:column>
             
                <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:26%;white-space:normal;">
 				    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
@@ -30,12 +30,6 @@
 			
 			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:32%;white-space:normal;">
 				   <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
-				   <p:spacer width="5"/>
-				   <p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
-				       rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}" action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
-					   <p:graphicImage value="/css/images/design/house.png"  
-					     styleClass="ui-icon-address" title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
-				   </p:commandLink>
 			    </p:column>
 			
 			    <p:column style="width:10%;white-space:normal;">
@@ -84,14 +78,73 @@
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
-       		</p:commandButton> 
-			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}"  process="@form" onclick="dlgDel.show();"
-				rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" >
+       		</p:commandButton>
+			 <p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" process="@this"
+			 	onsuccess="dlgDel.show()" disabled="#{contractDetailsBackingBean.managedBean.buttonHideActive}" 
+			 	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
 				</p:tooltip>
 			</p:commandButton>
 	  	</div>
+	  	
+	  	<p:outputPanel id="agencyDeliveryAddress">
+	        <h:panelGroup  style="width:100%" rendered="#{contractDetailsBackingBean.managedBean.selectedAgency != null}">	     
+	           	<div style="clear:both" />
+	           	<p:spacer height="20"/>
+	           	<p:dataTable id="deliveryAddressTbl" var="deliveryAddress" 
+	           		value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
+					rowKey="#{deliveryAddress}" selection="#{contractDetailsBackingBean.managedBean.selectedListOfAddress}">
+					<ac:paginator for="deliveryAddressTbl"/>
+					<p:column selectionMode="multiple" style="width:3%"  
+						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
+					   <h:outputText value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" />
+					</p:column>
+				</p:dataTable>
+				<div>
+		   		<table style="width: 100%">
+				<tr><td class="TableFieldLeft" width="80%"></td>
+			 	<td>
+			   	<table><tr>
+			   		<td>
+			   		<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE"
+						postUpdateListener="contractDetailsBackingBean.addDeliveryAddress(contractDetailsBackingBean.managedBean.addressTypeList)"
+						headerText="#{lbl['lbl.ct.delivery.address']}" 
+						buttonLabel="#{lbl['lbl.btn.add']}"
+						selectionMode="multiple"
+						saveObject="contractDetailsBackingBean.managedBean.addressTypeList"
+						conditionField="pmOrgProfile.orgProfileId^#{contractDetailsBackingBean.managedBean.selectedAgency.orgProfile.orgProfileId}|recordStatus^1"
+						update=":form:deliveryAddressTbl"
+						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+					<ac:lovPopup />
+					</td>
+					<td>
+				    <p:commandButton id="delAddressBtn" value="#{lbl['lbl.btn.delete']}" 
+				     	 process="@this" onclick="delAddressDlg.show()" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+					</td>
+				</tr></table>
+				</td>
+			    </tr>
+				</table>
+	      		</div>
+		      	<p:dialog id="delAddressDlg" widgetVar="delAddressDlg"
+			   		styleClass="screen-title" resizable="false" modal="true" width="330">  
+	           		<h:panelGrid columns="3">
+	             	<p:graphicImage library="ep/images/design" name="exclamation.png"
+				   		value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+				   	<p:spacer width="10"/>
+	              	<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+	           		</h:panelGrid>
+	           		<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=deliveryAddressTbl])" process="@all"
+							actionListener="#{contractDetailsBackingBean.deleteDeliveryAddress()}" onclick="delAddressDlg.hide();"/>
+						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delAddressDlg.hide();" type="button" />
+					</div>
+	    		</p:dialog>  
+				<p:spacer height="20"/>		
+			</h:panelGroup>
+	    </p:outputPanel> 
 	  	    
         <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
            resizable="false" modal="true" width="330">  
@@ -165,15 +218,6 @@
 			  </h:panelGrid>
 			</f:facet>
            </p:panel>
-	</p:dialog>
-	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.delivery.address']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
-	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
-		rowKey="#{deliveryAddress}">
-		<ac:paginator for="deliveryAddressTbl"/>
-		<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="white-space:normal;">
-		   <p:outputLabel value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" style="float:left;" />
-		</p:column>
-	   </p:dataTable>
 	</p:dialog>
 	<p:panel id="agencyRemarksAttachmentPnl"  header="#{lbl['lbl.ct.panel.remarks.attachment.contract.sharing']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
