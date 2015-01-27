@@ -88,15 +88,15 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
 				}
 				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
-					System.out.println("getSearchDocumentNo");
+					System.out.println("getSearchDocumentNo"+ getSearchDocumentNo());
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentNo()));
 				}
 				if(getSearchStatusId()!=null) {
-					System.out.println("getSearchDocumentNo");
+					System.out.println("getSearchStatusId");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),getSearchStatusId()));
 				}
 				if(getSearchDocumentFromDuration()!=null && getSearchDocumentToDuration()!=null) {
-					System.out.println("getSearchDocumentNo");
+					System.out.println("getSearchDocumentFromDuration");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate",SearchOperator.OPERATOR_BETWEEN.value(), 
 							new SearchBetweenValue<Date>(
 							new Date(System.currentTimeMillis() + (30*24*60*60*1000)),
@@ -169,6 +169,11 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setScRNDocumentDataModel(IPagingDataModel<Object[]> scRNDocumentDataModel) {
 		this.scRNDocumentDataModel = scRNDocumentDataModel;
+	}
+	Object[] scObj = new Object[6];
+	public void setScObj(Object[] scObj) {
+		// TODO Auto-generated method stub
+		this.scObj= scObj;
 	}
 
 }
