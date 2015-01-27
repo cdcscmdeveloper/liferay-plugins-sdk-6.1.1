@@ -178,6 +178,7 @@ public class FileUtility {
 				}
 
 			}
+			System.out.println("local fie create....");
 			Encryption encryption = new Encryption();
 			encryption.encryptPhis(filePath,
 					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
@@ -226,6 +227,7 @@ public class FileUtility {
 				}
 
 			}
+			System.out.println("local fie create....");
 			Encryption encryption = new Encryption();
 			encryption.encryptPhis(filePath,
 					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
@@ -273,6 +275,7 @@ public class FileUtility {
 				}
 
 			}
+			System.out.println("local fie create....");
 			// encript the content and put in a location
 
 			Encryption encryption = new Encryption();
@@ -383,6 +386,7 @@ public class FileUtility {
 
 				}
 			}
+			System.out.println("local fie create....");
 		} catch (IOException e) {
 
 		} finally {
@@ -423,6 +427,7 @@ public class FileUtility {
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 				}
+				System.out.println("local fie create....");
 				
 				Encryption encryption = new Encryption();
 				encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-350");
