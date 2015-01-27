@@ -21,12 +21,17 @@ import my.ep.web.integration.eperunding.ConsultantProfile;
 import my.ep.web.integration.eperunding.EquityOwner;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.Signatory;
+import my.ep.web.integration.gfmas.AgCtrlOfficer;
+import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
 import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.gfmas.MasterDataMaterialInfo;
 import my.ep.web.integration.gfmas.MasterDataVendor;
+import my.ep.web.integration.gfmas.OrgProfile;
+import my.ep.web.integration.gfmas.PaymentInfo;
 import my.ep.web.integration.gfmas.ProgramActivity;
 import my.ep.web.integration.gfmas.Project;
+import my.ep.web.integration.gfmas.PtjGroup;
 import my.ep.web.integration.gfmas.SSTInformation;
 import my.ep.web.integration.gfmas.VotFund;
 import my.ep.web.integration.phis.ItemType;
@@ -34,6 +39,10 @@ import my.ep.web.integration.phis.MaterialBrand;
 import my.ep.web.integration.phis.MaterialClass;
 import my.ep.web.integration.phis.MaterialColor;
 import my.ep.web.integration.phis.MaterialMeasurement;
+import my.ep.web.integration.phis.PhisGlAccount;
+import my.ep.web.integration.phis.PhisProgramActivity;
+import my.ep.web.integration.phis.PhisProject;
+import my.ep.web.integration.phis.PhisVotFund;
 
 public class FileUtility {
 
@@ -474,6 +483,336 @@ public class FileUtility {
 			}
 			return masterDataVendorList;
 		}
+	// GFMAS PM Files Start
+
+		public List<AgOffice> pejabatPerakaunanFileInPutStream(String filePath) {
+			//String PROCESS_ID = "GLBAC";
+			Path path = Paths.get(filePath);
+			String line;
+			List<AgOffice> agOfficeList = new ArrayList<AgOffice>();
+			AgOffice afOffice = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+					afOffice = new AgOffice();
+					afOffice.setYear(fileUtility.getValue(line, 0, 4));
+					afOffice.setCode(fileUtility.getValue(line, 4, 4));
+					afOffice.setDescription(fileUtility.getValue(line, 8, 255));
+					afOffice.setStatus(fileUtility.getValue(line, 263, 1));
+					agOfficeList.add(afOffice);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return agOfficeList;
+		}
+
+		public List<AgCtrlOfficer> pegawaiPengawalInPutStream(String filePath) {
+			//String PROCESS_ID = "GLSEG";
+			Path path = Paths.get(filePath);
+			String line;
+			List<AgCtrlOfficer> agCtrOfficeList = new ArrayList<AgCtrlOfficer>();
+			AgCtrlOfficer afCtrOffice = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					afCtrOffice = new AgCtrlOfficer();
+
+					afCtrOffice.setYear(fileUtility.getValue(line,0 ,4 ));
+					afCtrOffice.setCode(fileUtility.getValue(line, 4, 2));
+					afCtrOffice.setCode(fileUtility.getValue(line, 4, 2));
+					afCtrOffice.setDescription(fileUtility.getValue(line, 6, 255));
+					afCtrOffice.setStatus(fileUtility.getValue(line,261, 1));
+					agCtrOfficeList.add(afCtrOffice);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return agCtrOfficeList;
+		}
+
+		public List<VotFund> votInPutStream(String filePath) {
+			String PROCESS_ID = "GLVOT";
+			Path path = Paths.get(filePath);
+			String line;
+			List<VotFund> votList = new ArrayList<VotFund>();
+			VotFund vot = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					vot = new VotFund();
+
+				    vot.setYear(fileUtility.getValue(line,0 ,4 ));
+				    vot.setVotFundType(fileUtility.getValue(line,4 ,1));
+					vot.setCode(fileUtility.getValue(line, 4, 3));
+					vot.setPtjCode(fileUtility.getValue(line,7 ,2));
+					vot.setDescription(fileUtility.getValue(line, 9, 264));
+					vot.setStatus(fileUtility.getValue(line, 264,265));
+					votList.add(vot);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return votList;
+		}
+
+		public List<VotFund> votDanaInPutStream(String filePath) {
+			String PROCESS_ID = "GLDNA";
+			Path path = Paths.get(filePath);
+			String line;
+			List<VotFund> votList = new ArrayList<VotFund>();
+			VotFund vot = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					vot = new VotFund();
+
+				    vot.setYear(fileUtility.getValue(line,0 ,4 ));								
+					vot.setCode(fileUtility.getValue(line,4 ,4));
+					vot.setDescription(fileUtility.getValue(line, 8, 255));
+					vot.setStatus(fileUtility.getValue(line, 263, 1));
+					votList.add(vot);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return votList;
+		}
+
+		public List<ProgramActivity> programAktiviti(String filePath) {
+			String PROCESS_ID = "GLPRG";
+			Path path = Paths.get(filePath);
+			String line;
+			List<ProgramActivity> programActivityList = new ArrayList<ProgramActivity>();
+			ProgramActivity programActivity = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					programActivity = new ProgramActivity();
+
+					programActivity.setYear(fileUtility.getValue(line,0 ,4 ));				
+					programActivity.setVotCode(fileUtility.getValue(line,4 ,3 ));
+					programActivity.setCode(fileUtility.getValue(line, 7, 6));
+					programActivity.setDescription(fileUtility.getValue(line, 13, 255));
+					programActivity.setStatus(fileUtility.getValue(line, 268, 1));
+					programActivityList.add(programActivity);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return programActivityList;
+		}
+
+		public List<Project> project(String filePath) {
+			String PROCESS_ID = "GLPRJ";
+			Path path = Paths.get(filePath);
+			String line;
+			List<Project> projectList = new ArrayList<Project>();
+			Project project = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					project = new Project();
+
+					project.setYear(fileUtility.getValue(line,0 ,4 ));
+					project.setVotCode(fileUtility.getValue(line, 4, 3));
+					project.setCode(fileUtility.getValue(line, 7, 5));
+					project.setSetiaCode(fileUtility.getValue(line, 12, 3));
+					project.setSubSetiaCode(fileUtility.getValue(line,15, 4));
+					project.setPembiayaan(fileUtility.getValue(line,19, 1));
+					project.setDescription(fileUtility.getValue(line,20, 255));
+					project.setStatus(fileUtility.getValue(line,275, 1));
+					projectList.add(project);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return projectList;
+		}
+
+		public List<GlAccount> kodAkaun(String filePath) {
+			String PROCESS_ID = "GLGLC";
+			Path path = Paths.get(filePath);
+			String line;
+			List<GlAccount> glAccountList = new ArrayList<GlAccount>();
+			GlAccount glAccount = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					glAccount = new GlAccount();
+
+					glAccount.setYear(fileUtility.getValue(line,0 ,4 ));
+					glAccount.setCode(fileUtility.getValue(line, 4, 8));
+					glAccount.setPtjCode(fileUtility.getValue(line,12, 2));
+					glAccount.setDescription(fileUtility.getValue(line,14, 255));
+					glAccount.setStatus(fileUtility.getValue(line,269, 1));
+					glAccountList.add(glAccount);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return glAccountList;
+		}
+
+		public List<PtjGroup> kumpulanPTJ(String filePath) {
+			String PROCESS_ID = "GLPCG";
+			Path path = Paths.get(filePath);
+			String line;
+			List<PtjGroup> ptjGroupList = new ArrayList<PtjGroup>();
+			PtjGroup ptjGroup = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					ptjGroup = new PtjGroup();
+
+					ptjGroup.setYear(fileUtility.getValue(line,0 ,4 ));
+					ptjGroup.setCode(fileUtility.getValue(line,4, 2));
+					ptjGroup.setDescription(fileUtility.getValue(line,6, 255));
+					ptjGroup.setStatus(fileUtility.getValue(line, 261, 1));
+					ptjGroupList.add(ptjGroup);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return ptjGroupList;
+		}
+
+		public List<OrgProfile> masterDatePTJ(String filePath) {
+			String PROCESS_ID = "GLPTJ";
+			Path path = Paths.get(filePath);
+			String line;
+			List<OrgProfile> orgProfileList = new ArrayList<OrgProfile>();
+			OrgProfile orgProfile = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					orgProfile = new OrgProfile();
+
+					orgProfile.setYear(fileUtility.getValue(line,0 ,4 ));
+					orgProfile.setPtjCode(fileUtility.getValue(line, 4, 2));
+					orgProfile.setCode(fileUtility.getValue(line, 6, 6));
+					orgProfile.setDescription(fileUtility.getValue(line, 12, 255));
+					orgProfile.setCtrOfficerCode(fileUtility.getValue(line,267,2));
+					orgProfile.setAgOfficeCode(fileUtility.getValue(line, 269, 4));
+					orgProfile.setStatus(fileUtility.getValue(line, 273, 1));
+					orgProfileList.add(orgProfile);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return orgProfileList;
+		}
+
+		public List<BankAccountInformation> kodBank(String filePath) {
+			String PROCESS_ID = "CMBNK";
+			Path path = Paths.get(filePath);
+			String line;
+			List<BankAccountInformation> bankList = new ArrayList<BankAccountInformation>();
+			BankAccountInformation bank = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					bank = new BankAccountInformation();
+
+					bank.setSwiftCode(fileUtility.getValue(line, 0, 11));
+					bank.setBankName(fileUtility.getValue(line, 11, 40));
+					bank.setStatus(fileUtility.getValue(line, 51, 1));
+					bankList.add(bank);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return bankList;
+		}
+
+		public List<PaymentInfo> paymentInfo(String filePath) {
+			String PROCESS_ID = "AP511";
+			Path path = Paths.get(filePath);
+			String line;
+			List<PaymentInfo> paymentList = new ArrayList<PaymentInfo>();
+			PaymentInfo paymentInfo = null;
+
+			try (Scanner scanner = new Scanner(path,
+					IntegrationConstants.ENCODING.name())) {
+
+				FileUtility fileUtility = new FileUtility();
+				while (scanner.hasNextLine()) {
+					line = scanner.nextLine();
+
+					paymentInfo = new PaymentInfo();
+
+					paymentInfo.setPaymentRefNo(fileUtility.getValue(line, 33, 18));
+					paymentInfo.setPaymentDate(fileUtility.getValue(line, 11, 8));
+					//paymentInfo.setInvoiceNoList(fileUtility.getValue(line, 4, 6));
+					paymentList.add(paymentInfo);
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return paymentList;
+		}
+
+		// END OF GFMAS PM Files
 	
 	
 	// set values for masterData material Info
@@ -1016,7 +1355,7 @@ public class FileUtility {
 		}
 	}
 	// PHIS PM Modules
-	public void votFundFileOutPutStream(List<VotFund> content, String filePath) {
+	public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
 		String SERVICE_CODE = "PHS-090";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1029,7 +1368,7 @@ public class FileUtility {
 
 			if (content.size() != 0) {
 				StringBuffer line;
-				for (VotFund votFund : content) {
+				for (PhisVotFund votFund : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
 					line.append(formatStringField(
@@ -1043,7 +1382,8 @@ public class FileUtility {
 
 				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
+						SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1060,7 +1400,7 @@ public class FileUtility {
 		}
 	}
 
-	public void votFundDanaFileOutPutStream(List<VotFund> content,
+	public void votFundDanaFileOutPutStream(List<PhisVotFund> content,
 			String filePath) {
 		String SERVICE_CODE = "PHS-100";
 
@@ -1074,7 +1414,7 @@ public class FileUtility {
 
 			if (content.size() != 0) {
 				StringBuffer line;
-				for (VotFund votFund : content) {
+				for (PhisVotFund votFund : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
 					line.append(formatStringField(votFund.getCode(), 4, "L"));
@@ -1087,7 +1427,8 @@ public class FileUtility {
 
 				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
+						SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1104,7 +1445,7 @@ public class FileUtility {
 		}
 	}
 
-	public void programActivityFileOutPutStream(List<ProgramActivity> content,
+	public void programActivityFileOutPutStream(List<PhisProgramActivity> content,
 			String filePath) {
 		String SERVICE_CODE = "PHS-110";
 
@@ -1118,7 +1459,7 @@ public class FileUtility {
 
 			if (content.size() != 0) {
 				StringBuffer line;
-				for (ProgramActivity prgActivity : content) {
+				for (PhisProgramActivity prgActivity : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(prgActivity.getYear(), 4,
 							"R"));
@@ -1134,7 +1475,8 @@ public class FileUtility {
 
 				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
+						SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1151,7 +1493,7 @@ public class FileUtility {
 		}
 	}
 
-	public void projectFileOutPutStream(List<Project> content, String filePath) {
+	public void projectFileOutPutStream(List<PhisProject> content, String filePath) {
 		String SERVICE_CODE = "PHS-120";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1164,10 +1506,12 @@ public class FileUtility {
 
 			if (content.size() != 0) {
 				StringBuffer line;
-				for (Project project : content) {
+				for (PhisProject project : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(project.getYear(), 4, "R"));
-					line.append(formatStringField(project.getVotCode()+project.getCode()+project.getSetiaCode()+project.getSubSetiaCode(), 16, "L"));
+					line.append(formatStringField(project.getVotCode()
+							+ project.getCode() + project.getSetiaCode()
+							+ project.getSubSetiaCode(), 16, "L"));
 					line.append(formatStringField(project.getDescription(),
 							255, "L"));
 					line.append(formatStringField(project.getStatus(), 1, "L"));
@@ -1177,7 +1521,8 @@ public class FileUtility {
 
 				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
+						SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1194,7 +1539,7 @@ public class FileUtility {
 		}
 	}
 
-	public void glAccountFileOutPutStream(List<GlAccount> content,
+	public void glAccountFileOutPutStream(List<PhisGlAccount> content,
 			String filePath) {
 		String SERVICE_CODE = "PHS-140";
 
@@ -1208,7 +1553,7 @@ public class FileUtility {
 
 			if (content.size() != 0) {
 				StringBuffer line;
-				for (GlAccount glAccount : content) {
+				for (PhisGlAccount glAccount : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(glAccount.getYear(), 4, "R"));
 					line.append(formatStringField(glAccount.getCode(), 8, "L"));
@@ -1223,7 +1568,8 @@ public class FileUtility {
 
 				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH,  fileName, SERVICE_CODE);
+						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
+						SERVICE_CODE);
 
 			}
 		} catch (IOException e) {

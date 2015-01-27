@@ -2,26 +2,14 @@ package my.ep.web.integration.gfmas;
 
 public class VotFund {
 
-	private int year;
+	private String year;
 	private String code;
 	private String ptjCode;
 	private String description;
 	private String status;
+	private String votFundType;
 
-	/**
-	 * @return the year
-	 */
-	public int getYear() {
-		return year;
-	}
-
-	/**
-	 * @param year
-	 *            the year to set
-	 */
-	public void setYear(int year) {
-		this.year = year;
-	}
+	
 
 	/**
 	 * @return the code
@@ -80,6 +68,34 @@ public class VotFund {
 	 */
 	public void setPtjCode(String ptjCode) {
 		this.ptjCode = ptjCode;
+	}
+
+	/**
+	 * @return the year
+	 */
+	public String getYear() {
+		return year;
+	}
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	/**
+	 * @return the votFundType
+	 */
+	public String getVotFundType() {
+		return votFundType;
+	}
+
+	/**
+	 * @param votFundType the votFundType to set
+	 */
+	public void setVotFundType(String votFundType) {
+		this.votFundType = votFundType;
 	}
 
 }

@@ -1,25 +1,28 @@
 package my.ep.web.integration.gfmas;
 
+import java.util.Date;
+
 public class AgOffice {
 
-	private int year;
+	private String year;
 	private String code;
 	private String description;
 	private String status;
+	private Date effDate;
 
 	/**
 	 * @return the year
 	 */
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
 	/**
-	 * @param year
+	 * @param string
 	 *            the year to set
 	 */
-	public void setYear(int year) {
-		this.year = year;
+	public void setYear(String string) {
+		this.year = string;
 	}
 
 	/**
@@ -65,6 +68,20 @@ public class AgOffice {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the effDate
+	 */
+	public Date getEffDate() {
+		return effDate;
+	}
+
+	/**
+	 * @param effDate the effDate to set
+	 */
+	public void setEffDate(Date effDate) {
+		this.effDate = effDate;
 	}
 
 }
