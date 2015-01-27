@@ -2,28 +2,16 @@ package my.ep.web.integration.gfmas;
 
 public class Project {
 
-	private int year;
+	private String year;
 	private String code;
 	private String votCode;
 	private String setiaCode;
 	private String subSetiaCode;
 	private String description;
 	private String status;
+	private String pembiayaan;
 
-	/**
-	 * @return the year
-	 */
-	public int getYear() {
-		return year;
-	}
-
-	/**
-	 * @param year
-	 *            the year to set
-	 */
-	public void setYear(int year) {
-		this.year = year;
-	}
+	
 
 	/**
 	 * @return the code
@@ -110,6 +98,34 @@ public class Project {
 	 */
 	public void setVotCode(String votCode) {
 		this.votCode = votCode;
+	}
+
+	/**
+	 * @return the year
+	 */
+	public String getYear() {
+		return year;
+	}
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	/**
+	 * @return the pembiayaan
+	 */
+	public String getPembiayaan() {
+		return pembiayaan;
+	}
+
+	/**
+	 * @param pembiayaan the pembiayaan to set
+	 */
+	public void setPembiayaan(String pembiayaan) {
+		this.pembiayaan = pembiayaan;
 	}
 
 }

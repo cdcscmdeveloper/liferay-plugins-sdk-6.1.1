@@ -2,25 +2,57 @@ package my.ep.web.integration.gfmas;
 
 public class OrgProfile {
 
-	private int year;
+	private String year;
 	private String code;
+	private String ptjCode;
 	private String description;
+	private String ctrOfficerCode;
+	private String agOfficeCode;
+	/**
+	 * @return the ptjCode
+	 */
+	public String getPtjCode() {
+		return ptjCode;
+	}
+
+	/**
+	 * @param ptjCode the ptjCode to set
+	 */
+	public void setPtjCode(String ptjCode) {
+		this.ptjCode = ptjCode;
+	}
+
+	/**
+	 * @return the ctrOfficerCode
+	 */
+	public String getCtrOfficerCode() {
+		return ctrOfficerCode;
+	}
+
+	/**
+	 * @param ctrOfficerCode the ctrOfficerCode to set
+	 */
+	public void setCtrOfficerCode(String ctrOfficerCode) {
+		this.ctrOfficerCode = ctrOfficerCode;
+	}
+
+	/**
+	 * @return the agOfficeCode
+	 */
+	public String getAgOfficeCode() {
+		return agOfficeCode;
+	}
+
+	/**
+	 * @param agOfficeCode the agOfficeCode to set
+	 */
+	public void setAgOfficeCode(String agOfficeCode) {
+		this.agOfficeCode = agOfficeCode;
+	}
+
 	private String status;
 
-	/**
-	 * @return the year
-	 */
-	public int getYear() {
-		return year;
-	}
-
-	/**
-	 * @param year
-	 *            the year to set
-	 */
-	public void setYear(int year) {
-		this.year = year;
-	}
+	
 
 	/**
 	 * @return the code
@@ -65,6 +97,20 @@ public class OrgProfile {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the year
+	 */
+	public String getYear() {
+		return year;
+	}
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(String year) {
+		this.year = year;
 	}
 
 }
