@@ -48,6 +48,7 @@ public class SFTPUtility {
 	 */
 	
 	public void upload(String localFilePath, String remoteFilePath) {
+		System.out.println("inside file upload...");
 
 		File file = new File(localFilePath);
 		if (!file.exists())

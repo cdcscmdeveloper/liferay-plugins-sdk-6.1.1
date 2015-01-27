@@ -87,6 +87,7 @@ public class PhisIntegration {
 	// method to create file for pharmaniaga for Class,Brand,Measrement,ItemType,Color
 	
 	public void createFilesforPHIS() {
+		System.out.println("inside phis...");
 
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
