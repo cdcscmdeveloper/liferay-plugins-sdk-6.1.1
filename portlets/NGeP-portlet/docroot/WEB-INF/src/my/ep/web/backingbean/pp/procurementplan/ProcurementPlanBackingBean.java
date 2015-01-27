@@ -339,7 +339,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			// APPROVAL & VERIFICATION	
 			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
 					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
-					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
+					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)
+					|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(status)
+					|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(status)
+					|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(status)){
 				this.getManagedBean().setModeEditable(false);
 				this.getManagedBean().setModeReview(true);
 			
@@ -359,7 +362,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					|| ProcurementPlanConst.PPE_PENDING_REVISION.equals(status)
 					|| ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) 
 					|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status)
-					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)){
+					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status)
+					|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(status)
+					|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(status)
+					|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(status)){
 				this.getManagedBean().setModeEditable(false);
 				this.getManagedBean().setModeReview(true);
 				this.getManagedBean().setModeReviewEditable(false);
@@ -1993,10 +1999,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				roleCode = RoleCode.PLAN_EXPEN_OFFICER.value();
 			}else if(ProcurementPlanConst.PPP_PENDING_REVISION.equals(statusId)){
 				roleCode = RoleCode.PLAN_PROCU_OFFICER.value();
-			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(statusId)){
+			}else if(ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(statusId)
+					|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(statusId)){
 				roleCode = RoleCode.PLAN_VERFICATION_OFFICER.value();
 			}else if(ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(statusId)
-					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(statusId)){
+					|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(statusId)
+					|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(statusId)
+					|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(statusId)){
 				roleCode = RoleCode.PLAN_APPROVER.value();
 			}else if(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
 						|| ProcurementPlanConst.PPE_APPROVED.equals(statusId)){
@@ -2172,7 +2181,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(ppPlan.getStatus()!=null 
 				&& (ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
 						|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId())
-						|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))){
+						|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))
+						|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
+				){
 			
 			rejectReasons = new ArrayList<PpRejectReason>();
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
