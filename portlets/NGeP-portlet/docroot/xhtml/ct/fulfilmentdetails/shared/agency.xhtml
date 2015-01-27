@@ -17,9 +17,8 @@
             <p:ajax event="rowSelect" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
                   
-            <p:column style="width:2%;">
-	     		<p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" styleClass="myCustomChekBox"
-	      			rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+            <p:column style="width:2%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+	     		<p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" styleClass="myCustomChekBox">
 			  		<p:ajax event="change" update=":form:delBtn" listener="#{contractDetailsBackingBean.selectOneCheckboxSelect}"></p:ajax>
 		       	</p:selectBooleanCheckbox>
 	      	</p:column>
