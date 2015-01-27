@@ -24,7 +24,7 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		<div style="text-align: right; min-height: 40px;">	
 			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" action="#{cdTrackingDiaryBackingBean.backToPrev}" />
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" action="#{ctTrackingDiaryBackingBean.backToPrev}" />
 			</div>
 		</div>
 		<p:panel header="Trackng Diary Details" toggleable="true">
@@ -61,7 +61,7 @@
 					<f:facet name="header">
 					Document Status
 					</f:facet>
-				#{smTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				#{ctTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
 				</p:column>
 
 			</p:dataTable>
