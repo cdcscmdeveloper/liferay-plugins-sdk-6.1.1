@@ -26,51 +26,63 @@
 			<ac:templateSpec
 				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
 
-		<!-- 	<h:panelGroup>
-				<p:panel header="Scoring Offered Price" toggleable="true">
-					<p:panelGrid style="margin-top:5px;width:100%;"
-						styleClass="panelGridBorders tr, panelGridBorders td">
-						<f:facet name="header">
-							<p:row>
-								<p:column styleClass="panelGridHeaders" colspan="1">Offered Price</p:column>
-								<p:column styleClass="panelGridHeaders" colspan="1">From Variance(%)</p:column>
-								<p:column styleClass="panelGridHeaders" colspan="1">To Variance(%)</p:column>
-								<p:column styleClass="panelGridHeaders">Below Variance(Score)</p:column>
-								<p:column styleClass="panelGridHeaders">Within Variance(Score)</p:column>
-								<p:column styleClass="panelGridHeaders">Above Variance(Score)</p:column>
-							</p:row>
-						</f:facet>
-
-						<p:row>
-							<p:column style="font-weight: bold;">By Item</p:column>
-							<p:column style="font-weight: bold;">
-								<h:outputText style="text-align:right;"
-									value="#{evaluationBackingBean.managedBean.offerPriceItem.fromVariance}" />
-							</p:column>
-
-							<p:column colspan="1" style="font-weight: bold;">
-								<h:outputText style="text-align:right;"
-									value="#{evaluationBackingBean.managedBean.offerPriceItem.toVariance}" />
-							</p:column>
-							<p:column colspan="1" style="font-weight: bold;">
-								<h:outputText style="text-align:right;"
-									value="#{evaluationBackingBean.managedBean.offerPriceItem.belowScore}" />
-							</p:column>
-							<p:column colspan="1" style="font-weight: bold;">
-								<h:outputText
-									value="#{evaluationBackingBean.managedBean.withInVarieance}"
-									style="text-align:right;" />
-							</p:column>
-							<p:column colspan="1" style="font-weight: bold;">
-								<h:outputText style="text-align:right;"
-									value="#{evaluationBackingBean.managedBean.offerPriceItem.aboveScore}" />
-							</p:column>
-						</p:row>
-					</p:panelGrid>
+			<h:panelGroup>
+				<p:panel
+					header="#{lbl['lbl.sc.spec.fin.score.scoring.offered.price']}"
+					toggleable="true">
 
 
+
+					<p:dataTable var="itemofferPricelist" id="itemOfferpriceId"
+						rows="10"
+						value="#{evaluationBackingBean.managedBean.specItemScoringList}"
+						rowIndexVar="index" style="width:100%"
+						rowKey="#{itemofferPricelist}">
+						<ac:paginator for="itemOfferpriceId" />
+
+
+						<p:column headerText="#{lbl['lbl.so.itemname']}"
+							style="width:30%;white-space: normal;">
+							<h:outputText
+								value="#{itemofferPricelist.tplSpecQuestion.clItem}"></h:outputText>
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.spec.fin.score.from.varience']}"
+							style="width:15%">
+							<h:outputLabel value="#{itemofferPricelist.rangeFrom}"
+								style="text-align:right"></h:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.spec.fin.score.to.varience']}"
+							style="width:15%">
+							<h:outputLabel value="#{itemofferPricelist.rangeTo}"
+								style="text-align:right"></h:outputLabel>
+						</p:column>
+
+						<p:column
+							headerText="#{lbl['lbl.sc.spec.fin.score.below.varience']}"
+							style="width:15%">
+							<h:outputLabel value="#{itemofferPricelist.belowScore}"
+								style="text-align:right"></h:outputLabel>
+						</p:column>
+
+						<p:column
+							headerText="#{lbl['lbl.sc.spec.fin.score.within.variance']}"
+							style="width:10%">
+							<h:outputLabel value="#{itemofferPricelist.score}"
+								style="text-align:right"></h:outputLabel>
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.spec.fin.score.above.variance']}"
+							style="width:15%">
+							<h:outputLabel value="#{itemofferPricelist.aboveScore}"
+								style="text-align:right"></h:outputLabel>
+						</p:column>
+
+
+					</p:dataTable>
 				</p:panel>
-			</h:panelGroup> -->
+			</h:panelGroup>
 		</p:panel>
 	</ui:define>
 </ui:composition>
