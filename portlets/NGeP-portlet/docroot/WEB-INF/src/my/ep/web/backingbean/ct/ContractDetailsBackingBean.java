@@ -334,6 +334,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    
 	         setBondRecordStatus(this.getManagedBean().getContractVer());
 	         if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
+	        	  	getManagedBean().setSelectedAgency(null);
 		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
 		           for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 		        	  checkAgencyStatus(ctAgency);		        	   
