@@ -15,9 +15,20 @@
 						rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
 						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
 						<ac:paginator for="meetingAttDtlTbl" />
-
-						<p:column selectionMode="multiple" style="width:2%"></p:column>
 						
+						<p:column selectionMode="multiple" style="width:2%"></p:column>
+								
+						<p:ajax event="toggleSelect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
+								process="@this" partialSubmit="true"/>	
+						<p:ajax event="rowSelect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
+								process="@this" partialSubmit="true"/>
+						<p:ajax event="rowSelectCheckbox" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
+								process="@this" partialSubmit="true"/>
+						<p:ajax event="rowUnselect" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
+								process="@this" partialSubmit="true"/>
+						<p:ajax event="rowUnselectCheckbox" update="@([id$=meetingAttDtlTbl],[id$=attdDelBtn])" 
+								process="@this" partialSubmit="true"/>				
+
 						<p:column headerText="#{lbl['lbl.sc.name']}">
 							<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"/>
 						</p:column>
@@ -25,7 +36,6 @@
 						<p:column headerText="#{lbl['lbl.sc.id.no']}">
 							<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15" size="15"/>
 						</p:column>
-						
 					</p:dataTable>
 					
 					<p:spacer height="10px"></p:spacer>
@@ -36,12 +46,36 @@
 							action="#{suppFinalizationBackingBean.addMeetingAttendance}"
 							update="meetingAttDtlTbl" />
 							
-						<p:commandButton value="#{lbl['lbl.btn.delete']}"
-							process="@this, meetingAttDtlTbl" partialSubmit="true"
-							action="#{suppFinalizationBackingBean.deleteRowsAction(suppFinalizationBackingBean.managedBean.meetingAttendanceList, suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}"
-							update="meetingAttDtlTbl" />
+						<p:commandButton value="#{lbl['lbl.btn.delete']}" id="attdDelBtn"
+							process="@this, meetingAttDtlTbl" partialSubmit="true" 
+							onsuccess="dlgPerformDel.show();" 
+							rendered="#{(suppFinalizationBackingBean.managedBean.meetingAttendanceList ne null) and
+										(suppFinalizationBackingBean.managedBean.meetingAttendanceList.size() gt 0)}"
+							disabled="#{(suppFinalizationBackingBean.managedBean.selectedMeetingAttList eq null) ||
+										(suppFinalizationBackingBean.managedBean.selectedMeetingAttList.size() eq 0)}" />
 	
 					</div>
+					
+					<!-- Dialog to prompt the user before deleting attendance records -->
+					<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" styleClass="screen-title" 
+							  resizable="false" modal="true" width="330">
+						<h:panelGrid columns="3">
+							<p:graphicImage library="ep/images/design" name="exclamation.png"
+								value="/css/images/design/exclamation.png"
+								styleClass="ui-icon-complain"></p:graphicImage>
+							<p:spacer width="10" />
+							<div class="confirmation-message-box" style="font-size:11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
+						</h:panelGrid>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="attdDelBtn, meetingAttDtlTbl" 
+						         process="@this, meetingAttDtlTbl" actionListener="#{suppFinalizationBackingBean.deleteRowsAction(
+						         suppFinalizationBackingBean.managedBean.meetingAttendanceList, 
+								 suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}" 
+								 onclick="dlgPerformDel.hide();">
+						    </p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
+						</div>
+					</p:dialog>					
 				</p:panel> 
 
 			</td>
@@ -49,15 +83,3 @@
 	</table>
 		
 </ui:composition>
-
-
-
-
-
-
-
-
-
-
-
-
