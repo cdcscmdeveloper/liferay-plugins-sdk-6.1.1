@@ -3287,9 +3287,14 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		if (CollectionUtils.isNotEmpty(selectedItemList)) {
 			boolean supplierFound = false;
+			ScQtRecommend removableItem = null; // Remove item added due to row selection followed by checkbox selection
 			
 			//get the SmSupplier object by the dropdown selection
 			for (ScQtRecommend scQtRecommend : selectedItemList) {
+				if (!scQtRecommend.isSelected()) {
+					removableItem = scQtRecommend;
+					continue;
+				}
 				List<ScQtEvaluationResultDtl> shortListedSupplierList = scQtRecommend.getShortListedSupplierList();
 				if (CollectionUtils.isNotEmpty(shortListedSupplierList)) {
 					for (ScQtEvaluationResultDtl evalResultDtl : shortListedSupplierList) {
@@ -3310,7 +3315,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					}
 				}
 			}
-			
+			if (removableItem != null) {
+				selectedItemList.remove(removableItem);
+			}
 			addSelectedSupplier();
 			
 			this.getManagedBean().setShortlistedItemSupplierList(null);
