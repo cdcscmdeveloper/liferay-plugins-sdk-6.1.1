@@ -112,7 +112,7 @@ public class ScTrackingDiaryBackingBean extends
 
 	public String goToTrackingDiarySearch(Object[] scObj) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setScSupplier(scRequestNote);
+		getManagedBean().setScObj(scObj);
 		searchTrackingDiaryDataModel.reloadData();
 		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
 	}
