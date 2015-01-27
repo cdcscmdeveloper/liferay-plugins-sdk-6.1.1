@@ -211,7 +211,8 @@
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
-				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
+				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal() and
+				 			  suppFinalizationBackingBean.managedBean.recommendSupplier}">
 					<td width="16%" style="vertical-align: baseline;">
 						<p:tabMenu styleClass="sidemenu"
 							activeIndex="#{suppFinalizationBackingBean.managedBean.zoneActiveIndex}"
