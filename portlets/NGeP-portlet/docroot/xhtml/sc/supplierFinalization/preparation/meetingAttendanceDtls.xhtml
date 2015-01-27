@@ -9,7 +9,7 @@
 	<table style="border: 0px;width:100%; align:center">
 		<tr>
 			<td width="100%" align="left" valign="top">
-				<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+				<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true" id="attendeesPanel">
 					<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
 						value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}" rows="10"
 						rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
@@ -44,7 +44,7 @@
 							process="@this,meetingAttDtlTbl" 
 							partialSubmit="true"
 							action="#{suppFinalizationBackingBean.addMeetingAttendance}"
-							update="meetingAttDtlTbl" />
+							update="@([id$=attendeesPanel])" />
 							
 						<p:commandButton value="#{lbl['lbl.btn.delete']}" id="attdDelBtn"
 							process="@this, meetingAttDtlTbl" partialSubmit="true" 
