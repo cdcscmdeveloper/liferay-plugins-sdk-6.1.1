@@ -89,7 +89,8 @@
 
 			<p:panel>
 				<table style="width: 100%">
-					<tr><td><p:commandButton value="#{lbl['lbl.sm.button.resend.activation']}" oncomplete="confirmDialog.show();" style="float:right;" /></td></tr>
+					<tr><td><p:commandButton value="#{lbl['lbl.sm.button.resend.activation']}" oncomplete="confirmDialog.show();" 
+								style="float:right;" disabled="#{empty bb.expiredActivationPersonnels}"/></td></tr>
 				</table>
 			</p:panel>
 		</h:panelGrid>
