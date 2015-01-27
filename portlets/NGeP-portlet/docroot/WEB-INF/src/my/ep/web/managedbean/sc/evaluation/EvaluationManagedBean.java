@@ -40,6 +40,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.evaluation.SummaryZoneBaen;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
@@ -210,6 +211,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String checkListType;
 	private List<TplSpecZoneDtl> evaluationStageZonesSummary;
 	private boolean complianceOnly;
+	private boolean evaluationStageStatusHide=true;
+	private List<TplSpecScoring> specItemScoringList;
   
 	/**
 	 * @return the today
@@ -2059,6 +2062,34 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setComplianceOnly(boolean complianceOnly) {
 		this.complianceOnly = complianceOnly;
+	}
+
+	/**
+	 * @return the evaluationStageStatusHide
+	 */
+	public boolean isEvaluationStageStatusHide() {
+		return evaluationStageStatusHide;
+	}
+
+	/**
+	 * @param evaluationStageStatusHide the evaluationStageStatusHide to set
+	 */
+	public void setEvaluationStageStatusHide(boolean evaluationStageStatusHide) {
+		this.evaluationStageStatusHide = evaluationStageStatusHide;
+	}
+
+	/**
+	 * @return the specItemScoringList
+	 */
+	public List<TplSpecScoring> getSpecItemScoringList() {
+		return specItemScoringList;
+	}
+
+	/**
+	 * @param specItemScoringList the specItemScoringList to set
+	 */
+	public void setSpecItemScoringList(List<TplSpecScoring> specItemScoringList) {
+		this.specItemScoringList = specItemScoringList;
 	}
 
 	
