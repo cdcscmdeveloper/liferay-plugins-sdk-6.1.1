@@ -4165,6 +4165,8 @@ public class SmApplicationBackingBean extends
 	 * @param personType - the person type
 	 */
 	public void deleteSelectedShareHolders(String personType) {
+		boolean existAsBankSignatory = false;
+		boolean existAsBranchPoc = false;
 		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
 			if (shr.getEpRole() != null
 					&& (shr.getEpRole().equalsIgnoreCase(
@@ -4175,11 +4177,21 @@ public class SmApplicationBackingBean extends
 			}
 			if (SmApplicationUtil.isPersonnelBankSignatory(shr,
 					getManagedBean().getSmAppl().getSmSupplierBanks())) {
-				throw new EpException(MessageConst.ERROR_722585);
+				existAsBankSignatory = true;
 			}
 			if (SmApplicationUtil.isPersonnelBranchPointOfContact(shr,
 					getManagedBean().getSmAppl().getSmSupplierBranches())) {
-				throw new EpException(MessageConst.ERROR_722586);
+				existAsBranchPoc = true;
+			}
+			
+			if(existAsBankSignatory && existAsBranchPoc){
+				throw new EpException(MessageConst.ERROR_722588);
+			}else{
+				if(existAsBankSignatory){
+					throw new EpException(MessageConst.ERROR_722585);
+				}else if(existAsBranchPoc){
+					throw new EpException(MessageConst.ERROR_722586);
+				}
 			}
 		}
 		log.info("*** Delete Share Holders ******* "
