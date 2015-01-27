@@ -27,8 +27,48 @@
 				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" action="#{cdTrackingDiaryBackingBean.backToPrev}" />
 			</div>
 		</div>
+		<p:panel header="Trackng Diary Details" toggleable="true">
 
-		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include>
+			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{scTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+
+				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
+
+				<p:column width="15%">
+					<f:facet name="header">
+					Creation Timestamp
+					</f:facet>
+				#{trackingDiaryObj.actionedDate}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Actioned By
+					</f:facet>
+				#{trackingDiaryObj.actionedBy}
+				</p:column>
+<!-- 				<p:column width="15%"> -->
+<!-- 					<f:facet name="header"> -->
+<!-- 					Role -->
+<!-- 					</f:facet> -->
+<!-- 				#{trackingDiaryObj.pmRole.pmRoleDescs.roleName} -->
+<!-- 				</p:column> -->
+				<p:column width="25%">
+					<f:facet name="header">
+					Description
+					</f:facet>
+				#{trackingDiaryObj.actionDesc}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Document Status
+					</f:facet>
+				#{scTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>			
+
+<!-- 		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include> -->
 	</h:panelGroup>		
 
 
