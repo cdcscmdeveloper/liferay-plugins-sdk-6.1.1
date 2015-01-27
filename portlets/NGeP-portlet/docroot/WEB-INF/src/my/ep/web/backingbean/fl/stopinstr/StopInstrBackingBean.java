@@ -327,10 +327,15 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		}
-		
 		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
 				&&  !isSupplierRole()) {
+			// Temp setTextBeforeSign : DocNo+SAP
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
+			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
+			sb.append(getManagedBean().getButtonAction());
+			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -357,16 +362,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			PmDigiSign pmDigiSign) throws Exception {
 		this.getManagedBean().setPmDigiSign(pmDigiSign);
 		if (pmDigiSign != null) {
-			if ((getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
-					getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
-					&&  !isSupplierRole()) {
-				// Temp setTextBeforeSign : DocNo+SAP
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
-				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
-				sb.append(getManagedBean().getButtonAction());
-				getManagedBean().setTextBeforeSign(sb.toString());
-			}else if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+			if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
 					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
