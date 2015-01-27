@@ -46,7 +46,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.toattened']}"
 						style="width:5%;white-space: normal;">
-						<h:outputText value="#{brfsitdtl.maxNoOfAttendance}" />
+						<h:outputText value="#{brfsitdtl.toBeattand}" />
 					</p:column>
 				</p:dataTable>
 
@@ -226,7 +226,7 @@
 
 				<p:column style="width:5px;text-align:center">
 					<p:selectBooleanCheckbox value="#{bsvAttandance.preRegisterd}">
-						<p:ajax listener="#{noticeBoardBackingBean.updateToBeAttandance}" />
+						<p:ajax process="@all" listener="#{noticeBoardBackingBean.updateToBeAttandance}" update="@all"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 
