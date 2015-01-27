@@ -62,6 +62,7 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
+				System.out.println("content no equal to zero....");
 				StringBuffer line;
 				for (MaterialClass mclass : content) {
 					line = new StringBuffer();
@@ -75,9 +76,11 @@ public class FileUtility {
 							mclass.getMaterialOldClassCode(), 8, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
+			System.out.println("local fie create....");
 			Encryption encryption = new Encryption();
 			encryption.encryptPhis(filePath,
 					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
@@ -108,6 +111,7 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
+				System.out.println("content no equal to zero....");
 				StringBuffer line;
 				for (MaterialBrand mbrand : content) {
 					line = new StringBuffer();
@@ -121,9 +125,11 @@ public class FileUtility {
 							mbrand.getMaterialOldBrandCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
+			System.out.println("file created.....");
 			Encryption encryption = new Encryption();
 			encryption.encryptPhis(filePath,
 					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
@@ -153,6 +159,8 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
+				System.out.println("-------------------");
+				
 				StringBuffer line;
 				for (MaterialColor mcolor : content) {
 					line = new StringBuffer();
@@ -166,6 +174,7 @@ public class FileUtility {
 							mcolor.getMaterialOldColorCode(), 2, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
@@ -199,6 +208,7 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
+				System.out.println("=================");
 				StringBuffer line;
 				for (MaterialMeasurement mMeasurement : content) {
 					line = new StringBuffer();
@@ -212,6 +222,7 @@ public class FileUtility {
 							mMeasurement.getMeasurementOldCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
@@ -244,6 +255,7 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
+				System.out.println("=======================");
 				StringBuffer line;
 				for (ItemType itemType : content) {
 					line = new StringBuffer();
@@ -257,6 +269,7 @@ public class FileUtility {
 							"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 			}
@@ -363,6 +376,7 @@ public class FileUtility {
 									bankInfo.getAccountHolderName(), 60, "L"));
 							subLine.append(System.getProperty("line.separator"));
 							writer.write(subLine.toString());
+							writer.flush();
 						}
 
 					}
