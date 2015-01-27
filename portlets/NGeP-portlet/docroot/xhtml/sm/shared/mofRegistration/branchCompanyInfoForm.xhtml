@@ -152,7 +152,7 @@
 				id="branchPopUpSaveBtn"
 				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				partialSubmit="true" process="banchDialog"
-				update=":form:tt:dt,@([id$=Msg])" />
+				update=":form:tt:dt,:form:tt:personDt,@([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.assignCancelBranchBean}" />
