@@ -65,8 +65,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				
 			</td>
 		</tr>
-		<p:outputPanel id="opEP" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure
-			or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode == null)}">
+		<p:outputPanel id="opEP" rendered="#{pPlanBackingBean.managedBean.modeEditable}">
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pp.vot.amanah.type']}" />

@@ -451,7 +451,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBpmStatusCreator(null);
 		this.getManagedBean().setBpmStatusDate(null);
 		this.getManagedBean().setBpmStatusId(null);
-		this.getManagedBean().setInvitationYear("c-0:c+1");
+		this.getManagedBean().setInvitationYear("");
 		this.getManagedBean().setApprovedPlan(false);
 	}
 	
@@ -1952,7 +1952,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 
-	
 	/*  Expenditure Related ------------------- START ---------------------------*/
 
 	/**
@@ -2652,7 +2651,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setInvitationYear("");
 			}else{ 
 				//next year
-				this.getManagedBean().setInvitationYear("c+1:c+1");
+				this.getManagedBean().setInvitationYear("c+0:c+0");
+				//c+1:c+0 2017
+				//c+0:c+0
+				//c+1:c+1 2016, 2017
+				//"" 2015(current)
 			}
 		}else{
 			this.getManagedBean().setInvitationYear("");
