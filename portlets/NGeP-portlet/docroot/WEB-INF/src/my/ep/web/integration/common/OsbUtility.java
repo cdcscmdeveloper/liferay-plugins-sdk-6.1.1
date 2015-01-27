@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 public class OsbUtility {
 
 	public void osbServiceCallOutBound(String processId) {
+		System.out.println("osb service outbound...");
 
 		try {
 			my.ep.web.integration.osb.RqHeader_Type header_Type = new my.ep.web.integration.osb.RqHeader_Type();

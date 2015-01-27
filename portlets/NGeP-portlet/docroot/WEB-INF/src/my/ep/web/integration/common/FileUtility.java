@@ -42,6 +42,7 @@ public class FileUtility {
 	 */
 	public void materialClassFileOutPutStream(List<MaterialClass> content,
 			String filePath) {
+		System.out.println("inside materialClassFileOutPutStream");
 		String SERVICE_CODE = "PHS-030";
 
 		Writer writer = null;
@@ -87,6 +88,7 @@ public class FileUtility {
 
 	public void materialBrandFileOutPutStream(List<MaterialBrand> content,
 			String filePath) {
+		System.out.println("inside materialBrandFileOutPutStream");
 		String SERVICE_CODE = "PHS-040";
 		Writer writer = null;
 
@@ -132,6 +134,7 @@ public class FileUtility {
 
 	public void materialColorFileOutPutStream(List<MaterialColor> content,
 			String filePath) {
+		System.out.println("inside materialColorFileOutPutStream..");
 		String SERVICE_CODE = "PHS-050";
 		Writer writer = null;
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -176,6 +179,7 @@ public class FileUtility {
 
 	public void materialMeasurementFileOutPutStream(
 			List<MaterialMeasurement> content, String filePath) {
+		System.out.println("inside materialMeasurementFileOutPutStream");
 		String SERVICE_CODE = "PHS-060";
 		Writer writer = null;
 
@@ -220,6 +224,7 @@ public class FileUtility {
 	}
 
 	public void itemTypeFileOutPutStream(List<ItemType> content, String filePath) {
+		System.out.println("inside itemTypeFileOutPutStream ");
 		String SERVICE_CODE = "PHS-070";
 		Writer writer = null;
 
@@ -1288,8 +1293,7 @@ public class FileUtility {
 
 	}
 	
-	
-	  public String getValue(String line,int begin,int size){
+	public String getValue(String line,int begin,int size){
 		  
 		  String result = line.substring(begin, begin+size);
 //		  char[] result = new char[size];
