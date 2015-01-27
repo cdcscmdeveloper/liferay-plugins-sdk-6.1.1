@@ -7,11 +7,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel header="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" toggleable="true">
-		<table>
+		<table align="left" width="80%">
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
+				<td valign="top" width="35%"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
 				<td>
-					<p:inputTextarea rows="8" id="commentId"  style="width:60%;" autoResize="false" 
+					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false" 
 					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" />
 				</td>
 			</tr>
@@ -19,7 +19,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
-					<p:inputTextarea rows="8" id="compInfoId"  style="width:60%;" autoResize="false" 
+					<p:inputTextarea rows="8" id="compInfoId"  style="width:70%;" autoResize="false" 
 					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" />
 				</td>
 			</tr>
