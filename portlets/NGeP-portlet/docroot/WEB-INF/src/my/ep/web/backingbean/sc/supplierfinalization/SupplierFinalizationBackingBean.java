@@ -1613,8 +1613,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
     	context.put("openFor", scQt.getOpenFor());
     	
     	String paidupcapital = "";
-    	if (scQt.getScQtSupplierCriteria().getMinPaidUpCapital() != null) {
-    		paidupcapital = amountDF.format(scQt.getScQtSupplierCriteria().getMinPaidUpCapital());	
+    	if (scQt.getScQtSupplierCriteria() != null) {
+	    	if (scQt.getScQtSupplierCriteria().getMinPaidUpCapital() != null) {
+	    		paidupcapital = amountDF.format(scQt.getScQtSupplierCriteria().getMinPaidUpCapital());	
+	    	}
     	}
     	context.put("paidupcapital", paidupcapital);
     	
@@ -1654,17 +1656,19 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	    	context.put("locLevel", isLocLevel);
     	} else {
     		ScQtSupplierCriteria criteria = scQt.getScQtSupplierCriteria();
-    		if (criteria.getLocationLevel() != null) {
-    			if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria.getLocationLevel().getParameterCode())) {
-    				isSubLocLevel = true;
-    	    		locationLevel = "State";
-        		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(criteria.getLocationLevel().getParameterCode())) {
-        			isSubLocLevel = true;
-    				locationLevel = "District";
-    			}
-    			context.put("subLocLevel", isSubLocLevel);
-    		} else {
-    			context.put("subLocLevel", isSubLocLevel);
+    		if (criteria != null) {
+	    		if (criteria.getLocationLevel() != null) {
+	    			if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria.getLocationLevel().getParameterCode())) {
+	    				isSubLocLevel = true;
+	    	    		locationLevel = "State";
+	        		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(criteria.getLocationLevel().getParameterCode())) {
+	        			isSubLocLevel = true;
+	    				locationLevel = "District";
+	    			}
+	    			context.put("subLocLevel", isSubLocLevel);
+	    		} else {
+	    			context.put("subLocLevel", isSubLocLevel);
+	    		}
     		}
     		context.put("locLevel", isLocLevel);
     	}
