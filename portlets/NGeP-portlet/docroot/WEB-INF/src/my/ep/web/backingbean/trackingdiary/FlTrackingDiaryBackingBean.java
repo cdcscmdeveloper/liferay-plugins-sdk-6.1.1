@@ -96,13 +96,13 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 	    return selectedItemList.toArray(new SelectItem[selectedItemList.size()]);
 	}
 	
-	public void selectedUser(AjaxBehaviorEvent e) {
-		// doing some stuff here
-		//System.out.println("====enter process checked===="+ getManagedBean().getTempLoginId());
-		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get id value=====" + id);
-		getManagedBean().setTempLoginId(id);
-	}
+//	public void selectedUser(AjaxBehaviorEvent e) {
+//		// doing some stuff here
+//		//System.out.println("====enter process checked===="+ getManagedBean().getTempLoginId());
+//		String id = (String) e.getComponent().getAttributes().get("value");
+//		System.out.println("=======get id value=====" + id);
+//		getManagedBean().setTempLoginId(id);
+//	}
 	
 	public void selectedDoctype(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
@@ -154,7 +154,8 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		reset();
 		if(id!=null) {
 			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-				this.getManagedBean().setCheckDocType(true);
+				System.out.println("selectedOrderType()====================================: "+id);
+		this.getManagedBean().setCheckDocType(true);
 			}	
 		}
 		

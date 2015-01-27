@@ -92,7 +92,7 @@ public class ScTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchDocumentNo()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocumentNo()));
 			System.out.println("getScDocumentDataModel docNo " + getManagedBean().getSearchDocumentNo());
 
 			reqDTO.setSearchBean(searchBean);
