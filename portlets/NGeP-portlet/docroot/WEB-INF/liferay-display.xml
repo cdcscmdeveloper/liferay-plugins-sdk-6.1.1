@@ -220,6 +220,7 @@
 		<portlet id="paymentResponse"></portlet>
 		<portlet id="virtualCert"></portlet>
 		<portlet id="smExpiredPersonnel"></portlet>
+		<portlet id="smRequestActivation"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
