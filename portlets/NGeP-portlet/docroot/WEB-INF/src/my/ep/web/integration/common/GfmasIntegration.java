@@ -147,6 +147,8 @@ public class GfmasIntegration {
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 		if (osbUtility.osbServiceCallInBound("GFM-370")) {
+			
+		//	find out the file name here
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
@@ -171,10 +173,6 @@ public class GfmasIntegration {
 			}
 
 		}
-
-//		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-//		String fileName = "1000APOVE40000120141113001.GPG";
-		
 
 	}
 	public void masterDataVendorGfmasOutbound() {

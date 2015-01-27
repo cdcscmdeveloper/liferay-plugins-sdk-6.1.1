@@ -13,6 +13,7 @@ import my.ep.pgp.PGPProcessor;
 public class Encryption {
 
 	public void encryptGmas(String inFilePath, String outFilePath,String fileName,String processId) {
+		System.out.println("inside encryption....");
 
 		File inFile = new File(inFilePath+fileName);
 		File outFile = new File(outFilePath+fileName);
@@ -25,7 +26,7 @@ public class Encryption {
 		
 		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
 		
-		String encryptKey = "\\"+substring+IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
+		String encryptKey = substring+IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
 		System.out.println("encryptKey :"+encryptKey);
 		
 		
@@ -37,6 +38,7 @@ public class Encryption {
 					encryptKey);
 
 			createFile(outFile, encrypted);
+			System.out.println("encryption successful..");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
