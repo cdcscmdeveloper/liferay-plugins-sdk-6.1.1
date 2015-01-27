@@ -78,7 +78,7 @@ public class CdTrackingDiaryBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("SearchCDTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
+//			System.out.println("SearchCDTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
 			return resDTO.getResultBean();
 		}
 	}
