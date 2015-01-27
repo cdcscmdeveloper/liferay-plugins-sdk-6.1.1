@@ -7,7 +7,8 @@
 
 	<p:tabView var="zones"  orientation="left"
 		value="#{noticeBoardBackingBean.managedBean.zoneBean}">
-	
+	<p:ajax event="tabChange" listener="#{noticeBoardBackingBean.bsvZoneTabChange}"
+			></p:ajax>
 		<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
 			<ui:param name="bsvDetails" value="#{zones}"></ui:param>
 			<ui:param name="bsvSelectedDtls" value="#{noticeBoardBackingBean.managedBean.selectedBriefingDtls}"></ui:param>
