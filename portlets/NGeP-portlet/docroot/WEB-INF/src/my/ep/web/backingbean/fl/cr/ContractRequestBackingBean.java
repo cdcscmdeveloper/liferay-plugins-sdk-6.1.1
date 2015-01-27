@@ -2475,12 +2475,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					ResourceBundleUtils.getMessage("lbl.fl.gosodo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}		
 		
-		List<String> selectedItemAddressList = new ArrayList<String>();
+		List<Long> selectedItemAddressList = new ArrayList<Long>();
 		updateSelectedTreeNodes();
 		FlFulfilmentItemAddr flTemp = null;
 		for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
 			flTemp = (FlFulfilmentItemAddr)selectedNode.getData();
-			selectedItemAddressList.add(flTemp.getScRequestItem().getRequestNoteItemId()+ " "+flTemp.getUnitPrice().doubleValue());
+			selectedItemAddressList.add(flTemp.getScRequestItem().getRequestNoteItemId());
 		}
 		
 		boolean isVotSOrAmanahExist = false;
@@ -2488,7 +2488,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		String votFundType = null;
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId()+ " "+itemAddress.getUnitPrice().doubleValue())) {
+				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId())) {
 					continue;
 				}
 				if(itemAddress.getPmVotFund()!=null) {
