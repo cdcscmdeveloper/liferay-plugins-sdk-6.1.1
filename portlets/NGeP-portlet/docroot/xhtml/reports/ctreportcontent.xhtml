@@ -57,6 +57,21 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pending']}" itemValue="#{lbl['lbl.rpt.pending']}"></f:selectItem>										
 									</p:selectOneMenu>
 								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupOneView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctGroupOne}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.cntrctno']}" itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>																			
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupTwoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctGroupTwo}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.acve']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>																				
+									</p:selectOneMenu>
+								  </c:if>
 								   			 			
 							    </h:panelGrid>							    
 						    </td>
