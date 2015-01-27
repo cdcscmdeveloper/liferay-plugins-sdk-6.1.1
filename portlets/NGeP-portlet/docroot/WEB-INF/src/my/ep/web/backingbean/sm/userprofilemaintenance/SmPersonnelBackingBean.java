@@ -21,6 +21,9 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -60,7 +63,9 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -155,9 +160,8 @@ public class SmPersonnelBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		getManagedBean().setNoSupplierUserMsg("");
-		if (SmApplicationUtil.hasActiveTransactions(smSupplier)) {
-			setDisallowedDeactivateSuppAdminMsg(fc);
-		} else if (SmApplicationUtil.checkActiveSmApplForSupp(smSupplier)) {
+
+		if (isHavePendingTaskList()) {
 			setDisallowedDeactivateSuppAdminMsg(fc);
 		} else {
 			redirectPage = "adminReAssign.xhtml";
@@ -1847,5 +1851,42 @@ public class SmPersonnelBackingBean extends
 				}
 			}
 		}
+	}
+
+	private boolean isHavePendingTaskList() {
+		boolean retVal = false;
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		try{
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			reqDTO = new BpmRequestDTO();
+			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+			reqDTO.setOffset(1);
+			reqDTO.setState("ASSIGNED");
+			reqDTO.setDocType("");
+
+			reqDTO.setViewBy("");
+			reqDTO.setAssignment("");
+			// get bpm token only if not yet authenticate
+			if (getManagedBean().getToken() == null
+					|| StringUtils.isBlank(getManagedBean().getToken())) {
+				FacesScopes face = new FacesScopes();
+				getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
+			}
+			reqDTO.setCtxToken(getManagedBean().getToken());
+			responseDTO = bpmSO.getWorklistItems(reqDTO);
+			if (responseDTO.getWorklistVO() != null) {
+				if (responseDTO.getWorklistVO().getTotal() > 0) {
+					retVal = true;
+				}
+			}
+		}finally{
+			bpmSO = null;
+			reqDTO = null;
+			responseDTO = null;
+		}
+		return retVal;
 	}
 }
