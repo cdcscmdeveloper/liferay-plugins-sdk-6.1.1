@@ -85,6 +85,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -99,6 +100,7 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -174,7 +176,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private ContractBackingBean ctBB = null;
 	private List<CtContractItem> ContractItemServiceList;
 	private CtSchedule[] selectedSchedule;
-	private CtAgency[] selectedListOfAgency;
 	private CtDeductionClause[] chkDeductionClause;
 	private CtProgressivePayment[] selectedProgressive;
 	private PmOrgProfile[] selectedPmOrgProfile;
@@ -1766,21 +1767,51 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	 
 	public void deleteAgencyDetails(){
-	  for(int i = 0; i < selectedListOfAgency.length; i++) {
-		 CtAgency ctAgency = selectedListOfAgency[i];
-		 this.getManagedBean().getContractVer().getCtAgencies().remove(ctAgency);
-		 if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
-			     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
-			    	 Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
-			    	 while(ctItemCeilingQtyIterator.hasNext()){
-							CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
-							if(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(ctAgency.getOrgProfile().getOrgProfileId())){
-								ctItemCeilingQtyIterator.remove();
-							}
-						}
-			     }	
-		   }
-	  }selectedListOfAgency = null;
+		try {
+			if(this.getManagedBean().getContractVer().getCtAgencies() != null){
+				Iterator<CtAgency> agencyIterator = this.getManagedBean().getContractVer().getCtAgencies().iterator();
+				while(agencyIterator.hasNext()){
+					CtAgency agency = agencyIterator.next();
+					if(agency.isSelectedCheckBox()){
+						agencyIterator.remove();
+						if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
+						     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
+						    	 Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
+						    	 while(ctItemCeilingQtyIterator.hasNext()){
+										CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
+										if(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(agency.getOrgProfile().getOrgProfileId())){
+											ctItemCeilingQtyIterator.remove();
+										}
+									}
+						     }	
+					   }
+					}
+				}
+			}
+			
+			this.getManagedBean().setSelectedAgency(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		
+		
+		
+//	  for(int i = 0; i < selectedListOfAgency.length; i++) {
+//		 CtAgency ctAgency = selectedListOfAgency[i];
+//		 this.getManagedBean().getContractVer().getCtAgencies().remove(ctAgency);
+//		 if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
+//			     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
+//			    	 Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
+//			    	 while(ctItemCeilingQtyIterator.hasNext()){
+//							CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
+//							if(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(ctAgency.getOrgProfile().getOrgProfileId())){
+//								ctItemCeilingQtyIterator.remove();
+//							}
+//						}
+//			     }	
+//		   }
+//	  }selectedListOfAgency = null;
 	}
 	
 	public void selectedZoneValue(){
@@ -2315,10 +2346,46 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 	}
 	
-	public void assignSelAgency(CtAgency agency) {
-		getManagedBean().setSelectedAgency(agency);
-		RequestContext.getCurrentInstance().execute("deliveryAddressDlg.show()");
+	public void addDeliveryAddress(List<PmAddressType> addressTypeList){
+		try {
+			if (addressTypeList != null) {
+				List<CtAgencyAddress> ctAgencyAddress = new ArrayList<CtAgencyAddress>();
+				List<CtAgencyAddress> agencyAddressList = new ArrayList<CtAgencyAddress>();
+				
+				ctAgencyAddress = getManagedBean().getSelectedAgency().getCtAgencyAddresses();
+				
+				for (PmAddressType addressType : addressTypeList) {
+					CtAgencyAddress agencyAddress = new CtAgencyAddress();
+					agencyAddress.setAddressType(addressType);
+					agencyAddress.setCtAgency(getManagedBean().getSelectedAgency());		
+					agencyAddressList.add(agencyAddress);
+				   
+					//Remove if already exist, avoid duplicate
+					for(CtAgencyAddress address : ctAgencyAddress) {
+						if(address.getAddressType().getAddressTypeId().equals(addressType.getAddressTypeId())) {
+							agencyAddressList.remove(agencyAddress);
+						}
+					}
+				}
+				ctAgencyAddress.addAll(agencyAddressList);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
 	}
+	
+	public void deleteDeliveryAddress(){
+		
+		try {
+			getManagedBean().getSelectedAgency().getCtAgencyAddresses().removeAll(getManagedBean().getSelectedListOfAddress());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	
 	/*Implementation of search method for agency*/
 	public void searchAgencyDetails() {
 		try { 
@@ -2600,14 +2667,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
-
-	public CtAgency[] getSelectedListOfAgency() {
-		return selectedListOfAgency;
-	}
-
-	public void setSelectedListOfAgency(CtAgency[] selectedListOfAgency) {
-		this.selectedListOfAgency = selectedListOfAgency;
-	}	
 	
 	public boolean isValidateScheduleDate() {
 			return validateScheduleDate;
