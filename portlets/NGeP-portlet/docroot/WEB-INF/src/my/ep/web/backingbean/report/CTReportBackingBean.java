@@ -27,7 +27,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setCtGroupOneView(true);
+	        	//rptGenBean.setExtraTwoColumnView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
@@ -39,7 +40,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.CT_LST_OF_CONTRACT_ALL_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setCtGroupTwoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
