@@ -7,11 +7,13 @@
 
 	<p:tabView var="zones" dynamic="true" orientation="left"
 		value="#{noticeBoardBackingBean.managedBean.zoneBean}">
-
+		<p:ajax event="tabChange" listener="#{noticeBoardBackingBean.bsvZoneTabChange}"
+			></p:ajax>
 		<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
-			<ui:param name="bsvDetails" value="#{zones}"></ui:param>
+			<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="/xhtml/sc/noticeboard/qtlocationbriefingdtls.xhtml"></ui:include>
-<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
+			<ui:include
+				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 		</p:tab>
 
 
