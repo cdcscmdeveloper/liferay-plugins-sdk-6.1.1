@@ -1128,6 +1128,7 @@ public class LOIDetailBackingBean extends
 				.setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
 
 		if (scLoi.isBrandNew()) {
+			setUserDetails(scLoi);
 			handleBranchDetailsChanged();
 		}
 

@@ -183,10 +183,10 @@ public class LOADetailBackingBean extends
 			reqDTO.setLanguageCode(language);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			scLoa = resDTO.getScLoa();
 
-			if (resDTO.getScLoa() != null
-					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(resDTO
-							.getScLoa().getScLoiLoa().getDocType())) {
+			if (scLoa != null
+					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 				if (new FacesScopes()
 						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
 					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
@@ -208,6 +208,11 @@ public class LOADetailBackingBean extends
 					awardDataType.setDeskOfficer(new FacesScopes()
 							.getUserSessionBean().getLoginId());
 				}
+			}
+			
+			if(scLoa.isBrandNew()) {
+				setUserDetails(scLoa);
+				resDTO.setScLoa(scLoa);
 			}
 
 			populateLOADetails(resDTO);
