@@ -242,6 +242,8 @@ public class ReportsGenerateBean {
 		private boolean ctStatusView = false;
 		private boolean ctContrMontrStatusView = false;
 		private boolean ctCompleteView = false;
+		private boolean ctGroupOneView = false;
+		private boolean ctGroupTwoView = false;
 		
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
@@ -396,6 +398,8 @@ public class ReportsGenerateBean {
 		private String ctContrMontrStatusVar=ReportConst.EMPTY_VAL;
 		private String ctHiddenParamGroupVar=ReportConst.EMPTY_VAL;
 		private String ctCompleteVar=ReportConst.EMPTY_VAL;
+		private String ctGroupOneVar=ReportConst.EMPTY_VAL;
+		private String ctGroupTwoVar=ReportConst.EMPTY_VAL;
 		//ct
 		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
 		private String flContractRequestVar=ReportConst.EMPTY_VAL;
@@ -420,6 +424,30 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public boolean isCtGroupOneView() {
+			return ctGroupOneView;
+		}
+		public void setCtGroupOneView(boolean ctGroupOneView) {
+			this.ctGroupOneView = ctGroupOneView;
+		}
+		public boolean isCtGroupTwoView() {
+			return ctGroupTwoView;
+		}
+		public void setCtGroupTwoView(boolean ctGroupTwoView) {
+			this.ctGroupTwoView = ctGroupTwoView;
+		}
+		public String getCtGroupOneVar() {
+			return ctGroupOneVar;
+		}
+		public void setCtGroupOneVar(String ctGroupOneVar) {
+			this.ctGroupOneVar = ctGroupOneVar;
+		}
+		public String getCtGroupTwoVar() {
+			return ctGroupTwoVar;
+		}
+		public void setCtGroupTwoVar(String ctGroupTwoVar) {
+			this.ctGroupTwoVar = ctGroupTwoVar;
+		}
 		public boolean isCmExtentionView() {
 			return cmExtentionView;
 		}

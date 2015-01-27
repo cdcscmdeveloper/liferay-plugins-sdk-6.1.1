@@ -343,10 +343,24 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctAgreement;
 	private String ctStatus;
 	private String ctContrMontrStatus;
-	private String ctComplete;	
+	private String ctComplete;
+	private String ctGroupOne;
+	private String ctGroupTwo;
 	
 	
 	
+	public String getCtGroupOne() {
+		return ctGroupOne;
+	}
+	public void setCtGroupOne(String ctGroupOne) {
+		this.ctGroupOne = ctGroupOne;
+	}
+	public String getCtGroupTwo() {
+		return ctGroupTwo;
+	}
+	public void setCtGroupTwo(String ctGroupTwo) {
+		this.ctGroupTwo = ctGroupTwo;
+	}
 	public String getCmExtention() {
 		return cmExtention;
 	}
@@ -2046,7 +2060,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
 			}
-			if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue()!=ReportConst.EMPTY_VAL)){
+			/*if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue()!=ReportConst.EMPTY_VAL)){
 				if(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL)){
 					rptGenBean.setCtHiddenParamGroupVar(ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_ALL);
 				}else if(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL)){
@@ -2058,10 +2072,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				}else if(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.CT_LST_OF_CONTRACT_INACTIVE_RPT_VAL)){
 					rptGenBean.setCtHiddenParamGroupVar(ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_INACTIVE);
 				}
+			}*/
+			if((this.getCtGroupOne()!=null)&&(this.getCtGroupOne()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtGroupOneVar(ReportConst.CT_AMP_GROUP_EQ+this.getCtGroupOne());
+			}
+			if((this.getCtGroupTwo()!=null)&&(this.getCtGroupTwo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ+this.getCtGroupTwo());
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtHiddenParamGroupVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtGroupOneVar()+rptGenBean.getCtGroupTwoVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
