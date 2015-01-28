@@ -30,7 +30,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
-
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
@@ -51,6 +51,7 @@ import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -100,6 +101,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.logging.LogKey;
@@ -2238,6 +2240,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			reqDTO.getSaveSupplierItems().add(
 					this.getManagedBean().getSelectedMaintainItem());
+			
+			log.info("Tracking diary for catalog saved items");
+			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(), CmConst.SUPPLIER_ITEM_STATUS_SAVED, new PmStatus()));
+
+			/*reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
+					this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_SAVED, new PmStatus()));*/
+
 			catalogueSO.updateSupplierItem(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -3327,7 +3337,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//record status = active
 			this.getManagedBean().getSelectedMaintainItem().setRecordStatusFlg(1);
 			
-			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
+			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());			
+			log.info("Tracking diary for catalog published items");
+			
+			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));
+						
+			/*reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
+					this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));*/
+			
 			catalogueSO.updateSupplierItem(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -3430,9 +3448,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CatalogueResDTO resDTO = new CatalogueResDTO();
 		try {
 			this.getManagedBean().setTabActiveIndex(0);
-			
-			for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {
-				reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItems()[i].getSupplierItemId());
+			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+			for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {					
+				reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItems()[i].getSupplierItemId());	
+				//reqDTO.setItemStatus("U");
+				log.info("tracking diary for catalog Items");
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItems()[i], CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));
+				
 				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 				
 //				CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
@@ -3800,7 +3822,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				reqDTO.getSaveSupplierItems().add(catalog);
 
-			}
+			}			
 			resDTO = catalogueSO.updateSupplierItem(reqDTO);
 			log.debug("resDTO.isSuccessful():" + resDTO.isSuccessful());
 			
@@ -3973,6 +3995,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setPublishedItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(4);
+				
 	
 			} else if (status.equalsIgnoreCase("Approval")) {
 	
@@ -4135,16 +4158,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(this.getManagedBean().getSelectedApprovedItems() != null 
 				&& this.getManagedBean().getSelectedApprovedItems().length > 0) {
-			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			ICatalogueSO catalogueSO = null;
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			List<CmSupplierItem> csiList = new ArrayList<CmSupplierItem>();
+			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
 			
+			log.info("Tracking diary for catalog approved items");
 			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
 				csiList.add(csi);
-				reqDTO.setSupplierId(csi.getSupplierId());
-			}
-			
+				reqDTO.setSupplierId(csi.getSupplierId());				
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,CmConst.SUPPLIER_ITEM_APPROVED, new PmStatus()));
+			}			
 			try {
 				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 				reqDTO.setSupplierItem(csiList);
@@ -4745,6 +4770,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void addCatalogueRemarks() {
 
 		CmItemRejectReason reason = new CmItemRejectReason();
+		
 
 		this.getManagedBean().getSelectedMaintainItem()
 				.getCmItemRejectReasons().add(reason);

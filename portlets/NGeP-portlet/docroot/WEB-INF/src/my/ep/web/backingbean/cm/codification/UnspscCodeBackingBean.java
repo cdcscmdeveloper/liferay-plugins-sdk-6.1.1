@@ -25,6 +25,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.cm.CmConst;
 import my.ep.constants.CDProcessNameConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -48,6 +49,7 @@ import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -57,6 +59,7 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -199,7 +202,7 @@ public class UnspscCodeBackingBean extends
 			// }
 
 			if (this.getManagedBean().getRequestCode().getItemType()
-					.equals("S")) {// for services clear extension fileds
+					.equals("S")) {// for services clear extension fields
 				this.getManagedBean().getRequestCode().setTypeName(null);
 				this.getManagedBean().getRequestCode().setBrandName(null);
 				this.getManagedBean().getRequestCode().setMeasurementName(null);
@@ -210,14 +213,15 @@ public class UnspscCodeBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
 
-			reqDTO.setToken(token);
+			reqDTO.setToken(token);			
 			CodificationResDTO resDTO = null;
 
-			if (action.equalsIgnoreCase("SUBMIT")) {
-
-				if (this.getManagedBean().getRequestCode().isBrandNew()) {
-
+			if (action.equalsIgnoreCase("SUBMIT")) {				
+				if (this.getManagedBean().getRequestCode().isBrandNew()) {					
+					log.info("Tracking diary for UNSPSC Code---submitForRequest()");
+					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValuesForUNSPSCExtension(this.getManagedBean().getRequestCode(),CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
+										
                     if(resDTO.isSuccessful()){
 					FacesContext facesContext = FacesContext
 							.getCurrentInstance();
@@ -1490,14 +1494,22 @@ public class UnspscCodeBackingBean extends
 		System.out.println("getSmSupplier"
 				+ smResDTO.getResultBean().getResultList().get(0));
 
+
 		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
-			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
-		}
+			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));			
+			
+		    }
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
-
-		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
+		
+		log.info("Tracking diary for Extension Code---submitToBPM()");
+		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
+		    reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValuesForUNSPSCExtension(code,CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));		
+	    }
+		
+		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
+		
         if(resDTO.isSuccessful()){
 	     	facesContext.addMessage(
 				null,
