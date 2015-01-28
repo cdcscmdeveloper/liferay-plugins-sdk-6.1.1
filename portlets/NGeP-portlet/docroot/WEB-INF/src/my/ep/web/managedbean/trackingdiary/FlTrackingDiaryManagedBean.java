@@ -94,31 +94,32 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long statusDescId;
 	private Long searchProcurementTypeId;
 	
-	
-	private FlFulfilmentRequest fulfilmentRequest;
-	private PmUser pmUser;
+	private VFlDocument vFlDocument;
+
+//	private FlFulfilmentRequest fulfilmentRequest;
+//	private PmUser pmUser;
 	
 	private List<VFlDocument> flDocumentList;
 	
-	private Boolean checkDocType =false;
-	private Boolean checkPoDocType =false;
-	private Boolean checkPaDocType =false;
-	//private Boolean checkTitle =false;
-	private Boolean checkDocNo =false;
-	private Boolean  checkDoInDocType=false;
-	private Boolean  checkDoDocType=false;
-	private Boolean  checkInDocType=false;
+//	private Boolean checkDocType =false;
+//	private Boolean checkPoDocType =false;
+//	private Boolean checkPaDocType =false;
+//	//private Boolean checkTitle =false;
+//	private Boolean checkDocNo =false;
+//	private Boolean  checkDoInDocType=false;
+//	private Boolean  checkDoDocType=false;
+//	private Boolean  checkInDocType=false;
 	
-	// getUserGroup
-	private String flRequisitioner;
-	private String flRecevingOfficer;
-	private String flSupplier;
-	private String flPmOfficer;
-	private String flApprover;
-	
-	// for selected Approver List
-	private DualListModel<String> approverModel;
-	private HashMap<String, PmUserGroupUser> approverMap;
+//	// getUserGroup
+//	private String flRequisitioner;
+//	private String flRecevingOfficer;
+//	private String flSupplier;
+//	private String flPmOfficer;
+//	private String flApprover;
+//	
+//	// for selected Approver List
+//	private DualListModel<String> approverModel;
+//	private HashMap<String, PmUserGroupUser> approverMap;
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 
 	public String getTempLoginId() {
@@ -419,75 +420,75 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchStatusId = searchStatusId;
 	}
 
-	/**
-	 * @return the fulfilmentRequest
-	 */
-	public FlFulfilmentRequest getFulfilmentRequest() {
-		return fulfilmentRequest;
-	}
+//	/**
+//	 * @return the fulfilmentRequest
+//	 */
+//	public FlFulfilmentRequest getFulfilmentRequest() {
+//		return fulfilmentRequest;
+//	}
+//
+//	/**
+//	 * @param fulfilmentRequest the fulfilmentRequest to set
+//	 */
+//	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+//		this.fulfilmentRequest = fulfilmentRequest;
+//	}
 
-	/**
-	 * @param fulfilmentRequest the fulfilmentRequest to set
-	 */
-	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
-		this.fulfilmentRequest = fulfilmentRequest;
-	}
-
-	/**
-	 * @return the checkDocType
-	 */
-	public Boolean getCheckDocType() {
-		return checkDocType;
-	}
-
-	/**
-	 * @param checkDocType the checkDocType to set
-	 */
-	public void setCheckDocType(Boolean checkDocType) {
-		this.checkDocType = checkDocType;
-	}
-
-	/**
-	 * @return the checkPoDocType
-	 */
-	public Boolean getCheckPoDocType() {
-		return checkPoDocType;
-	}
-
-	/**
-	 * @param checkPoDocType the checkPoDocType to set
-	 */
-	public void setCheckPoDocType(Boolean checkPoDocType) {
-		this.checkPoDocType = checkPoDocType;
-	}
-
-	/**
-	 * @return the checkPaDocType
-	 */
-	public Boolean getCheckPaDocType() {
-		return checkPaDocType;
-	}
-
-	/**
-	 * @param checkPaDocType the checkPaDocType to set
-	 */
-	public void setCheckPaDocType(Boolean checkPaDocType) {
-		this.checkPaDocType = checkPaDocType;
-	}
-
-	/**
-	 * @return the checkDocNo
-	 */
-	public Boolean getCheckDocNo() {
-		return checkDocNo;
-	}
-
-	/**
-	 * @param checkDocNo the checkDocNo to set
-	 */
-	public void setCheckDocNo(Boolean checkDocNo) {
-		this.checkDocNo = checkDocNo;
-	}
+//	/**
+//	 * @return the checkDocType
+//	 */
+//	public Boolean getCheckDocType() {
+//		return checkDocType;
+//	}
+//
+//	/**
+//	 * @param checkDocType the checkDocType to set
+//	 */
+//	public void setCheckDocType(Boolean checkDocType) {
+//		this.checkDocType = checkDocType;
+//	}
+//
+//	/**
+//	 * @return the checkPoDocType
+//	 */
+//	public Boolean getCheckPoDocType() {
+//		return checkPoDocType;
+//	}
+//
+//	/**
+//	 * @param checkPoDocType the checkPoDocType to set
+//	 */
+//	public void setCheckPoDocType(Boolean checkPoDocType) {
+//		this.checkPoDocType = checkPoDocType;
+//	}
+//
+//	/**
+//	 * @return the checkPaDocType
+//	 */
+//	public Boolean getCheckPaDocType() {
+//		return checkPaDocType;
+//	}
+//
+//	/**
+//	 * @param checkPaDocType the checkPaDocType to set
+//	 */
+//	public void setCheckPaDocType(Boolean checkPaDocType) {
+//		this.checkPaDocType = checkPaDocType;
+//	}
+//
+//	/**
+//	 * @return the checkDocNo
+//	 */
+//	public Boolean getCheckDocNo() {
+//		return checkDocNo;
+//	}
+//
+//	/**
+//	 * @param checkDocNo the checkDocNo to set
+//	 */
+//	public void setCheckDocNo(Boolean checkDocNo) {
+//		this.checkDocNo = checkDocNo;
+//	}
 
 	/**
 	 * @return the searchOrderToDuration
@@ -573,19 +574,19 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		this.statusDescId = statusDescId;
 	}
 
-	/**
-	 * @return the pmUser
-	 */
-	public PmUser getPmUser() {
-		return pmUser;
-	}
-
-	/**
-	 * @param pmUser the pmUser to set
-	 */
-	public void setPmUser(PmUser pmUser) {
-		this.pmUser = pmUser;
-	}
+//	/**
+//	 * @return the pmUser
+//	 */
+//	public PmUser getPmUser() {
+//		return pmUser;
+//	}
+//
+//	/**
+//	 * @param pmUser the pmUser to set
+//	 */
+//	public void setPmUser(PmUser pmUser) {
+//		this.pmUser = pmUser;
+//	}
 
 	/**
 	 * @return the searchProcurementTypeId
@@ -601,19 +602,19 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchProcurementTypeId = searchProcurementTypeId;
 	}
 
-	/**
-	 * @return the checkDoInDocType
-	 */
-	public Boolean getCheckDoInDocType() {
-		return checkDoInDocType;
-	}
-
-	/**
-	 * @param checkDoInDocType the checkDoInDocType to set
-	 */
-	public void setCheckDoInDocType(Boolean checkDoInDocType) {
-		this.checkDoInDocType = checkDoInDocType;
-	}
+//	/**
+//	 * @return the checkDoInDocType
+//	 */
+//	public Boolean getCheckDoInDocType() {
+//		return checkDoInDocType;
+//	}
+//
+//	/**
+//	 * @param checkDoInDocType the checkDoInDocType to set
+//	 */
+//	public void setCheckDoInDocType(Boolean checkDoInDocType) {
+//		this.checkDoInDocType = checkDoInDocType;
+//	}
 
 	/**
 	 * @return the procurementTypeList
@@ -657,131 +658,131 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchSuppInvRef = searchSuppInvRef;
 	}
 
-	/**
-	 * @return the flRequisitioner
-	 */
-	public String getFlRequisitioner() {
-		return flRequisitioner;
-	}
-
-	/**
-	 * @param flRequisitioner the flRequisitioner to set
-	 */
-	public void setFlRequisitioner(String flRequisitioner) {
-		this.flRequisitioner = flRequisitioner;
-	}
-
-	/**
-	 * @return the flRecevingOfficer
-	 */
-	public String getFlRecevingOfficer() {
-		return flRecevingOfficer;
-	}
-
-	/**
-	 * @param flRecevingOfficer the flRecevingOfficer to set
-	 */
-	public void setFlRecevingOfficer(String flRecevingOfficer) {
-		this.flRecevingOfficer = flRecevingOfficer;
-	}
-
-	/**
-	 * @return the flSupplier
-	 */
-	public String getFlSupplier() {
-		return flSupplier;
-	}
-
-	/**
-	 * @param flSupplier the flSupplier to set
-	 */
-	public void setFlSupplier(String flSupplier) {
-		this.flSupplier = flSupplier;
-	}
-
-	/**
-	 * @return the flPmOfficer
-	 */
-	public String getFlPmOfficer() {
-		return flPmOfficer;
-	}
-
-	/**
-	 * @param flPmOfficer the flPmOfficer to set
-	 */
-	public void setFlPmOfficer(String flPmOfficer) {
-		this.flPmOfficer = flPmOfficer;
-	}
-
-	/**
-	 * @return the flApprover
-	 */
-	public String getFlApprover() {
-		return flApprover;
-	}
-
-	/**
-	 * @param flApprover the flApprover to set
-	 */
-	public void setFlApprover(String flApprover) {
-		this.flApprover = flApprover;
-	}
-
-	/**
-	 * @return the approverModel
-	 */
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	/**
-	 * @param approverModel the approverModel to set
-	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
-	}
-
-	/**
-	 * @return the approverMap
-	 */
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
-		return approverMap;
-	}
-
-	/**
-	 * @param approverMap the approverMap to set
-	 */
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
-		this.approverMap = approverMap;
-	}
-
-	/**
-	 * @return the checkDoDocType
-	 */
-	public Boolean getCheckDoDocType() {
-		return checkDoDocType;
-	}
-
-	/**
-	 * @param checkDoDocType the checkDoDocType to set
-	 */
-	public void setCheckDoDocType(Boolean checkDoDocType) {
-		this.checkDoDocType = checkDoDocType;
-	}
-
-	/**
-	 * @return the checkInDocType
-	 */
-	public Boolean getCheckInDocType() {
-		return checkInDocType;
-	}
-
-	/**
-	 * @param checkInDocType the checkInDocType to set
-	 */
-	public void setCheckInDocType(Boolean checkInDocType) {
-		this.checkInDocType = checkInDocType;
-	}
+//	/**
+//	 * @return the flRequisitioner
+//	 */
+//	public String getFlRequisitioner() {
+//		return flRequisitioner;
+//	}
+//
+//	/**
+//	 * @param flRequisitioner the flRequisitioner to set
+//	 */
+//	public void setFlRequisitioner(String flRequisitioner) {
+//		this.flRequisitioner = flRequisitioner;
+//	}
+//
+//	/**
+//	 * @return the flRecevingOfficer
+//	 */
+//	public String getFlRecevingOfficer() {
+//		return flRecevingOfficer;
+//	}
+//
+//	/**
+//	 * @param flRecevingOfficer the flRecevingOfficer to set
+//	 */
+//	public void setFlRecevingOfficer(String flRecevingOfficer) {
+//		this.flRecevingOfficer = flRecevingOfficer;
+//	}
+//
+//	/**
+//	 * @return the flSupplier
+//	 */
+//	public String getFlSupplier() {
+//		return flSupplier;
+//	}
+//
+//	/**
+//	 * @param flSupplier the flSupplier to set
+//	 */
+//	public void setFlSupplier(String flSupplier) {
+//		this.flSupplier = flSupplier;
+//	}
+//
+//	/**
+//	 * @return the flPmOfficer
+//	 */
+//	public String getFlPmOfficer() {
+//		return flPmOfficer;
+//	}
+//
+//	/**
+//	 * @param flPmOfficer the flPmOfficer to set
+//	 */
+//	public void setFlPmOfficer(String flPmOfficer) {
+//		this.flPmOfficer = flPmOfficer;
+//	}
+//
+//	/**
+//	 * @return the flApprover
+//	 */
+//	public String getFlApprover() {
+//		return flApprover;
+//	}
+//
+//	/**
+//	 * @param flApprover the flApprover to set
+//	 */
+//	public void setFlApprover(String flApprover) {
+//		this.flApprover = flApprover;
+//	}
+//
+//	/**
+//	 * @return the approverModel
+//	 */
+//	public DualListModel<String> getApproverModel() {
+//		return approverModel;
+//	}
+//
+//	/**
+//	 * @param approverModel the approverModel to set
+//	 */
+//	public void setApproverModel(DualListModel<String> approverModel) {
+//		this.approverModel = approverModel;
+//	}
+//
+//	/**
+//	 * @return the approverMap
+//	 */
+//	public HashMap<String, PmUserGroupUser> getApproverMap() {
+//		return approverMap;
+//	}
+//
+//	/**
+//	 * @param approverMap the approverMap to set
+//	 */
+//	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+//		this.approverMap = approverMap;
+//	}
+//
+//	/**
+//	 * @return the checkDoDocType
+//	 */
+//	public Boolean getCheckDoDocType() {
+//		return checkDoDocType;
+//	}
+//
+//	/**
+//	 * @param checkDoDocType the checkDoDocType to set
+//	 */
+//	public void setCheckDoDocType(Boolean checkDoDocType) {
+//		this.checkDoDocType = checkDoDocType;
+//	}
+//
+//	/**
+//	 * @return the checkInDocType
+//	 */
+//	public Boolean getCheckInDocType() {
+//		return checkInDocType;
+//	}
+//
+//	/**
+//	 * @param checkInDocType the checkInDocType to set
+//	 */
+//	public void setCheckInDocType(Boolean checkInDocType) {
+//		this.checkInDocType = checkInDocType;
+//	}
 
 	/**
 	 * @return the searchOrderNo
@@ -826,6 +827,12 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPhysContractNo(String searchPhysContractNo) {
 		this.searchPhysContractNo = searchPhysContractNo;
+	}
+	public VFlDocument getvFlDocument() {
+		return vFlDocument;
+	}
+	public void setvFlDocument(VFlDocument vFlDocument) {
+		this.vFlDocument = vFlDocument;
 	}
 
 }

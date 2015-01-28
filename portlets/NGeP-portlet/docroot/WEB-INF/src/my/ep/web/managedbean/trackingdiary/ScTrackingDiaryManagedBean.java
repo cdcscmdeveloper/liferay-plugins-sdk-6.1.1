@@ -53,6 +53,7 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
 	private String searchDocumentType; 
+	private String searchDocNo;
 	private String searchDocumentNo;
 	private String searchDocumentTitle;
 	private Long searchStatusId;
@@ -171,9 +172,20 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 		this.scRNDocumentDataModel = scRNDocumentDataModel;
 	}
 	Object[] scObj = new Object[6];
+	public Object[] getScObj() {
+		return scObj;
+	}
+
 	public void setScObj(Object[] scObj) {
-		// TODO Auto-generated method stub
-		this.scObj= scObj;
+		this.scObj = scObj;
+	}
+
+	public String getSearchDocNo() {
+		return searchDocNo;
+	}
+
+	public void setSearchDocNo(String searchDocNo) {
+		this.searchDocNo = searchDocNo;
 	}
 
 }
