@@ -13,6 +13,7 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -137,6 +138,10 @@ public class ReviewCatalogueBackingBean extends
 
 		reqDTO.getSaveSupplierItems().add(
 				bb.getManagedBean().getSelectedMaintainItem());
+		
+		log.info("Tracking diary for approveCatalogueItem items");
+		reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
+				getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,new Pmstatus()));
 
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
