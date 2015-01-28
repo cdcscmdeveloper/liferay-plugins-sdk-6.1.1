@@ -227,7 +227,8 @@ public class SmPersonnelBackingBean extends
 		if (getManagedBean().getBasicSmPersonnel() != null
 				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null
 				&& getManagedBean().getBasicSmPersonnel().getEpRole()
-						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				&& getManagedBean().isEditMode()) {
 			SelectItem adminRole = new SelectItem();
 			adminRole.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.suppAdmin", null));
@@ -1858,7 +1859,7 @@ public class SmPersonnelBackingBean extends
 		IBpmSO bpmSO = null;
 		BpmRequestDTO reqDTO = null;
 		BpmResponseDTO responseDTO = null;
-		try{
+		try {
 			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 			reqDTO = new BpmRequestDTO();
@@ -1882,7 +1883,7 @@ public class SmPersonnelBackingBean extends
 					retVal = true;
 				}
 			}
-		}finally{
+		} finally {
 			bpmSO = null;
 			reqDTO = null;
 			responseDTO = null;
