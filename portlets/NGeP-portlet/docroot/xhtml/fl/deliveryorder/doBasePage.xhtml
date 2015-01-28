@@ -28,7 +28,8 @@
 			textBeforeSign="#{createDOBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
-		<ac:spkiPopup postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(spkiBackingBean.pmDigiSign)}"/>
+		<ac:spkiPopup postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
