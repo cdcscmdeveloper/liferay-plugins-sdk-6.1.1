@@ -1204,7 +1204,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void updatePlanActors(PpPlan ppPlan){
 		log.info("updatePlanActors");
-		if(!ppPlan.isBrandNew() && ppPlan.getPpPlanActors()!=null && !ppPlan.getPpPlanActors().isEmpty()){
+		if(ppPlan.getPpPlanActors()!=null && !ppPlan.getPpPlanActors().isEmpty()){ //!ppPlan.isBrandNew() && 
 			log.info("syncPlanActors");
 			//Existing Plan Actors
 			List <Long> existingVerifiers = new ArrayList<>();
@@ -1806,7 +1806,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), resDTO.getPlan().getPlanNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				
-			
+				
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 						|| (StringUtils.isBlank(this.getManagedBean().getTaskId()) 
 								&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))) { //PP20150108-0007
