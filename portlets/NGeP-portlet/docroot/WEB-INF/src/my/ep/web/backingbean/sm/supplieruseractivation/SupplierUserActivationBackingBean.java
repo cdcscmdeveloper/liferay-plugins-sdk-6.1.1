@@ -192,7 +192,7 @@ public class SupplierUserActivationBackingBean extends
 					
 					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
 					
-					reqDTO.setSmPersonnels(getOthersPersonnelWithSameIdentificationNoAndSupplierId(getManagedBean().getSmPersonnel(), Long.parseLong(supplierId)));
+					reqDTO.setSmPersonnels(getOthersPersonnelWithSameIdentificationNoAndSupplierId(getManagedBean().getSmPersonnel(), Long.parseLong(supplierId),draftApplId));
 					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					reqDTO.setLoginId(loginId);
@@ -315,7 +315,7 @@ public class SupplierUserActivationBackingBean extends
 	// syazwan: added to retrieve others personnel with same identificationNo
 	// and supplierId
 	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(
-			SmPersonnel smPersonnel, Long supplierId) {
+			SmPersonnel smPersonnel, Long supplierId, Long draftApplId) {
 		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
@@ -323,15 +323,26 @@ public class SupplierUserActivationBackingBean extends
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
-			reqDTO.setDraftApplId(null);
-			PersonnelResDTO resDTO = personnelSO
-					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
-			if (resDTO.getSmPersonnelList() != null
-					&& !resDTO.getSmPersonnelList().isEmpty()) {
-				for (SmPersonnel smPersonnelTmp : resDTO.getSmPersonnelList()) {
-					if (smPersonnelTmp.getPersonnelId().compareTo(
-							smPersonnel.getPersonnelId()) != 0) {
-						smPersonnelList.add(smPersonnelTmp);
+			reqDTO.setDraftApplId(draftApplId);
+			PersonnelResDTO resDTO = null;
+
+			if (draftApplId != null) {
+				resDTO = personnelSO
+						.retrieveMofDraftPersonnelByIdentificationNoAndSupplierIdAndApplType(reqDTO);
+				if (resDTO.getSmPersonnel() != null) {
+					smPersonnelList.add(resDTO.getSmPersonnel());
+				}
+			} else {
+				resDTO = personnelSO
+						.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
+				if (resDTO.getSmPersonnelList() != null
+						&& !resDTO.getSmPersonnelList().isEmpty()) {
+					for (SmPersonnel smPersonnelTmp : resDTO
+							.getSmPersonnelList()) {
+						if (smPersonnelTmp.getPersonnelId().compareTo(
+								smPersonnel.getPersonnelId()) != 0) {
+							smPersonnelList.add(smPersonnelTmp);
+						}
 					}
 				}
 			}
@@ -341,6 +352,8 @@ public class SupplierUserActivationBackingBean extends
 		}
 		return smPersonnelList;
 	}
+	
+	
 
 	// syazwan: added to validate if pending activation personnel already
 	// deactivate in latest approved personnel
