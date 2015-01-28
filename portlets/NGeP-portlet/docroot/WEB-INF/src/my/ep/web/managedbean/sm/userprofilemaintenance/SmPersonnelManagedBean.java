@@ -84,6 +84,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String selectedPersonnelIdentificationType;
 	private String deactivateTerminateConfirmMsg;
 	private Long myCountryId;
+	private String token;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -580,6 +581,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setMyCountryId(Long myCountryId) {
 		this.myCountryId = myCountryId;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }
