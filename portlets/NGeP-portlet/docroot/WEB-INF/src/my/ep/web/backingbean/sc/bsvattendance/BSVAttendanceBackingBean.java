@@ -40,6 +40,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
@@ -310,9 +311,9 @@ public class BSVAttendanceBackingBean extends
 
 				List<ScQtBsvAttendance> bsvAttandance = registration
 						.getBsvAttendance();
-				if (null != bsvAttandance
-						&& bsvAttandance.size() > scQtBrief
-								.getMaxNoOfAttendance()) {
+
+				if (getAttandanceCount(bsvAttandance) > scQtBrief
+						.getMaxNoOfAttendance()) {
 					throw new EpException(MessageConst.ERROR_760230,
 							new String[] { Integer.valueOf(
 									scQtBrief.getMaxNoOfAttendance())
@@ -535,16 +536,19 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setLocation(briefing.getLocation());
 		StringBuffer address = new StringBuffer(briefing.getAddress()
 				.getAddress1());
-		address.append(",");
+
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
-			address.append(briefing.getAddress().getAddress2());
 			address.append(",");
+			address.append(briefing.getAddress().getAddress2());
+
 		}
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress3())) {
-			address.append(briefing.getAddress().getAddress3());
 			address.append(",");
+			address.append(briefing.getAddress().getAddress3());
+
 		}
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress4())) {
+			address.append(",");
 			address.append(briefing.getAddress().getAddress4());
 
 		}
@@ -779,8 +783,24 @@ public class BSVAttendanceBackingBean extends
 		// this.getManagedBean().setBriefingAttendanceList(attanedList);
 
 	}
-	
-	public boolean showRegistrationIcon(ScQtBsvDtl bsvDtl){
+
+	public boolean showRegistrationIcon(ScQtBsvDtl bsvDtl) {
 		return DateUtils.isDateGreaterOrEqual(new Date(), bsvDtl.getBsvDate());
+	}
+
+	/**
+	 * @param attandance
+	 */
+	private int getAttandanceCount(List<ScQtBsvAttendance> attandance) {
+		int count = 0;
+		if (CollectionUtils.isNotEmpty(attandance)) {
+			for (ScQtBsvAttendance attendance : attandance) {
+				if (attendance.isAttended()) {
+					count++;
+				}
+			}
+		}
+		return count;
+
 	}
 }
