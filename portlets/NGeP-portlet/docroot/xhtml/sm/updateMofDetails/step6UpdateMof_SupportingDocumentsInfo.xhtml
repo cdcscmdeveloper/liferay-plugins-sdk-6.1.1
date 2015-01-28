@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table style="width: 100%">
 		<tr>
@@ -28,9 +29,16 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForUpdate,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
+						<ui:remove>
 						<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
 							style="margin-bottom:5px;"
 							action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForUpdate)}" />
+						</ui:remove>
+							
+						<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+							action="#{spkiBackingBean.getChallengeQuestions}"
+							update="spkiPopup" oncomplete="spki_dlg.show();" />
+						<ac:spkiPopup id="spkiPopup" postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForUpdate)}" />
 					</div>
 				</p:outputPanel> <p:outputPanel id="supDocPan">
 					<ui:fragment
@@ -59,7 +67,9 @@
 									<td><p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue('5','4')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
-											update=":form" /></td>
+											update=":form" />
+
+									</td>
 								</tr>
 							</table>
 						</div>

@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -73,6 +74,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
@@ -119,6 +121,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -993,6 +996,52 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getCurrentPageType());
 	}
 
+
+	
+	public void updateSmAppl(PmDigiSign  pmDigiSign, String applType, String currentPageType,
+			String outputPageType) {
+		
+		if (pmDigiSign != null) {
+			updateSpkiDigiSignData(pmDigiSign, "SR", 
+					this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), prepareOriginalText());
+			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			log.info("signedData: " + signedData);
+			
+			pmDigiSign.setSignedData(signedData);
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		updateSmAppl(applType, currentPageType, outputPageType);
+	}
+	
+	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
+			String docType, Long docId, String docNumber, String textBeforeSign) {
+		FacesScopes facesScope = new FacesScopes();
+		Long userId = facesScope.getUserSessionBean().getUserId();
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		pmDigiSign.setDocId(new BigDecimal(docId));
+		pmDigiSign.setDocNo(docNumber);
+		pmDigiSign.setDocType(docType);
+		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedDate(date);
+		pmDigiSign.setOrginalData(textBeforeSign);
+	}
+	
+	/**
+	 * text to be signed for SM: applNo + userId (IC or password) + epNo
+	 * @return
+	 */
+	private String prepareOriginalText() {
+		
+		String applNo = this.getManagedBean().getSmAppl().getApplNo();
+		String userIdentificationNo = new FacesScopes().getUserSessionBean().getIdentificationNo();
+		String epNo = this.getManagedBean().getSmSupplier().getEpNo();
+		
+		String originalText = applNo + "|" + userIdentificationNo + "|" + epNo;
+		log.info("originalText: " + originalText);
+		return originalText;
+	}
+	
 	/**
 	 * Validate and Update sm application.Mainly called when navigate from one
 	 * page to other or save as draft
@@ -1050,6 +1099,7 @@ public class SmApplicationBackingBean extends
 			if (valid) {
 				// Save or update to DB
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+				reqDto.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 				mofRegistrationSO.updateApplication(reqDto);
 				getManagedBean().setCurrentPageType(outputPageType);
@@ -5338,7 +5388,11 @@ public class SmApplicationBackingBean extends
 				// }
 
 			}
-
+			
+			if(this.getManagedBean().getPmDigiSign() != null) {
+				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			}
+			
 			@SuppressWarnings("unused")
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -5446,6 +5500,24 @@ public class SmApplicationBackingBean extends
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
+	public String submitSmApplToBpm(PmDigiSign pmDigiSign, String applType) {
+		
+		if (pmDigiSign != null) {
+			updateSpkiDigiSignData(pmDigiSign, "SR", 
+					this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), prepareOriginalText());
+			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			log.info("spkiBackingBean: " + spkiBackingBean);
+			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			log.info("signedData: " + signedData);
+			
+			pmDigiSign.setSignedData(signedData);
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+				
+		return submitSmApplToBpm(applType);
+	}
+	
+	
 	/**
 	 * Submit cancel mof application to bpm and update the DB.
 	 * 
