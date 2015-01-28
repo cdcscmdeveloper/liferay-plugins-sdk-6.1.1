@@ -65,6 +65,8 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.Document;
@@ -366,7 +368,11 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
 
     	Properties p = new Properties();
-    	p.setProperty( "file.resource.loader.path", myTemplatePath);
+//    	p.setProperty( "file.resource.loader.path", myTemplatePath);
+    	
+    	p.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
+        p.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
+    	
     	Velocity.init(p);
 
     	String templateName = null;

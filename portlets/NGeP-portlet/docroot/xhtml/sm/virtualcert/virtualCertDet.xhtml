@@ -32,12 +32,12 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
-					<ui:remove>
+					
 					<p:commandButton value="#{lbl['lbl.btn.download']}"
 						action="#{virtualCertBackingBean.generatePdf(mofCert.smMofAccount)}" ajax="false" rendered="#{!mofCert.bumiCert}" />
 					<p:commandButton value="#{lbl['lbl.btn.download']}"
 						action="#{virtualCertBackingBean.generateBumiPdf(mofCert.smMofAccount)}" ajax="false" rendered="#{mofCert.bumiCert}" />
-					</ui:remove>
+					
 										
 					<p:commandButton
 						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
