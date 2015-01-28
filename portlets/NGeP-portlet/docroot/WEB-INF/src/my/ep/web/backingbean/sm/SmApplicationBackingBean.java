@@ -1714,13 +1714,13 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 						0);
+			}else{
+				getManagedBean().getSelectedShareHolder().setSoftcertFlg(2);
+				getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 			}
 		} else if (!getManagedBean().getSelectedShareHolder().getEpRole()
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
-			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
-		} else if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() != 1) {
-			getManagedBean().getSelectedShareHolder().setSoftcertFlg(2);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
 

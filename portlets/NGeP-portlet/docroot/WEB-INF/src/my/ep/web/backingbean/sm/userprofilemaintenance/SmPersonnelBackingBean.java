@@ -256,8 +256,7 @@ public class SmPersonnelBackingBean extends
 				int count = 0;
 				for (SmPersonnel smPersonnel : getManagedBean()
 						.getSmPersonnelList()) {
-					if (smPersonnel.getPmUser() != null
-							&& smPersonnel.getEpRole() != null
+					if (smPersonnel.getEpRole() != null
 							&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
 						count++;
 					}
