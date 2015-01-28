@@ -1276,7 +1276,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			setFulfilmentRequestField(resDTO);
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml?faces-redirect=true");//TODO once flError implemented ?faces-redirect=true removed
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");//TODO once flError implemented ?faces-redirect=true removed
 	}
 
 	public void calculateSubTotal(BigDecimal quantity){
