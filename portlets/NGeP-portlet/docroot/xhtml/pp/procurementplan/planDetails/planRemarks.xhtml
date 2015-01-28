@@ -17,7 +17,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<td rowspan="2" valign="top">
 						<h:graphicImage styleClass="smallUserImage"  value="#{pPlanBackingBean.userImagePathWithDefaultImage(remarkVar.userId)}"  />
 					</td>
-					<td width="5"></td>
 					<td>
 						<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
 						<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
@@ -26,7 +25,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</td>
 				</tr>
 				<tr>
-					<td></td>
 					<td>
 						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.editable or remarkVar.brandNew}"
 							/> 
