@@ -241,7 +241,7 @@ public class SupplierUserActivationBackingBean extends
 						try{
 							resDTO = reqSO.createPmProfile(reqDTO);
 							this.getManagedBean().setValidActivation(false);
-							this.getManagedBean().setSmPersonnel(null);
+							//this.getManagedBean().setSmPersonnel(null);
 							renewSesionObject();
 							return navigateToAck();
 							
