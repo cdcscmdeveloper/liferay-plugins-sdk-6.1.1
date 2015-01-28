@@ -81,10 +81,12 @@ public class Encryption {
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 		
+		System.out.println("encryptPhis Path :"+path);
 		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
 		
 		String encryptKey = substring+IntegrationConstants.PHIS_PUBLIC_KEY_PATH;
 
+		System.out.println("encryptPhis encryptKey :"+encryptKey);
 		
 		// encript the content
 		String encrypted;
