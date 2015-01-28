@@ -2934,4 +2934,8 @@ public void removeAddRow(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
+	
+	public String getDeliveryAddressType() {
+		return AddressType.DELIVERY_ADDRESS.value();
+	}
 }
