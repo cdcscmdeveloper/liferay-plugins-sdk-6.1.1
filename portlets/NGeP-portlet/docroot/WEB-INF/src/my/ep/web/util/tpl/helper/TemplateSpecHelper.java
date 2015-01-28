@@ -496,4 +496,49 @@ public class TemplateSpecHelper {
 		baseObject.setChangedBy(user.getUserId());
 		baseObject.setChangedDate(null);
 	}
+	
+	public BigDecimal calcTotalAmount(TplSpecQuestion specQuestion, BigDecimal unitPrice, BigDecimal quantity) {
+		BigDecimal totalPrice = null;
+		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+		boolean isPriceTypeTier = isPriceTypeTier(
+				specQuestion.getClPriceTypeCode().getParameterCode());
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster.getItemTypeCode().getParameterCode());
+		
+		if (!isPriceTypeTier) {
+			if (unitPrice != null) {
+				totalPrice = unitPrice.multiply(quantity);
+				
+				if (isItemTypeService) {
+					BigDecimal uomFrequency = specQuestion.getClUomFrequency();
+					BigDecimal uomPerDay = specQuestion.getClUomPerDay();
+					BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
+					BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
+					
+					if (uomFrequency != null) {
+						totalPrice = totalPrice.multiply(uomFrequency);
+					}
+					
+					if (uomPerDay != null) {
+						totalPrice = totalPrice.multiply(uomPerDay);
+					}
+					
+					if (uomPerMonth != null) {
+						totalPrice = totalPrice.multiply(uomPerMonth);
+					}
+					
+					if (itemDurationMonth != null) {
+						totalPrice = totalPrice.multiply(itemDurationMonth);
+					} else {
+						BigDecimal durationMonth = specMaster.getDurationMonth();
+						
+						if (durationMonth != null) {
+							totalPrice = totalPrice.multiply(durationMonth);
+						}
+					}
+				}	
+			}	
+		}
+		
+		return totalPrice;
+	}
 }
