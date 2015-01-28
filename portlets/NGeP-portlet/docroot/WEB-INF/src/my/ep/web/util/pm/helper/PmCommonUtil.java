@@ -712,21 +712,23 @@ public class PmCommonUtil {
 	
 	/**
 	 * Get full attachment upload path
+	 * @param loginId
+	 * @param fileName
 	 * @return String
 	 */
-	public static String getUploadPath(String fileName){
+	public static String getUploadPath(String loginId, String fileName){
+		//e.g: base/PM/LoginID/files
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(DateUtils.getLast2DigitOfYear());
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(DateUtils.dateToString(FILE_DATETIME_FORMAT, DateUtils.getCurrentDate()));
+		filePath.append(loginId);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(fileName);
 		return filePath.toString();
 	}
+
 
 	/**
 	 * Get attachment upload path
