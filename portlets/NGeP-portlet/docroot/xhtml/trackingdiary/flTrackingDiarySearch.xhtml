@@ -95,7 +95,7 @@
 			<p:dataTable id="flDocListDt"
 				value="#{flTrackingDiaryBackingBean.managedBean.flDocumentDataModel}" lazy="true"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
-				width="100%">
+				width="100%" rows="10">
 				<ac:paginator for="flDocListDt" />
 
 				<p:column width="15%">
@@ -126,7 +126,7 @@
 					<f:facet name="header">
 					Status
 				</f:facet>
-				#{flTrackingDiaryBackingBean.getStatusDescById(flDocument.statusId)}
+				#{flTrackingDiaryBackingBean.getStatusDescById(flDocument.status.statusId)}
 				</p:column>				
 				<p:column>
 					<f:facet name="header">
