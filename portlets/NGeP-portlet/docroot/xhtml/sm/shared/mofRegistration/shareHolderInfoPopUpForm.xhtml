@@ -262,7 +262,7 @@
 						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1') or (backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONSULTANT)}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
+						<f:selectItems value="#{backingBean.getAuthorizedPersonnelValidEpRoles()}" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
 					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"

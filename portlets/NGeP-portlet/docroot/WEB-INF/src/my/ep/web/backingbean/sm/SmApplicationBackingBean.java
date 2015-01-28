@@ -1706,7 +1706,16 @@ public class SmApplicationBackingBean extends
 	 * @param e - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
-		if (!getManagedBean().getSelectedShareHolder().getEpRole()
+		if (getManagedBean().getSelectedShareHolder().getEpRole()
+				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
+			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
+					&& !getManagedBean().getSmAppl().getSmCompanyBasic()
+							.isWithFederal()) {
+				getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
+				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
+						0);
+			}
+		} else if (!getManagedBean().getSelectedShareHolder().getEpRole()
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
@@ -8253,6 +8262,34 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
+	
+	/**
+	 * Get valid epRole list for personnel
+	 * 
+	 * @return List<SelectItem> epRoles
+	 */
+	public List<SelectItem> getAuthorizedPersonnelValidEpRoles() {
+		List<SelectItem> ePRoleList = new ArrayList<SelectItem>();
+		SelectItem roleToRemove = null;
+		if (getManagedBean().getePRoleList() != null
+				&& !getManagedBean().getePRoleList().isEmpty()) {
+			ePRoleList = getManagedBean().getePRoleList();
+			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
+					&& !getManagedBean().getSmAppl().getSmCompanyBasic()
+							.isWithFederal()) {
+				for (SelectItem role : getManagedBean().getePRoleList()) {
+					if (role.getValue().equals(RoleCode.CM_USER.value())) {
+						roleToRemove = role;
+						break;
+					}
+				}
+			}
+		}
+		if (roleToRemove != null) {
+			ePRoleList.remove(roleToRemove);
+		}
+		return ePRoleList;
+	
 
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
