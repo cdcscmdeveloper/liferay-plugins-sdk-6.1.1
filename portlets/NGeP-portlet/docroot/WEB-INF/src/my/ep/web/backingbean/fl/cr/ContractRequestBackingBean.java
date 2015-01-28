@@ -229,6 +229,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
+	private boolean selectAllCheckbox;
 	
 	/**
 	 * get faces scopes
@@ -2261,6 +2262,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		//reset the checkboxes already selected.
 		resetSelectedTreeNodes();
 		getManagedBean().setChargeLinePanel(false);
+		setSelectAllCheckbox(false);
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
 		if(null!=selectedNode){
@@ -2358,25 +2360,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setSubSetiaCode("");
 		getManagedBean().setFinancingTypeCode("");		
 	
-	}
-	public void selectAllCheckboxSelect(AjaxBehaviorEvent e){
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-				if(null!=deliveryAddress){
-					deliveryAddress.setSelectedAddressRowDelete(true);
-				}
-			}
-			getManagedBean().setDeleteButtonHide(false);
-			
-		}else{
-			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-				if(null!=deliveryAddress){
-					deliveryAddress.setSelectedAddressRowDelete(false);
-				}
-			}
-			getManagedBean().setDeleteButtonHide(true);
-			
-		}
 	}
 	
 	public void chargeLineApply() {
@@ -2537,10 +2520,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	private void updateSelectedTreeNodes() {
 		List<TreeNode> selectedNodes=new ArrayList<TreeNode>();
 		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		setSelectAllCheckbox(true);
 		for(TreeNode node:root.getChildren()){
 			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
 			if(addr.isSelectedChargeItem()){
 				selectedNodes.add(node);
+			}else{
+				setSelectAllCheckbox(false);
 			}
 		}
 		
@@ -3044,6 +3030,23 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 					}
 			}	 
+		}
+		
+		public void selectAllCheckboxes(){
+			onNodeUnSelect();
+			getManagedBean().setProgramLov(false);
+			getManagedBean().setProjectLov(false);
+			boolean checkValue=isSelectAllCheckbox();
+			TreeNode root=getManagedBean().getChargeLineItemRoot();
+			for(TreeNode node:root.getChildren()){
+				FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
+				addr.setSelectedChargeItem(checkValue);
+			}
+			if(checkValue==true){
+				getManagedBean().setChargeLinePanel(true);
+			}else{
+				getManagedBean().setChargeLinePanel(false);
+			}
 		}
 		
 		public void checkVotFundLov(){
@@ -3731,5 +3734,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getUnitOfMeasurementDataModel().resetData();
 		unitOfMeasurementDataModel.reloadData();		
 	}
+
+	/**
+	 * @return the selectAllCheckbox
+	 */
+	public boolean isSelectAllCheckbox() {
+		return selectAllCheckbox;
+	}
+
+	/**
+	 * @param selectAllCheckbox the selectAllCheckbox to set
+	 */
+	public void setSelectAllCheckbox(boolean selectAllCheckbox) {
+		this.selectAllCheckbox = selectAllCheckbox;
+	}
+	
 	
 }
