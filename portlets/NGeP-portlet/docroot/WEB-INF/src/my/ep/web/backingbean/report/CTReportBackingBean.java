@@ -32,19 +32,19 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
-	        case ReportConst.CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL:
+	        /*case ReportConst.CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
-	            break;
+	            break;*/
 	        case ReportConst.CT_LST_OF_CONTRACT_ALL_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtGroupTwoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
-	        case ReportConst.CT_LST_OF_CONTRACT_ACTIVE_RPT_VAL:
+	        /*case ReportConst.CT_LST_OF_CONTRACT_ACTIVE_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
 				rptGenBean.setFromDateView(true);
@@ -55,7 +55,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setExtraTwoColumnView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
-	            break;
+	            break;*/
 	        case ReportConst.CT_CONTRACT_MONITORING_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtAgreementView(true);
@@ -66,15 +66,16 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.CT_LST_OF_ITEM_PRODUCT_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtStatusView(true);
+	        	rptGenBean.setCtProductServiceView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
-	        case ReportConst.CT_LST_OF_ITEM_SERVICE_RPT_VAL:
+	        /*case ReportConst.CT_LST_OF_ITEM_SERVICE_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtStatusView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
-	            break;
+	            break;*/
 	        case ReportConst.CT_LST_OF_AMENDMENT_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtStatusView(true);

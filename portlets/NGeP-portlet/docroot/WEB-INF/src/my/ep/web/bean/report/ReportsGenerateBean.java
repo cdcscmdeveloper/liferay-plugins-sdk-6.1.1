@@ -244,6 +244,7 @@ public class ReportsGenerateBean {
 		private boolean ctCompleteView = false;
 		private boolean ctGroupOneView = false;
 		private boolean ctGroupTwoView = false;
+		private boolean ctProductServiceView = false;
 		
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
@@ -400,6 +401,7 @@ public class ReportsGenerateBean {
 		private String ctCompleteVar=ReportConst.EMPTY_VAL;
 		private String ctGroupOneVar=ReportConst.EMPTY_VAL;
 		private String ctGroupTwoVar=ReportConst.EMPTY_VAL;
+		private String ctProductServiceVar=ReportConst.EMPTY_VAL;
 		//ct
 		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
 		private String flContractRequestVar=ReportConst.EMPTY_VAL;
@@ -424,6 +426,18 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public boolean isCtProductServiceView() {
+			return ctProductServiceView;
+		}
+		public void setCtProductServiceView(boolean ctProductServiceView) {
+			this.ctProductServiceView = ctProductServiceView;
+		}
+		public String getCtProductServiceVar() {
+			return ctProductServiceVar;
+		}
+		public void setCtProductServiceVar(String ctProductServiceVar) {
+			this.ctProductServiceVar = ctProductServiceVar;
+		}
 		public boolean isCtGroupOneView() {
 			return ctGroupOneView;
 		}
