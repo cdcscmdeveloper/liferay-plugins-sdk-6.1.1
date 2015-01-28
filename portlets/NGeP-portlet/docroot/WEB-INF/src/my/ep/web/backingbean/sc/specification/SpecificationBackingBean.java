@@ -734,9 +734,10 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
-			this.getManagedBean().getScQt().setZonal(false);
+			
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
+				this.getManagedBean().getScQt().setZonal(false);
 				removespecDtls();
 				if (null == this.getManagedBean().getScQt()
 						.getPmProcurementCategory()) {
@@ -3945,7 +3946,7 @@ public class SpecificationBackingBean extends
 	public void showGeneralZoneLocationPopup() {
 
 		ICountrySO countrySo = null;
-		this.getManagedBean().setZoneLocation(true);
+		
 		try {
 			Long locationLevel = this.getManagedBean().getScQt()
 					.getZoneLocationLevel().getParameterId();
@@ -3974,6 +3975,7 @@ public class SpecificationBackingBean extends
 
 				if (paramDesc.getPmParameter().getParameterId()
 						.equals(locationLevel)) {
+					this.getManagedBean().setZoneLocation(true);
 					this.getManagedBean().setStateCode(
 							paramDesc.getPmParameter().getParameterCode());
 					CountryReqDTO countryReqDTo = new CountryReqDTO();
@@ -8812,6 +8814,8 @@ public class SpecificationBackingBean extends
 				if (null != this.getManagedBean().getCtPanelItem()
 						&& null != this.getManagedBean().getCtPanelItem()
 								.getPanelItemId()) {
+					getManagedBean().setZoneGeneralTrees(
+							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
 					PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
 					supplierreqDTO.setPanelItemId(this.getManagedBean()
