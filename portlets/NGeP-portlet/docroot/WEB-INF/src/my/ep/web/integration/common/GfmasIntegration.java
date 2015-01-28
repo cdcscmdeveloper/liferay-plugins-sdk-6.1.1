@@ -212,8 +212,7 @@ public class GfmasIntegration {
 
 	public void masterDataVendorGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"");
 		ISupplierSearchSO supplierSearchSO = BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
@@ -225,7 +224,7 @@ public class GfmasIntegration {
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
 				List<MasterDataVendor> dataVendors = fileUtility
-						.masterDataVendorFileInPutStream(filePath + fileName);
+						.masterDataVendorFileInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				SupplierSearchReqDTO reqDTO = null;
 				SmSupplier smSupplier = null;
 
@@ -252,16 +251,14 @@ public class GfmasIntegration {
 	}
 	public void pejabatPerakaunanGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";
-		//String filePath = IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLBAC");
 		if (osbUtility.osbServiceCallInBound("GFM-190")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
 				List<AgOffice> agOfficeList = fileUtility
-						.pejabatPerakaunanFileInPutStream(filePath + fileName);
+						.pejabatPerakaunanFileInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				AgOfficeReqDTO reqDTO = null;
 				PmAgOffice agOffice = null;
 
@@ -270,8 +267,11 @@ public class GfmasIntegration {
 					agOffice = new PmAgOffice();
 					agOffice.setOfficeCode(office.getCode());
 					agOffice.setOfficeName(office.getDescription());
-					agOffice.setExpDate((Timestamp) new Date());
-					agOffice.setChangedBy(IntegrationConstants.CHANGED_BY);
+					agOffice.setEffDate(new Timestamp(System.currentTimeMillis()));
+					//agOffice.setExpDate((Timestamp) new Date());
+					agOffice.setCreatedBy(1L);
+					agOffice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					agOffice.setRecordStatusFlg(1);					
 					reqDTO.setAgOffice(agOffice);
 					agOfficeSO.saveOrUpdateAgOffice(reqDTO);
 
@@ -281,18 +281,16 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void pegawaiPengawalFileInPutStream() {
+	public void pegawaiPengawalGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";
-		//String filePath = IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLSEG");
 		if (osbUtility.osbServiceCallInBound("GFM-200")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
 				List<AgCtrlOfficer> agOfficeList = fileUtility
-						.pegawaiPengawalInPutStream(filePath + fileName);
+						.pegawaiPengawalInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				AgOfficeReqDTO reqDTO = null;
 				PmAgCtrlOfficer agControlOfficer = null;
 
@@ -312,17 +310,15 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void votFileInPutStream() {
+	public void votGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";
-		//String filePath = IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLVOT");
 		if (osbUtility.osbServiceCallInBound("GFM-210")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<VotFund> votList = fileUtility.votInPutStream(filePath + fileName);
+				List<VotFund> votList = fileUtility.votInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
 
@@ -352,17 +348,15 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void votDanaFileInPutStream() {
+	public void votDanaGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";
-		// String filePath = IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLDNA");
 		if (osbUtility.osbServiceCallInBound("GFM-220")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<VotFund> votList = fileUtility.votDanaInPutStream(filePath + fileName);
+				List<VotFund> votList = fileUtility.votDanaInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
 
@@ -382,16 +376,15 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void programAktivitiFileInPutStream() {
+	public void programAktivitiGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPRG");
 		if (osbUtility.osbServiceCallInBound("GFM-230")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<ProgramActivity> votList = fileUtility.programAktiviti(filePath + fileName);
+				List<ProgramActivity> votList = fileUtility.programAktiviti(IntegrationConstants.FILE_PATH + fileName);
 				ProgramActivityReqDTO reqDTO = null;
 				PmPrgActivity prgActivity = null;
 
@@ -416,16 +409,15 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void projectFileInPutStream() {
+	public void projectGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPRJ");
 		if (osbUtility.osbServiceCallInBound("GFM-240")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<Project> projectList = fileUtility.project(filePath + fileName);
+				List<Project> projectList = fileUtility.project(IntegrationConstants.FILE_PATH + fileName);
 				ProjectSetiaReqDTO reqDTO = null;
 				PmProject pmProject = null;
 
@@ -445,16 +437,15 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void kodAkaunInPutStream() {
+	public void kodAkaunGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLGLC");
 		if (osbUtility.osbServiceCallInBound("GFM-260")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<GlAccount> glAccountList = fileUtility.kodAkaun(filePath + fileName);
+				List<GlAccount> glAccountList = fileUtility.kodAkaun(IntegrationConstants.FILE_PATH + fileName);
 				GlAccountReqDTO reqDTO = null;
 				PmGlAccount glAccount = null;
 
@@ -474,16 +465,15 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void kumpulanPTJInPutStream() {
-
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+	public void kumpulanPtjGfmasInbound() {
+		
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPCG");
 		if (osbUtility.osbServiceCallInBound("GFM-270")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<PtjGroup> glAccountList = fileUtility.kumpulanPTJ(filePath + fileName);
+				List<PtjGroup> glAccountList = fileUtility.kumpulanPTJ(IntegrationConstants.FILE_PATH + fileName);
 				PtjGroupReqDTO reqDTO = null;
 				PmPtjGroup ptjGroup = null;
 
@@ -503,23 +493,22 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void masterDataPTJInPutStream() {
+	public void masterDataPtjGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPTJ");
 		if (osbUtility.osbServiceCallInBound("GFM-280")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<OrgProfile> orgProfileList = fileUtility.masterDatePTJ(filePath + fileName);
+				List<OrgProfile> orgProfileList = fileUtility.masterDatePTJ(IntegrationConstants.FILE_PATH + fileName);
 				OrgProfileReqDTO reqDTO = null;
 				PmOrgProfile pmOrgProfile = null;
 
 				for (OrgProfile orgProfile : orgProfileList) {
 					reqDTO = new OrgProfileReqDTO();
 					pmOrgProfile = new PmOrgProfile();
-					//pmOrgProfile.setGroupCode(group.getCode());
+					pmOrgProfile.getPmOrgValidity().setOrgCode(orgProfile.getCode());
 					//pmOrgProfile.setGroupName(group.getDescription());
 					//pmOrgProfile.setExpDate((Timestamp) new Date());
 					pmOrgProfile.setChangedBy(IntegrationConstants.CHANGED_BY);
@@ -532,23 +521,22 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void kodBankInPutStream() {
+	public void kodBankGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"CMBNK");
 		if (osbUtility.osbServiceCallInBound("GFM-360")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<BankAccountInformation> bankList = fileUtility.kodBank(filePath + fileName);
+				List<BankAccountInformation> bankList = fileUtility.kodBank(IntegrationConstants.FILE_PATH + fileName);
 				FinancialOrgReqDTO reqDTO = null;
 				PmFinancialOrg pmFinancialOrg = null;
 
 				for (BankAccountInformation bank : bankList) {
 					reqDTO = new FinancialOrgReqDTO();
 					pmFinancialOrg = new PmFinancialOrg();
-					//pmOrgProfile.setGroupCode(bank.getCode());
+					pmFinancialOrg.setFinOrgName(bank.getBankName());
 					//pmOrgProfile.setGroupName(group.getDescription());
 					//pmOrgProfile.setExpDate((Timestamp) new Date());
 					pmFinancialOrg.setChangedBy(IntegrationConstants.CHANGED_BY);
@@ -561,29 +549,26 @@ public class GfmasIntegration {
 
 		}
 	}
-	public void paymentInPutStream() {
+	public void paymentGfmasInbound() {
 
-		String filePath = "C:/Integration/Encryption/decrypt/";// IntegrationConstants.FILE_PATH;
-		String fileName = "1000APOVE40000120141113001.GPG";
+		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"AP511");
 		if (osbUtility.osbServiceCallInBound("GFM-140")) {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
 				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo(filePath + fileName);
+				List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo(IntegrationConstants.FILE_PATH + fileName);
 				FLOsbReqDTO reqDTO = null;
 				
 
 				for (PaymentInfo bank : paymentInfoList) {
 					reqDTO = new FLOsbReqDTO();
 					
-					//pmOrgProfile.setGroupCode(bank.getCode());
-					//pmOrgProfile.setGroupName(group.getDescription());
-					//pmOrgProfile.setExpDate((Timestamp) new Date());
+					
 					
 					reqDTO.setInvoiceNoList(new String[]{"10000004371400210"});
-					//reqDTO.setInvoiceNoList(new String[] { row.getInoviceNumber() });
-					//reqDTO.setPaymentDate(row.getPaymentDate());
+					//reqDTO.setInvoiceNoList(new String[] { bank.getInoviceNumber() });
+					reqDTO.setPaymentDate(bank.getPaymentDate());
 					//reqDTO.setPaymentRefNo(row.getPaymentRefNum());
 					flOsbSO.updatePaymentDetails(reqDTO);
 
