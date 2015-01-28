@@ -325,27 +325,30 @@ public class SupplierUserActivationBackingBean extends
 			reqDTO.setSmSupplierId(supplierId);
 			reqDTO.setDraftApplId(draftApplId);
 			PersonnelResDTO resDTO = null;
-
+			
+			//add personnel in draft
 			if (draftApplId != null) {
 				resDTO = personnelSO
 						.retrieveMofDraftPersonnelByIdentificationNoAndSupplierIdAndApplType(reqDTO);
 				if (resDTO.getSmPersonnel() != null) {
 					smPersonnelList.add(resDTO.getSmPersonnel());
 				}
-			} else {
-				resDTO = personnelSO
-						.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
-				if (resDTO.getSmPersonnelList() != null
-						&& !resDTO.getSmPersonnelList().isEmpty()) {
-					for (SmPersonnel smPersonnelTmp : resDTO
-							.getSmPersonnelList()) {
-						if (smPersonnelTmp.getPersonnelId().compareTo(
-								smPersonnel.getPersonnelId()) != 0) {
-							smPersonnelList.add(smPersonnelTmp);
-						}
+			} 
+			
+			//add personnel in latest approved
+			resDTO = personnelSO
+					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
+			if (resDTO.getSmPersonnelList() != null
+					&& !resDTO.getSmPersonnelList().isEmpty()) {
+				for (SmPersonnel smPersonnelTmp : resDTO
+						.getSmPersonnelList()) {
+					if (smPersonnelTmp.getPersonnelId().compareTo(
+							smPersonnel.getPersonnelId()) != 0) {
+						smPersonnelList.add(smPersonnelTmp);
 					}
 				}
 			}
+			
 		} catch (Exception ex) {
 			log.info("Error in getOthersPersonnelWithSameIdentificationNoAndSupplierId:"
 					+ ex.getMessage());
