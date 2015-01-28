@@ -74,7 +74,7 @@
 				rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="catDt" />
-				<p:ajax event="rowSelect"
+				<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 					listener="#{backingBean.unSelectApporvedCategories}"
 					update=":form:tt:catCodeInfPan"></p:ajax>
 				<p:ajax event="rowUnselect"
@@ -110,8 +110,7 @@
 						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}"
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
-						<p:column
-							rendered="#{backingBean.managedBean.poUser}"
+						<p:column rendered="#{backingBean.managedBean.poUser}"
 							headerText="#{lbl['lbl.sm.catCodes.remark']}"
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 						<p:column rendered="#{backingBean.managedBean.approverUser}"
@@ -147,8 +146,10 @@
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 					<p:inputTextarea id="otherDesc" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
-						value="#{catBean.otherDesc}" required="true"
-						rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" />
+						value="#{catBean.otherDesc}"
+						rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
+						<p:ajax event="blur" process="@this" partialSubmit="true"></p:ajax>
+					</p:inputTextarea>
 					<p:message for="otherDesc" showDetail="false" showSummary="true"
 						display="icon" />
 				</p:column>
@@ -187,14 +188,23 @@
 						showDetail="false" display="icon" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
-					
+
 					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-						<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+						<table
+							style="width: 100%; border: none !important; table-layout: fixed !important;">
 							<tr>
-								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" escape="false"/>
-									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 1}" escape="false"/>
-									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0}" escape="false"/>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}"
+										escape="false" /> <h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 1}"
+										escape="false" /> <h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+										rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0}"
+										escape="false" />
 								</td>
 							</tr>
 							<tr>
@@ -202,15 +212,15 @@
 										value="#{lbl['lbl.sm.catCodes.remark']}" />:</td>
 							</tr>
 							<tr>
-								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 										value="#{catBean.poRemarks}"
 										rendered="#{not empty catBean.poRemarks}" /></td>
 							</tr>
 						</table>
 					</p:outputPanel>
 				</p:column>
-				<p:column
-					rendered="#{backingBean.managedBean.poUser}"
+				<p:column rendered="#{backingBean.managedBean.poUser}"
 					style="width : 25%;"
 					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 					<p:inputTextarea value="#{catBean.poRemarks}" maxlength="200"
@@ -255,11 +265,17 @@
 						<p:outputPanel
 							rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 							<p:outputPanel rendered="#{not empty catBean.prevApprDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.prevApprDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBean.prevApprDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBean.prevApprDecFlg eq 1}" escape="false" />
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBean.prevApprDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -267,7 +283,8 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBean.prevApproverRemarks}"
 												rendered="#{not empty catBean.prevApproverRemarks}" /></td>
 									</tr>
@@ -286,16 +303,20 @@
 						<p:outputPanel
 							rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 							<p:outputPanel rendered="#{not empty catBean.prevPoDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.prevPoDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBean.prevPoDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBean.prevPoDecFlg eq 1}" escape="false" /> <h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBean.prevPoDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
-										<td
-											style="border: none !important; font-weight: bold;"><h:outputText
+										<td style="border: none !important; font-weight: bold;"><h:outputText
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
@@ -320,11 +341,17 @@
 						<p:outputPanel
 							rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 							<p:outputPanel rendered="#{not empty catBean.prevApprDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.prevApprDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBean.prevApprDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBean.prevApprDecFlg eq 1}" escape="false" />
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBean.prevApprDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -332,18 +359,24 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBean.prevApproverRemarks}"
 												rendered="#{not empty catBean.prevApproverRemarks}" /></td>
 									</tr>
 								</table>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{empty catBean.prevApprDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBean.prevPoDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBean.prevPoDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBean.prevPoDecFlg eq 1}" escape="false" /> <h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBean.prevPoDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -351,7 +384,8 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBean.prevPoRemarks}"
 												rendered="#{not empty catBean.prevPoRemarks}" /></td>
 									</tr>
@@ -415,7 +449,7 @@
 				<p:column>
 					<p:inputTextarea id="otherDescR" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
-						value="#{catBeanR.otherDesc}" required="true"
+						value="#{catBeanR.otherDesc}"
 						rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" />
 					<p:message for="otherDescR" showDetail="false" showSummary="true"
 						display="icon" />
@@ -451,14 +485,23 @@
 						showDetail="false" display="icon" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
-						
+
 					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-						<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+						<table
+							style="width: 100%; border: none !important; table-layout: fixed !important;">
 							<tr>
-								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" escape="false"/>
-									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 1}" escape="false"/>
-									<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0}" escape="false"/>
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}"
+										escape="false" /> <h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+										rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 1}"
+										escape="false" /> <h:outputText
+										value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+										rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0}"
+										escape="false" />
 								</td>
 							</tr>
 							<tr>
@@ -466,7 +509,8 @@
 										value="#{lbl['lbl.sm.catCodes.remark']}" />:</td>
 							</tr>
 							<tr>
-								<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+								<td
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 										value="#{catBeanR.poRemarks}"
 										rendered="#{not empty catBeanR.poRemarks}" /></td>
 							</tr>
@@ -514,11 +558,17 @@
 						<p:outputPanel
 							rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 							<p:outputPanel rendered="#{not empty catBeanR.prevApprDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.prevApprDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBeanR.prevApprDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBeanR.prevApprDecFlg eq 1}" escape="false" />
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBeanR.prevApprDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -526,7 +576,8 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBeanR.prevApproverRemarks}"
 												rendered="#{not empty catBeanR.prevApproverRemarks}" /></td>
 									</tr>
@@ -545,11 +596,17 @@
 						<p:outputPanel
 							rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 							<p:outputPanel rendered="#{not empty catBeanR.prevPoDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.prevPoDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBeanR.prevPoDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBeanR.prevPoDecFlg eq 1}" escape="false" />
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBeanR.prevPoDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -557,7 +614,8 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBeanR.prevPoRemarks}"
 												rendered="#{not empty catBeanR.prevPoRemarks}" /></td>
 									</tr>
@@ -577,11 +635,17 @@
 						<p:outputPanel
 							rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 							<p:outputPanel rendered="#{not empty catBeanR.prevApprDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.prevApprDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBeanR.prevApprDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBeanR.prevApprDecFlg eq 1}" escape="false" />
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBeanR.prevApprDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -589,18 +653,25 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBeanR.prevApproverRemarks}"
 												rendered="#{not empty catBeanR.prevApproverRemarks}" /></td>
 									</tr>
 								</table>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{empty catBeanR.prevApprDecFlg}">
-								<table style="width: 100%; border: none !important; table-layout:fixed !important;">
+								<table
+									style="width: 100%; border: none !important; table-layout: fixed !important;">
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}" rendered="#{catBeanR.prevPoDecFlg eq 1}" escape="false"/> 
-											<h:outputText value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}" rendered="#{catBeanR.prevPoDecFlg eq 0}" escape="false"/>
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.approved']}"
+												rendered="#{catBeanR.prevPoDecFlg eq 1}" escape="false" />
+											<h:outputText
+												value="#{lbl['lbl.sm.catCodes.status.bold']}  #{lbl['lbl.sm.catCodes.rejected']}"
+												rendered="#{catBeanR.prevPoDecFlg eq 0}" escape="false" />
 										</td>
 									</tr>
 									<tr>
@@ -608,7 +679,8 @@
 												value="#{lbl['lbl.sm.catCodes.prevRmrk']}" /></td>
 									</tr>
 									<tr>
-										<td style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
+										<td
+											style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
 												value="#{catBeanR.prevPoRemarks}"
 												rendered="#{not empty catBeanR.prevPoRemarks}" /></td>
 									</tr>
@@ -636,13 +708,15 @@
 							<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 								action="#{backingBean.deleteSelectedCategoryCodes}"
 								update=":form:tt:catDtR" partialSubmit="true"
-								process=":form:tt:catCodeInfPan" />
+								process=":form:tt:catCodeInfPan">
+							</p:commandButton>
 						</c:when>
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 								action="#{backingBean.deleteSelectedPendingApprovalCategoryCodes}"
 								update=":form:tt:catDt" partialSubmit="true"
-								process=":form:tt:catCodeInfPan" />
+								process=":form:tt:catCodeInfPan">
+							</p:commandButton>
 						</c:otherwise>
 					</c:choose>
 
