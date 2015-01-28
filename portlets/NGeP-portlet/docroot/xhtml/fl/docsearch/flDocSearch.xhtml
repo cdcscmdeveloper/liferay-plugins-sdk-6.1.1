@@ -55,9 +55,10 @@
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu></td>
 			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
-			<td><p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
-						</tr>
+			<td><p:inputText size="28" value="#{flDocumentBackingBean.managedBean.searchDocNo}" />
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no']}"/>	
+			</td>
+			</tr>
 			</table>
 			<h:panelGroup id="docStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
@@ -86,9 +87,10 @@
 			<h:panelGroup id="docInvStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTypeSearch">
