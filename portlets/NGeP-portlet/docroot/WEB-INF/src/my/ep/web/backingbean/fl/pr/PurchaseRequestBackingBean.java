@@ -1248,13 +1248,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
 			
 			//TODO flError have been implemented for current will be commented first
-//			if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
-//				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-//				errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
-//				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
-//				errRes.getFlErrorContent();
-//				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,errRes.getFlErrorContent()));
-//			}
+			if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
+				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+				errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
+				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+				errRes.getFlErrorContent();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,errRes.getFlErrorContent()));
+			}
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
