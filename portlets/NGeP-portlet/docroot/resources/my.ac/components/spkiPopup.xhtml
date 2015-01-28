@@ -5,15 +5,36 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:fn="http://java.sun.com/jsp/jstl/functions"
    	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
    	xmlns:ac="http://ac.my/jsf/composite/cc">
     
 <cc:interface>
 	<cc:attribute name="beforeSignText" />
 	<cc:attribute name="postSignAction" method-signature="java.lang.String action()" />
+	<cc:attribute name="enableAutoUpdate" required="false"
+			method-signature="void action()" />
 </cc:interface>
 
 <cc:implementation>
-       
+    <c:choose>
+			<c:when test="#{not empty cc.getValueExpression('enableAutoUpdate')}">
+				<p:remoteCommand name="spkiAutoUpdateAction"
+					action="#{cc.attrs.enableAutoUpdate}" />
+			</c:when>
+			<c:otherwise>
+				<p:remoteCommand name="spkiAutoUpdateAction" />
+			</c:otherwise>
+		</c:choose>   
+			<p:remoteCommand name="spkiPostSignAction"
+				action="#{cc.attrs.postSignAction}" />
+		<script>
+			function spkiSign() {
+				spkiAutoUpdateAction();
+				spkiPostSignAction();
+				spki_dlg.hide();
+				
+			}
+		</script>
     <p:dialog widgetVar="spki_dlg" resizable="false" modal="true">
         <span id="#{cc.clientId}">
         
@@ -25,7 +46,7 @@
         
             <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
             <p:password binding="#{pin1}" id="password"  />
- 			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" oncomplete="spki_dlg.hide();" />        
+ 			<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" />        
 		</h:panelGrid></span>
     </p:dialog>
 </cc:implementation>

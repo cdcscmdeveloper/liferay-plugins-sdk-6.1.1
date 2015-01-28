@@ -37,7 +37,8 @@
 			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(gpkiBackingBean.pmDigiSign)}" />
 		<ac:spkiPopup
 			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
-			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(spkiBackingBean.pmDigiSign)}" />
+			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
 		<p:panel id="headerDetails">
 			<f:event listener="#{supplierBackingBean.preRenderView}"
 				type="preRenderView" />
