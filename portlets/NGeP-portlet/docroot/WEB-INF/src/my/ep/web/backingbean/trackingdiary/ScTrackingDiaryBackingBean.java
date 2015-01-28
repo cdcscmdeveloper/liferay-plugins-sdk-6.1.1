@@ -47,7 +47,7 @@ public class ScTrackingDiaryBackingBean extends
 
 		try {
 
-			items = new SelectItem[5];
+			items = new SelectItem[9];
 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
