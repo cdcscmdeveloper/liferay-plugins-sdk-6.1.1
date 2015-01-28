@@ -37,15 +37,27 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.from']}" />
 				</f:facet>
-				<p:inputText id="#{scoringPnlId}_fromRange" style="text-align:right"
+				<p:inputText id="#{scoringPnlId}_fromRangeTN"
+					style="text-align:right"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+
 				</p:inputText>
-				<p:message id="#{scoringPnlId}_rangeFrom"
-					for="#{scoringPnlId}_fromRange" display="icon"></p:message>
+
+				<p:inputText id="#{scoringPnlId}_fromRangeTG"
+					style="text-align:right"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'AL'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
+					value="#{checkListScoring.rangeFrom}" maxlength="18">
+					<p:ajax event="blur" process="@this" partialSubmit="true" />
+				</p:inputText>
+				<!-- 	<p:message id="#{scoringPnlId}_rangeFrom"
+					for="#{scoringPnlId}_fromRange" display="icon"></p:message> -->
 			</p:column>
 			<p:column style="width:30%">
 				<f:facet name="header">
@@ -55,16 +67,30 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.to']}" />
 				</f:facet>
-				<p:inputText id="#{scoringPnlId}_toRange" style="text-align:right"
+				<p:inputText id="#{scoringPnlId}_toRangeNE" style="text-align:right"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
 					value="#{checkListScoring.rangeTo}" maxlength="18">
-					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
-				<p:message id="#{scoringPnlId}_rangeTo"
-					for="#{scoringPnlId}_toRange" display="icon"></p:message>
+
+				<p:inputText id="#{scoringPnlId}_toRangeBS" style="text-align:right"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'AL'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					required="#{index lt scoringList.size()-1}"
+					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
+					value="#{checkListScoring.rangeTo}" maxlength="18">
+					<p:ajax event="blur" process="@this" partialSubmit="true"
+						update="#{scoringPnlId}_toRangeBS" />
+					<ac:validateNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+						maxIntegerDigits="14" />
+				</p:inputText>
+				<!-- 	<p:message id="#{scoringPnlId}_rangeTo"
+					for="#{scoringPnlId}_toRange" display="icon"></p:message> -->
 			</p:column>
 			<p:column style="width:30%">
 				<f:facet name="header">
