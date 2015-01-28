@@ -38,7 +38,7 @@ public class IntegrationConstants {
 	public static final String SFTP_PASS = "welcome1";
 	
 	public static final String GMAS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id";
-	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet/docroot/encryptionKeys/privatekey";
+	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet/encryptionKeys/privatekey";
 
 	public static final String GMAS_PASS_PHASE = "eperolehanpsstg";
 	
