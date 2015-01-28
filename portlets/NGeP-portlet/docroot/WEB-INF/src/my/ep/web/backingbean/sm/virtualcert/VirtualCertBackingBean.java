@@ -372,6 +372,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	
     	p.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
         p.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
+        p.setProperty("class.resource.loader.path", "../WEB-INF/templates");
     	
     	Velocity.init(p);
 
